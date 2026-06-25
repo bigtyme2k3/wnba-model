@@ -1,0 +1,74 @@
+name: WNBA Daily Pipeline
+
+on:
+  schedule:
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for today'
+        required: false
+        default: ''
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Set target date
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            echo "TARGET=${{ github.event.inputs.date }}" >> $GITHUB_ENV
+          else
+            echo "TARGET=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+          fi
+          echo "YEAR=$(date -u +%Y)" >> $GITHUB_ENV
+
+      - name: Scrape stats
+        run: python collect_stats.py --start 2022 --end ${{ env.YEAR }} --out data/raw
+        continue-on-error: true
+
+      - name: Scrape odds
+        run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      - name: Scrape props
+        run: python scrape_props.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      - name: Scrape scores
+        run: python scrape_scores.py --date ${{ env.TARGET }} --out data/raw --boxscores
+        continue-on-error: true
+
+      - name: Merge data
+        run: python merge_data.py --year all --raw data/raw --out data/processed
+
+      - name: Generate predictions
+        run: |
+          python daily_runner.py \
+            --date ${{ env.TARGET }} \
+            --out predictions/predictions_${{ env.TARGET }}.json
+
+      - name: Build dashboard
+        run: python build_dashboard.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/ predictions/ docs/
+          git diff --cached --quiet || git commit -m "🏀 Daily update — ${{ env.TARGET }}"
+          git push
