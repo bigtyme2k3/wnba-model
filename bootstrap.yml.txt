@@ -1,0 +1,74 @@
+name: Bootstrap — First Time Setup
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_historical:
+        description: 'Pull historical data 2022-2024? (true/false)'
+        required: true
+        default: 'true'
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120   # historical pull takes a while
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Pull historical stats (2022-2024)
+        if: ${{ github.event.inputs.pull_historical == 'true' }}
+        run: python collect_stats.py --start 2022 --end 2024 --out data/raw
+
+      - name: Pull historical scores (2022-2024)
+        if: ${{ github.event.inputs.pull_historical == 'true' }}
+        run: python scrape_scores.py --historical 2022 2024 --out data/raw
+
+      - name: Pull historical odds closing lines
+        if: ${{ github.event.inputs.pull_historical == 'true' }}
+        run: python scrape_odds.py --historical --out data/raw
+        continue-on-error: true
+
+      - name: Merge all data
+        run: python merge_data.py --year all --raw data/raw --out data/processed
+
+      - name: Train spread model
+        run: python spread_model.py --mode train --data data/processed/master_all.csv
+
+      - name: Train totals model
+        run: python totals_model.py --mode train --data data/processed/master_all.csv
+
+      - name: Train props model
+        run: python props_model.py --mode train
+
+      - name: Run today's predictions
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          python daily_runner.py --date $DATE --out predictions/predictions_$DATE.json
+          python update_dashboard.py --predictions predictions/predictions_$DATE.json --dashboard docs/index.jsx
+          python build_dashboard.py
+
+      - name: Commit everything
+        run: |
+          git config user.name  "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "🏀 Bootstrap — initial data + trained models"
+          git push
+
+      - name: Done
+        run: |
+          echo "✅ Bootstrap complete."
+          echo "   Enable GitHub Pages: Settings → Pages → Source: main branch /docs folder"
+          echo "   Your dashboard: https://YOUR-USERNAME.github.io/wnba-model"

@@ -1,0 +1,129 @@
+name: WNBA Daily Pipeline
+
+on:
+  schedule:
+    # 9 AM ET daily (1 PM UTC) — runs before most games tip off
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    # Also allows manual trigger from GitHub Actions tab
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for today'
+        required: false
+        default: ''
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: write   # needed to push updated dashboard back to repo
+
+    steps:
+
+      # ── 1. Checkout repo ───────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Python setup ────────────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── 3. Set date ────────────────────────────────────────────────────────
+      - name: Set target date
+        id: date
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            echo "TARGET=${{ github.event.inputs.date }}" >> $GITHUB_ENV
+          else
+            echo "TARGET=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+          fi
+          echo "YEAR=$(date -u +%Y)" >> $GITHUB_ENV
+
+      # ── 4. Scrape stats ────────────────────────────────────────────────────
+      - name: Scrape Basketball-Reference stats
+        run: python scrape_stats.py --start 2022 --end ${{ env.YEAR }} --out data/raw
+        continue-on-error: true   # don't kill pipeline if BRef is down
+
+      # ── 5. Scrape odds ─────────────────────────────────────────────────────
+      - name: Scrape OddsShark lines
+        run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      # ── 6. Scrape props ────────────────────────────────────────────────────
+      - name: Scrape PrizePicks props
+        run: python scrape_props.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      # ── 7. Scrape scores ───────────────────────────────────────────────────
+      - name: Scrape ESPN scores
+        run: python scrape_scores.py --date ${{ env.TARGET }} --out data/raw --boxscores
+        continue-on-error: true
+
+      # ── 8. Merge + feature engineering ────────────────────────────────────
+      - name: Merge data
+        run: python merge_data.py --year all --raw data/raw --out data/processed
+
+      # ── 9. Retrain models (Mondays only) ───────────────────────────────────
+      - name: Retrain models (Monday only)
+        if: ${{ github.event.schedule == '0 13 * * 1' || github.event.inputs.date != '' }}
+        run: |
+          python spread_model.py --mode train --data data/processed/master_all.csv
+          python totals_model.py --mode train --data data/processed/master_all.csv
+          python props_model.py  --mode train
+
+      # ── 10. Run predictions ────────────────────────────────────────────────
+      - name: Generate predictions
+        run: |
+          python daily_runner.py \
+            --date ${{ env.TARGET }} \
+            --out predictions/predictions_${{ env.TARGET }}.json
+
+      # ── 11. Patch dashboard ────────────────────────────────────────────────
+      - name: Update dashboard JSON
+        run: |
+          python update_dashboard.py \
+            --predictions predictions/predictions_${{ env.TARGET }}.json \
+            --dashboard docs/index.jsx
+
+      # ── 12. Build static dashboard ─────────────────────────────────────────
+      - name: Build static HTML dashboard
+        run: python build_dashboard.py
+
+      # ── 13. Print best bets to Actions log ────────────────────────────────
+      - name: Print best bets summary
+        run: |
+          python - << 'PYEOF'
+          import json
+          with open(f"predictions/predictions_${{ env.TARGET }}.json") as f:
+              d = json.load(f)
+          print(f"\n{'═'*60}")
+          print(f"WNBA Best Bets — {d['date']}")
+          print(f"{'═'*60}")
+          for b in d["best_bets"]:
+              e = f"+{b['edge']}" if b['edge'] > 0 else str(b['edge'])
+              print(f"  #{b['rank']} [{b['type']:<6}] {b['play']:<40} {e:>6} pts  {'★'*b['stars']}")
+          print(f"\n  {len(d['games'])} games  |  {sum(1 for b in d['best_bets'] if b['stars']==3)} HIGH conf plays")
+          PYEOF
+
+      # ── 14. Commit and push ────────────────────────────────────────────────
+      - name: Commit updated files
+        run: |
+          git config user.name  "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add \
+            data/raw/ \
+            data/processed/ \
+            predictions/ \
+            docs/ \
+            models/
+          git diff --cached --quiet || git commit -m \
+            "🏀 Daily update — ${{ env.TARGET }}"
+          git push

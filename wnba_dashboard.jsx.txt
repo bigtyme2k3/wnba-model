@@ -1,0 +1,164 @@
+import { useState, useEffect } from "react";
+
+const PIPELINE_DATA = {"date": "2026-05-12", "games": [{"tip": "8:00 PM ET", "home": {"name": "Dallas Wings", "abbr": "DAL", "record": "1-0", "net_rtg": -1.0}, "away": {"name": "Atlanta Dream", "abbr": "ATL", "record": "1-0", "net_rtg": 0.5}, "spread": {"pred": 1.0, "model_line": "Dallas Wings -1.0", "posted_line": null, "edge": null, "conf": "LOW", "stars": 1}, "totals": {"pred": 162.0, "line": 158.5, "edge": 3.5, "play": "OVER", "conf": "MED", "stars": 2}, "props": [{"player": "Arike Ogunbowale", "team": "Dallas Wings", "opp": "Atlanta Dream", "pos": "G", "proj_min": 33.0, "b2b": false, "props": {"pts": {"pred": 19.8, "line": null, "edge": null, "signal": null}, "reb": {"pred": 5.5, "line": null, "edge": null, "signal": null}, "ast": {"pred": 4.7, "line": null, "edge": null, "signal": null}, "threes": {"pred": 1.9, "line": null, "edge": null, "signal": null}, "pra": {"pred": 30.0, "line": null, "edge": null, "signal": null}}}], "flags": ["Travel"]}, {"tip": "10:00 PM ET", "home": {"name": "Phoenix Mercury", "abbr": "PHX", "record": "1-0", "net_rtg": -0.5}, "away": {"name": "Minnesota Lynx", "abbr": "MIN", "record": "0-1", "net_rtg": 3.8}, "spread": {"pred": -2.9, "model_line": "Minnesota Lynx -2.9", "posted_line": null, "edge": null, "conf": "LOW", "stars": 1}, "totals": {"pred": 160.4, "line": 162.5, "edge": -2.1, "play": "UNDER", "conf": "MED", "stars": 2}, "props": [{"player": "Napheesa Collier", "team": "Minnesota Lynx", "opp": "Phoenix Mercury", "pos": "F", "proj_min": 29.9, "b2b": true, "props": {"pts": {"pred": 17.6, "line": 20.5, "edge": -2.9, "signal": "UNDER"}, "reb": {"pred": 8.1, "line": 8.5, "edge": -0.4, "signal": null}, "ast": {"pred": 3.3, "line": 3.5, "edge": -0.2, "signal": null}, "threes": {"pred": 0.7, "line": 0.5, "edge": 0.2, "signal": null}, "pra": {"pred": 29.0, "line": 32.5, "edge": -3.5, "signal": null}}}], "flags": ["B2B (MIN)"]}, {"tip": "10:00 PM ET", "home": {"name": "Portland Fire", "abbr": "PDX", "record": "0-1", "net_rtg": -3.0}, "away": {"name": "New York Liberty", "abbr": "NYL", "record": "1-0", "net_rtg": 8.1}, "spread": {"pred": -2.3, "model_line": "New York Liberty -2.3", "posted_line": null, "edge": null, "conf": "LOW", "stars": 1}, "totals": {"pred": 163.4, "line": 155.0, "edge": 8.4, "play": "OVER", "conf": "HIGH", "stars": 3}, "props": [{"player": "Breanna Stewart", "team": "New York Liberty", "opp": "Portland Fire", "pos": "F", "proj_min": 29.0, "b2b": true, "props": {"pts": {"pred": 17.7, "line": 22.5, "edge": -4.8, "signal": "UNDER"}, "reb": {"pred": 7.4, "line": 8.5, "edge": -1.1, "signal": null}, "ast": {"pred": 3.4, "line": 4.0, "edge": -0.6, "signal": null}, "threes": {"pred": 1.3, "line": 1.5, "edge": -0.2, "signal": null}, "pra": {"pred": 28.5, "line": 35.0, "edge": -6.5, "signal": "UNDER"}}}, {"player": "Sabrina Ionescu", "team": "New York Liberty", "opp": "Portland Fire", "pos": "G", "proj_min": 29.9, "b2b": true, "props": {"pts": {"pred": 16.7, "line": 18.5, "edge": -1.8, "signal": null}, "reb": {"pred": 4.6, "line": 5.5, "edge": -0.9, "signal": null}, "ast": {"pred": 5.7, "line": 6.5, "edge": -0.8, "signal": null}, "threes": {"pred": 2.1, "line": 2.5, "edge": -0.4, "signal": null}, "pra": {"pred": 27.0, "line": 30.5, "edge": -3.5, "signal": null}}}], "flags": ["B2B (NYL)", "Travel"]}], "best_bets": [{"type": "TOTAL", "game": "New York Liberty @ Portland Fire", "play": "OVER 155.0", "edge": 8.4, "conf": "HIGH", "stars": 3, "tip": "10:00 PM ET", "rank": 1}, {"type": "PROP", "game": "New York Liberty @ Portland Fire", "play": "Breanna Stewart PRA UNDER 35.0", "edge": -6.5, "conf": "HIGH", "stars": 3, "tip": "10:00 PM ET", "rank": 2}, {"type": "PROP", "game": "New York Liberty @ Portland Fire", "play": "Breanna Stewart PTS UNDER 22.5", "edge": -4.8, "conf": "HIGH", "stars": 3, "tip": "10:00 PM ET", "rank": 3}, {"type": "TOTAL", "game": "Atlanta Dream @ Dallas Wings", "play": "OVER 158.5", "edge": 3.5, "conf": "MED", "stars": 2, "tip": "8:00 PM ET", "rank": 4}, {"type": "PROP", "game": "Minnesota Lynx @ Phoenix Mercury", "play": "Napheesa Collier PTS UNDER 20.5", "edge": -2.9, "conf": "MED", "stars": 2, "tip": "10:00 PM ET", "rank": 5}, {"type": "TOTAL", "game": "Minnesota Lynx @ Phoenix Mercury", "play": "UNDER 162.5", "edge": -2.1, "conf": "MED", "stars": 2, "tip": "10:00 PM ET", "rank": 6}], "model_stats": {"spread": {"algo": "Ridge v2", "cv_mae": 9.72, "dir_acc": 0.716, "strong_ats": 0.815, "n": 263}, "totals": {"algo": "Random Forest", "cv_mae": 6.77, "ou_acc": 0.542, "strong_ou": 0.554, "n": 939}, "props": {"algo": "Ridge", "cv_mae": 6.0, "hit_rate": 0.721, "strong_hr": 0.754, "n": 1337}}};
+const RECENT=[{date:"May 10",game:"NYL @ WAS",type:"SPREAD",play:"NYL -9.7",result:"WIN",actual:"NYL +5"},{date:"May 10",game:"PHX @ GSV",type:"SPREAD",play:"GSV -2.8",result:"WIN",actual:"GSV +16"},{date:"May 10",game:"SEA @ CON",type:"SPREAD",play:"CON -2.1",result:"LOSS",actual:"SEA +7"},{date:"May 10",game:"LVA @ LAS",type:"SPREAD",play:"Pick'em",result:"LOSS",actual:"LVA +27"}];
+const C={bg:"#07080f",panel:"#0d0f1a",border:"#ffffff0d",high:"#00e5a0",med:"#f5c518",low:"#555577",over:"#4ade80",under:"#f87171",spread:"#60a5fa",total:"#c084fc",prop:"#fb923c",text:"#e2e8f0",muted:"#475569",dim:"#1e2235"};
+const confColor=c=>c==="HIGH"?C.high:c==="MED"?C.med:C.low;
+const typeColor=t=>t==="SPREAD"?C.spread:t==="TOTAL"?C.total:C.prop;
+const signalColor=s=>s==="OVER"?C.over:C.under;
+function Stars({n,size=11}){const c=n===3?C.high:n===2?C.med:C.low;return<span>{[1,2,3].map(i=><span key={i} style={{color:i<=n?c:"#222",fontSize:size}}>★</span>)}</span>}
+function Chip({label,color,bg,border}){return<span style={{background:bg||color+"18",color,border:`1px solid ${border||color+"44"}`,borderRadius:4,padding:"2px 8px",fontSize:10,fontWeight:700,letterSpacing:0.8}}>{label}</span>}
+function Flag({label}){return<Chip label={label} color="#f87171"/>}
+function ConfBadge({conf}){return<Chip label={conf} color={confColor(conf)}/>}
+function TypeBadge({type}){return<Chip label={type} color={typeColor(type)}/>}
+
+function GameCard({g,active,onClick}){
+  const tc=g.totals,cc=confColor(tc.conf);
+  return<div onClick={onClick} style={{background:active?C.dim:"transparent",border:`1px solid ${active?C.spread+"44":C.border}`,borderRadius:10,padding:"12px 14px",cursor:"pointer",transition:"all 0.15s",marginBottom:8}}>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
+      <div>
+        <div style={{fontSize:10,color:C.muted,letterSpacing:1,marginBottom:3}}>{g.tip}</div>
+        <div style={{fontSize:14,fontWeight:700,color:C.text}}><span>{g.away.abbr}</span><span style={{color:"#222",margin:"0 6px",fontWeight:300}}>@</span><span>{g.home.abbr}</span></div>
+      </div>
+      <div style={{textAlign:"right"}}>
+        {tc.line&&<div style={{background:cc+"18",color:cc,border:`1px solid ${cc}33`,borderRadius:5,padding:"3px 9px",fontSize:11,fontWeight:700}}>{tc.play} {tc.line}</div>}
+        <div style={{marginTop:4}}><Stars n={tc.stars}/></div>
+      </div>
+    </div>
+    {g.flags.length>0&&<div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{g.flags.map(f=><Flag key={f} label={f}/>)}</div>}
+  </div>
+}
+
+function GameDetail({g}){
+  const{spread,totals,props}=g;
+  return<div style={{animation:"fadeIn 0.18s ease"}}>
+    <div style={{marginBottom:18}}>
+      <div style={{display:"flex",gap:8,marginBottom:8,flexWrap:"wrap"}}><span style={{color:C.muted,fontSize:12}}>{g.tip}</span>{g.flags.map(f=><Flag key={f} label={f}/>)}</div>
+      <div style={{fontSize:22,fontWeight:800,color:C.text,letterSpacing:-0.5,lineHeight:1.2}}>{g.away.name}<span style={{color:"#1e2235",fontWeight:200,margin:"0 10px"}}>@</span>{g.home.name}</div>
+      <div style={{display:"flex",gap:16,marginTop:6}}>{[g.away,g.home].map((t,i)=><span key={i} style={{fontSize:12,color:C.muted}}>{t.abbr}<span style={{color:t.net_rtg>=0?C.high:C.under,marginLeft:5}}>{t.net_rtg>=0?"+":""}{t.net_rtg} net</span></span>)}</div>
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
+      {[
+        {label:"SPREAD",conf:spread.conf,main:spread.model_line||"—",sub1:spread.posted_line?`Posted: ${spread.posted_line}`:"No posted line",sub2:spread.edge?`Edge: ${spread.edge>0?"+":""}${spread.edge} pts`:"—"},
+        {label:"TOTAL",conf:totals.conf,main:totals.line?`${totals.play} ${totals.line}`:`Model: ${totals.pred}`,sub1:totals.line?`Model: ${totals.pred}`:"No line",sub2:totals.edge?`Edge: ${totals.edge>0?"+":""}${totals.edge} pts`:"—"},
+      ].map(({label,conf,main,sub1,sub2})=>{
+        const cc=confColor(conf);
+        return<div key={label} style={{background:C.panel,border:`1px solid ${cc}2a`,borderRadius:10,padding:"14px 16px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><span style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700}}>{label}</span><ConfBadge conf={conf}/></div>
+          <div style={{fontSize:18,fontWeight:800,color:C.text,marginBottom:5}}>{main}</div>
+          <div style={{fontSize:11,color:C.muted}}>{sub1}</div>
+          <div style={{fontSize:11,color:label==="TOTAL"&&totals.edge?cc:C.muted,marginTop:2}}>{sub2}</div>
+        </div>
+      })}
+    </div>
+    {props.length>0&&<div>
+      <div style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700,marginBottom:10}}>PLAYER PROPS</div>
+      {props.map((p,pi)=><div key={pi} style={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:9,padding:"12px 14px",marginBottom:8}}>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}>
+          <div><span style={{fontWeight:700,color:C.text,fontSize:14}}>{p.player}</span><span style={{color:C.muted,fontSize:11,marginLeft:8}}>{p.pos} · {p.proj_min}min</span>{p.b2b&&<span style={{marginLeft:8}}><Flag label="B2B"/></span>}</div>
+          <span style={{fontSize:11,color:C.muted}}>{p.opp}</span>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6}}>
+          {["pts","reb","ast","threes","pra"].map(prop=>{
+            const d=p.props[prop],hs=!!d.signal,sc=d.signal?signalColor(d.signal):C.muted;
+            return<div key={prop} style={{background:hs?sc+"12":"#ffffff05",border:`1px solid ${hs?sc+"44":"#ffffff08"}`,borderRadius:7,padding:"8px 10px",textAlign:"center"}}>
+              <div style={{fontSize:9,color:C.muted,letterSpacing:1,marginBottom:4}}>{prop.toUpperCase()}</div>
+              <div style={{fontSize:15,fontWeight:700,color:hs?sc:C.text}}>{d.pred}</div>
+              {d.line&&<div style={{fontSize:10,color:C.muted,marginTop:2}}>line {d.line}</div>}
+              {d.signal&&<div style={{fontSize:9,fontWeight:800,color:sc,marginTop:3}}>{d.signal} {d.edge>0?"+":""}{d.edge}</div>}
+            </div>
+          })}
+        </div>
+      </div>)}
+    </div>}
+  </div>
+}
+
+function BestBets({bets}){
+  return<div>
+    <div style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700,marginBottom:14}}>TONIGHT'S PLAYS — RANKED BY CONFIDENCE</div>
+    {bets.map((b,i)=>{
+      const c=confColor(b.conf),edge=typeof b.edge==="number"?b.edge:0;
+      return<div key={i} style={{background:C.panel,border:`1px solid ${c}22`,borderRadius:10,padding:"14px 18px",marginBottom:9,display:"grid",gridTemplateColumns:"36px 80px 1fr 110px",gap:14,alignItems:"center",animation:`fadeIn ${0.08+i*0.04}s ease both`}}>
+        <div style={{fontSize:26,fontWeight:800,color:"#1a1f30"}}>{String(i+1).padStart(2,"0")}</div>
+        <div><TypeBadge type={b.type}/><div style={{fontSize:10,color:C.muted,marginTop:5}}>{b.tip}</div></div>
+        <div><div style={{fontSize:16,fontWeight:700,color:C.text,marginBottom:4}}>{b.play}</div><div style={{fontSize:11,color:C.muted}}>{b.game}</div></div>
+        <div style={{textAlign:"right"}}>
+          <div style={{background:c+"18",color:c,border:`1px solid ${c}44`,borderRadius:6,padding:"4px 12px",fontSize:14,fontWeight:800,marginBottom:6,display:"inline-block"}}>{edge>0?"+":""}{edge} pts</div>
+          <div><Stars n={b.stars} size={12}/></div>
+        </div>
+      </div>
+    })}
+    <div style={{marginTop:16,padding:"13px 16px",background:C.panel,border:`1px solid ${C.border}`,borderRadius:9,fontSize:11,color:C.muted,lineHeight:1.8}}>
+      <span style={{color:C.med,fontWeight:700}}>Sizing: </span>3★ = 2u · 2★ = 1u · 1★ = pass. Break-even: 52.4% at −110. Strong play rates: 81.5% spread · 55.4% totals · 75.4% props.
+    </div>
+  </div>
+}
+
+function ModelStats({stats,recent}){
+  const wins=recent.filter(r=>r.result==="WIN").length;
+  const cards=[
+    {key:"spread",label:"SPREAD",color:C.spread,rows:[["Algo",stats.spread.algo],["CV MAE",`${stats.spread.cv_mae} pts`],["Directional",`${(stats.spread.dir_acc*100).toFixed(1)}%`],["Strong ATS",`${(stats.spread.strong_ats*100).toFixed(1)}%`],["n",stats.spread.n]],feats:["Quality floor","Blowout cap ±20","Anchored rolling"]},
+    {key:"totals",label:"TOTALS",color:C.total,rows:[["Algo",stats.totals.algo],["CV MAE",`${stats.totals.cv_mae} pts`],["O/U Acc",`${(stats.totals.ou_acc*100).toFixed(1)}%`],["Strong O/U",`${(stats.totals.strong_ou*100).toFixed(1)}%`],["n",stats.totals.n]],feats:["Rolling scoring","Pace × ortg","B2B suppression"]},
+    {key:"props",label:"PROPS",color:C.prop,rows:[["Algo",stats.props.algo],["CV MAE",`${stats.props.cv_mae} pts`],["Hit Rate",`${(stats.props.hit_rate*100).toFixed(1)}%`],["Strong HR",`${(stats.props.strong_hr*100).toFixed(1)}%`],["n",stats.props.n]],feats:["Proj. minutes","Positional defense","Usage × pace"]},
+  ];
+  return<div>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:20}}>
+      {cards.map(card=><div key={card.key} style={{background:C.panel,border:`1px solid ${card.color}22`,borderRadius:10,padding:"16px"}}>
+        <div style={{fontSize:9,color:card.color,letterSpacing:1.8,fontWeight:700,marginBottom:12}}>{card.label} MODEL</div>
+        {card.rows.map(([k,v])=><div key={k} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:`1px solid ${C.border}`}}><span style={{fontSize:10,color:C.muted}}>{k}</span><span style={{fontSize:11,color:C.text,fontWeight:500}}>{v}</span></div>)}
+        <div style={{marginTop:12}}>{card.feats.map(f=><div key={f} style={{display:"flex",gap:6,marginBottom:4}}><span style={{color:card.color,fontSize:10}}>▸</span><span style={{fontSize:10,color:C.muted}}>{f}</span></div>)}</div>
+      </div>)}
+    </div>
+    <div style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700,marginBottom:10}}>RECENT — {wins}-{recent.length-wins}</div>
+    {recent.map((r,i)=>{const win=r.result==="WIN";return<div key={i} style={{background:C.panel,border:`1px solid ${win?C.high+"22":C.under+"22"}`,borderRadius:8,padding:"10px 16px",marginBottom:6,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <div style={{display:"flex",gap:12,alignItems:"center"}}><TypeBadge type={r.type}/><span style={{fontSize:12,color:C.text}}>{r.game}</span><span style={{fontSize:11,color:C.muted}}>→ {r.play}</span></div>
+      <div style={{display:"flex",gap:10,alignItems:"center"}}><span style={{fontSize:11,color:C.muted}}>{r.actual}</span><span style={{background:win?C.high+"22":C.under+"22",color:win?C.high:C.under,border:`1px solid ${win?C.high+"55":C.under+"55"}`,borderRadius:4,padding:"2px 10px",fontSize:11,fontWeight:800}}>{r.result}</span></div>
+    </div>})}
+    <div style={{marginTop:14,padding:"12px 16px",background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11,color:C.muted,lineHeight:1.7}}>
+      <span style={{color:C.spread}}>How to update: </span>Run <code style={{color:C.high}}>python daily_runner.py</code> each morning → paste new <code style={{color:C.high}}>PIPELINE_DATA</code> JSON at top of this file.
+    </div>
+  </div>
+}
+
+export default function App(){
+  const[activeGame,setActiveGame]=useState(2);
+  const[tab,setTab]=useState("games");
+  const{games,best_bets,model_stats,date:reportDate}=PIPELINE_DATA;
+  const highBets=best_bets.filter(b=>b.stars===3).length;
+  return<div style={{minHeight:"100vh",background:C.bg,color:C.text,fontFamily:"'DM Mono','Fira Code',monospace"}}>
+    <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#0d0f1a}::-webkit-scrollbar-thumb{background:#1e2235;border-radius:2px}@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}`}</style>
+    <div style={{background:"#0a0b15",borderBottom:`1px solid ${C.border}`,padding:"14px 24px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <div><div style={{fontSize:10,color:C.spread,letterSpacing:2.5,fontWeight:500,marginBottom:3}}>WNBA BETTING MODEL</div><div style={{fontSize:20,fontWeight:700,letterSpacing:-0.5}}>Daily Report</div></div>
+      <div style={{textAlign:"right"}}>
+        <div style={{fontSize:11,color:C.muted,marginBottom:6}}>{new Date(reportDate+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})}</div>
+        <span style={{display:"flex",alignItems:"center",gap:5,background:C.high+"12",color:C.high,border:`1px solid ${C.high}30`,borderRadius:20,padding:"3px 12px",fontSize:10,fontWeight:700,justifyContent:"flex-end"}}>
+          <span style={{width:5,height:5,borderRadius:"50%",background:C.high,animation:"blink 2s infinite",display:"inline-block"}}/>
+          {games.length} GAMES · {highBets} HIGH CONF
+        </span>
+      </div>
+    </div>
+    <div style={{background:"#0a0b15",borderBottom:`1px solid ${C.border}`,padding:"10px 24px",display:"flex",gap:0,overflowX:"auto"}}>
+      {[{label:"SPREAD",color:C.spread,v1:`MAE ${model_stats.spread.cv_mae}`,v2:`${(model_stats.spread.dir_acc*100).toFixed(1)}% dir`,v3:`${(model_stats.spread.strong_ats*100).toFixed(1)}% strong`},{label:"TOTALS",color:C.total,v1:`MAE ${model_stats.totals.cv_mae}`,v2:`${(model_stats.totals.ou_acc*100).toFixed(1)}% O/U`,v3:`${(model_stats.totals.strong_ou*100).toFixed(1)}% strong`},{label:"PROPS",color:C.prop,v1:`MAE ${model_stats.props.cv_mae}`,v2:`${(model_stats.props.hit_rate*100).toFixed(1)}% hit`,v3:`${(model_stats.props.strong_hr*100).toFixed(1)}% strong`}].map((m,i)=><div key={i} style={{paddingRight:28,borderRight:i<2?`1px solid ${C.border}`:"none",marginRight:i<2?28:0}}><div style={{fontSize:9,color:m.color,letterSpacing:1.8,fontWeight:700,marginBottom:4}}>{m.label}</div><div style={{display:"flex",gap:18}}>{[m.v1,m.v2,m.v3].map((v,j)=><span key={j} style={{fontSize:12,color:"#94a3b8"}}>{v}</span>)}</div></div>)}
+      <div style={{marginLeft:"auto",display:"flex",gap:5,alignItems:"center",flexShrink:0}}><span style={{fontSize:9,color:C.muted,letterSpacing:1,marginRight:4}}>MAY 10</span>{RECENT.map((r,i)=><div key={i} title={`${r.game}: ${r.actual}`} style={{width:22,height:22,borderRadius:4,background:r.result==="WIN"?C.high+"20":C.under+"20",border:`1px solid ${r.result==="WIN"?C.high+"55":C.under+"55"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:800,color:r.result==="WIN"?C.high:C.under}}>{r.result[0]}</div>)}<span style={{fontSize:11,color:C.muted,marginLeft:4}}>2-2</span></div>
+    </div>
+    <div style={{borderBottom:`1px solid ${C.border}`,padding:"0 24px",display:"flex"}}>
+      {[["games","Tonight's Games"],["bets","Best Bets"],["stats","Model Stats"]].map(([id,label])=><button key={id} onClick={()=>setTab(id)} style={{background:"none",border:"none",cursor:"pointer",padding:"11px 16px",fontSize:10,letterSpacing:1.2,fontWeight:700,color:tab===id?C.spread:C.muted,borderBottom:`2px solid ${tab===id?C.spread:"transparent"}`,transition:"all 0.12s"}}>{label.toUpperCase()}</button>)}
+    </div>
+    <div style={{padding:"20px 24px",maxWidth:920,margin:"0 auto"}}>
+      {tab==="games"&&<div style={{display:"grid",gridTemplateColumns:"260px 1fr",gap:20}}>
+        <div>
+          <div style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700,marginBottom:10}}>SELECT GAME</div>
+          {games.map((g,i)=><GameCard key={i} g={g} active={activeGame===i} onClick={()=>setActiveGame(i)}/>)}
+          <div style={{marginTop:16,padding:"10px 12px",background:C.panel,border:`1px solid ${C.border}`,borderRadius:8}}>
+            <div style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700,marginBottom:8}}>PIPELINE STATUS</div>
+            {[["Spread model v2","✅"],["Totals model","✅"],["Props model","✅"],["collect_stats.py","⚠️"],["ODDS_API_KEY","⚠️"]].map(([l,i])=><div key={l} style={{display:"flex",justifyContent:"space-between",marginBottom:5}}><span style={{fontSize:9,color:i==="✅"?C.high:C.med}}>{i} {l}</span></div>)}
+          </div>
+        </div>
+        <div style={{animation:"fadeIn 0.18s ease"}}>{games[activeGame]&&<GameDetail g={games[activeGame]}/>}</div>
+      </div>}
+      {tab==="bets"&&<BestBets bets={best_bets}/>}
+      {tab==="stats"&&<ModelStats stats={model_stats} recent={RECENT}/>}
+    </div>
+  </div>
+}
