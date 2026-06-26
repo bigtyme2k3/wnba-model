@@ -357,7 +357,6 @@ def main():
     parser.add_argument("--out", type=str, default=PROCESSED_DIR, help="Processed output directory")
     args = parser.parse_args()
 
-    global RAW_DIR, PROCESSED_DIR
     RAW_DIR       = args.raw
     PROCESSED_DIR = args.out
     os.makedirs(PROCESSED_DIR, exist_ok=True)
