@@ -35,7 +35,17 @@ jobs:
         run: python scrape_scores.py --historical 2022 2024 --out data/raw
 
       - name: Merge all data
-        run: python merge_data.py --year all --raw data/raw --out data/processed
+        run: |
+               python - << 'EOF'
+               import re, pathlib
+               f = pathlib.Path("merge_data.py")
+               src = f.read_text()
+               # Remove all global declarations then add one at top of main
+               src = re.sub(r'\n\s+global RAW_DIR, PROCESSED_DIR', '', src)
+               src = src.replace('def main():\n', 'def main():\n    global RAW_DIR, PROCESSED_DIR\n')
+               f.write_text(src)
+               EOF
+               python merge_data.py --year all --raw data/raw --out data/processed
 
       - name: Train spread model
         run: python spread_model.py --mode train --data data/processed/master_all.csv
