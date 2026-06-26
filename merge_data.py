@@ -350,6 +350,7 @@ def process_year(year: int) -> pd.DataFrame:
 
 
 def main():
+    global RAW_DIR, PROCESSED_DIR
     parser = argparse.ArgumentParser(description="Merge WNBA stats + odds into model-ready dataset")
     parser.add_argument("--year", type=str, default="all", help="Year to process (e.g. 2023) or 'all'")
     parser.add_argument("--raw", type=str, default=RAW_DIR, help="Raw data directory")
