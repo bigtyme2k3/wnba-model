@@ -273,10 +273,9 @@
         // Load today's predictions JSON from the predictions folder
         const today = new Date().toISOString().split("T")[0];
         const urls  = [
-          `predictions/predictions_${today}.json`,
-          // fallback to most recent
-          `predictions/predictions_2026-07-01.json`,
-          `predictions/predictions_2026-06-30.json`,
+          const urls  = [ 
+          `https://raw.githubusercontent.com/bigtyme2k3/wnba-model/main/predictions/predictions_${today}.json`,
+          `https://raw.githubusercontent.com/bigtyme2k3/wnba-model/main/predictions/predictions_2026-07-02.json`,
         ];
 
         async function tryLoad() {
