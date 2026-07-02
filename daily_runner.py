@@ -24,9 +24,9 @@ import pandas as pd
 from datetime import date, datetime
 warnings.filterwarnings("ignore")
 
-BASE_DIR   = "/home/claude/wnba"
-MODEL_DIR  = f"{BASE_DIR}/models"
-DATA_DIR   = f"{BASE_DIR}/data/processed"
+BASE_DIR   = "."
+MODEL_DIR  = "models"
+DATA_DIR   = "data/processed"
 OUTPUT_DIR = f"{BASE_DIR}/predictions"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
