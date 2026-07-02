@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="theme-color" content="#07080f">
+<title>WNBA Betting Model</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#07080f;color:#e2e8f0;min-height:100%}
+body{font-family:'Courier New',monospace}
+button{cursor:pointer;background:none;border:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+// Pipeline data — updated daily by GitHub Actions
+const PIPELINE_DATA = {"date":"2026-07-02","generated":"2026-07-02T15:04:00","games":[{"tip":"2026-07-02T23:30Z","home":{"name":"Washington Mystics","abbr":"WAS","record":"7-7","net_rtg":-3.0},"away":{"name":"Atlanta Dream","abbr":"ATL","record":"7-7","net_rtg":0.5},"spread":{"pred":0.0,"model_line":"Pick'em","posted_line":null,"edge":null,"conf":"LOW","stars":1},"totals":{"pred":169.0,"line":167.5,"edge":1.5,"play":"OVER","conf":"LOW","stars":1},"props":[],"flags":[]},{"tip":"2026-07-03T00:00Z","home":{"name":"Connecticut Sun","abbr":"CON","record":"7-7","net_rtg":2.1},"away":{"name":"Dallas Wings","abbr":"DAL","record":"7-7","net_rtg":-1.0},"spread":{"pred":0.0,"model_line":"Pick'em","posted_line":null,"edge":null,"conf":"LOW","stars":1},"totals":{"pred":168.9,"line":171.5,"edge":-2.6,"play":"UNDER","conf":"MED","stars":2},"props":[{"player":"Arike Ogunbowale","team":"Dallas Wings","opp":"Connecticut Sun","pos":"G","proj_min":33.0,"b2b":false,"props":{"pts":{"pred":18.8,"line":null,"edge":null,"signal":null},"reb":{"pred":6.3,"line":null,"edge":null,"signal":null},"ast":{"pred":6.3,"line":null,"edge":null,"signal":null},"threes":{"pred":6.3,"line":null,"edge":null,"signal":null},"pra":{"pred":6.3,"line":null,"edge":null,"signal":null}}}],"flags":[]}],"best_bets":[{"type":"TOTAL","game":"Dallas Wings @ Connecticut Sun","play":"UNDER 171.5","edge":-2.6,"conf":"MED","stars":2,"tip":"2026-07-03T00:00Z","rank":1}],"model_stats":{"spread":{"algo":"Ridge v2","cv_mae":9.72,"dir_acc":0.716,"strong_ats":0.815,"n":263},"totals":{"algo":"Random Forest","cv_mae":6.77,"ou_acc":0.542,"strong_ou":0.554,"n":939},"props":{"algo":"Ridge","cv_mae":6.0,"hit_rate":0.721,"strong_hr":0.754,"n":1337}}};
+</script>
+<script type="text/babel" data-presets="react">
+const {useState} = React;
+const C = {bg:"#07080f",panel:"#0d0f1a",border:"#ffffff0d",high:"#00e5a0",med:"#f5c518",
+  low:"#555577",over:"#4ade80",under:"#f87171",spread:"#60a5fa",total:"#c084fc",
+  prop:"#fb923c",text:"#e2e8f0",muted:"#475569",dim:"#1e2235"};
+const cc = c => c==="HIGH"?C.high:c==="MED"?C.med:C.low;
+const tc = t => t==="SPREAD"?C.spread:t==="TOTAL"?C.total:C.prop;
+
+function Stars({n}){
+  const col=n===3?C.high:n===2?C.med:C.low;
+  return <span>{[1,2,3].map(i=><span key={i} style={{color:i<=n?col:"#222",fontSize:11}}>★</span>)}</span>;
+}
+function Pill({label,color}){
+  return <span style={{background:color+"22",color,border:`1px solid ${color}44`,
+    borderRadius:4,padding:"2px 8px",fontSize:10,fontWeight:700}}>{label}</span>;
+}
+
+function GameCard({g,active,onClick}){
+  const tot=g.totals, c=cc(tot.conf||"LOW");
+  return <div onClick={onClick} style={{background:active?C.dim:"transparent",
+    border:`1px solid ${active?C.spread+"55":C.border}`,borderRadius:10,
+    padding:"12px 14px",cursor:"pointer",marginBottom:8,transition:"all 0.15s"}}>
+    <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+      <div>
+        <div style={{fontSize:10,color:C.muted,marginBottom:3}}>{g.tip}</div>
+        <div style={{fontSize:14,fontWeight:700,color:C.text}}>
+          {g.away.abbr} <span style={{color:"#333",fontWeight:300}}>@</span> {g.home.abbr}
+        </div>
+      </div>
+      {tot.line && <div style={{textAlign:"right"}}>
+        <div style={{background:c+"18",color:c,border:`1px solid ${c}33`,
+          borderRadius:5,padding:"3px 8px",fontSize:11,fontWeight:700}}>
+          {tot.play} {tot.line}
+        </div>
+        <div style={{marginTop:4}}><Stars n={tot.stars||1}/></div>
+      </div>}
+    </div>
+    {(g.flags||[]).map(f=><span key={f} style={{background:"#f8717122",color:"#f87171",
+      border:"1px solid #f8717133",borderRadius:3,padding:"1px 6px",fontSize:9,marginRight:4}}>{f}</span>)}
+  </div>;
+}
+
+function GameDetail({g}){
+  const {spread,totals,props=[]}=g;
+  return <div style={{animation:"fadeIn 0.2s ease"}}>
+    <div style={{marginBottom:16}}>
+      <div style={{display:"flex",gap:8,marginBottom:6,flexWrap:"wrap"}}>
+        <span style={{color:C.muted,fontSize:11}}>{g.tip}</span>
+        {(g.flags||[]).map(f=><span key={f} style={{background:"#f8717122",color:"#f87171",
+          border:"1px solid #f8717133",borderRadius:3,padding:"1px 6px",fontSize:9}}>{f}</span>)}
+      </div>
+      <div style={{fontSize:20,fontWeight:800,color:C.text,letterSpacing:-0.5}}>
+        {g.away.name} <span style={{color:"#222",fontWeight:200,margin:"0 8px"}}>@</span> {g.home.name}
+      </div>
+      <div style={{display:"flex",gap:14,marginTop:4}}>
+        {[g.away,g.home].map((t,i)=><span key={i} style={{fontSize:11,color:C.muted}}>
+          {t.abbr} <span style={{color:t.net_rtg>=0?C.high:C.under}}>{t.net_rtg>=0?"+":""}{t.net_rtg} net</span>
+        </span>)}
+      </div>
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
+      {[{lbl:"SPREAD",conf:spread.conf||"LOW",main:spread.model_line||"—",
+         sub2:spread.edge?`Edge: ${spread.edge>0?"+":""}${spread.edge} pts`:"No line posted"},
+        {lbl:"TOTAL",conf:totals.conf||"LOW",
+         main:totals.line?`${totals.play} ${totals.line}`:`Model: ${totals.pred}`,
+         sub2:totals.edge?`Edge: ${totals.edge>0?"+":""}${totals.edge} pts`:"No line posted"},
+      ].map(({lbl,conf,main,sub2})=>{
+        const c2=cc(conf);
+        return <div key={lbl} style={{background:C.panel,border:`1px solid ${c2}2a`,
+          borderRadius:10,padding:"14px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+            <span style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700}}>{lbl}</span>
+            <Pill label={conf} color={c2}/>
+          </div>
+          <div style={{fontSize:17,fontWeight:800,color:C.text,marginBottom:4}}>{main}</div>
+          <div style={{fontSize:11,color:C.muted}}>{sub2}</div>
+        </div>;
+      })}
+    </div>
+    {props.length>0 && <div>
+      <div style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700,marginBottom:8}}>PLAYER PROPS</div>
+      {props.map((p,i)=><div key={i} style={{background:C.panel,border:`1px solid ${C.border}`,
+        borderRadius:9,padding:"12px",marginBottom:8}}>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+          <div>
+            <span style={{fontWeight:700,color:C.text}}>{p.player}</span>
+            <span style={{color:C.muted,fontSize:11,marginLeft:8}}>{p.pos} · {p.proj_min}min</span>
+          </div>
+          <span style={{fontSize:11,color:C.muted}}>{p.opp}</span>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5}}>
+          {["pts","reb","ast","threes","pra"].map(prop=>{
+            const d=(p.props||{})[prop]||{};
+            const hs=!!d.signal;
+            const sc=d.signal?(d.signal==="OVER"?C.over:C.under):C.muted;
+            return <div key={prop} style={{background:hs?sc+"12":"#ffffff05",
+              border:`1px solid ${hs?sc+"44":"#ffffff08"}`,borderRadius:6,padding:"7px 5px",textAlign:"center"}}>
+              <div style={{fontSize:9,color:C.muted,marginBottom:3}}>{prop.toUpperCase()}</div>
+              <div style={{fontSize:13,fontWeight:700,color:hs?sc:C.text}}>{d.pred||"—"}</div>
+              {d.line&&<div style={{fontSize:9,color:C.muted}}>{d.line}</div>}
+              {d.signal&&<div style={{fontSize:9,fontWeight:800,color:sc}}>{d.signal} {d.edge>0?"+":""}{d.edge}</div>}
+            </div>;
+          })}
+        </div>
+      </div>)}
+    </div>}
+  </div>;
+}
+
+function BestBets({bets}){
+  return <div>
+    <div style={{fontSize:9,color:C.muted,letterSpacing:1.5,fontWeight:700,marginBottom:12}}>
+      TODAY — RANKED BY CONFIDENCE
+    </div>
+    {bets.length===0&&<div style={{color:C.muted,padding:30,textAlign:"center"}}>No strong plays today.</div>}
+    {bets.map((b,i)=>{
+      const c=cc(b.conf), e=typeof b.edge==="number"?b.edge:0;
+      return <div key={i} style={{background:C.panel,border:`1px solid ${c}22`,borderRadius:10,
+        padding:"14px 16px",marginBottom:8,display:"grid",
+        gridTemplateColumns:"32px 70px 1fr 100px",gap:12,alignItems:"center",
+        animation:`fadeIn ${0.08+i*0.04}s ease both`}}>
+        <div style={{fontSize:22,fontWeight:800,color:"#1a1f30"}}>{String(i+1).padStart(2,"0")}</div>
+        <div><Pill label={b.type} color={tc(b.type)}/></div>
+        <div>
+          <div style={{fontSize:14,fontWeight:700,color:C.text,marginBottom:3}}>{b.play}</div>
+          <div style={{fontSize:11,color:C.muted}}>{b.game}</div>
+        </div>
+        <div style={{textAlign:"right"}}>
+          <div style={{background:c+"18",color:c,border:`1px solid ${c}44`,borderRadius:5,
+            padding:"3px 10px",fontSize:13,fontWeight:800,marginBottom:4,display:"inline-block"}}>
+            {e>0?"+":""}{e} pts
+          </div>
+          <div><Stars n={b.stars||1}/></div>
+        </div>
+      </div>;
+    })}
+  </div>;
+}
+
+function ModelStats({stats}){
+  return <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+    {[{l:"SPREAD",c:C.spread,rows:[["Algo",stats.spread.algo],["MAE",`${stats.spread.cv_mae}pts`],
+        ["Dir",`${(stats.spread.dir_acc*100).toFixed(0)}%`],["ATS",`${(stats.spread.strong_ats*100).toFixed(0)}%`]]},
+      {l:"TOTALS",c:C.total, rows:[["Algo",stats.totals.algo],["MAE",`${stats.totals.cv_mae}pts`],
+        ["O/U",`${(stats.totals.ou_acc*100).toFixed(0)}%`],["Str",`${(stats.totals.strong_ou*100).toFixed(0)}%`]]},
+      {l:"PROPS", c:C.prop,  rows:[["Algo",stats.props.algo],["MAE",`${stats.props.cv_mae}pts`],
+        ["Hit",`${(stats.props.hit_rate*100).toFixed(0)}%`],["Str",`${(stats.props.strong_hr*100).toFixed(0)}%`]]},
+    ].map(m=><div key={m.l} style={{background:C.panel,border:`1px solid ${m.c}22`,borderRadius:10,padding:14}}>
+      <div style={{fontSize:9,color:m.c,letterSpacing:1.8,fontWeight:700,marginBottom:10}}>{m.l}</div>
+      {m.rows.map(([k,v])=><div key={k} style={{display:"flex",justifyContent:"space-between",
+        padding:"6px 0",borderBottom:`1px solid ${C.border}`}}>
+        <span style={{fontSize:10,color:C.muted}}>{k}</span>
+        <span style={{fontSize:11,color:C.text,fontWeight:500}}>{v}</span>
+      </div>)}
+    </div>)}
+  </div>;
+}
+
+function App(){
+  const [tab,setTab]=useState("games");
+  const [game,setGame]=useState(0);
+  const {games=[],best_bets=[],model_stats,date:d}=PIPELINE_DATA;
+  const hi=best_bets.filter(b=>b.stars===3).length;
+
+  return <div style={{minHeight:"100vh",background:C.bg}}>
+    {/* Header */}
+    <div style={{background:"#0a0b15",borderBottom:`1px solid ${C.border}`,
+      padding:"14px 18px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <div>
+        <div style={{fontSize:9,color:C.spread,letterSpacing:2.5,fontWeight:700,marginBottom:3}}>WNBA BETTING MODEL</div>
+        <div style={{fontSize:18,fontWeight:700,color:C.text,letterSpacing:-0.5}}>Daily Report</div>
+      </div>
+      <div style={{textAlign:"right"}}>
+        <div style={{fontSize:11,color:C.muted,marginBottom:5}}>{d}</div>
+        <span style={{display:"flex",alignItems:"center",gap:5,background:C.high+"12",color:C.high,
+          border:`1px solid ${C.high}30`,borderRadius:20,padding:"3px 10px",fontSize:10,fontWeight:700}}>
+          <span style={{width:5,height:5,borderRadius:"50%",background:C.high,
+            animation:"blink 2s infinite",display:"inline-block"}}/>
+          {games.length} GAMES · {hi} HIGH
+        </span>
+      </div>
+    </div>
+
+    {/* Model ribbon */}
+    {model_stats&&<div style={{background:"#0a0b15",borderBottom:`1px solid ${C.border}`,
+      padding:"8px 18px",display:"flex",gap:0,overflowX:"auto"}}>
+      {[{l:"SPREAD",c:C.spread,v:`${(model_stats.spread.dir_acc*100).toFixed(0)}% dir · ${(model_stats.spread.strong_ats*100).toFixed(0)}% strong`},
+        {l:"TOTALS",c:C.total, v:`${(model_stats.totals.ou_acc*100).toFixed(0)}% O/U · ${(model_stats.totals.strong_ou*100).toFixed(0)}% strong`},
+        {l:"PROPS", c:C.prop,  v:`${(model_stats.props.hit_rate*100).toFixed(0)}% hit · ${(model_stats.props.strong_hr*100).toFixed(0)}% strong`},
+      ].map((m,i)=><div key={i} style={{paddingRight:20,borderRight:i<2?`1px solid ${C.border}`:"none",marginRight:i<2?20:0}}>
+        <span style={{fontSize:9,color:m.c,letterSpacing:1.5,fontWeight:700,marginRight:8}}>{m.l}</span>
+        <span style={{fontSize:11,color:"#94a3b8"}}>{m.v}</span>
+      </div>)}
+    </div>}
+
+    {/* Nav */}
+    <div style={{borderBottom:`1px solid ${C.border}`,padding:"0 18px",display:"flex"}}>
+      {[["games","Games"],["bets","Best Bets"],["stats","Stats"]].map(([id,lbl])=>
+        <button key={id} onClick={()=>setTab(id)} style={{padding:"11px 14px",fontSize:10,
+          letterSpacing:1.2,fontWeight:700,color:tab===id?C.spread:C.muted,
+          borderBottom:`2px solid ${tab===id?C.spread:"transparent"}`,transition:"all 0.12s"}}>
+          {lbl.toUpperCase()}
+        </button>
+      )}
+    </div>
+
+    {/* Content */}
+    <div style={{padding:"16px 18px",maxWidth:900,margin:"0 auto"}}>
+      {tab==="games"&&(games.length===0
+        ?<div style={{color:C.muted,padding:40,textAlign:"center"}}>No games today.</div>
+        :<div style={{display:"grid",gridTemplateColumns:"220px 1fr",gap:16}}>
+          <div>
+            {games.map((g2,i)=><GameCard key={i} g={g2} active={game===i} onClick={()=>setGame(i)}/>)}
+          </div>
+          <div>{games[game]&&<GameDetail g={games[game]}/>}</div>
+        </div>
+      )}
+      {tab==="bets"&&<BestBets bets={best_bets}/>}
+      {tab==="stats"&&model_stats&&<ModelStats stats={model_stats}/>}
+    </div>
+  </div>;
+}
+
+const root=ReactDOM.createRoot(document.getElementById("root"));
+root.render(React.createElement(App));
+</script>
+</body>
+</html>
