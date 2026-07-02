@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#07080f">
+<title>WNBA Betting Model</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#07080f;color:#e2e8f0;font-family:'Courier New',monospace;min-height:100vh}
+.header{background:#0a0b15;border-bottom:1px solid #ffffff0d;padding:14px 18px;
+  display:flex;justify-content:space-between;align-items:center}
+.title-sm{font-size:9px;color:#60a5fa;letter-spacing:2.5px;font-weight:700;margin-bottom:3px}
+.title-lg{font-size:18px;font-weight:700;letter-spacing:-0.5px}
+.live-pill{display:flex;align-items:center;gap:5px;background:#00e5a012;color:#00e5a0;
+  border:1px solid #00e5a030;border-radius:20px;padding:3px 12px;font-size:10px;font-weight:700}
+.dot{width:5px;height:5px;border-radius:50%;background:#00e5a0;
+  animation:blink 2s infinite;display:inline-block}
+.ribbon{background:#0a0b15;border-bottom:1px solid #ffffff0d;padding:8px 18px;
+  display:flex;gap:20px;overflow-x:auto}
+.ribbon-item{white-space:nowrap}
+.ribbon-label{font-size:9px;font-weight:700;letter-spacing:1.5px;margin-right:8px}
+.ribbon-val{font-size:11px;color:#94a3b8}
+.nav{border-bottom:1px solid #ffffff0d;padding:0 18px;display:flex}
+.nav-btn{padding:11px 14px;font-size:10px;letter-spacing:1.2px;font-weight:700;
+  background:none;border:none;cursor:pointer;color:#475569;
+  border-bottom:2px solid transparent;transition:all 0.12s;font-family:inherit}
+.nav-btn.active{color:#60a5fa;border-bottom-color:#60a5fa}
+.content{padding:16px 18px;max-width:900px;margin:0 auto}
+.games-grid{display:grid;grid-template-columns:220px 1fr;gap:16px}
+.game-card{border:1px solid #ffffff0d;border-radius:10px;padding:12px 14px;
+  cursor:pointer;margin-bottom:8px;transition:all 0.15s}
+.game-card.active{background:#1e2235;border-color:#60a5fa55}
+.game-card-row{display:flex;justify-content:space-between;margin-bottom:4px}
+.game-tip{font-size:10px;color:#475569;margin-bottom:3px}
+.game-teams{font-size:14px;font-weight:700}
+.tot-pill{border-radius:5px;padding:3px 8px;font-size:11px;font-weight:700}
+.detail-header{margin-bottom:16px}
+.detail-matchup{font-size:20px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat-card{background:#0d0f1a;border-radius:10px;padding:14px}
+.stat-label{font-size:9px;letter-spacing:1.5px;font-weight:700;color:#475569;margin-bottom:8px}
+.stat-main{font-size:17px;font-weight:800;margin-bottom:4px}
+.stat-sub{font-size:11px;color:#475569}
+.pill{border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700}
+.best-bet{background:#0d0f1a;border-radius:10px;padding:14px 16px;margin-bottom:8px;
+  display:grid;grid-template-columns:32px 70px 1fr 100px;gap:12px;align-items:center}
+.bet-num{font-size:22px;font-weight:800;color:#1a1f30}
+.bet-play{font-size:14px;font-weight:700;margin-bottom:3px}
+.bet-game{font-size:11px;color:#475569}
+.bet-edge{border-radius:5px;padding:3px 10px;font-size:13px;font-weight:800;
+  display:inline-block;margin-bottom:4px}
+.model-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.model-card{background:#0d0f1a;border-radius:10px;padding:14px}
+.model-lbl{font-size:9px;letter-spacing:1.8px;font-weight:700;margin-bottom:10px}
+.model-row{display:flex;justify-content:space-between;padding:6px 0;
+  border-bottom:1px solid #ffffff0d}
+.model-key{font-size:10px;color:#475569}
+.model-val{font-size:11px;font-weight:500}
+.stars span{font-size:11px}
+.no-games{color:#475569;padding:40px;text-align:center;font-size:13px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.fade{animation:fadeIn 0.2s ease}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="title-sm">WNBA BETTING MODEL</div>
+    <div class="title-lg">Daily Report</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:11px;color:#475569;margin-bottom:5px" id="report-date"></div>
+    <div class="live-pill">
+      <span class="dot"></span>
+      <span id="header-count">0 GAMES</span>
+    </div>
+  </div>
+</div>
+
+<div class="ribbon">
+  <div class="ribbon-item">
+    <span class="ribbon-label" style="color:#60a5fa">SPREAD</span>
+    <span class="ribbon-val" id="spread-stats"></span>
+  </div>
+  <div class="ribbon-item">
+    <span class="ribbon-label" style="color:#c084fc">TOTALS</span>
+    <span class="ribbon-val" id="totals-stats"></span>
+  </div>
+  <div class="ribbon-item">
+    <span class="ribbon-label" style="color:#fb923c">PROPS</span>
+    <span class="ribbon-val" id="props-stats"></span>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="switchTab('games',this)">GAMES</button>
+  <button class="nav-btn" onclick="switchTab('bets',this)">BEST BETS</button>
+  <button class="nav-btn" onclick="switchTab('stats',this)">STATS</button>
+</div>
+
+<div class="content">
+  <div id="tab-games"></div>
+  <div id="tab-bets" style="display:none"></div>
+  <div id="tab-stats" style="display:none"></div>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const DATA = {"date":"2026-07-02","generated":"2026-07-02T15:04:00","games":[{"tip":"2026-07-02T23:30Z","home":{"name":"Washington Mystics","abbr":"WAS","record":"7-7","net_rtg":-3.0},"away":{"name":"Atlanta Dream","abbr":"ATL","record":"7-7","net_rtg":0.5},"spread":{"pred":0.0,"model_line":"Pick'em","posted_line":null,"edge":null,"conf":"LOW","stars":1},"totals":{"pred":169.0,"line":167.5,"edge":1.5,"play":"OVER","conf":"LOW","stars":1},"props":[],"flags":[]},{"tip":"2026-07-03T00:00Z","home":{"name":"Connecticut Sun","abbr":"CON","record":"7-7","net_rtg":2.1},"away":{"name":"Dallas Wings","abbr":"DAL","record":"7-7","net_rtg":-1.0},"spread":{"pred":0.0,"model_line":"Pick'em","posted_line":null,"edge":null,"conf":"LOW","stars":1},"totals":{"pred":168.9,"line":171.5,"edge":-2.6,"play":"UNDER","conf":"MED","stars":2},"props":[{"player":"Arike Ogunbowale","team":"Dallas Wings","opp":"Connecticut Sun","pos":"G","proj_min":33.0,"b2b":false,"props":{"pts":{"pred":18.8,"line":null,"edge":null,"signal":null},"reb":{"pred":6.3,"line":null,"edge":null,"signal":null},"ast":{"pred":6.3,"line":null,"edge":null,"signal":null},"threes":{"pred":1.8,"line":null,"edge":null,"signal":null},"pra":{"pred":31.4,"line":null,"edge":null,"signal":null}}}],"flags":[]}],"best_bets":[{"type":"TOTAL","game":"Dallas Wings @ Connecticut Sun","play":"UNDER 171.5","edge":-2.6,"conf":"MED","stars":2,"tip":"2026-07-03T00:00Z","rank":1}],"model_stats":{"spread":{"algo":"Ridge v2","cv_mae":9.72,"dir_acc":0.716,"strong_ats":0.815,"n":263},"totals":{"algo":"Random Forest","cv_mae":6.77,"ou_acc":0.542,"strong_ou":0.554,"n":939},"props":{"algo":"Ridge","cv_mae":6.0,"hit_rate":0.721,"strong_hr":0.754,"n":1337}}};
+
+// ── Colors ─────────────────────────────────────────────────────────────────────
+const CC = {HIGH:"#00e5a0", MED:"#f5c518", LOW:"#555577"};
+const TC = {SPREAD:"#60a5fa", TOTAL:"#c084fc", PROP:"#fb923c"};
+function cc(c){return CC[c]||CC.LOW}
+function tc(t){return TC[t]||TC.SPREAD}
+
+function stars(n){
+  const c=n===3?CC.HIGH:n===2?CC.MED:CC.LOW;
+  return [1,2,3].map(i=>`<span style="color:${i<=n?c:'#222'}">\u2605</span>`).join('');
+}
+function pill(label,color){
+  return `<span class="pill" style="background:${color}22;color:${color};border:1px solid ${color}44">${label}</span>`;
+}
+
+// ── Active game ────────────────────────────────────────────────────────────────
+let activeGame = 0;
+
+// ── Init ───────────────────────────────────────────────────────────────────────
+window.onload = function() {
+  const {games, best_bets, model_stats, date} = DATA;
+
+  // Header
+  document.getElementById('report-date').textContent = date;
+  const hi = best_bets.filter(b=>b.stars===3).length;
+  document.getElementById('header-count').textContent =
+    `${games.length} GAMES \u00B7 ${hi} HIGH`;
+
+  // Ribbon
+  if(model_stats){
+    document.getElementById('spread-stats').textContent =
+      `${(model_stats.spread.dir_acc*100).toFixed(0)}% dir \u00B7 ${(model_stats.spread.strong_ats*100).toFixed(0)}% strong`;
+    document.getElementById('totals-stats').textContent =
+      `${(model_stats.totals.ou_acc*100).toFixed(0)}% O/U \u00B7 ${(model_stats.totals.strong_ou*100).toFixed(0)}% strong`;
+    document.getElementById('props-stats').textContent =
+      `${(model_stats.props.hit_rate*100).toFixed(0)}% hit \u00B7 ${(model_stats.props.strong_hr*100).toFixed(0)}% strong`;
+  }
+
+  renderGames();
+  renderBets();
+  renderStats();
+};
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  ['games','bets','stats'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===tab ? '' : 'none';
+  });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Games tab ─────────────────────────────────────────────────────────────────
+function renderGames() {
+  const {games} = DATA;
+  if(!games.length){
+    document.getElementById('tab-games').innerHTML =
+      '<div class="no-games">No games today.</div>'; return;
+  }
+
+  let sidebar = '';
+  games.forEach((g,i) => {
+    const tot = g.totals, c = cc(tot.conf);
+    sidebar += `<div class="game-card ${i===activeGame?'active':''}"
+      onclick="selectGame(${i})">
+      <div class="game-card-row">
+        <div>
+          <div class="game-tip">${g.tip}</div>
+          <div class="game-teams">${g.away.abbr} <span style="color:#333;font-weight:300">@</span> ${g.home.abbr}</div>
+        </div>
+        ${tot.line ? `<div style="text-align:right">
+          <div class="tot-pill" style="background:${c}18;color:${c};border:1px solid ${c}33">
+            ${tot.play} ${tot.line}
+          </div>
+          <div style="margin-top:4px">${stars(tot.stars||1)}</div>
+        </div>` : ''}
+      </div>
+      ${(g.flags||[]).map(f=>`<span style="background:#f8717122;color:#f87171;
+        border:1px solid #f8717133;border-radius:3px;padding:1px 6px;font-size:9px;margin-right:4px">${f}</span>`).join('')}
+    </div>`;
+  });
+
+  document.getElementById('tab-games').innerHTML =
+    `<div class="games-grid">
+      <div>${sidebar}</div>
+      <div id="game-detail" class="fade">${gameDetail(games[activeGame])}</div>
+    </div>`;
+}
+
+function selectGame(i) {
+  activeGame = i;
+  const det = document.getElementById('game-detail');
+  if(det){ det.innerHTML = gameDetail(DATA.games[i]); det.className='fade'; }
+  document.querySelectorAll('.game-card').forEach((el,j) => {
+    el.classList.toggle('active', j===i);
+  });
+}
+
+function gameDetail(g) {
+  if(!g) return '';
+  const {spread,totals,props=[]} = g;
+  const sc = cc(spread.conf||'LOW'), tc2 = cc(totals.conf||'LOW');
+
+  let propsHtml = '';
+  if(props.length) {
+    propsHtml = `<div style="font-size:9px;color:#475569;letter-spacing:1.5px;font-weight:700;margin-bottom:8px">PLAYER PROPS</div>`;
+    props.forEach(p => {
+      const propCells = ['pts','reb','ast','threes','pra'].map(prop => {
+        const d = (p.props||{})[prop]||{};
+        const hs = !!d.signal;
+        const sc2 = d.signal ? (d.signal==='OVER'?'#4ade80':'#f87171') : '#475569';
+        return `<div style="background:${hs?sc2+'12':'#ffffff05'};
+          border:1px solid ${hs?sc2+'44':'#ffffff08'};
+          border-radius:6px;padding:7px 5px;text-align:center">
+          <div style="font-size:9px;color:#475569;margin-bottom:3px">${prop.toUpperCase()}</div>
+          <div style="font-size:13px;font-weight:700;color:${hs?sc2:'#e2e8f0'}">${d.pred||'—'}</div>
+          ${d.line?`<div style="font-size:9px;color:#475569">${d.line}</div>`:''}
+          ${d.signal?`<div style="font-size:9px;font-weight:800;color:${sc2}">${d.signal} ${d.edge>0?'+':''}${d.edge}</div>`:''}
+        </div>`;
+      }).join('');
+      propsHtml += `<div style="background:#0d0f1a;border:1px solid #ffffff0d;
+        border-radius:9px;padding:12px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <div>
+            <span style="font-weight:700;color:#e2e8f0">${p.player}</span>
+            <span style="color:#475569;font-size:11px;margin-left:8px">${p.pos} · ${p.proj_min}min</span>
+          </div>
+          <span style="font-size:11px;color:#475569">${p.opp}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px">${propCells}</div>
+      </div>`;
+    });
+  }
+
+  return `<div>
+    <div class="detail-header">
+      <div style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <span style="color:#475569;font-size:11px">${g.tip}</span>
+        ${(g.flags||[]).map(f=>`<span style="background:#f8717122;color:#f87171;
+          border:1px solid #f8717133;border-radius:3px;padding:1px 6px;font-size:9px">${f}</span>`).join('')}
+      </div>
+      <div class="detail-matchup">${g.away.name} <span style="color:#1e2235;font-weight:200;margin:0 8px">@</span> ${g.home.name}</div>
+      <div style="display:flex;gap:14px;margin-top:4px">
+        ${[g.away,g.home].map(t=>`<span style="font-size:11px;color:#475569">
+          ${t.abbr} <span style="color:${t.net_rtg>=0?'#00e5a0':'#f87171'}">${t.net_rtg>=0?'+':''}${t.net_rtg} net</span>
+        </span>`).join('')}
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="stat-card" style="border:1px solid ${sc}2a">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span class="stat-label">SPREAD</span>${pill(spread.conf||'LOW',sc)}
+        </div>
+        <div class="stat-main">${spread.model_line||'—'}</div>
+        <div class="stat-sub">${spread.edge!=null?`Edge: ${spread.edge>0?'+':''}${spread.edge} pts`:'No line posted'}</div>
+      </div>
+      <div class="stat-card" style="border:1px solid ${tc2}2a">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span class="stat-label">TOTAL</span>${pill(totals.conf||'LOW',tc2)}
+        </div>
+        <div class="stat-main">${totals.line?`${totals.play} ${totals.line}`:`Model: ${totals.pred}`}</div>
+        <div class="stat-sub">${totals.edge!=null?`Edge: ${totals.edge>0?'+':''}${totals.edge} pts`:'No line posted'}</div>
+      </div>
+    </div>
+    ${propsHtml}
+  </div>`;
+}
+
+// ── Best bets tab ─────────────────────────────────────────────────────────────
+function renderBets() {
+  const {best_bets} = DATA;
+  let html = `<div style="font-size:9px;color:#475569;letter-spacing:1.5px;font-weight:700;margin-bottom:12px">
+    TODAY \u2014 RANKED BY CONFIDENCE</div>`;
+
+  if(!best_bets.length) {
+    html += '<div class="no-games">No strong plays today.</div>';
+  } else {
+    best_bets.forEach((b,i) => {
+      const c = cc(b.conf), e = typeof b.edge==='number'?b.edge:0;
+      html += `<div class="best-bet" style="border:1px solid ${c}22">
+        <div class="bet-num">${String(i+1).padStart(2,'0')}</div>
+        <div>${pill(b.type,tc(b.type))}</div>
+        <div>
+          <div class="bet-play">${b.play}</div>
+          <div class="bet-game">${b.game}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="bet-edge" style="background:${c}18;color:${c};border:1px solid ${c}44">
+            ${e>0?'+':''}${e} pts
+          </div>
+          <div>${stars(b.stars||1)}</div>
+        </div>
+      </div>`;
+    });
+  }
+  html += `<div style="margin-top:16px;padding:13px 16px;background:#0d0f1a;
+    border:1px solid #ffffff0d;border-radius:9px;font-size:11px;color:#475569;line-height:1.8">
+    <span style="color:#f5c518;font-weight:700">Sizing: </span>
+    3\u2605 = 2u \u00B7 2\u2605 = 1u \u00B7 1\u2605 = pass. Break-even at \u2212110: 52.4%.
+  </div>`;
+  document.getElementById('tab-bets').innerHTML = html;
+}
+
+// ── Stats tab ─────────────────────────────────────────────────────────────────
+function renderStats() {
+  const ms = DATA.model_stats;
+  if(!ms){ document.getElementById('tab-stats').innerHTML='<div class="no-games">No model stats.</div>'; return; }
+  const cards = [
+    {l:'SPREAD',c:'#60a5fa',rows:[['Algorithm',ms.spread.algo],['CV MAE',`${ms.spread.cv_mae} pts`],
+      ['Directional',`${(ms.spread.dir_acc*100).toFixed(0)}%`],['Strong ATS',`${(ms.spread.strong_ats*100).toFixed(0)}%`]]},
+    {l:'TOTALS',c:'#c084fc',rows:[['Algorithm',ms.totals.algo],['CV MAE',`${ms.totals.cv_mae} pts`],
+      ['O/U Acc',`${(ms.totals.ou_acc*100).toFixed(0)}%`],['Strong O/U',`${(ms.totals.strong_ou*100).toFixed(0)}%`]]},
+    {l:'PROPS', c:'#fb923c',rows:[['Algorithm',ms.props.algo],['CV MAE',`${ms.props.cv_mae} pts`],
+      ['Hit Rate',`${(ms.props.hit_rate*100).toFixed(0)}%`],['Strong HR',`${(ms.props.strong_hr*100).toFixed(0)}%`]]},
+  ];
+  document.getElementById('tab-stats').innerHTML =
+    `<div class="model-grid">${cards.map(m=>`
+      <div class="model-card" style="border:1px solid ${m.c}22">
+        <div class="model-lbl" style="color:${m.c}">${m.l} MODEL</div>
+        ${m.rows.map(([k,v])=>`<div class="model-row">
+          <span class="model-key">${k}</span>
+          <span class="model-val">${v}</span>
+        </div>`).join('')}
+      </div>`).join('')}
+    </div>`;
+}
+</script>
+</body>
+</html>
