@@ -42,6 +42,8 @@ jobs:
         continue-on-error: true
 
       - name: Scrape odds
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
@@ -61,6 +63,9 @@ jobs:
           python daily_runner.py \
             --date ${{ env.TARGET }} \
             --out predictions/predictions_${{ env.TARGET }}.json
+
+      - name: Postprocess predictions
+        run: python postprocess_predictions.py --date ${{ env.TARGET }}
 
       - name: Build dashboard
         run: python build_dashboard.py
