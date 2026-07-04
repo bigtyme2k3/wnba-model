@@ -47,8 +47,8 @@ jobs:
           echo "YEAR=$(date -u +%Y)" >> $GITHUB_ENV
 
       # ── Step 1: Stats ───────────────────────────────────────────────────────
-      - name: Scrape Basketball-Reference stats
-        run: python collect_stats.py --start 2022 --end ${{ env.YEAR }} --out data/raw
+      - name: Collect whoop data (current season)
+        run: python collect_wehoop.py --current --out data/raw
         continue-on-error: true
 
       # ── Step 2: Odds (The Odds API) ─────────────────────────────────────────
