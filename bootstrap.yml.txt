@@ -29,7 +29,7 @@ jobs:
 
       - name: Pull historical stats (2022-2024)
         if: ${{ github.event.inputs.pull_historical == 'true' }}
-        run: python collect_stats.py --start 2022 --end 2024 --out data/raw
+        run: python collect_wehoop.py --start 2022 --end 2024 --out data/raw
 
       - name: Pull historical scores (2022-2024)
         if: ${{ github.event.inputs.pull_historical == 'true' }}
