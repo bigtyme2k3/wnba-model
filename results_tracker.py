@@ -1,304 +1,261 @@
 """
 results_tracker.py
 ------------------
-Compares yesterday's predictions against actual ESPN results.
-Updates a running W/L log and injects the record into the dashboard.
-
-Run daily AFTER games complete (schedule after midnight ET).
+Grades saved WNBA best bets against ESPN final scores and writes a running log.
+Designed for GitHub Actions after games are final.
 
 Usage:
-    python results_tracker.py
-    python results_tracker.py --date 2026-07-03
+    python results_tracker.py --date 2026-07-04
 """
 
-import os, json, glob, argparse, requests, pandas as pd
+import argparse
+import glob
+import json
+import os
+import re
 from datetime import date, datetime, timedelta
 
+import pandas as pd
+import requests
+
 PREDICTIONS_DIR = "predictions"
-RESULTS_FILE    = "data/results_log.csv"
-ESPN_URL        = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard"
+RESULTS_FILE = "data/results_log.csv"
+ESPN_URL = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard"
 
 
 def fetch_scores(target_date: str) -> dict:
-    """Pull final scores from ESPN for a given date."""
     params = {"dates": target_date.replace("-", "")}
     try:
-        resp = requests.get(ESPN_URL, params=params, timeout=15)
+        resp = requests.get(ESPN_URL, params=params, timeout=20)
         resp.raise_for_status()
         data = resp.json()
-    except Exception as e:
-        print(f"  [WARN] ESPN fetch failed: {e}")
+    except Exception as exc:
+        print(f"  [WARN] ESPN fetch failed: {exc}")
         return {}
 
-    results = {}
+    scores = {}
     for event in data.get("events", []):
+        status = event.get("status", {}).get("type", {}).get("name", "")
+        if "FINAL" not in status.upper():
+            continue
+
         comps = event.get("competitions", [{}])[0]
         competitors = comps.get("competitors", [])
         if len(competitors) < 2:
             continue
 
-        status = event.get("status", {}).get("type", {}).get("name", "")
-        if "FINAL" not in status.upper():
-            continue
-
         home = next((c for c in competitors if c.get("homeAway") == "home"), competitors[0])
         away = next((c for c in competitors if c.get("homeAway") == "away"), competitors[1])
-
-        home_name  = home.get("team", {}).get("displayName", "")
-        away_name  = away.get("team", {}).get("displayName", "")
+        home_name = home.get("team", {}).get("displayName", "")
+        away_name = away.get("team", {}).get("displayName", "")
         home_score = int(home.get("score", 0) or 0)
         away_score = int(away.get("score", 0) or 0)
-
         key = f"{away_name}@{home_name}"
-        results[key] = {
-            "home_team":    home_name,
-            "away_team":    away_name,
-            "home_score":   home_score,
-            "away_score":   away_score,
-            "actual_spread":home_score - away_score,
+        scores[key] = {
+            "game_id": event.get("id"),
+            "home_team": home_name,
+            "away_team": away_name,
+            "home_score": home_score,
+            "away_score": away_score,
+            "actual_spread": home_score - away_score,
             "actual_total": home_score + away_score,
         }
         print(f"  {away_name} {away_score} @ {home_name} {home_score}")
+    return scores
 
-    return results
+
+def prediction_path(target_date: str) -> str | None:
+    exact = os.path.join(PREDICTIONS_DIR, f"predictions_{target_date}.json")
+    if os.path.exists(exact):
+        return exact
+    files = sorted(glob.glob(os.path.join(PREDICTIONS_DIR, "predictions_*.json")))
+    return files[-1] if files else None
 
 
 def load_predictions(target_date: str) -> dict:
-    """Load predictions JSON for a given date."""
-    path = os.path.join(PREDICTIONS_DIR, f"predictions_{target_date}.json")
-    if not os.path.exists(path):
-        # Try most recent
-        files = sorted(glob.glob(os.path.join(PREDICTIONS_DIR, "predictions_*.json")))
-        if files:
-            path = files[-1]
-            print(f"  [INFO] Using {path}")
-        else:
-            return {}
+    path = prediction_path(target_date)
+    if not path:
+        return {}
+    if not path.endswith(f"predictions_{target_date}.json"):
+        print(f"  [INFO] Exact date file missing. Using latest file: {path}")
     with open(path) as f:
         return json.load(f)
 
 
+def extract_number(text):
+    nums = re.findall(r"[-+]?\d+(?:\.\d+)?", str(text or ""))
+    return float(nums[-1]) if nums else None
+
+
+def grade_spread(bet, game, score):
+    play = str(bet.get("play", ""))
+    home = game.get("home", {}).get("name", "")
+    away = game.get("away", {}).get("name", "")
+    actual_home_margin = score["actual_spread"]
+
+    play_line = extract_number(play)
+    if play_line is None:
+        market_line = bet.get("market_line", game.get("spread", {}).get("posted_line"))
+        if market_line is None:
+            return "NO_LINE", None
+        play_line = float(market_line)
+
+    # If the play names the away team, flip to away margin.
+    if away.lower() in play.lower():
+        margin = -actual_home_margin
+        # If market_line was home spread and play_line came from market_line, flip it.
+        if bet.get("market_line") is not None and extract_number(play) is None:
+            play_line = -float(bet["market_line"])
+    else:
+        margin = actual_home_margin
+
+    graded = margin + play_line
+    if abs(graded) < 1e-9:
+        return "PUSH", graded
+    return ("WIN" if graded > 0 else "LOSS"), graded
+
+
+def grade_total(bet, game, score):
+    play = str(bet.get("play", "")).upper()
+    line = bet.get("market_line", game.get("totals", {}).get("line"))
+    if line is None:
+        line = extract_number(play)
+    if line is None:
+        return "NO_LINE", None
+
+    actual_total = score["actual_total"]
+    diff = actual_total - float(line)
+    if abs(diff) < 1e-9:
+        return "PUSH", diff
+    if "UNDER" in play:
+        return ("WIN" if diff < 0 else "LOSS"), diff
+    if "OVER" in play:
+        return ("WIN" if diff > 0 else "LOSS"), diff
+    return "NO_PLAY", diff
+
+
 def evaluate_bets(predictions: dict, scores: dict) -> list:
-    """Score each best bet against actual results."""
     results = []
-    bets    = predictions.get("best_bets", [])
-    games   = {f"{g['away']['name']}@{g['home']['name']}": g
-               for g in predictions.get("games", [])}
+    games = {f"{g['away']['name']}@{g['home']['name']}": g for g in predictions.get("games", [])}
 
-    for bet in bets:
-        game_key = bet["game"].replace(" @ ", "@")
-        score    = scores.get(game_key)
-        game     = games.get(game_key, {})
+    for bet in predictions.get("best_bets", []):
+        game_key = str(bet.get("game", "")).replace(" @ ", "@")
+        score = scores.get(game_key)
+        game = games.get(game_key, {})
 
         if not score:
-            # Try reversed key
-            parts = game_key.split("@")
-            if len(parts) == 2:
-                score = scores.get(f"{parts[1]}@{parts[0]}")
-
-        if not score:
-            result = "NO_RESULT"
-            won    = None
+            result, grade_margin = "NO_RESULT", None
+        elif bet.get("type") == "SPREAD":
+            result, grade_margin = grade_spread(bet, game, score)
+        elif bet.get("type") == "TOTAL":
+            result, grade_margin = grade_total(bet, game, score)
         else:
-            actual_spread = score["actual_spread"]
-            actual_total  = score["actual_total"]
-            bet_type      = bet["type"]
-            play          = bet["play"]
-            edge          = bet.get("edge", 0) or 0
-
-            if bet_type == "SPREAD":
-                # Parse which side we bet
-                # model_line e.g. "NYL -4.1" means we bet NYL -4.1
-                # positive actual_spread = home won
-                tot = game.get("totals", {})
-                sp  = game.get("spread", {})
-                line = sp.get("posted_line")
-                if line is not None:
-                    home_covered = actual_spread > -line
-                    # Did we bet home or away?
-                    bet_home = edge > 0
-                    won = home_covered if bet_home else not home_covered
-                else:
-                    won = None
-
-            elif bet_type == "TOTAL":
-                line = game.get("totals", {}).get("line")
-                if line is not None:
-                    if "OVER" in play:
-                        won = actual_total > line
-                    else:
-                        won = actual_total < line
-                else:
-                    won = None
-
-            elif bet_type == "PROP":
-                # Can't verify without box scores — mark as pending
-                won = None
-
-            if won is None:
-                result = "NO_LINE"
-            elif won:
-                result = "WIN"
-            else:
-                result = "LOSS"
+            result, grade_margin = "PENDING_PROP", None
 
         results.append({
-            "date":      predictions.get("date", ""),
-            "type":      bet["type"],
-            "game":      bet["game"],
-            "play":      bet["play"],
-            "edge":      bet.get("edge", 0),
-            "conf":      bet.get("conf", ""),
-            "stars":     bet.get("stars", 1),
-            "result":    result,
-            "actual_spread": score["actual_spread"] if score else None,
-            "actual_total":  score["actual_total"]  if score else None,
-            "home_score":    score["home_score"]    if score else None,
-            "away_score":    score["away_score"]    if score else None,
-            "evaluated_at":  datetime.now().isoformat(),
+            "date": predictions.get("date", ""),
+            "type": bet.get("type", ""),
+            "game": bet.get("game", ""),
+            "play": bet.get("play", ""),
+            "edge": bet.get("edge", 0),
+            "edge_abs": bet.get("edge_abs", abs(bet.get("edge", 0) or 0)),
+            "conf": bet.get("conf", ""),
+            "stars": bet.get("stars", 1),
+            "result": result,
+            "grade_margin": grade_margin,
+            "home_score": score.get("home_score") if score else None,
+            "away_score": score.get("away_score") if score else None,
+            "actual_spread": score.get("actual_spread") if score else None,
+            "actual_total": score.get("actual_total") if score else None,
+            "evaluated_at": datetime.now().isoformat(),
         })
-
     return results
 
 
-def update_log(new_results: list):
-    """Append new results to the running log."""
+def update_log(new_results: list) -> pd.DataFrame:
     new_df = pd.DataFrame(new_results)
+    os.makedirs(os.path.dirname(RESULTS_FILE), exist_ok=True)
 
     if os.path.exists(RESULTS_FILE):
-        existing = pd.read_csv(RESULTS_FILE)
-        # Don't duplicate — remove old entries for same date
-        if not new_df.empty and "date" in existing.columns:
-            dates = new_df["date"].unique()
-            existing = existing[~existing["date"].isin(dates)]
-        combined = pd.concat([existing, new_df], ignore_index=True)
+        old = pd.read_csv(RESULTS_FILE)
+        if not new_df.empty:
+            keys = set(zip(new_df["date"], new_df["type"], new_df["game"], new_df["play"]))
+            old = old[~old.apply(lambda r: (r.get("date"), r.get("type"), r.get("game"), r.get("play")) in keys, axis=1)]
+        log = pd.concat([old, new_df], ignore_index=True)
     else:
-        combined = new_df
+        log = new_df
 
-    os.makedirs(os.path.dirname(RESULTS_FILE), exist_ok=True)
-    combined.to_csv(RESULTS_FILE, index=False)
-    return combined
+    log.to_csv(RESULTS_FILE, index=False)
+    return log
 
 
 def compute_record(log: pd.DataFrame) -> dict:
-    """Compute overall and by-type W/L records."""
     if log.empty:
-        return {}
+        return {"overall": "0-0", "win_pct": 0, "total_bets": 0, "by_type": {}, "by_conf": {}, "recent_10": []}
 
-    decided = log[log["result"].isin(["WIN","LOSS"])]
-    if decided.empty:
-        return {"overall": "0-0", "win_pct": 0}
-
-    wins   = (decided["result"] == "WIN").sum()
-    losses = (decided["result"] == "LOSS").sum()
-    total  = wins + losses
-
+    decided = log[log["result"].isin(["WIN", "LOSS"])]
+    wins = int((decided["result"] == "WIN").sum())
+    losses = int((decided["result"] == "LOSS").sum())
+    total = wins + losses
     record = {
-        "overall":    f"{wins}-{losses}",
-        "win_pct":    round(wins / total, 3) if total else 0,
-        "total_bets": int(total),
-        "by_type":    {},
-        "by_conf":    {},
-        "recent_10":  [],
+        "overall": f"{wins}-{losses}",
+        "win_pct": round(wins / total, 3) if total else 0,
+        "total_bets": total,
+        "by_type": {},
+        "by_conf": {},
+        "recent_10": [],
     }
 
-    # By type
-    for t in ["SPREAD","TOTAL","PROP"]:
-        sub = decided[decided["type"] == t]
-        if not sub.empty:
-            w = (sub["result"] == "WIN").sum()
-            l = (sub["result"] == "LOSS").sum()
-            record["by_type"][t] = f"{w}-{l} ({w/(w+l):.0%})" if (w+l) else "0-0"
+    for col, key in [("type", "by_type"), ("conf", "by_conf")]:
+        for value in sorted(decided[col].dropna().unique()):
+            sub = decided[decided[col] == value]
+            w = int((sub["result"] == "WIN").sum())
+            l = int((sub["result"] == "LOSS").sum())
+            record[key][value] = f"{w}-{l} ({w/(w+l):.0%})" if (w + l) else "0-0"
 
-    # By confidence
-    for c in ["HIGH","MED","LOW"]:
-        sub = decided[decided["conf"] == c]
-        if not sub.empty:
-            w = (sub["result"] == "WIN").sum()
-            l = (sub["result"] == "LOSS").sum()
-            record["by_conf"][c] = f"{w}-{l} ({w/(w+l):.0%})" if (w+l) else "0-0"
-
-    # Last 10 results
     recent = decided.tail(10)
     record["recent_10"] = [
-        {"date": r["date"], "type": r["type"], "play": r["play"],
-         "result": r["result"], "edge": r.get("edge", 0)}
+        {"date": r["date"], "type": r["type"], "play": r["play"], "result": r["result"], "edge": r.get("edge", 0)}
         for _, r in recent.iterrows()
     ]
-
     return record
 
 
-def inject_record_into_predictions(target_date: str, record: dict):
-    """Add W/L record to today's predictions JSON for dashboard display."""
-    pred_path = os.path.join(PREDICTIONS_DIR, f"predictions_{target_date}.json")
-    if not os.path.exists(pred_path):
+def inject_record(record: dict):
+    files = sorted(glob.glob(os.path.join(PREDICTIONS_DIR, "predictions_*.json")))
+    if not files:
         return
-
-    with open(pred_path) as f:
+    latest = files[-1]
+    with open(latest) as f:
         data = json.load(f)
-
     data["record"] = record
-
-    with open(pred_path, "w") as f:
+    with open(latest, "w") as f:
         json.dump(data, f, indent=2)
-
-    print(f"  Record injected into {pred_path}")
+    print(f"  Record injected into {latest}")
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--date", default=str(date.today() - timedelta(days=1)),
-                        help="Date to evaluate (default: yesterday)")
+    parser.add_argument("--date", default=str(date.today() - timedelta(days=1)))
     args = parser.parse_args()
 
-    target = args.date
-    print(f"\n═══ RESULTS TRACKER — evaluating {target} ═══\n")
-
-    # Fetch actual scores
-    print("Fetching ESPN final scores...")
-    scores = fetch_scores(target)
-    if not scores:
-        print("  No final scores found yet. Run after games complete.")
-
-    # Load predictions
-    print(f"\nLoading predictions for {target}...")
-    preds = load_predictions(target)
+    print(f"\n═══ RESULTS TRACKER — {args.date} ═══\n")
+    scores = fetch_scores(args.date)
+    preds = load_predictions(args.date)
     if not preds:
         print("  No predictions file found.")
         return
 
-    bets = preds.get("best_bets", [])
-    print(f"  Found {len(bets)} best bets to evaluate")
-
-    # Evaluate
     results = evaluate_bets(preds, scores)
-
-    # Save to log
     log = update_log(results)
-    print(f"\n  Results log: {len(log)} total entries → {RESULTS_FILE}")
-
-    # Compute record
     record = compute_record(log)
-    print(f"\n  Overall record: {record.get('overall','0-0')} ({record.get('win_pct',0):.1%})")
-    for t, r in record.get("by_type",{}).items():
-        print(f"  {t}: {r}")
-    for c, r in record.get("by_conf",{}).items():
-        print(f"  {c} conf: {r}")
+    inject_record(record)
 
-    # Inject into today's predictions
-    today = str(date.today())
-    inject_record_into_predictions(today, record)
-
-    # Print results
-    print(f"\n── Yesterday's Results ──")
+    print(f"  Results logged: {len(results)} new / {len(log)} total")
+    print(f"  Overall record: {record.get('overall')} ({record.get('win_pct', 0):.1%})")
     for r in results:
-        icon = "✅" if r["result"]=="WIN" else "❌" if r["result"]=="LOSS" else "—"
+        icon = "✅" if r["result"] == "WIN" else "❌" if r["result"] == "LOSS" else "—"
         print(f"  {icon} [{r['type']}] {r['play']} → {r['result']}")
-        if r["actual_total"]:
-            print(f"     Actual: {r['away_score']}-{r['home_score']} "
-                  f"(total {r['actual_total']}, spread {r['actual_spread']:+d})")
-
     print("\n✅ Results tracking complete.")
 
 
