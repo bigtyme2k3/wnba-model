@@ -1,0 +1,123 @@
+name: WNBA Daily Pipeline
+
+on:
+  schedule:
+    # 9 AM ET daily (1 PM UTC)
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for today'
+        required: false
+        default: ''
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    permissions:
+      contents: write
+
+    env:
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Set target date
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            echo "TARGET=${{ github.event.inputs.date }}" >> $GITHUB_ENV
+          else
+            echo "TARGET=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+          fi
+          echo "YESTERDAY=$(date -u -d 'yesterday' +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d)" >> $GITHUB_ENV
+          echo "YEAR=$(date -u +%Y)" >> $GITHUB_ENV
+
+      # ── Step 1: Stats ───────────────────────────────────────────────────────
+      - name: Scrape Basketball-Reference stats
+        run: python collect_stats.py --start 2022 --end ${{ env.YEAR }} --out data/raw
+        continue-on-error: true
+
+      # ── Step 2: Odds (The Odds API) ─────────────────────────────────────────
+      - name: Scrape odds lines
+        run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      # ── Step 3: Props (PrizePicks) ──────────────────────────────────────────
+      - name: Scrape PrizePicks props
+        run: python scrape_props.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      # ── Step 4: Scores (ESPN) ───────────────────────────────────────────────
+      - name: Scrape ESPN scores
+        run: python scrape_scores.py --date ${{ env.TARGET }} --out data/raw --boxscores
+        continue-on-error: true
+
+      # ── Step 5: Merge + feature engineering ────────────────────────────────
+      - name: Merge data
+        run: python merge_data.py --year all --raw data/raw --out data/processed
+
+      # ── Step 6: Retrain models (Mondays only) ───────────────────────────────
+      - name: Retrain models (Monday only)
+        if: ${{ github.event.schedule == '0 13 * * 1' }}
+        run: |
+          python spread_model.py --mode train --data data/processed/master_all.csv
+          python totals_model.py --mode train --data data/processed/master_all.csv
+          python props_model.py  --mode train
+
+      # ── Step 7: Generate today's predictions ────────────────────────────────
+      - name: Generate predictions
+        run: |
+          python daily_runner.py \
+            --date ${{ env.TARGET }} \
+            --out predictions/predictions_${{ env.TARGET }}.json
+
+      # ── Step 8: Evaluate yesterday's predictions ────────────────────────────
+      - name: Track results
+        run: python results_tracker.py --date ${{ env.YESTERDAY }}
+        continue-on-error: true
+
+      # ── Step 9: Build dashboard ─────────────────────────────────────────────
+      - name: Build dashboard
+        run: python build_dashboard.py
+
+      # ── Step 10: Print best bets summary ───────────────────────────────────
+      - name: Print best bets
+        run: |
+          python - << 'PYEOF'
+          import json, glob, os
+          files = sorted(glob.glob("predictions/predictions_*.json"))
+          if not files: print("No predictions found"); exit()
+          with open(files[-1]) as f: d = json.load(f)
+          print(f"\n{'='*60}")
+          print(f"WNBA Best Bets — {d['date']}")
+          rec = d.get('record',{})
+          if rec: print(f"Record: {rec.get('overall','0-0')} ({rec.get('win_pct',0):.1%})")
+          print(f"{'='*60}")
+          for b in d.get('best_bets',[]):
+              e = f"+{b['edge']}" if b['edge'] and b['edge']>0 else str(b.get('edge',''))
+              print(f"  #{ b['rank']} [{ b['type']:<6}] { b['play']:<40} {e:>6}  {'★'*b['stars']}")
+          print(f"\n  Games: {len(d.get('games',[]))} | High conf: {sum(1 for b in d.get('best_bets',[]) if b.get('stars',0)==3)}")
+          PYEOF
+
+      # ── Step 11: Commit everything ──────────────────────────────────────────
+      - name: Commit and push
+        run: |
+          git config user.name  "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/ predictions/ docs/ models/
+          git diff --cached --quiet || git commit -m "🏀 Daily update — ${{ env.TARGET }}"
+          git push
