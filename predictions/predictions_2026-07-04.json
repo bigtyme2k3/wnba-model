@@ -1,6 +1,6 @@
 {
   "date": "2026-07-04",
-  "generated": "2026-07-04T23:15:36.213927",
+  "generated": "2026-07-04T23:42:09.702323",
   "games": [
     {
       "tip": "2026-07-04T17:00Z",
@@ -22,7 +22,8 @@
         "posted_line": null,
         "edge": null,
         "conf": "LOW",
-        "stars": 1
+        "stars": 1,
+        "edge_abs": null
       },
       "totals": {
         "pred": 168.9,
@@ -48,6 +49,11 @@
         "west_to_east": 1,
         "season_game_num": 10,
         "month": 7
+      },
+      "market": {
+        "source": null,
+        "books": 0,
+        "scraped_at": null
       }
     },
     {
@@ -67,15 +73,17 @@
       "spread": {
         "pred": -2.0,
         "model_line": "Portland Fire -2.0",
-        "posted_line": null,
-        "edge": null,
-        "conf": "LOW",
-        "stars": 1
+        "posted_line": -4.5,
+        "edge": -6.5,
+        "conf": "HIGH",
+        "stars": 3,
+        "edge_abs": 6.5,
+        "play": "Portland Fire +4.5"
       },
       "totals": {
         "pred": 168.8,
-        "line": 172.5,
-        "edge": -3.7,
+        "line": 172.61,
+        "edge": -3.8,
         "play": "UNDER",
         "conf": "MED",
         "stars": 2
@@ -94,23 +102,42 @@
         "west_to_east": 0,
         "season_game_num": 10,
         "month": 7
+      },
+      "market": {
+        "source": "the-odds-api",
+        "books": 9,
+        "scraped_at": "2026-07-04T23:42:05.520666"
       }
     }
   ],
   "best_bets": [
     {
+      "type": "SPREAD",
+      "game": "Portland Fire @ Seattle Storm",
+      "play": "Portland Fire +4.5",
+      "edge": 6.5,
+      "edge_abs": 6.5,
+      "conf": "HIGH",
+      "stars": 3,
+      "tip": "2026-07-05T01:00Z",
+      "market_line": -4.5,
+      "model_line": "Portland Fire -2.0",
+      "verdict": "BET",
+      "rank": 1
+    },
+    {
       "type": "TOTAL",
       "game": "Portland Fire @ Seattle Storm",
-      "play": "UNDER 172.5",
-      "edge": -3.7,
+      "play": "UNDER 172.61",
+      "edge": -3.8,
+      "edge_abs": 3.8,
       "conf": "MED",
       "stars": 2,
       "tip": "2026-07-05T01:00Z",
-      "rank": 1,
-      "win_prob": 0.387,
-      "units": 0.0,
-      "dollar_amt": 0.0,
-      "verdict": "PASS"
+      "market_line": 172.61,
+      "model_line": 168.8,
+      "verdict": "BET",
+      "rank": 2
     }
   ],
   "model_stats": {
@@ -135,5 +162,14 @@
       "strong_hr": 0.754,
       "n": 1337
     }
+  },
+  "data_health": {
+    "odds": "loaded",
+    "spreads_found": 1,
+    "totals_found": 1,
+    "games": 2,
+    "actionable_bets": 2,
+    "high_bets": 1,
+    "last_updated_utc": "2026-07-04T23:42:10.116134+00:00"
   }
 }
