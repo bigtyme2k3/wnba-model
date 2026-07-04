@@ -1,0 +1,55 @@
+name: WNBA Results Tracker
+
+on:
+  schedule:
+    - cron: '30 8 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Date to grade (YYYY-MM-DD), leave blank for yesterday'
+        required: false
+        default: ''
+
+jobs:
+  grade-results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Set target date
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            echo "TARGET=${{ github.event.inputs.date }}" >> $GITHUB_ENV
+          else
+            echo "TARGET=$(date -u -d 'yesterday' +%Y-%m-%d)" >> $GITHUB_ENV
+          fi
+
+      - name: Refresh final scores
+        run: python scrape_scores.py --date ${{ env.TARGET }} --out data/raw --boxscores
+        continue-on-error: true
+
+      - name: Grade betting results
+        run: python results_tracker.py --date ${{ env.TARGET }}
+
+      - name: Rebuild dashboard with record
+        run: python build_dashboard.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/ predictions/ docs/
+          git diff --cached --quiet || git commit -m "📊 Results update — ${{ env.TARGET }}"
+          git push
