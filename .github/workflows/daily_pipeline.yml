@@ -45,6 +45,7 @@ jobs:
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_injuries.py \
+            line_shopping.py \
             scrape_wnba_stats.py \
             scrape_scores.py \
             merge_data.py \
@@ -83,6 +84,12 @@ jobs:
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python scrape_odds_props.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      - name: Scrape line shopping
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python line_shopping.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
       - name: Scrape injuries
