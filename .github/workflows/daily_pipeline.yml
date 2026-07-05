@@ -43,6 +43,7 @@ jobs:
             betting_engine.py \
             results_tracker.py \
             model_tracking.py \
+            slip_optimizer.py \
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_injuries.py \
@@ -55,6 +56,7 @@ jobs:
             postprocess_predictions.py \
             build_dashboard.py \
             patch_model_tracking_ui.py \
+            patch_slip_optimizer_ui.py \
             patch_props_ui.py \
             validate_odds.py \
             validate_props.py \
@@ -134,11 +136,18 @@ jobs:
       - name: Postprocess predictions
         run: python postprocess_predictions.py --date ${{ env.TARGET }}
 
+      - name: Build slip optimizer
+        run: python slip_optimizer.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Build dashboard
         run: python build_dashboard.py
 
       - name: Patch model tracking UI
         run: python patch_model_tracking_ui.py
+
+      - name: Patch slip optimizer UI
+        run: python patch_slip_optimizer_ui.py
 
       - name: Patch props UI
         run: python patch_props_ui.py
