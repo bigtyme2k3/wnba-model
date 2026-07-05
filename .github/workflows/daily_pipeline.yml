@@ -57,6 +57,10 @@ jobs:
         run: python scrape_props.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
+      - name: Generate player points
+        run: python player_points.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
       - name: Scrape scores
         run: python scrape_scores.py --date ${{ env.TARGET }} --out data/raw --boxscores
         continue-on-error: true
