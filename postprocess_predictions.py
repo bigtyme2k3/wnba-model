@@ -36,15 +36,15 @@ def norm_team(name):
     return ALIASES.get(name, name)
 
 
-def to_float(value):
+def to_float(value, default=None):
     if value is None:
-        return None
+        return default
     try:
         if pd.isna(value):
-            return None
+            return default
         return float(value)
     except Exception:
-        return None
+        return default
 
 
 def clean_value(value):
@@ -221,7 +221,7 @@ def build_props_board(props_df, games, player_points=None):
         board.append({
             "player": row.get("player", ""), "team": row.get("team", ""), "opp": row.get("opp_team", ""),
             "stat": stat.upper() if stat != "threes" else "3PM", "line": to_float(row.get("line")),
-            "source": row.get("source", "prizepicks"), "status": "MARKET",
+            "source": row.get("source", "the-odds-api"), "status": "MARKET",
         })
     return board[:80]
 
