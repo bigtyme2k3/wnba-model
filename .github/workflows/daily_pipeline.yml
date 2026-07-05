@@ -58,12 +58,10 @@ jobs:
       - name: Validate odds
         run: python validate_odds.py --date ${{ env.TARGET }} --raw data/raw
 
-      - name: Discover PrizePicks props
-        run: python discover_prizepicks.py --out data/raw
-        continue-on-error: true
-
       - name: Scrape props
-        run: python scrape_props.py --date ${{ env.TARGET }} --out data/raw
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python scrape_odds_props.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
       - name: Scrape WNBA official stats
