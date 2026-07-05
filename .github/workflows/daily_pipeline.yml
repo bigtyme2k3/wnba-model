@@ -42,6 +42,7 @@ jobs:
           python -m py_compile \
             betting_engine.py \
             results_tracker.py \
+            model_tracking.py \
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_injuries.py \
@@ -53,6 +54,7 @@ jobs:
             player_points.py \
             postprocess_predictions.py \
             build_dashboard.py \
+            patch_model_tracking_ui.py \
             patch_props_ui.py \
             validate_odds.py \
             validate_props.py \
@@ -116,6 +118,10 @@ jobs:
         run: python results_tracker.py --date ${{ env.TARGET }}
         continue-on-error: true
 
+      - name: Build model tracking
+        run: python model_tracking.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Merge data
         run: python merge_data.py --year all --raw data/raw --out data/processed
 
@@ -130,6 +136,9 @@ jobs:
 
       - name: Build dashboard
         run: python build_dashboard.py
+
+      - name: Patch model tracking UI
+        run: python patch_model_tracking_ui.py
 
       - name: Patch props UI
         run: python patch_props_ui.py
