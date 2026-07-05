@@ -58,6 +58,7 @@ jobs:
             patch_model_tracking_ui.py \
             patch_slip_optimizer_ui.py \
             patch_props_ui.py \
+            patch_player_detail_ui.py \
             validate_odds.py \
             validate_props.py \
             validate_dashboard.py
@@ -152,6 +153,9 @@ jobs:
       - name: Patch props UI
         run: python patch_props_ui.py
 
+      - name: Patch player detail UI
+        run: python patch_player_detail_ui.py
+
       - name: Validate dashboard
         run: python validate_dashboard.py
 
@@ -162,5 +166,5 @@ jobs:
           git status --short
           git add -A
           git diff --cached --quiet && echo "No changes to commit" && exit 0
-          git commit -m "🏀 Daily update — ${{ env.TARGET }}"
+          git commit -m "Daily update - ${{ env.TARGET }}"
           git push || (git pull --rebase origin main && git push)
