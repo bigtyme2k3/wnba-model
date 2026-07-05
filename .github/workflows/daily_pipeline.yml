@@ -62,6 +62,10 @@ jobs:
         run: python scrape_props.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
+      - name: Scrape WNBA official stats
+        run: python scrape_wnba_stats.py --season ${{ env.YEAR }} --out data/raw
+        continue-on-error: true
+
       - name: Generate player points
         run: python player_points.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
