@@ -4,12 +4,10 @@ postprocess_predictions.py
 Patches today's predictions JSON after daily_runner.py by:
   - merging The Odds API CSV lines into each game
   - recomputing spread/total edges and confidence
+  - embedding player_points_YYYY-MM-DD.csv into the predictions JSON
   - rebuilding best_bets as actionable MED/HIGH plays only
-  - adding a spread board and PrizePicks props board
+  - adding a spread board and props board
   - adding data_health metadata for the dashboard
-
-Usage:
-    python postprocess_predictions.py --date 2026-07-04
 """
 
 import argparse
@@ -26,7 +24,7 @@ RAW_DIR = "data/raw"
 CONF_THRESHOLDS = {
     "spread": {"HIGH": 5.0, "MED": 3.0},
     "totals": {"HIGH": 4.0, "MED": 2.0},
-    "props": {"HIGH": 3.5, "MED": 2.0},
+    "props": {"HIGH": 3.0, "MED": 1.5},
 }
 
 ALIASES = {
@@ -53,6 +51,17 @@ def to_float(value):
         return float(value)
     except Exception:
         return None
+
+
+def clean_value(value):
+    if value is None:
+        return None
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+    return value
 
 
 def score_confidence(edge, model_type):
@@ -111,6 +120,13 @@ def load_props(target_date):
     ], "props")
 
 
+def load_player_points(target_date):
+    return load_csv([
+        os.path.join(RAW_DIR, f"player_points_{target_date}.csv"),
+        os.path.join(RAW_DIR, "player_points_today.csv"),
+    ], "player points")
+
+
 def find_odds_row(odds_df, home, away):
     if odds_df.empty:
         return None
@@ -150,7 +166,45 @@ def build_spread_board(games):
     return board
 
 
-def build_props_board(props_df, games):
+def build_player_points_board(points_df):
+    if points_df.empty:
+        return []
+    board = []
+    for _, row in points_df.iterrows():
+        edge = to_float(row.get("edge"))
+        conf = str(clean_value(row.get("conf")) or "LOW").upper()
+        signal = clean_value(row.get("signal"))
+        if signal is not None:
+            signal = str(signal).upper()
+        conf_calc, stars = score_confidence(edge, "props")
+        if conf not in {"HIGH", "MED", "LOW"}:
+            conf = conf_calc
+        board.append({
+            "player": clean_value(row.get("player")) or "",
+            "team": clean_value(row.get("team")) or "",
+            "opp": clean_value(row.get("opp")) or "",
+            "pos": clean_value(row.get("pos")) or "",
+            "season_avg": to_float(row.get("season_avg")),
+            "projection": to_float(row.get("pred")),
+            "pred": to_float(row.get("pred")),
+            "low": to_float(row.get("low")),
+            "high": to_float(row.get("high")),
+            "range": clean_value(row.get("range")) or "",
+            "line": to_float(row.get("line")),
+            "edge": edge,
+            "signal": signal,
+            "conf": conf,
+            "stars": {"HIGH": 3, "MED": 2, "LOW": 1}.get(conf, stars),
+            "reasoning": clean_value(row.get("reasoning")) or "",
+            "game": clean_value(row.get("game")) or "",
+        })
+    board.sort(key=lambda x: (-abs(x.get("edge") or 0), x.get("player", "")))
+    return board
+
+
+def build_props_board(props_df, games, player_points=None):
+    if player_points:
+        return player_points
     if props_df.empty:
         return []
 
@@ -233,25 +287,6 @@ def rebuild_best_bets(games):
                 "verdict": "BET",
             })
 
-        for prop in game.get("props", []):
-            for prop_type, pdata in prop.get("props", {}).items():
-                if not pdata.get("signal") or pdata.get("edge") is None:
-                    continue
-                conf, stars = score_confidence(pdata.get("edge"), "props")
-                if stars < 2:
-                    continue
-                bets.append({
-                    "type": "PROP",
-                    "game": matchup,
-                    "play": f"{prop.get('player')} {prop_type.upper()} {pdata.get('signal')} {pdata.get('line')}",
-                    "edge": pdata.get("edge"),
-                    "edge_abs": abs(pdata.get("edge", 0)),
-                    "conf": conf,
-                    "stars": stars,
-                    "tip": tip,
-                    "verdict": "BET",
-                })
-
     bets.sort(key=lambda b: (-b.get("stars", 1), -abs(b.get("edge_abs", b.get("edge", 0)))))
     for i, bet in enumerate(bets[:8], start=1):
         bet["rank"] = i
@@ -265,8 +300,10 @@ def patch_predictions(target_date):
 
     odds_df = load_odds(target_date)
     props_df = load_props(target_date)
+    points_df = load_player_points(target_date)
     odds_loaded = not odds_df.empty
     props_loaded = not props_df.empty
+    points_loaded = not points_df.empty
     spreads_found = 0
     totals_found = 0
 
@@ -326,15 +363,19 @@ def patch_predictions(target_date):
             if totals.get("line") is None:
                 totals.update({"edge": None, "play": None})
 
+    player_points = build_player_points_board(points_df)
+    data["player_points"] = player_points
     data["spread_board"] = build_spread_board(data.get("games", []))
-    data["props_board"] = build_props_board(props_df, data.get("games", []))
+    data["props_board"] = build_props_board(props_df, data.get("games", []), player_points)
     data["best_bets"] = rebuild_best_bets(data.get("games", []))
     data["data_health"] = {
         "odds": "loaded" if odds_loaded else "missing",
         "props": "loaded" if props_loaded else "missing",
+        "player_points": "loaded" if points_loaded else "missing",
         "spreads_found": spreads_found,
         "totals_found": totals_found,
         "props_found": len(data.get("props_board", [])),
+        "player_points_found": len(player_points),
         "games": len(data.get("games", [])),
         "actionable_bets": len([b for b in data.get("best_bets", []) if b.get("stars", 0) >= 2]),
         "high_bets": len([b for b in data.get("best_bets", []) if b.get("stars") == 3]),
@@ -346,6 +387,7 @@ def patch_predictions(target_date):
 
     print(f"  Patched predictions: {path}")
     print(f"  Odds health: {spreads_found} spreads, {totals_found} totals")
+    print(f"  Player points: {len(player_points)} rows")
     print(f"  Props board: {len(data['props_board'])} props")
     print(f"  Best bets rebuilt: {len(data['best_bets'])}")
 
