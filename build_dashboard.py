@@ -123,7 +123,8 @@ def build_html(data):
     html = html.replace('>Stats</button>', '>Model Tracking</button>')
     html = re.sub(r"<script id=\"model-tracking-override\">.*?</script>", "", html, flags=re.DOTALL)
     pattern = r"const\s+DATA\s*=\s*.*?;\s*(?=\n\s*const|\n\s*let|\n\s*function|\n\s*window\.)"
-    new_html = re.sub(pattern, f"const DATA = {data_json};\n", html, flags=re.DOTALL)
+    replacement = f"const DATA = {data_json};\n"
+    new_html = re.sub(pattern, lambda _: replacement, html, flags=re.DOTALL)
     if new_html == html:
         print("  [WARN] Could not find DATA constant to replace — check docs/index.html")
         return False
