@@ -5,6 +5,7 @@ Patches today's predictions JSON after daily_runner.py by:
   - merging The Odds API CSV lines into each game
   - recomputing spread/total edges and confidence
   - rebuilding best_bets as actionable MED/HIGH plays only
+  - adding a spread board and PrizePicks props board
   - adding data_health metadata for the dashboard
 
 Usage:
@@ -83,21 +84,31 @@ def prediction_path(target_date):
     return files[-1]
 
 
-def load_odds(target_date):
-    candidates = [
-        os.path.join(RAW_DIR, f"odds_{target_date}.csv"),
-        os.path.join(RAW_DIR, "odds_today.csv"),
-    ]
+def load_csv(candidates, label):
     for path in candidates:
         if os.path.exists(path):
             try:
                 df = pd.read_csv(path)
-                print(f"  Loaded odds: {path} ({len(df)} rows)")
+                print(f"  Loaded {label}: {path} ({len(df)} rows)")
                 return df
             except Exception as exc:
                 print(f"  [WARN] Could not read {path}: {exc}")
-    print("  [WARN] No odds CSV found")
+    print(f"  [WARN] No {label} CSV found")
     return pd.DataFrame()
+
+
+def load_odds(target_date):
+    return load_csv([
+        os.path.join(RAW_DIR, f"odds_{target_date}.csv"),
+        os.path.join(RAW_DIR, "odds_today.csv"),
+    ], "odds")
+
+
+def load_props(target_date):
+    return load_csv([
+        os.path.join(RAW_DIR, f"props_raw_{target_date}.csv"),
+        os.path.join(RAW_DIR, "props_today.csv"),
+    ], "props")
 
 
 def find_odds_row(odds_df, home, away):
@@ -111,6 +122,75 @@ def find_odds_row(odds_df, home, away):
         if rh == h and ra == a:
             return row
     return None
+
+
+def build_spread_board(games):
+    board = []
+    for game in games:
+        sp = game.get("spread", {})
+        if sp.get("posted_line") is None:
+            status = "WAIT"
+        elif (sp.get("stars") or 1) >= 2:
+            status = "BET"
+        else:
+            status = "WATCH"
+        board.append({
+            "game": f"{game['away']['name']} @ {game['home']['name']}",
+            "tip": game.get("tip"),
+            "market_line": sp.get("posted_line"),
+            "model_line": sp.get("model_line"),
+            "play": sp.get("play") or sp.get("model_line"),
+            "edge": sp.get("edge_abs"),
+            "conf": sp.get("conf", "LOW"),
+            "stars": sp.get("stars", 1),
+            "status": status,
+            "books": game.get("market", {}).get("books", 0),
+        })
+    board.sort(key=lambda x: (x.get("status") != "BET", -(x.get("edge") or 0)))
+    return board
+
+
+def build_props_board(props_df, games):
+    if props_df.empty:
+        return []
+
+    game_team_names = set()
+    for g in games:
+        game_team_names.add(norm_team(g.get("home", {}).get("name")))
+        game_team_names.add(norm_team(g.get("away", {}).get("name")))
+
+    keep_stats = {"pts", "reb", "ast", "threes", "pra"}
+    df = props_df.copy()
+    if "stat" in df.columns:
+        df = df[df["stat"].isin(keep_stats)]
+    if "team" in df.columns and game_team_names:
+        df = df[df["team"].apply(lambda x: norm_team(x) in game_team_names if pd.notna(x) else False)]
+
+    if df.empty:
+        return []
+
+    stat_order = {"pts": 1, "pra": 2, "reb": 3, "ast": 4, "threes": 5}
+    board = []
+    for _, row in df.sort_values(by=["player", "stat"]).iterrows():
+        stat = str(row.get("stat", "")).lower()
+        line = to_float(row.get("line"))
+        board.append({
+            "player": row.get("player", ""),
+            "team": row.get("team", ""),
+            "opp": row.get("opp_team", ""),
+            "stat": stat.upper() if stat != "threes" else "3PM",
+            "line": line,
+            "odds_type": row.get("odds_type", "standard"),
+            "game_time": row.get("game_time", ""),
+            "source": row.get("source", "prizepicks"),
+            "status": "MARKET",
+            "rank_key": stat_order.get(stat, 99),
+        })
+
+    board.sort(key=lambda x: (x.get("player", ""), x.get("rank_key", 99)))
+    for item in board:
+        item.pop("rank_key", None)
+    return board[:80]
 
 
 def rebuild_best_bets(games):
@@ -184,7 +264,9 @@ def patch_predictions(target_date):
         data = json.load(f)
 
     odds_df = load_odds(target_date)
+    props_df = load_props(target_date)
     odds_loaded = not odds_df.empty
+    props_loaded = not props_df.empty
     spreads_found = 0
     totals_found = 0
 
@@ -209,8 +291,6 @@ def patch_predictions(target_date):
         spread = game.setdefault("spread", {})
         model_margin = to_float(spread.get("pred"))
         if posted_spread is not None and model_margin is not None:
-            # posted_spread is the home team's sportsbook spread.
-            # model_margin is projected home margin.
             home_edge = round(model_margin + posted_spread, 1)
             bet_home = home_edge >= 0
             play_team = home if bet_home else away
@@ -246,11 +326,15 @@ def patch_predictions(target_date):
             if totals.get("line") is None:
                 totals.update({"edge": None, "play": None})
 
+    data["spread_board"] = build_spread_board(data.get("games", []))
+    data["props_board"] = build_props_board(props_df, data.get("games", []))
     data["best_bets"] = rebuild_best_bets(data.get("games", []))
     data["data_health"] = {
         "odds": "loaded" if odds_loaded else "missing",
+        "props": "loaded" if props_loaded else "missing",
         "spreads_found": spreads_found,
         "totals_found": totals_found,
+        "props_found": len(data.get("props_board", [])),
         "games": len(data.get("games", [])),
         "actionable_bets": len([b for b in data.get("best_bets", []) if b.get("stars", 0) >= 2]),
         "high_bets": len([b for b in data.get("best_bets", []) if b.get("stars") == 3]),
@@ -262,6 +346,7 @@ def patch_predictions(target_date):
 
     print(f"  Patched predictions: {path}")
     print(f"  Odds health: {spreads_found} spreads, {totals_found} totals")
+    print(f"  Props board: {len(data['props_board'])} props")
     print(f"  Best bets rebuilt: {len(data['best_bets'])}")
 
 
