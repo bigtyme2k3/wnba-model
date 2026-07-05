@@ -43,6 +43,9 @@ jobs:
           fi
           echo "YEAR=$(date -u +%Y)" >> $GITHUB_ENV
 
+      - name: Sync latest repo before generating files
+        run: git pull --rebase origin main
+
       - name: Scrape stats
         run: python collect_stats.py --start 2022 --end ${{ env.YEAR }} --out data/raw
         continue-on-error: true
@@ -84,8 +87,8 @@ jobs:
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add data/ predictions/ docs/
+          git status --short
+          git add -A
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "🏀 Daily update — ${{ env.TARGET }}"
-          git pull --rebase origin main
-          git push
+          git push || (git pull --rebase origin main && git push)
