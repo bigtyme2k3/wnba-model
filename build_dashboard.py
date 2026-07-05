@@ -2,7 +2,7 @@
 build_dashboard.py
 ------------------
 Reads the latest predictions JSON and bakes it into docs/index.html.
-Also injects model tracking data and overrides the Stats tab into Model Tracking.
+Also injects model tracking data and overrides dashboard helpers.
 """
 
 import glob, json, os, re
@@ -99,6 +99,26 @@ def dashboard_override_script():
 (function(){
   const tabs=document.querySelectorAll('.tab');
   tabs.forEach(t=>{ if(t.textContent.trim()==='Stats') t.textContent='Model Tracking'; });
+
+  // Fix Props > Today's Games filter. The Odds API prop rows often have blank
+  // team fields and store the full matchup in `opp`/`game`, so the previous
+  // filter could show All Players but no rows for a selected game.
+  window.rowGameKey=function(p){
+    const norm=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+    const raw=[p.game,p.opp,p.team,p.home_team,p.away_team].map(x=>String(x||'')).join(' ').toUpperCase();
+    const compact=norm(raw);
+    for(const g of (DATA.games||[])){
+      const key=g.away.name+' @ '+g.home.name;
+      const vals=[g.away.name,g.home.name,g.away.abbr,g.home.abbr].map(norm);
+      const awayName=vals[0], homeName=vals[1], awayAbbr=vals[2], homeAbbr=vals[3];
+      const hasAway=compact.includes(awayName)||compact.includes(awayAbbr);
+      const hasHome=compact.includes(homeName)||compact.includes(homeAbbr);
+      if(hasAway && hasHome) return key;
+      if(norm(p.game).includes(norm(key)) || norm(p.opp).includes(norm(key))) return key;
+    }
+    return p.game||p.opp||'UNKNOWN';
+  };
+
   window.renderStats=function(){
     const t=DATA.tracking||DATA.model_tracking||{};
     const byType=t.by_type||{}, byConf=t.by_conf||{};
