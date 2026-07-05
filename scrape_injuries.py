@@ -1,313 +1,241 @@
 """
 scrape_injuries.py
 ------------------
-Scrapes WNBA injury reports and reallocates projected minutes
-to bench players when starters are out.
+Creates daily WNBA injury status files and minute adjustments.
 
 Sources:
-  1. ESPN injuries API  — official injury designations
-  2. Rotowire WNBA      — detailed injury notes (backup)
+  1. ESPN team injury endpoints
+  2. Optional data/raw/injury_overrides.json with optional expires date
 
-Output:
-  data/raw/injuries_today.csv     — current injury report
-  data/raw/minute_projections.csv — adjusted minutes per player per game
-
-Usage:
-    python scrape_injuries.py
-    python scrape_injuries.py --date 2026-07-04
+Outputs:
+  data/raw/injuries_today.csv
+  data/raw/injuries_YYYY-MM-DD.csv
+  data/raw/injuries_historical.csv
+  data/raw/minute_projections.csv
+  data/raw/injuries_status.json
 """
 
-import os, json, time, argparse, requests
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import time
+from datetime import date, datetime, timezone
+
 import pandas as pd
-from datetime import date, datetime
+import requests
 
-OUT_DIR   = "data/raw"
-HEADERS   = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"}
+OUT_DIR = "data/raw"
+HEADERS = {"User-Agent": "Mozilla/5.0 (Linux; Android 13; Tablet) AppleWebKit/537.36 Chrome/120 Safari/537.36"}
 ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba"
-
-# Typical minutes by position when starter sits
-# Based on WNBA rotation patterns
-BENCH_FILL_PCT = {
-    "G": 0.75,   # Guards — bench gets ~75% of starter minutes
-    "F": 0.70,
-    "C": 0.65,
-    "": 0.70,
-}
-
-# ── ESPN injuries ─────────────────────────────────────────────────────────────
+RAW_COLUMNS = ["game_date", "team", "player", "player_id", "position", "status", "severity", "injury_type", "detail", "return_date", "is_out", "source", "scraped_at"]
 
 TEAM_IDS = {
-    "Atlanta Dream":          28,
-    "Chicago Sky":            29,
-    "Connecticut Sun":        30,
-    "Dallas Wings":           27,
-    "Golden State Valkyries": 132052,
-    "Indiana Fever":          32,
-    "Las Vegas Aces":         33,
-    "Los Angeles Sparks":     34,
-    "Minnesota Lynx":         35,
-    "New York Liberty":       36,
-    "Phoenix Mercury":        37,
-    "Portland Fire":          132051,
-    "Seattle Storm":          38,
-    "Toronto Tempo":          132053,
-    "Washington Mystics":     39,
+    "Atlanta Dream": 28, "Chicago Sky": 29, "Connecticut Sun": 30, "Dallas Wings": 27,
+    "Golden State Valkyries": 132052, "Indiana Fever": 32, "Las Vegas Aces": 33,
+    "Los Angeles Sparks": 34, "Minnesota Lynx": 35, "New York Liberty": 36,
+    "Phoenix Mercury": 37, "Portland Fire": 132051, "Seattle Storm": 38,
+    "Toronto Tempo": 132053, "Washington Mystics": 39,
 }
 
 STATUS_SEVERITY = {
-    "Out":           "OUT",
-    "Doubtful":      "DOUBTFUL",
-    "Questionable":  "QUESTIONABLE",
-    "Probable":      "PROBABLE",
-    "Day-To-Day":    "QUESTIONABLE",
-    "IR":            "OUT",
-    "Suspended":     "OUT",
+    "out": "OUT", "doubtful": "DOUBTFUL", "questionable": "QUESTIONABLE", "probable": "PROBABLE",
+    "day-to-day": "QUESTIONABLE", "day to day": "QUESTIONABLE", "ir": "OUT", "suspended": "OUT",
 }
 
+BENCH_FILL_PCT = {"G": 0.75, "F": 0.70, "C": 0.65, "": 0.70}
+DEFAULT_MINUTES = {"A'ja Wilson": 32, "Kelsey Plum": 30, "Jackie Young": 31, "Chelsea Gray": 28, "Breanna Stewart": 33, "Sabrina Ionescu": 34, "Jonquel Jones": 29, "Napheesa Collier": 34, "Caitlin Clark": 35, "Arike Ogunbowale": 33, "Angel Reese": 30}
+BENCH_DEPTH = {"Las Vegas Aces": [("Kate Martin", 22), ("Tiffany Hayes", 18)], "New York Liberty": [("Leonie Fiebich", 22), ("Betnijah Laney", 20)], "Dallas Wings": [("Natasha Howard", 22), ("Odyssey Sims", 18)], "Chicago Sky": [("Chennedy Carter", 24), ("Isabelle Harrison", 20)], "Indiana Fever": [("Kelsey Mitchell", 30), ("Aliyah Boston", 28)]}
+
+
+def normalize_status(value):
+    s = str(value or "").strip().lower()
+    for key, label in STATUS_SEVERITY.items():
+        if key in s:
+            return label
+    return "UNKNOWN" if s else "ACTIVE"
+
+
+def empty_df():
+    return pd.DataFrame(columns=RAW_COLUMNS)
+
+
 def fetch_espn_injuries(team_name: str, team_id: int) -> list:
-    """Fetch injury report for one team from ESPN."""
-    url  = f"{ESPN_BASE}/teams/{team_id}/injuries"
+    url = f"{ESPN_BASE}/teams/{team_id}/injuries"
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=10)
+        resp = requests.get(url, headers=HEADERS, timeout=12)
         if resp.status_code == 404:
             return []
         resp.raise_for_status()
         data = resp.json()
-    except Exception as e:
+    except Exception:
         return []
 
     injuries = []
-    for item in data.get("injuries", []):
-        athlete = item.get("athlete", {})
-        status  = item.get("status","")
-        inj_type= item.get("type","")
-        detail  = item.get("details", {})
-
-        severity = STATUS_SEVERITY.get(status, "UNKNOWN")
-        if severity == "UNKNOWN":
+    now = datetime.now(timezone.utc).isoformat()
+    for item in data.get("injuries", []) or []:
+        athlete = item.get("athlete", {}) or {}
+        raw_status = item.get("status") or item.get("type") or item.get("shortComment") or ""
+        detail = item.get("details", {}) if isinstance(item.get("details"), dict) else {}
+        severity = normalize_status(raw_status)
+        if severity in {"ACTIVE", "UNKNOWN"}:
             continue
-
-        pos = athlete.get("position", {}).get("abbreviation", "")
         injuries.append({
-            "team":        team_name,
-            "player":      athlete.get("displayName",""),
-            "player_id":   athlete.get("id",""),
-            "position":    pos,
-            "status":      status,
-            "severity":    severity,
-            "injury_type": inj_type,
-            "detail":      detail.get("detail",""),
-            "return_date": detail.get("returnDate",""),
-            "is_out":      severity in ("OUT","DOUBTFUL"),
-            "scraped_at":  datetime.now().isoformat(),
+            "game_date": "", "team": team_name, "player": athlete.get("displayName", "") or athlete.get("fullName", ""),
+            "player_id": athlete.get("id", ""), "position": (athlete.get("position", {}) or {}).get("abbreviation", ""),
+            "status": raw_status or severity, "severity": severity, "injury_type": item.get("type", ""),
+            "detail": detail.get("detail", "") or item.get("longComment", "") or item.get("shortComment", ""),
+            "return_date": detail.get("returnDate", ""), "is_out": severity in {"OUT", "DOUBTFUL"},
+            "source": "espn", "scraped_at": now,
         })
-
     return injuries
 
 
-def fetch_all_injuries(out_dir: str, target_date: str) -> pd.DataFrame:
-    """Pull injury reports for all 15 WNBA teams."""
-    print(f"Fetching injury reports for {target_date}...")
-    all_injuries = []
+def load_overrides(out_dir: str, target_date: str) -> list:
+    path = os.path.join(out_dir, "injury_overrides.json")
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path) as f:
+            data = json.load(f)
+    except Exception as exc:
+        print(f"  [WARN] Could not read injury overrides: {exc}")
+        return []
+    rows = []
+    now = datetime.now(timezone.utc).isoformat()
+    for player, info in (data or {}).items():
+        if isinstance(info, str):
+            info = {"status": info}
+        expires = str(info.get("expires", "")).strip()
+        if expires and expires < target_date:
+            continue
+        severity = normalize_status(info.get("status", ""))
+        rows.append({
+            "game_date": target_date, "team": info.get("team", ""), "player": player, "player_id": "",
+            "position": info.get("position", ""), "status": info.get("status", severity), "severity": severity,
+            "injury_type": info.get("injury_type", ""), "detail": info.get("note", ""),
+            "return_date": expires, "is_out": severity in {"OUT", "DOUBTFUL"}, "source": info.get("source", "manual"), "scraped_at": now,
+        })
+    return rows
 
+
+def fetch_all_injuries(out_dir: str, target_date: str) -> pd.DataFrame:
+    print(f"Fetching injury reports for {target_date}...")
+    rows = []
     for team, tid in TEAM_IDS.items():
         injuries = fetch_espn_injuries(team, tid)
-        all_injuries.extend(injuries)
+        rows.extend(injuries)
         if injuries:
-            out_names = [i["player"] for i in injuries if i["is_out"]]
-            q_names   = [i["player"] for i in injuries if not i["is_out"]]
-            if out_names:
-                print(f"  {team}: OUT — {', '.join(out_names)}")
-            if q_names:
-                print(f"  {team}: Q   — {', '.join(q_names)}")
-        time.sleep(0.3)
-
-    df = pd.DataFrame(all_injuries)
+            print(f"  {team}: {', '.join([i['player'] + ' ' + i['severity'] for i in injuries if i.get('player')])}")
+        time.sleep(0.25)
+    rows.extend(load_overrides(out_dir, target_date))
+    df = pd.DataFrame(rows, columns=RAW_COLUMNS) if rows else empty_df()
     if not df.empty:
         df["game_date"] = target_date
-        path = os.path.join(out_dir, "injuries_today.csv")
-        df.to_csv(path, index=False)
-        hist_path = os.path.join(out_dir, "injuries_historical.csv")
+        df = df.drop_duplicates(subset=["player"], keep="last")
+    os.makedirs(out_dir, exist_ok=True)
+    today_path = os.path.join(out_dir, "injuries_today.csv")
+    dated_path = os.path.join(out_dir, f"injuries_{target_date}.csv")
+    df.to_csv(today_path, index=False)
+    df.to_csv(dated_path, index=False)
+    hist_path = os.path.join(out_dir, "injuries_historical.csv")
+    if not df.empty:
         if os.path.exists(hist_path):
             hist = pd.read_csv(hist_path)
-            hist = hist[hist["game_date"] != target_date]
+            if "game_date" in hist.columns:
+                hist = hist[hist["game_date"] != target_date]
             pd.concat([hist, df], ignore_index=True).to_csv(hist_path, index=False)
         else:
             df.to_csv(hist_path, index=False)
-        print(f"\n  {len(df)} injury designations saved → {path}")
-    else:
-        print("  No injuries found (all teams healthy or data unavailable)")
-
+    print(f"  Saved → {today_path} ({len(df)} rows)")
+    print(f"  Saved → {dated_path}")
     return df
 
 
-# ── Minute reallocation ───────────────────────────────────────────────────────
-
-# Default starter minute profiles (updated from wehoop player box data)
-DEFAULT_MINUTES = {
-    "A'ja Wilson":         32, "Kelsey Plum":        30, "Jackie Young":       31,
-    "Chelsea Gray":        28, "Breanna Stewart":    33, "Sabrina Ionescu":    34,
-    "Jonquel Jones":       29, "Napheesa Collier":   34, "Courtney Williams":  27,
-    "Alyssa Thomas":       34, "DeWanna Bonner":     28, "Caitlin Clark":      35,
-    "Aliyah Boston":       28, "Nneka Ogwumike":     29, "Skylar Diggins":     31,
-    "Angel Reese":         30, "Marina Mabrey":      28, "Arike Ogunbowale":   33,
-    "Rhyne Howard":        32, "Elena Delle Donne":  29, "Dearica Hamby":      30,
-}
-
-# Bench players who absorb minutes (team → list of bench players with avg min)
-BENCH_DEPTH = {
-    "Las Vegas Aces":         [("Kate Martin",    22), ("Tiffany Hayes",   18)],
-    "New York Liberty":       [("Leonie Fiebich", 22), ("Betnijah Laney",  20)],
-    "Minnesota Lynx":         [("Olivia Miles",   24), ("Natasha Howard",  20)],
-    "Connecticut Sun":        [("Marina Mabrey",  20), ("Brionna Jones",   18)],
-    "Indiana Fever":          [("NaLyssa Smith",  22), ("Kelsey Mitchell", 20)],
-    "Seattle Storm":          [("Jewell Loyd",    28), ("Victoria Vivians",18)],
-    "Atlanta Dream":          [("Allisha Gray",   25), ("Tina Charles",    22)],
-    "Dallas Wings":           [("Natasha Howard", 22), ("Odyssey Sims",    18)],
-    "Chicago Sky":            [("Chennedy Carter",24), ("Isabelle Harrison",20)],
-    "Phoenix Mercury":        [("Sophie Cunningham",22),("Diana Taurasi",  24)],
-    "Golden State Valkyries": [("Kayla Thornton", 22), ("Rebecca Harris",  18)],
-    "Washington Mystics":     [("Ariel Atkins",   24), ("Julie Allemand",  20)],
-    "Los Angeles Sparks":     [("Lexie Brown",    22), ("Azura Stevens",   20)],
-    "Toronto Tempo":          [("Kayla McBride",  26), ("Sonia Citron",    20)],
-    "Portland Fire":          [("Gabby Williams", 24), ("Satou Sabally",   22)],
-}
-
-
 def reallocate_minutes(injuries_df: pd.DataFrame, games: list) -> dict:
-    """
-    For each game, compute adjusted minute projections accounting for injuries.
-
-    Returns dict: {player_name: adjusted_minutes}
-    """
     if injuries_df.empty:
         return {}
-
-    # Players definitely out
-    out_players = set(
-        injuries_df[injuries_df["is_out"]]["player"].tolist()
-    )
-    # Players questionable (50% minute reduction)
-    q_players = set(
-        injuries_df[~injuries_df["is_out"]]["player"].tolist()
-    )
-
+    if "is_out" not in injuries_df.columns:
+        injuries_df["is_out"] = injuries_df.get("severity", "").astype(str).isin(["OUT", "DOUBTFUL"])
     adjustments = {}
-
-    # Get teams playing today
     teams_playing = set()
-    for g in games:
-        teams_playing.add(g.get("home",""))
-        teams_playing.add(g.get("away",""))
-
+    for g in games or []:
+        teams_playing.add(g.get("home", "")); teams_playing.add(g.get("away", ""))
+    if not teams_playing:
+        teams_playing = set(injuries_df.get("team", pd.Series(dtype=str)).dropna().astype(str))
     for team in teams_playing:
         bench = BENCH_DEPTH.get(team, [])
-        total_missing_min = 0
-
-        # Find starters who are out for this team
-        team_out = injuries_df[
-            (injuries_df["team"] == team) & injuries_df["is_out"]
-        ]["player"].tolist()
-
-        team_q = injuries_df[
-            (injuries_df["team"] == team) & ~injuries_df["is_out"]
-        ]["player"].tolist()
-
-        for player in team_out:
-            missing = DEFAULT_MINUTES.get(player, 25)
-            total_missing_min += missing
-            adjustments[player] = 0  # Out — zero minutes
-            print(f"  {player} ({team}): OUT — 0 min (was ~{missing})")
-
-        for player in team_q:
-            orig = DEFAULT_MINUTES.get(player, 25)
-            adj  = orig * 0.6  # Questionable: 60% of normal
-            adjustments[player] = adj
-            print(f"  {player} ({team}): QUESTIONABLE — {adj:.0f} min (was ~{orig})")
-
-        # Distribute missing minutes to bench
-        if total_missing_min > 0 and bench:
-            per_bench = total_missing_min / len(bench)
+        team_df = injuries_df[injuries_df.get("team", "") == team] if "team" in injuries_df.columns else injuries_df
+        total_missing = 0
+        for _, row in team_df.iterrows():
+            player = row.get("player", "")
+            sev = str(row.get("severity", "")).upper()
+            if sev in {"OUT", "DOUBTFUL"} or bool(row.get("is_out", False)):
+                missing = DEFAULT_MINUTES.get(player, 25)
+                total_missing += missing
+                adjustments[player] = 0
+            elif sev == "QUESTIONABLE":
+                adjustments[player] = DEFAULT_MINUTES.get(player, 25) * 0.6
+            elif sev == "PROBABLE":
+                adjustments[player] = DEFAULT_MINUTES.get(player, 25) * 0.9
+        if total_missing > 0 and bench:
+            per_bench = total_missing / len(bench)
             for bench_player, base_min in bench:
-                pos = ""
-                fill_pct = BENCH_FILL_PCT.get(pos, 0.70)
-                extra = per_bench * fill_pct
-                new_min = base_min + extra
-                new_min = min(new_min, 36)  # Cap at 36 min
-                adjustments[bench_player] = new_min
-                print(f"  {bench_player} ({team}): PROMOTED — {new_min:.0f} min (+{extra:.0f})")
-
+                adjustments[bench_player] = min(36, base_min + per_bench * BENCH_FILL_PCT.get("", 0.70))
     return adjustments
 
 
 def save_projections(adjustments: dict, games: list, out_dir: str, target_date: str):
-    """Save minute projections to CSV."""
-    rows = []
-    for player, minutes in adjustments.items():
-        rows.append({
-            "game_date":  target_date,
-            "player":     player,
-            "proj_min":   round(minutes, 1),
-            "adjusted":   True,
-        })
-    if rows:
-        df = pd.DataFrame(rows)
+    rows = [{"game_date": target_date, "player": p, "proj_min": round(m, 1), "adjusted": True} for p, m in adjustments.items()]
+    df = pd.DataFrame(rows)
+    if not df.empty:
         path = os.path.join(out_dir, "minute_projections.csv")
         df.to_csv(path, index=False)
-        print(f"\n  Minute projections → {path} ({len(df)} players adjusted)")
-        return df
-    return pd.DataFrame()
+        print(f"  Minute projections → {path} ({len(df)} players adjusted)")
+    return df
 
-
-# ── Impact on props model ─────────────────────────────────────────────────────
 
 def apply_injury_adjustments(player_games: list, adjustments: dict) -> list:
-    """
-    Apply minute adjustments to player game inputs before props prediction.
-    Call this in daily_runner.py before running props model.
-    """
     adjusted = []
     for pg in player_games:
-        player = pg.get("player","")
+        player = pg.get("player", "")
         if player in adjustments:
             new_min = adjustments[player]
             orig_min = pg.get("proj_minutes", pg.get("mpg", 28))
+            pg["injury_adjusted"] = True
             if new_min == 0:
-                pg["proj_minutes"]  = 0
-                pg["is_out"]        = True
+                pg["proj_minutes"] = 0; pg["is_out"] = True
             else:
                 scale = new_min / max(orig_min, 1)
-                pg["proj_minutes"]  = new_min
-                pg["roll5_pts"]     = pg.get("roll5_pts", 15) * scale
-                pg["roll5_reb"]     = pg.get("roll5_reb", 5)  * scale
-                pg["roll5_ast"]     = pg.get("roll5_ast", 3)  * scale
-                pg["roll5_threes"]  = pg.get("roll5_threes",1)* scale
-                pg["roll5_pra"]     = pg.get("roll5_pra", 23) * scale
+                pg["proj_minutes"] = new_min
+                for k in ["roll5_pts", "roll5_reb", "roll5_ast", "roll5_threes", "roll5_pra"]:
+                    if k in pg:
+                        pg[k] = pg[k] * scale
         adjusted.append(pg)
     return adjusted
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
-
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--date",    default=str(date.today()))
-    parser.add_argument("--out",     default="data/raw")
+    parser.add_argument("--date", default=str(date.today()))
+    parser.add_argument("--out", default=OUT_DIR)
     args = parser.parse_args()
-
     os.makedirs(args.out, exist_ok=True)
     print(f"\n═══ Injury Report + Minute Projections — {args.date} ═══\n")
-
-    injuries_df = fetch_all_injuries(args.out, args.date)
-
-    # Example games (in production comes from daily_runner)
-    games = []
-    adjustments = reallocate_minutes(injuries_df, games)
-    save_projections(adjustments, games, args.out, args.date)
-
-    out_count = len(injuries_df[injuries_df["is_out"]]) if not injuries_df.empty else 0
-    q_count   = len(injuries_df[~injuries_df["is_out"]]) if not injuries_df.empty else 0
-    print(f"\n  Summary: {out_count} OUT, {q_count} Questionable")
+    status = {"status": "unknown", "target_date": args.date, "rows": 0, "out": 0, "questionable": 0, "error": None}
+    try:
+        injuries_df = fetch_all_injuries(args.out, args.date)
+        adjustments = reallocate_minutes(injuries_df, [])
+        save_projections(adjustments, [], args.out, args.date)
+        status.update({"status": "ok", "rows": int(len(injuries_df)), "out": int(injuries_df["is_out"].sum()) if not injuries_df.empty else 0, "questionable": int((injuries_df.get("severity", pd.Series(dtype=str)) == "QUESTIONABLE").sum()) if not injuries_df.empty else 0})
+    except Exception as exc:
+        status.update({"status": "error", "error": str(exc)})
+        print(f"  [WARN] Injury step failed: {exc}")
+        empty_df().to_csv(os.path.join(args.out, "injuries_today.csv"), index=False)
+    with open(os.path.join(args.out, "injuries_status.json"), "w") as f:
+        json.dump(status, f, indent=2)
+    print(f"  Summary: {status['out']} OUT/DOUBTFUL, {status['questionable']} QUESTIONABLE")
     print("✅ Injury scrape complete.")
 
 
