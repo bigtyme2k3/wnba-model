@@ -34,6 +34,22 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Validate Python syntax
+        run: |
+          python -m py_compile \
+            scrape_odds.py \
+            scrape_odds_props.py \
+            scrape_wnba_stats.py \
+            scrape_scores.py \
+            merge_data.py \
+            daily_runner.py \
+            player_points.py \
+            postprocess_predictions.py \
+            build_dashboard.py \
+            validate_odds.py \
+            validate_props.py \
+            validate_dashboard.py
+
       - name: Set target date
         run: |
           if [ -n "${{ github.event.inputs.date }}" ]; then
@@ -46,9 +62,10 @@ jobs:
       - name: Sync latest repo before generating files
         run: git pull --rebase origin main
 
-      - name: Scrape stats
-        run: python collect_stats.py --start 2022 --end ${{ env.YEAR }} --out data/raw
-        continue-on-error: true
+      - name: Legacy Basketball Reference skipped
+        run: |
+          echo "Basketball Reference HTML scrape is retired from the daily path."
+          echo "Using committed historical data plus ESPN, stats.wnba.com, and The Odds API."
 
       - name: Scrape odds
         env:
@@ -93,6 +110,9 @@ jobs:
 
       - name: Build dashboard
         run: python build_dashboard.py
+
+      - name: Validate dashboard
+        run: python validate_dashboard.py
 
       - name: Commit and push
         run: |
