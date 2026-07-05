@@ -40,6 +40,8 @@ jobs:
       - name: Validate Python syntax
         run: |
           python -m py_compile \
+            betting_engine.py \
+            results_tracker.py \
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_wnba_stats.py \
@@ -95,6 +97,10 @@ jobs:
 
       - name: Scrape scores
         run: python scrape_scores.py --date ${{ env.TARGET }} --out data/raw --boxscores
+        continue-on-error: true
+
+      - name: Track results
+        run: python results_tracker.py --date ${{ env.TARGET }}
         continue-on-error: true
 
       - name: Merge data
