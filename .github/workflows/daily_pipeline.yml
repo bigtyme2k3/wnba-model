@@ -66,6 +66,9 @@ jobs:
         run: python player_points.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
+      - name: Validate props
+        run: python validate_props.py --date ${{ env.TARGET }} --raw data/raw --non-strict
+
       - name: Scrape scores
         run: python scrape_scores.py --date ${{ env.TARGET }} --out data/raw --boxscores
         continue-on-error: true
