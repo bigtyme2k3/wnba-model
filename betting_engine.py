@@ -5,9 +5,11 @@ Shared betting utilities for the WNBA dashboard.
 
 Adds:
   - Expected value calculations for American odds
-  - Edge-to-probability conversion for spreads/totals/props
+  - Fair odds / implied probability
+  - Conservative edge-to-probability conversion
+  - Decision score 0-100
   - Automatic bet scoring/ranking
-  - Lightweight model tracking summary from graded historical predictions
+  - Lightweight model tracking summary
 """
 
 from __future__ import annotations
@@ -30,6 +32,17 @@ def implied_prob_american(odds):
     if odds < 0:
         return abs(odds) / (abs(odds) + 100.0)
     return 100.0 / (odds + 100.0)
+
+
+def american_from_prob(prob):
+    """Convert no-vig/fair probability to American fair odds."""
+    try:
+        p = max(0.001, min(0.999, float(prob)))
+    except Exception:
+        p = 0.5
+    if p >= 0.5:
+        return int(round(-(p / (1 - p)) * 100))
+    return int(round(((1 - p) / p) * 100))
 
 
 def payout_profit_per_unit(odds):
@@ -69,6 +82,8 @@ def kelly_fraction(prob, odds=-110, fraction=0.25, cap=0.05):
 
 
 def grade_bucket(ev, stars):
+    if ev >= 0.15 and stars >= 3:
+        return "A+"
     if ev >= 0.10 and stars >= 3:
         return "A"
     if ev >= 0.05 and stars >= 2:
@@ -78,30 +93,86 @@ def grade_bucket(ev, stars):
     return "PASS"
 
 
+def decision_score(prob, odds, edge=0, stars=1, injury_status="ACTIVE", market_books=1):
+    """Professional-style 0-100 score based on EV, edge, confidence, injury, and market depth."""
+    ev = expected_value(prob, odds)
+    try:
+        edge_abs = abs(float(edge or 0))
+    except Exception:
+        edge_abs = 0.0
+    score = 50
+    score += min(25, max(0, ev * 120))
+    score += min(12, edge_abs * 2.5)
+    score += int(stars or 1) * 4
+    score += min(6, int(market_books or 1) * 1.5)
+    status = str(injury_status or "ACTIVE").upper()
+    if status == "QUESTIONABLE":
+        score -= 10
+    elif status == "PROBABLE":
+        score -= 4
+    elif status in {"OUT", "DOUBTFUL"}:
+        score = 0
+    return int(round(max(0, min(100, score))))
+
+
+def decision_label(score):
+    if score >= 92:
+        return "ELITE"
+    if score >= 85:
+        return "STRONG"
+    if score >= 75:
+        return "GOOD"
+    if score >= 65:
+        return "LEAN"
+    return "PASS"
+
+
+def explain_edge(b):
+    parts = []
+    if b.get("ev_pct") is not None:
+        parts.append(f"EV {b.get('ev_pct')}%")
+    if b.get("edge") is not None:
+        parts.append(f"edge {b.get('edge')}")
+    if b.get("best_book_title") or b.get("best_book"):
+        parts.append(f"best at {b.get('best_book_title') or b.get('best_book')}")
+    if b.get("injury_status") and b.get("injury_status") != "ACTIVE":
+        parts.append(f"injury {b.get('injury_status')}")
+    if b.get("available_books"):
+        parts.append(f"{b.get('available_books')} books")
+    return " · ".join(parts) if parts else "Model edge and market price combined."
+
+
 def enrich_bet(bet, market_type=None):
     b = dict(bet)
     typ = (market_type or b.get("type") or "BET").upper()
-    odds = b.get("odds") or b.get("price") or b.get("over_price") or b.get("under_price") or -110
+    odds = b.get("best_odds") or b.get("odds") or b.get("price") or b.get("over_price") or b.get("under_price") or -110
     prob = b.get("model_prob") or edge_to_prob(b.get("edge", b.get("edge_abs", 0)), typ)
     ev = expected_value(prob, odds)
     stars = int(b.get("stars", 1) or 1)
+    score = decision_score(prob, odds, b.get("edge", b.get("edge_abs", 0)), stars, b.get("injury_status", "ACTIVE"), b.get("available_books", 1))
     b.update({
         "type": typ,
         "odds": odds,
         "model_prob": prob,
+        "model_prob_pct": round(prob * 100, 1),
         "implied_prob": round(implied_prob_american(odds), 4),
+        "implied_prob_pct": round(implied_prob_american(odds) * 100, 1),
+        "fair_odds": american_from_prob(prob),
         "ev": ev,
         "ev_pct": round(ev * 100, 1),
         "kelly_frac": kelly_fraction(prob, odds),
         "units": round(kelly_fraction(prob, odds) / 0.05, 2),
         "grade": grade_bucket(ev, stars),
+        "score": score,
+        "score_label": decision_label(score),
     })
+    b["ev_reason"] = b.get("ev_reason") or explain_edge(b)
     return b
 
 
 def rank_bets(bets, limit=20):
     enriched = [enrich_bet(b) for b in bets]
-    enriched.sort(key=lambda b: (-{"A": 4, "B": 3, "C": 2, "PASS": 1}.get(b.get("grade"), 0), -float(b.get("ev", 0) or 0), -int(b.get("stars", 1) or 1), -abs(float(b.get("edge", b.get("edge_abs", 0)) or 0))))
+    enriched.sort(key=lambda b: (-float(b.get("score", 0) or 0), -{"A+": 5, "A": 4, "B": 3, "C": 2, "PASS": 1}.get(b.get("grade"), 0), -float(b.get("ev", 0) or 0), -int(b.get("stars", 1) or 1), -abs(float(b.get("edge", b.get("edge_abs", 0)) or 0))))
     for i, b in enumerate(enriched[:limit], 1):
         b["rank"] = i
     return enriched[:limit]
