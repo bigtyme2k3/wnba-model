@@ -100,23 +100,37 @@ def dashboard_override_script():
   const tabs=document.querySelectorAll('.tab');
   tabs.forEach(t=>{ if(t.textContent.trim()==='Stats') t.textContent='Model Tracking'; });
 
-  // Fix Props > Today's Games filter. The Odds API prop rows often have blank
-  // team fields and store the full matchup in `opp`/`game`, so the previous
-  // filter could show All Players but no rows for a selected game.
   window.rowGameKey=function(p){
     const norm=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
     const raw=[p.game,p.opp,p.team,p.home_team,p.away_team].map(x=>String(x||'')).join(' ').toUpperCase();
     const compact=norm(raw);
     for(const g of (DATA.games||[])){
       const key=g.away.name+' @ '+g.home.name;
-      const vals=[g.away.name,g.home.name,g.away.abbr,g.home.abbr].map(norm);
-      const awayName=vals[0], homeName=vals[1], awayAbbr=vals[2], homeAbbr=vals[3];
+      const awayName=norm(g.away.name), homeName=norm(g.home.name), awayAbbr=norm(g.away.abbr), homeAbbr=norm(g.home.abbr);
       const hasAway=compact.includes(awayName)||compact.includes(awayAbbr);
       const hasHome=compact.includes(homeName)||compact.includes(homeAbbr);
       if(hasAway && hasHome) return key;
-      if(norm(p.game).includes(norm(key)) || norm(p.opp).includes(norm(key))) return key;
     }
     return p.game||p.opp||'UNKNOWN';
+  };
+
+  window.renderProps=function(){
+    const safe=(v,d='—')=>v===null||v===undefined||v===''||String(v)==='nan'?d:v;
+    const pct=x=>typeof x==='number'?Math.round(x*100)+'%':'—';
+    const arr=v=>{if(Array.isArray(v))return v;if(!v)return[];try{let p=JSON.parse(v);return Array.isArray(p)?p:[]}catch(e){return[]}};
+    const rankClass=r=>{r=Number(r||8);return r<=5?'rank-tough':r<=10?'rank-mid':'rank-easy'};
+    const statClass=p=>p.conf==='HIGH'?'stat-pill high':'stat-pill';
+    const hitLabel=(v,sig)=>sig?`${pct(v)} ${sig}`:'—';
+    const l5Boxes=p=>{let vals=arr(p.last5_vals).slice(0,5),opps=arr(p.last5_opps).slice(0,5),line=Number(p.line),sig=p.signal;if(!vals.length)return'—';return`<div class="l5-wrap">${vals.map((v,i)=>{let cls='l5-neutral';if(sig){let hit=sig==='UNDER'?v<line:v>line;cls=hit?'l5-hit':'l5-miss'}return`<div class="l5-box"><div class="l5-num ${cls}">${v}</div><div class="l5-opp">${safe(opps[i],'')}</div></div>`}).join('')}</div>`};
+    const gameKey=(a,h)=>a+' @ '+h;
+    const props=(DATA.props||DATA.player_points||DATA.props_board||[]).filter(p=>p.line!==null&&p.line!==undefined&&p.line!==''&&p.market_status!=='NO MARKET'&&p.injury_status!=='OUT'&&p.injury_status!=='DOUBTFUL');
+    const games=DATA.games||[];
+    let gameCards=`<article class="props-game all ${propsGame==='ALL'?'active':''}" onclick="setPropsGame('ALL')"><div class="game-time">ALL</div><div class="team-line">All Players</div></article>`+games.map(g=>{let k=gameKey(g.away.name,g.home.name);return`<article class="props-game ${propsGame===k?'active':''}" onclick="setPropsGame('${k.replace(/'/g,"\\'")}')"><div class="game-time">${fmtTime(g.tip)}</div><div class="team-line">${g.away.abbr} @ ${g.home.abbr}</div><div class="board-sub">${g.away.name} @ ${g.home.name}</div></article>`}).join('');
+    let stats=['ALL','PTS','REB','AST','3PM','PRA'];
+    let filtered=props.map(p=>Object.assign({},p,{_game:window.rowGameKey(p)})).filter(p=>(propsGame==='ALL'||p._game===propsGame)&&(propsStat==='ALL'||String(p.stat).toUpperCase()===propsStat));
+    filtered.sort((a,b)=>(b.conf==='HIGH')-(a.conf==='HIGH')||(b.conf==='MED')-(a.conf==='MED')||Math.abs(b.edge||0)-Math.abs(a.edge||0));
+    let table=filtered.length?`<div class="props-scroll"><div class="props-table"><div class="props-head"><div>Player</div><div>Stat</div><div>Line</div><div>Over</div><div>Under</div><div>Projected</div><div>Last 5</div><div>L5 Hit</div><div>L10 Hit</div><div>H2H L5</div><div>Opp Rank</div></div>${filtered.map(p=>`<article class="prop-row ${p.conf||'LOW'}"><div><div class="player-name">${safe(p.player)}</div><div class="player-meta">${safe(p.team)} · ${safe(p.pos)} · ${safe(p.injury_status,'ACTIVE')} · ${safe(p.opp)}</div></div><div><span class="${statClass(p)}">${safe(p.stat)}</span></div><div class="board-value">${safe(p.line)}</div><div class="signal-over">${p.signal==='OVER'?'OVER':'—'}</div><div class="signal-under">${p.signal==='UNDER'?'UNDER':'—'}</div><div class="${p.line?'proj-bright':'proj-dim'}">${safe(p.pred)}</div><div>${l5Boxes(p)}</div><div>${hitLabel(p.last5_hit,p.signal)}</div><div>${hitLabel(p.last10_hit,p.signal)}</div><div>${arr(p.h2h_last5).length?arr(p.h2h_last5).join(', '):'—'}</div><div class="${rankClass(p.opp_rank)}">${safe(p.opp_rank)}</div></article>`).join('')}</div></div>`:`<div class="empty">No props for this selected game/stat filter. Try ALL or another stat.</div>`;
+    document.getElementById('tab-props').innerHTML=`<div class="section-title">Today's Games</div><div class="props-games">${gameCards}</div><div class="section-title">Filters</div><div class="filter-bar">${stats.map(s=>`<button class="filter-btn ${propsStat===s?'active':''}" onclick="setPropsStat('${s}')">${s}</button>`).join('')}</div><div class="section-title">Props Table</div>${table}`;
   };
 
   window.renderStats=function(){
