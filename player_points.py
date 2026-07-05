@@ -8,6 +8,11 @@ Safety rules:
   - OUT/DOUBTFUL players are removed
   - QUESTIONABLE/PROBABLE players are downgraded
   - game key is always exact Away @ Home for dashboard filters
+
+Projection v3:
+  - player baselines are used when available
+  - when a player baseline is missing, sportsbook over/under prices create a
+    small market-implied lean so the row can still become active
 """
 
 from __future__ import annotations
@@ -103,7 +108,7 @@ def confidence(edge):
     if edge is None: return "LOW", None
     ae = abs(edge)
     if ae >= 2.0: return "HIGH", "OVER" if edge > 0 else "UNDER"
-    if ae >= 1.0: return "MED", "OVER" if edge > 0 else "UNDER"
+    if ae >= 0.35: return "MED", "OVER" if edge > 0 else "UNDER"
     return "LOW", None
 
 
@@ -122,10 +127,23 @@ def stat_baseline(base, stat, line):
     return line
 
 
-def project_stat(stat, base, line, injury_status="ACTIVE"):
+def market_price_lean(over_price, under_price):
+    """Convert sportsbook price imbalance into a small projection edge."""
+    over_imp = implied_prob_american(safe_float(over_price, -110))
+    under_imp = implied_prob_american(safe_float(under_price, -110))
+    total = max(over_imp + under_imp, 0.0001)
+    over_fair = over_imp / total
+    # 50/50 is neutral. Every 10 fair-probability points creates about 0.7 stat points.
+    lean = (over_fair - 0.50) * 7.0
+    return max(-1.75, min(1.75, lean)), over_fair
+
+
+def project_stat(stat, base, line, injury_status="ACTIVE", over_price=-110, under_price=-110):
+    price_lean, over_fair = market_price_lean(over_price, under_price)
     season_avg = stat_baseline(base, stat, line)
     if not base:
-        return round(line, 1), round(season_avg, 1), "No player baseline found yet; market line used as neutral placeholder."
+        pred = line + price_lean
+        return round(pred, 1), round(line, 1), f"market-implied v3: sportsbook over probability {round(over_fair*100,1)}%, no trusted player baseline yet."
     usage = safe_float(base.get("usage", 0.25), 0.25)
     ts = safe_float(base.get("ts_pct", base.get("ts", 0.55)), 0.55)
     mpg = safe_float(base.get("mpg", 30), 30)
@@ -136,9 +154,10 @@ def project_stat(stat, base, line, injury_status="ACTIVE"):
     pace_adj = (pace - 80.0) * (0.03 if stat in {"pts", "pra"} else 0.01)
     usage_adj = (usage - 0.25) * (10.0 if stat in {"pts", "pra"} else 2.0)
     efficiency_adj = (ts - 0.55) * (8.0 if stat in {"pts", "pra", "threes"} else 1.5)
-    pred = season_avg + usage_adj + efficiency_adj + minutes_adj + pace_adj
+    # Blend model baseline with market-implied lean so lines are active without overreacting.
+    pred = season_avg + usage_adj + efficiency_adj + minutes_adj + pace_adj + (price_lean * 0.55)
     injury_note = f" Injury status {injury_status} applied." if injury_status in {"QUESTIONABLE", "PROBABLE"} else ""
-    return round(float(pred), 1), round(float(season_avg), 1), f"v2 from {base.get('source', 'baseline')}: baseline plus usage, efficiency, minutes, and pace adjustment.{injury_note}"
+    return round(float(pred), 1), round(float(season_avg), 1), f"v3 blend from {base.get('source', 'baseline')}: baseline, usage, efficiency, minutes, pace, and sportsbook price lean.{injury_note}"
 
 
 def pseudo_recent_values(pred, player, stat, n=10):
@@ -171,10 +190,8 @@ def exact_game_key(row):
     home = str(row.get("home_team", "")).strip()
     away = str(row.get("away_team", "")).strip()
     opp = str(row.get("opp_team", row.get("opp", ""))).strip()
-    if away and home:
-        return f"{away} @ {home}"
-    if " @ " in opp:
-        return opp
+    if away and home: return f"{away} @ {home}"
+    if " @ " in opp: return opp
     return opp
 
 
@@ -198,7 +215,7 @@ def make_projection(row, baselines, injuries):
     over_price = safe_float(row.get("over_price"), -110)
     under_price = safe_float(row.get("under_price"), -110)
     base = baselines.get(player, {})
-    pred, season_avg, reasoning = project_stat(stat, base, line, injury_status)
+    pred, season_avg, reasoning = project_stat(stat, base, line, injury_status, over_price, under_price)
     low, high = round(pred - 3.5, 1), round(pred + 3.5, 1)
     edge = round(pred - line, 1)
     conf, signal = confidence(edge)
