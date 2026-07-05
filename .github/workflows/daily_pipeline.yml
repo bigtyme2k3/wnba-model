@@ -26,6 +26,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Sync latest repo before setup
+        run: git pull --rebase origin main
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -49,6 +52,7 @@ jobs:
             validate_odds.py \
             validate_props.py \
             validate_dashboard.py
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
 
       - name: Set target date
         run: |
@@ -58,9 +62,6 @@ jobs:
             echo "TARGET=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
           fi
           echo "YEAR=$(date -u +%Y)" >> $GITHUB_ENV
-
-      - name: Sync latest repo before generating files
-        run: git pull --rebase origin main
 
       - name: Legacy Basketball Reference skipped
         run: |
