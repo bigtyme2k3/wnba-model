@@ -4,15 +4,16 @@ player_points.py
 Generates WNBA player-stat prop rows for the dashboard Props tab.
 
 Input:
-  data/raw/props_today.csv or data/raw/props_raw_YYYY-MM-DD.csv from scrape_props.py
+  data/raw/props_today.csv or data/raw/props_raw_YYYY-MM-DD.csv from The Odds API
   data/raw/wnba_players_live.json from scrape_wnba_stats.py, when available
 
 Output:
   data/raw/player_points_today.csv
   data/raw/player_points_YYYY-MM-DD.csv
 
-Rows include dashboard-ready fields:
-  player, team, opp, pos, stat, season_avg, pred, line, edge, signal, conf,
+Rows include dashboard/model-ready fields:
+  player, team, opp, pos, stat, season_avg, pred, line, over_price,
+  under_price, edge, signal, conf, ev, model_prob, implied_prob,
   last5_vals, last5_opps, last5_hit, last10_hit, h2h_last5, opp_rank
 """
 
@@ -25,12 +26,15 @@ from datetime import date
 
 import pandas as pd
 
+from betting_engine import edge_to_prob, expected_value, implied_prob_american, kelly_fraction
+
 RAW_DIR = "data/raw"
 LIVE_PLAYERS_PATH = os.path.join(RAW_DIR, "wnba_players_live.json")
 STAT_MAP = {"pts": "PTS", "reb": "REB", "ast": "AST", "threes": "3PM", "pra": "PRA"}
 OUTPUT_COLUMNS = [
     "player", "team", "opp", "pos", "stat", "season_avg", "pred", "low", "high", "range",
-    "line", "edge", "signal", "conf", "reasoning", "game", "last5_vals", "last5_opps",
+    "line", "over_price", "under_price", "edge", "signal", "conf", "model_prob", "implied_prob",
+    "ev", "ev_pct", "kelly_frac", "reasoning", "game", "last5_vals", "last5_opps",
     "last5_hit", "last10_hit", "h2h_last5", "opp_rank"
 ]
 
@@ -90,7 +94,7 @@ def load_props(target_date: str, raw_dir: str) -> pd.DataFrame:
             df = pd.read_csv(path)
             print(f"  Loaded props: {path} ({len(df)} rows)")
             return df
-    print("  [WARN] No PrizePicks props file found.")
+    print("  [WARN] No props file found.")
     return pd.DataFrame()
 
 
@@ -134,7 +138,7 @@ def project_stat(stat: str, base: dict, line: float) -> tuple[float, float, str]
     efficiency_adj = (ts - 0.55) * (8.0 if stat in {"pts", "pra", "threes"} else 1.5)
     pred = season_avg + usage_adj + efficiency_adj + minutes_adj + pace_adj
     source = base.get("source", "baseline")
-    return round(float(pred), 1), round(float(season_avg), 1), f"Baseline from {source}: season average plus usage, efficiency, minutes, and pace adjustment."
+    return round(float(pred), 1), round(float(season_avg), 1), f"v2 from {source}: baseline plus usage, efficiency, minutes, and pace adjustment."
 
 
 def pseudo_recent_values(pred: float, player: str, stat: str, n: int = 10) -> list[float]:
@@ -155,11 +159,23 @@ def opp_rank_from_name(opp: str) -> int:
 def hit_rate(values: list[float], line: float, signal: str | None) -> float:
     if not values or line is None or not signal:
         return 0.0
-    if signal == "UNDER":
-        hits = sum(1 for v in values if v < line)
-    else:
-        hits = sum(1 for v in values if v > line)
+    hits = sum(1 for v in values if (v < line if signal == "UNDER" else v > line))
     return round(hits / len(values), 2)
+
+
+def normalize_stat(stat_raw):
+    stat_raw = str(stat_raw or "pts").lower()
+    if stat_raw in {"3pm", "3-point_made", "3-pointers_made", "player_threes"}:
+        return "threes"
+    if stat_raw in {"player_points"}:
+        return "pts"
+    if stat_raw in {"player_rebounds"}:
+        return "reb"
+    if stat_raw in {"player_assists"}:
+        return "ast"
+    if stat_raw in {"player_points_rebounds_assists"}:
+        return "pra"
+    return stat_raw
 
 
 def make_projection(row: pd.Series, baselines: dict) -> dict:
@@ -167,11 +183,12 @@ def make_projection(row: pd.Series, baselines: dict) -> dict:
     team = str(row.get("team", "")).strip()
     opp = str(row.get("opp_team", row.get("opp", ""))).strip()
     pos = str(row.get("position", row.get("pos", ""))).strip()
-    stat_raw = str(row.get("stat", row.get("stat_raw", "pts"))).lower()
-    stat = "threes" if stat_raw in {"3pm", "3-point_made", "3-pointers_made"} else stat_raw
+    stat = normalize_stat(row.get("stat", row.get("stat_raw", "pts")))
     if stat not in STAT_MAP:
         stat = "pts"
     line = float(row.get("line"))
+    over_price = safe_float(row.get("over_price"), -110)
+    under_price = safe_float(row.get("under_price"), -110)
     base = baselines.get(player, {})
 
     pred, season_avg, reasoning = project_stat(stat, base, line)
@@ -179,34 +196,25 @@ def make_projection(row: pd.Series, baselines: dict) -> dict:
     high = round(pred + 3.5, 1)
     edge = round(pred - line, 1)
     conf, signal = confidence(edge)
+    chosen_odds = over_price if signal != "UNDER" else under_price
+    model_prob = edge_to_prob(edge, "PROP")
+    implied_prob = implied_prob_american(chosen_odds)
+    ev = expected_value(model_prob, chosen_odds)
     recent10 = pseudo_recent_values(pred, player, stat, 10)
     last5_vals = recent10[:5]
     last5_opps = ["ATL", "CHI", "DAL", "IND", "SEA"]
     h2h = pseudo_recent_values(pred - 0.4, player + opp, stat, 5)
 
     return {
-        "player": player,
-        "team": team,
-        "opp": opp,
-        "pos": pos,
-        "stat": STAT_MAP[stat],
-        "season_avg": season_avg,
-        "pred": pred,
-        "low": low,
-        "high": high,
-        "range": f"{low}-{high}",
-        "line": line,
-        "edge": edge,
-        "signal": signal,
-        "conf": conf,
-        "reasoning": reasoning,
-        "game": f"{team} vs {opp}" if opp else team,
-        "last5_vals": json.dumps(last5_vals),
-        "last5_opps": json.dumps(last5_opps),
-        "last5_hit": hit_rate(last5_vals, line, signal),
-        "last10_hit": hit_rate(recent10, line, signal),
-        "h2h_last5": json.dumps(h2h),
-        "opp_rank": opp_rank_from_name(opp),
+        "player": player, "team": team, "opp": opp, "pos": pos, "stat": STAT_MAP[stat],
+        "season_avg": season_avg, "pred": pred, "low": low, "high": high, "range": f"{low}-{high}",
+        "line": line, "over_price": over_price, "under_price": under_price, "edge": edge,
+        "signal": signal, "conf": conf, "model_prob": model_prob, "implied_prob": round(implied_prob, 4),
+        "ev": ev, "ev_pct": round(ev * 100, 1), "kelly_frac": kelly_fraction(model_prob, chosen_odds),
+        "reasoning": reasoning, "game": f"{team} vs {opp}" if opp else team,
+        "last5_vals": json.dumps(last5_vals), "last5_opps": json.dumps(last5_opps),
+        "last5_hit": hit_rate(last5_vals, line, signal), "last10_hit": hit_rate(recent10, line, signal),
+        "h2h_last5": json.dumps(h2h), "opp_rank": opp_rank_from_name(opp),
     }
 
 
@@ -214,10 +222,8 @@ def build_player_points(target_date: str, raw_dir: str) -> pd.DataFrame:
     props = load_props(target_date, raw_dir)
     if props.empty:
         return pd.DataFrame(columns=OUTPUT_COLUMNS)
-
     if "stat" in props.columns:
         props = props[props["stat"].astype(str).str.lower().isin({"pts", "reb", "ast", "threes", "pra"})].copy()
-
     if props.empty:
         print("  [WARN] No model-supported props found.")
         return pd.DataFrame(columns=OUTPUT_COLUMNS)
@@ -234,8 +240,10 @@ def build_player_points(target_date: str, raw_dir: str) -> pd.DataFrame:
 
     df = pd.DataFrame(rows, columns=OUTPUT_COLUMNS)
     if not df.empty:
+        conf_order = {"HIGH": 0, "MED": 1, "LOW": 2}
+        df["conf_rank"] = df["conf"].map(conf_order).fillna(9)
         df["abs_edge"] = df["edge"].abs()
-        df = df.sort_values(["conf", "abs_edge", "player"], ascending=[True, False, True]).drop(columns=["abs_edge"])
+        df = df.sort_values(["conf_rank", "ev", "abs_edge", "player"], ascending=[True, False, False, True]).drop(columns=["conf_rank", "abs_edge"])
     return df
 
 
@@ -246,19 +254,17 @@ def main():
     args = parser.parse_args()
 
     os.makedirs(args.out, exist_ok=True)
-    print(f"\n═══ PLAYER PROPS — {args.date} ═══\n")
+    print(f"\n═══ PLAYER PROPS V2 — {args.date} ═══\n")
     df = build_player_points(args.date, args.out)
-
     today_path = os.path.join(args.out, "player_points_today.csv")
     dated_path = os.path.join(args.out, f"player_points_{args.date}.csv")
     df.to_csv(today_path, index=False)
     df.to_csv(dated_path, index=False)
-
     print(f"  Saved → {today_path}")
     print(f"  Saved → {dated_path}")
     print(f"  Rows: {len(df)}")
     if not df.empty:
-        print(df[["player", "team", "opp", "stat", "pred", "line", "edge", "signal", "conf"]].head(15).to_string(index=False))
+        print(df[["player", "team", "opp", "stat", "pred", "line", "edge", "signal", "conf", "ev_pct"]].head(15).to_string(index=False))
     print("\n✅ Player props complete.")
 
 
