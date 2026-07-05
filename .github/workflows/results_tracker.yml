@@ -10,6 +10,10 @@ on:
         required: false
         default: ''
 
+concurrency:
+  group: wnba-results-tracker
+  cancel-in-progress: false
+
 jobs:
   grade-results:
     runs-on: ubuntu-latest
@@ -19,6 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -51,5 +57,7 @@ jobs:
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           git add data/ predictions/ docs/
-          git diff --cached --quiet || git commit -m "📊 Results update — ${{ env.TARGET }}"
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "📊 Results update — ${{ env.TARGET }}"
+          git pull --rebase origin main
           git push
