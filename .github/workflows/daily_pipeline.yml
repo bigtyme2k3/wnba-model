@@ -53,6 +53,7 @@ jobs:
             player_points.py \
             postprocess_predictions.py \
             build_dashboard.py \
+            patch_props_ui.py \
             validate_odds.py \
             validate_props.py \
             validate_dashboard.py
@@ -129,6 +130,9 @@ jobs:
 
       - name: Build dashboard
         run: python build_dashboard.py
+
+      - name: Patch props UI
+        run: python patch_props_ui.py
 
       - name: Validate dashboard
         run: python validate_dashboard.py
