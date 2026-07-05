@@ -3,6 +3,9 @@ build_dashboard.py
 ------------------
 Reads the latest predictions JSON from the predictions/ folder and bakes it
 into docs/index.html for a zero-dependency GitHub Pages dashboard.
+
+Also merges data/raw/player_points_YYYY-MM-DD.csv when present so the Props tab
+can render even if player points were generated outside daily_runner.py.
 """
 
 import glob
@@ -11,7 +14,10 @@ import os
 import re
 from datetime import date
 
+import pandas as pd
+
 PREDICTIONS_DIR = "predictions"
+RAW_DIR = "data/raw"
 OUTPUT_HTML = "docs/index.html"
 
 
@@ -22,10 +28,16 @@ def empty_dashboard_data():
         "generated": None,
         "games": [],
         "best_bets": [],
+        "player_points": [],
+        "props_board": [],
         "data_health": {
             "odds": "missing",
+            "props": "missing",
+            "player_points": "missing",
             "spreads_found": 0,
             "totals_found": 0,
+            "props_found": 0,
+            "player_points_found": 0,
             "games": 0,
             "actionable_bets": 0,
             "high_bets": 0,
@@ -61,14 +73,61 @@ def find_predictions():
     return empty_dashboard_data()
 
 
+def csv_value(value):
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+    return value
+
+
+def load_player_points_for_date(target_date):
+    candidates = [
+        os.path.join(RAW_DIR, f"player_points_{target_date}.csv"),
+        os.path.join(RAW_DIR, "player_points_today.csv"),
+    ]
+    for path in candidates:
+        if os.path.exists(path):
+            try:
+                df = pd.read_csv(path)
+                print(f"  Loaded player points: {path} ({len(df)} rows)")
+                rows = []
+                for _, row in df.iterrows():
+                    rows.append({k: csv_value(v) for k, v in row.to_dict().items()})
+                return rows
+            except Exception as exc:
+                print(f"  [WARN] Could not load player points from {path}: {exc}")
+    return []
+
+
+def enrich_with_player_points(data):
+    target_date = data.get("date") or str(date.today())
+    points = data.get("player_points") or load_player_points_for_date(target_date)
+    if not points:
+        data.setdefault("player_points", [])
+        data.setdefault("props_board", data.get("props_board", []))
+        data.setdefault("data_health", {})["player_points"] = data.get("data_health", {}).get("player_points", "missing")
+        data.setdefault("data_health", {})["player_points_found"] = 0
+        return data
+
+    data["player_points"] = points
+    data["props_board"] = data.get("props_board") or points
+    health = data.setdefault("data_health", {})
+    health["player_points"] = "loaded"
+    health["player_points_found"] = len(points)
+    health["props_found"] = max(int(health.get("props_found", 0) or 0), len(data.get("props_board", [])))
+    return data
+
+
 def build_html(data):
+    data = enrich_with_player_points(data)
     data_json = json.dumps(data, separators=(",", ":"))
 
     with open(OUTPUT_HTML) as f:
         html = f.read()
 
-    # Replace any existing DATA assignment, including large minified JSON.
-    pattern = r"const\s+DATA\s*=\s*.*?;\s*(?=\n\s*//|\n\s*const|\n\s*let|\n\s*function|\n\s*window\.)"
+    pattern = r"const\s+DATA\s*=\s*.*?;\s*(?=\n\s*const|\n\s*let|\n\s*function|\n\s*window\.)"
     replacement = f"const DATA = {data_json};\n"
     new_html = re.sub(pattern, replacement, html, flags=re.DOTALL)
 
@@ -94,6 +153,7 @@ def main():
         print(f"     Date: {data.get('date')}")
         print(f"     Games: {len(data.get('games', []))}")
         print(f"     Best bets: {len(data.get('best_bets', []))}")
+        print(f"     Player points: {health.get('player_points_found', 0)}")
         print(f"     Odds: {health.get('odds', 'unknown')}")
     else:
         raise SystemExit("  ❌ Build failed")
