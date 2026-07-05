@@ -5,6 +5,7 @@ Generates WNBA player points projections and compares them to PrizePicks lines.
 
 Input:
   data/raw/props_today.csv or data/raw/props_raw_YYYY-MM-DD.csv from scrape_props.py
+  data/raw/wnba_players_live.json from scrape_wnba_stats.py, when available
 
 Output:
   data/raw/player_points_today.csv
@@ -13,31 +14,68 @@ Output:
 Columns:
   player, team, opp, pos, season_avg, pred, low, high, range,
   line, edge, signal, conf, reasoning, game
-
-This is intentionally lightweight for GitHub Actions/tablet-only workflow.
-When a player is in daily_runner.PLAYER_PROPS, it uses that baseline.
-Otherwise it starts from the PrizePicks line and marks the play as no-edge.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
-from datetime import date, datetime
+from datetime import date
 
 import pandas as pd
 
 RAW_DIR = "data/raw"
+LIVE_PLAYERS_PATH = os.path.join(RAW_DIR, "wnba_players_live.json")
+
+
+def load_live_players(path: str = LIVE_PLAYERS_PATH) -> dict:
+    if not os.path.exists(path):
+        print("  [INFO] No live WNBA player stats found. Using fallback baselines only.")
+        return {}
+    try:
+        with open(path) as f:
+            data = json.load(f)
+        print(f"  Loaded live WNBA player stats: {path} ({len(data)} players)")
+        return data or {}
+    except Exception as exc:
+        print(f"  [WARN] Could not read live WNBA player stats: {exc}")
+        return {}
 
 
 def load_player_baselines() -> dict:
-    """Load simple baseline player stats from daily_runner if available."""
+    """Load hardcoded fallback baselines, then update with live official WNBA season data."""
+    baselines = {}
     try:
         from daily_runner import PLAYER_PROPS
-        return PLAYER_PROPS or {}
+        baselines.update(PLAYER_PROPS or {})
+        print(f"  Loaded fallback PLAYER_PROPS: {len(PLAYER_PROPS or {})} players")
     except Exception as exc:
         print(f"  [WARN] Could not import PLAYER_PROPS from daily_runner.py: {exc}")
-        return {}
+
+    live_players = load_live_players()
+    for player, live in live_players.items():
+        existing = baselines.get(player, {}) or {}
+        merged = dict(existing)
+        ppg = live.get("ppg", live.get("roll5_pts", existing.get("roll5_pts", 0)))
+        mpg = live.get("mpg", existing.get("mpg", 30))
+        usage = live.get("usage", existing.get("usage", 0.25))
+        ts_pct = live.get("ts_pct", live.get("ts", existing.get("ts", 0.55)))
+        merged.update(live)
+        merged.update({
+            "roll5_pts": ppg,
+            "ppg": ppg,
+            "mpg": mpg,
+            "usage": usage,
+            "ts": ts_pct,
+            "ts_pct": ts_pct,
+            "source": "stats.wnba.com",
+        })
+        baselines[player] = merged
+
+    if live_players:
+        print(f"  Updated baselines with live WNBA stats: {len(live_players)} players")
+    return baselines
 
 
 def load_props(target_date: str, raw_dir: str) -> pd.DataFrame:
@@ -65,27 +103,38 @@ def confidence(edge: float | None) -> tuple[str, str | None]:
     return "LOW", None
 
 
+def safe_float(value, default=0.0):
+    try:
+        if pd.isna(value):
+            return default
+        return float(value)
+    except Exception:
+        return default
+
+
 def make_projection(row: pd.Series, baselines: dict) -> dict:
     player = str(row.get("player", "")).strip()
     team = str(row.get("team", "")).strip()
     opp = str(row.get("opp_team", row.get("opp", ""))).strip()
-    pos = str(row.get("position", "")).strip()
+    pos = str(row.get("position", row.get("pos", ""))).strip()
     line = float(row.get("line"))
 
     base = baselines.get(player, {})
-    season_avg = float(base.get("roll5_pts", line))
+    season_avg = safe_float(base.get("ppg", base.get("roll5_pts", line)), line)
 
-    # Lightweight points projection.
-    # Known players use model baseline from daily_runner; unknown players stay near market.
     if base:
-        usage = float(base.get("usage", 0.25))
-        ts = float(base.get("ts", 0.55))
-        mpg = float(base.get("mpg", 30))
+        usage = safe_float(base.get("usage", 0.25), 0.25)
+        ts = safe_float(base.get("ts_pct", base.get("ts", 0.55)), 0.55)
+        mpg = safe_float(base.get("mpg", 30), 30)
+        pace = safe_float(base.get("pace", base.get("team_pace", 80)), 80)
+
         usage_adj = (usage - 0.25) * 10.0
         efficiency_adj = (ts - 0.55) * 8.0
         minutes_adj = (mpg - 30.0) * 0.12
-        pred = season_avg + usage_adj + efficiency_adj + minutes_adj
-        reasoning = "Baseline from daily_runner.PLAYER_PROPS with usage, efficiency, and minutes adjustment."
+        pace_adj = (pace - 80.0) * 0.03
+        pred = season_avg + usage_adj + efficiency_adj + minutes_adj + pace_adj
+        source = base.get("source", "baseline")
+        reasoning = f"Baseline from {source}: season PPG + usage, efficiency, minutes, and pace adjustment."
     else:
         pred = line
         reasoning = "No player baseline found yet; market line used as neutral placeholder."
@@ -124,7 +173,6 @@ def build_player_points(target_date: str, raw_dir: str) -> pd.DataFrame:
             "line", "edge", "signal", "conf", "reasoning", "game"
         ])
 
-    # PrizePicks points props are normalized to stat == pts by scrape_props.py.
     if "stat" in props.columns:
         props = props[props["stat"].astype(str).str.lower().eq("pts")].copy()
     elif "stat_raw" in props.columns:
@@ -132,7 +180,10 @@ def build_player_points(target_date: str, raw_dir: str) -> pd.DataFrame:
 
     if props.empty:
         print("  [WARN] No points props found.")
-        return pd.DataFrame()
+        return pd.DataFrame(columns=[
+            "player", "team", "opp", "pos", "season_avg", "pred", "low", "high", "range",
+            "line", "edge", "signal", "conf", "reasoning", "game"
+        ])
 
     baselines = load_player_baselines()
     rows = []
