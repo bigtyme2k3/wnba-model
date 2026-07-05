@@ -8,6 +8,7 @@ PATCH = '''
 (function(){
   function safe(v,d='—'){return v===null||v===undefined||v===''||String(v)==='nan'?d:v}
   function fmt(v){try{return fmtTime(v)}catch(e){return v||'—'}}
+  function state(name, fallback){return Object.prototype.hasOwnProperty.call(window,name)?window[name]:fallback}
   function key(g){return g.away.name+' @ '+g.home.name}
   function rowGame(p){
     if(p.game && String(p.game).includes(' @ ')) return String(p.game).trim();
@@ -47,7 +48,7 @@ PATCH = '''
     return rows;
   }
   function draw(){
-    let curGame=window.propsGame||propsGame||'ALL',curStat=window.propsStat||propsStat||'ALL',curSort=window.propsSort||'EDGE';
+    let curGame=state('propsGame','ALL'),curStat=state('propsStat','ALL'),curSort=state('propsSort','EDGE');
     let props=(DATA.props||DATA.player_points||DATA.props_board||[]).filter(p=>p.line!==null&&p.line!==undefined&&p.line!==''&&p.market_status!=='NO MARKET'&&p.injury_status!=='OUT'&&p.injury_status!=='DOUBTFUL');
     let cards='<article class="props-game all '+(curGame==='ALL'?'active':'')+'" onclick="setPropsGame(\'ALL\')"><div class="game-time">ALL</div><div class="team-line">All Players</div></article>'+(DATA.games||[]).map(g=>{let k=key(g);return `<article class="props-game ${curGame===k?'active':''}" onclick="setPropsGame('${k.replace(/'/g,"\\'")}')"><div class="game-time">${fmt(g.tip)}</div><div class="team-line">${g.away.abbr} @ ${g.home.abbr}</div><div class="board-sub">${k}</div></article>`}).join('');
     let stats=['ALL','PTS','REB','AST','3PM','PRA','PA','PR','RA','DD','TD'];
@@ -60,8 +61,8 @@ PATCH = '''
     let table=rows.length?`<div class="props-scroll"><div class="props-table"><div class="props-head"><div>Player</div><div>Stat</div><div>Line</div><div>Over / Yes</div><div>Under / No</div><div>Projected</div><div>Last 5</div><div>L5 Hit</div><div>L10 Hit</div><div>H2H L5</div><div>Opp Rank</div></div>${rows.map(p=>`<article class="prop-row ${p.conf||'LOW'}"><div><div class="player-name">${safe(p.player)}</div><div class="player-meta">${safe(p.best_book_title||p.best_book,'Best book —')} · ${safe(p.injury_status,'ACTIVE')} · ${safe(p._game)}</div></div><div><span class="stat-pill ${p.conf==='HIGH'?'high':''}">${safe(p.stat)}</span></div><div class="board-value">${statLine(p)}</div><div class="signal-over">${showOver(p)}</div><div class="signal-under">${showUnder(p)}</div><div class="${p.line?'proj-bright':'proj-dim'}">${projected(p)}</div><div>${boxes(p)}</div><div class="hit-cell ${p.signal==='OVER'||p.signal==='YES'?'signal-over':p.signal==='UNDER'||p.signal==='NO'?'signal-under':''}">${p.signal?pct(p.last5_hit)+'<br>'+p.signal:'—'}</div><div class="hit-cell ${p.signal==='OVER'||p.signal==='YES'?'signal-over':p.signal==='UNDER'||p.signal==='NO'?'signal-under':''}">${p.signal?pct(p.last10_hit)+'<br>'+p.signal:'—'}</div><div>${arr(p.h2h_last5).length?arr(p.h2h_last5).join(', '):'—'}</div><div class="${rank(p.opp_rank)}">${safe(p.opp_rank)}</div></article>`).join('')}</div></div>`:'<div class="empty">No sportsbook props for this selected game/stat filter. Try ALL or another stat.</div>';
     let el=document.getElementById('tab-props');if(el)el.innerHTML=`<div class="section-title">Today's Games</div><div class="props-games">${cards}</div><div class="section-title">Filters</div><div class="filter-bar">${filters}</div><div class="section-title">Sort</div><div class="filter-bar">${sortbar}</div><div class="section-title">Props Table</div>${table}`;
   }
-  window.setPropsGame=function(k){window.propsGame=k;try{propsGame=k}catch(e){} draw()};
-  window.setPropsStat=function(s){window.propsStat=s;try{propsStat=s}catch(e){} draw()};
+  window.setPropsGame=function(k){window.propsGame=k;draw()};
+  window.setPropsStat=function(s){window.propsStat=s;draw()};
   window.setPropsSort=function(s){window.propsSort=s;draw()};
   window.renderProps=draw;
   try{renderProps=draw;setPropsGame=window.setPropsGame;setPropsStat=window.setPropsStat}catch(e){}
