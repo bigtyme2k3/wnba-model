@@ -53,6 +53,7 @@ jobs:
             autonomous_intelligence.py \
             projection_accuracy.py \
             wnba_context_engine.py \
+            projection_intelligence_v2.py \
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_injuries.py \
@@ -77,6 +78,7 @@ jobs:
             patch_autonomous_intelligence_ui.py \
             patch_projection_accuracy_ui.py \
             patch_wnba_context_ui.py \
+            patch_projection_intelligence_v2_ui.py \
             validate_odds.py \
             validate_props.py \
             validate_dashboard.py
@@ -187,6 +189,10 @@ jobs:
         run: python wnba_context_engine.py --date ${{ env.TARGET }}
         continue-on-error: true
 
+      - name: Build Projection Intelligence v2
+        run: python projection_intelligence_v2.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Build Projection Accuracy Audit
         run: python projection_accuracy.py --date ${{ env.TARGET }}
         continue-on-error: true
@@ -236,6 +242,9 @@ jobs:
 
       - name: Patch WNBA Context UI
         run: python patch_wnba_context_ui.py
+
+      - name: Patch Projection Intelligence v2 UI
+        run: python patch_projection_intelligence_v2_ui.py
 
       - name: Validate dashboard
         run: python validate_dashboard.py
