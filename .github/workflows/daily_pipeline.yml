@@ -63,6 +63,7 @@ jobs:
             merge_data.py \
             daily_runner.py \
             player_points.py \
+            props_fallback_generator.py \
             postprocess_predictions.py \
             build_dashboard.py \
             patch_model_tracking_ui.py \
@@ -129,6 +130,10 @@ jobs:
 
       - name: Generate player points
         run: python player_points.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      - name: Generate fallback props if needed
+        run: python props_fallback_generator.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
       - name: Validate props
