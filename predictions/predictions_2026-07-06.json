@@ -685,7 +685,21 @@
       },
       "minutes_usage_score": 82.6,
       "minutes_usage_grade": "B+",
-      "rotation_risk_level": "LOW"
+      "rotation_risk_level": "LOW",
+      "market_timing_intelligence": {
+        "timing_action": "WAIT FOR LINE",
+        "timing_confidence": 68.8,
+        "urgency_score": 60.4,
+        "expected_clv": 0.59,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      "timing_action": "WAIT FOR LINE",
+      "timing_confidence": 68.8,
+      "expected_clv_v2": 0.59
     },
     {
       "type": "PROP",
@@ -938,7 +952,21 @@
       },
       "minutes_usage_score": 89.8,
       "minutes_usage_grade": "A",
-      "rotation_risk_level": "LOW"
+      "rotation_risk_level": "LOW",
+      "market_timing_intelligence": {
+        "timing_action": "BET SOON",
+        "timing_confidence": 70.4,
+        "urgency_score": 61.7,
+        "expected_clv": 0.78,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      "timing_action": "BET SOON",
+      "timing_confidence": 70.4,
+      "expected_clv_v2": 0.78
     },
     {
       "type": "PROP",
@@ -1193,7 +1221,23 @@
       },
       "minutes_usage_score": 87.6,
       "minutes_usage_grade": "A",
-      "rotation_risk_level": "LOW"
+      "rotation_risk_level": "LOW",
+      "market_timing_intelligence": {
+        "timing_action": "PASS",
+        "timing_confidence": 63.7,
+        "urgency_score": 57.2,
+        "expected_clv": 0.97,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": [
+          "high projection volatility"
+        ]
+      },
+      "timing_action": "PASS",
+      "timing_confidence": 63.7,
+      "expected_clv_v2": 0.97
     },
     {
       "type": "PROP",
@@ -1452,7 +1496,23 @@
       },
       "minutes_usage_score": 85.1,
       "minutes_usage_grade": "A",
-      "rotation_risk_level": "LOW"
+      "rotation_risk_level": "LOW",
+      "market_timing_intelligence": {
+        "timing_action": "PASS",
+        "timing_confidence": 61.2,
+        "urgency_score": 53.6,
+        "expected_clv": 0.5,
+        "expected_line_direction": "stable",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": [
+          "high projection volatility"
+        ]
+      },
+      "timing_action": "PASS",
+      "timing_confidence": 61.2,
+      "expected_clv_v2": 0.5
     },
     {
       "type": "PROP",
@@ -1705,7 +1765,21 @@
       },
       "minutes_usage_score": 88.4,
       "minutes_usage_grade": "A",
-      "rotation_risk_level": "LOW"
+      "rotation_risk_level": "LOW",
+      "market_timing_intelligence": {
+        "timing_action": "WAIT FOR LINE",
+        "timing_confidence": 65.1,
+        "urgency_score": 56.0,
+        "expected_clv": 0.36,
+        "expected_line_direction": "stable",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      "timing_action": "WAIT FOR LINE",
+      "timing_confidence": 65.1,
+      "expected_clv_v2": 0.36
     }
   ],
   "player_points": [
@@ -11402,6 +11476,93 @@
         "stat": "PRA",
         "count": 1,
         "avg_minutes_usage_score": 82.6
+      }
+    ]
+  },
+  "market_timing_intelligence": {
+    "generated_at_utc": "2026-07-06T16:35:44.449575+00:00",
+    "target_date": "2026-07-06",
+    "summary": {
+      "props_scored": 5,
+      "bet_now_count": 0,
+      "bet_soon_count": 1,
+      "wait_count": 2,
+      "monitor_count": 0,
+      "pass_count": 2,
+      "avg_expected_clv": 0.64
+    },
+    "action_counts": {
+      "WAIT FOR LINE": 2,
+      "BET SOON": 1,
+      "PASS": 2
+    },
+    "best_timing_plays": [
+      {
+        "player": "Napheesa Collier",
+        "team": "Minnesota Lynx",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "signal": "OVER",
+        "line": 21.0,
+        "odds": -110,
+        "pred": 22.1,
+        "timing_action": "BET SOON",
+        "timing_confidence": 70.4,
+        "urgency_score": 61.7,
+        "expected_clv": 0.78,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      }
+    ],
+    "monitor_list": [
+      {
+        "player": "Napheesa Collier",
+        "team": "Minnesota Lynx",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PRA",
+        "signal": "OVER",
+        "line": 33.0,
+        "odds": -110,
+        "pred": 34.1,
+        "timing_action": "WAIT FOR LINE",
+        "timing_confidence": 68.8,
+        "urgency_score": 60.4,
+        "expected_clv": 0.59,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      {
+        "player": "Napheesa Collier",
+        "team": "Minnesota Lynx",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "REB",
+        "signal": null,
+        "line": 8.5,
+        "odds": -110,
+        "pred": 8.7,
+        "timing_action": "WAIT FOR LINE",
+        "timing_confidence": 65.1,
+        "urgency_score": 56.0,
+        "expected_clv": 0.36,
+        "expected_line_direction": "stable",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      }
+    ],
+    "sportsbook_timing": [
+      {
+        "sportsbook": "Unknown",
+        "count": 5,
+        "avg_expected_clv": 0.64,
+        "bet_now_count": 1
       }
     ]
   }
