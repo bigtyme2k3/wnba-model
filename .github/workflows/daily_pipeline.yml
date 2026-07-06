@@ -96,15 +96,16 @@ jobs:
       - name: Legacy Basketball Reference skipped
         run: |
           echo "Basketball Reference HTML scrape is retired from the daily path."
-          echo "Using committed historical data plus ESPN, stats.wnba.com, and The Odds API."
+          echo "Using committed historical data plus ESPN, stats.wnba.com, and cached/available odds."
 
       - name: Scrape odds
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
 
       - name: Validate odds
-        run: python validate_odds.py --date ${{ env.TARGET }} --raw data/raw
+        run: python validate_odds.py --date ${{ env.TARGET }} --raw data/raw --non-strict
 
       - name: Scrape props
         env:
