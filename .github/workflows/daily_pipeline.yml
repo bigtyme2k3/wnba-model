@@ -47,6 +47,7 @@ jobs:
             advanced_model_upgrades.py \
             dashboard_health.py \
             game_command_center.py \
+            market_heatmap.py \
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_injuries.py \
@@ -65,6 +66,7 @@ jobs:
             patch_advanced_ui.py \
             patch_health_briefing_ui.py \
             patch_game_command_ui.py \
+            patch_market_heatmap_ui.py \
             validate_odds.py \
             validate_props.py \
             validate_dashboard.py
@@ -155,6 +157,10 @@ jobs:
         run: python game_command_center.py --date ${{ env.TARGET }}
         continue-on-error: true
 
+      - name: Build Market Heat Map
+        run: python market_heatmap.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Build dashboard health and briefing
         run: python dashboard_health.py --date ${{ env.TARGET }}
         continue-on-error: true
@@ -182,6 +188,9 @@ jobs:
 
       - name: Patch Game Command Center UI
         run: python patch_game_command_ui.py
+
+      - name: Patch Market Heat Map UI
+        run: python patch_market_heatmap_ui.py
 
       - name: Validate dashboard
         run: python validate_dashboard.py
