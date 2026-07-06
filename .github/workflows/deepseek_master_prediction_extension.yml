@@ -23,10 +23,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: integration/deepseek-v1
-
-      - name: Sync latest repo
-        run: git pull --rebase origin integration/deepseek-v1
 
       - uses: actions/setup-python@v5
         with:
@@ -46,16 +42,10 @@ jobs:
           fi
 
       - name: Validate syntax
-        run: python -m py_compile deepseek_master_prediction_engine.py build_dashboard.py validate_dashboard.py
+        run: python -m py_compile deepseek_master_prediction_engine.py
 
       - name: Build DeepSeek Master Prediction Engine
         run: python deepseek_master_prediction_engine.py --date ${{ env.TARGET }}
-
-      - name: Rebuild dashboard
-        run: python build_dashboard.py
-
-      - name: Validate dashboard
-        run: python validate_dashboard.py
 
       - name: Commit and push
         run: |
@@ -63,7 +53,8 @@ jobs:
           git config user.email "actions@github.com"
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
           git status --short
-          git add -A
+          git add data/dashboard/deepseek_master_predictions.json data/intelligence/deepseek_master_predictions_${{ env.TARGET }}.json
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "DeepSeek master prediction update - ${{ env.TARGET }}"
-          git push origin integration/deepseek-v1
+          git pull --rebase origin main
+          git push origin main
