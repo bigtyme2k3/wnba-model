@@ -24,9 +24,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Sync latest repo
-        run: git pull --rebase origin integration/deepseek-v1
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -45,16 +42,10 @@ jobs:
           fi
 
       - name: Validate syntax
-        run: python -m py_compile deepseek_portfolio_optimizer.py build_dashboard.py validate_dashboard.py
+        run: python -m py_compile deepseek_portfolio_optimizer.py
 
       - name: Build DeepSeek Portfolio Optimizer
         run: python deepseek_portfolio_optimizer.py --date ${{ env.TARGET }}
-
-      - name: Rebuild dashboard
-        run: python build_dashboard.py
-
-      - name: Validate dashboard
-        run: python validate_dashboard.py
 
       - name: Commit and push
         run: |
@@ -62,7 +53,8 @@ jobs:
           git config user.email "actions@github.com"
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
           git status --short
-          git add -A
+          git add data/dashboard/deepseek_portfolio_optimizer.json data/intelligence/deepseek_portfolio_optimizer_${{ env.TARGET }}.json
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "DeepSeek portfolio optimizer update - ${{ env.TARGET }}"
-          git push
+          git pull --rebase origin main
+          git push origin main
