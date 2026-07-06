@@ -1,0 +1,72 @@
+name: WNBA Results Review Center Extension
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Review date (YYYY-MM-DD), leave blank for yesterday'
+        required: false
+        default: ''
+  workflow_run:
+    workflows: ["WNBA Daily Pipeline"]
+    types: [completed]
+
+concurrency:
+  group: wnba-results-review-center-extension
+  cancel-in-progress: false
+
+jobs:
+  run-results-review-center:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Resolve review date
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            echo "TARGET=${{ github.event.inputs.date }}" >> $GITHUB_ENV
+          else
+            echo "TARGET=$(date -u -d 'yesterday' +%Y-%m-%d)" >> $GITHUB_ENV
+          fi
+
+      - name: Validate syntax
+        run: python -m py_compile results_review_center.py patch_results_review_center_ui.py build_dashboard.py validate_dashboard.py
+
+      - name: Build Results Review Center
+        run: python results_review_center.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Rebuild dashboard
+        run: python build_dashboard.py
+
+      - name: Patch Results Review Center UI
+        run: python patch_results_review_center_ui.py
+
+      - name: Validate dashboard
+        run: python validate_dashboard.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git status --short
+          git add -A
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "Results review center update - ${{ env.TARGET }}"
+          git pull --rebase origin main
+          git push
