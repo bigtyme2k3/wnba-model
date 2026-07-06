@@ -20,13 +20,14 @@ import argparse
 import json
 import os
 from datetime import date, datetime, timezone
-from typing import Dict, List
+from typing import List
 
 import pandas as pd
 
 from player_points import OUTPUT_COLUMNS, load_player_baselines, load_injuries, make_projection, safe_float
 
 RAW_DIR = "data/raw"
+PRED_DIR = "predictions"
 SUPPORTED_STATS = ["pts", "reb", "ast", "threes", "pra"]
 
 
@@ -34,10 +35,49 @@ def load_existing_player_points(target: str, raw_dir: str) -> pd.DataFrame:
     for path in [os.path.join(raw_dir, f"player_points_{target}.csv"), os.path.join(raw_dir, "player_points_today.csv")]:
         if os.path.exists(path):
             try:
-                return pd.read_csv(path)
+                df = pd.read_csv(path)
+                if not df.empty:
+                    return df
             except Exception:
-                return pd.DataFrame(columns=OUTPUT_COLUMNS)
+                pass
     return pd.DataFrame(columns=OUTPUT_COLUMNS)
+
+
+def _abbr_to_team(abbr: str) -> str:
+    try:
+        from daily_runner import TEAM_ABBR
+        return TEAM_ABBR.get(str(abbr or "").upper(), abbr)
+    except Exception:
+        return abbr
+
+
+def games_from_predictions(target: str) -> List[dict]:
+    path = os.path.join(PRED_DIR, f"predictions_{target}.json")
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path) as f:
+            data = json.load(f)
+    except Exception:
+        return []
+    games = []
+    for g in data.get("games", []) or []:
+        home_obj = g.get("home", {}) if isinstance(g.get("home"), dict) else {}
+        away_obj = g.get("away", {}) if isinstance(g.get("away"), dict) else {}
+        home = home_obj.get("name") or _abbr_to_team(home_obj.get("abbr") or g.get("home_team") or g.get("home"))
+        away = away_obj.get("name") or _abbr_to_team(away_obj.get("abbr") or g.get("away_team") or g.get("away"))
+        if not home or not away:
+            continue
+        games.append({
+            "home_team": home,
+            "away_team": away,
+            "game": f"{away} @ {home}",
+            "game_time": g.get("tip") or g.get("commence_time") or "",
+            "source": "predictions_schedule",
+        })
+    if games:
+        print(f"  Loaded {len(games)} games for fallback props from predictions schedule")
+    return games
 
 
 def load_games(target: str, raw_dir: str) -> List[dict]:
@@ -59,10 +99,16 @@ def load_games(target: str, raw_dir: str) -> List[dict]:
                     "away_team": away,
                     "game": f"{away} @ {home}",
                     "game_time": row.get("commence_time", ""),
+                    "source": path,
                 })
             if games:
                 print(f"  Loaded {len(games)} games for fallback props from {path}")
                 return games
+
+    games = games_from_predictions(target)
+    if games:
+        return games
+
     print("  [WARN] No game slate found for fallback props.")
     return []
 
@@ -80,7 +126,6 @@ def stat_line(base: dict, stat: str) -> float:
     else: val = 0
     if val <= 0:
         val = {"pts": 10.5, "reb": 4.5, "ast": 2.5, "threes": 1.5, "pra": 17.5}.get(stat, 5.5)
-    # Make it look like a common prop line ending in .5.
     return max(0.5, round(val * 2) / 2)
 
 
@@ -128,7 +173,7 @@ def build_fallback(target: str, raw_dir: str) -> tuple[pd.DataFrame, dict]:
     }
     existing = load_existing_player_points(target, raw_dir)
     if not existing.empty:
-        status.update({"status": "skipped_existing_player_points", "rows": int(len(existing))})
+        status.update({"status": "skipped_existing_player_points", "rows": int(len(existing)), "players": int(existing["player"].nunique()) if "player" in existing.columns else 0})
         return existing, status
 
     games = load_games(target, raw_dir)
