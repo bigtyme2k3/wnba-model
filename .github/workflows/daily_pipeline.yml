@@ -48,6 +48,7 @@ jobs:
             dashboard_health.py \
             game_command_center.py \
             market_heatmap.py \
+            unified_prediction_score.py \
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_injuries.py \
@@ -67,6 +68,7 @@ jobs:
             patch_health_briefing_ui.py \
             patch_game_command_ui.py \
             patch_market_heatmap_ui.py \
+            patch_ups_ui.py \
             validate_odds.py \
             validate_props.py \
             validate_dashboard.py
@@ -161,6 +163,10 @@ jobs:
         run: python market_heatmap.py --date ${{ env.TARGET }}
         continue-on-error: true
 
+      - name: Build Universal Prediction Score
+        run: python unified_prediction_score.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Build dashboard health and briefing
         run: python dashboard_health.py --date ${{ env.TARGET }}
         continue-on-error: true
@@ -191,6 +197,9 @@ jobs:
 
       - name: Patch Market Heat Map UI
         run: python patch_market_heatmap_ui.py
+
+      - name: Patch Universal Prediction Score UI
+        run: python patch_ups_ui.py
 
       - name: Validate dashboard
         run: python validate_dashboard.py
