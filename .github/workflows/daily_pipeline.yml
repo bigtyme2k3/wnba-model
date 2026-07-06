@@ -46,6 +46,7 @@ jobs:
             slip_optimizer.py \
             advanced_model_upgrades.py \
             dashboard_health.py \
+            game_command_center.py \
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_injuries.py \
@@ -63,6 +64,7 @@ jobs:
             patch_player_detail_ui.py \
             patch_advanced_ui.py \
             patch_health_briefing_ui.py \
+            patch_game_command_ui.py \
             validate_odds.py \
             validate_props.py \
             validate_dashboard.py
@@ -149,6 +151,10 @@ jobs:
         run: python slip_optimizer.py --date ${{ env.TARGET }}
         continue-on-error: true
 
+      - name: Build Game Command Center
+        run: python game_command_center.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Build dashboard health and briefing
         run: python dashboard_health.py --date ${{ env.TARGET }}
         continue-on-error: true
@@ -173,6 +179,9 @@ jobs:
 
       - name: Patch health briefing UI
         run: python patch_health_briefing_ui.py
+
+      - name: Patch Game Command Center UI
+        run: python patch_game_command_ui.py
 
       - name: Validate dashboard
         run: python validate_dashboard.py
