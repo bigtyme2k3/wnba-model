@@ -132,10 +132,6 @@ jobs:
         run: python player_points.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
-      - name: Generate fallback props if needed
-        run: python props_fallback_generator.py --date ${{ env.TARGET }} --out data/raw
-        continue-on-error: true
-
       - name: Validate props
         run: python validate_props.py --date ${{ env.TARGET }} --raw data/raw --non-strict
 
@@ -159,6 +155,10 @@ jobs:
           python daily_runner.py \
             --date ${{ env.TARGET }} \
             --out predictions/predictions_${{ env.TARGET }}.json
+
+      - name: Generate fallback props from predictions schedule if needed
+        run: python props_fallback_generator.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
 
       - name: Postprocess predictions
         run: python postprocess_predictions.py --date ${{ env.TARGET }}
