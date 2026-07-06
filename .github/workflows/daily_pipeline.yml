@@ -44,6 +44,7 @@ jobs:
             results_tracker.py \
             model_tracking.py \
             slip_optimizer.py \
+            advanced_model_upgrades.py \
             scrape_odds.py \
             scrape_odds_props.py \
             scrape_injuries.py \
@@ -59,6 +60,7 @@ jobs:
             patch_slip_optimizer_ui.py \
             patch_props_ui.py \
             patch_player_detail_ui.py \
+            patch_advanced_ui.py \
             validate_odds.py \
             validate_props.py \
             validate_dashboard.py
@@ -137,6 +139,10 @@ jobs:
       - name: Postprocess predictions
         run: python postprocess_predictions.py --date ${{ env.TARGET }}
 
+      - name: Apply advanced model upgrades
+        run: python advanced_model_upgrades.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Build slip optimizer
         run: python slip_optimizer.py --date ${{ env.TARGET }}
         continue-on-error: true
@@ -155,6 +161,9 @@ jobs:
 
       - name: Patch player detail UI
         run: python patch_player_detail_ui.py
+
+      - name: Patch advanced UI
+        run: python patch_advanced_ui.py
 
       - name: Validate dashboard
         run: python validate_dashboard.py
