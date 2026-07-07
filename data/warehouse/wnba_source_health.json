@@ -1,0 +1,120 @@
+{
+  "generated_at_utc": "2026-07-07T11:49:12.299498+00:00",
+  "target_date": "2026-07-07",
+  "summary": {
+    "sources": 8,
+    "ok_or_optional": 6,
+    "degraded_or_missing": 2
+  },
+  "sources": {
+    "sports_skills": {
+      "label": "sports-skills",
+      "status": "ok",
+      "detail": {
+        "scores": {
+          "ok": true,
+          "returncode": 0,
+          "bytes": 4612,
+          "stderr": "",
+          "output_file": "data/wnba/scores.json"
+        },
+        "injuries": {
+          "ok": true,
+          "returncode": 0,
+          "bytes": 10133,
+          "stderr": "",
+          "output_file": "data/wnba/injuries.json"
+        },
+        "standings": {
+          "ok": true,
+          "returncode": 0,
+          "bytes": 10742,
+          "stderr": "",
+          "output_file": "data/wnba/standings.json"
+        },
+        "futures": {
+          "ok": true,
+          "returncode": 0,
+          "bytes": 2097,
+          "stderr": "",
+          "output_file": "data/wnba/futures.json"
+        }
+      }
+    },
+    "stats_wnba": {
+      "label": "stats.wnba.com",
+      "status": "missing",
+      "detail": {
+        "path": "data/raw/wnba_players_live.json",
+        "exists": false,
+        "bytes": 0,
+        "populated": false
+      }
+    },
+    "data_warehouse": {
+      "label": "Data Warehouse",
+      "status": "degraded",
+      "detail": {
+        "games": 2,
+        "injuries": 0,
+        "standings": 0,
+        "futures": 1
+      }
+    },
+    "player_intelligence": {
+      "label": "Player Intelligence",
+      "status": "ok",
+      "detail": {
+        "path": "data/warehouse/wnba_player_intelligence.json",
+        "exists": true,
+        "bytes": 247,
+        "populated": true
+      }
+    },
+    "matchup_intelligence": {
+      "label": "Matchup Intelligence",
+      "status": "ok",
+      "detail": {
+        "path": "data/warehouse/wnba_matchup_intelligence.json",
+        "exists": true,
+        "bytes": 178,
+        "populated": true
+      }
+    },
+    "consensus_engine": {
+      "label": "Consensus Engine",
+      "status": "ok",
+      "detail": {
+        "path": "data/warehouse/wnba_consensus_engine.json",
+        "exists": true,
+        "bytes": 218,
+        "populated": true
+      }
+    },
+    "odds_layer": {
+      "label": "Odds Layer",
+      "status": "ok",
+      "detail": {
+        "status": "ok",
+        "target_date": "2026-07-07",
+        "selected_source": "current_file",
+        "rows": 12,
+        "notes": "Loaded from existing current odds file.",
+        "checked_at_utc": "2026-07-07T11:49:11.177618+00:00",
+        "source_priority": [
+          "manual",
+          "current_file",
+          "cache_exact",
+          "cache_last_known",
+          "empty"
+        ],
+        "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
+      }
+    },
+    "odds_api": {
+      "label": "The Odds API",
+      "status": "optional",
+      "detail": "Disabled by default to conserve credits."
+    }
+  }
+}
