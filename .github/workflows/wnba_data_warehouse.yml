@@ -1,0 +1,59 @@
+name: WNBA Data Warehouse
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for today'
+        required: false
+        default: ''
+  schedule:
+    - cron: '45 12 * * *'
+
+concurrency:
+  group: wnba-data-warehouse
+  cancel-in-progress: false
+
+jobs:
+  build-warehouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Resolve target date
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            echo "TARGET=${{ github.event.inputs.date }}" >> $GITHUB_ENV
+          else
+            echo "TARGET=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+          fi
+
+      - name: Validate warehouse syntax
+        run: python -m py_compile wnba_data_warehouse.py
+
+      - name: Build WNBA data warehouse
+        run: python wnba_data_warehouse.py --date ${{ env.TARGET }}
+
+      - name: Commit and push
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/warehouse/*.json data/dashboard/wnba_data_warehouse.json
+          git diff --cached --quiet && echo "No warehouse changes" && exit 0
+          git commit -m "Update WNBA data warehouse - ${{ env.TARGET }}"
+          git pull --rebase origin main
+          git push origin main
