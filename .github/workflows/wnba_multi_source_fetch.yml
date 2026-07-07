@@ -1,0 +1,78 @@
+name: WNBA Multi-Source Data Fetch
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 12 * * *'
+
+concurrency:
+  group: wnba-multi-source-data
+  cancel-in-progress: false
+
+jobs:
+  fetch-multi-source-wnba-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install sports-skills
+        continue-on-error: true
+        run: |
+          python -m pip install --upgrade pip
+          pip install git+https://github.com/machina-sports/sports-skills.git
+
+      - name: Fetch WNBA data from sports-skills
+        continue-on-error: true
+        run: |
+          mkdir -p data/wnba
+
+          sports-skills wnba get_scoreboard > data/wnba/scores.json || echo '{}' > data/wnba/scores.json
+          sports-skills wnba get_injuries > data/wnba/injuries.json || echo '{}' > data/wnba/injuries.json
+          sports-skills wnba get_standings --season 2026 > data/wnba/standings.json || echo '{}' > data/wnba/standings.json
+          sports-skills wnba get_futures > data/wnba/futures.json || echo '{}' > data/wnba/futures.json
+
+      - name: Write source status
+        run: |
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          files = ['scores.json','injuries.json','standings.json','futures.json']
+          status = {
+            'source': 'sports-skills',
+            'repo': 'https://github.com/machina-sports/sports-skills',
+            'checked_at_utc': datetime.now(timezone.utc).isoformat(),
+            'files': {}
+          }
+          for f in files:
+            path = os.path.join('data/wnba', f)
+            try:
+              raw = open(path).read().strip()
+              parsed = json.loads(raw or '{}')
+              populated = bool(parsed)
+              status['files'][f] = {'exists': True, 'bytes': len(raw), 'populated': populated}
+            except Exception as exc:
+              status['files'][f] = {'exists': os.path.exists(path), 'error': str(exc), 'populated': False}
+          with open('data/wnba/source_status.json', 'w') as fh:
+            json.dump(status, fh, indent=2)
+          print(json.dumps(status, indent=2))
+          PY
+
+      - name: Commit and push
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/wnba/*.json
+          git diff --cached --quiet && echo "No WNBA source data changes" && exit 0
+          git commit -m "Update WNBA multi-source data"
+          git pull --rebase origin main
+          git push origin main
