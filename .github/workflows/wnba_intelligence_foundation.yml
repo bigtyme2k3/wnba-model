@@ -59,7 +59,11 @@ jobs:
             player_points.py \
             wnba_matchup_intelligence.py \
             wnba_consensus_engine.py \
-            wnba_source_health.py
+            wnba_source_health.py \
+            wnba_historical_database.py \
+            wnba_self_learning.py \
+            wnba_terminal_ui.py \
+            patch_terminal_ui.py
 
       - name: Refresh sports-skills core provider
         run: python sports_skills_core_provider.py --season ${{ env.YEAR }} --out data/wnba --warehouse data/warehouse
@@ -90,12 +94,26 @@ jobs:
       - name: Build source health
         run: python wnba_source_health.py --date ${{ env.TARGET }}
 
+      - name: Update historical database
+        run: python wnba_historical_database.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build self-learning weights
+        run: python wnba_self_learning.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build terminal UI data
+        run: python wnba_terminal_ui.py --date ${{ env.TARGET }}
+
+      - name: Patch dashboard terminal UI
+        run: python patch_terminal_ui.py
+
       - name: Commit and push
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           git status --short
-          git add data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/odds*.csv data/raw/odds_source_status.json data/raw/player_points*.csv
+          git add data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/odds*.csv data/raw/odds_source_status.json data/raw/player_points*.csv data/history/*.jsonl docs/index.html
           git diff --cached --quiet && echo "No intelligence foundation changes" && exit 0
           git commit -m "Update WNBA intelligence foundation - ${{ env.TARGET }}"
           git push || (git pull --rebase origin main && git push)
