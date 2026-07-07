@@ -33,9 +33,19 @@ def file_status(path: str) -> Dict[str, Any]:
     return {"path": path, "exists": exists, "bytes": size, "populated": exists and size > 5}
 
 
+def odds_status_from_health(odds: Dict[str, Any], odds_health: Dict[str, Any]) -> str:
+    status = str(odds_health.get("status") or odds.get("status") or "missing")
+    if status in {"ok", "props_only"}:
+        return "ok"
+    if status in {"props_unpriced", "empty"}:
+        return "degraded"
+    return "missing"
+
+
 def build(target: str) -> Dict[str, Any]:
     sports = load_json("data/warehouse/sports_skills_provider_status.json", {})
     odds = load_json("data/raw/odds_source_status.json", {})
+    odds_health = load_json("data/warehouse/wnba_odds_health.json", load_json("data/dashboard/wnba_odds_health.json", {}))
     wh = load_json("data/warehouse/wnba_source_quality.json", {})
     modules = {
         "sports_skills": {"label": "sports-skills", "status": "ok" if sports.get("ready") else "degraded", "detail": sports.get("commands", {})},
@@ -44,7 +54,7 @@ def build(target: str) -> Dict[str, Any]:
         "player_intelligence": {"label": "Player Intelligence", "status": "ok" if file_status("data/warehouse/wnba_player_intelligence.json")["populated"] else "missing", "detail": file_status("data/warehouse/wnba_player_intelligence.json")},
         "matchup_intelligence": {"label": "Matchup Intelligence", "status": "ok" if file_status("data/warehouse/wnba_matchup_intelligence.json")["populated"] else "missing", "detail": file_status("data/warehouse/wnba_matchup_intelligence.json")},
         "consensus_engine": {"label": "Consensus Engine", "status": "ok" if file_status("data/warehouse/wnba_consensus_engine.json")["populated"] else "missing", "detail": file_status("data/warehouse/wnba_consensus_engine.json")},
-        "odds_layer": {"label": "Odds Layer", "status": odds.get("status", "missing"), "detail": odds},
+        "odds_layer": {"label": "Odds Layer", "status": odds_status_from_health(odds, odds_health), "detail": {"raw_status": odds, "health": odds_health}},
         "odds_api": {"label": "The Odds API", "status": "optional", "detail": "Disabled by default to conserve credits."},
     }
     ok = sum(1 for m in modules.values() if m["status"] in {"ok", "optional"})
