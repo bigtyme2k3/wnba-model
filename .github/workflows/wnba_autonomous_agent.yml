@@ -45,8 +45,24 @@ jobs:
           echo "TARGET=$TARGET" >> $GITHUB_ENV
           echo "Using target date: $TARGET"
 
-      - name: Validate autonomous agent
-        run: python -m py_compile wnba_autonomous_agent.py
+      - name: Validate modules
+        run: |
+          python -m py_compile wnba_autonomous_agent.py
+          python -m py_compile wnba_backtest_engine.py
+          python -m py_compile wnba_source_shopping.py
+          python -m py_compile wnba_vote_layer_v2.py
+
+      - name: Build backtest engine
+        run: python wnba_backtest_engine.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build source shopping layer
+        run: python wnba_source_shopping.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build vote layer v2
+        run: python wnba_vote_layer_v2.py --date ${{ env.TARGET }}
+        continue-on-error: true
 
       - name: Run autonomous agent
         run: python wnba_autonomous_agent.py --date ${{ env.TARGET }}
@@ -63,7 +79,7 @@ jobs:
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add data/warehouse/wnba_autonomous_agent.json data/dashboard/wnba_autonomous_agent.json data/dashboard/terminal_ui.json docs/index.html
+          git add data/warehouse/*.json data/dashboard/*.json docs/index.html
           git diff --cached --quiet && echo "No autonomous agent changes" && exit 0
           git commit -m "Update WNBA autonomous agent - ${{ env.TARGET }}"
           git push || (git pull --rebase origin main && git push)
