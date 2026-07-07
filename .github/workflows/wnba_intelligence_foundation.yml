@@ -51,30 +51,15 @@ jobs:
       - name: Validate intelligence scripts
         run: |
           python -m py_compile \
-            active_slate_date.py \
-            sports_skills_core_provider.py \
-            wnba_data_warehouse.py \
-            wnba_player_intelligence.py \
-            odds_source_manager.py \
-            wnba_live_odds_layer.py \
-            player_points.py \
-            wnba_matchup_intelligence.py \
-            wnba_consensus_engine.py \
-            wnba_monte_carlo_engine.py \
-            wnba_projection_ai.py \
-            wnba_market_engine.py \
-            wnba_portfolio_optimizer_v2.py \
-            wnba_decision_engine_final.py \
-            wnba_ai_coach.py \
-            wnba_source_health.py \
-            wnba_historical_database.py \
-            wnba_master_database.py \
-            wnba_results_grader.py \
-            wnba_closing_line_tracker.py \
-            wnba_betting_ledger.py \
-            wnba_self_learning.py \
-            wnba_terminal_ui.py \
-            patch_terminal_ui.py
+            active_slate_date.py sports_skills_core_provider.py wnba_data_warehouse.py \
+            wnba_player_intelligence.py odds_source_manager.py wnba_live_odds_layer.py \
+            player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py \
+            wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py \
+            wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py \
+            wnba_reasoning_layer.py wnba_portfolio_dashboard.py wnba_ai_coach.py \
+            wnba_source_health.py wnba_historical_database.py wnba_master_database.py \
+            wnba_results_grader.py wnba_closing_line_tracker.py wnba_betting_ledger.py \
+            wnba_self_learning.py wnba_terminal_ui.py patch_terminal_ui.py
 
       - name: Refresh sports-skills core provider
         run: python sports_skills_core_provider.py --season ${{ env.YEAR }} --out data/wnba --warehouse data/warehouse
@@ -128,6 +113,18 @@ jobs:
 
       - name: Build final decision engine
         run: python wnba_decision_engine_final.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build risk allocation
+        run: python wnba_risk_allocation.py --date ${{ env.TARGET }} --capital 500
+        continue-on-error: true
+
+      - name: Build reasoning layer
+        run: python wnba_reasoning_layer.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build portfolio dashboard
+        run: python wnba_portfolio_dashboard.py --date ${{ env.TARGET }}
         continue-on-error: true
 
       - name: Build AI coach
