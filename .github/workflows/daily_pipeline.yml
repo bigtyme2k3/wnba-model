@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       date:
-        description: 'Target date (YYYY-MM-DD), leave blank for today'
+        description: 'Target date (YYYY-MM-DD), leave blank for active Eastern slate'
         required: false
         default: ''
 
@@ -40,6 +40,7 @@ jobs:
       - name: Validate Python syntax
         run: |
           python -m py_compile \
+            active_slate_date.py \
             betting_engine.py \
             results_tracker.py \
             model_tracking.py \
@@ -85,14 +86,13 @@ jobs:
             validate_dashboard.py
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
 
-      - name: Set target date
+      - name: Set active Eastern slate date
         run: |
-          if [ -n "${{ github.event.inputs.date }}" ]; then
-            echo "TARGET=${{ github.event.inputs.date }}" >> $GITHUB_ENV
-          else
-            echo "TARGET=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
-          fi
-          echo "YEAR=$(date -u +%Y)" >> $GITHUB_ENV
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          YEAR=$(python active_slate_date.py --year)
+          echo "TARGET=$TARGET" >> $GITHUB_ENV
+          echo "YEAR=$YEAR" >> $GITHUB_ENV
+          echo "Using active WNBA slate date: $TARGET"
 
       - name: Legacy Basketball Reference skipped
         run: |
