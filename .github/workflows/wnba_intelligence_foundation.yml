@@ -1,0 +1,76 @@
+name: WNBA Intelligence Foundation
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for active Eastern slate'
+        required: false
+        default: ''
+  schedule:
+    - cron: '15 13 * * *'
+
+concurrency:
+  group: wnba-intelligence-foundation
+  cancel-in-progress: false
+
+jobs:
+  build-intelligence-foundation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repo
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install sports-skills==0.27.0 || pip install git+https://github.com/machina-sports/sports-skills.git
+
+      - name: Resolve active Eastern slate date
+        run: |
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          YEAR=$(python active_slate_date.py --year)
+          echo "TARGET=$TARGET" >> $GITHUB_ENV
+          echo "YEAR=$YEAR" >> $GITHUB_ENV
+          echo "Using active WNBA slate date: $TARGET"
+
+      - name: Validate intelligence scripts
+        run: python -m py_compile active_slate_date.py sports_skills_core_provider.py wnba_data_warehouse.py wnba_player_intelligence.py odds_source_manager.py
+
+      - name: Refresh sports-skills core provider
+        run: python sports_skills_core_provider.py --season ${{ env.YEAR }} --out data/wnba --warehouse data/warehouse
+        continue-on-error: true
+
+      - name: Build data warehouse
+        run: python wnba_data_warehouse.py --date ${{ env.TARGET }}
+
+      - name: Build player intelligence database
+        run: python wnba_player_intelligence.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Resolve odds source without API credits
+        run: python odds_source_manager.py --date ${{ env.TARGET }} --raw data/raw --manual data/manual/wnba_manual_odds.csv
+
+      - name: Commit and push
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git status --short
+          git add data/wnba/*.json data/warehouse/*.json data/dashboard/wnba_data_warehouse.json data/dashboard/wnba_player_intelligence.json data/raw/odds*.csv data/raw/odds_source_status.json
+          git diff --cached --quiet && echo "No intelligence foundation changes" && exit 0
+          git commit -m "Update WNBA intelligence foundation - ${{ env.TARGET }}"
+          git push || (git pull --rebase origin main && git push)
