@@ -1,8 +1,8 @@
 {
-  "generated_at_utc": "2026-07-07T22:25:34.375272+00:00",
+  "generated_at_utc": "2026-07-07T22:54:50.877768+00:00",
   "target_date": "2026-07-07",
   "source_health": {
-    "generated_at_utc": "2026-07-07T22:25:33.811584+00:00",
+    "generated_at_utc": "2026-07-07T22:54:50.296737+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "sources": 8,
@@ -104,7 +104,7 @@
             "selected_source": "current_file",
             "rows": 12,
             "notes": "Loaded from existing current odds file.",
-            "checked_at_utc": "2026-07-07T22:25:30.405775+00:00",
+            "checked_at_utc": "2026-07-07T22:54:46.796553+00:00",
             "source_priority": [
               "manual",
               "current_file",
@@ -115,7 +115,7 @@
             "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
           },
           "health": {
-            "generated_at_utc": "2026-07-07T22:25:31.428328+00:00",
+            "generated_at_utc": "2026-07-07T22:54:47.832916+00:00",
             "target_date": "2026-07-07",
             "status": "ok",
             "label": "Team odds loaded",
@@ -133,7 +133,7 @@
               "selected_source": "current_file",
               "rows": 12,
               "notes": "Loaded from existing current odds file.",
-              "checked_at_utc": "2026-07-07T22:25:30.405775+00:00",
+              "checked_at_utc": "2026-07-07T22:54:46.796553+00:00",
               "source_priority": [
                 "manual",
                 "current_file",
@@ -156,7 +156,7 @@
     }
   },
   "odds_health": {
-    "generated_at_utc": "2026-07-07T22:25:31.428328+00:00",
+    "generated_at_utc": "2026-07-07T22:54:47.832916+00:00",
     "target_date": "2026-07-07",
     "status": "ok",
     "label": "Team odds loaded",
@@ -174,7 +174,7 @@
       "selected_source": "current_file",
       "rows": 12,
       "notes": "Loaded from existing current odds file.",
-      "checked_at_utc": "2026-07-07T22:25:30.405775+00:00",
+      "checked_at_utc": "2026-07-07T22:54:46.796553+00:00",
       "source_priority": [
         "manual",
         "current_file",
@@ -188,20 +188,4970 @@
     "next_fix": "Add manual/team odds or a reliable sportsbook feed for spreads and totals; continue using prop markets for player decisions."
   },
   "sportsbook_consensus": {
-    "generated_at_utc": "2026-07-07T22:25:31.761980+00:00",
+    "generated_at_utc": "2026-07-07T22:54:48.192930+00:00",
     "target_date": "2026-07-07",
     "summary": {
-      "markets": 0,
-      "multi_book_markets": 0,
-      "single_feed_markets": 0,
-      "books_detected": [],
-      "source_used": "none"
+      "markets": 249,
+      "multi_book_markets": 163,
+      "single_feed_markets": 86,
+      "books_detected": [
+        "BetOnline.ag",
+        "BetRivers",
+        "DraftKings",
+        "FanDuel"
+      ],
+      "source_used": "data/raw/line_shopping_best_today.csv"
     },
-    "diagnosis": "If books_detected has only one item, the issue is upstream odds ingestion, not the dashboard.",
-    "markets": []
+    "diagnosis": "Reads line_shopping files first; header-only files are skipped. If source_used is stale, refresh live odds ingestion.",
+    "input_diagnostics": [
+      {
+        "path": "data/raw/line_shopping_today.csv",
+        "rows": 0,
+        "columns": [
+          "game_date",
+          "event_id",
+          "game",
+          "commence_time",
+          "market_type",
+          "market_key",
+          "side",
+          "team",
+          "player",
+          "stat",
+          "book_key",
+          "book_title",
+          "line",
+          "odds",
+          "is_preferred_book",
+          "source",
+          "scraped_at"
+        ]
+      },
+      {
+        "path": "data/raw/line_shopping_best_today.csv",
+        "rows": 498,
+        "columns": [
+          "game_date",
+          "event_id",
+          "game",
+          "commence_time",
+          "market_type",
+          "market_key",
+          "side",
+          "team",
+          "player",
+          "stat",
+          "book_key",
+          "book_title",
+          "line",
+          "odds",
+          "is_preferred_book",
+          "source",
+          "scraped_at",
+          "available_books",
+          "all_books"
+        ]
+      }
+    ],
+    "markets": [
+      {
+        "player": "Brittney Griner",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 11.0,
+        "line_range": 1.0,
+        "best_over_price": -125.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -126.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5556,
+        "consensus_under_probability": 0.5575,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 4.0,
+        "line_range": 1.0,
+        "best_over_price": -169.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -162.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6283,
+        "consensus_under_probability": 0.6183,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 25.0,
+        "line_range": 1.0,
+        "best_over_price": -129.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -130.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5633,
+        "consensus_under_probability": 0.5652,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla McBride",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 2.0,
+        "line_range": 1.0,
+        "best_over_price": -181.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -200.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6441,
+        "consensus_under_probability": 0.6667,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natasha Howard",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 19.0,
+        "line_range": 1.0,
+        "best_over_price": -129.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -132.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5633,
+        "consensus_under_probability": 0.569,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natasha Howard",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.0,
+        "line_range": 1.0,
+        "best_over_price": -138.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -142.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5798,
+        "consensus_under_probability": 0.5868,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 11.0,
+        "line_range": 1.0,
+        "best_over_price": -115.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -130.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5349,
+        "consensus_under_probability": 0.5652,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 17.0,
+        "line_range": 1.0,
+        "best_over_price": -120.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -122.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5455,
+        "consensus_under_probability": 0.5495,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.0,
+        "line_range": 1.0,
+        "best_over_price": -136.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -110.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5763,
+        "consensus_under_probability": 0.5238,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Nelson-Ododa",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 16.0,
+        "line_range": 1.0,
+        "best_over_price": -118.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -118.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5413,
+        "consensus_under_probability": 0.5413,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Nelson-Ododa",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 6.0,
+        "line_range": 1.0,
+        "best_over_price": -144.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -126.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5902,
+        "consensus_under_probability": 0.5575,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nyara Sabally",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 15.0,
+        "line_range": 1.0,
+        "best_over_price": -120.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -108.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5455,
+        "consensus_under_probability": 0.5192,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Cecilia Zandalasini",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 9.0,
+        "line_range": 1.0,
+        "best_over_price": -128.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -130.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5614,
+        "consensus_under_probability": 0.5652,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Janelle Salaun",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 14.0,
+        "line_range": 1.0,
+        "best_over_price": -120.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -132.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5455,
+        "consensus_under_probability": 0.569,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kiki Iriafen",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 24.0,
+        "line_range": 1.0,
+        "best_over_price": -128.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -130.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5614,
+        "consensus_under_probability": 0.5652,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kiki Iriafen",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 9.0,
+        "line_range": 1.0,
+        "best_over_price": -146.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -142.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5935,
+        "consensus_under_probability": 0.5868,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Shakira Austin",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 20.0,
+        "line_range": 1.0,
+        "best_over_price": -127.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -125.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5595,
+        "consensus_under_probability": 0.5556,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Shakira Austin",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 23.0,
+        "line_range": 1.0,
+        "best_over_price": -128.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -130.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5614,
+        "consensus_under_probability": 0.5652,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.0,
+        "line_range": 1.0,
+        "best_over_price": -220.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -227.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.6875,
+        "consensus_under_probability": 0.6942,
+        "status": "multi_book",
+        "books": [
+          "BetRivers",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 17.0,
+        "line_range": 1.0,
+        "best_over_price": -129.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -115.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5633,
+        "consensus_under_probability": 0.5349,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "BetRivers"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 26.0,
+        "line_range": 1.0,
+        "best_over_price": -101.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -123.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5025,
+        "consensus_under_probability": 0.5516,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 2.0,
+        "line_range": 1.0,
+        "best_over_price": -185.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -200.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6491,
+        "consensus_under_probability": 0.6667,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 32.0,
+        "line_range": 1.0,
+        "best_over_price": -122.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -123.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5495,
+        "consensus_under_probability": 0.5516,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 20.0,
+        "line_range": 1.0,
+        "best_over_price": -125.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -119.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5556,
+        "consensus_under_probability": 0.5434,
+        "status": "multi_book",
+        "books": [
+          "BetRivers",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.0,
+        "line_range": 1.0,
+        "best_over_price": -154.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -149.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.6063,
+        "consensus_under_probability": 0.5984,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Jewell Loyd",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 2.0,
+        "line_range": 1.0,
+        "best_over_price": -172.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -210.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6324,
+        "consensus_under_probability": 0.6774,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jewell Loyd",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 14.0,
+        "line_range": 1.0,
+        "best_over_price": -136.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -120.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5763,
+        "consensus_under_probability": 0.5455,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jewell Loyd",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 11.0,
+        "line_range": 1.0,
+        "best_over_price": -121.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -131.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5475,
+        "consensus_under_probability": 0.5671,
+        "status": "multi_book",
+        "books": [
+          "BetRivers",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Kelsey Mitchell",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.0,
+        "line_range": 1.0,
+        "best_over_price": -174.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -156.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.635,
+        "consensus_under_probability": 0.6094,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kelsey Mitchell",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 23.0,
+        "line_range": 1.0,
+        "best_over_price": -134.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -120.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5726,
+        "consensus_under_probability": 0.5455,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "BetRivers"
+        ]
+      },
+      {
+        "player": "Monique Billings",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 14.0,
+        "line_range": 1.0,
+        "best_over_price": -133.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -130.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5708,
+        "consensus_under_probability": 0.5652,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "NaLyssa Smith",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 13.0,
+        "line_range": 1.0,
+        "best_over_price": -130.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -132.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5652,
+        "consensus_under_probability": 0.569,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "NaLyssa Smith",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 7.0,
+        "line_range": 1.0,
+        "best_over_price": -144.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -152.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5902,
+        "consensus_under_probability": 0.6032,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Raven Johnson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.0,
+        "line_range": 1.0,
+        "best_over_price": -143.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -192.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5885,
+        "consensus_under_probability": 0.6575,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "BetRivers"
+        ]
+      },
+      {
+        "player": "Sophie Cunningham",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.0,
+        "line_range": 1.0,
+        "best_over_price": -139.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -217.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5816,
+        "consensus_under_probability": 0.6845,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "BetRivers"
+        ]
+      },
+      {
+        "player": "Awa Fam",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 18.0,
+        "line_range": 1.0,
+        "best_over_price": -130.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -125.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5652,
+        "consensus_under_probability": 0.5556,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Awa Fam",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 20.0,
+        "line_range": 1.0,
+        "best_over_price": -128.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -122.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5614,
+        "consensus_under_probability": 0.5495,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nneka Ogwumike",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 25.0,
+        "line_range": 1.0,
+        "best_over_price": -125.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -126.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5556,
+        "consensus_under_probability": 0.5575,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Brittney Griner",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": 128.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -146.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4386,
+        "consensus_under_probability": 0.5935,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 172.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -200.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.3676,
+        "consensus_under_probability": 0.6667,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 19.5,
+        "line_range": 0.0,
+        "best_over_price": -118.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 100.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5413,
+        "consensus_under_probability": 0.5,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 15.5,
+        "line_range": 0.0,
+        "best_over_price": -110.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -113.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5305,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "RA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 9.5,
+        "line_range": 0.0,
+        "best_over_price": -102.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -125.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.505,
+        "consensus_under_probability": 0.5556,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": 128.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -146.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4386,
+        "consensus_under_probability": 0.5935,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla McBride",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 18.5,
+        "line_range": 0.0,
+        "best_over_price": 100.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -129.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5633,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla McBride",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 18.5,
+        "line_range": 0.0,
+        "best_over_price": -117.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -104.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5392,
+        "consensus_under_probability": 0.5098,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla McBride",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 21.5,
+        "line_range": 0.0,
+        "best_over_price": -112.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5283,
+        "consensus_under_probability": 0.5327,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla McBride",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 15.5,
+        "line_range": 0.0,
+        "best_over_price": -106.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5413,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla McBride",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": 116.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -132.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.463,
+        "consensus_under_probability": 0.569,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Le\u00efla Lacan",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 4.5,
+        "line_range": 0.0,
+        "best_over_price": -108.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5192,
+        "consensus_under_probability": 0.5413,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natasha Howard",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 24.5,
+        "line_range": 0.0,
+        "best_over_price": -118.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -110.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5413,
+        "consensus_under_probability": 0.5238,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natasha Howard",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 27.5,
+        "line_range": 0.0,
+        "best_over_price": -104.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -123.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5098,
+        "consensus_under_probability": 0.5516,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natasha Howard",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 16.5,
+        "line_range": 0.0,
+        "best_over_price": -110.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -115.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5349,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natasha Howard",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "RA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 10.5,
+        "line_range": 0.0,
+        "best_over_price": -112.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -110.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5283,
+        "consensus_under_probability": 0.5238,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 116.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -138.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.463,
+        "consensus_under_probability": 0.5798,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 14.5,
+        "line_range": 0.0,
+        "best_over_price": -106.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -108.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5192,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "RA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.5,
+        "line_range": 0.0,
+        "best_over_price": -104.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -121.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5098,
+        "consensus_under_probability": 0.5475,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": -144.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 112.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5902,
+        "consensus_under_probability": 0.4717,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 142.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -168.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4132,
+        "consensus_under_probability": 0.6269,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": -135.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 104.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5745,
+        "consensus_under_probability": 0.4902,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 24.5,
+        "line_range": 0.0,
+        "best_over_price": -118.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5413,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 23.5,
+        "line_range": 0.0,
+        "best_over_price": -110.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5327,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 29.5,
+        "line_range": 0.0,
+        "best_over_price": -111.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5261,
+        "consensus_under_probability": 0.5327,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 18.5,
+        "line_range": 0.0,
+        "best_over_price": -113.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5305,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "RA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 10.5,
+        "line_range": 0.0,
+        "best_over_price": -102.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -121.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.505,
+        "consensus_under_probability": 0.5475,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Nelson-Ododa",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 9.5,
+        "line_range": 0.0,
+        "best_over_price": -118.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -101.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5413,
+        "consensus_under_probability": 0.5025,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": 180.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -245.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.3571,
+        "consensus_under_probability": 0.7101,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": 125.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -158.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4444,
+        "consensus_under_probability": 0.6124,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": 225.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -220.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.3077,
+        "consensus_under_probability": 0.6875,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nyara Sabally",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": 230.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -255.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.303,
+        "consensus_under_probability": 0.7183,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nyara Sabally",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 6.5,
+        "line_range": 0.0,
+        "best_over_price": 134.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -155.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4274,
+        "consensus_under_probability": 0.6078,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Cecilia Zandalasini",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 120.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -157.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4545,
+        "consensus_under_probability": 0.6109,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Gabby Williams",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": -111.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5261,
+        "consensus_under_probability": 0.5413,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Gabby Williams",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 17.5,
+        "line_range": 0.0,
+        "best_over_price": -124.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -104.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5536,
+        "consensus_under_probability": 0.5098,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Gabby Williams",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 14.5,
+        "line_range": 0.0,
+        "best_over_price": -106.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5413,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Gabby Williams",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": 100.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -129.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5633,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Janelle Salaun",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": -160.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 124.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.6154,
+        "consensus_under_probability": 0.4464,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Janelle Salaun",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 10.5,
+        "line_range": 0.0,
+        "best_over_price": 100.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -119.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5434,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Janelle Salaun",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": 100.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -122.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5495,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla Thornton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": -102.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -128.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.505,
+        "consensus_under_probability": 0.5614,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla Thornton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.5,
+        "line_range": 0.0,
+        "best_over_price": -117.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -104.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5392,
+        "consensus_under_probability": 0.5098,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla Thornton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 4.5,
+        "line_range": 0.0,
+        "best_over_price": -139.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5816,
+        "consensus_under_probability": 0.4673,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kiki Iriafen",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 26.5,
+        "line_range": 0.0,
+        "best_over_price": -106.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -123.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5516,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kiki Iriafen",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 14.5,
+        "line_range": 0.0,
+        "best_over_price": -118.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -104.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5413,
+        "consensus_under_probability": 0.5098,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Michaela Onyenwere",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 156.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -200.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.3906,
+        "consensus_under_probability": 0.6667,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Michaela Onyenwere",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 9.5,
+        "line_range": 0.0,
+        "best_over_price": -107.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -115.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5169,
+        "consensus_under_probability": 0.5349,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Shakira Austin",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 11.5,
+        "line_range": 0.0,
+        "best_over_price": -119.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5434,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Shakira Austin",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.5,
+        "line_range": 0.0,
+        "best_over_price": 116.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -142.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.463,
+        "consensus_under_probability": 0.5868,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Sonia Citron",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 123.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -158.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4484,
+        "consensus_under_probability": 0.6124,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Sonia Citron",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": 138.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -172.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4202,
+        "consensus_under_probability": 0.6324,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Sonia Citron",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 19.5,
+        "line_range": 0.0,
+        "best_over_price": -105.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -125.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5122,
+        "consensus_under_probability": 0.5556,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Sonia Citron",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 19.5,
+        "line_range": 0.0,
+        "best_over_price": -106.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -122.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5495,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Sonia Citron",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 15.5,
+        "line_range": 0.0,
+        "best_over_price": -121.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 100.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5475,
+        "consensus_under_probability": 0.5,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Sonia Citron",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": 120.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -159.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4545,
+        "consensus_under_probability": 0.6139,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 154.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -182.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.3937,
+        "consensus_under_probability": 0.6454,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": 102.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -135.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.495,
+        "consensus_under_probability": 0.5745,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 16.5,
+        "line_range": 0.0,
+        "best_over_price": -129.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5633,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 14.5,
+        "line_range": 0.0,
+        "best_over_price": -114.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -111.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5261,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 20.5,
+        "line_range": 0.0,
+        "best_over_price": -102.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -122.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.505,
+        "consensus_under_probability": 0.5495,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 11.5,
+        "line_range": 0.0,
+        "best_over_price": -110.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -117.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5392,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": 140.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -166.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4167,
+        "consensus_under_probability": 0.6241,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": -106.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -111.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5261,
+        "status": "multi_book",
+        "books": [
+          "BetRivers",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 21.5,
+        "line_range": 0.0,
+        "best_over_price": -102.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -127.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.505,
+        "consensus_under_probability": 0.5595,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 30.5,
+        "line_range": 0.0,
+        "best_over_price": -103.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5074,
+        "consensus_under_probability": 0.5413,
+        "status": "multi_book",
+        "books": [
+          "BetRivers",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "RA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 12.5,
+        "line_range": 0.0,
+        "best_over_price": -123.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5516,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.5,
+        "line_range": 0.0,
+        "best_over_price": -127.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": 110.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5595,
+        "consensus_under_probability": 0.4762,
+        "status": "multi_book",
+        "books": [
+          "BetRivers",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": -164.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": 132.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6212,
+        "consensus_under_probability": 0.431,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 6.5,
+        "line_range": 0.0,
+        "best_over_price": -130.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": 118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5652,
+        "consensus_under_probability": 0.4587,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 21.5,
+        "line_range": 0.0,
+        "best_over_price": -114.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -114.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5327,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 18.5,
+        "line_range": 0.0,
+        "best_over_price": -123.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5516,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 14.5,
+        "line_range": 0.0,
+        "best_over_price": -105.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -120.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5122,
+        "consensus_under_probability": 0.5455,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "RA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 11.5,
+        "line_range": 0.0,
+        "best_over_price": -117.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -108.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5392,
+        "consensus_under_probability": 0.5192,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 4.5,
+        "line_range": 0.0,
+        "best_over_price": 105.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4878,
+        "consensus_under_probability": 0.5327,
+        "status": "multi_book",
+        "books": [
+          "BetRivers",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Cheyenne Parker-Tyus",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 13.5,
+        "line_range": 0.0,
+        "best_over_price": 100.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -126.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5575,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Cheyenne Parker-Tyus",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.5,
+        "line_range": 0.0,
+        "best_over_price": 100.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -123.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5516,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Cheyenne Parker-Tyus",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 4.5,
+        "line_range": 0.0,
+        "best_over_price": -114.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -105.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5122,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 6.5,
+        "line_range": 0.0,
+        "best_over_price": 118.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -132.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4587,
+        "consensus_under_probability": 0.569,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 26.5,
+        "line_range": 0.0,
+        "best_over_price": -118.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -108.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5413,
+        "consensus_under_probability": 0.5192,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 25.5,
+        "line_range": 0.0,
+        "best_over_price": -108.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -112.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5192,
+        "consensus_under_probability": 0.5283,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "RA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 11.5,
+        "line_range": 0.0,
+        "best_over_price": -103.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5074,
+        "consensus_under_probability": 0.5413,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jewell Loyd",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": 134.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -165.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4274,
+        "consensus_under_probability": 0.6226,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kelsey Mitchell",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 2.5,
+        "line_range": 0.0,
+        "best_over_price": 110.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -116.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.4762,
+        "consensus_under_probability": 0.537,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "BetRivers"
+        ]
+      },
+      {
+        "player": "Kelsey Mitchell",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 26.5,
+        "line_range": 0.0,
+        "best_over_price": -110.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -113.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5305,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kelsey Mitchell",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 25.5,
+        "line_range": 0.0,
+        "best_over_price": -108.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -119.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5192,
+        "consensus_under_probability": 0.5434,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kelsey Mitchell",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 28.5,
+        "line_range": 0.0,
+        "best_over_price": -112.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -109.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5283,
+        "consensus_under_probability": 0.5215,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kelsey Mitchell",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": -182.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": 140.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6454,
+        "consensus_under_probability": 0.4167,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Lexie Hull",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 170.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": -220.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.3704,
+        "consensus_under_probability": 0.6875,
+        "status": "multi_book",
+        "books": [
+          "BetRivers",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Lexie Hull",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 3.5,
+        "line_range": 0.0,
+        "best_over_price": -161.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": 128.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6169,
+        "consensus_under_probability": 0.4386,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Monique Billings",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.5,
+        "line_range": 0.0,
+        "best_over_price": -108.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5192,
+        "consensus_under_probability": 0.5327,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Monique Billings",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": -101.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5025,
+        "consensus_under_probability": 0.5413,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "NaLyssa Smith",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 20.5,
+        "line_range": 0.0,
+        "best_over_price": -106.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -123.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5516,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Sophie Cunningham",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": -122.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -103.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5495,
+        "consensus_under_probability": 0.5074,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Sophie Cunningham",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 9.5,
+        "line_range": 0.0,
+        "best_over_price": -110.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -106.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5146,
+        "status": "multi_book",
+        "books": [
+          "BetOnline.ag",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Ariel Atkins",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 168.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -220.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.3731,
+        "consensus_under_probability": 0.6875,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Ariel Atkins",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 9.5,
+        "line_range": 0.0,
+        "best_over_price": -129.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 100.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5633,
+        "consensus_under_probability": 0.5,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Awa Fam",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": -130.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 100.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5652,
+        "consensus_under_probability": 0.5,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Awa Fam",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 12.5,
+        "line_range": 0.0,
+        "best_over_price": -114.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -105.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5122,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Awa Fam",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": 116.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -154.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.463,
+        "consensus_under_probability": 0.6063,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dearica Hamby",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 22.5,
+        "line_range": 0.0,
+        "best_over_price": -114.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5327,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dearica Hamby",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 25.5,
+        "line_range": 0.0,
+        "best_over_price": -105.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -125.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5122,
+        "consensus_under_probability": 0.5556,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dearica Hamby",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 15.5,
+        "line_range": 0.0,
+        "best_over_price": 100.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -130.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5652,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dearica Hamby",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 7.5,
+        "line_range": 0.0,
+        "best_over_price": 108.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -144.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4808,
+        "consensus_under_probability": 0.5902,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dominique Malonga",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 27.5,
+        "line_range": 0.0,
+        "best_over_price": -112.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -116.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5283,
+        "consensus_under_probability": 0.537,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dominique Malonga",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 29.5,
+        "line_range": 0.0,
+        "best_over_price": -112.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -116.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5283,
+        "consensus_under_probability": 0.537,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dominique Malonga",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 18.5,
+        "line_range": 0.0,
+        "best_over_price": -104.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -117.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5098,
+        "consensus_under_probability": 0.5392,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dominique Malonga",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 8.5,
+        "line_range": 0.0,
+        "best_over_price": -136.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 104.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5763,
+        "consensus_under_probability": 0.4902,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Flau'jae Johnson",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 105.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -136.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4878,
+        "consensus_under_probability": 0.5763,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Flau'jae Johnson",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PR",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 17.5,
+        "line_range": 0.0,
+        "best_over_price": -122.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -106.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5495,
+        "consensus_under_probability": 0.5146,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Flau'jae Johnson",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 20.5,
+        "line_range": 0.0,
+        "best_over_price": -120.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5455,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Flau'jae Johnson",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 11.5,
+        "line_range": 0.0,
+        "best_over_price": -112.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5283,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Flau'jae Johnson",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 5.5,
+        "line_range": 0.0,
+        "best_over_price": -144.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 108.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5902,
+        "consensus_under_probability": 0.4808,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natisha Hiedeman",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 2.5,
+        "line_range": 0.0,
+        "best_over_price": 140.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -186.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4167,
+        "consensus_under_probability": 0.6503,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natisha Hiedeman",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "AST",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 4.5,
+        "line_range": 0.0,
+        "best_over_price": -136.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5763,
+        "consensus_under_probability": 0.495,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natisha Hiedeman",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 20.5,
+        "line_range": 0.0,
+        "best_over_price": -125.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -106.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5556,
+        "consensus_under_probability": 0.5146,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natisha Hiedeman",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 23.5,
+        "line_range": 0.0,
+        "best_over_price": -104.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -121.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5098,
+        "consensus_under_probability": 0.5475,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natisha Hiedeman",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 15.5,
+        "line_range": 0.0,
+        "best_over_price": -120.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -105.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5455,
+        "consensus_under_probability": 0.5122,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nneka Ogwumike",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": 138.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -185.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4202,
+        "consensus_under_probability": 0.6491,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nneka Ogwumike",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 27.5,
+        "line_range": 0.0,
+        "best_over_price": -110.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -115.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5349,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nneka Ogwumike",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 17.5,
+        "line_range": 0.0,
+        "best_over_price": 100.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -125.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5556,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nneka Ogwumike",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "REB",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 7.5,
+        "line_range": 0.0,
+        "best_over_price": -110.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -109.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5215,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Rae Burrell",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "3PM",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 1.5,
+        "line_range": 0.0,
+        "best_over_price": -114.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5327,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Rae Burrell",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PRA",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 21.5,
+        "line_range": 0.0,
+        "best_over_price": -121.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -108.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5475,
+        "consensus_under_probability": 0.5192,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Rae Burrell",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PTS",
+        "book_count": 2,
+        "market_rows": 2,
+        "consensus_line": 15.5,
+        "line_range": 0.0,
+        "best_over_price": -128.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -102.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5614,
+        "consensus_under_probability": 0.505,
+        "status": "multi_book",
+        "books": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Brittney Griner",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 1600.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0588,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Brittney Griner",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PR",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 16.5,
+        "line_range": 0,
+        "best_over_price": -115.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -118.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5349,
+        "consensus_under_probability": 0.5413,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 1300.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0714,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Courtney Williams",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PR",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 20.5,
+        "line_range": 0,
+        "best_over_price": -122.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -108.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5495,
+        "consensus_under_probability": 0.5192,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla McBride",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "AST",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 2.5,
+        "line_range": 0,
+        "best_over_price": -123.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -111.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5516,
+        "consensus_under_probability": 0.5261,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Kayla McBride",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "RA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 5.5,
+        "line_range": 0,
+        "best_over_price": -158.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 118.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6124,
+        "consensus_under_probability": 0.4587,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Le\u00efla Lacan",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 16.5,
+        "line_range": 0,
+        "best_over_price": -108.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -122.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5192,
+        "consensus_under_probability": 0.5495,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Le\u00efla Lacan",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 11.5,
+        "line_range": 0,
+        "best_over_price": -114.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5327,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natasha Howard",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "AST",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 2.5,
+        "line_range": 0,
+        "best_over_price": 101.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -138.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4975,
+        "consensus_under_probability": 0.5798,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Natasha Howard",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 200.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.3333,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "AST",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 2.5,
+        "line_range": 0,
+        "best_over_price": 111.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -151.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4739,
+        "consensus_under_probability": 0.6016,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Nia Coffey",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 1400.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0667,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 700.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.125,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Miles",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "REB",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 4.5,
+        "line_range": 0,
+        "best_over_price": -106.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -125.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5556,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Olivia Nelson-Ododa",
+        "game": "Connecticut Sun @ Minnesota Lynx",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 850.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.1053,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "3PM",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 1.5,
+        "line_range": 0,
+        "best_over_price": 310.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -470.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.2439,
+        "consensus_under_probability": 0.8246,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "AST",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 2.5,
+        "line_range": 0,
+        "best_over_price": 250.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -360.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.2857,
+        "consensus_under_probability": 0.7826,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 5000.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0196,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 20.5,
+        "line_range": 0,
+        "best_over_price": 100.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -140.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5,
+        "consensus_under_probability": 0.5833,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 8.5,
+        "line_range": 0,
+        "best_over_price": -114.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5327,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Azzi Fudd",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "3PM",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 5.5,
+        "line_range": 0,
+        "best_over_price": 310.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -470.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.2439,
+        "consensus_under_probability": 0.8246,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Azzi Fudd",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 22.5,
+        "line_range": 0,
+        "best_over_price": -125.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -110.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5556,
+        "consensus_under_probability": 0.5238,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Azzi Fudd",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 18.5,
+        "line_range": 0,
+        "best_over_price": -130.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 100.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5652,
+        "consensus_under_probability": 0.5,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Azzi Fudd",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "REB",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 3.5,
+        "line_range": 0,
+        "best_over_price": 320.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -490.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.2381,
+        "consensus_under_probability": 0.8305,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Isabelle Harrison",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 13.5,
+        "line_range": 0,
+        "best_over_price": 275.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -395.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.2667,
+        "consensus_under_probability": 0.798,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Isabelle Harrison",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "REB",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 5.5,
+        "line_range": 0,
+        "best_over_price": -136.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 102.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5763,
+        "consensus_under_probability": 0.495,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jessica Shepard",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "AST",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 3.5,
+        "line_range": 0,
+        "best_over_price": 178.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -245.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.3597,
+        "consensus_under_probability": 0.7101,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jessica Shepard",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 34.5,
+        "line_range": 0,
+        "best_over_price": -145.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 105.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5918,
+        "consensus_under_probability": 0.4878,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Jessica Shepard",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 14.5,
+        "line_range": 0,
+        "best_over_price": 120.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -156.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4545,
+        "consensus_under_probability": 0.6094,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jessica Shepard",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "REB",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 15.5,
+        "line_range": 0,
+        "best_over_price": -144.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 108.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5902,
+        "consensus_under_probability": 0.4808,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jessica Shepard",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "TD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 6000.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0164,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Maria Conde",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 3.5,
+        "line_range": 0,
+        "best_over_price": 275.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -395.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.2667,
+        "consensus_under_probability": 0.798,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 6000.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0164,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 26.5,
+        "line_range": 0,
+        "best_over_price": -135.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 100.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5745,
+        "consensus_under_probability": 0.5,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PR",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 26.5,
+        "line_range": 0,
+        "best_over_price": -130.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -110.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5652,
+        "consensus_under_probability": 0.5238,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 32.5,
+        "line_range": 0,
+        "best_over_price": 105.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -140.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4878,
+        "consensus_under_probability": 0.5833,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 21.5,
+        "line_range": 0,
+        "best_over_price": 102.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -132.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.495,
+        "consensus_under_probability": 0.569,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Marina Mabrey",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "RA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 10.5,
+        "line_range": 0,
+        "best_over_price": -180.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 130.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.6429,
+        "consensus_under_probability": 0.4348,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Nyara Sabally",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 4500.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0217,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Nyara Sabally",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PR",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 21.5,
+        "line_range": 0,
+        "best_over_price": -140.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": 100.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5833,
+        "consensus_under_probability": 0.5,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Nyara Sabally",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 27.5,
+        "line_range": 0,
+        "best_over_price": 115.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -155.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.4651,
+        "consensus_under_probability": 0.6078,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Paige Bueckers",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "3PM",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 1.5,
+        "line_range": 0,
+        "best_over_price": 390.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -670.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.2041,
+        "consensus_under_probability": 0.8701,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Paige Bueckers",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "AST",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 7.5,
+        "line_range": 0,
+        "best_over_price": 104.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -138.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4902,
+        "consensus_under_probability": 0.5798,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Paige Bueckers",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 5000.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0196,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Paige Bueckers",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 34.5,
+        "line_range": 0,
+        "best_over_price": -130.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -105.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5652,
+        "consensus_under_probability": 0.5122,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Paige Bueckers",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 24.5,
+        "line_range": 0,
+        "best_over_price": 122.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -160.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.4505,
+        "consensus_under_probability": 0.6154,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Paige Bueckers",
+        "game": "Dallas Wings @ Toronto Tempo",
+        "stat": "REB",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 3.5,
+        "line_range": 0,
+        "best_over_price": 174.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -240.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.365,
+        "consensus_under_probability": 0.7059,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Cecilia Zandalasini",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 13.5,
+        "line_range": 0,
+        "best_over_price": -106.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -125.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5556,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Gabby Williams",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 20.5,
+        "line_range": 0,
+        "best_over_price": -114.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5327,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla Thornton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 2200.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0435,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Kayla Thornton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PR",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 13.5,
+        "line_range": 0,
+        "best_over_price": -117.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -116.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5392,
+        "consensus_under_probability": 0.537,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Kiki Iriafen",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 139.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.4184,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Shakira Austin",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 245.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.2899,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Sonia Citron",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 22.5,
+        "line_range": 0,
+        "best_over_price": -114.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5327,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Sonia Citron",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "RA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 6.5,
+        "line_range": 0,
+        "best_over_price": -102.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -128.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.505,
+        "consensus_under_probability": 0.5614,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 1500.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0625,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Veronica Burton",
+        "game": "Golden State Valkyries @ Washington Mystics",
+        "stat": "RA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 8.5,
+        "line_range": 0,
+        "best_over_price": -106.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -125.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5556,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "A'ja Wilson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "AST",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 2.5,
+        "line_range": 0,
+        "best_over_price": -122.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -106.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5495,
+        "consensus_under_probability": 0.5146,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "A'ja Wilson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 38.5,
+        "line_range": 0,
+        "best_over_price": -106.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -122.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5146,
+        "consensus_under_probability": 0.5495,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "A'ja Wilson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 25.5,
+        "line_range": 0,
+        "best_over_price": -111.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -116.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5261,
+        "consensus_under_probability": 0.537,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "A'ja Wilson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 9.5,
+        "line_range": 0,
+        "best_over_price": -123.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -105.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5516,
+        "consensus_under_probability": 0.5122,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 134.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.4274,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Aliyah Boston",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 26.5,
+        "line_range": 0,
+        "best_over_price": -113.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -120.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5305,
+        "consensus_under_probability": 0.5455,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Chelsea Gray",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 400.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.2,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Cheyenne Parker-Tyus",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 2200.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0435,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 420.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.1923,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Jackie Young",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "TD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 3000.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0323,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Kelsey Mitchell",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "RA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 4.5,
+        "line_range": 0,
+        "best_over_price": -162.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": 122.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.6183,
+        "consensus_under_probability": 0.4505,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Lexie Hull",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PR",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 11.5,
+        "line_range": 0,
+        "best_over_price": -121.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": -112.0,
+        "best_under_book": "DraftKings",
+        "consensus_over_probability": 0.5475,
+        "consensus_under_probability": 0.5283,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Lexie Hull",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 7.5,
+        "line_range": 0,
+        "best_over_price": -110.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -118.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5413,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "Monique Billings",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 1300.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0714,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "NaLyssa Smith",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 400.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.2,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Raven Johnson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": -200.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": 152.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.6667,
+        "consensus_under_probability": 0.3968,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "Raven Johnson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 14.5,
+        "line_range": 0,
+        "best_over_price": -110.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "BetRivers"
+        ]
+      },
+      {
+        "player": "Raven Johnson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 7.5,
+        "line_range": 0,
+        "best_over_price": -118.0,
+        "best_over_book": "BetRivers",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.5413,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "BetRivers"
+        ]
+      },
+      {
+        "player": "Raven Johnson",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 3.5,
+        "line_range": 0,
+        "best_over_price": 115.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -149.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.4651,
+        "consensus_under_probability": 0.5984,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "Stephanie Talbot",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "3PM",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": -110.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -118.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5238,
+        "consensus_under_probability": 0.5413,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "Stephanie Talbot",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "PTS",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 5.5,
+        "line_range": 0,
+        "best_over_price": 118.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": -154.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.4587,
+        "consensus_under_probability": 0.6063,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "Stephanie Talbot",
+        "game": "Indiana Fever @ Las Vegas Aces",
+        "stat": "REB",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 3.5,
+        "line_range": 0,
+        "best_over_price": -141.0,
+        "best_over_book": "BetOnline.ag",
+        "best_under_price": 109.0,
+        "best_under_book": "BetOnline.ag",
+        "consensus_over_probability": 0.5851,
+        "consensus_under_probability": 0.4785,
+        "status": "single_feed",
+        "books": [
+          "BetOnline.ag"
+        ]
+      },
+      {
+        "player": "Ariel Atkins",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "PRA",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 15.5,
+        "line_range": 0,
+        "best_over_price": -114.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": -114.0,
+        "best_under_book": "FanDuel",
+        "consensus_over_probability": 0.5327,
+        "consensus_under_probability": 0.5327,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Awa Fam",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 1700.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0556,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Dearica Hamby",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 321.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.2375,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Dominique Malonga",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 125.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.4444,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Flau'jae Johnson",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 850.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.1053,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      },
+      {
+        "player": "Natisha Hiedeman",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 1640.0,
+        "best_over_book": "DraftKings",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.0575,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "DraftKings"
+        ]
+      },
+      {
+        "player": "Nneka Ogwumike",
+        "game": "Seattle Storm @ Los Angeles Sparks",
+        "stat": "DD",
+        "book_count": 1,
+        "market_rows": 1,
+        "consensus_line": 0.5,
+        "line_range": 0,
+        "best_over_price": 230.0,
+        "best_over_book": "FanDuel",
+        "best_under_price": null,
+        "best_under_book": null,
+        "consensus_over_probability": 0.303,
+        "consensus_under_probability": null,
+        "status": "single_feed",
+        "books": [
+          "FanDuel"
+        ]
+      }
+    ]
   },
   "live_odds": {
-    "generated_at_utc": "2026-07-07T22:25:30.734800+00:00",
+    "generated_at_utc": "2026-07-07T22:54:47.142067+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 12,
@@ -358,7 +5308,7 @@
     "policy": "Free/manual/cache first. Paid API is optional only."
   },
   "projection_ai": {
-    "generated_at_utc": "2026-07-07T22:25:33.104851+00:00",
+    "generated_at_utc": "2026-07-07T22:54:49.572600+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -367,7 +5317,7 @@
     "projections": []
   },
   "ai_coach": {
-    "generated_at_utc": "2026-07-07T22:25:33.768979+00:00",
+    "generated_at_utc": "2026-07-07T22:54:50.251857+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "notes": 0,
@@ -376,11 +5326,11 @@
     "coach_cards": []
   },
   "master_database": {
-    "generated_at_utc": "2026-07-07T22:25:34.333505+00:00",
+    "generated_at_utc": "2026-07-07T22:54:50.831958+00:00",
     "target_date": "2026-07-07",
     "latest": {
       "date": "2026-07-07",
-      "captured_at_utc": "2026-07-07T22:25:34.333505+00:00",
+      "captured_at_utc": "2026-07-07T22:54:50.831958+00:00",
       "final": {
         "rows": 0,
         "bets": 0,
@@ -403,7 +5353,7 @@
         "down": 0
       },
       "grading": {
-        "generated_at_utc": "2026-07-07T22:25:34.217762+00:00",
+        "generated_at_utc": "2026-07-07T22:54:50.703962+00:00",
         "target_date": "2026-07-07",
         "actual_source_rows": 0,
         "graded_this_run": 0,
@@ -414,7 +5364,7 @@
         "status": "waiting_for_actuals"
       },
       "clv": {
-        "generated_at_utc": "2026-07-07T22:25:33.461670+00:00",
+        "generated_at_utc": "2026-07-07T22:54:49.919996+00:00",
         "target_date": "2026-07-07",
         "stage": "snapshot",
         "snapshot_rows_added": 0,
@@ -430,7 +5380,7 @@
     }
   },
   "consensus": {
-    "generated_at_utc": "2026-07-07T22:25:32.432938+00:00",
+    "generated_at_utc": "2026-07-07T22:54:48.901750+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -442,7 +5392,7 @@
     "all_consensus": []
   },
   "matchups": {
-    "generated_at_utc": "2026-07-07T22:25:32.098990+00:00",
+    "generated_at_utc": "2026-07-07T22:54:48.539766+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -452,7 +5402,7 @@
     "matchups": []
   },
   "players": {
-    "generated_at_utc": "2026-07-07T22:25:30.070246+00:00",
+    "generated_at_utc": "2026-07-07T22:54:46.459395+00:00",
     "target_date": "2026-07-07",
     "players": [],
     "summary": {
@@ -463,7 +5413,7 @@
     }
   },
   "monte_carlo": {
-    "generated_at_utc": "2026-07-07T22:25:32.774179+00:00",
+    "generated_at_utc": "2026-07-07T22:54:49.240295+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -475,7 +5425,7 @@
     "all_simulations": []
   },
   "market_engine": {
-    "generated_at_utc": "2026-07-07T22:25:33.535272+00:00",
+    "generated_at_utc": "2026-07-07T22:54:49.997256+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "markets": 0,
@@ -485,7 +5435,7 @@
     "movements": []
   },
   "portfolio_v2": {
-    "generated_at_utc": "2026-07-07T22:25:33.574193+00:00",
+    "generated_at_utc": "2026-07-07T22:54:50.040420+00:00",
     "target_date": "2026-07-07",
     "bankroll": 500.0,
     "summary": {
@@ -497,7 +5447,7 @@
     "candidates": []
   },
   "decision_final": {
-    "generated_at_utc": "2026-07-07T22:25:33.614326+00:00",
+    "generated_at_utc": "2026-07-07T22:54:50.082032+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -508,7 +5458,7 @@
     "portfolio_card": []
   },
   "history": {
-    "generated_at_utc": "2026-07-07T22:25:33.870945+00:00",
+    "generated_at_utc": "2026-07-07T22:54:50.357908+00:00",
     "target_date": "2026-07-07",
     "added_records": 0,
     "total_records": 0,
@@ -517,7 +5467,7 @@
     "source_predictions_games": 2
   },
   "learning": {
-    "generated_at_utc": "2026-07-07T22:25:34.293150+00:00",
+    "generated_at_utc": "2026-07-07T22:54:50.789471+00:00",
     "target_date": "2026-07-07",
     "history_records": 0,
     "graded_records": 0,
@@ -540,7 +5490,7 @@
     ]
   },
   "grading": {
-    "generated_at_utc": "2026-07-07T22:25:34.217762+00:00",
+    "generated_at_utc": "2026-07-07T22:54:50.703962+00:00",
     "target_date": "2026-07-07",
     "actual_source_rows": 0,
     "graded_this_run": 0,
@@ -551,7 +5501,7 @@
     "status": "waiting_for_actuals"
   },
   "clv": {
-    "generated_at_utc": "2026-07-07T22:25:33.461670+00:00",
+    "generated_at_utc": "2026-07-07T22:54:49.919996+00:00",
     "target_date": "2026-07-07",
     "stage": "snapshot",
     "snapshot_rows_added": 0,
@@ -1509,9 +6459,14 @@
     "team_spread_rows": 12,
     "team_total_rows": 12,
     "active_prop_rows": 0,
-    "sportsbook_markets": 0,
-    "multi_book_markets": 0,
-    "books_detected": [],
+    "sportsbook_markets": 249,
+    "multi_book_markets": 163,
+    "books_detected": [
+      "BetOnline.ag",
+      "BetRivers",
+      "DraftKings",
+      "FanDuel"
+    ],
     "ai_projection_rows": 0,
     "coach_notes": 0
   }
