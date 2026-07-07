@@ -9,6 +9,10 @@ on:
         description: 'Target date (YYYY-MM-DD), leave blank for active Eastern slate'
         required: false
         default: ''
+      use_odds_api:
+        description: 'Use The Odds API this run? Set true only when you want to spend credits.'
+        required: false
+        default: 'false'
 
 concurrency:
   group: wnba-daily-pipeline
@@ -41,6 +45,7 @@ jobs:
         run: |
           python -m py_compile \
             active_slate_date.py \
+            odds_source_manager.py \
             betting_engine.py \
             results_tracker.py \
             model_tracking.py \
@@ -97,24 +102,30 @@ jobs:
       - name: Legacy Basketball Reference skipped
         run: |
           echo "Basketball Reference HTML scrape is retired from the daily path."
-          echo "Using committed historical data plus ESPN, stats.wnba.com, and cached/available odds."
+          echo "Using committed historical data plus ESPN, stats.wnba.com, sports-skills, manual/cached odds, and optional Odds API."
 
-      - name: Scrape odds
+      - name: Optional The Odds API scrape
+        if: ${{ github.event.inputs.use_odds_api == 'true' }}
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
+      - name: Resolve odds source without spending API credits
+        run: python odds_source_manager.py --date ${{ env.TARGET }} --raw data/raw --manual data/manual/wnba_manual_odds.csv
+
       - name: Validate odds
         run: python validate_odds.py --date ${{ env.TARGET }} --raw data/raw --non-strict
 
-      - name: Scrape props
+      - name: Optional props API scrape
+        if: ${{ github.event.inputs.use_odds_api == 'true' }}
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python scrape_odds_props.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
-      - name: Scrape line shopping
+      - name: Optional line shopping API scrape
+        if: ${{ github.event.inputs.use_odds_api == 'true' }}
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python line_shopping.py --date ${{ env.TARGET }} --out data/raw
