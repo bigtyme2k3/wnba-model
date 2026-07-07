@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       date:
-        description: 'Target date (YYYY-MM-DD), leave blank for today'
+        description: 'Target date (YYYY-MM-DD), leave blank for active Eastern slate'
         required: false
         default: ''
   schedule:
@@ -34,16 +34,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Resolve target date
+      - name: Resolve active Eastern slate date
         run: |
-          if [ -n "${{ github.event.inputs.date }}" ]; then
-            echo "TARGET=${{ github.event.inputs.date }}" >> $GITHUB_ENV
-          else
-            echo "TARGET=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
-          fi
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> $GITHUB_ENV
+          echo "Using active WNBA slate date: $TARGET"
 
       - name: Validate warehouse syntax
-        run: python -m py_compile wnba_data_warehouse.py
+        run: python -m py_compile active_slate_date.py wnba_data_warehouse.py
 
       - name: Build WNBA data warehouse
         run: python wnba_data_warehouse.py --date ${{ env.TARGET }}
