@@ -17,6 +17,10 @@ def build(target: str):
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target,
         "source_health": load_json("data/dashboard/wnba_source_health.json", {}),
+        "live_odds": load_json("data/dashboard/wnba_live_odds_layer.json", {}),
+        "projection_ai": load_json("data/dashboard/wnba_projection_ai.json", {}),
+        "ai_coach": load_json("data/dashboard/wnba_ai_coach.json", {}),
+        "master_database": load_json("data/dashboard/wnba_master_database_summary.json", {}),
         "consensus": load_json("data/dashboard/wnba_consensus_engine.json", {}),
         "matchups": load_json("data/dashboard/wnba_matchup_intelligence.json", {}),
         "players": load_json("data/dashboard/wnba_player_intelligence.json", {}),
@@ -37,6 +41,9 @@ def build(target: str):
     port=(bundle.get("portfolio_v2",{}) or {}).get("summary",{})
     dec=(bundle.get("decision_final",{}) or {}).get("summary",{})
     market=(bundle.get("market_engine",{}) or {}).get("summary",{})
+    odds=(bundle.get("live_odds",{}) or {}).get("summary",{})
+    coach=(bundle.get("ai_coach",{}) or {}).get("summary",{})
+    proj=(bundle.get("projection_ai",{}) or {}).get("summary",{})
     bundle["terminal_summary"]={
         "top_cards": top[:5],
         "final_bets": dec.get("bets",0),
@@ -54,6 +61,9 @@ def build(target: str):
         "portfolio_card_size": port.get("card_size",0),
         "portfolio_total_stake": port.get("total_stake",0),
         "market_rows": market.get("markets",0),
+        "live_odds_rows": odds.get("rows",0),
+        "ai_projection_rows": proj.get("rows",0),
+        "coach_notes": coach.get("notes",0),
     }
     os.makedirs("data/dashboard", exist_ok=True)
     with open("data/dashboard/terminal_ui.json","w",encoding="utf-8") as f: json.dump(bundle,f,indent=2)
