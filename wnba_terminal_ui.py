@@ -17,6 +17,8 @@ def build(target: str):
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target,
         "source_health": load_json("data/dashboard/wnba_source_health.json", {}),
+        "odds_health": load_json("data/dashboard/wnba_odds_health.json", {}),
+        "sportsbook_consensus": load_json("data/dashboard/wnba_sportsbook_consensus.json", {}),
         "live_odds": load_json("data/dashboard/wnba_live_odds_layer.json", {}),
         "projection_ai": load_json("data/dashboard/wnba_projection_ai.json", {}),
         "ai_coach": load_json("data/dashboard/wnba_ai_coach.json", {}),
@@ -42,6 +44,8 @@ def build(target: str):
     dec=(bundle.get("decision_final",{}) or {}).get("summary",{})
     market=(bundle.get("market_engine",{}) or {}).get("summary",{})
     odds=(bundle.get("live_odds",{}) or {}).get("summary",{})
+    odds_health=(bundle.get("odds_health",{}) or {}).get("summary",{})
+    book=(bundle.get("sportsbook_consensus",{}) or {}).get("summary",{})
     coach=(bundle.get("ai_coach",{}) or {}).get("summary",{})
     proj=(bundle.get("projection_ai",{}) or {}).get("summary",{})
     bundle["terminal_summary"]={
@@ -62,6 +66,12 @@ def build(target: str):
         "portfolio_total_stake": port.get("total_stake",0),
         "market_rows": market.get("markets",0),
         "live_odds_rows": odds.get("rows",0),
+        "team_spread_rows": odds_health.get("spread_rows",0),
+        "team_total_rows": odds_health.get("total_rows",0),
+        "active_prop_rows": odds_health.get("active_prop_rows",0),
+        "sportsbook_markets": book.get("markets",0),
+        "multi_book_markets": book.get("multi_book_markets",0),
+        "books_detected": book.get("books_detected",[]),
         "ai_projection_rows": proj.get("rows",0),
         "coach_notes": coach.get("notes",0),
     }
