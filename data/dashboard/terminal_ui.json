@@ -1,0 +1,718 @@
+{
+  "generated_at_utc": "2026-07-07T12:14:51.033634+00:00",
+  "target_date": "2026-07-07",
+  "source_health": {
+    "generated_at_utc": "2026-07-07T12:14:50.873300+00:00",
+    "target_date": "2026-07-07",
+    "summary": {
+      "sources": 8,
+      "ok_or_optional": 6,
+      "degraded_or_missing": 2
+    },
+    "sources": {
+      "sports_skills": {
+        "label": "sports-skills",
+        "status": "ok",
+        "detail": {
+          "scores": {
+            "ok": true,
+            "returncode": 0,
+            "bytes": 4612,
+            "stderr": "",
+            "output_file": "data/wnba/scores.json"
+          },
+          "injuries": {
+            "ok": true,
+            "returncode": 0,
+            "bytes": 10133,
+            "stderr": "",
+            "output_file": "data/wnba/injuries.json"
+          },
+          "standings": {
+            "ok": true,
+            "returncode": 0,
+            "bytes": 10742,
+            "stderr": "",
+            "output_file": "data/wnba/standings.json"
+          },
+          "futures": {
+            "ok": true,
+            "returncode": 0,
+            "bytes": 2097,
+            "stderr": "",
+            "output_file": "data/wnba/futures.json"
+          }
+        }
+      },
+      "stats_wnba": {
+        "label": "stats.wnba.com",
+        "status": "missing",
+        "detail": {
+          "path": "data/raw/wnba_players_live.json",
+          "exists": false,
+          "bytes": 0,
+          "populated": false
+        }
+      },
+      "data_warehouse": {
+        "label": "Data Warehouse",
+        "status": "degraded",
+        "detail": {
+          "games": 2,
+          "injuries": 0,
+          "standings": 0,
+          "futures": 1
+        }
+      },
+      "player_intelligence": {
+        "label": "Player Intelligence",
+        "status": "ok",
+        "detail": {
+          "path": "data/warehouse/wnba_player_intelligence.json",
+          "exists": true,
+          "bytes": 247,
+          "populated": true
+        }
+      },
+      "matchup_intelligence": {
+        "label": "Matchup Intelligence",
+        "status": "ok",
+        "detail": {
+          "path": "data/warehouse/wnba_matchup_intelligence.json",
+          "exists": true,
+          "bytes": 178,
+          "populated": true
+        }
+      },
+      "consensus_engine": {
+        "label": "Consensus Engine",
+        "status": "ok",
+        "detail": {
+          "path": "data/warehouse/wnba_consensus_engine.json",
+          "exists": true,
+          "bytes": 218,
+          "populated": true
+        }
+      },
+      "odds_layer": {
+        "label": "Odds Layer",
+        "status": "ok",
+        "detail": {
+          "status": "ok",
+          "target_date": "2026-07-07",
+          "selected_source": "current_file",
+          "rows": 12,
+          "notes": "Loaded from existing current odds file.",
+          "checked_at_utc": "2026-07-07T12:14:49.718549+00:00",
+          "source_priority": [
+            "manual",
+            "current_file",
+            "cache_exact",
+            "cache_last_known",
+            "empty"
+          ],
+          "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
+        }
+      },
+      "odds_api": {
+        "label": "The Odds API",
+        "status": "optional",
+        "detail": "Disabled by default to conserve credits."
+      }
+    }
+  },
+  "consensus": {
+    "generated_at_utc": "2026-07-07T12:14:50.780620+00:00",
+    "target_date": "2026-07-07",
+    "summary": {
+      "rows": 0,
+      "bets": 0,
+      "leans": 0,
+      "elite": 0
+    },
+    "top_consensus": [],
+    "all_consensus": []
+  },
+  "matchups": {
+    "generated_at_utc": "2026-07-07T12:14:50.420301+00:00",
+    "target_date": "2026-07-07",
+    "summary": {
+      "rows": 0,
+      "excellent": 0,
+      "good": 0
+    },
+    "matchups": []
+  },
+  "players": {
+    "generated_at_utc": "2026-07-07T12:14:49.362387+00:00",
+    "target_date": "2026-07-07",
+    "players": [],
+    "summary": {
+      "players": 0,
+      "injury_records_matched": 0,
+      "projection_records_matched": 0,
+      "core_rotation_players": 0
+    }
+  },
+  "history": {
+    "generated_at_utc": "2026-07-07T12:14:50.939564+00:00",
+    "target_date": "2026-07-07",
+    "added_records": 0,
+    "total_records": 0,
+    "by_recommendation": {},
+    "recent_records": [],
+    "source_predictions_games": 2
+  },
+  "learning": {
+    "generated_at_utc": "2026-07-07T12:14:50.988701+00:00",
+    "target_date": "2026-07-07",
+    "history_records": 0,
+    "graded_records": 0,
+    "engine_weights": {
+      "Projection EV": 0.1429,
+      "Projection Edge": 0.1429,
+      "Player Intelligence": 0.1429,
+      "Matchup Intelligence": 0.1429,
+      "Injury Engine": 0.1429,
+      "Market Engine": 0.1429,
+      "DeepSeek Engine": 0.1429
+    },
+    "notes": [
+      "Not enough graded results yet; using balanced starter weights."
+    ],
+    "next_learning_needs": [
+      "actual stat results",
+      "closing lines",
+      "engine-level vote outcome attribution"
+    ]
+  },
+  "portfolio": {
+    "generated_at_utc": "2026-07-07T11:10:48.143401+00:00",
+    "target_date": "2026-07-07",
+    "source": "DeepSeek concept integrated safely by ChatGPT",
+    "status": "ok",
+    "summary": {
+      "props_reviewed": 175,
+      "candidate_bets": 0,
+      "portfolios_created": 5,
+      "top_portfolio": "Best 3-Leg Portfolio",
+      "top_score": 514.1
+    },
+    "portfolios": [
+      {
+        "name": "Best 3-Leg Portfolio",
+        "style": "aggressive",
+        "legs": 3,
+        "portfolio_score": 514.1,
+        "expected_value_sum": 3.5943,
+        "correlation_penalty": 0.0,
+        "recommended_bankroll_fraction": 0.08,
+        "bets": [
+          {
+            "id": "Arike Ogunbowale|3PM|None|Dallas Wings @ New York Liberty",
+            "player": "Arike Ogunbowale",
+            "team": "Dallas Wings",
+            "game": "Dallas Wings @ New York Liberty",
+            "stat": "3PM",
+            "signal": null,
+            "line": 2.0,
+            "odds": 310.0,
+            "sportsbook": "FanDuel",
+            "score": 75.9,
+            "probability": 0.95,
+            "ev": 2.895,
+            "kelly_fraction": 0.04,
+            "action": ""
+          },
+          {
+            "id": "Olivia Nelson-Ododa|PTS|UNDER|Connecticut Sun @ Minnesota Lynx",
+            "player": "Olivia Nelson-Ododa",
+            "team": "Connecticut Sun",
+            "game": "Connecticut Sun @ Minnesota Lynx",
+            "stat": "PTS",
+            "signal": "UNDER",
+            "line": 6.0,
+            "odds": -101.0,
+            "sportsbook": "DraftKings",
+            "score": 78.4,
+            "probability": 0.728,
+            "ev": 0.4488,
+            "kelly_fraction": 0.04,
+            "action": ""
+          },
+          {
+            "id": "Kelsey Plum|PTS|OVER|Seattle Storm @ Los Angeles Sparks",
+            "player": "Kelsey Plum",
+            "team": "Los Angeles Sparks",
+            "game": "Seattle Storm @ Los Angeles Sparks",
+            "stat": "PTS",
+            "signal": "OVER",
+            "line": 19.0,
+            "odds": -110,
+            "sportsbook": null,
+            "score": 77.8,
+            "probability": 0.655,
+            "ev": 0.2505,
+            "kelly_fraction": 0.04,
+            "action": ""
+          }
+        ]
+      },
+      {
+        "name": "Top 3 Singles",
+        "style": "balanced",
+        "legs": 3,
+        "portfolio_score": 424.25,
+        "expected_value_sum": 3.5943,
+        "correlation_penalty": 0.0,
+        "recommended_bankroll_fraction": 0.08,
+        "bets": [
+          {
+            "id": "Arike Ogunbowale|3PM|None|Dallas Wings @ New York Liberty",
+            "player": "Arike Ogunbowale",
+            "team": "Dallas Wings",
+            "game": "Dallas Wings @ New York Liberty",
+            "stat": "3PM",
+            "signal": null,
+            "line": 2.0,
+            "odds": 310.0,
+            "sportsbook": "FanDuel",
+            "score": 75.9,
+            "probability": 0.95,
+            "ev": 2.895,
+            "kelly_fraction": 0.04,
+            "action": ""
+          },
+          {
+            "id": "Olivia Nelson-Ododa|PTS|UNDER|Connecticut Sun @ Minnesota Lynx",
+            "player": "Olivia Nelson-Ododa",
+            "team": "Connecticut Sun",
+            "game": "Connecticut Sun @ Minnesota Lynx",
+            "stat": "PTS",
+            "signal": "UNDER",
+            "line": 6.0,
+            "odds": -101.0,
+            "sportsbook": "DraftKings",
+            "score": 78.4,
+            "probability": 0.728,
+            "ev": 0.4488,
+            "kelly_fraction": 0.04,
+            "action": ""
+          },
+          {
+            "id": "Kelsey Plum|PTS|OVER|Seattle Storm @ Los Angeles Sparks",
+            "player": "Kelsey Plum",
+            "team": "Los Angeles Sparks",
+            "game": "Seattle Storm @ Los Angeles Sparks",
+            "stat": "PTS",
+            "signal": "OVER",
+            "line": 19.0,
+            "odds": -110,
+            "sportsbook": null,
+            "score": 77.8,
+            "probability": 0.655,
+            "ev": 0.2505,
+            "kelly_fraction": 0.04,
+            "action": ""
+          }
+        ]
+      },
+      {
+        "name": "Best 2-Leg Portfolio",
+        "style": "balanced",
+        "legs": 2,
+        "portfolio_score": 389.1,
+        "expected_value_sum": 3.3438,
+        "correlation_penalty": 0.0,
+        "recommended_bankroll_fraction": 0.08,
+        "bets": [
+          {
+            "id": "Arike Ogunbowale|3PM|None|Dallas Wings @ New York Liberty",
+            "player": "Arike Ogunbowale",
+            "team": "Dallas Wings",
+            "game": "Dallas Wings @ New York Liberty",
+            "stat": "3PM",
+            "signal": null,
+            "line": 2.0,
+            "odds": 310.0,
+            "sportsbook": "FanDuel",
+            "score": 75.9,
+            "probability": 0.95,
+            "ev": 2.895,
+            "kelly_fraction": 0.04,
+            "action": ""
+          },
+          {
+            "id": "Olivia Nelson-Ododa|PTS|UNDER|Connecticut Sun @ Minnesota Lynx",
+            "player": "Olivia Nelson-Ododa",
+            "team": "Connecticut Sun",
+            "game": "Connecticut Sun @ Minnesota Lynx",
+            "stat": "PTS",
+            "signal": "UNDER",
+            "line": 6.0,
+            "odds": -101.0,
+            "sportsbook": "DraftKings",
+            "score": 78.4,
+            "probability": 0.728,
+            "ev": 0.4488,
+            "kelly_fraction": 0.04,
+            "action": ""
+          }
+        ]
+      },
+      {
+        "name": "Best Single",
+        "style": "conservative",
+        "legs": 1,
+        "portfolio_score": 246.8,
+        "expected_value_sum": 2.895,
+        "correlation_penalty": 0.0,
+        "recommended_bankroll_fraction": 0.04,
+        "bets": [
+          {
+            "id": "Arike Ogunbowale|3PM|None|Dallas Wings @ New York Liberty",
+            "player": "Arike Ogunbowale",
+            "team": "Dallas Wings",
+            "game": "Dallas Wings @ New York Liberty",
+            "stat": "3PM",
+            "signal": null,
+            "line": 2.0,
+            "odds": 310.0,
+            "sportsbook": "FanDuel",
+            "score": 75.9,
+            "probability": 0.95,
+            "ev": 2.895,
+            "kelly_fraction": 0.04,
+            "action": ""
+          }
+        ]
+      },
+      {
+        "name": "Low Correlation Card",
+        "style": "conservative",
+        "legs": 3,
+        "portfolio_score": 127.82,
+        "expected_value_sum": 0.9093,
+        "correlation_penalty": 0.03,
+        "recommended_bankroll_fraction": 0.08,
+        "bets": [
+          {
+            "id": "Arike Ogunbowale|PRA|OVER|Dallas Wings @ New York Liberty",
+            "player": "Arike Ogunbowale",
+            "team": "Dallas Wings",
+            "game": "Dallas Wings @ New York Liberty",
+            "stat": "PRA",
+            "signal": "OVER",
+            "line": 31.0,
+            "odds": 100.0,
+            "sportsbook": "DraftKings",
+            "score": 82.6,
+            "probability": 0.605,
+            "ev": 0.21,
+            "kelly_fraction": 0.04,
+            "action": ""
+          },
+          {
+            "id": "Olivia Nelson-Ododa|PTS|UNDER|Connecticut Sun @ Minnesota Lynx",
+            "player": "Olivia Nelson-Ododa",
+            "team": "Connecticut Sun",
+            "game": "Connecticut Sun @ Minnesota Lynx",
+            "stat": "PTS",
+            "signal": "UNDER",
+            "line": 6.0,
+            "odds": -101.0,
+            "sportsbook": "DraftKings",
+            "score": 78.4,
+            "probability": 0.728,
+            "ev": 0.4488,
+            "kelly_fraction": 0.04,
+            "action": ""
+          },
+          {
+            "id": "Kelsey Plum|PTS|OVER|Seattle Storm @ Los Angeles Sparks",
+            "player": "Kelsey Plum",
+            "team": "Los Angeles Sparks",
+            "game": "Seattle Storm @ Los Angeles Sparks",
+            "stat": "PTS",
+            "signal": "OVER",
+            "line": 19.0,
+            "odds": -110,
+            "sportsbook": null,
+            "score": 77.8,
+            "probability": 0.655,
+            "ev": 0.2505,
+            "kelly_fraction": 0.04,
+            "action": ""
+          }
+        ]
+      }
+    ]
+  },
+  "market_timing": {
+    "generated_at_utc": "2026-07-07T01:12:21.535596+00:00",
+    "target_date": "2026-07-07",
+    "summary": {
+      "props_scored": 20,
+      "bet_now_count": 0,
+      "bet_soon_count": 6,
+      "wait_count": 4,
+      "monitor_count": 0,
+      "pass_count": 10,
+      "avg_expected_clv": 0.5
+    },
+    "action_counts": {
+      "BET SOON": 6,
+      "WAIT FOR LINE": 4,
+      "PASS": 10
+    },
+    "best_timing_plays": [
+      {
+        "player": "Arike Ogunbowale",
+        "team": "Dallas Wings",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "PTS",
+        "signal": "OVER",
+        "line": 22.5,
+        "odds": -114.0,
+        "pred": 23.5,
+        "timing_action": "BET SOON",
+        "timing_confidence": 77.9,
+        "urgency_score": 79.6,
+        "expected_clv": 1.09,
+        "expected_line_direction": "toward model",
+        "sportsbook": "FanDuel",
+        "book_timing_profile": "slow",
+        "latest_action_window": "monitor until line moves",
+        "reasons": [
+          "book may be slower to adjust"
+        ]
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "team": "Dallas Wings",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "3PM",
+        "signal": null,
+        "line": 2.0,
+        "odds": 310.0,
+        "pred": 2.3,
+        "timing_action": "BET SOON",
+        "timing_confidence": 74.8,
+        "urgency_score": 75.7,
+        "expected_clv": 1.55,
+        "expected_line_direction": "toward model",
+        "sportsbook": "FanDuel",
+        "book_timing_profile": "slow",
+        "latest_action_window": "monitor until line moves",
+        "reasons": [
+          "positive expected CLV",
+          "book may be slower to adjust"
+        ]
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "team": "Dallas Wings",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "PRA",
+        "signal": "OVER",
+        "line": 31.0,
+        "odds": 100.0,
+        "pred": 32.1,
+        "timing_action": "BET SOON",
+        "timing_confidence": 74.5,
+        "urgency_score": 66.4,
+        "expected_clv": 0.88,
+        "expected_line_direction": "toward model",
+        "sportsbook": "DraftKings",
+        "book_timing_profile": "fast",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "team": "Dallas Wings",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "AST",
+        "signal": null,
+        "line": 4.5,
+        "odds": 250.0,
+        "pred": 4.8,
+        "timing_action": "BET SOON",
+        "timing_confidence": 72.2,
+        "urgency_score": 71.2,
+        "expected_clv": 0.9,
+        "expected_line_direction": "toward model",
+        "sportsbook": "FanDuel",
+        "book_timing_profile": "slow",
+        "latest_action_window": "monitor until line moves",
+        "reasons": [
+          "book may be slower to adjust"
+        ]
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "team": "Dallas Wings",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "REB",
+        "signal": "OVER",
+        "line": 4.0,
+        "odds": -110,
+        "pred": 4.4,
+        "timing_action": "BET SOON",
+        "timing_confidence": 70.1,
+        "urgency_score": 64.0,
+        "expected_clv": 0.97,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      {
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "3PM",
+        "signal": "OVER",
+        "line": 2.0,
+        "odds": -110,
+        "pred": 2.7,
+        "timing_action": "BET SOON",
+        "timing_confidence": 65.7,
+        "urgency_score": 60.8,
+        "expected_clv": 0.82,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      }
+    ],
+    "monitor_list": [
+      {
+        "player": "Breanna Stewart",
+        "team": "New York Liberty",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "PRA",
+        "signal": "OVER",
+        "line": 35.5,
+        "odds": -110,
+        "pred": 37.0,
+        "timing_action": "WAIT FOR LINE",
+        "timing_confidence": 66.6,
+        "urgency_score": 55.8,
+        "expected_clv": 0.62,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      {
+        "player": "Breanna Stewart",
+        "team": "New York Liberty",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "PTS",
+        "signal": "OVER",
+        "line": 23.0,
+        "odds": -110,
+        "pred": 24.1,
+        "timing_action": "WAIT FOR LINE",
+        "timing_confidence": 64.6,
+        "urgency_score": 54.4,
+        "expected_clv": 0.59,
+        "expected_line_direction": "toward model",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      {
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "PRA",
+        "signal": "OVER",
+        "line": 31.0,
+        "odds": -110,
+        "pred": 32.1,
+        "timing_action": "WAIT FOR LINE",
+        "timing_confidence": 64.2,
+        "urgency_score": 53.4,
+        "expected_clv": 0.45,
+        "expected_line_direction": "stable",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      },
+      {
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "game": "Dallas Wings @ New York Liberty",
+        "stat": "PTS",
+        "signal": "OVER",
+        "line": 19.0,
+        "odds": -110,
+        "pred": 19.9,
+        "timing_action": "WAIT FOR LINE",
+        "timing_confidence": 64.5,
+        "urgency_score": 53.0,
+        "expected_clv": 0.48,
+        "expected_line_direction": "stable",
+        "sportsbook": "Unknown",
+        "book_timing_profile": "unknown",
+        "latest_action_window": "monitor until line moves",
+        "reasons": []
+      }
+    ],
+    "sportsbook_timing": [
+      {
+        "sportsbook": "FanDuel",
+        "count": 3,
+        "avg_expected_clv": 1.18,
+        "bet_now_count": 3
+      },
+      {
+        "sportsbook": "Unknown",
+        "count": 16,
+        "avg_expected_clv": 0.35,
+        "bet_now_count": 2
+      },
+      {
+        "sportsbook": "DraftKings",
+        "count": 1,
+        "avg_expected_clv": 0.88,
+        "bet_now_count": 1
+      }
+    ]
+  },
+  "projection_accuracy": {
+    "generated_at_utc": "2026-07-07T08:50:25.919837+00:00",
+    "target_date": "2026-07-07",
+    "summary": {
+      "audited_props": 0,
+      "graded_bets": 0,
+      "hit_rate": null,
+      "mae": null,
+      "bias": null,
+      "grade_counts": {},
+      "actual_rows_available": 0
+    },
+    "lessons": [
+      "No completed prop results found yet. Report will populate after box scores/results are available."
+    ],
+    "stat_summary": {},
+    "player_summary": [],
+    "worst_misses": [],
+    "best_calls": [],
+    "audits": []
+  },
+  "terminal_summary": {
+    "top_cards": [],
+    "bet_count": 0,
+    "lean_count": 0,
+    "source_ok": 6,
+    "history_records": 0
+  }
+}
