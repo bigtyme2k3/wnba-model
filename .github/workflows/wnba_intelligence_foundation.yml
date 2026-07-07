@@ -59,6 +59,7 @@ jobs:
             player_points.py \
             wnba_matchup_intelligence.py \
             wnba_consensus_engine.py \
+            wnba_monte_carlo_engine.py \
             wnba_source_health.py \
             wnba_historical_database.py \
             wnba_results_grader.py \
@@ -92,6 +93,10 @@ jobs:
 
       - name: Build consensus engine
         run: python wnba_consensus_engine.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build Monte Carlo simulation engine
+        run: python wnba_monte_carlo_engine.py --date ${{ env.TARGET }} --sims 5000
         continue-on-error: true
 
       - name: Build source health
