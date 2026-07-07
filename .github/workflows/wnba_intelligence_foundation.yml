@@ -17,7 +17,7 @@ concurrency:
 jobs:
   build-intelligence-foundation:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     permissions:
       contents: write
 
@@ -51,8 +51,8 @@ jobs:
       - name: Validate intelligence scripts
         run: |
           python -m py_compile \
-            active_slate_date.py sports_skills_core_provider.py wnba_data_warehouse.py \
-            wnba_player_intelligence.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py wnba_sportsbook_consensus.py \
+            active_slate_date.py scrape_wnba_stats.py sports_skills_core_provider.py wnba_data_warehouse.py \
+            wnba_player_intelligence.py wnba_stats_quality.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py wnba_sportsbook_consensus.py \
             player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py \
             wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py \
             wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py \
@@ -60,6 +60,10 @@ jobs:
             wnba_source_health.py wnba_historical_database.py wnba_master_database.py \
             wnba_results_grader.py wnba_closing_line_tracker.py wnba_betting_ledger.py \
             wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py
+
+      - name: Refresh official WNBA stats
+        run: python scrape_wnba_stats.py --season ${{ env.YEAR }} --out data/raw --delay 0.6
+        continue-on-error: true
 
       - name: Refresh sports-skills core provider
         run: python sports_skills_core_provider.py --season ${{ env.YEAR }} --out data/wnba --warehouse data/warehouse
@@ -70,6 +74,10 @@ jobs:
 
       - name: Build player intelligence database
         run: python wnba_player_intelligence.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build stats quality diagnostics
+        run: python wnba_stats_quality.py --date ${{ env.TARGET }}
         continue-on-error: true
 
       - name: Resolve odds source without API credits
@@ -176,7 +184,7 @@ jobs:
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           git status --short
-          git add data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/odds*.csv data/raw/odds_source_status.json data/raw/player_points*.csv data/history/*.jsonl docs/index.html
+          git add data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/*.csv data/raw/*.json data/history/*.jsonl docs/index.html
           git diff --cached --quiet && echo "No intelligence foundation changes" && exit 0
           git commit -m "Update WNBA intelligence foundation - ${{ env.TARGET }}"
           git push || (git pull --rebase origin main && git push)
