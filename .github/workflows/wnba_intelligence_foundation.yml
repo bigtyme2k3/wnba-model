@@ -56,15 +56,19 @@ jobs:
             wnba_data_warehouse.py \
             wnba_player_intelligence.py \
             odds_source_manager.py \
+            wnba_live_odds_layer.py \
             player_points.py \
             wnba_matchup_intelligence.py \
             wnba_consensus_engine.py \
             wnba_monte_carlo_engine.py \
+            wnba_projection_ai.py \
             wnba_market_engine.py \
             wnba_portfolio_optimizer_v2.py \
             wnba_decision_engine_final.py \
+            wnba_ai_coach.py \
             wnba_source_health.py \
             wnba_historical_database.py \
+            wnba_master_database.py \
             wnba_results_grader.py \
             wnba_closing_line_tracker.py \
             wnba_betting_ledger.py \
@@ -86,6 +90,10 @@ jobs:
       - name: Resolve odds source without API credits
         run: python odds_source_manager.py --date ${{ env.TARGET }} --raw data/raw --manual data/manual/wnba_manual_odds.csv
 
+      - name: Build live odds layer
+        run: python wnba_live_odds_layer.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Rebuild player props with intelligence
         run: python player_points.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
@@ -99,7 +107,11 @@ jobs:
         continue-on-error: true
 
       - name: Build Monte Carlo simulation engine
-        run: python wnba_monte_carlo_engine.py --date ${{ env.TARGET }} --sims 5000
+        run: python wnba_monte_carlo_engine.py --date ${{ env.TARGET }} --sims 10000
+        continue-on-error: true
+
+      - name: Build projection AI
+        run: python wnba_projection_ai.py --date ${{ env.TARGET }}
         continue-on-error: true
 
       - name: Track line snapshot
@@ -116,6 +128,10 @@ jobs:
 
       - name: Build final decision engine
         run: python wnba_decision_engine_final.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build AI coach
+        run: python wnba_ai_coach.py --date ${{ env.TARGET }}
         continue-on-error: true
 
       - name: Build source health
@@ -135,6 +151,10 @@ jobs:
 
       - name: Build self-learning weights
         run: python wnba_self_learning.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Update master database
+        run: python wnba_master_database.py --date ${{ env.TARGET }}
         continue-on-error: true
 
       - name: Build terminal UI data
