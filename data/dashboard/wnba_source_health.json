@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-07T17:04:56.488135+00:00",
+  "generated_at_utc": "2026-07-07T22:05:46.151346+00:00",
   "target_date": "2026-07-07",
   "summary": {
     "sources": 8,
@@ -21,7 +21,7 @@
         "injuries": {
           "ok": true,
           "returncode": 0,
-          "bytes": 10119,
+          "bytes": 9414,
           "stderr": "",
           "output_file": "data/wnba/injuries.json"
         },
@@ -95,20 +95,54 @@
       "label": "Odds Layer",
       "status": "ok",
       "detail": {
-        "status": "ok",
-        "target_date": "2026-07-07",
-        "selected_source": "current_file",
-        "rows": 12,
-        "notes": "Loaded from existing current odds file.",
-        "checked_at_utc": "2026-07-07T17:04:53.498426+00:00",
-        "source_priority": [
-          "manual",
-          "current_file",
-          "cache_exact",
-          "cache_last_known",
-          "empty"
-        ],
-        "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
+        "raw_status": {
+          "status": "ok",
+          "target_date": "2026-07-07",
+          "selected_source": "current_file",
+          "rows": 12,
+          "notes": "Loaded from existing current odds file.",
+          "checked_at_utc": "2026-07-07T22:05:42.900839+00:00",
+          "source_priority": [
+            "manual",
+            "current_file",
+            "cache_exact",
+            "cache_last_known",
+            "empty"
+          ],
+          "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
+        },
+        "health": {
+          "generated_at_utc": "2026-07-07T22:05:43.996270+00:00",
+          "target_date": "2026-07-07",
+          "status": "ok",
+          "label": "Team odds loaded",
+          "summary": {
+            "team_odds_rows": 12,
+            "spread_rows": 12,
+            "total_rows": 12,
+            "prop_rows": 0,
+            "active_prop_rows": 0,
+            "books_detected": []
+          },
+          "source_status": {
+            "status": "ok",
+            "target_date": "2026-07-07",
+            "selected_source": "current_file",
+            "rows": 12,
+            "notes": "Loaded from existing current odds file.",
+            "checked_at_utc": "2026-07-07T22:05:42.900839+00:00",
+            "source_priority": [
+              "manual",
+              "current_file",
+              "cache_exact",
+              "cache_last_known",
+              "empty"
+            ],
+            "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
+          },
+          "dashboard_note": "Do not treat missing team spreads/totals as a full odds failure when player prop markets are loaded.",
+          "next_fix": "Add manual/team odds or a reliable sportsbook feed for spreads and totals; continue using prop markets for player decisions."
+        }
       }
     },
     "odds_api": {
