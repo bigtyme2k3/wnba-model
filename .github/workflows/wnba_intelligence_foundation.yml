@@ -52,7 +52,7 @@ jobs:
         run: |
           python -m py_compile \
             active_slate_date.py sports_skills_core_provider.py wnba_data_warehouse.py \
-            wnba_player_intelligence.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py \
+            wnba_player_intelligence.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py wnba_sportsbook_consensus.py \
             player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py \
             wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py \
             wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py \
@@ -85,6 +85,10 @@ jobs:
 
       - name: Build odds health polish
         run: python wnba_odds_health.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build sportsbook consensus
+        run: python wnba_sportsbook_consensus.py --date ${{ env.TARGET }}
         continue-on-error: true
 
       - name: Build matchup intelligence
