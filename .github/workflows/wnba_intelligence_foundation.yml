@@ -49,7 +49,17 @@ jobs:
           echo "Using active WNBA slate date: $TARGET"
 
       - name: Validate intelligence scripts
-        run: python -m py_compile active_slate_date.py sports_skills_core_provider.py wnba_data_warehouse.py wnba_player_intelligence.py odds_source_manager.py
+        run: |
+          python -m py_compile \
+            active_slate_date.py \
+            sports_skills_core_provider.py \
+            wnba_data_warehouse.py \
+            wnba_player_intelligence.py \
+            odds_source_manager.py \
+            player_points.py \
+            wnba_matchup_intelligence.py \
+            wnba_consensus_engine.py \
+            wnba_source_health.py
 
       - name: Refresh sports-skills core provider
         run: python sports_skills_core_provider.py --season ${{ env.YEAR }} --out data/wnba --warehouse data/warehouse
@@ -65,12 +75,27 @@ jobs:
       - name: Resolve odds source without API credits
         run: python odds_source_manager.py --date ${{ env.TARGET }} --raw data/raw --manual data/manual/wnba_manual_odds.csv
 
+      - name: Rebuild player props with intelligence
+        run: python player_points.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      - name: Build matchup intelligence
+        run: python wnba_matchup_intelligence.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build consensus engine
+        run: python wnba_consensus_engine.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build source health
+        run: python wnba_source_health.py --date ${{ env.TARGET }}
+
       - name: Commit and push
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           git status --short
-          git add data/wnba/*.json data/warehouse/*.json data/dashboard/wnba_data_warehouse.json data/dashboard/wnba_player_intelligence.json data/raw/odds*.csv data/raw/odds_source_status.json
+          git add data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/odds*.csv data/raw/odds_source_status.json data/raw/player_points*.csv
           git diff --cached --quiet && echo "No intelligence foundation changes" && exit 0
           git commit -m "Update WNBA intelligence foundation - ${{ env.TARGET }}"
           git push || (git pull --rebase origin main && git push)
