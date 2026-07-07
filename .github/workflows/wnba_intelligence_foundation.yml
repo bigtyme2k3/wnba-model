@@ -60,6 +60,9 @@ jobs:
             wnba_matchup_intelligence.py \
             wnba_consensus_engine.py \
             wnba_monte_carlo_engine.py \
+            wnba_market_engine.py \
+            wnba_portfolio_optimizer_v2.py \
+            wnba_decision_engine_final.py \
             wnba_source_health.py \
             wnba_historical_database.py \
             wnba_results_grader.py \
@@ -99,15 +102,27 @@ jobs:
         run: python wnba_monte_carlo_engine.py --date ${{ env.TARGET }} --sims 5000
         continue-on-error: true
 
+      - name: Track line snapshot
+        run: python wnba_closing_line_tracker.py --date ${{ env.TARGET }} --stage snapshot
+        continue-on-error: true
+
+      - name: Build market engine
+        run: python wnba_market_engine.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Build portfolio optimizer v2
+        run: python wnba_portfolio_optimizer_v2.py --date ${{ env.TARGET }} --bankroll 500
+        continue-on-error: true
+
+      - name: Build final decision engine
+        run: python wnba_decision_engine_final.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
       - name: Build source health
         run: python wnba_source_health.py --date ${{ env.TARGET }}
 
       - name: Update historical database
         run: python wnba_historical_database.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Track line snapshot
-        run: python wnba_closing_line_tracker.py --date ${{ env.TARGET }} --stage snapshot
         continue-on-error: true
 
       - name: Build ledger summary
