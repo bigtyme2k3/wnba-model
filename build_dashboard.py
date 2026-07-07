@@ -1,12 +1,23 @@
 """
 build_dashboard.py
 ------------------
-Reads the latest predictions JSON and bakes it into docs/index.html.
-Also injects model tracking data and overrides dashboard helpers.
+Reads the target predictions JSON and bakes it into docs/index.html.
+
+Fixes:
+- Uses TARGET env var from the workflow instead of runner UTC date.
+- If docs/index.html no longer has the old `const DATA = ...` block, injects a
+  safe dashboard-data script instead of failing the pipeline.
 """
 
-import glob, json, os, re
+from __future__ import annotations
+
+import glob
+import json
+import os
+import re
 from datetime import date
+from typing import Any, Dict, List
+
 import pandas as pd
 
 PREDICTIONS_DIR = "predictions"
@@ -15,25 +26,73 @@ TRACKING_JSON = "data/tracking/model_tracking.json"
 OUTPUT_HTML = "docs/index.html"
 
 
-def empty_tracking():
-    return {"overall":"0-0-0","wins":0,"losses":0,"pushes":0,"win_pct":0,"roi":0,"profit_units":0,"clv_avg":0,"by_type":{},"by_conf":{},"recent_10":[]}
+def target_today() -> str:
+    return os.environ.get("TARGET") or os.environ.get("WNBA_TARGET_DATE") or str(date.today())
 
 
-def empty_dashboard_data():
-    today = str(date.today())
-    return {"date":today,"generated":None,"games":[],"best_bets":[],"props":[],"player_points":[],"props_board":[],"line_shopping":[],"tracking":empty_tracking(),"model_tracking":empty_tracking(),"data_health":{"odds":"missing","props":"missing","line_shopping":"missing","player_points":"missing","spreads_found":0,"totals_found":0,"props_found":0,"player_points_found":0,"line_shopping_rows":0,"games":0,"actionable_bets":0,"high_bets":0,"last_updated_utc":None},"model_stats":{"spread":{"algo":"Ridge v2","cv_mae":9.72,"dir_acc":0.716,"strong_ats":0.815,"n":0},"totals":{"algo":"Random Forest","cv_mae":6.77,"ou_acc":0.542,"strong_ou":0.554,"n":0},"props":{"algo":"Ridge","cv_mae":6.00,"hit_rate":0.721,"strong_hr":0.754,"n":0}}}
+def empty_tracking() -> Dict[str, Any]:
+    return {
+        "overall": "0-0-0",
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "win_pct": 0,
+        "roi": 0,
+        "profit_units": 0,
+        "clv_avg": 0,
+        "by_type": {},
+        "by_conf": {},
+        "recent_10": [],
+    }
 
 
-def find_predictions():
-    today = str(date.today())
-    candidates = [os.path.join(PREDICTIONS_DIR, f"predictions_{today}.json")] + sorted(glob.glob(os.path.join(PREDICTIONS_DIR, "predictions_*.json")), reverse=True)
+def empty_dashboard_data() -> Dict[str, Any]:
+    today = target_today()
+    return {
+        "date": today,
+        "generated": None,
+        "games": [],
+        "best_bets": [],
+        "props": [],
+        "player_points": [],
+        "props_board": [],
+        "line_shopping": [],
+        "tracking": empty_tracking(),
+        "model_tracking": empty_tracking(),
+        "data_health": {
+            "odds": "missing",
+            "props": "missing",
+            "line_shopping": "missing",
+            "player_points": "missing",
+            "spreads_found": 0,
+            "totals_found": 0,
+            "props_found": 0,
+            "player_points_found": 0,
+            "line_shopping_rows": 0,
+            "games": 0,
+            "actionable_bets": 0,
+            "high_bets": 0,
+            "last_updated_utc": None,
+        },
+        "model_stats": {
+            "spread": {"algo": "Ridge v2", "cv_mae": 9.72, "dir_acc": 0.716, "strong_ats": 0.815, "n": 0},
+            "totals": {"algo": "Random Forest", "cv_mae": 6.77, "ou_acc": 0.542, "strong_ou": 0.554, "n": 0},
+            "props": {"algo": "Ridge", "cv_mae": 6.00, "hit_rate": 0.721, "strong_hr": 0.754, "n": 0},
+        },
+    }
+
+
+def find_predictions() -> Dict[str, Any]:
+    target = target_today()
+    candidates = [os.path.join(PREDICTIONS_DIR, f"predictions_{target}.json")]
+    candidates += sorted(glob.glob(os.path.join(PREDICTIONS_DIR, "predictions_*.json")), reverse=True)
     seen = set()
     for path in candidates:
         if path in seen:
             continue
         seen.add(path)
         if os.path.exists(path):
-            with open(path) as f:
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
             print(f"  Loaded: {path} ({len(data.get('games', []))} games)")
             return data
@@ -41,7 +100,7 @@ def find_predictions():
     return empty_dashboard_data()
 
 
-def csv_value(value):
+def csv_value(value: Any) -> Any:
     try:
         if pd.isna(value):
             return None
@@ -50,8 +109,12 @@ def csv_value(value):
     return value
 
 
-def load_player_points_for_date(target_date):
-    for path in [os.path.join(RAW_DIR, f"player_points_{target_date}.csv"), os.path.join(RAW_DIR, "player_points_today.csv")]:
+def load_player_points_for_date(target_date: str) -> List[Dict[str, Any]]:
+    paths = [
+        os.path.join(RAW_DIR, f"player_points_{target_date}.csv"),
+        os.path.join(RAW_DIR, "player_points_today.csv"),
+    ]
+    for path in paths:
         if os.path.exists(path):
             try:
                 df = pd.read_csv(path)
@@ -62,18 +125,18 @@ def load_player_points_for_date(target_date):
     return []
 
 
-def load_tracking():
+def load_tracking() -> Dict[str, Any]:
     if os.path.exists(TRACKING_JSON):
         try:
-            with open(TRACKING_JSON) as f:
+            with open(TRACKING_JSON, encoding="utf-8") as f:
                 return json.load(f)
         except Exception as exc:
             print(f"  [WARN] Could not read model tracking: {exc}")
     return empty_tracking()
 
 
-def enrich_data(data):
-    target_date = data.get("date") or str(date.today())
+def enrich_data(data: Dict[str, Any]) -> Dict[str, Any]:
+    target_date = data.get("date") or target_today()
     points = data.get("props") or data.get("player_points") or load_player_points_for_date(target_date)
     if points:
         data["props"] = points
@@ -94,105 +157,91 @@ def enrich_data(data):
     return data
 
 
-def dashboard_override_script():
-    return r'''
-<script id="model-tracking-override">
-(function(){
-  const tabs=document.querySelectorAll('.tab');
-  tabs.forEach(t=>{ if(t.textContent.trim()==='Stats') t.textContent='Model Tracking'; });
-
-  window.rowGameKey=function(p){
-    const norm=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-    const raw=[p.game,p.opp,p.team,p.home_team,p.away_team].map(x=>String(x||'')).join(' ').toUpperCase();
-    const compact=norm(raw);
-    for(const g of (DATA.games||[])){
-      const key=g.away.name+' @ '+g.home.name;
-      const awayName=norm(g.away.name), homeName=norm(g.home.name), awayAbbr=norm(g.away.abbr), homeAbbr=norm(g.home.abbr);
-      const hasAway=compact.includes(awayName)||compact.includes(awayAbbr);
-      const hasHome=compact.includes(homeName)||compact.includes(homeAbbr);
-      if(hasAway && hasHome) return key;
-    }
-    return p.game||p.opp||'UNKNOWN';
-  };
-
-  window.renderProps=function(){
-    const safe=(v,d='—')=>v===null||v===undefined||v===''||String(v)==='nan'?d:v;
-    const pct=x=>typeof x==='number'?Math.round(x*100)+'%':'—';
-    const arr=v=>{if(Array.isArray(v))return v;if(!v)return[];try{let p=JSON.parse(v);return Array.isArray(p)?p:[]}catch(e){return[]}};
-    const rankClass=r=>{r=Number(r||8);return r<=5?'rank-tough':r<=10?'rank-mid':'rank-easy'};
-    const statClass=p=>p.conf==='HIGH'?'stat-pill high':'stat-pill';
-    const hitLabel=(v,sig)=>sig?`${pct(v)} ${sig}`:'—';
-    const l5Boxes=p=>{let vals=arr(p.last5_vals).slice(0,5),opps=arr(p.last5_opps).slice(0,5),line=Number(p.line),sig=p.signal;if(!vals.length)return'—';return`<div class="l5-wrap">${vals.map((v,i)=>{let cls='l5-neutral';if(sig){let hit=sig==='UNDER'?v<line:v>line;cls=hit?'l5-hit':'l5-miss'}return`<div class="l5-box"><div class="l5-num ${cls}">${v}</div><div class="l5-opp">${safe(opps[i],'')}</div></div>`}).join('')}</div>`};
-    const gameKey=(a,h)=>a+' @ '+h;
-    const props=(DATA.props||DATA.player_points||DATA.props_board||[]).filter(p=>p.line!==null&&p.line!==undefined&&p.line!==''&&p.market_status!=='NO MARKET'&&p.injury_status!=='OUT'&&p.injury_status!=='DOUBTFUL');
-    const games=DATA.games||[];
-    let gameCards=`<article class="props-game all ${propsGame==='ALL'?'active':''}" onclick="setPropsGame('ALL')"><div class="game-time">ALL</div><div class="team-line">All Players</div></article>`+games.map(g=>{let k=gameKey(g.away.name,g.home.name);return`<article class="props-game ${propsGame===k?'active':''}" onclick="setPropsGame('${k.replace(/'/g,"\\'")}')"><div class="game-time">${fmtTime(g.tip)}</div><div class="team-line">${g.away.abbr} @ ${g.home.abbr}</div><div class="board-sub">${g.away.name} @ ${g.home.name}</div></article>`}).join('');
-    let stats=['ALL','PTS','REB','AST','3PM','PRA'];
-    let filtered=props.map(p=>Object.assign({},p,{_game:window.rowGameKey(p)})).filter(p=>(propsGame==='ALL'||p._game===propsGame)&&(propsStat==='ALL'||String(p.stat).toUpperCase()===propsStat));
-    filtered.sort((a,b)=>(b.conf==='HIGH')-(a.conf==='HIGH')||(b.conf==='MED')-(a.conf==='MED')||Math.abs(b.edge||0)-Math.abs(a.edge||0));
-    let table=filtered.length?`<div class="props-scroll"><div class="props-table"><div class="props-head"><div>Player</div><div>Stat</div><div>Line</div><div>Over</div><div>Under</div><div>Projected</div><div>Last 5</div><div>L5 Hit</div><div>L10 Hit</div><div>H2H L5</div><div>Opp Rank</div></div>${filtered.map(p=>`<article class="prop-row ${p.conf||'LOW'}"><div><div class="player-name">${safe(p.player)}</div><div class="player-meta">${safe(p.best_book_title||p.best_book,'Best book —')} · ${safe(p.injury_status,'ACTIVE')} · ${safe(p.opp)}</div></div><div><span class="${statClass(p)}">${safe(p.stat)}</span></div><div class="board-value">${safe(p.best_line,p.line)} @ ${safe(p.best_odds,p.odds)}</div><div class="signal-over">${p.signal==='OVER'?'OVER':'—'}</div><div class="signal-under">${p.signal==='UNDER'?'UNDER':'—'}</div><div class="${p.line?'proj-bright':'proj-dim'}">${safe(p.pred)}</div><div>${l5Boxes(p)}</div><div>${hitLabel(p.last5_hit,p.signal)}</div><div>${hitLabel(p.last10_hit,p.signal)}</div><div>${arr(p.h2h_last5).length?arr(p.h2h_last5).join(', '):'—'}</div><div class="${rankClass(p.opp_rank)}">${safe(p.opp_rank)}</div></article>`).join('')}</div></div>`:`<div class="empty">No props for this selected game/stat filter. Try ALL or another stat.</div>`;
-    document.getElementById('tab-props').innerHTML=`<div class="section-title">Today's Games</div><div class="props-games">${gameCards}</div><div class="section-title">Filters</div><div class="filter-bar">${stats.map(s=>`<button class="filter-btn ${propsStat===s?'active':''}" onclick="setPropsStat('${s}')">${s}</button>`).join('')}</div><div class="section-title">Props Table</div>${table}`;
-  };
-
-  window.renderBets=function(){
-    const safe=(v,d='—')=>v===null||v===undefined||v===''?d:v;
-    const bets=(DATA.best_bets||[]);
-    const rows=bets.length?bets.map((b,i)=>`<article class="board-row" style="grid-template-columns:42px 85px 1fr 150px 110px"><div class="board-value">${String(i+1).padStart(2,'0')}</div><div><span class="tag">${safe(b.type)}</span></div><div><div class="board-main">${safe(b.play)}</div><div class="board-sub">${safe(b.game)} · Grade ${safe(b.grade)} · EV ${safe(b.ev_pct)}%</div></div><div><div class="board-label">Best Book</div><div class="board-value">${safe(b.best_book_title||b.best_book)}</div><div class="board-sub">${safe(b.available_books,0)} books</div></div><div><span class="edge-badge">${safe(b.best_line,b.market_line)} @ ${safe(b.best_odds,b.odds)}</span><div class="board-sub">Kelly ${safe(b.units,0)}u</div></div></article>`).join(''):'<div class="empty">No actionable MED/HIGH plays yet.</div>';
-    const shop=(DATA.line_shopping||[]).slice(0,12).map(s=>`<article class="board-row" style="grid-template-columns:90px 1fr 120px 100px"><div><span class="tag">${safe(s.market_type)}</span></div><div><div class="board-main">${safe(s.player)||safe(s.side)} ${safe(s.stat,'')}</div><div class="board-sub">${safe(s.game)}</div></div><div><div class="board-label">Best</div><div class="board-value">${safe(s.book_title||s.book_key)}</div></div><div><div class="board-label">Line</div><div class="board-value">${safe(s.line)} @ ${safe(s.odds)}</div></div></article>`).join('')||'<div class="note">Line shopping appears after The Odds API returns per-book lines.</div>';
-    document.getElementById('tab-bets').innerHTML=`<div class="section-title">Best Bets + Best Sportsbook</div><div class="board">${rows}</div><div class="section-title">Line Shopping Snapshot</div><div class="board">${shop}</div>`;
-  };
-
-  window.renderStats=function(){
-    const t=DATA.tracking||DATA.model_tracking||{};
-    const byType=t.by_type||{}, byConf=t.by_conf||{};
-    const fmtPct=v=>typeof v==='number'?Math.round(v*1000)/10+'%':'—';
-    const safe=(v,d='—')=>v===null||v===undefined||v===''?d:v;
-    const statCard=(title,rows)=>`<article class="stat-card"><div class="stat-title">${title}</div>${rows.map(r=>`<div class="stat-line"><span>${r[0]}</span><span>${safe(r[1])}</span></div>`).join('')}</article>`;
-    const typeRows=Object.keys(byType).length?Object.entries(byType).map(([k,v])=>`<article class="board-row"><div><div class="board-main">${k}</div><div class="board-sub">${v.bets||0} tracked bets</div></div><div><div class="board-label">Record</div><div class="board-value">${safe(v.record)}</div></div><div><div class="board-label">Win %</div><div class="board-value">${fmtPct(v.win_pct)}</div></div><div></div><div></div></article>`).join(''):'<div class="empty">No graded bets yet. Tracking starts once games finish.</div>';
-    const confRows=Object.keys(byConf).length?Object.entries(byConf).map(([k,v])=>`<article class="board-row"><div><div class="board-main">${k}</div><div class="board-sub">Confidence bucket</div></div><div><div class="board-label">Record</div><div class="board-value">${safe(v.record)}</div></div><div><div class="board-label">Win %</div><div class="board-value">${fmtPct(v.win_pct)}</div></div><div></div><div></div></article>`).join(''):'<div class="note">Confidence tracking appears after bets are graded.</div>';
-    const recent=(t.recent_10||[]).slice(-10).map(b=>`<article class="board-row"><div><div class="board-main">${safe(b.play)}</div><div class="board-sub">${safe(b.date)} · ${safe(b.game)}</div></div><div><div class="board-label">Type</div><div class="board-value">${safe(b.type)}</div></div><div><div class="board-label">Result</div><div class="board-value ${b.result==='WIN'?'good':b.result==='LOSS'?'bad':'warn'}">${safe(b.result)}</div></div><div><div class="board-label">Units</div><div class="board-value">${safe(b.profit_units)}</div></div><div></div></article>`).join('')||'<div class="empty">No recent graded bets yet.</div>';
-    document.getElementById('tab-stats').innerHTML=`<div class="section-title">Model Tracking</div><section class="stats-grid">${statCard('Overall',[['Record',t.overall||'0-0-0'],['Win %',fmtPct(t.win_pct)],['ROI',fmtPct(t.roi)],['Units',safe(t.profit_units,0)],['Avg CLV',safe(t.clv_avg,0)]])}${statCard('Automation',[['Odds',safe((DATA.data_health||{}).odds)],['Props',safe((DATA.data_health||{}).props)],['Line Shop',safe((DATA.data_health||{}).line_shopping)],['Games',safe((DATA.data_health||{}).games,0)],['Best Bets',(DATA.best_bets||[]).length]])}${statCard('EV Engine',[['A/B Bets',(DATA.best_bets||[]).filter(b=>['A','B'].includes(b.grade)).length],['Top EV',(DATA.best_bets||[])[0]?.ev_pct?((DATA.best_bets||[])[0].ev_pct+'%'):'—'],['Top Grade',(DATA.best_bets||[])[0]?.grade||'—'],['Kelly Units',(DATA.best_bets||[])[0]?.units||'—']])}${statCard('Model Counts',[['Spreads',(DATA.data_health||{}).spreads_found||0],['Totals',(DATA.data_health||{}).totals_found||0],['Props',(DATA.data_health||{}).props_found||0],['Line Rows',(DATA.data_health||{}).line_shopping_rows||0],['High Bets',(DATA.data_health||{}).high_bets||0]])}</section><div class="section-title">Performance by Market</div><div class="board">${typeRows}</div><div class="section-title">Confidence Breakdown</div><div class="board">${confRows}</div><div class="section-title">Recent Graded Bets</div><div class="board">${recent}</div>`;
-  };
-})();
+def fallback_html(data_json: str) -> str:
+    return f"""<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"UTF-8\">
+<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">
+<title>WNBA Betting Model</title>
+<style>
+body{{background:#07080f;color:#e2e8f0;font-family:'Courier New',monospace;margin:0}}.app{{max-width:1200px;margin:0 auto;padding:18px}}.title{{font-size:28px;font-weight:900}}.sub{{color:#94a3b8}}.tabs{{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}}button{{background:#121b30;color:#e2e8f0;border:1px solid #24314d;border-radius:12px;padding:10px 14px;font-family:inherit;font-weight:900}}.grid{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}}.card,.panel{{background:#0d1220;border:1px solid #ffffff12;border-radius:18px;padding:16px}}.value{{font-size:28px;font-weight:900;color:#00e5a0}}.bad{{color:#f87171}}.list{{display:flex;flex-direction:column;gap:10px}}.row{{background:#0d1220;border:1px solid #ffffff12;border-radius:14px;padding:14px}}@media(max-width:800px){{.grid{{grid-template-columns:1fr 1fr}}}}
+</style>
+<script id=\"dashboard-data\">const DATA = {data_json}; window.DATA = DATA;</script>
+</head>
+<body>
+<div class=\"app\">
+  <div class=\"title\">WNBA Betting Model</div>
+  <div class=\"sub\">Daily Report · <span id=\"date\"></span></div>
+  <div class=\"grid\" id=\"health\"></div>
+  <div class=\"tabs\"><button onclick=\"show('games')\">Games</button><button onclick=\"show('props')\">Props</button><button onclick=\"show('bets')\">Best Bets</button><button onclick=\"show('tracking')\">Model Tracking</button></div>
+  <div id=\"view\" class=\"panel\"></div>
+</div>
+<script>
+const safe=(v,d='—')=>v===null||v===undefined||v===''?d:v;
+function health(){{const h=DATA.data_health||{{}};document.getElementById('date').textContent=DATA.date||'';document.getElementById('health').innerHTML=[['Odds',h.odds||'missing'],['Props',h.player_points||h.props||'missing'],['Games',(DATA.games||[]).length],['Actionable',h.actionable_bets||0]].map(x=>`<div class=\"card\"><div>${{x[0]}}</div><div class=\"value ${{String(x[1]).includes('missing')?'bad':''}}\">${{x[1]}}</div></div>`).join('')}}
+function show(tab){{let out=''; if(tab==='games')out=(DATA.games||[]).map(g=>`<div class=\"row\"><b>${{safe(g.away?.name||g.away_team)}} @ ${{safe(g.home?.name||g.home_team)}}</b><br>${{safe(g.tip||g.date)}}</div>`).join('')||'No games.'; if(tab==='props')out=(DATA.props||DATA.player_points||[]).slice(0,80).map(p=>`<div class=\"row\"><b>${{safe(p.player)}}</b> ${{safe(p.stat)}} ${{safe(p.signal)}}<br>Line ${{safe(p.line)}} · Projection ${{safe(p.pred)}} · EV ${{safe(p.ev_pct)}}%</div>`).join('')||'No props.'; if(tab==='bets')out=(DATA.best_bets||[]).map(b=>`<div class=\"row\"><b>${{safe(b.play)}}</b><br>${{safe(b.game)}} · EV ${{safe(b.ev_pct)}}%</div>`).join('')||'No best bets.'; if(tab==='tracking')out=`<pre>${{JSON.stringify(DATA.tracking||DATA.model_tracking||{{}},null,2)}}</pre>`; document.getElementById('view').innerHTML=out}}
+health();show('games');
 </script>
-'''
+</body></html>"""
 
 
-def build_html(data):
+def inject_data_script(html: str, data_json: str) -> str:
+    # Remove any prior injected data block.
+    html = re.sub(r"<script id=[\"']dashboard-data[\"']>.*?</script>\s*", "", html, flags=re.DOTALL)
+
+    # Replace legacy const DATA if present.
+    patterns = [
+        r"const\s+DATA\s*=\s*.*?;\s*(?=\n\s*const|\n\s*let|\n\s*function|\n\s*window\.|</script>)",
+        r"window\.DATA\s*=\s*.*?;\s*(?=\n|</script>)",
+    ]
+    replacement = f"const DATA = {data_json}; window.DATA = DATA;\n"
+    for pattern in patterns:
+        new_html, n = re.subn(pattern, replacement, html, count=1, flags=re.DOTALL)
+        if n:
+            return new_html
+
+    # Modern patched dashboards sometimes do not carry the old DATA constant.
+    # Insert a small script in <head> so later scripts can read DATA.
+    block = f"<script id=\"dashboard-data\">const DATA = {data_json}; window.DATA = DATA;</script>\n"
+    if "</head>" in html:
+        return html.replace("</head>", block + "</head>", 1)
+    if "<body" in html:
+        return re.sub(r"(<body[^>]*>)", r"\1\n" + block, html, count=1, flags=re.IGNORECASE)
+    return block + html
+
+
+def build_html(data: Dict[str, Any]) -> bool:
     data = enrich_data(data)
-    data_json = json.dumps(data, separators=(",", ":"))
-    with open(OUTPUT_HTML) as f:
-        html = f.read()
-    html = html.replace('>Stats</button>', '>Model Tracking</button>')
-    html = re.sub(r"<script id=\"model-tracking-override\">.*?</script>", "", html, flags=re.DOTALL)
-    pattern = r"const\s+DATA\s*=\s*.*?;\s*(?=\n\s*const|\n\s*let|\n\s*function|\n\s*window\.)"
-    replacement = f"const DATA = {data_json};\n"
-    new_html = re.sub(pattern, lambda _: replacement, html, flags=re.DOTALL)
-    if new_html == html:
-        print("  [WARN] Could not find DATA constant to replace — check docs/index.html")
-        return False
-    new_html = new_html.replace("</body>", dashboard_override_script() + "\n</body>")
-    with open(OUTPUT_HTML, "w") as f:
-        f.write(new_html)
+    data_json = json.dumps(data, separators=(",", ":"), ensure_ascii=False)
+    os.makedirs(os.path.dirname(OUTPUT_HTML), exist_ok=True)
+
+    if os.path.exists(OUTPUT_HTML):
+        with open(OUTPUT_HTML, encoding="utf-8") as f:
+            html = f.read()
+        html = html.replace('>Stats</button>', '>Model Tracking</button>')
+        html = inject_data_script(html, data_json)
+    else:
+        html = fallback_html(data_json)
+
+    with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
+        f.write(html)
     return True
 
 
-def main():
+def main() -> None:
     print("\n═══ Building Dashboard ═══\n")
-    os.makedirs("docs", exist_ok=True)
     data = find_predictions()
-    success = build_html(data)
-    if success:
-        h = data.get("data_health", {})
-        print(f"  ✅ {OUTPUT_HTML} updated")
-        print(f"     Date: {data.get('date')}")
-        print(f"     Games: {len(data.get('games', []))}")
-        print(f"     Best bets: {len(data.get('best_bets', []))}")
-        print(f"     Props: {len(data.get('props', []))}")
-        print(f"     Line shopping: {len(data.get('line_shopping', []))}")
-        print(f"     Odds: {h.get('odds', 'unknown')}")
-    else:
-        raise SystemExit("  ❌ Build failed")
+    build_html(data)
+    h = data.get("data_health", {})
+    print(f"  ✅ {OUTPUT_HTML} updated")
+    print(f"     Target env: {target_today()}")
+    print(f"     Date: {data.get('date')}")
+    print(f"     Games: {len(data.get('games', []))}")
+    print(f"     Best bets: {len(data.get('best_bets', []))}")
+    print(f"     Props: {len(data.get('props', []))}")
+    print(f"     Line shopping: {len(data.get('line_shopping', []))}")
+    print(f"     Odds: {h.get('odds', 'unknown')}")
 
 
 if __name__ == "__main__":
