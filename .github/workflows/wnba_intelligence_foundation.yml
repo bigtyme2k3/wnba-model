@@ -61,6 +61,9 @@ jobs:
             wnba_consensus_engine.py \
             wnba_source_health.py \
             wnba_historical_database.py \
+            wnba_results_grader.py \
+            wnba_closing_line_tracker.py \
+            wnba_betting_ledger.py \
             wnba_self_learning.py \
             wnba_terminal_ui.py \
             patch_terminal_ui.py
@@ -96,6 +99,18 @@ jobs:
 
       - name: Update historical database
         run: python wnba_historical_database.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Track line snapshot
+        run: python wnba_closing_line_tracker.py --date ${{ env.TARGET }} --stage snapshot
+        continue-on-error: true
+
+      - name: Build ledger summary
+        run: python wnba_betting_ledger.py --date ${{ env.TARGET }} --unit 20
+        continue-on-error: true
+
+      - name: Grade available results
+        run: python wnba_results_grader.py --date ${{ env.TARGET }}
         continue-on-error: true
 
       - name: Build self-learning weights
