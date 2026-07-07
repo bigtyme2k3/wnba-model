@@ -1,17 +1,8 @@
-"""
-wnba_terminal_ui.py
--------------------
-Builds a single professional-dashboard data bundle from all priority modules.
-
-Outputs:
-- data/dashboard/terminal_ui.json
-"""
+"""Builds a single professional-dashboard data bundle from all priority modules."""
 from __future__ import annotations
-
 import argparse, json, os
 from datetime import date, datetime, timezone
 from typing import Any
-
 
 def load_json(path: str, default: Any):
     try:
@@ -20,7 +11,6 @@ def load_json(path: str, default: Any):
     except Exception:
         pass
     return default
-
 
 def build(target: str):
     bundle={
@@ -32,6 +22,8 @@ def build(target: str):
         "players": load_json("data/dashboard/wnba_player_intelligence.json", {}),
         "history": load_json("data/dashboard/wnba_historical_summary.json", {}),
         "learning": load_json("data/dashboard/wnba_self_learning.json", {}),
+        "grading": load_json("data/dashboard/wnba_results_grading.json", {}),
+        "clv": load_json("data/dashboard/wnba_clv_summary.json", {}),
         "portfolio": load_json("data/dashboard/deepseek_portfolio_optimizer.json", {}),
         "market_timing": load_json("data/dashboard/market_timing_intelligence.json", {}),
         "projection_accuracy": load_json("data/dashboard/projection_accuracy.json", {}),
@@ -43,14 +35,15 @@ def build(target: str):
         "lean_count": (bundle.get("consensus",{}) or {}).get("summary",{}).get("leans",0),
         "source_ok": (bundle.get("source_health",{}) or {}).get("summary",{}).get("ok_or_optional",0),
         "history_records": (bundle.get("history",{}) or {}).get("total_records",0),
+        "graded_this_run": (bundle.get("grading",{}) or {}).get("graded_this_run",0),
+        "win_rate": (bundle.get("grading",{}) or {}).get("win_rate",0),
+        "clv_updates": (bundle.get("clv",{}) or {}).get("history_clv_updates",0),
     }
     os.makedirs("data/dashboard", exist_ok=True)
     with open("data/dashboard/terminal_ui.json","w",encoding="utf-8") as f: json.dump(bundle,f,indent=2)
     return bundle["terminal_summary"]
 
-
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--date", default=str(date.today())); args=ap.parse_args()
-    print(f"✅ Terminal UI bundle built: {build(args.date)}")
-
+    print(f"Terminal UI bundle built: {build(args.date)}")
 if __name__=="__main__": main()
