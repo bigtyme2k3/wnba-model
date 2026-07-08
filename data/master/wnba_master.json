@@ -1,7 +1,7 @@
 {
-  "generated_at_utc": "2026-07-08T12:32:24.177295+00:00",
+  "generated_at_utc": "2026-07-08T12:49:50.508261+00:00",
   "target_date": "2026-07-08",
-  "schema_version": "master-v1",
+  "schema_version": "master-v2",
   "registry": {
     "version": "2026-07-08-v1",
     "principle": "External sources are ingested into one normalized master database before any model or dashboard reads them.",
@@ -74,8 +74,8 @@
     "deprecated_pattern": "Raw source files and experimental engines should not feed the dashboard directly. They feed master builder or remain legacy."
   },
   "summary": {
-    "games": 9,
-    "today_games": 7,
+    "games": 12,
+    "today_games": 10,
     "yesterday_games": 2,
     "players": 121,
     "props": 249,
@@ -89,79 +89,166 @@
   },
   "games": [
     {
-      "game_id": "401857046",
+      "game_id": "2026-07-08|golden state valkyries|toronto tempo",
       "game_date": "2026-07-08",
       "bucket": "today",
-      "away_team": "Dallas Wings",
-      "home_team": "New York Liberty",
-      "away_score": "88",
-      "home_score": "77",
-      "status": "STATUS_FINAL",
-      "start_time": "",
+      "game": "Golden State Valkyries @ Toronto Tempo",
+      "away_team": "Golden State Valkyries",
+      "home_team": "Toronto Tempo",
+      "away_score": "",
+      "home_score": "",
+      "status": "Pregame",
+      "start_time": "2026-07-08T23:00Z",
       "spread": "",
-      "total": "",
-      "source": "data/raw/scores_today.csv"
+      "model_spread": "Toronto Tempo -0.8",
+      "total": 168.5,
+      "model_total": 164,
+      "total_play": "UNDER",
+      "source": "predictions_schedule"
     },
     {
-      "game_id": "401857047",
+      "game_id": "2026-07-08|minnesota lynx|connecticut sun",
       "game_date": "2026-07-08",
       "bucket": "today",
-      "away_team": "Chicago Sky",
-      "home_team": "Phoenix Mercury",
-      "away_score": "77",
-      "home_score": "66",
-      "status": "STATUS_FINAL",
-      "start_time": "",
+      "game": "Minnesota Lynx @ Connecticut Sun",
+      "away_team": "Minnesota Lynx",
+      "home_team": "Connecticut Sun",
+      "away_score": "",
+      "home_score": "",
+      "status": "Pregame",
+      "start_time": "2026-07-08T23:30Z",
       "spread": "",
-      "total": "",
-      "source": "data/raw/scores_today.csv"
+      "model_spread": "Connecticut Sun -0.8",
+      "total": 167.5,
+      "model_total": 168.2,
+      "total_play": "OVER",
+      "source": "predictions_schedule"
     },
     {
-      "game_id": "401857046",
-      "game_date": "2026-07-08",
-      "bucket": "yesterday",
-      "away_team": "Dallas Wings",
-      "home_team": "New York Liberty",
-      "away_score": "88",
-      "home_score": "77",
-      "status": "STATUS_FINAL",
-      "start_time": "",
-      "spread": "",
-      "total": "",
-      "source": "data/raw/scores_2026-07-07.csv"
-    },
-    {
-      "game_id": "401857047",
-      "game_date": "2026-07-08",
-      "bucket": "yesterday",
-      "away_team": "Chicago Sky",
-      "home_team": "Phoenix Mercury",
-      "away_score": "77",
-      "home_score": "66",
-      "status": "STATUS_FINAL",
-      "start_time": "",
-      "spread": "",
-      "total": "",
-      "source": "data/raw/scores_2026-07-07.csv"
-    },
-    {
-      "game_id": "2026-07-08|connecticut sun|minnesota lynx",
+      "game_id": "2026-07-08|indiana fever|los angeles sparks",
       "game_date": "2026-07-08",
       "bucket": "today",
+      "game": "Indiana Fever @ Los Angeles Sparks",
+      "away_team": "Indiana Fever",
+      "home_team": "Los Angeles Sparks",
+      "away_score": "",
+      "home_score": "",
+      "status": "Pregame",
+      "start_time": "2026-07-09T02:00Z",
+      "spread": "",
+      "model_spread": "Indiana Fever -1.6",
+      "total": 185.5,
+      "model_total": 165.4,
+      "total_play": "UNDER",
+      "source": "predictions_schedule"
+    },
+    {
+      "game_id": "1fbe348b23c9f547e63ce18ccf0888db",
+      "game_date": "2026-07-08",
+      "bucket": "today",
+      "game": "Golden State Valkyries @ Washington Mystics",
+      "away_team": "Golden State Valkyries",
+      "home_team": "Washington Mystics",
+      "away_score": "",
+      "home_score": "",
+      "status": "Pregame",
+      "start_time": "2026-07-06T23:40:00Z",
+      "spread": 5.44,
+      "total": 156.33,
+      "moneyline_home": 179.56,
+      "moneyline_away": -219.22,
+      "source": "data/raw/odds_2026-07-08.csv"
+    },
+    {
+      "game_id": "9c39120f2059c1fee0df606e5979d967",
+      "game_date": "2026-07-08",
+      "bucket": "today",
+      "game": "Connecticut Sun @ Minnesota Lynx",
       "away_team": "Connecticut Sun",
       "home_team": "Minnesota Lynx",
       "away_score": "",
       "home_score": "",
       "status": "Pregame",
-      "start_time": "",
-      "spread": "",
-      "total": "",
-      "source": "sportsbook_consensus"
+      "start_time": "2026-07-07T00:00:00Z",
+      "spread": -13.89,
+      "total": 165.72,
+      "moneyline_home": -1102.22,
+      "moneyline_away": 679.11,
+      "source": "data/raw/odds_2026-07-08.csv"
+    },
+    {
+      "game_id": "4db4df7b4890e0ebc6a85982f4a85115",
+      "game_date": "2026-07-08",
+      "bucket": "today",
+      "game": "Seattle Storm @ Los Angeles Sparks",
+      "away_team": "Seattle Storm",
+      "home_team": "Los Angeles Sparks",
+      "away_score": "",
+      "home_score": "",
+      "status": "Pregame",
+      "start_time": "2026-07-07T02:10:00Z",
+      "spread": -3.62,
+      "total": 174.5,
+      "moneyline_home": -166.56,
+      "moneyline_away": 139.78,
+      "source": "data/raw/odds_2026-07-08.csv"
+    },
+    {
+      "game_id": "f784500c59f1f83757bec7c0ef787879",
+      "game_date": "2026-07-08",
+      "bucket": "today",
+      "game": "Indiana Fever @ Las Vegas Aces",
+      "away_team": "Indiana Fever",
+      "home_team": "Las Vegas Aces",
+      "away_score": "",
+      "home_score": "",
+      "status": "Pregame",
+      "start_time": "2026-07-05T23:00:00Z",
+      "spread": -2.94,
+      "total": 179.78,
+      "moneyline_home": -150.67,
+      "moneyline_away": 126.56,
+      "source": "data/raw/odds_2026-07-08.csv"
+    },
+    {
+      "game_id": "a5c10cf00d97057ef1bd2f450afb222d",
+      "game_date": "2026-07-08",
+      "bucket": "today",
+      "game": "Dallas Wings @ New York Liberty",
+      "away_team": "Dallas Wings",
+      "home_team": "New York Liberty",
+      "away_score": "",
+      "home_score": "",
+      "status": "Pregame",
+      "start_time": "2026-07-08T00:00:00Z",
+      "spread": -5.5,
+      "total": 175.5,
+      "moneyline_home": -211.5,
+      "moneyline_away": 172,
+      "source": "data/raw/odds_2026-07-08.csv"
+    },
+    {
+      "game_id": "2077ab7ab8e6b6e3437a042a329a944f",
+      "game_date": "2026-07-08",
+      "bucket": "today",
+      "game": "Chicago Sky @ Phoenix Mercury",
+      "away_team": "Chicago Sky",
+      "home_team": "Phoenix Mercury",
+      "away_score": "",
+      "home_score": "",
+      "status": "Pregame",
+      "start_time": "2026-07-08T02:00:00Z",
+      "spread": -3.5,
+      "total": 173,
+      "moneyline_home": -166,
+      "moneyline_away": 137,
+      "source": "data/raw/odds_2026-07-08.csv"
     },
     {
       "game_id": "2026-07-08|dallas wings|toronto tempo",
       "game_date": "2026-07-08",
       "bucket": "today",
+      "game": "Dallas Wings @ Toronto Tempo",
       "away_team": "Dallas Wings",
       "home_team": "Toronto Tempo",
       "away_score": "",
@@ -173,46 +260,34 @@
       "source": "sportsbook_consensus"
     },
     {
-      "game_id": "2026-07-08|golden state valkyries|washington mystics",
+      "game_id": "401857046",
       "game_date": "2026-07-08",
-      "bucket": "today",
-      "away_team": "Golden State Valkyries",
-      "home_team": "Washington Mystics",
-      "away_score": "",
-      "home_score": "",
-      "status": "Pregame",
+      "bucket": "yesterday",
+      "game": "Dallas Wings @ New York Liberty",
+      "away_team": "Dallas Wings",
+      "home_team": "New York Liberty",
+      "away_score": "88",
+      "home_score": "77",
+      "status": "STATUS_FINAL",
       "start_time": "",
       "spread": "",
       "total": "",
-      "source": "sportsbook_consensus"
+      "source": "data/raw/scores_2026-07-07.csv"
     },
     {
-      "game_id": "2026-07-08|indiana fever|las vegas aces",
+      "game_id": "401857047",
       "game_date": "2026-07-08",
-      "bucket": "today",
-      "away_team": "Indiana Fever",
-      "home_team": "Las Vegas Aces",
-      "away_score": "",
-      "home_score": "",
-      "status": "Pregame",
+      "bucket": "yesterday",
+      "game": "Chicago Sky @ Phoenix Mercury",
+      "away_team": "Chicago Sky",
+      "home_team": "Phoenix Mercury",
+      "away_score": "77",
+      "home_score": "66",
+      "status": "STATUS_FINAL",
       "start_time": "",
       "spread": "",
       "total": "",
-      "source": "sportsbook_consensus"
-    },
-    {
-      "game_id": "2026-07-08|seattle storm|los angeles sparks",
-      "game_date": "2026-07-08",
-      "bucket": "today",
-      "away_team": "Seattle Storm",
-      "home_team": "Los Angeles Sparks",
-      "away_score": "",
-      "home_score": "",
-      "status": "Pregame",
-      "start_time": "",
-      "spread": "",
-      "total": "",
-      "source": "sportsbook_consensus"
+      "source": "data/raw/scores_2026-07-07.csv"
     }
   ],
   "players": [
@@ -5824,7 +5899,7 @@
     "source_used": "data/raw/line_shopping_best_today.csv"
   },
   "stats_quality": {
-    "generated_at_utc": "2026-07-08T12:32:19.257565+00:00",
+    "generated_at_utc": "2026-07-08T12:49:45.875484+00:00",
     "target_date": "2026-07-08",
     "status": "ok",
     "summary": {
@@ -5839,7 +5914,7 @@
     "stats_status": {
       "status": "error",
       "season": "2026",
-      "checked_at_utc": "2026-07-08T12:31:46.762835+00:00",
+      "checked_at_utc": "2026-07-08T12:49:13.595134+00:00",
       "players_base_rows": 0,
       "players_recent5_rows": 0,
       "players_advanced_rows": 0,
@@ -5851,7 +5926,7 @@
     "note": "Stats are trusted only when live_players and recent5_rows are populated. Otherwise projections should lean more on market odds and be labeled degraded."
   },
   "source_health": {
-    "generated_at_utc": "2026-07-08T12:32:24.123495+00:00",
+    "generated_at_utc": "2026-07-08T12:49:50.454526+00:00",
     "target_date": "2026-07-08",
     "summary": {
       "sources": 8,
@@ -5953,7 +6028,7 @@
             "selected_source": "current_file",
             "rows": 12,
             "notes": "Loaded from existing current odds file.",
-            "checked_at_utc": "2026-07-08T12:32:19.731861+00:00",
+            "checked_at_utc": "2026-07-08T12:49:46.294020+00:00",
             "source_priority": [
               "manual",
               "current_file",
@@ -5964,7 +6039,7 @@
             "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
           },
           "health": {
-            "generated_at_utc": "2026-07-08T12:32:21.191984+00:00",
+            "generated_at_utc": "2026-07-08T12:49:47.560126+00:00",
             "target_date": "2026-07-08",
             "status": "ok",
             "label": "Team odds loaded",
@@ -5982,7 +6057,7 @@
               "selected_source": "current_file",
               "rows": 12,
               "notes": "Loaded from existing current odds file.",
-              "checked_at_utc": "2026-07-08T12:32:19.731861+00:00",
+              "checked_at_utc": "2026-07-08T12:49:46.294020+00:00",
               "source_priority": [
                 "manual",
                 "current_file",
@@ -6008,51 +6083,51 @@
     {
       "source": "sportsdataverse",
       "status": "optional_package_installed",
-      "rows": 9,
-      "detail": "Schedule/game data falls back to scores CSV and consensus odds until importer is enabled.",
-      "checked_at_utc": "2026-07-08T12:32:24.177016+00:00"
+      "rows": 10,
+      "detail": "Schedule source planned; predictions schedule is current source of truth.",
+      "checked_at_utc": "2026-07-08T12:49:50.508000+00:00"
     },
     {
       "source": "nba_api",
       "status": "optional_package_installed",
       "rows": 121,
       "detail": "Advanced stats falls back to owned boxscore warehouse.",
-      "checked_at_utc": "2026-07-08T12:32:24.177105+00:00"
+      "checked_at_utc": "2026-07-08T12:49:50.508098+00:00"
     },
     {
       "source": "boxscore_warehouse",
       "status": "ok",
       "rows": 121,
       "detail": "wnba_players_live.json generated from official stats or boxscore fallback.",
-      "checked_at_utc": "2026-07-08T12:32:24.177109+00:00"
+      "checked_at_utc": "2026-07-08T12:49:50.508102+00:00"
     },
     {
       "source": "odds_pipeline",
       "status": "ok",
       "rows": 249,
       "detail": "sportsbook consensus markets normalized into master props.",
-      "checked_at_utc": "2026-07-08T12:32:24.177112+00:00"
+      "checked_at_utc": "2026-07-08T12:49:50.508104+00:00"
     },
     {
       "source": "the_odds_api",
       "status": "backup_only",
       "rows": 0,
       "detail": "Do not use as primary because credits burn quickly.",
-      "checked_at_utc": "2026-07-08T12:32:24.177114+00:00"
+      "checked_at_utc": "2026-07-08T12:49:50.508106+00:00"
     },
     {
       "source": "litellm",
       "status": "optional_package_installed",
       "rows": 0,
       "detail": "AI gateway planned; not required for current dashboard.",
-      "checked_at_utc": "2026-07-08T12:32:24.177191+00:00"
+      "checked_at_utc": "2026-07-08T12:49:50.508185+00:00"
     },
     {
       "source": "optuna",
       "status": "optional_package_installed",
       "rows": 0,
       "detail": "Model tuning planned; not required for current dashboard.",
-      "checked_at_utc": "2026-07-08T12:32:24.177291+00:00"
+      "checked_at_utc": "2026-07-08T12:49:50.508258+00:00"
     }
   ]
 }
