@@ -1,0 +1,49 @@
+{
+  "version": "2026-07-08-v1",
+  "principle": "External sources are ingested into one normalized master database before any model or dashboard reads them.",
+  "sources": {
+    "sportsdataverse": {
+      "role": "Primary schedule, team, season, and historical game source",
+      "reliance": "high",
+      "package": "sportsdataverse-py / sportsdataverse",
+      "fallbacks": ["data/raw/scores_*.csv", "data/raw/scores_today.csv", "data/wnba/scores.json"]
+    },
+    "nba_api": {
+      "role": "Primary official/advanced player and team stat API when available",
+      "reliance": "high",
+      "package": "nba_api",
+      "fallbacks": ["data/raw/wnba_players_live.json", "data/raw/wnba_player_stats.csv", "data/raw/boxscores_*.csv"]
+    },
+    "boxscore_warehouse": {
+      "role": "Owned historical player game log fallback and long-term source of truth",
+      "reliance": "very_high",
+      "package": "local_csv",
+      "fallbacks": ["data/raw/boxscores_*.csv", "data/raw/scores_*.csv"]
+    },
+    "odds_pipeline": {
+      "role": "Primary live odds, player props, line shopping, and sportsbook consensus",
+      "reliance": "very_high",
+      "package": "local_pipeline",
+      "fallbacks": ["data/raw/line_shopping_best_today.csv", "data/raw/line_shopping_today.csv", "data/dashboard/wnba_sportsbook_consensus.json"]
+    },
+    "the_odds_api": {
+      "role": "Paid/credit-limited backup odds source only",
+      "reliance": "low",
+      "package": "external_api",
+      "fallbacks": ["odds_pipeline", "manual odds csv"]
+    },
+    "litellm": {
+      "role": "Optional AI gateway for future coach/reasoning model portability",
+      "reliance": "medium",
+      "package": "litellm",
+      "fallbacks": ["static AI coach summaries"]
+    },
+    "optuna": {
+      "role": "Optional model tuning and threshold optimization, not a data source",
+      "reliance": "medium",
+      "package": "optuna",
+      "fallbacks": ["fixed weights"]
+    }
+  },
+  "deprecated_pattern": "Raw source files and experimental engines should not feed the dashboard directly. They feed master builder or remain legacy."
+}
