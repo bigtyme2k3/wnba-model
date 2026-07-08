@@ -51,7 +51,7 @@ jobs:
       - name: Validate intelligence scripts
         run: |
           python -m py_compile \
-            active_slate_date.py scrape_wnba_stats.py sports_skills_core_provider.py wnba_data_warehouse.py \
+            active_slate_date.py scrape_wnba_stats.py wnba_stats_fallback_from_boxscores.py sports_skills_core_provider.py wnba_data_warehouse.py \
             wnba_player_intelligence.py wnba_stats_quality.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py wnba_sportsbook_consensus.py \
             player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py \
             wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py \
@@ -64,6 +64,15 @@ jobs:
       - name: Refresh official WNBA stats
         run: python scrape_wnba_stats.py --season ${{ env.YEAR }} --out data/raw --delay 0.6
         continue-on-error: true
+
+      - name: Build boxscore stats fallback if official stats missing
+        run: |
+          if [ ! -s data/raw/wnba_players_live.json ]; then
+            echo "Official player stats missing; building fallback from boxscores"
+            python wnba_stats_fallback_from_boxscores.py --out data/raw
+          else
+            echo "Official player stats found"
+          fi
 
       - name: Refresh sports-skills core provider
         run: python sports_skills_core_provider.py --season ${{ env.YEAR }} --out data/wnba --warehouse data/warehouse
