@@ -99,6 +99,8 @@ def prediction_games(target: str):
     for g in pred.get("games", []):
         away = team_name(g.get("away")) or g.get("away_team", "")
         home = team_name(g.get("home")) or g.get("home_team", "")
+        if not away or not home:
+            continue
         tip = g.get("tip") or g.get("start_time") or ""
         spread = g.get("spread", {}) if isinstance(g.get("spread"), dict) else {}
         totals = g.get("totals", {}) if isinstance(g.get("totals"), dict) else {}
@@ -120,7 +122,7 @@ def prediction_games(target: str):
             "total_play": totals.get("play") if totals else "",
             "source": "predictions_schedule",
         })
-    return games
+    return dedupe_games(games, target)
 
 
 def games_from_scores(target: str, bucket: str = "yesterday"):
@@ -134,7 +136,6 @@ def games_from_scores(target: str, bucket: str = "yesterday"):
         home = norm_team(r, "home")
         if (not away or not home) and r.get("game"):
             away, home = parse_game_text(str(r.get("game")))
-        # Reject score rows with no teams; these caused '-' cards on the dashboard.
         if not away or not home:
             continue
         away_score = norm_score(r, "away")
@@ -154,7 +155,7 @@ def games_from_scores(target: str, bucket: str = "yesterday"):
             "total": r.get("total") or r.get("posted_total") or "",
             "source": src or "scores_csv",
         })
-    return out
+    return dedupe_games(out, y if bucket == "yesterday" else target)
 
 
 def odds_games(target: str):
@@ -213,21 +214,47 @@ def consensus_games(target: str):
     return list(latest.values())
 
 
-def merge_today_games(target: str):
-    # Schedule/predictions are source of truth. Odds and consensus fill gaps only.
+def dedupe_games(games: list[dict], target: str):
     merged = {}
-    for src in [prediction_games(target), odds_games(target), consensus_games(target)]:
-        for g in src:
-            if not g.get("away_team") or not g.get("home_team"):
-                continue
-            key = game_key(g["away_team"], g["home_team"], target)
-            if key not in merged:
-                merged[key] = g
-            else:
-                for k, v in g.items():
-                    if merged[key].get(k) in (None, "", "Pregame") and v not in (None, ""):
-                        merged[key][k] = v
+    for g in games:
+        away = g.get("away_team", "")
+        home = g.get("home_team", "")
+        if not away or not home:
+            continue
+        key = game_key(away, home, target)
+        if key not in merged:
+            merged[key] = dict(g)
+        else:
+            for k, v in g.items():
+                if merged[key].get(k) in (None, "", "Pregame") and v not in (None, ""):
+                    merged[key][k] = v
     return list(merged.values())
+
+
+def attach_market_data(schedule_games: list[dict], extras: list[dict], target: str):
+    # Attach odds/consensus only to games that are already in the official daily schedule.
+    # Do not add extra games here; old line files often contain stale games.
+    by_key = {game_key(g["away_team"], g["home_team"], target): g for g in schedule_games if g.get("away_team") and g.get("home_team")}
+    for g in extras:
+        if not g.get("away_team") or not g.get("home_team"):
+            continue
+        key = game_key(g["away_team"], g["home_team"], target)
+        if key not in by_key:
+            continue
+        base = by_key[key]
+        for k, v in g.items():
+            if base.get(k) in (None, "", "Pregame") and v not in (None, ""):
+                base[k] = v
+    return list(by_key.values())
+
+
+def merge_today_games(target: str):
+    schedule = prediction_games(target)
+    if schedule:
+        return attach_market_data(schedule, odds_games(target) + consensus_games(target), target)
+    # Fallback only when no schedule exists.
+    fallback = odds_games(target) or consensus_games(target)
+    return dedupe_games(fallback, target)
 
 
 def player_stats_from_live():
@@ -291,7 +318,7 @@ def build(target: str):
         source_status("optuna", "optional_package_" + optional_package_status("optuna"), 0, "Model tuning planned; not required for current dashboard."),
     ]
     master = {
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target, "schema_version": "master-v2",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target, "schema_version": "master-v3",
         "registry": registry,
         "summary": {"games": len(games), "today_games": len(today_games), "yesterday_games": len(yesterday_games), "players": len(players), "props": len(props), "sportsbook_markets": odds.get("summary", {}).get("markets", 0), "books": odds.get("summary", {}).get("books_detected", [])},
         "games": games, "players": players, "props": props, "odds_summary": odds.get("summary", {}), "stats_quality": stats_quality, "source_health": source_health, "source_matrix": health,
