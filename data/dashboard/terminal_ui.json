@@ -1,13 +1,13 @@
 {
-  "generated_at_utc": "2026-07-07T23:49:29.294675+00:00",
+  "generated_at_utc": "2026-07-08T00:26:56.528311+00:00",
   "target_date": "2026-07-07",
   "source_health": {
-    "generated_at_utc": "2026-07-07T23:49:28.224895+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.442794+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "sources": 8,
-      "ok_or_optional": 6,
-      "degraded_or_missing": 2
+      "ok_or_optional": 7,
+      "degraded_or_missing": 1
     },
     "sources": {
       "sports_skills": {
@@ -17,14 +17,14 @@
           "scores": {
             "ok": true,
             "returncode": 0,
-            "bytes": 4688,
+            "bytes": 3793,
             "stderr": "",
             "output_file": "data/wnba/scores.json"
           },
           "injuries": {
             "ok": true,
             "returncode": 0,
-            "bytes": 9414,
+            "bytes": 9435,
             "stderr": "",
             "output_file": "data/wnba/injuries.json"
           },
@@ -46,12 +46,12 @@
       },
       "stats_wnba": {
         "label": "stats.wnba.com",
-        "status": "missing",
+        "status": "ok",
         "detail": {
           "path": "data/raw/wnba_players_live.json",
-          "exists": false,
-          "bytes": 0,
-          "populated": false
+          "exists": true,
+          "bytes": 81208,
+          "populated": true
         }
       },
       "data_warehouse": {
@@ -70,7 +70,7 @@
         "detail": {
           "path": "data/warehouse/wnba_player_intelligence.json",
           "exists": true,
-          "bytes": 247,
+          "bytes": 124293,
           "populated": true
         }
       },
@@ -104,7 +104,7 @@
             "selected_source": "current_file",
             "rows": 12,
             "notes": "Loaded from existing current odds file.",
-            "checked_at_utc": "2026-07-07T23:49:24.506159+00:00",
+            "checked_at_utc": "2026-07-08T00:26:51.708351+00:00",
             "source_priority": [
               "manual",
               "current_file",
@@ -115,7 +115,7 @@
             "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
           },
           "health": {
-            "generated_at_utc": "2026-07-07T23:49:25.616463+00:00",
+            "generated_at_utc": "2026-07-08T00:26:52.802920+00:00",
             "target_date": "2026-07-07",
             "status": "ok",
             "label": "Team odds loaded",
@@ -133,7 +133,7 @@
               "selected_source": "current_file",
               "rows": 12,
               "notes": "Loaded from existing current odds file.",
-              "checked_at_utc": "2026-07-07T23:49:24.506159+00:00",
+              "checked_at_utc": "2026-07-08T00:26:51.708351+00:00",
               "source_priority": [
                 "manual",
                 "current_file",
@@ -156,7 +156,7 @@
     }
   },
   "odds_health": {
-    "generated_at_utc": "2026-07-07T23:49:25.616463+00:00",
+    "generated_at_utc": "2026-07-08T00:26:52.802920+00:00",
     "target_date": "2026-07-07",
     "status": "ok",
     "label": "Team odds loaded",
@@ -174,7 +174,7 @@
       "selected_source": "current_file",
       "rows": 12,
       "notes": "Loaded from existing current odds file.",
-      "checked_at_utc": "2026-07-07T23:49:24.506159+00:00",
+      "checked_at_utc": "2026-07-08T00:26:51.708351+00:00",
       "source_priority": [
         "manual",
         "current_file",
@@ -188,7 +188,7 @@
     "next_fix": "Add manual/team odds or a reliable sportsbook feed for spreads and totals; continue using prop markets for player decisions."
   },
   "sportsbook_consensus": {
-    "generated_at_utc": "2026-07-07T23:49:26.002388+00:00",
+    "generated_at_utc": "2026-07-08T00:26:53.184988+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "markets": 249,
@@ -5151,7 +5151,7 @@
     ]
   },
   "live_odds": {
-    "generated_at_utc": "2026-07-07T23:49:24.872095+00:00",
+    "generated_at_utc": "2026-07-08T00:26:52.060902+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 12,
@@ -5308,7 +5308,7 @@
     "policy": "Free/manual/cache first. Paid API is optional only."
   },
   "projection_ai": {
-    "generated_at_utc": "2026-07-07T23:49:27.483561+00:00",
+    "generated_at_utc": "2026-07-08T00:26:54.666417+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -5317,7 +5317,7 @@
     "projections": []
   },
   "ai_coach": {
-    "generated_at_utc": "2026-07-07T23:49:28.178953+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.391450+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "notes": 0,
@@ -5326,11 +5326,11 @@
     "coach_cards": []
   },
   "master_database": {
-    "generated_at_utc": "2026-07-07T23:49:28.807908+00:00",
+    "generated_at_utc": "2026-07-08T00:26:56.037967+00:00",
     "target_date": "2026-07-07",
     "latest": {
       "date": "2026-07-07",
-      "captured_at_utc": "2026-07-07T23:49:28.807908+00:00",
+      "captured_at_utc": "2026-07-08T00:26:56.037967+00:00",
       "final": {
         "rows": 0,
         "bets": 0,
@@ -5353,7 +5353,7 @@
         "down": 0
       },
       "grading": {
-        "generated_at_utc": "2026-07-07T23:49:28.677764+00:00",
+        "generated_at_utc": "2026-07-08T00:26:55.900037+00:00",
         "target_date": "2026-07-07",
         "actual_source_rows": 0,
         "graded_this_run": 0,
@@ -5364,7 +5364,7 @@
         "status": "waiting_for_actuals"
       },
       "clv": {
-        "generated_at_utc": "2026-07-07T23:49:27.853253+00:00",
+        "generated_at_utc": "2026-07-08T00:26:55.023702+00:00",
         "target_date": "2026-07-07",
         "stage": "snapshot",
         "snapshot_rows_added": 0,
@@ -5374,13 +5374,13 @@
       },
       "source_health": {
         "sources": 8,
-        "ok_or_optional": 6,
-        "degraded_or_missing": 2
+        "ok_or_optional": 7,
+        "degraded_or_missing": 1
       }
     }
   },
   "consensus": {
-    "generated_at_utc": "2026-07-07T23:49:26.744064+00:00",
+    "generated_at_utc": "2026-07-08T00:26:53.927990+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -5392,7 +5392,7 @@
     "all_consensus": []
   },
   "matchups": {
-    "generated_at_utc": "2026-07-07T23:49:26.372739+00:00",
+    "generated_at_utc": "2026-07-08T00:26:53.555022+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -5402,18 +5402,5222 @@
     "matchups": []
   },
   "players": {
-    "generated_at_utc": "2026-07-07T23:49:23.808673+00:00",
+    "generated_at_utc": "2026-07-08T00:26:50.961361+00:00",
     "target_date": "2026-07-07",
-    "players": [],
+    "players": [
+      {
+        "player": "Allisha Gray",
+        "team": "Atlanta Dream",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 22.0,
+          "reb": 4.0,
+          "ast": 3.0,
+          "mpg": 36.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 22.0,
+          "last5_reb": 4.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 36.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959921+00:00"
+      },
+      {
+        "player": "Angel Reese",
+        "team": "Atlanta Dream",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 17.0,
+          "reb": 13.0,
+          "ast": 3.0,
+          "mpg": 35.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 17.0,
+          "last5_reb": 13.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 35.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959983+00:00"
+      },
+      {
+        "player": "Arike Ogunbowale",
+        "team": "Dallas Wings",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 10.0,
+          "reb": 6.0,
+          "ast": 2.0,
+          "mpg": 27.0,
+          "usage": 0.322,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 10.0,
+          "last5_reb": 6.0,
+          "last5_ast": 2.0,
+          "last5_mpg": 27.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960031+00:00"
+      },
+      {
+        "player": "Awa Fam",
+        "team": "Seattle Storm",
+        "position": "C",
+        "season": {
+          "gp": 2.0,
+          "ppg": 9.5,
+          "reb": 4.0,
+          "ast": 1.5,
+          "mpg": 29.5,
+          "usage": 0.311,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 9.5,
+          "last5_reb": 4.0,
+          "last5_ast": 1.5,
+          "last5_mpg": 29.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960044+00:00"
+      },
+      {
+        "player": "Azzi Fudd",
+        "team": "Dallas Wings",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 17.0,
+          "reb": 3.0,
+          "ast": 2.0,
+          "mpg": 30.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 17.0,
+          "last5_reb": 3.0,
+          "last5_ast": 2.0,
+          "last5_mpg": 30.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960079+00:00"
+      },
+      {
+        "player": "Bridget Carleton",
+        "team": "Portland Fire",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 14.0,
+          "reb": 7.0,
+          "ast": 2.0,
+          "mpg": 31.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 14.0,
+          "last5_reb": 7.0,
+          "last5_ast": 2.0,
+          "last5_mpg": 31.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960090+00:00"
+      },
+      {
+        "player": "Brittney Griner",
+        "team": "Connecticut Sun",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 29.0,
+          "reb": 10.0,
+          "ast": 3.0,
+          "mpg": 34.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 29.0,
+          "last5_reb": 10.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 34.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960112+00:00"
+      },
+      {
+        "player": "Charlisse Leger-Walker",
+        "team": "Connecticut Sun",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 6.0,
+          "reb": 4.0,
+          "ast": 5.0,
+          "mpg": 28.0,
+          "usage": 0.297,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 6.0,
+          "last5_reb": 4.0,
+          "last5_ast": 5.0,
+          "last5_mpg": 28.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960207+00:00"
+      },
+      {
+        "player": "Cotie McMahon",
+        "team": "Washington Mystics",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 8.0,
+          "reb": 5.0,
+          "ast": 3.0,
+          "mpg": 29.0,
+          "usage": 0.305,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 8.0,
+          "last5_reb": 5.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 29.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960218+00:00"
+      },
+      {
+        "player": "Courtney Williams",
+        "team": "Minnesota Lynx",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 23.0,
+          "reb": 9.0,
+          "ast": 6.0,
+          "mpg": 36.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 23.0,
+          "last5_reb": 9.0,
+          "last5_ast": 6.0,
+          "last5_mpg": 36.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960228+00:00"
+      },
+      {
+        "player": "Dearica Hamby",
+        "team": "Los Angeles Sparks",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 17.0,
+          "reb": 4.0,
+          "ast": 2.0,
+          "mpg": 29.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 17.0,
+          "last5_reb": 4.0,
+          "last5_ast": 2.0,
+          "last5_mpg": 29.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960241+00:00"
+      },
+      {
+        "player": "Flau'jae Johnson",
+        "team": "Seattle Storm",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 12.0,
+          "reb": 6.5,
+          "ast": 3.0,
+          "mpg": 29.0,
+          "usage": 0.355,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 12.0,
+          "last5_reb": 6.5,
+          "last5_ast": 3.0,
+          "last5_mpg": 29.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960358+00:00"
+      },
+      {
+        "player": "Isabelle Harrison",
+        "team": "Toronto Tempo",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 13.0,
+          "reb": 5.0,
+          "ast": 1.0,
+          "mpg": 27.0,
+          "usage": 0.351,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 13.0,
+          "last5_reb": 5.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 27.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960439+00:00"
+      },
+      {
+        "player": "Jessica Shepard",
+        "team": "Dallas Wings",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 14.0,
+          "reb": 15.0,
+          "ast": 3.0,
+          "mpg": 32.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 14.0,
+          "last5_reb": 15.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 32.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960491+00:00"
+      },
+      {
+        "player": "Jordin Canada",
+        "team": "Atlanta Dream",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 7.0,
+          "reb": 4.0,
+          "ast": 8.0,
+          "mpg": 35.0,
+          "usage": 0.334,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 7.0,
+          "last5_reb": 4.0,
+          "last5_ast": 8.0,
+          "last5_mpg": 35.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960527+00:00"
+      },
+      {
+        "player": "Kayla McBride",
+        "team": "Minnesota Lynx",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 28.0,
+          "reb": 3.0,
+          "ast": 2.0,
+          "mpg": 38.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 28.0,
+          "last5_reb": 3.0,
+          "last5_ast": 2.0,
+          "last5_mpg": 38.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960622+00:00"
+      },
+      {
+        "player": "Kiki Iriafen",
+        "team": "Washington Mystics",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 12.0,
+          "reb": 9.0,
+          "ast": 1.0,
+          "mpg": 30.0,
+          "usage": 0.338,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 12.0,
+          "last5_reb": 9.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 30.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960695+00:00"
+      },
+      {
+        "player": "Leila Lacan",
+        "team": "Connecticut Sun",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 13.0,
+          "reb": 2.0,
+          "ast": 3.0,
+          "mpg": 34.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 13.0,
+          "last5_reb": 2.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 34.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960752+00:00"
+      },
+      {
+        "player": "Marina Mabrey",
+        "team": "Toronto Tempo",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 19.0,
+          "reb": 5.0,
+          "ast": 5.0,
+          "mpg": 31.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 19.0,
+          "last5_reb": 5.0,
+          "last5_ast": 5.0,
+          "last5_mpg": 31.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960857+00:00"
+      },
+      {
+        "player": "Megan Gustafson",
+        "team": "Portland Fire",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 10.0,
+          "reb": 9.0,
+          "ast": 3.0,
+          "mpg": 27.0,
+          "usage": 0.33,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 10.0,
+          "last5_reb": 9.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 27.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960883+00:00"
+      },
+      {
+        "player": "Natasha Howard",
+        "team": "Minnesota Lynx",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 18.0,
+          "reb": 6.0,
+          "ast": 4.0,
+          "mpg": 26.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 18.0,
+          "last5_reb": 6.0,
+          "last5_ast": 4.0,
+          "last5_mpg": 26.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960928+00:00"
+      },
+      {
+        "player": "Natisha Hiedeman",
+        "team": "Seattle Storm",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 15.0,
+          "reb": 4.0,
+          "ast": 4.0,
+          "mpg": 29.5,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 15.0,
+          "last5_reb": 4.0,
+          "last5_ast": 4.0,
+          "last5_mpg": 29.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960939+00:00"
+      },
+      {
+        "player": "Nneka Ogwumike",
+        "team": "Los Angeles Sparks",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 14.0,
+          "reb": 11.0,
+          "ast": 3.0,
+          "mpg": 28.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 14.0,
+          "last5_reb": 11.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 28.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960986+00:00"
+      },
+      {
+        "player": "Nyara Sabally",
+        "team": "Toronto Tempo",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 14.0,
+          "reb": 7.0,
+          "ast": 5.0,
+          "mpg": 29.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 14.0,
+          "last5_reb": 7.0,
+          "last5_ast": 5.0,
+          "last5_mpg": 29.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961009+00:00"
+      },
+      {
+        "player": "Olivia Nelson-Ododa",
+        "team": "Connecticut Sun",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 10.0,
+          "reb": 8.0,
+          "ast": 3.0,
+          "mpg": 29.0,
+          "usage": 0.33,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 10.0,
+          "last5_reb": 8.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 29.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961044+00:00"
+      },
+      {
+        "player": "Paige Bueckers",
+        "team": "Dallas Wings",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 22.0,
+          "reb": 3.0,
+          "ast": 7.0,
+          "mpg": 31.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 22.0,
+          "last5_reb": 3.0,
+          "last5_ast": 7.0,
+          "last5_mpg": 31.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961067+00:00"
+      },
+      {
+        "player": "Rhyne Howard",
+        "team": "Atlanta Dream",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 19.0,
+          "reb": 5.0,
+          "ast": 3.0,
+          "mpg": 37.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 19.0,
+          "last5_reb": 5.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 37.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961104+00:00"
+      },
+      {
+        "player": "Veronica Burton",
+        "team": "Golden State Valkyries",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 14.0,
+          "reb": 2.0,
+          "ast": 3.5,
+          "mpg": 27.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 14.0,
+          "last5_reb": 2.0,
+          "last5_ast": 3.5,
+          "last5_mpg": 27.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 100,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961317+00:00"
+      },
+      {
+        "player": "Maria Conde",
+        "team": "Toronto Tempo",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 10.0,
+          "ast": 3.0,
+          "mpg": 29.0,
+          "usage": 0.242,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 10.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 29.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 99.6,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960847+00:00"
+      },
+      {
+        "player": "Sarah Ashlee Barker",
+        "team": "Portland Fire",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 4.0,
+          "reb": 6.0,
+          "ast": 3.0,
+          "mpg": 28.0,
+          "usage": 0.255,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 4.0,
+          "last5_reb": 6.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 28.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 98.3,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961137+00:00"
+      },
+      {
+        "player": "Kennedy Burke",
+        "team": "Connecticut Sun",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 16.0,
+          "reb": 0.0,
+          "ast": 2.0,
+          "mpg": 23.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 16.0,
+          "last5_reb": 0.0,
+          "last5_ast": 2.0,
+          "last5_mpg": 23.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 95.8,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960646+00:00"
+      },
+      {
+        "player": "Shakira Austin",
+        "team": "Washington Mystics",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 11.0,
+          "reb": 11.0,
+          "ast": 0.0,
+          "mpg": 24.0,
+          "usage": 0.318,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 11.0,
+          "last5_reb": 11.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 24.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 94.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961162+00:00"
+      },
+      {
+        "player": "Michaela Onyenwere",
+        "team": "Washington Mystics",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 3.0,
+          "ast": 1.0,
+          "mpg": 28.0,
+          "usage": 0.213,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 3.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 28.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 94.1,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960894+00:00"
+      },
+      {
+        "player": "Carla Leite",
+        "team": "Portland Fire",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 20.0,
+          "reb": 3.0,
+          "ast": 4.0,
+          "mpg": 22.0,
+          "usage": 0.36,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 20.0,
+          "last5_reb": 3.0,
+          "last5_ast": 4.0,
+          "last5_mpg": 22.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 93.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960135+00:00"
+      },
+      {
+        "player": "Antonia Delaere",
+        "team": "Minnesota Lynx",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 8.0,
+          "reb": 2.0,
+          "ast": 0.0,
+          "mpg": 25.0,
+          "usage": 0.28,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 8.0,
+          "last5_reb": 2.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 25.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 93.0,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960007+00:00"
+      },
+      {
+        "player": "Laura Juskaite",
+        "team": "Toronto Tempo",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 8.0,
+          "reb": 5.0,
+          "ast": 1.0,
+          "mpg": 24.0,
+          "usage": 0.288,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 8.0,
+          "last5_reb": 5.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 24.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 91.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960731+00:00"
+      },
+      {
+        "player": "Kiah Stokes",
+        "team": "Golden State Valkyries",
+        "position": "C",
+        "season": {
+          "gp": 2.0,
+          "ppg": 5.5,
+          "reb": 8.0,
+          "ast": 1.5,
+          "mpg": 25.0,
+          "usage": 0.261,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.5,
+          "last5_reb": 8.0,
+          "last5_ast": 1.5,
+          "last5_mpg": 25.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 91.1,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960670+00:00"
+      },
+      {
+        "player": "Janelle Salaun",
+        "team": "Golden State Valkyries",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 11.0,
+          "reb": 1.5,
+          "ast": 0.0,
+          "mpg": 22.5,
+          "usage": 0.318,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 11.0,
+          "last5_reb": 1.5,
+          "last5_ast": 0.0,
+          "last5_mpg": 22.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 90.3,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960480+00:00"
+      },
+      {
+        "player": "Erica Wheeler",
+        "team": "Los Angeles Sparks",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 1.0,
+          "ast": 7.0,
+          "mpg": 24.0,
+          "usage": 0.276,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 1.0,
+          "last5_ast": 7.0,
+          "last5_mpg": 24.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 90.0,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960332+00:00"
+      },
+      {
+        "player": "Dorka Juhasz",
+        "team": "Minnesota Lynx",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 4.0,
+          "ast": 3.0,
+          "mpg": 25.0,
+          "usage": 0.242,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 4.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 25.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 89.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960276+00:00"
+      },
+      {
+        "player": "Gabby Williams",
+        "team": "Golden State Valkyries",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 10.5,
+          "reb": 2.0,
+          "ast": 1.0,
+          "mpg": 22.0,
+          "usage": 0.32,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 10.5,
+          "last5_reb": 2.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 22.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 89.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960381+00:00"
+      },
+      {
+        "player": "Rae Burrell",
+        "team": "Los Angeles Sparks",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 5.0,
+          "reb": 1.0,
+          "ast": 0.0,
+          "mpg": 25.0,
+          "usage": 0.242,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.0,
+          "last5_reb": 1.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 25.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 89.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961080+00:00"
+      },
+      {
+        "player": "Dominique Malonga",
+        "team": "Seattle Storm",
+        "position": "C",
+        "season": {
+          "gp": 2.0,
+          "ppg": 12.0,
+          "reb": 7.0,
+          "ast": 1.5,
+          "mpg": 21.0,
+          "usage": 0.342,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 12.0,
+          "last5_reb": 7.0,
+          "last5_ast": 1.5,
+          "last5_mpg": 21.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 88.8,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960264+00:00"
+      },
+      {
+        "player": "Kia Nurse",
+        "team": "Toronto Tempo",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 12.0,
+          "reb": 1.0,
+          "ast": 0.0,
+          "mpg": 21.0,
+          "usage": 0.33,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 12.0,
+          "last5_reb": 1.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 21.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 87.6,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960658+00:00"
+      },
+      {
+        "player": "Emily Engstler",
+        "team": "Portland Fire",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 9.0,
+          "reb": 8.0,
+          "ast": 0.0,
+          "mpg": 22.0,
+          "usage": 0.292,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 9.0,
+          "last5_reb": 8.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 22.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 86.4,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960298+00:00"
+      },
+      {
+        "player": "Kaila Charles",
+        "team": "Golden State Valkyries",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 7.5,
+          "reb": 6.5,
+          "ast": 3.0,
+          "mpg": 21.5,
+          "usage": 0.299,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 7.5,
+          "last5_reb": 6.5,
+          "last5_ast": 3.0,
+          "last5_mpg": 21.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 85.8,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960563+00:00"
+      },
+      {
+        "player": "Awak Kuier",
+        "team": "Dallas Wings",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 10.0,
+          "reb": 6.0,
+          "ast": 0.0,
+          "mpg": 21.0,
+          "usage": 0.305,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 10.0,
+          "last5_reb": 6.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 21.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 85.1,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960056+00:00"
+      },
+      {
+        "player": "Naz Hillmon",
+        "team": "Atlanta Dream",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 5.0,
+          "ast": 1.0,
+          "mpg": 24.0,
+          "usage": 0.226,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 5.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 24.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 85.0,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960951+00:00"
+      },
+      {
+        "player": "Jade Melbourne",
+        "team": "Seattle Storm",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 8.0,
+          "reb": 1.5,
+          "ast": 3.5,
+          "mpg": 20.5,
+          "usage": 0.309,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 8.0,
+          "last5_reb": 1.5,
+          "last5_ast": 3.5,
+          "last5_mpg": 20.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 84.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960468+00:00"
+      },
+      {
+        "player": "Ariel Atkins",
+        "team": "Los Angeles Sparks",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 5.0,
+          "reb": 5.0,
+          "ast": 0.0,
+          "mpg": 22.0,
+          "usage": 0.242,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.0,
+          "last5_reb": 5.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 22.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 81.4,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960019+00:00"
+      },
+      {
+        "player": "Georgia Amoore",
+        "team": "Washington Mystics",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 2.0,
+          "ast": 0.0,
+          "mpg": 22.0,
+          "usage": 0.217,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 2.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 22.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 78.9,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960392+00:00"
+      },
+      {
+        "player": "Frieda Buhner",
+        "team": "Portland Fire",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 9.0,
+          "reb": 7.0,
+          "ast": 2.0,
+          "mpg": 18.0,
+          "usage": 0.309,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 9.0,
+          "last5_reb": 7.0,
+          "last5_ast": 2.0,
+          "last5_mpg": 18.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 77.7,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960369+00:00"
+      },
+      {
+        "player": "Tima Pouye",
+        "team": "Toronto Tempo",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 0.0,
+          "ast": 1.0,
+          "mpg": 21.0,
+          "usage": 0.226,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 0.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 21.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 77.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961306+00:00"
+      },
+      {
+        "player": "Cecilia Zandalasini",
+        "team": "Golden State Valkyries",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 7.5,
+          "reb": 2.0,
+          "ast": 1.0,
+          "mpg": 18.5,
+          "usage": 0.282,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 7.5,
+          "last5_reb": 2.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 18.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 76.3,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960162+00:00"
+      },
+      {
+        "player": "Diamond Miller",
+        "team": "Connecticut Sun",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 5.0,
+          "reb": 4.0,
+          "ast": 3.0,
+          "mpg": 19.0,
+          "usage": 0.268,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.0,
+          "last5_reb": 4.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 19.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 76.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960253+00:00"
+      },
+      {
+        "player": "Nia Coffey",
+        "team": "Minnesota Lynx",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 4.0,
+          "ast": 3.0,
+          "mpg": 20.0,
+          "usage": 0.23,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 4.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 20.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 75.0,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960973+00:00"
+      },
+      {
+        "player": "Kate Martin",
+        "team": "Los Angeles Sparks",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 8.0,
+          "reb": 6.0,
+          "ast": 0.0,
+          "mpg": 17.0,
+          "usage": 0.28,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 8.0,
+          "last5_reb": 6.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 17.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 72.2,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960599+00:00"
+      },
+      {
+        "player": "Kaitlyn Chen",
+        "team": "Golden State Valkyries",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 9.0,
+          "reb": 0.5,
+          "ast": 3.0,
+          "mpg": 15.0,
+          "usage": 0.318,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 9.0,
+          "last5_reb": 0.5,
+          "last5_ast": 3.0,
+          "last5_mpg": 15.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 70.8,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960575+00:00"
+      },
+      {
+        "player": "Lauren Betts",
+        "team": "Washington Mystics",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 7.0,
+          "reb": 5.0,
+          "ast": 3.0,
+          "mpg": 16.0,
+          "usage": 0.292,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 7.0,
+          "last5_reb": 5.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 16.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 70.8,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960742+00:00"
+      },
+      {
+        "player": "Kayla Thornton",
+        "team": "Golden State Valkyries",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 2.0,
+          "reb": 2.0,
+          "ast": 1.0,
+          "mpg": 19.0,
+          "usage": 0.213,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 2.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 19.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 70.7,
+          "is_rotation_core": true,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960633+00:00"
+      },
+      {
+        "player": "Katie Lou Samuelson",
+        "team": "Seattle Storm",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 7.0,
+          "reb": 3.0,
+          "ast": 0.0,
+          "mpg": 16.5,
+          "usage": 0.267,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 7.0,
+          "last5_reb": 3.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 16.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 69.6,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960611+00:00"
+      },
+      {
+        "player": "Tiffany Hayes",
+        "team": "Golden State Valkyries",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 7.0,
+          "reb": 1.0,
+          "ast": 1.5,
+          "mpg": 16.0,
+          "usage": 0.28,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 7.0,
+          "last5_reb": 1.0,
+          "last5_ast": 1.5,
+          "last5_mpg": 16.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 69.6,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961295+00:00"
+      },
+      {
+        "player": "Kiana Williams",
+        "team": "Los Angeles Sparks",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 4.0,
+          "reb": 0.0,
+          "ast": 3.0,
+          "mpg": 16.0,
+          "usage": 0.255,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 4.0,
+          "last5_reb": 0.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 16.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 67.1,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960682+00:00"
+      },
+      {
+        "player": "Teja Oblak",
+        "team": "Portland Fire",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 5.0,
+          "reb": 2.0,
+          "ast": 1.0,
+          "mpg": 16.0,
+          "usage": 0.251,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.0,
+          "last5_reb": 2.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 16.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 66.7,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961260+00:00"
+      },
+      {
+        "player": "Alicia Florez",
+        "team": "Washington Mystics",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 1.0,
+          "reb": 4.0,
+          "ast": 3.0,
+          "mpg": 17.0,
+          "usage": 0.217,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 1.0,
+          "last5_reb": 4.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 17.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 65.9,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959889+00:00"
+      },
+      {
+        "player": "Emma Cannon",
+        "team": "Los Angeles Sparks",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 5.0,
+          "reb": 3.0,
+          "ast": 3.0,
+          "mpg": 15.0,
+          "usage": 0.268,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.0,
+          "last5_reb": 3.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 15.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 65.8,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960310+00:00"
+      },
+      {
+        "player": "Lucy Olsen",
+        "team": "Washington Mystics",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 5.0,
+          "reb": 0.0,
+          "ast": 3.0,
+          "mpg": 15.0,
+          "usage": 0.268,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.0,
+          "last5_reb": 0.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 15.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 65.8,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960788+00:00"
+      },
+      {
+        "player": "Saniya Rivers",
+        "team": "Connecticut Sun",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 4.0,
+          "reb": 2.0,
+          "ast": 1.0,
+          "mpg": 16.0,
+          "usage": 0.238,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 4.0,
+          "last5_reb": 2.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 16.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 65.4,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961126+00:00"
+      },
+      {
+        "player": "Zia Cooke",
+        "team": "Seattle Storm",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 5.5,
+          "reb": 1.5,
+          "ast": 0.5,
+          "mpg": 14.5,
+          "usage": 0.253,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.5,
+          "last5_reb": 1.5,
+          "last5_ast": 0.5,
+          "last5_mpg": 14.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 63.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961329+00:00"
+      },
+      {
+        "player": "Nyadiew Puoch",
+        "team": "Portland Fire",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 2.0,
+          "ast": 0.0,
+          "mpg": 15.0,
+          "usage": 0.205,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 2.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 15.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 59.5,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960998+00:00"
+      },
+      {
+        "player": "Ezi Magbegor",
+        "team": "Seattle Storm",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 2.0,
+          "reb": 5.5,
+          "ast": 0.5,
+          "mpg": 14.5,
+          "usage": 0.209,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 5.5,
+          "last5_ast": 0.5,
+          "last5_mpg": 14.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 58.6,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960347+00:00"
+      },
+      {
+        "player": "Chance Gray",
+        "team": "Los Angeles Sparks",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 3.0,
+          "ast": 0.0,
+          "mpg": 14.0,
+          "usage": 0.217,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 3.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 14.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 58.1,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960174+00:00"
+      },
+      {
+        "player": "Madina Okot",
+        "team": "Atlanta Dream",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 11.0,
+          "reb": 2.0,
+          "ast": 0.0,
+          "mpg": 10.0,
+          "usage": 0.318,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 11.0,
+          "last5_reb": 2.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 10.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 57.8,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960836+00:00"
+      },
+      {
+        "player": "Alanna Smith",
+        "team": "Dallas Wings",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 4.0,
+          "ast": 1.0,
+          "mpg": 14.0,
+          "usage": 0.213,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 4.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 14.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 57.7,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959872+00:00"
+      },
+      {
+        "player": "Maya Caldwell",
+        "team": "Minnesota Lynx",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 2.0,
+          "ast": 3.0,
+          "mpg": 13.0,
+          "usage": 0.23,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 2.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 13.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 56.8,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960873+00:00"
+      },
+      {
+        "player": "Jordan Horston",
+        "team": "Seattle Storm",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 4.0,
+          "reb": 2.0,
+          "ast": 1.5,
+          "mpg": 12.5,
+          "usage": 0.242,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 4.0,
+          "last5_reb": 2.0,
+          "last5_ast": 1.5,
+          "last5_mpg": 12.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 56.7,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960514+00:00"
+      },
+      {
+        "player": "Aaliyah Edwards",
+        "team": "Connecticut Sun",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 5.0,
+          "reb": 2.0,
+          "ast": 1.0,
+          "mpg": 12.0,
+          "usage": 0.251,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 5.0,
+          "last5_reb": 2.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 12.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 56.3,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959828+00:00"
+      },
+      {
+        "player": "Laeticia Amihere",
+        "team": "Golden State Valkyries",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 1.0,
+          "reb": 4.5,
+          "ast": 1.0,
+          "mpg": 13.0,
+          "usage": 0.201,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 1.0,
+          "last5_reb": 4.5,
+          "last5_ast": 1.0,
+          "last5_mpg": 13.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 53.9,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960720+00:00"
+      },
+      {
+        "player": "Serah Williams",
+        "team": "Portland Fire",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 2.0,
+          "ast": 0.0,
+          "mpg": 13.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 2.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 13.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 51.8,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961148+00:00"
+      },
+      {
+        "player": "Aziaha James",
+        "team": "Dallas Wings",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 4.0,
+          "ast": 0.0,
+          "mpg": 10.0,
+          "usage": 0.217,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 4.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 10.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 47.7,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960068+00:00"
+      },
+      {
+        "player": "Stefanie Dolson",
+        "team": "Seattle Storm",
+        "position": "C",
+        "season": {
+          "gp": 2.0,
+          "ppg": 2.0,
+          "reb": 1.5,
+          "ast": 1.0,
+          "mpg": 10.0,
+          "usage": 0.213,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 1.5,
+          "last5_ast": 1.0,
+          "last5_mpg": 10.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 47.3,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961211+00:00"
+      },
+      {
+        "player": "Sug Sutton",
+        "team": "Dallas Wings",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 4.0,
+          "reb": 0.0,
+          "ast": 1.0,
+          "mpg": 9.0,
+          "usage": 0.238,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 4.0,
+          "last5_reb": 0.0,
+          "last5_ast": 1.0,
+          "last5_mpg": 9.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 47.2,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961222+00:00"
+      },
+      {
+        "player": "Teonni Key",
+        "team": "Toronto Tempo",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 10.0,
+          "usage": 0.205,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 10.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 46.5,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961284+00:00"
+      },
+      {
+        "player": "Holly Winterburn",
+        "team": "Portland Fire",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 4.0,
+          "reb": 1.0,
+          "ast": 2.0,
+          "mpg": 8.0,
+          "usage": 0.247,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 4.0,
+          "last5_reb": 1.0,
+          "last5_ast": 2.0,
+          "last5_mpg": 8.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 45.5,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960417+00:00"
+      },
+      {
+        "player": "Anastasiia Olairi Kosu",
+        "team": "Minnesota Lynx",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 9.0,
+          "usage": 0.217,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 9.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 45.1,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959954+00:00"
+      },
+      {
+        "player": "Angela Dugalic",
+        "team": "Washington Mystics",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 1.0,
+          "ast": 0.0,
+          "mpg": 10.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 1.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 10.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 44.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959995+00:00"
+      },
+      {
+        "player": "Isobel Borlase",
+        "team": "Atlanta Dream",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 3.0,
+          "ast": 0.0,
+          "mpg": 10.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 3.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 10.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 44.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960450+00:00"
+      },
+      {
+        "player": "Jihyun Park",
+        "team": "Los Angeles Sparks",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 1.0,
+          "ast": 0.0,
+          "mpg": 10.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 1.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 10.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 44.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960502+00:00"
+      },
+      {
+        "player": "Eliska Hamzova",
+        "team": "Minnesota Lynx",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 2.0,
+          "ast": 3.0,
+          "mpg": 8.0,
+          "usage": 0.23,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 2.0,
+          "last5_ast": 3.0,
+          "last5_mpg": 8.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 43.8,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960287+00:00"
+      },
+      {
+        "player": "Cassandre Prosper",
+        "team": "Washington Mystics",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 1.0,
+          "ast": 0.0,
+          "mpg": 9.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 1.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 9.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 41.4,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960146+00:00"
+      },
+      {
+        "player": "Maddy Siegrist",
+        "team": "Dallas Wings",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 8.0,
+          "usage": 0.205,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 8.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 41.3,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960825+00:00"
+      },
+      {
+        "player": "Odyssey Sims",
+        "team": "Dallas Wings",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 8.0,
+          "usage": 0.205,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 8.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 41.3,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961020+00:00"
+      },
+      {
+        "player": "Ornella Bankole",
+        "team": "Toronto Tempo",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 2.0,
+          "ast": 0.0,
+          "mpg": 8.0,
+          "usage": 0.205,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 2.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 8.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 41.3,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961057+00:00"
+      },
+      {
+        "player": "Sika Kone",
+        "team": "Atlanta Dream",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 4.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 6.0,
+          "usage": 0.23,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 4.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 6.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 38.6,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961173+00:00"
+      },
+      {
+        "player": "Alysha Clark",
+        "team": "Dallas Wings",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 3.0,
+          "reb": 1.0,
+          "ast": 0.0,
+          "mpg": 6.0,
+          "usage": 0.217,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 3.0,
+          "last5_reb": 1.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 6.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 37.3,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959934+00:00"
+      },
+      {
+        "player": "Gianna Kneepkens",
+        "team": "Connecticut Sun",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 2.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 5.0,
+          "usage": 0.205,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 2.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 5.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 33.5,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960405+00:00"
+      },
+      {
+        "player": "Te-Hina Paopao",
+        "team": "Atlanta Dream",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 5.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 5.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 31.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961249+00:00"
+      },
+      {
+        "player": "Indya Nivar",
+        "team": "Atlanta Dream",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 1.0,
+          "ast": 0.0,
+          "mpg": 4.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 1.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 4.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 28.4,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960428+00:00"
+      },
+      {
+        "player": "Li Yueru",
+        "team": "Dallas Wings",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 4.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 4.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 28.4,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960766+00:00"
+      },
+      {
+        "player": "Mackenzie Holmes",
+        "team": "Seattle Storm",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 0.0,
+          "reb": 0.5,
+          "ast": 0.0,
+          "mpg": 1.5,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.5,
+          "last5_ast": 0.0,
+          "last5_mpg": 1.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 21.9,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960814+00:00"
+      },
+      {
+        "player": "Taylor Thierry",
+        "team": "Seattle Storm",
+        "position": "F",
+        "season": {
+          "gp": 2.0,
+          "ppg": 0.0,
+          "reb": 0.5,
+          "ast": 0.0,
+          "mpg": 1.5,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.5,
+          "last5_ast": 0.0,
+          "last5_mpg": 1.5,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 21.9,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961236+00:00"
+      },
+      {
+        "player": "Aaliyah Nye",
+        "team": "Atlanta Dream",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959855+00:00"
+      },
+      {
+        "player": "Alissa Pili",
+        "team": "Los Angeles Sparks",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959907+00:00"
+      },
+      {
+        "player": "Aneesah Morrow",
+        "team": "Connecticut Sun",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.959968+00:00"
+      },
+      {
+        "player": "Brionna Jones",
+        "team": "Atlanta Dream",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960101+00:00"
+      },
+      {
+        "player": "Brittney Sykes",
+        "team": "Toronto Tempo",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960124+00:00"
+      },
+      {
+        "player": "Emma Cechova",
+        "team": "Minnesota Lynx",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960320+00:00"
+      },
+      {
+        "player": "Julie Allemand",
+        "team": "Toronto Tempo",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960538+00:00"
+      },
+      {
+        "player": "Juste Jocyte",
+        "team": "Golden State Valkyries",
+        "position": "G",
+        "season": {
+          "gp": 2.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960550+00:00"
+      },
+      {
+        "player": "Karlie Samuelson",
+        "team": "Portland Fire",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960588+00:00"
+      },
+      {
+        "player": "Kiki Rice",
+        "team": "Toronto Tempo",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960709+00:00"
+      },
+      {
+        "player": "Liatu King",
+        "team": "Minnesota Lynx",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960777+00:00"
+      },
+      {
+        "player": "Luisa Geiselsoder",
+        "team": "Portland Fire",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960799+00:00"
+      },
+      {
+        "player": "Nadia Fingall",
+        "team": "Golden State Valkyries",
+        "position": "C",
+        "season": {
+          "gp": 2.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960905+00:00"
+      },
+      {
+        "player": "Napheesa Collier",
+        "team": "Minnesota Lynx",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960915+00:00"
+      },
+      {
+        "player": "Nell Angloma",
+        "team": "Connecticut Sun",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.960961+00:00"
+      },
+      {
+        "player": "Olivia Miles",
+        "team": "Minnesota Lynx",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961031+00:00"
+      },
+      {
+        "player": "Raegan Beers",
+        "team": "Connecticut Sun",
+        "position": "F",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961091+00:00"
+      },
+      {
+        "player": "Rori Harmon",
+        "team": "Washington Mystics",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961114+00:00"
+      },
+      {
+        "player": "Sonia Citron",
+        "team": "Washington Mystics",
+        "position": "G",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961197+00:00"
+      },
+      {
+        "player": "Temi Fagbenle",
+        "team": "Toronto Tempo",
+        "position": "C",
+        "season": {
+          "gp": 1.0,
+          "ppg": 0.0,
+          "reb": 0.0,
+          "ast": 0.0,
+          "mpg": 0.0,
+          "usage": 0.18,
+          "ts_pct": 0.55
+        },
+        "recent_form": {
+          "last5_pts": 0.0,
+          "last5_reb": 0.0,
+          "last5_ast": 0.0,
+          "last5_mpg": 0.0,
+          "last5_threes": 0.0,
+          "points_trend": "STABLE",
+          "minutes_trend": "STABLE"
+        },
+        "injury": {
+          "status": "ACTIVE",
+          "detail": null,
+          "source": null
+        },
+        "projection_snapshot": {
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
+        },
+        "intelligence": {
+          "role_score": 18.0,
+          "is_rotation_core": false,
+          "is_recent_minutes_up": false,
+          "is_recent_scoring_up": false
+        },
+        "updated_at_utc": "2026-07-08T00:26:50.961271+00:00"
+      }
+    ],
     "summary": {
-      "players": 0,
+      "players": 121,
       "injury_records_matched": 0,
       "projection_records_matched": 0,
-      "core_rotation_players": 0
+      "core_rotation_players": 60
     }
   },
   "monte_carlo": {
-    "generated_at_utc": "2026-07-07T23:49:27.120436+00:00",
+    "generated_at_utc": "2026-07-08T00:26:54.309364+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -5425,7 +10629,7 @@
     "all_simulations": []
   },
   "market_engine": {
-    "generated_at_utc": "2026-07-07T23:49:27.937292+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.119012+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "markets": 0,
@@ -5435,7 +10639,7 @@
     "movements": []
   },
   "portfolio_v2": {
-    "generated_at_utc": "2026-07-07T23:49:27.978202+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.167571+00:00",
     "target_date": "2026-07-07",
     "bankroll": 500.0,
     "summary": {
@@ -5447,7 +10651,7 @@
     "candidates": []
   },
   "decision_final": {
-    "generated_at_utc": "2026-07-07T23:49:28.019496+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.213267+00:00",
     "target_date": "2026-07-07",
     "summary": {
       "rows": 0,
@@ -5458,7 +10662,7 @@
     "portfolio_card": []
   },
   "history": {
-    "generated_at_utc": "2026-07-07T23:49:28.287894+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.509126+00:00",
     "target_date": "2026-07-07",
     "added_records": 0,
     "total_records": 0,
@@ -5467,7 +10671,7 @@
     "source_predictions_games": 2
   },
   "learning": {
-    "generated_at_utc": "2026-07-07T23:49:28.766839+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.994379+00:00",
     "target_date": "2026-07-07",
     "history_records": 0,
     "graded_records": 0,
@@ -5490,7 +10694,7 @@
     ]
   },
   "grading": {
-    "generated_at_utc": "2026-07-07T23:49:28.677764+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.900037+00:00",
     "target_date": "2026-07-07",
     "actual_source_rows": 0,
     "graded_this_run": 0,
@@ -5501,7 +10705,7 @@
     "status": "waiting_for_actuals"
   },
   "clv": {
-    "generated_at_utc": "2026-07-07T23:49:27.853253+00:00",
+    "generated_at_utc": "2026-07-08T00:26:55.023702+00:00",
     "target_date": "2026-07-07",
     "stage": "snapshot",
     "snapshot_rows_added": 0,
@@ -6444,7 +11648,7 @@
     "final_leans": 0,
     "bet_count": 0,
     "lean_count": 0,
-    "source_ok": 6,
+    "source_ok": 7,
     "history_records": 0,
     "graded_this_run": 0,
     "win_rate": 0.0,

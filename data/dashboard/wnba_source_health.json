@@ -1,10 +1,10 @@
 {
-  "generated_at_utc": "2026-07-07T23:49:28.224895+00:00",
+  "generated_at_utc": "2026-07-08T00:26:55.442794+00:00",
   "target_date": "2026-07-07",
   "summary": {
     "sources": 8,
-    "ok_or_optional": 6,
-    "degraded_or_missing": 2
+    "ok_or_optional": 7,
+    "degraded_or_missing": 1
   },
   "sources": {
     "sports_skills": {
@@ -14,14 +14,14 @@
         "scores": {
           "ok": true,
           "returncode": 0,
-          "bytes": 4688,
+          "bytes": 3793,
           "stderr": "",
           "output_file": "data/wnba/scores.json"
         },
         "injuries": {
           "ok": true,
           "returncode": 0,
-          "bytes": 9414,
+          "bytes": 9435,
           "stderr": "",
           "output_file": "data/wnba/injuries.json"
         },
@@ -43,12 +43,12 @@
     },
     "stats_wnba": {
       "label": "stats.wnba.com",
-      "status": "missing",
+      "status": "ok",
       "detail": {
         "path": "data/raw/wnba_players_live.json",
-        "exists": false,
-        "bytes": 0,
-        "populated": false
+        "exists": true,
+        "bytes": 81208,
+        "populated": true
       }
     },
     "data_warehouse": {
@@ -67,7 +67,7 @@
       "detail": {
         "path": "data/warehouse/wnba_player_intelligence.json",
         "exists": true,
-        "bytes": 247,
+        "bytes": 124293,
         "populated": true
       }
     },
@@ -101,7 +101,7 @@
           "selected_source": "current_file",
           "rows": 12,
           "notes": "Loaded from existing current odds file.",
-          "checked_at_utc": "2026-07-07T23:49:24.506159+00:00",
+          "checked_at_utc": "2026-07-08T00:26:51.708351+00:00",
           "source_priority": [
             "manual",
             "current_file",
@@ -112,7 +112,7 @@
           "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
         },
         "health": {
-          "generated_at_utc": "2026-07-07T23:49:25.616463+00:00",
+          "generated_at_utc": "2026-07-08T00:26:52.802920+00:00",
           "target_date": "2026-07-07",
           "status": "ok",
           "label": "Team odds loaded",
@@ -130,7 +130,7 @@
             "selected_source": "current_file",
             "rows": 12,
             "notes": "Loaded from existing current odds file.",
-            "checked_at_utc": "2026-07-07T23:49:24.506159+00:00",
+            "checked_at_utc": "2026-07-08T00:26:51.708351+00:00",
             "source_priority": [
               "manual",
               "current_file",
