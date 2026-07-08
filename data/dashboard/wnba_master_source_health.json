@@ -1,0 +1,69 @@
+{
+  "generated_at_utc": "2026-07-08T12:32:24.177295+00:00",
+  "target_date": "2026-07-08",
+  "summary": {
+    "games": 9,
+    "today_games": 7,
+    "yesterday_games": 2,
+    "players": 121,
+    "props": 249,
+    "sportsbook_markets": 249,
+    "books": [
+      "BetOnline.ag",
+      "BetRivers",
+      "DraftKings",
+      "FanDuel"
+    ]
+  },
+  "sources": [
+    {
+      "source": "sportsdataverse",
+      "status": "optional_package_installed",
+      "rows": 9,
+      "detail": "Schedule/game data falls back to scores CSV and consensus odds until importer is enabled.",
+      "checked_at_utc": "2026-07-08T12:32:24.177016+00:00"
+    },
+    {
+      "source": "nba_api",
+      "status": "optional_package_installed",
+      "rows": 121,
+      "detail": "Advanced stats falls back to owned boxscore warehouse.",
+      "checked_at_utc": "2026-07-08T12:32:24.177105+00:00"
+    },
+    {
+      "source": "boxscore_warehouse",
+      "status": "ok",
+      "rows": 121,
+      "detail": "wnba_players_live.json generated from official stats or boxscore fallback.",
+      "checked_at_utc": "2026-07-08T12:32:24.177109+00:00"
+    },
+    {
+      "source": "odds_pipeline",
+      "status": "ok",
+      "rows": 249,
+      "detail": "sportsbook consensus markets normalized into master props.",
+      "checked_at_utc": "2026-07-08T12:32:24.177112+00:00"
+    },
+    {
+      "source": "the_odds_api",
+      "status": "backup_only",
+      "rows": 0,
+      "detail": "Do not use as primary because credits burn quickly.",
+      "checked_at_utc": "2026-07-08T12:32:24.177114+00:00"
+    },
+    {
+      "source": "litellm",
+      "status": "optional_package_installed",
+      "rows": 0,
+      "detail": "AI gateway planned; not required for current dashboard.",
+      "checked_at_utc": "2026-07-08T12:32:24.177191+00:00"
+    },
+    {
+      "source": "optuna",
+      "status": "optional_package_installed",
+      "rows": 0,
+      "detail": "Model tuning planned; not required for current dashboard.",
+      "checked_at_utc": "2026-07-08T12:32:24.177291+00:00"
+    }
+  ]
+}
