@@ -39,6 +39,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install sports-skills==0.27.0 || pip install git+https://github.com/machina-sports/sports-skills.git
+          pip install nba_api sportsdataverse litellm optuna || true
 
       - name: Resolve active Eastern slate date
         run: |
@@ -57,7 +58,7 @@ jobs:
             wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py \
             wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py \
             wnba_reasoning_layer.py wnba_portfolio_dashboard.py wnba_ai_coach.py \
-            wnba_source_health.py wnba_historical_database.py wnba_master_database.py \
+            wnba_source_health.py wnba_historical_database.py wnba_master_database.py wnba_master_source_builder.py \
             wnba_results_grader.py wnba_closing_line_tracker.py wnba_betting_ledger.py \
             wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py patch_dashboard_navigation_v2.py
 
@@ -159,6 +160,9 @@ jobs:
       - name: Build source health
         run: python wnba_source_health.py --date ${{ env.TARGET }}
 
+      - name: Build normalized master source database
+        run: python wnba_master_source_builder.py --date ${{ env.TARGET }}
+
       - name: Update historical database
         run: python wnba_historical_database.py --date ${{ env.TARGET }}
         continue-on-error: true
@@ -196,7 +200,7 @@ jobs:
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           git status --short
-          git add data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/*.csv data/raw/*.json data/history/*.jsonl docs/index.html
+          git add config/*.json docs/*.md data/master/*.json data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/*.csv data/raw/*.json data/history/*.jsonl docs/index.html
           git diff --cached --quiet && echo "No intelligence foundation changes" && exit 0
           git commit -m "Update WNBA intelligence foundation - ${{ env.TARGET }}"
           git push || (git pull --rebase origin main && git push)
