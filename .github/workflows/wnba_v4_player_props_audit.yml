@@ -1,0 +1,44 @@
+name: WNBA V4 Player Props Audit
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["WNBA Intelligence Foundation"]
+    types: [completed]
+
+concurrency:
+  group: wnba-v4-player-props-audit
+  cancel-in-progress: false
+
+jobs:
+  audit-player-props:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repo
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate audit
+        run: python -m py_compile wnba_v4_player_props_audit.py wnba_sportsbook_consensus.py
+
+      - name: Build player props audit
+        run: python wnba_v4_player_props_audit.py
+
+      - name: Commit audit
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/dashboard/wnba_v4_player_props_audit.json
+          git diff --cached --quiet && echo "No audit changes" && exit 0
+          git commit -m "Update V4 player props audit"
+          git push || (git pull --rebase origin main && git push)
