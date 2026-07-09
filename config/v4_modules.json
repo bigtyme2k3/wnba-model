@@ -1,0 +1,32 @@
+{
+  "version": "4.0",
+  "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
+  "status_scale": ["planned", "partial", "active", "validated"],
+  "modules": [
+    {"id": "M01", "name": "Source Registry", "owner_file": "config/source_registry.json", "status": "active", "purpose": "Track every primary, fallback, and backup data source with reliability."},
+    {"id": "M02", "name": "Schedule Core", "owner_file": "wnba_master_source_builder.py", "status": "active", "purpose": "Use the official daily slate as the game source of truth."},
+    {"id": "M03", "name": "Odds Source Manager", "owner_file": "odds_source_manager.py", "status": "active", "purpose": "Prefer no-credit/manual/sportsbook-derived odds before The Odds API backup."},
+    {"id": "M04", "name": "Sportsbook Consensus", "owner_file": "wnba_sportsbook_consensus.py", "status": "active", "purpose": "Normalize multi-book lines and best over/under prices."},
+    {"id": "M05", "name": "Player Stats Warehouse", "owner_file": "wnba_player_intelligence.py", "status": "active", "purpose": "Maintain player averages, form, minutes, and recent stat context."},
+    {"id": "M06", "name": "Boxscore Fallback", "owner_file": "wnba_stats_fallback_from_boxscores.py", "status": "active", "purpose": "Recover player stat data when official endpoint fails."},
+    {"id": "M07", "name": "Play-by-Play Layer", "owner_file": "sports_skills_core_provider.py", "status": "partial", "purpose": "Prepare possession, pace, lineup, and event-level inputs."},
+    {"id": "M08", "name": "Matchup Intelligence", "owner_file": "wnba_matchup_intelligence.py", "status": "partial", "purpose": "Add pace, defense, rest, home/away, and matchup adjustments."},
+    {"id": "M09", "name": "Projection Engine", "owner_file": "wnba_projection_ai.py", "status": "partial", "purpose": "Blend last 5, last 10, season, matchup, usage, and market inputs."},
+    {"id": "M10", "name": "Player Props Model", "owner_file": "player_points.py", "status": "active", "purpose": "Generate prop projection, side, edge, sportsbook, and history display."},
+    {"id": "M11", "name": "Spread Model", "owner_file": "wnba_decision_engine_final.py", "status": "partial", "purpose": "Rate side/spread opportunities from schedule, odds, and matchup data."},
+    {"id": "M12", "name": "Totals Model", "owner_file": "wnba_decision_engine_final.py", "status": "partial", "purpose": "Rate over/under opportunities from tempo, efficiency, and market totals."},
+    {"id": "M13", "name": "Expected Value Engine", "owner_file": "wnba_decision_engine_final.py", "status": "partial", "purpose": "Convert projection edges and prices into expected value decisions."},
+    {"id": "M14", "name": "Portfolio Optimizer", "owner_file": "wnba_portfolio_optimizer_v2.py", "status": "partial", "purpose": "Rank card construction while limiting correlated exposure."},
+    {"id": "M15", "name": "Risk Allocation", "owner_file": "wnba_risk_allocation.py", "status": "partial", "purpose": "Assign stake, bankroll exposure, Kelly cap, and risk tier."},
+    {"id": "M16", "name": "CLV Tracker", "owner_file": "wnba_closing_line_tracker.py", "status": "partial", "purpose": "Track opening, current, and closing line value."},
+    {"id": "M17", "name": "Results Grading", "owner_file": "wnba_results_grader.py", "status": "partial", "purpose": "Grade picks after final scores and player results are available."},
+    {"id": "M18", "name": "Self Learning", "owner_file": "wnba_self_learning.py", "status": "partial", "purpose": "Adjust weights from outcomes, CLV, and error patterns."},
+    {"id": "M19", "name": "Model Explainability", "owner_file": "wnba_reasoning_layer.py", "status": "partial", "purpose": "Explain why a pick exists and which factors mattered."},
+    {"id": "M20", "name": "Dashboard V4", "owner_file": "patch_dashboard_navigation_v2.py", "status": "active", "purpose": "Display clean games, props, books, best bets, portfolio, AI, and health views."},
+    {"id": "M21", "name": "Model Calibration", "owner_file": "wnba_v4_status_engine.py", "status": "planned", "purpose": "Compare predicted probability buckets to actual hit rates."},
+    {"id": "M22", "name": "Feature Importance", "owner_file": "wnba_v4_status_engine.py", "status": "planned", "purpose": "Track which features help predictions and which create noise."},
+    {"id": "M23", "name": "Hyperparameter Optimization", "owner_file": "wnba_v4_status_engine.py", "status": "planned", "purpose": "Tune model weights with optuna when enough historical results exist."},
+    {"id": "M24", "name": "Daily Retraining", "owner_file": "wnba_self_learning.py", "status": "planned", "purpose": "Automate daily model refresh, validation, and safe weight updates."},
+    {"id": "M25", "name": "Ensemble Learning", "owner_file": "wnba_v4_status_engine.py", "status": "planned", "purpose": "Combine rules, market, projection, simulation, and self-learning scores."}
+  ]
+}
