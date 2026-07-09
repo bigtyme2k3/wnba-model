@@ -7,6 +7,10 @@ on:
         description: 'Target date (YYYY-MM-DD), leave blank for active Eastern slate'
         required: false
         default: ''
+      refresh_odds_api:
+        description: 'Fetch current game odds and player props from The Odds API?'
+        required: false
+        default: 'true'
   schedule:
     - cron: '15 13 * * *'
 
@@ -17,7 +21,7 @@ concurrency:
 jobs:
   build-intelligence-foundation:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     permissions:
       contents: write
 
@@ -52,7 +56,7 @@ jobs:
       - name: Validate intelligence scripts
         run: |
           python -m py_compile \
-            active_slate_date.py scrape_wnba_stats.py wnba_stats_fallback_from_boxscores.py sports_skills_core_provider.py wnba_data_warehouse.py \
+            active_slate_date.py scrape_odds.py scrape_odds_props.py line_shopping.py scrape_wnba_stats.py wnba_stats_fallback_from_boxscores.py sports_skills_core_provider.py wnba_data_warehouse.py \
             wnba_player_intelligence.py wnba_stats_quality.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py wnba_sportsbook_consensus.py \
             player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py \
             wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py \
@@ -60,7 +64,14 @@ jobs:
             wnba_reasoning_layer.py wnba_portfolio_dashboard.py wnba_ai_coach.py \
             wnba_source_health.py wnba_historical_database.py wnba_master_database.py wnba_master_source_builder.py \
             wnba_results_grader.py wnba_closing_line_tracker.py wnba_betting_ledger.py \
-            wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py patch_dashboard_navigation_v2.py patch_prop_box_colors.py build_dashboard_v4.py wnba_v4_props_guard.py wnba_v4_prop_context.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py
+            wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py patch_dashboard_navigation_v2.py patch_prop_box_colors.py build_dashboard_v4.py wnba_v4_props_guard.py wnba_v4_prop_context.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py wnba_v4_player_props_audit.py
+
+      - name: Fetch current game odds from The Odds API
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.refresh_odds_api != 'false' }}
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
 
       - name: Refresh official WNBA stats
         run: python scrape_wnba_stats.py --season ${{ env.YEAR }} --out data/raw --delay 0.6
@@ -95,6 +106,20 @@ jobs:
 
       - name: Build live odds layer
         run: python wnba_live_odds_layer.py --date ${{ env.TARGET }}
+        continue-on-error: true
+
+      - name: Fetch current player props from The Odds API
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.refresh_odds_api != 'false' }}
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python scrape_odds_props.py --date ${{ env.TARGET }} --out data/raw
+        continue-on-error: true
+
+      - name: Build current line shopping props
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.refresh_odds_api != 'false' }}
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python line_shopping.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
       - name: Rebuild player props with intelligence
@@ -168,6 +193,10 @@ jobs:
 
       - name: Enrich V4 prop team context
         run: python wnba_v4_prop_context.py
+
+      - name: Audit V4 player props
+        run: python wnba_v4_player_props_audit.py
+        continue-on-error: true
 
       - name: Update historical database
         run: python wnba_historical_database.py --date ${{ env.TARGET }}
