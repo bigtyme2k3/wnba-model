@@ -1,13 +1,13 @@
 {
-  "generated_at_utc": "2026-07-09T13:14:16.298234+00:00",
+  "generated_at_utc": "2026-07-09T16:11:30.362398+00:00",
   "target_date": "2026-07-09",
   "summary": {
-    "games": 9,
-    "today_games": 6,
+    "games": 6,
+    "today_games": 3,
     "yesterday_games": 3,
     "players": 121,
-    "props": 249,
-    "best_bets": 30,
+    "props": 0,
+    "best_bets": 0,
     "sportsbook_markets": 249,
     "books": [
       "BetOnline.ag",
@@ -18,53 +18,60 @@
   },
   "sources": [
     {
+      "source": "sports_skills_schedule",
+      "status": "ok",
+      "rows": 3,
+      "detail": "Primary active slate schedule from data/wnba/scores.json.",
+      "checked_at_utc": "2026-07-09T16:11:30.362040+00:00"
+    },
+    {
       "source": "sportsdataverse",
       "status": "optional_package_installed",
-      "rows": 6,
-      "detail": "Schedule source planned; predictions schedule is current source of truth.",
-      "checked_at_utc": "2026-07-09T13:14:16.297988+00:00"
+      "rows": 3,
+      "detail": "Package schedule backup.",
+      "checked_at_utc": "2026-07-09T16:11:30.362158+00:00"
     },
     {
       "source": "nba_api",
       "status": "optional_package_installed",
       "rows": 121,
       "detail": "Advanced stats falls back to owned boxscore warehouse.",
-      "checked_at_utc": "2026-07-09T13:14:16.298071+00:00"
+      "checked_at_utc": "2026-07-09T16:11:30.362235+00:00"
     },
     {
       "source": "boxscore_warehouse",
       "status": "ok",
       "rows": 121,
       "detail": "wnba_players_live.json generated from official stats or boxscore fallback.",
-      "checked_at_utc": "2026-07-09T13:14:16.298075+00:00"
+      "checked_at_utc": "2026-07-09T16:11:30.362239+00:00"
     },
     {
       "source": "odds_pipeline",
-      "status": "ok",
-      "rows": 249,
+      "status": "missing",
+      "rows": 0,
       "detail": "sportsbook consensus markets normalized into master props.",
-      "checked_at_utc": "2026-07-09T13:14:16.298078+00:00"
+      "checked_at_utc": "2026-07-09T16:11:30.362241+00:00"
     },
     {
       "source": "the_odds_api",
       "status": "backup_only",
       "rows": 0,
       "detail": "Do not use as primary because credits burn quickly.",
-      "checked_at_utc": "2026-07-09T13:14:16.298080+00:00"
+      "checked_at_utc": "2026-07-09T16:11:30.362243+00:00"
     },
     {
       "source": "litellm",
       "status": "optional_package_installed",
       "rows": 0,
       "detail": "AI gateway planned; not required for current dashboard.",
-      "checked_at_utc": "2026-07-09T13:14:16.298156+00:00"
+      "checked_at_utc": "2026-07-09T16:11:30.362322+00:00"
     },
     {
       "source": "optuna",
       "status": "optional_package_installed",
       "rows": 0,
       "detail": "Model tuning planned; not required for current dashboard.",
-      "checked_at_utc": "2026-07-09T13:14:16.298231+00:00"
+      "checked_at_utc": "2026-07-09T16:11:30.362394+00:00"
     }
   ]
 }
