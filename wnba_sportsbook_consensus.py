@@ -34,6 +34,35 @@ def better_price(a, b):
     return max(float(a), float(b))
 
 
+def row_date(v):
+    try:
+        if v in (None, '') or pd.isna(v):
+            return ''
+        s=str(v).replace('Z','+00:00')
+        if 'T' in s:
+            return datetime.fromisoformat(s).date().isoformat()
+        return str(v)[:10]
+    except Exception:
+        return ''
+
+
+def filter_target_rows(df, target):
+    if df.empty:
+        return df, 'empty', 0, 0
+    total=len(df)
+    if 'game_date' in df.columns:
+        out=df[df['game_date'].astype(str).str[:10] == target].copy()
+        return out, 'game_date', total, len(out)
+    if 'commence_time' in df.columns:
+        dates=df['commence_time'].apply(row_date)
+        out=df[dates == target].copy()
+        return out, 'commence_time', total, len(out)
+    if 'date' in df.columns:
+        out=df[df['date'].astype(str).str[:10] == target].copy()
+        return out, 'date', total, len(out)
+    return df, 'no_date_column', total, total
+
+
 def candidates(target):
     preferred = [
         f'data/raw/line_shopping_{target}.csv',
@@ -45,7 +74,7 @@ def candidates(target):
         f'data/raw/player_points_{target}.csv',
         'data/raw/player_points_today.csv',
     ]
-    # Also allow most recent historical line-shopping files when today's files are header-only.
+    # Historical extras are diagnostics only unless their rows match the target date.
     extras = sorted(glob.glob('data/raw/line_shopping*.csv') + glob.glob('data/raw/props_raw_*.csv'), reverse=True)
     seen=[]
     for p in preferred + extras:
@@ -62,13 +91,17 @@ def file_rows(path):
 def choose_source(target):
     diagnostics=[]
     for p in candidates(target):
-        df, rows = file_rows(p)
         if not os.path.exists(p):
             continue
-        cols = list(df.columns) if not df.empty else list(pd.read_csv(p, nrows=0).columns)
-        diagnostics.append({'path': p, 'rows': rows, 'columns': cols[:30]})
-        if rows > 0:
-            return df, p, diagnostics
+        df, rows = file_rows(p)
+        try:
+            cols = list(df.columns) if not df.empty else list(pd.read_csv(p, nrows=0).columns)
+        except Exception:
+            cols = []
+        filtered, date_filter, original_rows, target_rows = filter_target_rows(df, target)
+        diagnostics.append({'path': p, 'rows': rows, 'target_rows': target_rows, 'date_filter': date_filter, 'columns': cols[:30]})
+        if target_rows > 0:
+            return filtered, p, diagnostics
     return pd.DataFrame(), 'none', diagnostics
 
 
@@ -115,7 +148,6 @@ def build(target):
 
     markets=[]; books_detected=set()
     for (player, game, stat), rows in grouped.items():
-        # merge same player/stat/game/book/line sides together
         merged={}
         for r in rows:
             k=(r['book'], r['line'])
@@ -147,14 +179,16 @@ def build(target):
             'books': sorted(set(r['book'] for r in rows))[:10]
         })
     markets.sort(key=lambda x: (x['book_count'], x['line_range']), reverse=True)
+    stale_candidates=[d for d in diagnostics if d.get('rows',0)>0 and d.get('target_rows',0)==0]
     report={
         'generated_at_utc': datetime.now(timezone.utc).isoformat(), 'target_date': target,
         'summary': {
             'markets': len(markets), 'multi_book_markets': sum(1 for m in markets if m['status']=='multi_book'),
             'single_feed_markets': sum(1 for m in markets if m['status']=='single_feed'),
             'books_detected': sorted(books_detected), 'source_used': source_used,
+            'stale_sources_rejected': [d['path'] for d in stale_candidates[:10]],
         },
-        'diagnosis': 'Reads line_shopping files first; header-only files are skipped. If source_used is stale, refresh live odds ingestion.',
+        'diagnosis': 'Strict mode: only prop rows whose game_date/date or commence_time matches target_date are accepted. Stale today files are rejected.',
         'input_diagnostics': diagnostics,
         'markets': markets[:300]
     }
