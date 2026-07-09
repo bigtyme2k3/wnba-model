@@ -1,0 +1,42 @@
+name: WNBA Version 4 Status
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 13 * * *'
+
+concurrency:
+  group: wnba-v4-status
+  cancel-in-progress: false
+
+jobs:
+  build-v4-status:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repo
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate V4 files
+        run: python -m py_compile wnba_v4_status_engine.py
+
+      - name: Build V4 status
+        run: python wnba_v4_status_engine.py
+
+      - name: Commit V4 status
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add config/v4_modules.json data/dashboard/wnba_v4_status.json docs/VERSION_4_ROADMAP.md
+          git diff --cached --quiet && echo "No V4 status changes" && exit 0
+          git commit -m "Update WNBA V4 status"
+          git push || (git pull --rebase origin main && git push)
