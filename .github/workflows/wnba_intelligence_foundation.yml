@@ -60,7 +60,7 @@ jobs:
             wnba_reasoning_layer.py wnba_portfolio_dashboard.py wnba_ai_coach.py \
             wnba_source_health.py wnba_historical_database.py wnba_master_database.py wnba_master_source_builder.py \
             wnba_results_grader.py wnba_closing_line_tracker.py wnba_betting_ledger.py \
-            wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py patch_dashboard_navigation_v2.py patch_prop_box_colors.py build_dashboard_v4.py wnba_v4_props_guard.py wnba_v4_prop_context.py patch_dashboard_v4_team_context.py
+            wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py patch_dashboard_navigation_v2.py patch_prop_box_colors.py build_dashboard_v4.py wnba_v4_props_guard.py wnba_v4_prop_context.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py
 
       - name: Refresh official WNBA stats
         run: python scrape_wnba_stats.py --season ${{ env.YEAR }} --out data/raw --delay 0.6
@@ -209,6 +209,9 @@ jobs:
 
       - name: Patch Dashboard V4 team context
         run: python patch_dashboard_v4_team_context.py
+
+      - name: Patch Dashboard V4 layout and slate chips
+        run: python patch_dashboard_v4_layout_and_slate.py
 
       - name: Commit and push
         run: |
