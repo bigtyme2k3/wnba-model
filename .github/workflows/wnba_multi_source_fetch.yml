@@ -38,11 +38,23 @@ jobs:
           r-version: 'release'
           use-public-rspm: true
 
-      - name: Install wehoop provider
+      - name: Clone wehoop source
         run: |
-          Rscript -e 'install.packages(c("cli","data.table","dplyr","httr2","janitor","jsonlite","lifecycle","lubridate","glmnet","magrittr","Matrix","progressr","purrr","Rcpp","RcppParallel","rlang","rvest","stringdist","stringi","stringr","tidyr","readr"), repos="https://cloud.r-project.org", dependencies=TRUE)'
           rm -rf /tmp/wehoop
           git clone --depth 1 https://github.com/sportsdataverse/wehoop.git /tmp/wehoop
+
+      - name: Install wehoop dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: /tmp/wehoop
+          cache-version: 1
+          needs: check
+          extra-packages: |
+            any::readr
+            any::jsonlite
+
+      - name: Install wehoop provider
+        run: |
           R CMD INSTALL /tmp/wehoop
           Rscript -e 'stopifnot(requireNamespace("wehoop", quietly=TRUE)); cat("wehoop installed:", as.character(packageVersion("wehoop")), "\n")'
 
