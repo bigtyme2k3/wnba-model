@@ -28,23 +28,50 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Validate polish patch
-        run: python -m py_compile patch_dashboard_v4_player_props_polish.py
+      - name: Validate Player Props build
+        run: |
+          python -m py_compile \
+            wnba_v4_prop_context.py \
+            build_dashboard_v4.py \
+            patch_dashboard_v4_team_context.py \
+            patch_dashboard_v4_layout_and_slate.py \
+            patch_dashboard_v4_prop_header.py \
+            patch_dashboard_v4_game_filter.py \
+            patch_dashboard_v4_player_props_polish.py
 
-      - name: Apply Player Props polish
+      - name: Enrich props with actual player game history
+        run: python wnba_v4_prop_context.py
+
+      - name: Rebuild V4 dashboard
+        run: python build_dashboard_v4.py
+
+      - name: Reapply V4 team context
+        run: python patch_dashboard_v4_team_context.py
+
+      - name: Reapply V4 responsive layout
+        run: python patch_dashboard_v4_layout_and_slate.py
+
+      - name: Reapply prop header fix
+        run: python patch_dashboard_v4_prop_header.py
+
+      - name: Reapply single-game filtering
+        run: python patch_dashboard_v4_game_filter.py
+
+      - name: Apply Player Props polish and actual history rendering
         run: python patch_dashboard_v4_player_props_polish.py
 
       - name: Verify generated dashboard
         run: |
           grep -q "Final V4 Player Props polish" docs/index.html
+          grep -q "actualHistory" docs/index.html
+          grep -q "opponent_abbr" docs/index.html
           grep -q "unique props" docs/index.html
-          grep -q "setPropSort" docs/index.html
 
-      - name: Commit polished dashboard
+      - name: Commit actual history and polished dashboard
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add docs/index.html
-          git diff --cached --quiet && echo "No Player Props polish changes" && exit 0
-          git commit -m "Polish V4 player props interface"
-          git push || (git pull --rebase origin main && python patch_dashboard_v4_player_props_polish.py && git add docs/index.html && git commit -m "Polish V4 player props interface" && git push)
+          git add data/dashboard/wnba_master.json data/master/wnba_master.json docs/index.html
+          git diff --cached --quiet && echo "No Player Props history changes" && exit 0
+          git commit -m "Display actual last game stats in V4 props"
+          git push || (git pull --rebase origin main && python wnba_v4_prop_context.py && python build_dashboard_v4.py && python patch_dashboard_v4_team_context.py && python patch_dashboard_v4_layout_and_slate.py && python patch_dashboard_v4_prop_header.py && python patch_dashboard_v4_game_filter.py && python patch_dashboard_v4_player_props_polish.py && git add data/dashboard/wnba_master.json data/master/wnba_master.json docs/index.html && git commit -m "Display actual last game stats in V4 props" && git push)
