@@ -1,0 +1,62 @@
+name: WNBA Closing Line Snapshots
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Slate date (YYYY-MM-DD), leave blank for active Eastern slate'
+        required: false
+        default: ''
+      stage:
+        description: 'Snapshot stage: open, snapshot, or close'
+        required: false
+        default: 'snapshot'
+  schedule:
+    - cron: '15 19-23 * * *'
+    - cron: '15 0-3 * * *'
+
+concurrency:
+  group: wnba-closing-line-snapshots
+  cancel-in-progress: false
+
+jobs:
+  capture-lines:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pandas
+        run: pip install pandas
+
+      - name: Resolve slate and stage
+        run: |
+          TARGET="${{ github.event.inputs.date }}"
+          if [ -z "$TARGET" ]; then TARGET=$(python active_slate_date.py); fi
+          STAGE="${{ github.event.inputs.stage }}"
+          if [ -z "$STAGE" ]; then STAGE="snapshot"; fi
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "STAGE=$STAGE" >> "$GITHUB_ENV"
+
+      - name: Capture line snapshot
+        run: python wnba_closing_line_tracker.py --date "${{ env.TARGET }}" --stage "${{ env.STAGE }}"
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add -A data/history data/warehouse/wnba_clv_summary.json data/dashboard/wnba_clv_summary.json
+          git diff --cached --quiet && echo "No line snapshot changes" && exit 0
+          git commit -m "Capture WNBA line snapshot - ${{ env.TARGET }} ${{ env.STAGE }}"
+          git pull --rebase origin main
+          git push
