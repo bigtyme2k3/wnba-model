@@ -21,7 +21,7 @@ concurrency:
 jobs:
   build-intelligence-foundation:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 40
     permissions:
       contents: write
 
@@ -38,20 +38,12 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: 'release'
-          use-public-rspm: true
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install sports-skills==0.27.0 || pip install git+https://github.com/machina-sports/sports-skills.git
           pip install nba_api sportsdataverse litellm optuna || true
-          Rscript -e 'install.packages(c("remotes","dplyr","readr","jsonlite","lubridate"), repos="https://cloud.r-project.org")'
-          Rscript -e 'remotes::install_github("sportsdataverse/wehoop", upgrade="never", dependencies=TRUE)'
-          Rscript -e 'stopifnot(requireNamespace("wehoop", quietly=TRUE)); cat("wehoop installed:", as.character(packageVersion("wehoop")), "\n")'
 
       - name: Resolve active Eastern slate date
         run: |
@@ -81,16 +73,13 @@ jobs:
         run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
         continue-on-error: true
 
-      - name: Refresh WNBA player stats from wehoop
-        run: Rscript fetch_wehoop_stats.R --date "${{ env.TARGET }}" --out data/raw
-
-      - name: Build boxscore stats fallback if wehoop data missing
+      - name: Validate committed wehoop player stats
         run: |
-          if [ ! -s data/raw/wnba_players_live.json ]; then
-            echo "⚠ wehoop player stats missing; building fallback from cached boxscores"
-            python wnba_stats_fallback_from_boxscores.py --out data/raw
+          if [ -s data/raw/wnba_players_live.json ] && [ -s data/raw/boxscores_wehoop.csv ]; then
+            echo "✓ wehoop player stats and boxscores are available"
           else
-            echo "✓ wehoop player stats available"
+            echo "⚠ committed wehoop files are missing; using cached boxscore fallback"
+            python wnba_stats_fallback_from_boxscores.py --out data/raw
           fi
 
       - name: Refresh sports-skills core provider
