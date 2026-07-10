@@ -52,14 +52,16 @@ def script(data: dict[str, Any]) -> str:
 .term-section-title{{margin-top:20px;font-size:18px;font-weight:900;letter-spacing:.12em}}
 .term-empty{{color:#94a3b8}}
 .term-hidden{{display:none!important}}
+.term-meter{{height:8px;background:#172033;border-radius:8px;overflow:hidden;margin-top:8px}}.term-meter span{{display:block;height:100%;background:#34d399}}
 @media(max-width:900px){{.term-grid{{grid-template-columns:1fr 1fr}}.term-list{{grid-template-columns:1fr}}}}
 </style>
 <section id="terminal-ui">
   <h2>WNBA Intelligence Terminal</h2>
-  <div class="term-label">Final Decisions · Portfolio · Monte Carlo · Market · Source Health</div>
+  <div class="term-label">Final Decisions · Portfolio · Monte Carlo · Market · Results · Calibration · Source Health</div>
   <div class="term-grid" id="terminalMetrics"></div>
   <div id="terminalFinalSection"><div class="term-section-title">Final Decisions</div><div class="term-list" id="terminalFinal"></div></div>
   <div id="terminalCardSection"><div class="term-section-title">Top Betting Card</div><div class="term-list" id="terminalCard"></div></div>
+  <div id="terminalLearningSection"><div class="term-section-title">Phase 5 Learning</div><div class="term-grid" id="terminalLearningMetrics"></div><div class="term-list" id="terminalCalibration"></div></div>
   <div class="term-section-title">Validation Guardrails</div>
   <div class="term-list" id="terminalGuards"></div>
   <div id="terminalSourcesSection"><div class="term-section-title">Source Health</div><div class="term-list" id="terminalSources"></div></div>
@@ -69,17 +71,19 @@ def script(data: dict[str, Any]) -> str:
   const data={payload};
   const safe=(v,d='—')=>v===undefined||v===null||v===''?d:v;
   const num=v=>Number.isFinite(Number(v))?Number(v):0;
+  const pct=v=>v===undefined||v===null?'—':(Number(v)*100).toFixed(1)+'%';
   const summary=data.terminal_summary||{{}};
   const decision=data.decision_final||{{}};
   const portfolio=data.portfolio_v2||{{}};
   const health=data.source_health||{{}};
   const mc=data.monte_carlo||{{}};
   const market=data.market_engine||{{}};
+  const phase5=data.phase5||{{}};
   const finalRows=decision.top_decisions||data.consensus?.top_consensus||[];
   const card=portfolio.recommended_card||decision.portfolio_card||[];
   const sourceTotal=num(summary.source_total||health.summary?.sources);
   const metrics=[
-    ['FINAL BETS',num(summary.final_bets||summary.bet_count)],
+    ['QUALIFIED BETS',num(summary.final_bets||summary.bet_count)],
     ['FINAL LEANS',num(summary.final_leans||summary.lean_count)],
     ['MC ROWS',num(summary.mc_rows||mc.summary?.rows)],
     ['MC 60%+',num(summary.mc_prob_60_plus||mc.summary?.prob_60_plus)],
@@ -92,20 +96,40 @@ def script(data: dict[str, Any]) -> str:
 
   const finalEl=document.getElementById('terminalFinal');
   if(finalRows.length){{
-    finalEl.innerHTML=finalRows.slice(0,12).map(r=>`<div class="term-row"><span class="term-score">${{safe(r.final_score,r.consensus_score)}}</span><b>${{safe(r.final_action,r.recommendation)}} · ${{safe(r.player)}} ${{safe(r.stat)}} ${{safe(r.signal)}}</b><br><span class="term-label">${{safe(r.game)}} · Line ${{safe(r.line)}} · MC ${{r.simulation_probability!=null?Math.round(Number(r.simulation_probability)*100)+'%':'—'}} · Move ${{safe(r.market_move)}} · ${{safe(r.decision_reason,'')}}</span></div>`).join('');
+    finalEl.innerHTML=finalRows.slice(0,12).map(r=>`<div class="term-row"><span class="term-score">${{safe(r.final_score,r.consensus_score)}}</span><b>${{safe(r.final_action,r.recommendation)}} · ${{safe(r.player)}} ${{safe(r.stat)}} ${{safe(r.signal)}}</b><br><span class="term-label">${{safe(r.game)}} · Line ${{safe(r.line)}} · MC ${{r.simulation_probability!=null?Math.round(Number(r.simulation_probability)*100)+'%':'—'}} · EV ${{safe(r.ev_pct)}}% · ${{safe(r.decision_reason,'')}}</span></div>`).join('');
   }}else{{document.getElementById('terminalFinalSection').classList.add('term-hidden')}}
 
   const cardEl=document.getElementById('terminalCard');
   if(card.length){{
-    cardEl.innerHTML=card.slice(0,10).map(r=>`<div class="term-row"><span class="term-score">$${{safe(r.recommended_stake,0)}}</span><b>${{safe(r.player)}} ${{safe(r.stat)}} ${{safe(r.signal)}}</b><br><span class="term-label">${{safe(r.game)}} · Portfolio ${{safe(r.portfolio_score)}} · Consensus ${{safe(r.consensus_score)}} · Risk ${{safe(r.risk_band)}}</span></div>`).join('');
+    cardEl.innerHTML=card.slice(0,10).map(r=>`<div class="term-row"><span class="term-score">$${{safe(r.recommended_stake,0)}}</span><b>${{safe(r.player)}} ${{safe(r.stat)}} ${{safe(r.signal)}}</b><br><span class="term-label">${{safe(r.sportsbook)}} · ${{safe(r.american_odds)}} · EV ${{safe(r.ev_pct)}}% · ${{safe(r.game)}} · Risk ${{safe(r.risk_band)}}</span></div>`).join('');
   }}else{{document.getElementById('terminalCardSection').classList.add('term-hidden')}}
+
+  const perf=phase5.performance||{{}};
+  const readiness=phase5.learning_readiness||{{}};
+  const cal=phase5.calibration||{{}};
+  if(phase5 && Object.keys(phase5).length){{
+    const learningMetrics=[
+      ['GRADED BETS',num(perf.graded)],
+      ['WIN RATE',pct(perf.win_rate)],
+      ['ROI',pct(perf.roi)],
+      ['UNITS',safe(perf.units_profit,0)],
+      ['AVG CLV',safe(perf.average_clv)],
+      ['CLV SAMPLES',num(perf.clv_samples)],
+      ['CALIBRATION',readiness.calibration_ready?'READY':'LEARNING'],
+      ['FEATURE LEARNING',readiness.feature_learning_ready?'READY':'LEARNING']
+    ];
+    document.getElementById('terminalLearningMetrics').innerHTML=learningMetrics.map(x=>`<div class="term-card"><div class="term-label">${{x[0]}}</div><div class="term-value">${{x[1]}}</div></div>`).join('');
+    const bins=(cal.bins||[]).filter(b=>b.n>0);
+    document.getElementById('terminalCalibration').innerHTML=bins.length?bins.map(b=>`<div class="term-row"><b>Confidence ${{b.bin}}</b><span class="term-score">${{pct(b.actual_rate)}}</span><br><span class="term-label">${{b.wins}}-${{b.losses}} · expected ${{pct(b.predicted_rate)}} · n=${{b.n}}</span><div class="term-meter"><span style="width:${{Math.min(100,num(b.actual_rate)*100)}}%"></span></div></div>`).join(''):'<div class="term-row term-empty">Calibration begins after graded bets accumulate.</div>';
+  }}else{{document.getElementById('terminalLearningSection').classList.add('term-hidden')}}
 
   const oddsStatus=health.sources?.odds_layer?.status||'missing';
   const guards=[
     ['Odds Layer',oddsStatus,oddsStatus==='ok'?'term-good':'term-warn'],
     ['Monte Carlo Rows',num(mc.summary?.rows),num(mc.summary?.rows)>0?'term-good':'term-bad'],
-    ['Final Decisions',num(decision.summary?.rows),num(decision.summary?.rows)>0?'term-good':'term-bad'],
+    ['Decision Rows',num(decision.summary?.rows),num(decision.summary?.rows)>0?'term-good':'term-bad'],
     ['Market Snapshots',num(market.summary?.markets||market.summary?.rows),num(market.summary?.markets||market.summary?.rows)>0?'term-good':'term-warn'],
+    ['Phase 5 History',num(summary.graded_total),num(summary.graded_total)>=50?'term-good':'term-warn'],
     ['Source Health',sourceTotal?`${{num(health.summary?.ok_or_optional)}}/${{sourceTotal}}`:'—',num(health.summary?.degraded_or_missing)<=2?'term-good':'term-warn']
   ];
   document.getElementById('terminalGuards').innerHTML=guards.map(g=>`<div class="term-row"><b>${{g[0]}}</b><span class="term-score ${{g[2]}}">${{g[1]}}</span></div>`).join('');
