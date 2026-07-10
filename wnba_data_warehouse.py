@@ -168,11 +168,12 @@ def quality_report(files: Dict[str, Any], normalized: Dict[str, List[Dict[str, A
         "player_profiles": len(player_file) if isinstance(player_file, dict) else 0,
         "stats_fresh_for_target": str(wehoop_status.get("target_date", ""))[:10] == target,
     }
-    required = ["games_available", "standings_available", "wehoop_status_ok"]
+    required = ["games_available", "wehoop_status_ok", "stats_fresh_for_target"]
     report["ready_for_model"] = all(bool(report["checks"].get(k)) for k in required) and box_rows > 0 and report["checks"]["player_profiles"] > 0
     report["health"] = "ok" if report["ready_for_model"] else "degraded"
     report["warnings"] = []
     if not report["checks"]["injury_feed_valid"]: report["warnings"].append("injury feed invalid")
+    if not report["checks"]["standings_available"]: report["warnings"].append("supplemental standings unavailable")
     if not report["checks"]["stats_fresh_for_target"]: report["warnings"].append("wehoop target date differs from active slate")
     return report
 
