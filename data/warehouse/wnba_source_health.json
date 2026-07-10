@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-10T11:44:49.687259+00:00",
+  "generated_at_utc": "2026-07-10T21:53:46.604515+00:00",
   "target_date": "2026-07-10",
   "summary": {
     "sources": 8,
@@ -7,8 +7,45 @@
     "degraded_or_missing": 1
   },
   "sources": {
+    "wehoop": {
+      "label": "wehoop / ESPN Stats",
+      "status": "ok",
+      "detail": {
+        "status": {
+          "status": "ok",
+          "provider": "sportsdataverse/wehoop",
+          "upstream": "ESPN",
+          "target_date": "2026-07-10",
+          "season": 2026,
+          "completed_games": 183,
+          "player_game_rows": 4540,
+          "players": 321,
+          "latest_game_date": "2026-07-09",
+          "new_games_fetched": 183,
+          "generated_at_utc": "2026-07-10 20:46:35 UTC"
+        },
+        "players": {
+          "path": "data/raw/wnba_players_live.json",
+          "exists": true,
+          "bytes": 228782,
+          "populated": true
+        },
+        "boxscores": {
+          "path": "data/raw/boxscores_wehoop.csv",
+          "exists": true,
+          "bytes": 740727,
+          "populated": true
+        },
+        "history": {
+          "path": "data/raw/wehoop_player_boxscores.csv",
+          "exists": true,
+          "bytes": 2192566,
+          "populated": true
+        }
+      }
+    },
     "sports_skills": {
-      "label": "sports-skills",
+      "label": "sports-skills Supplemental",
       "status": "ok",
       "detail": {
         "scores": {
@@ -39,16 +76,6 @@
           "stderr": "",
           "output_file": "data/wnba/futures.json"
         }
-      }
-    },
-    "stats_wnba": {
-      "label": "stats.wnba.com",
-      "status": "ok",
-      "detail": {
-        "path": "data/raw/wnba_players_live.json",
-        "exists": true,
-        "bytes": 81208,
-        "populated": true
       }
     },
     "data_warehouse": {
@@ -147,8 +174,11 @@
     },
     "odds_api": {
       "label": "The Odds API",
-      "status": "optional",
-      "detail": "Disabled by default to conserve credits."
+      "status": "ok",
+      "detail": {
+        "selected_source": "current_file",
+        "rows": 6
+      }
     }
   }
 }
