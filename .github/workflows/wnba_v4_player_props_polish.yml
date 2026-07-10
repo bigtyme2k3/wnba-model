@@ -1,0 +1,50 @@
+name: WNBA V4 Player Props Polish
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["WNBA Intelligence Foundation"]
+    types: [completed]
+
+concurrency:
+  group: wnba-v4-player-props-polish
+  cancel-in-progress: false
+
+jobs:
+  polish-player-props:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate polish patch
+        run: python -m py_compile patch_dashboard_v4_player_props_polish.py
+
+      - name: Apply Player Props polish
+        run: python patch_dashboard_v4_player_props_polish.py
+
+      - name: Verify generated dashboard
+        run: |
+          grep -q "Final V4 Player Props polish" docs/index.html
+          grep -q "unique props" docs/index.html
+          grep -q "setPropSort" docs/index.html
+
+      - name: Commit polished dashboard
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add docs/index.html
+          git diff --cached --quiet && echo "No Player Props polish changes" && exit 0
+          git commit -m "Polish V4 player props interface"
+          git push || (git pull --rebase origin main && python patch_dashboard_v4_player_props_polish.py && git add docs/index.html && git commit -m "Polish V4 player props interface" && git push)
