@@ -57,6 +57,7 @@ def build(target: str):
         "decision_final": first_existing("data/dashboard/wnba_decision_engine_final.json", "data/warehouse/wnba_decision_engine_final.json"),
         "history": first_existing("data/dashboard/wnba_historical_summary.json"),
         "learning": first_existing("data/dashboard/wnba_self_learning.json"),
+        "phase5": first_existing("data/dashboard/wnba_phase5_learning.json", "data/warehouse/wnba_phase5_learning.json"),
         "grading": first_existing("data/dashboard/wnba_results_grading.json"),
         "clv": first_existing("data/dashboard/wnba_clv_summary.json"),
         "portfolio": first_existing("data/dashboard/deepseek_portfolio_optimizer.json"),
@@ -75,6 +76,7 @@ def build(target: str):
     books = bundle["sportsbook_consensus"]
     coach = bundle["ai_coach"]
     projection = bundle["projection_ai"]
+    phase5 = bundle["phase5"]
 
     top = (decision.get("top_decisions") or consensus.get("top_consensus") or [])[:20]
     sim_summary = monte_carlo.get("summary") or {}
@@ -87,6 +89,8 @@ def build(target: str):
     book_summary = books.get("summary") or {}
     coach_summary = coach.get("summary") or {}
     projection_summary = projection.get("summary") or {}
+    phase5_perf = phase5.get("performance") or {}
+    phase5_ready = phase5.get("learning_readiness") or {}
 
     bundle["terminal_summary"] = {
         "top_cards": top[:5],
@@ -99,8 +103,15 @@ def build(target: str):
         "source_total": health_summary.get("sources", 0),
         "source_degraded": health_summary.get("degraded_or_missing", 0),
         "history_records": bundle["history"].get("total_records", 0),
-        "graded_this_run": bundle["grading"].get("graded_this_run", 0),
-        "win_rate": bundle["grading"].get("win_rate", 0),
+        "graded_this_run": phase5.get("newly_graded", bundle["grading"].get("graded_this_run", 0)),
+        "graded_total": phase5_perf.get("graded", 0),
+        "win_rate": phase5_perf.get("win_rate"),
+        "roi": phase5_perf.get("roi"),
+        "units_profit": phase5_perf.get("units_profit"),
+        "average_clv": phase5_perf.get("average_clv"),
+        "calibration_rows": (phase5.get("calibration") or {}).get("graded_binary_rows", 0),
+        "calibration_ready": phase5_ready.get("calibration_ready", False),
+        "feature_learning_ready": phase5_ready.get("feature_learning_ready", False),
         "clv_updates": bundle["clv"].get("history_clv_updates", 0),
         "mc_rows": sim_summary.get("rows", len(monte_carlo.get("top_simulations") or [])),
         "mc_prob_60_plus": sim_summary.get("prob_60_plus", 0),
