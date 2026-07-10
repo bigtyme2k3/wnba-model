@@ -23,6 +23,24 @@ def sf(value, default=0.0):
         return default
 
 
+def clean_json(value):
+    """Recursively replace NaN/Infinity and non-JSON scalar values."""
+    if isinstance(value, dict):
+        return {str(key): clean_json(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [clean_json(item) for item in value]
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if value is None or isinstance(value, (str, int, bool)):
+        return value
+    try:
+        if hasattr(value, "item"):
+            return clean_json(value.item())
+    except Exception:
+        pass
+    return str(value)
+
+
 def clamp(value, low, high):
     return max(low, min(high, value))
 
@@ -70,12 +88,13 @@ def build(target):
     market_map = {key(row): row for row in market}
     decisions = []
 
-    for row in consensus:
+    for source_row in consensus:
+        row = clean_json(source_row)
         stat = str(row.get("stat") or "").upper().replace("THREES", "3PM")
         signal = str(row.get("signal") or "").upper()
-        prop = props.get(key(row), {})
-        sim = sim_map.get(key(row), {})
-        movement = market_map.get(key(row), {})
+        prop = clean_json(props.get(key(row), {}))
+        sim = clean_json(sim_map.get(key(row), {}))
+        movement = clean_json(market_map.get(key(row), {}))
         line = sf(row.get("line"), -1)
         prediction = sf(row.get("pred"), line)
         edge = abs(sf(row.get("edge"), prediction - line))
@@ -125,7 +144,7 @@ def build(target):
         else:
             action = "PASS"
 
-        decisions.append({
+        decisions.append(clean_json({
             **row,
             "stat": stat,
             "simulation_probability": round(probability, 4),
@@ -144,12 +163,12 @@ def build(target):
             "book_count": book_count,
             "guardrail_failures": reasons,
             "decision_reason": "Qualified across score, probability, EV, history, books and agreement." if eligible else "; ".join(reasons),
-        })
+        }))
 
     decisions.sort(key=lambda row: (row.get("final_action") == "BET", row.get("final_score", 0)), reverse=True)
     bets = [row for row in decisions if row.get("final_action") == "BET"]
     leans = [row for row in decisions if row.get("final_action") == "LEAN"]
-    report = {
+    report = clean_json({
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target,
         "scoring_scale": "0-100",
@@ -157,10 +176,11 @@ def build(target):
         "guardrails": {"supported_stats": sorted(SUPPORTED_STATS), "minimum_probability": 0.56, "minimum_ev_pct": 2, "maximum_ev_pct": 20, "minimum_history_games": 5, "minimum_books": 2, "minimum_edge_pct": 5, "minimum_engine_agreement": 4},
         "top_decisions": decisions[:75],
         "qualified_bets": bets,
-    }
+    })
     os.makedirs("data/warehouse", exist_ok=True); os.makedirs("data/dashboard", exist_ok=True)
     for path in ["data/warehouse/wnba_decision_engine_final.json", "data/dashboard/wnba_decision_engine_final.json"]:
-        json.dump(report, open(path, "w", encoding="utf-8"), indent=2, allow_nan=False)
+        with open(path, "w", encoding="utf-8") as handle:
+            json.dump(report, handle, indent=2, allow_nan=False)
     return report
 
 
