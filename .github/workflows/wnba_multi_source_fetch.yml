@@ -40,8 +40,10 @@ jobs:
 
       - name: Install wehoop provider
         run: |
-          Rscript -e 'install.packages(c("remotes","dplyr","readr","jsonlite","lubridate"), repos="https://cloud.r-project.org")'
-          Rscript -e 'remotes::install_github("sportsdataverse/wehoop", upgrade="never", dependencies=TRUE)'
+          Rscript -e 'install.packages(c("dplyr","readr","jsonlite","lubridate"), repos="https://cloud.r-project.org")'
+          rm -rf /tmp/wehoop
+          git clone --depth 1 https://github.com/sportsdataverse/wehoop.git /tmp/wehoop
+          R CMD INSTALL /tmp/wehoop
           Rscript -e 'stopifnot(requireNamespace("wehoop", quietly=TRUE)); cat("wehoop installed:", as.character(packageVersion("wehoop")), "\n")'
 
       - name: Resolve active slate date
