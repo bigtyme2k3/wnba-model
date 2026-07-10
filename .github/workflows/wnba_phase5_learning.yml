@@ -94,7 +94,7 @@ jobs:
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add data/history/wnba_model_history.jsonl data/history/wnba_graded_bets.csv data/history/wnba_line_snapshots.jsonl data/warehouse/wnba_phase5_learning.json data/warehouse/wnba_clv_summary.json data/dashboard/wnba_phase5_learning.json data/dashboard/wnba_clv_summary.json data/dashboard/terminal_ui.json data/warehouse/wnba_historical_summary.json data/dashboard/wnba_historical_summary.json docs/index.html
+          git add -A data/history data/warehouse data/dashboard docs/index.html
           git diff --cached --quiet && echo "No Phase 5 changes" && exit 0
           git commit -m "Update WNBA Phase 5 learning - ${{ env.TARGET }}"
           git pull --rebase origin main
