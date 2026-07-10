@@ -49,7 +49,9 @@ jobs:
           pip install -r requirements.txt
           pip install sports-skills==0.27.0 || pip install git+https://github.com/machina-sports/sports-skills.git
           pip install nba_api sportsdataverse litellm optuna || true
-          Rscript -e 'install.packages(c("wehoop","dplyr","readr","jsonlite","lubridate"), repos="https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("remotes","dplyr","readr","jsonlite","lubridate"), repos="https://cloud.r-project.org")'
+          Rscript -e 'remotes::install_github("sportsdataverse/wehoop", upgrade="never", dependencies=TRUE)'
+          Rscript -e 'stopifnot(requireNamespace("wehoop", quietly=TRUE)); cat("wehoop installed:", as.character(packageVersion("wehoop")), "\n")'
 
       - name: Resolve active Eastern slate date
         run: |
