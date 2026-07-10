@@ -1,0 +1,73 @@
+name: WNBA Model Quality Guardrails
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for active slate'
+        required: false
+        default: ''
+  workflow_run:
+    workflows: ["WNBA Intelligence Foundation"]
+    types: [completed]
+
+concurrency:
+  group: wnba-model-quality-guardrails
+  cancel-in-progress: false
+
+jobs:
+  quality-guardrails:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Resolve target date
+        run: |
+          TARGET="${{ github.event.inputs.date }}"
+          if [ -z "$TARGET" ]; then TARGET=$(python active_slate_date.py); fi
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Using quality target: $TARGET"
+
+      - name: Validate quality scripts
+        run: python -m py_compile wnba_data_warehouse.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_model_quality_audit.py wnba_risk_allocation.py wnba_portfolio_dashboard.py
+
+      - name: Repair and validate data warehouse
+        run: python wnba_data_warehouse.py --date "${{ env.TARGET }}"
+
+      - name: Rebuild normalized final decisions
+        run: python wnba_decision_engine_final.py --date "${{ env.TARGET }}"
+
+      - name: Build strict diversified betting card
+        run: python wnba_portfolio_optimizer_v2.py --date "${{ env.TARGET }}" --bankroll 500
+
+      - name: Refresh risk allocation
+        run: python wnba_risk_allocation.py --date "${{ env.TARGET }}" --capital 500
+        continue-on-error: true
+
+      - name: Refresh portfolio dashboard
+        run: python wnba_portfolio_dashboard.py --date "${{ env.TARGET }}"
+        continue-on-error: true
+
+      - name: Run model quality audit
+        run: python wnba_model_quality_audit.py --date "${{ env.TARGET }}"
+
+      - name: Commit quality-controlled outputs
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/warehouse/wnba_data_warehouse.json data/warehouse/wnba_source_quality.json data/warehouse/wnba_decision_engine_final.json data/warehouse/wnba_portfolio_optimizer_v2.json data/warehouse/wnba_model_quality_audit.json data/warehouse/wnba_risk_allocation.json data/dashboard/wnba_data_warehouse.json data/dashboard/wnba_decision_engine_final.json data/dashboard/wnba_portfolio_optimizer_v2.json data/dashboard/wnba_model_quality_audit.json data/dashboard/wnba_risk_allocation.json data/dashboard/wnba_portfolio_dashboard.json
+          git diff --cached --quiet && echo "No quality output changes" && exit 0
+          git commit -m "Apply WNBA model quality guardrails - ${{ env.TARGET }}"
+          git push || (git pull --rebase origin main && python wnba_data_warehouse.py --date "${{ env.TARGET }}" && python wnba_decision_engine_final.py --date "${{ env.TARGET }}" && python wnba_portfolio_optimizer_v2.py --date "${{ env.TARGET }}" --bankroll 500 && python wnba_model_quality_audit.py --date "${{ env.TARGET }}" && git add data/warehouse/*.json data/dashboard/*.json && git commit -m "Apply WNBA model quality guardrails - ${{ env.TARGET }}" && git push)
