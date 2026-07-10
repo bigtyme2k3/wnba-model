@@ -1,0 +1,101 @@
+name: WNBA Phase 5 Learning
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Grade date (YYYY-MM-DD), leave blank for yesterday Eastern'
+        required: false
+        default: ''
+      closing_snapshot:
+        description: 'Capture closing lines before grading?'
+        required: false
+        default: 'false'
+  schedule:
+    - cron: '30 9 * * *'
+
+concurrency:
+  group: wnba-phase5-learning
+  cancel-in-progress: false
+
+jobs:
+  phase5-learning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+
+      - name: Resolve grading date
+        run: |
+          TARGET="${{ github.event.inputs.date }}"
+          if [ -z "$TARGET" ]; then
+            TARGET=$(python - <<'PY'
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          print((datetime.now(ZoneInfo('America/New_York')).date()-timedelta(days=1)).isoformat())
+          PY
+          )
+          fi
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Phase 5 grading date: $TARGET"
+
+      - name: Validate Phase 5 scripts
+        run: python -m py_compile wnba_historical_database.py wnba_closing_line_tracker.py wnba_phase5_learning_engine.py wnba_terminal_ui.py patch_terminal_ui.py
+
+      - name: Record current model decisions
+        run: python wnba_historical_database.py --date "${{ env.TARGET }}"
+
+      - name: Capture closing line snapshot
+        if: ${{ github.event.inputs.closing_snapshot == 'true' }}
+        run: python wnba_closing_line_tracker.py --date "${{ env.TARGET }}" --stage close
+
+      - name: Grade and build calibration learning database
+        run: python wnba_phase5_learning_engine.py --date "${{ env.TARGET }}"
+
+      - name: Rebuild terminal bundle
+        run: python wnba_terminal_ui.py --date "${{ env.TARGET }}"
+
+      - name: Publish Phase 5 dashboard
+        run: python patch_terminal_ui.py
+
+      - name: Verify Phase 5 outputs
+        run: |
+          python - <<'PY'
+          import json, os
+          report=json.load(open('data/dashboard/wnba_phase5_learning.json'))
+          assert 'performance' in report
+          assert 'calibration' in report
+          assert 'feature_importance' in report
+          assert os.path.exists('data/history/wnba_graded_bets.csv')
+          terminal=json.load(open('data/dashboard/terminal_ui.json'))
+          assert 'phase5' in terminal
+          print('Phase 5 verified:', report['performance'])
+          PY
+
+      - name: Commit Phase 5 learning state
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/history/wnba_model_history.jsonl data/history/wnba_graded_bets.csv data/history/wnba_line_snapshots.jsonl data/warehouse/wnba_phase5_learning.json data/warehouse/wnba_clv_summary.json data/dashboard/wnba_phase5_learning.json data/dashboard/wnba_clv_summary.json data/dashboard/terminal_ui.json data/warehouse/wnba_historical_summary.json data/dashboard/wnba_historical_summary.json docs/index.html
+          git diff --cached --quiet && echo "No Phase 5 changes" && exit 0
+          git commit -m "Update WNBA Phase 5 learning - ${{ env.TARGET }}"
+          git pull --rebase origin main
+          git push
