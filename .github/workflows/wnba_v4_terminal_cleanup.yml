@@ -8,7 +8,7 @@ on:
         required: false
         default: ''
   workflow_run:
-    workflows: ["WNBA Intelligence Foundation"]
+    workflows: ["WNBA Model Quality Guardrails"]
     types: [completed]
 
 concurrency:
@@ -61,10 +61,14 @@ jobs:
           assert summary.get('mc_rows',0) > 0, summary
           assert summary.get('decision_rows',0) > 0, summary
           assert data.get('source_health',{}).get('sources'), 'source health missing'
+          quality=json.load(open('data/dashboard/wnba_model_quality_audit.json'))
+          assert quality.get('status') == 'ok', quality
+          assert quality.get('checks',{}).get('scores_0_100'), quality
           html=open('docs/index.html',encoding='utf-8').read()
           assert 'WNBA_TERMINAL_UI_PATCH_START' in html
           assert 'wehoop / ESPN Stats' in html
           print('Terminal verified:', summary)
+          print('Model quality verified:', quality.get('counts'))
           PY
 
       - name: Commit terminal cleanup
@@ -73,5 +77,5 @@ jobs:
           git config user.email "actions@github.com"
           git add data/dashboard/terminal_ui.json data/dashboard/wnba_source_health.json data/warehouse/wnba_source_health.json docs/index.html
           git diff --cached --quiet && echo "No terminal cleanup changes" && exit 0
-          git commit -m "Populate and clean V4 intelligence terminal"
-          git push || (git pull --rebase origin main && python wnba_source_health.py --date "${{ env.TARGET }}" && python wnba_terminal_ui.py --date "${{ env.TARGET }}" && python patch_terminal_ui.py && git add data/dashboard/terminal_ui.json data/dashboard/wnba_source_health.json data/warehouse/wnba_source_health.json docs/index.html && git commit -m "Populate and clean V4 intelligence terminal" && git push)
+          git commit -m "Populate quality-controlled V4 intelligence terminal"
+          git push || (git pull --rebase origin main && python wnba_source_health.py --date "${{ env.TARGET }}" && python wnba_terminal_ui.py --date "${{ env.TARGET }}" && python patch_terminal_ui.py && git add data/dashboard/terminal_ui.json data/dashboard/wnba_source_health.json data/warehouse/wnba_source_health.json docs/index.html && git commit -m "Populate quality-controlled V4 intelligence terminal" && git push)
