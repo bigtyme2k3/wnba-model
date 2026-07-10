@@ -1,8 +1,8 @@
 {
-  "generated_at_utc": "2026-07-09T22:28:54.853491+00:00",
+  "generated_at_utc": "2026-07-10T01:27:30.487450+00:00",
   "target_date": "2026-07-09",
   "source_health": {
-    "generated_at_utc": "2026-07-09T22:28:53.450810+00:00",
+    "generated_at_utc": "2026-07-10T01:27:29.132411+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "sources": 8,
@@ -17,14 +17,14 @@
           "scores": {
             "ok": true,
             "returncode": 0,
-            "bytes": 6977,
+            "bytes": 6110,
             "stderr": "",
             "output_file": "data/wnba/scores.json"
           },
           "injuries": {
             "ok": true,
             "returncode": 0,
-            "bytes": 12366,
+            "bytes": 11597,
             "stderr": "",
             "output_file": "data/wnba/injuries.json"
           },
@@ -70,7 +70,7 @@
         "detail": {
           "path": "data/warehouse/wnba_player_intelligence.json",
           "exists": true,
-          "bytes": 126193,
+          "bytes": 124293,
           "populated": true
         }
       },
@@ -101,10 +101,10 @@
           "raw_status": {
             "status": "ok",
             "target_date": "2026-07-09",
-            "selected_source": "current_file",
+            "selected_source": "cache",
             "rows": 12,
-            "notes": "Loaded from existing current odds file.",
-            "checked_at_utc": "2026-07-09T22:28:49.206446+00:00",
+            "notes": "Loaded from historical/cache odds.",
+            "checked_at_utc": "2026-07-10T01:27:23.936433+00:00",
             "source_priority": [
               "manual",
               "current_file",
@@ -115,7 +115,7 @@
             "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
           },
           "health": {
-            "generated_at_utc": "2026-07-09T22:28:50.471554+00:00",
+            "generated_at_utc": "2026-07-10T01:27:26.281992+00:00",
             "target_date": "2026-07-09",
             "status": "ok",
             "label": "Team odds loaded",
@@ -130,10 +130,10 @@
             "source_status": {
               "status": "ok",
               "target_date": "2026-07-09",
-              "selected_source": "current_file",
+              "selected_source": "cache",
               "rows": 12,
-              "notes": "Loaded from existing current odds file.",
-              "checked_at_utc": "2026-07-09T22:28:49.206446+00:00",
+              "notes": "Loaded from historical/cache odds.",
+              "checked_at_utc": "2026-07-10T01:27:23.936433+00:00",
               "source_priority": [
                 "manual",
                 "current_file",
@@ -156,7 +156,7 @@
     }
   },
   "odds_health": {
-    "generated_at_utc": "2026-07-09T22:28:50.471554+00:00",
+    "generated_at_utc": "2026-07-10T01:27:26.281992+00:00",
     "target_date": "2026-07-09",
     "status": "ok",
     "label": "Team odds loaded",
@@ -171,10 +171,10 @@
     "source_status": {
       "status": "ok",
       "target_date": "2026-07-09",
-      "selected_source": "current_file",
+      "selected_source": "cache",
       "rows": 12,
-      "notes": "Loaded from existing current odds file.",
-      "checked_at_utc": "2026-07-09T22:28:49.206446+00:00",
+      "notes": "Loaded from historical/cache odds.",
+      "checked_at_utc": "2026-07-10T01:27:23.936433+00:00",
       "source_priority": [
         "manual",
         "current_file",
@@ -188,7 +188,7 @@
     "next_fix": "Add manual/team odds or a reliable sportsbook feed for spreads and totals; continue using prop markets for player decisions."
   },
   "sportsbook_consensus": {
-    "generated_at_utc": "2026-07-09T22:28:50.937993+00:00",
+    "generated_at_utc": "2026-07-10T01:27:26.734139+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "markets": 0,
@@ -254,6 +254,35 @@
           "scraped_at",
           "available_books",
           "all_books"
+        ]
+      },
+      {
+        "path": "data/raw/props_raw_2026-07-09.csv",
+        "rows": 0,
+        "target_rows": 0,
+        "date_filter": "empty",
+        "columns": [
+          "game_date",
+          "event_id",
+          "player",
+          "team",
+          "position",
+          "opp_team",
+          "is_home",
+          "stat_raw",
+          "stat",
+          "line",
+          "over_price",
+          "under_price",
+          "yes_price",
+          "no_price",
+          "num_books",
+          "odds_type",
+          "game_time",
+          "home_team",
+          "away_team",
+          "source",
+          "scraped_at"
         ]
       },
       {
@@ -504,17 +533,17 @@
     "markets": []
   },
   "live_odds": {
-    "generated_at_utc": "2026-07-09T22:28:49.629415+00:00",
+    "generated_at_utc": "2026-07-10T01:27:24.335873+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "rows": 12,
-      "source": "current_file",
+      "source": "cache",
       "manual_rows": 0,
       "status": "ok"
     },
     "odds": [
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Washington Mystics",
         "away_team": "Golden State Valkyries",
         "spread_home": 3.5,
@@ -526,7 +555,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Minnesota Lynx",
         "away_team": "Connecticut Sun",
         "spread_home": -16.0,
@@ -538,7 +567,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Los Angeles Sparks",
         "away_team": "Seattle Storm",
         "spread_home": -3.5,
@@ -550,7 +579,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Las Vegas Aces",
         "away_team": "Indiana Fever",
         "spread_home": -2.94,
@@ -562,7 +591,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Washington Mystics",
         "away_team": "Golden State Valkyries",
         "spread_home": 4.5,
@@ -574,7 +603,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Minnesota Lynx",
         "away_team": "Connecticut Sun",
         "spread_home": -14.83,
@@ -586,7 +615,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Los Angeles Sparks",
         "away_team": "Seattle Storm",
         "spread_home": -4.31,
@@ -598,7 +627,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Washington Mystics",
         "away_team": "Golden State Valkyries",
         "spread_home": 5.44,
@@ -610,7 +639,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Minnesota Lynx",
         "away_team": "Connecticut Sun",
         "spread_home": -13.89,
@@ -622,7 +651,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Los Angeles Sparks",
         "away_team": "Seattle Storm",
         "spread_home": -3.62,
@@ -634,7 +663,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "New York Liberty",
         "away_team": "Dallas Wings",
         "spread_home": -5.5,
@@ -646,7 +675,7 @@
         "freshness": "current_or_cached"
       },
       {
-        "game_date": "2026-07-07",
+        "game_date": "2026-07-09",
         "home_team": "Phoenix Mercury",
         "away_team": "Chicago Sky",
         "spread_home": -3.5,
@@ -661,7 +690,7 @@
     "policy": "Free/manual/cache first. Paid API is optional only."
   },
   "projection_ai": {
-    "generated_at_utc": "2026-07-09T22:28:52.643323+00:00",
+    "generated_at_utc": "2026-07-10T01:27:28.363609+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "rows": 0,
@@ -670,7 +699,7 @@
     "projections": []
   },
   "ai_coach": {
-    "generated_at_utc": "2026-07-09T22:28:53.405432+00:00",
+    "generated_at_utc": "2026-07-10T01:27:29.091431+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "notes": 0,
@@ -679,11 +708,11 @@
     "coach_cards": []
   },
   "master_database": {
-    "generated_at_utc": "2026-07-09T22:28:54.232865+00:00",
+    "generated_at_utc": "2026-07-10T01:27:29.926889+00:00",
     "target_date": "2026-07-09",
     "latest": {
       "date": "2026-07-09",
-      "captured_at_utc": "2026-07-09T22:28:54.232865+00:00",
+      "captured_at_utc": "2026-07-10T01:27:29.926889+00:00",
       "final": {
         "rows": 0,
         "bets": 0,
@@ -706,7 +735,7 @@
         "down": 0
       },
       "grading": {
-        "generated_at_utc": "2026-07-09T22:28:54.091709+00:00",
+        "generated_at_utc": "2026-07-10T01:27:29.805809+00:00",
         "target_date": "2026-07-09",
         "actual_source_rows": 0,
         "graded_this_run": 0,
@@ -717,7 +746,7 @@
         "status": "waiting_for_actuals"
       },
       "clv": {
-        "generated_at_utc": "2026-07-09T22:28:53.054040+00:00",
+        "generated_at_utc": "2026-07-10T01:27:28.759565+00:00",
         "target_date": "2026-07-09",
         "stage": "snapshot",
         "snapshot_rows_added": 0,
@@ -733,7 +762,7 @@
     }
   },
   "consensus": {
-    "generated_at_utc": "2026-07-09T22:28:51.792472+00:00",
+    "generated_at_utc": "2026-07-10T01:27:27.543136+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "rows": 0,
@@ -745,7 +774,7 @@
     "all_consensus": []
   },
   "matchups": {
-    "generated_at_utc": "2026-07-09T22:28:51.357249+00:00",
+    "generated_at_utc": "2026-07-10T01:27:27.134948+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "rows": 0,
@@ -755,7 +784,7 @@
     "matchups": []
   },
   "players": {
-    "generated_at_utc": "2026-07-09T22:28:48.361589+00:00",
+    "generated_at_utc": "2026-07-10T01:27:23.096334+00:00",
     "target_date": "2026-07-09",
     "players": [
       {
@@ -799,7 +828,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359716+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093492+00:00"
       },
       {
         "player": "Angel Reese",
@@ -842,7 +871,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359804+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093591+00:00"
       },
       {
         "player": "Arike Ogunbowale",
@@ -872,12 +901,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.9,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -885,7 +914,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359902+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093690+00:00"
       },
       {
         "player": "Awa Fam",
@@ -915,12 +944,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.0,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -928,7 +957,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359924+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093715+00:00"
       },
       {
         "player": "Azzi Fudd",
@@ -958,12 +987,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.1,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -971,7 +1000,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359988+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093793+00:00"
       },
       {
         "player": "Bridget Carleton",
@@ -1014,7 +1043,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360073+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093814+00:00"
       },
       {
         "player": "Brittney Griner",
@@ -1044,12 +1073,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.2,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1057,7 +1086,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360135+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093856+00:00"
       },
       {
         "player": "Charlisse Leger-Walker",
@@ -1087,12 +1116,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.9,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1100,7 +1129,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360266+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093995+00:00"
       },
       {
         "player": "Cotie McMahon",
@@ -1130,12 +1159,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.9,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1143,7 +1172,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360305+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094016+00:00"
       },
       {
         "player": "Courtney Williams",
@@ -1173,12 +1202,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.3,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1186,7 +1215,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360344+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094037+00:00"
       },
       {
         "player": "Dearica Hamby",
@@ -1216,12 +1245,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.0,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1229,7 +1258,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360358+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094057+00:00"
       },
       {
         "player": "Flau'jae Johnson",
@@ -1259,12 +1288,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.0,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1272,7 +1301,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360493+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094317+00:00"
       },
       {
         "player": "Isabelle Harrison",
@@ -1315,7 +1344,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360585+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094477+00:00"
       },
       {
         "player": "Jessica Shepard",
@@ -1345,12 +1374,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.1,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1358,7 +1387,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360637+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094580+00:00"
       },
       {
         "player": "Jordin Canada",
@@ -1401,7 +1430,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360674+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094655+00:00"
       },
       {
         "player": "Kayla McBride",
@@ -1431,12 +1460,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.4,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1444,7 +1473,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360779+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094839+00:00"
       },
       {
         "player": "Kiki Iriafen",
@@ -1474,12 +1503,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.0,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1487,7 +1516,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360855+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094973+00:00"
       },
       {
         "player": "Leila Lacan",
@@ -1517,12 +1546,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.2,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1530,7 +1559,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360918+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095088+00:00"
       },
       {
         "player": "Marina Mabrey",
@@ -1573,7 +1602,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361032+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095321+00:00"
       },
       {
         "player": "Megan Gustafson",
@@ -1616,7 +1645,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361055+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095363+00:00"
       },
       {
         "player": "Natasha Howard",
@@ -1646,12 +1675,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.9,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1659,7 +1688,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361105+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095488+00:00"
       },
       {
         "player": "Natisha Hiedeman",
@@ -1689,12 +1718,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.1,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1702,7 +1731,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361117+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095511+00:00"
       },
       {
         "player": "Nneka Ogwumike",
@@ -1732,12 +1761,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.0,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1745,7 +1774,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361170+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095608+00:00"
       },
       {
         "player": "Nyara Sabally",
@@ -1788,7 +1817,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361195+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095651+00:00"
       },
       {
         "player": "Olivia Nelson-Ododa",
@@ -1818,12 +1847,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.0,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1831,7 +1860,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361231+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095718+00:00"
       },
       {
         "player": "Paige Bueckers",
@@ -1861,12 +1890,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.1,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1874,7 +1903,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361257+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095768+00:00"
       },
       {
         "player": "Rhyne Howard",
@@ -1917,7 +1946,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361326+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095836+00:00"
       },
       {
         "player": "Veronica Burton",
@@ -1947,12 +1976,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 2.0,
-          "signal": "OVER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 100,
@@ -1960,7 +1989,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361544+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096263+00:00"
       },
       {
         "player": "Maria Conde",
@@ -2003,7 +2032,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361021+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095300+00:00"
       },
       {
         "player": "Sarah Ashlee Barker",
@@ -2046,7 +2075,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361367+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095906+00:00"
       },
       {
         "player": "Kennedy Burke",
@@ -2076,12 +2105,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.8,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 95.8,
@@ -2089,7 +2118,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360804+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094881+00:00"
       },
       {
         "player": "Shakira Austin",
@@ -2119,12 +2148,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.7,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 94.2,
@@ -2132,7 +2161,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361391+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095953+00:00"
       },
       {
         "player": "Michaela Onyenwere",
@@ -2162,12 +2191,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "PRA",
-          "line": 6.0,
-          "pred": 6.1,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 94.1,
@@ -2175,7 +2204,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361069+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095394+00:00"
       },
       {
         "player": "Carla Leite",
@@ -2218,7 +2247,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360203+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093904+00:00"
       },
       {
         "player": "Antonia Delaere",
@@ -2248,12 +2277,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.7,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 93.0,
@@ -2261,7 +2290,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359850+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093637+00:00"
       },
       {
         "player": "Laura Juskaite",
@@ -2304,7 +2333,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360893+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095047+00:00"
       },
       {
         "player": "Kiah Stokes",
@@ -2334,12 +2363,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.6,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 91.1,
@@ -2347,7 +2376,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360830+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094930+00:00"
       },
       {
         "player": "Janelle Salaun",
@@ -2377,12 +2406,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.7,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 90.3,
@@ -2390,7 +2419,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360623+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094552+00:00"
       },
       {
         "player": "Erica Wheeler",
@@ -2420,12 +2449,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.6,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 90.0,
@@ -2433,7 +2462,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360465+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094273+00:00"
       },
       {
         "player": "Dorka Juhasz",
@@ -2463,12 +2492,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "PRA",
-          "line": 10.0,
-          "pred": 10.0,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 89.2,
@@ -2476,7 +2505,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360399+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094127+00:00"
       },
       {
         "player": "Gabby Williams",
@@ -2506,12 +2535,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.6,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 89.2,
@@ -2519,7 +2548,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360520+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094364+00:00"
       },
       {
         "player": "Rae Burrell",
@@ -2549,12 +2578,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "PRA",
-          "line": 6.0,
-          "pred": 6.0,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 89.2,
@@ -2562,7 +2591,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361268+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095794+00:00"
       },
       {
         "player": "Dominique Malonga",
@@ -2592,12 +2621,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.6,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 88.8,
@@ -2605,7 +2634,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360386+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094105+00:00"
       },
       {
         "player": "Kia Nurse",
@@ -2648,7 +2677,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360816+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094903+00:00"
       },
       {
         "player": "Emily Engstler",
@@ -2691,7 +2720,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360424+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094171+00:00"
       },
       {
         "player": "Kaila Charles",
@@ -2721,12 +2750,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.5,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 85.8,
@@ -2734,7 +2763,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360714+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094727+00:00"
       },
       {
         "player": "Awak Kuier",
@@ -2764,12 +2793,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.5,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 85.1,
@@ -2777,7 +2806,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359944+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093739+00:00"
       },
       {
         "player": "Naz Hillmon",
@@ -2820,7 +2849,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361132+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095539+00:00"
       },
       {
         "player": "Jade Melbourne",
@@ -2850,12 +2879,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.5,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 84.2,
@@ -2863,7 +2892,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360610+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094528+00:00"
       },
       {
         "player": "Ariel Atkins",
@@ -2893,12 +2922,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.4,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 81.4,
@@ -2906,7 +2935,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359881+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093666+00:00"
       },
       {
         "player": "Georgia Amoore",
@@ -2936,12 +2965,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.3,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 78.9,
@@ -2949,7 +2978,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360533+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094388+00:00"
       },
       {
         "player": "Frieda Buhner",
@@ -2992,7 +3021,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360508+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094337+00:00"
       },
       {
         "player": "Tima Pouye",
@@ -3035,7 +3064,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361533+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096235+00:00"
       },
       {
         "player": "Cecilia Zandalasini",
@@ -3065,12 +3094,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.3,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 76.3,
@@ -3078,7 +3107,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360234+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093949+00:00"
       },
       {
         "player": "Diamond Miller",
@@ -3108,12 +3137,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.3,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 76.2,
@@ -3121,7 +3150,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360371+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094079+00:00"
       },
       {
         "player": "Nia Coffey",
@@ -3151,12 +3180,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.3,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 75.0,
@@ -3164,7 +3193,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361156+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095587+00:00"
       },
       {
         "player": "Kate Martin",
@@ -3194,12 +3223,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.2,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 72.2,
@@ -3207,7 +3236,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360750+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094792+00:00"
       },
       {
         "player": "Kaitlyn Chen",
@@ -3237,12 +3266,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.2,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 70.8,
@@ -3250,7 +3279,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360726+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094749+00:00"
       },
       {
         "player": "Lauren Betts",
@@ -3280,12 +3309,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.2,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 70.8,
@@ -3293,7 +3322,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360905+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095068+00:00"
       },
       {
         "player": "Kayla Thornton",
@@ -3323,12 +3352,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.2,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 70.7,
@@ -3336,7 +3365,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360792+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094860+00:00"
       },
       {
         "player": "Katie Lou Samuelson",
@@ -3366,12 +3395,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.2,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 69.6,
@@ -3379,7 +3408,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360767+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094819+00:00"
       },
       {
         "player": "Tiffany Hayes",
@@ -3409,12 +3438,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.2,
-          "signal": NaN,
-          "conf": "LOW",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 69.6,
@@ -3422,7 +3451,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361519+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096191+00:00"
       },
       {
         "player": "Kiana Williams",
@@ -3452,12 +3481,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.1,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 67.1,
@@ -3465,7 +3494,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360843+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094953+00:00"
       },
       {
         "player": "Teja Oblak",
@@ -3508,7 +3537,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361484+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096118+00:00"
       },
       {
         "player": "Alicia Florez",
@@ -3538,12 +3567,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.1,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 65.9,
@@ -3551,7 +3580,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359673+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093446+00:00"
       },
       {
         "player": "Emma Cannon",
@@ -3581,12 +3610,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.1,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 65.8,
@@ -3594,7 +3623,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360436+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094193+00:00"
       },
       {
         "player": "Lucy Olsen",
@@ -3624,12 +3653,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.1,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 65.8,
@@ -3637,7 +3666,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360956+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095154+00:00"
       },
       {
         "player": "Saniya Rivers",
@@ -3667,12 +3696,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.1,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 65.4,
@@ -3680,7 +3709,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361355+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095883+00:00"
       },
       {
         "player": "Zia Cooke",
@@ -3710,12 +3739,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 1.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 63.0,
@@ -3723,7 +3752,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361558+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096289+00:00"
       },
       {
         "player": "Nyadiew Puoch",
@@ -3766,7 +3795,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361182+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095631+00:00"
       },
       {
         "player": "Ezi Magbegor",
@@ -3796,12 +3825,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.9,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 58.6,
@@ -3809,7 +3838,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360481+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094297+00:00"
       },
       {
         "player": "Chance Gray",
@@ -3839,12 +3868,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.9,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 58.1,
@@ -3852,7 +3881,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360248+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093971+00:00"
       },
       {
         "player": "Madina Okot",
@@ -3895,7 +3924,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361009+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095275+00:00"
       },
       {
         "player": "Alanna Smith",
@@ -3925,12 +3954,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.9,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 57.7,
@@ -3938,7 +3967,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359647+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093420+00:00"
       },
       {
         "player": "Maya Caldwell",
@@ -3968,12 +3997,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.9,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 56.8,
@@ -3981,7 +4010,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361044+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095342+00:00"
       },
       {
         "player": "Jordan Horston",
@@ -4011,12 +4040,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.9,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 56.7,
@@ -4024,7 +4053,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360663+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094634+00:00"
       },
       {
         "player": "Aaliyah Edwards",
@@ -4054,12 +4083,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.9,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 56.3,
@@ -4067,7 +4096,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359558+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093358+00:00"
       },
       {
         "player": "Laeticia Amihere",
@@ -4097,12 +4126,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.8,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 53.9,
@@ -4110,7 +4139,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360879+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095019+00:00"
       },
       {
         "player": "Serah Williams",
@@ -4153,7 +4182,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361379+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095927+00:00"
       },
       {
         "player": "Aziaha James",
@@ -4183,12 +4212,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.7,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 47.7,
@@ -4196,7 +4225,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359968+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093766+00:00"
       },
       {
         "player": "Stefanie Dolson",
@@ -4226,12 +4255,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.7,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 47.3,
@@ -4239,7 +4268,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361432+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096023+00:00"
       },
       {
         "player": "Sug Sutton",
@@ -4269,12 +4298,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.7,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 47.2,
@@ -4282,7 +4311,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361444+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096045+00:00"
       },
       {
         "player": "Teonni Key",
@@ -4325,7 +4354,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361507+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096168+00:00"
       },
       {
         "player": "Holly Winterburn",
@@ -4368,7 +4397,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360559+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094433+00:00"
       },
       {
         "player": "Anastasiia Olairi Kosu",
@@ -4398,12 +4427,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.6,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 45.1,
@@ -4411,7 +4440,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359762+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093548+00:00"
       },
       {
         "player": "Angela Dugalic",
@@ -4441,12 +4470,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.6,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 44.0,
@@ -4454,7 +4483,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359825+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093613+00:00"
       },
       {
         "player": "Isobel Borlase",
@@ -4497,7 +4526,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360596+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094502+00:00"
       },
       {
         "player": "Jihyun Park",
@@ -4527,12 +4556,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.6,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 44.0,
@@ -4540,7 +4569,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360649+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094607+00:00"
       },
       {
         "player": "Eliska Hamzova",
@@ -4570,12 +4599,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.6,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 43.8,
@@ -4583,7 +4612,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360412+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094149+00:00"
       },
       {
         "player": "Cassandre Prosper",
@@ -4613,12 +4642,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.5,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 41.4,
@@ -4626,7 +4655,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360220+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093925+00:00"
       },
       {
         "player": "Maddy Siegrist",
@@ -4656,12 +4685,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.5,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 41.3,
@@ -4669,7 +4698,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360996+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095247+00:00"
       },
       {
         "player": "Odyssey Sims",
@@ -4699,12 +4728,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.5,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 41.3,
@@ -4712,7 +4741,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361207+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095676+00:00"
       },
       {
         "player": "Ornella Bankole",
@@ -4755,7 +4784,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361243+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095744+00:00"
       },
       {
         "player": "Sika Kone",
@@ -4798,7 +4827,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361405+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095975+00:00"
       },
       {
         "player": "Alysha Clark",
@@ -4828,12 +4857,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.5,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 37.3,
@@ -4841,7 +4870,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359741+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093515+00:00"
       },
       {
         "player": "Gianna Kneepkens",
@@ -4871,12 +4900,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.4,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 33.5,
@@ -4884,7 +4913,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360545+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094411+00:00"
       },
       {
         "player": "Te-Hina Paopao",
@@ -4927,7 +4956,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361470+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096092+00:00"
       },
       {
         "player": "Indya Nivar",
@@ -4970,7 +4999,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360573+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094453+00:00"
       },
       {
         "player": "Li Yueru",
@@ -5000,12 +5029,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.2,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 28.4,
@@ -5013,7 +5042,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360930+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095108+00:00"
       },
       {
         "player": "Mackenzie Holmes",
@@ -5043,12 +5072,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.1,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 21.9,
@@ -5056,7 +5085,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360984+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095203+00:00"
       },
       {
         "player": "Taylor Thierry",
@@ -5086,12 +5115,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.1,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 21.9,
@@ -5099,7 +5128,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361458+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096070+00:00"
       },
       {
         "player": "Aaliyah Nye",
@@ -5142,7 +5171,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359621+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093394+00:00"
       },
       {
         "player": "Alissa Pili",
@@ -5172,12 +5201,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5185,7 +5214,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359695+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093469+00:00"
       },
       {
         "player": "Aneesah Morrow",
@@ -5215,12 +5244,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5228,7 +5257,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.359784+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093570+00:00"
       },
       {
         "player": "Brionna Jones",
@@ -5271,7 +5300,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360109+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093836+00:00"
       },
       {
         "player": "Brittney Sykes",
@@ -5314,7 +5343,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360172+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.093882+00:00"
       },
       {
         "player": "Emma Cechova",
@@ -5344,12 +5373,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5357,7 +5386,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360451+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094246+00:00"
       },
       {
         "player": "Julie Allemand",
@@ -5400,7 +5429,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360686+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094679+00:00"
       },
       {
         "player": "Juste Jocyte",
@@ -5430,12 +5459,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5443,7 +5472,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360700+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094700+00:00"
       },
       {
         "player": "Karlie Samuelson",
@@ -5486,7 +5515,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360738+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094771+00:00"
       },
       {
         "player": "Kiki Rice",
@@ -5529,7 +5558,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360867+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.094997+00:00"
       },
       {
         "player": "Liatu King",
@@ -5559,12 +5588,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5572,7 +5601,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360942+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095129+00:00"
       },
       {
         "player": "Luisa Geiselsoder",
@@ -5615,7 +5644,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.360970+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095179+00:00"
       },
       {
         "player": "Nadia Fingall",
@@ -5645,12 +5674,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5658,7 +5687,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361081+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095444+00:00"
       },
       {
         "player": "Napheesa Collier",
@@ -5688,12 +5717,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5701,7 +5730,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361093+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095469+00:00"
       },
       {
         "player": "Nell Angloma",
@@ -5731,12 +5760,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5744,7 +5773,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361144+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095564+00:00"
       },
       {
         "player": "Olivia Miles",
@@ -5774,12 +5803,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5787,7 +5816,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361220+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095697+00:00"
       },
       {
         "player": "Raegan Beers",
@@ -5817,12 +5846,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5830,7 +5859,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361312+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095816+00:00"
       },
       {
         "player": "Rori Harmon",
@@ -5860,12 +5889,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5873,7 +5902,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361339+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.095858+00:00"
       },
       {
         "player": "Sonia Citron",
@@ -5903,12 +5932,12 @@
           "source": null
         },
         "projection_snapshot": {
-          "stat": "3PM",
-          "line": 1.5,
-          "pred": 0.0,
-          "signal": "UNDER",
-          "conf": "MED",
-          "market_status": "FALLBACK ESTIMATED LINE"
+          "stat": null,
+          "line": null,
+          "pred": null,
+          "signal": null,
+          "conf": null,
+          "market_status": null
         },
         "intelligence": {
           "role_score": 18.0,
@@ -5916,7 +5945,7 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361420+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096001+00:00"
       },
       {
         "player": "Temi Fagbenle",
@@ -5959,18 +5988,18 @@
           "is_recent_minutes_up": false,
           "is_recent_scoring_up": false
         },
-        "updated_at_utc": "2026-07-09T22:28:48.361496+00:00"
+        "updated_at_utc": "2026-07-10T01:27:23.096140+00:00"
       }
     ],
     "summary": {
       "players": 121,
       "injury_records_matched": 0,
-      "projection_records_matched": 84,
+      "projection_records_matched": 0,
       "core_rotation_players": 60
     }
   },
   "monte_carlo": {
-    "generated_at_utc": "2026-07-09T22:28:52.216500+00:00",
+    "generated_at_utc": "2026-07-10T01:27:27.960770+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "rows": 0,
@@ -5982,7 +6011,7 @@
     "all_simulations": []
   },
   "market_engine": {
-    "generated_at_utc": "2026-07-09T22:28:53.162304+00:00",
+    "generated_at_utc": "2026-07-10T01:27:28.851429+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "markets": 0,
@@ -5992,7 +6021,7 @@
     "movements": []
   },
   "portfolio_v2": {
-    "generated_at_utc": "2026-07-09T22:28:53.205450+00:00",
+    "generated_at_utc": "2026-07-10T01:27:28.891083+00:00",
     "target_date": "2026-07-09",
     "bankroll": 500.0,
     "summary": {
@@ -6004,7 +6033,7 @@
     "candidates": []
   },
   "decision_final": {
-    "generated_at_utc": "2026-07-09T22:28:53.245613+00:00",
+    "generated_at_utc": "2026-07-10T01:27:28.930189+00:00",
     "target_date": "2026-07-09",
     "summary": {
       "rows": 0,
@@ -6015,7 +6044,7 @@
     "portfolio_card": []
   },
   "history": {
-    "generated_at_utc": "2026-07-09T22:28:53.687807+00:00",
+    "generated_at_utc": "2026-07-10T01:27:29.416395+00:00",
     "target_date": "2026-07-09",
     "added_records": 0,
     "total_records": 0,
@@ -6024,7 +6053,7 @@
     "source_predictions_games": 3
   },
   "learning": {
-    "generated_at_utc": "2026-07-09T22:28:54.193032+00:00",
+    "generated_at_utc": "2026-07-10T01:27:29.887333+00:00",
     "target_date": "2026-07-09",
     "history_records": 0,
     "graded_records": 0,
@@ -6047,7 +6076,7 @@
     ]
   },
   "grading": {
-    "generated_at_utc": "2026-07-09T22:28:54.091709+00:00",
+    "generated_at_utc": "2026-07-10T01:27:29.805809+00:00",
     "target_date": "2026-07-09",
     "actual_source_rows": 0,
     "graded_this_run": 0,
@@ -6058,7 +6087,7 @@
     "status": "waiting_for_actuals"
   },
   "clv": {
-    "generated_at_utc": "2026-07-09T22:28:53.054040+00:00",
+    "generated_at_utc": "2026-07-10T01:27:28.759565+00:00",
     "target_date": "2026-07-09",
     "stage": "snapshot",
     "snapshot_rows_added": 0,
