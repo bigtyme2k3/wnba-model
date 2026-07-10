@@ -2,6 +2,11 @@ name: WNBA Multi-Source Data Fetch
 
 on:
   workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for today'
+        required: false
+        default: ''
   schedule:
     - cron: '30 12 * * *'
 
@@ -12,7 +17,7 @@ concurrency:
 jobs:
   fetch-multi-source-wnba-data:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     permissions:
       contents: write
 
@@ -21,9 +26,31 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - name: Install wehoop provider
+        run: |
+          Rscript -e 'install.packages(c("wehoop","dplyr","readr","jsonlite","lubridate"), repos="https://cloud.r-project.org")'
+
+      - name: Resolve active slate date
+        run: |
+          TARGET="${{ github.event.inputs.date }}"
+          if [ -z "$TARGET" ]; then TARGET=$(date -u +%F); fi
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Using WNBA data target: $TARGET"
+
+      - name: Fetch player stats and boxscores from wehoop
+        run: Rscript fetch_wehoop_stats.R --date "${{ env.TARGET }}" --out data/raw
 
       - name: Install sports-skills
         continue-on-error: true
@@ -31,14 +58,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install git+https://github.com/machina-sports/sports-skills.git
 
-      - name: Fetch WNBA data from sports-skills
+      - name: Fetch supplemental WNBA data from sports-skills
         continue-on-error: true
         run: |
           mkdir -p data/wnba
-
           sports-skills wnba get_scoreboard > data/wnba/scores.json || echo '{}' > data/wnba/scores.json
           sports-skills wnba get_injuries > data/wnba/injuries.json || echo '{}' > data/wnba/injuries.json
-          sports-skills wnba get_standings --season 2026 > data/wnba/standings.json || echo '{}' > data/wnba/standings.json
+          sports-skills wnba get_standings --season "$(date -u +%Y)" > data/wnba/standings.json || echo '{}' > data/wnba/standings.json
           sports-skills wnba get_futures > data/wnba/futures.json || echo '{}' > data/wnba/futures.json
 
       - name: Write source status
@@ -48,8 +74,9 @@ jobs:
           from datetime import datetime, timezone
           files = ['scores.json','injuries.json','standings.json','futures.json']
           status = {
-            'source': 'sports-skills',
-            'repo': 'https://github.com/machina-sports/sports-skills',
+            'primary_stats_source': 'sportsdataverse/wehoop',
+            'primary_stats_upstream': 'ESPN',
+            'supplemental_source': 'sports-skills',
             'checked_at_utc': datetime.now(timezone.utc).isoformat(),
             'files': {}
           }
@@ -58,10 +85,13 @@ jobs:
             try:
               raw = open(path).read().strip()
               parsed = json.loads(raw or '{}')
-              populated = bool(parsed)
-              status['files'][f] = {'exists': True, 'bytes': len(raw), 'populated': populated}
+              status['files'][f] = {'exists': True, 'bytes': len(raw), 'populated': bool(parsed)}
             except Exception as exc:
               status['files'][f] = {'exists': os.path.exists(path), 'error': str(exc), 'populated': False}
+          try:
+            status['wehoop'] = json.load(open('data/raw/wehoop_stats_status.json'))
+          except Exception as exc:
+            status['wehoop'] = {'status': 'error', 'error': str(exc)}
           with open('data/wnba/source_status.json', 'w') as fh:
             json.dump(status, fh, indent=2)
           print(json.dumps(status, indent=2))
@@ -71,8 +101,8 @@ jobs:
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add data/wnba/*.json
+          git add data/wnba/*.json data/raw/wehoop_player_boxscores.csv data/raw/boxscores_wehoop.csv data/raw/boxscores_*.csv data/raw/wnba_players_live.json data/raw/wehoop_stats_status.json
           git diff --cached --quiet && echo "No WNBA source data changes" && exit 0
-          git commit -m "Update WNBA multi-source data"
+          git commit -m "Update WNBA stats from wehoop - ${{ env.TARGET }}"
           git pull --rebase origin main
           git push origin main
