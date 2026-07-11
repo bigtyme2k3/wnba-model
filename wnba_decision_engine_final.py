@@ -24,7 +24,6 @@ def sf(value, default=0.0):
 
 
 def clean_json(value):
-    """Recursively replace NaN/Infinity and non-JSON scalar values."""
     if isinstance(value, dict):
         return {str(key): clean_json(item) for key, item in value.items()}
     if isinstance(value, (list, tuple)):
@@ -49,11 +48,25 @@ def key(row):
     return (str(row.get("player") or "").strip().lower(), str(row.get("game") or "").strip().lower(), str(row.get("stat") or "").strip().upper())
 
 
+def norm_player(value):
+    return " ".join(str(value or "").strip().lower().replace("’", "'").split())
+
+
 def prop_map():
     master = load("data/dashboard/wnba_master.json", {}) or load("data/master/wnba_master.json", {})
     result = {}
     for row in master.get("props", []) or []:
         result[key(row)] = row
+    return result
+
+
+def injury_map():
+    payload = load("data/warehouse/wnba_injury_intelligence.json", {})
+    result = {}
+    for row in payload.get("adjustments", []) or []:
+        player = norm_player(row.get("player"))
+        if player:
+            result[player] = row
     return result
 
 
@@ -84,6 +97,7 @@ def build(target):
     simulations = load("data/warehouse/wnba_monte_carlo_engine.json", {}).get("all_simulations", [])
     market = load("data/warehouse/wnba_market_engine.json", {}).get("movements", [])
     props = prop_map()
+    injuries = injury_map()
     sim_map = {key(row): row for row in simulations}
     market_map = {key(row): row for row in market}
     decisions = []
@@ -95,6 +109,9 @@ def build(target):
         prop = clean_json(props.get(key(row), {}))
         sim = clean_json(sim_map.get(key(row), {}))
         movement = clean_json(market_map.get(key(row), {}))
+        injury = clean_json(injuries.get(norm_player(row.get("player")), {}))
+        injury_status = str(injury.get("severity") or sim.get("injury_status") or prop.get("injury_status") or "ACTIVE").upper()
+        injury_penalty = sf(injury.get("confidence_penalty"), 0)
         line = sf(row.get("line"), -1)
         prediction = sf(row.get("pred"), line)
         edge = abs(sf(row.get("edge"), prediction - line))
@@ -113,7 +130,7 @@ def build(target):
         probability_score = clamp((probability - 0.5) * 400, 0, 100)
         ev_score = clamp(max(ev_pct, 0) * 5, 0, 100)
         agreement_score = clamp((agreement / engines * 100) if engines else 0, 0, 100)
-        final_score = round(clamp(consensus_score * 0.35 + probability_score * 0.25 + edge_score * 0.15 + ev_score * 0.15 + agreement_score * 0.10, 0, 100), 1)
+        final_score = round(clamp(consensus_score * 0.35 + probability_score * 0.25 + edge_score * 0.15 + ev_score * 0.15 + agreement_score * 0.10 - injury_penalty, 0, 100), 1)
 
         reasons = []
         supported = stat in SUPPORTED_STATS
@@ -124,6 +141,7 @@ def build(target):
         enough_probability = probability >= 0.56
         enough_edge = edge_pct >= 5.0
         enough_agreement = agreement >= 4
+        injury_eligible = injury_status not in {"OUT", "DOUBTFUL"}
         if not supported: reasons.append("unsupported market")
         if not valid_market: reasons.append("invalid or missing sportsbook price")
         if raw_ev >= 100: reasons.append("raw EV rejected as malformed")
@@ -133,13 +151,15 @@ def build(target):
         if not enough_probability: reasons.append("simulation probability below 56%")
         if not enough_edge: reasons.append("projection edge below 5%")
         if not enough_agreement: reasons.append("fewer than four engines agree")
+        if not injury_eligible: reasons.append(f"{injury_status} injury status")
+        if injury_status in {"QUESTIONABLE", "UNKNOWN"}: reasons.append(f"{injury_status} injury confidence penalty applied")
 
-        eligible = all([supported, valid_market, valid_ev, enough_history, enough_books, enough_probability, enough_edge, enough_agreement])
-        if eligible and final_score >= 78:
+        eligible = all([supported, valid_market, valid_ev, enough_history, enough_books, enough_probability, enough_edge, enough_agreement, injury_eligible])
+        if eligible and injury_status not in {"QUESTIONABLE", "UNKNOWN"} and final_score >= 78:
             action = "BET"
-        elif supported and valid_market and enough_history and final_score >= 68:
+        elif injury_eligible and supported and valid_market and enough_history and final_score >= 68:
             action = "LEAN"
-        elif supported and valid_market and final_score >= 55:
+        elif injury_eligible and supported and valid_market and final_score >= 55:
             action = "WATCH"
         else:
             action = "PASS"
@@ -161,8 +181,14 @@ def build(target):
             "eligible_for_bet": eligible,
             "history_games": history_games,
             "book_count": book_count,
+            "injury_status": injury_status,
+            "injury_detail": injury.get("detail") or prop.get("injury_detail"),
+            "projected_minutes": injury.get("projected_minutes") or prop.get("projected_minutes"),
+            "minutes_delta": injury.get("minutes_delta") or prop.get("minutes_delta"),
+            "injury_projection_factor": injury.get("projection_factor") or prop.get("injury_projection_factor"),
+            "injury_confidence_penalty": injury_penalty,
             "guardrail_failures": reasons,
-            "decision_reason": "Qualified across score, probability, EV, history, books and agreement." if eligible else "; ".join(reasons),
+            "decision_reason": "Qualified across score, probability, EV, history, books, agreement and injury status." if eligible else "; ".join(reasons),
         }))
 
     decisions.sort(key=lambda row: (row.get("final_action") == "BET", row.get("final_score", 0)), reverse=True)
@@ -172,8 +198,8 @@ def build(target):
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target,
         "scoring_scale": "0-100",
-        "summary": {"rows": len(decisions), "bets": len(bets), "leans": len(leans), "watch": sum(1 for row in decisions if row.get("final_action") == "WATCH"), "passes": sum(1 for row in decisions if row.get("final_action") == "PASS")},
-        "guardrails": {"supported_stats": sorted(SUPPORTED_STATS), "minimum_probability": 0.56, "minimum_ev_pct": 2, "maximum_ev_pct": 20, "minimum_history_games": 5, "minimum_books": 2, "minimum_edge_pct": 5, "minimum_engine_agreement": 4},
+        "summary": {"rows": len(decisions), "bets": len(bets), "leans": len(leans), "watch": sum(1 for row in decisions if row.get("final_action") == "WATCH"), "passes": sum(1 for row in decisions if row.get("final_action") == "PASS"), "injury_blocked": sum(1 for row in decisions if row.get("injury_status") in {"OUT", "DOUBTFUL"})},
+        "guardrails": {"supported_stats": sorted(SUPPORTED_STATS), "minimum_probability": 0.56, "minimum_ev_pct": 2, "maximum_ev_pct": 20, "minimum_history_games": 5, "minimum_books": 2, "minimum_edge_pct": 5, "minimum_engine_agreement": 4, "injury_policy": {"OUT": "PASS", "DOUBTFUL": "PASS", "QUESTIONABLE": "max LEAN with confidence penalty", "PROBABLE": "eligible with small penalty"}},
         "top_decisions": decisions[:75],
         "qualified_bets": bets,
     })
