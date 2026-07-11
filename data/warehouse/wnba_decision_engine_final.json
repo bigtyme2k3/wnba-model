@@ -1,13 +1,14 @@
 {
-  "generated_at_utc": "2026-07-11T19:52:15.761699+00:00",
+  "generated_at_utc": "2026-07-11T23:07:10.432700+00:00",
   "target_date": "2026-07-11",
   "scoring_scale": "0-100",
   "summary": {
     "rows": 151,
-    "bets": 0,
-    "leans": 103,
-    "watch": 13,
-    "passes": 35
+    "bets": 1,
+    "leans": 108,
+    "watch": 9,
+    "passes": 33,
+    "injury_blocked": 0
   },
   "guardrails": {
     "supported_stats": [
@@ -29,9 +30,86 @@
     "minimum_history_games": 5,
     "minimum_books": 2,
     "minimum_edge_pct": 5,
-    "minimum_engine_agreement": 4
+    "minimum_engine_agreement": 4,
+    "injury_policy": {
+      "OUT": "PASS",
+      "DOUBTFUL": "PASS",
+      "QUESTIONABLE": "max LEAN with confidence penalty",
+      "PROBABLE": "eligible with small penalty"
+    }
   },
   "top_decisions": [
+    {
+      "player": "Rhyne Howard",
+      "team": null,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "REB",
+      "line": 4.5,
+      "pred": 2.8,
+      "signal": "UNDER",
+      "conf": "MED",
+      "ev_pct": 13.49,
+      "edge": -1.7,
+      "consensus_score": 77.1,
+      "consensus_grade": "PLAYABLE",
+      "engine_agreement": "5/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 40.0,
+          "agree": false
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 68.6,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 73.4,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "LEAN",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.6863,
+      "market_move": 1.0,
+      "sportsbook": "DraftKings",
+      "american_odds": -153,
+      "implied_probability": 0.6047,
+      "raw_ev_pct": -8.8,
+      "edge_pct": 37.78,
+      "confidence": 79.1,
+      "final_score": 79.1,
+      "final_action": "BET",
+      "eligible_for_bet": true,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [],
+      "decision_reason": "Qualified across score, probability, EV, history, books, agreement and injury status."
+    },
     {
       "player": "Allisha Gray",
       "team": null,
@@ -81,11 +159,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8581,
+      "simulation_probability": 0.8613,
       "market_move": 1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -113,
-      "implied_probability": 0.5305,
+      "sportsbook": "FanDuel",
+      "american_odds": -102,
+      "implied_probability": 0.505,
       "raw_ev_pct": 28.9,
       "edge_pct": 31.11,
       "confidence": 97.6,
@@ -94,6 +172,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -148,11 +232,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8174,
+      "simulation_probability": 0.8186,
       "market_move": -1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": 102,
-      "implied_probability": 0.495,
+      "sportsbook": "DraftKings",
+      "american_odds": -104,
+      "implied_probability": 0.5098,
       "raw_ev_pct": 27.6,
       "edge_pct": 30.27,
       "confidence": 97.6,
@@ -161,6 +245,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -215,11 +305,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7786,
+      "simulation_probability": 0.7808,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": -110,
-      "implied_probability": 0.5238,
+      "american_odds": -108,
+      "implied_probability": 0.5192,
       "raw_ev_pct": 25.4,
       "edge_pct": 28.21,
       "confidence": 97.5,
@@ -228,6 +318,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -282,11 +378,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8267,
+      "simulation_probability": 0.8296,
       "market_move": 2.0,
       "sportsbook": "FanDuel",
-      "american_odds": -104,
-      "implied_probability": 0.5098,
+      "american_odds": -108,
+      "implied_probability": 0.5192,
       "raw_ev_pct": 25.2,
       "edge_pct": 25.66,
       "confidence": 97.5,
@@ -295,6 +391,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -349,11 +451,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7786,
+      "simulation_probability": 0.7808,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": -110,
-      "implied_probability": 0.5238,
+      "american_odds": -108,
+      "implied_probability": 0.5192,
       "raw_ev_pct": 24.9,
       "edge_pct": 31.71,
       "confidence": 97.5,
@@ -362,6 +464,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -418,9 +526,9 @@
       "deepseek_rating": null,
       "simulation_probability": 0.7792,
       "market_move": 1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -110,
-      "implied_probability": 0.5238,
+      "sportsbook": "FanDuel",
+      "american_odds": -104,
+      "implied_probability": 0.5098,
       "raw_ev_pct": 24.8,
       "edge_pct": 24.89,
       "confidence": 97.4,
@@ -429,6 +537,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -483,11 +597,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.9983,
+      "simulation_probability": 0.9971,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
-      "american_odds": 104,
-      "implied_probability": 0.4902,
+      "american_odds": 114,
+      "implied_probability": 0.4673,
       "raw_ev_pct": 35.1,
       "edge_pct": 320.0,
       "confidence": 97.4,
@@ -496,6 +610,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -550,11 +670,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8128,
+      "simulation_probability": 0.8203,
       "market_move": 1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
+      "sportsbook": "DraftKings",
+      "american_odds": -105,
+      "implied_probability": 0.5122,
       "raw_ev_pct": 28.5,
       "edge_pct": 30.26,
       "confidence": 97.4,
@@ -563,6 +683,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -617,7 +743,7 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8908,
+      "simulation_probability": 0.8905,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
       "american_odds": -102,
@@ -630,6 +756,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -697,6 +829,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -751,11 +889,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8587,
+      "simulation_probability": 0.8577,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": -102,
-      "implied_probability": 0.505,
+      "american_odds": -114,
+      "implied_probability": 0.5327,
       "raw_ev_pct": 23.4,
       "edge_pct": 31.16,
       "confidence": 97.3,
@@ -764,6 +902,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -818,11 +962,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8383,
+      "simulation_probability": 0.8395,
       "market_move": 1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -102,
-      "implied_probability": 0.505,
+      "sportsbook": "DraftKings",
+      "american_odds": -109,
+      "implied_probability": 0.5215,
       "raw_ev_pct": 23.1,
       "edge_pct": 27.56,
       "confidence": 97.3,
@@ -831,6 +975,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -885,11 +1035,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8622,
+      "simulation_probability": 0.8591,
       "market_move": 1.0,
       "sportsbook": "DraftKings",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
+      "american_odds": -116,
+      "implied_probability": 0.537,
       "raw_ev_pct": 22.9,
       "edge_pct": 40.61,
       "confidence": 97.3,
@@ -898,6 +1048,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -953,11 +1109,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8571,
+      "simulation_probability": 0.8543,
       "market_move": 1.0,
       "sportsbook": "DraftKings",
-      "american_odds": -107,
-      "implied_probability": 0.5169,
+      "american_odds": -112,
+      "implied_probability": 0.5283,
       "raw_ev_pct": 22.9,
       "edge_pct": 28.51,
       "confidence": 97.3,
@@ -966,6 +1122,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1020,11 +1182,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8284,
+      "simulation_probability": 0.8252,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": -130,
-      "implied_probability": 0.5652,
+      "american_odds": -136,
+      "implied_probability": 0.5763,
       "raw_ev_pct": 32.0,
       "edge_pct": 48.89,
       "confidence": 97.3,
@@ -1033,6 +1195,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -1088,11 +1256,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8267,
+      "simulation_probability": 0.8296,
       "market_move": 2.0,
       "sportsbook": "FanDuel",
-      "american_odds": -104,
-      "implied_probability": 0.5098,
+      "american_odds": -108,
+      "implied_probability": 0.5192,
       "raw_ev_pct": 22.4,
       "edge_pct": 28.36,
       "confidence": 97.3,
@@ -1101,6 +1269,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1155,11 +1329,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8549,
+      "simulation_probability": 0.8557,
       "market_move": 1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
+      "sportsbook": "DraftKings",
+      "american_odds": -118,
+      "implied_probability": 0.5413,
       "raw_ev_pct": 21.9,
       "edge_pct": 29.8,
       "confidence": 97.2,
@@ -1168,6 +1342,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1222,11 +1402,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7969,
+      "simulation_probability": 0.8003,
       "market_move": 0.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -108,
-      "implied_probability": 0.5192,
+      "sportsbook": "DraftKings",
+      "american_odds": -109,
+      "implied_probability": 0.5215,
       "raw_ev_pct": 23.4,
       "edge_pct": 24.44,
       "confidence": 97.1,
@@ -1235,6 +1415,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1289,11 +1475,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8263,
+      "simulation_probability": 0.8313,
       "market_move": 1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -104,
-      "implied_probability": 0.5098,
+      "sportsbook": "FanDuel",
+      "american_odds": -102,
+      "implied_probability": 0.505,
       "raw_ev_pct": 20.1,
       "edge_pct": 31.28,
       "confidence": 97.1,
@@ -1302,6 +1488,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1356,11 +1548,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8263,
+      "simulation_probability": 0.8313,
       "market_move": 1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -104,
-      "implied_probability": 0.5098,
+      "sportsbook": "FanDuel",
+      "american_odds": -102,
+      "implied_probability": 0.505,
       "raw_ev_pct": 21.9,
       "edge_pct": 27.03,
       "confidence": 97.0,
@@ -1369,6 +1561,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1423,11 +1621,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8691,
+      "simulation_probability": 0.8659,
       "market_move": 1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -107,
-      "implied_probability": 0.5169,
+      "sportsbook": "FanDuel",
+      "american_odds": -114,
+      "implied_probability": 0.5327,
       "raw_ev_pct": 21.4,
       "edge_pct": 47.2,
       "confidence": 97.0,
@@ -1436,6 +1634,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1490,11 +1694,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8212,
+      "simulation_probability": 0.8199,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": 100,
-      "implied_probability": 0.5,
+      "american_odds": -114,
+      "implied_probability": 0.5327,
       "raw_ev_pct": 21.0,
       "edge_pct": 37.58,
       "confidence": 97.0,
@@ -1503,6 +1707,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1560,8 +1770,8 @@
       "simulation_probability": 0.8573,
       "market_move": 0.0,
       "sportsbook": "DraftKings",
-      "american_odds": -126,
-      "implied_probability": 0.5575,
+      "american_odds": -104,
+      "implied_probability": 0.5098,
       "raw_ev_pct": 19.0,
       "edge_pct": 42.22,
       "confidence": 97.0,
@@ -1570,6 +1780,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1626,9 +1842,9 @@
       "deepseek_rating": null,
       "simulation_probability": 0.7792,
       "market_move": 1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -110,
-      "implied_probability": 0.5238,
+      "sportsbook": "FanDuel",
+      "american_odds": -104,
+      "implied_probability": 0.5098,
       "raw_ev_pct": 18.8,
       "edge_pct": 28.51,
       "confidence": 97.0,
@@ -1637,6 +1853,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1691,11 +1913,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.9195,
+      "simulation_probability": 0.9214,
       "market_move": 1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
+      "sportsbook": "DraftKings",
+      "american_odds": -127,
+      "implied_probability": 0.5595,
       "raw_ev_pct": 18.3,
       "edge_pct": 37.44,
       "confidence": 96.9,
@@ -1704,6 +1926,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1758,11 +1986,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8451,
+      "simulation_probability": 0.8454,
       "market_move": 0.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -104,
-      "implied_probability": 0.5098,
+      "sportsbook": "DraftKings",
+      "american_odds": -113,
+      "implied_probability": 0.5305,
       "raw_ev_pct": 24.1,
       "edge_pct": 38.79,
       "confidence": 96.9,
@@ -1771,6 +1999,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1825,11 +2059,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8128,
+      "simulation_probability": 0.8203,
       "market_move": 1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
+      "sportsbook": "DraftKings",
+      "american_odds": -105,
+      "implied_probability": 0.5122,
       "raw_ev_pct": 20.1,
       "edge_pct": 34.15,
       "confidence": 96.9,
@@ -1838,6 +2072,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1892,7 +2132,7 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8062,
+      "simulation_probability": 0.8016,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
       "american_odds": -108,
@@ -1905,6 +2145,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -1959,11 +2205,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8038,
+      "simulation_probability": 0.8014,
       "market_move": 0.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -122,
-      "implied_probability": 0.5495,
+      "sportsbook": "FanDuel",
+      "american_odds": -125,
+      "implied_probability": 0.5556,
       "raw_ev_pct": 17.6,
       "edge_pct": 35.14,
       "confidence": 96.8,
@@ -1972,609 +2218,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "A'ja Wilson",
-      "team": null,
-      "game": "Phoenix Mercury @ Las Vegas Aces",
-      "stat": "PA",
-      "line": 28.5,
-      "pred": 22.5,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -6.0,
-      "consensus_score": 90.8,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 87.0,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 72.4,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.7668,
-      "market_move": 1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -111,
-      "implied_probability": 0.5261,
-      "raw_ev_pct": 18.8,
-      "edge_pct": 21.05,
-      "confidence": 96.8,
-      "final_score": 96.8,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Megan Gustafson",
-      "team": null,
-      "game": "Portland Fire @ Atlanta Dream",
-      "stat": "PR",
-      "line": 16.5,
-      "pred": 10.6,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -5.9,
-      "consensus_score": 90.7,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 99.5,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 85.6,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 73.2,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.8284,
-      "market_move": 0.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -112,
-      "implied_probability": 0.5283,
-      "raw_ev_pct": 26.2,
-      "edge_pct": 35.76,
-      "confidence": 96.7,
-      "final_score": 96.7,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Chelsea Gray",
-      "team": null,
-      "game": "Phoenix Mercury @ Las Vegas Aces",
-      "stat": "PRA",
-      "line": 24.5,
-      "pred": 16.8,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -7.7,
-      "consensus_score": 90.7,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 86.3,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 72.4,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.8498,
-      "market_move": 1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -118,
-      "implied_probability": 0.5413,
-      "raw_ev_pct": 18.4,
-      "edge_pct": 31.43,
-      "confidence": 96.7,
-      "final_score": 96.7,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Jackie Young",
-      "team": null,
-      "game": "Phoenix Mercury @ Las Vegas Aces",
-      "stat": "3PM",
-      "line": 1.5,
-      "pred": -1.4,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -2.9,
-      "consensus_score": 90.6,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 78.2,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 79.3,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.9378,
-      "market_move": 0.0,
-      "sportsbook": "FanDuel",
-      "american_odds": 146,
-      "implied_probability": 0.4065,
-      "raw_ev_pct": 38.0,
-      "edge_pct": 193.33,
-      "confidence": 96.7,
-      "final_score": 96.7,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Jordin Canada",
-      "team": null,
-      "game": "Portland Fire @ Atlanta Dream",
-      "stat": "PTS",
-      "line": 10.5,
-      "pred": 6.1,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -4.4,
-      "consensus_score": 90.6,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 91.0,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 90.2,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 76.8,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.7966,
-      "market_move": -1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -126,
-      "implied_probability": 0.5575,
-      "raw_ev_pct": 21.2,
-      "edge_pct": 41.9,
-      "confidence": 96.7,
-      "final_score": 96.7,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Alyssa Thomas",
-      "team": null,
-      "game": "Phoenix Mercury @ Las Vegas Aces",
-      "stat": "PRA",
-      "line": 30.5,
-      "pred": 23.4,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -7.1,
-      "consensus_score": 90.6,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 85.3,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 72.3,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.7674,
-      "market_move": 1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -106,
-      "implied_probability": 0.5146,
-      "raw_ev_pct": 17.8,
-      "edge_pct": 23.28,
-      "confidence": 96.7,
-      "final_score": 96.7,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Naz Hillmon",
-      "team": null,
-      "game": "Portland Fire @ Atlanta Dream",
-      "stat": "PTS",
-      "line": 9.5,
-      "pred": -0.4,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -9.9,
-      "consensus_score": 90.5,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 90.6,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 66.3,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "NEUTRAL",
-      "deepseek_rating": null,
-      "simulation_probability": 0.9716,
-      "market_move": 3.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
-      "raw_ev_pct": 31.4,
-      "edge_pct": 104.21,
-      "confidence": 96.7,
-      "final_score": 96.7,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Alyssa Thomas",
-      "team": null,
-      "game": "Phoenix Mercury @ Las Vegas Aces",
-      "stat": "PR",
-      "line": 21.5,
-      "pred": 16.2,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -5.3,
-      "consensus_score": 90.5,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 87.0,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 97.4,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 72.4,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.7798,
-      "market_move": 0.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -113,
-      "implied_probability": 0.5305,
-      "raw_ev_pct": 18.8,
-      "edge_pct": 24.65,
-      "confidence": 96.7,
-      "final_score": 96.7,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Bridget Carleton",
-      "team": null,
-      "game": "Portland Fire @ Atlanta Dream",
-      "stat": "PR",
-      "line": 17.5,
-      "pred": 12.1,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -5.4,
-      "consensus_score": 90.5,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 82.5,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 98.2,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 76.0,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.8038,
-      "market_move": 0.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -122,
-      "implied_probability": 0.5495,
-      "raw_ev_pct": 16.2,
-      "edge_pct": 30.86,
-      "confidence": 96.7,
-      "final_score": 96.7,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -2629,42 +2278,48 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7475,
+      "simulation_probability": 0.7509,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
       "american_odds": -102,
       "implied_probability": 0.505,
       "raw_ev_pct": 22.7,
       "edge_pct": 30.34,
-      "confidence": 96.6,
-      "final_score": 96.6,
+      "confidence": 96.8,
+      "final_score": 96.8,
       "final_action": "LEAN",
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
       "decision_reason": "EV outside 2-20% guardrail"
     },
     {
-      "player": "Naz Hillmon",
+      "player": "A'ja Wilson",
       "team": null,
-      "game": "Portland Fire @ Atlanta Dream",
-      "stat": "PR",
-      "line": 15.5,
-      "pred": 3.8,
+      "game": "Phoenix Mercury @ Las Vegas Aces",
+      "stat": "PA",
+      "line": 28.5,
+      "pred": 22.5,
       "signal": "UNDER",
       "conf": "HIGH",
       "ev_pct": 25,
-      "edge": -11.7,
-      "consensus_score": 90.4,
+      "edge": -6.0,
+      "consensus_score": 90.8,
       "consensus_grade": "ELITE",
       "engine_agreement": "6/6",
       "votes": [
         {
           "engine": "Projection EV",
-          "score": 100,
+          "score": 87.0,
           "agree": true
         },
         {
@@ -2674,12 +2329,12 @@
         },
         {
           "engine": "Player Intelligence",
-          "score": 90.6,
+          "score": 100,
           "agree": true
         },
         {
           "engine": "Matchup Intelligence",
-          "score": 65.8,
+          "score": 72.4,
           "agree": true
         },
         {
@@ -2694,21 +2349,27 @@
         }
       ],
       "recommendation": "BET",
-      "matchup_label": "NEUTRAL",
+      "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.9624,
-      "market_move": 4.0,
+      "simulation_probability": 0.7702,
+      "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": -102,
-      "implied_probability": 0.505,
-      "raw_ev_pct": 27.7,
-      "edge_pct": 75.48,
-      "confidence": 96.6,
-      "final_score": 96.6,
+      "american_odds": -104,
+      "implied_probability": 0.5098,
+      "raw_ev_pct": 18.8,
+      "edge_pct": 21.05,
+      "confidence": 96.8,
+      "final_score": 96.8,
       "final_action": "LEAN",
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -2763,19 +2424,682 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7475,
+      "simulation_probability": 0.7509,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
       "american_odds": -102,
       "implied_probability": 0.505,
       "raw_ev_pct": 17.1,
       "edge_pct": 35.48,
-      "confidence": 96.5,
-      "final_score": 96.5,
+      "confidence": 96.8,
+      "final_score": 96.8,
       "final_action": "LEAN",
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Megan Gustafson",
+      "team": null,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "PR",
+      "line": 16.5,
+      "pred": 10.6,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -5.9,
+      "consensus_score": 90.7,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 99.5,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 85.6,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 73.2,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.8265,
+      "market_move": 0.0,
+      "sportsbook": "FanDuel",
+      "american_odds": -108,
+      "implied_probability": 0.5192,
+      "raw_ev_pct": 26.2,
+      "edge_pct": 35.76,
+      "confidence": 96.7,
+      "final_score": 96.7,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Chelsea Gray",
+      "team": null,
+      "game": "Phoenix Mercury @ Las Vegas Aces",
+      "stat": "PRA",
+      "line": 24.5,
+      "pred": 16.8,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -7.7,
+      "consensus_score": 90.7,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 86.3,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 72.4,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.8481,
+      "market_move": 1.0,
+      "sportsbook": "FanDuel",
+      "american_odds": -120,
+      "implied_probability": 0.5455,
+      "raw_ev_pct": 18.4,
+      "edge_pct": 31.43,
+      "confidence": 96.7,
+      "final_score": 96.7,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Jackie Young",
+      "team": null,
+      "game": "Phoenix Mercury @ Las Vegas Aces",
+      "stat": "3PM",
+      "line": 1.5,
+      "pred": -1.4,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -2.9,
+      "consensus_score": 90.6,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 78.2,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 79.3,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.9383,
+      "market_move": 0.0,
+      "sportsbook": "FanDuel",
+      "american_odds": 144,
+      "implied_probability": 0.4098,
+      "raw_ev_pct": 38.0,
+      "edge_pct": 193.33,
+      "confidence": 96.7,
+      "final_score": 96.7,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Jordin Canada",
+      "team": null,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "PTS",
+      "line": 10.5,
+      "pred": 6.1,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -4.4,
+      "consensus_score": 90.6,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 91.0,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 90.2,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 76.8,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.7998,
+      "market_move": -1.0,
+      "sportsbook": "FanDuel",
+      "american_odds": -102,
+      "implied_probability": 0.505,
+      "raw_ev_pct": 21.2,
+      "edge_pct": 41.9,
+      "confidence": 96.7,
+      "final_score": 96.7,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Alyssa Thomas",
+      "team": null,
+      "game": "Phoenix Mercury @ Las Vegas Aces",
+      "stat": "PRA",
+      "line": 30.5,
+      "pred": 23.4,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -7.1,
+      "consensus_score": 90.6,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 85.3,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 72.3,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.7663,
+      "market_move": 1.0,
+      "sportsbook": "FanDuel",
+      "american_odds": -106,
+      "implied_probability": 0.5146,
+      "raw_ev_pct": 17.8,
+      "edge_pct": 23.28,
+      "confidence": 96.7,
+      "final_score": 96.7,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Naz Hillmon",
+      "team": null,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "PTS",
+      "line": 9.5,
+      "pred": -0.4,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -9.9,
+      "consensus_score": 90.5,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 90.6,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 66.3,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "NEUTRAL",
+      "deepseek_rating": null,
+      "simulation_probability": 0.9697,
+      "market_move": 3.0,
+      "sportsbook": "DraftKings",
+      "american_odds": -101,
+      "implied_probability": 0.5025,
+      "raw_ev_pct": 31.4,
+      "edge_pct": 104.21,
+      "confidence": 96.7,
+      "final_score": 96.7,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Alyssa Thomas",
+      "team": null,
+      "game": "Phoenix Mercury @ Las Vegas Aces",
+      "stat": "PR",
+      "line": 21.5,
+      "pred": 16.2,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -5.3,
+      "consensus_score": 90.5,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 87.0,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 97.4,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 72.4,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.7862,
+      "market_move": 0.0,
+      "sportsbook": "DraftKings",
+      "american_odds": -116,
+      "implied_probability": 0.537,
+      "raw_ev_pct": 18.8,
+      "edge_pct": 24.65,
+      "confidence": 96.7,
+      "final_score": 96.7,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Bridget Carleton",
+      "team": null,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "PR",
+      "line": 17.5,
+      "pred": 12.1,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -5.4,
+      "consensus_score": 90.5,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 82.5,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 98.2,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 76.0,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.8014,
+      "market_move": 0.0,
+      "sportsbook": "FanDuel",
+      "american_odds": -125,
+      "implied_probability": 0.5556,
+      "raw_ev_pct": 16.2,
+      "edge_pct": 30.86,
+      "confidence": 96.7,
+      "final_score": 96.7,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Naz Hillmon",
+      "team": null,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "PR",
+      "line": 15.5,
+      "pred": 3.8,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -11.7,
+      "consensus_score": 90.4,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 90.6,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 65.8,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "NEUTRAL",
+      "deepseek_rating": null,
+      "simulation_probability": 0.9636,
+      "market_move": 4.0,
+      "sportsbook": "DraftKings",
+      "american_odds": -107,
+      "implied_probability": 0.5169,
+      "raw_ev_pct": 27.7,
+      "edge_pct": 75.48,
+      "confidence": 96.6,
+      "final_score": 96.6,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -2830,11 +3154,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.849,
+      "simulation_probability": 0.8461,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
-      "american_odds": -108,
-      "implied_probability": 0.5192,
+      "american_odds": -122,
+      "implied_probability": 0.5495,
       "raw_ev_pct": 18.8,
       "edge_pct": 38.92,
       "confidence": 96.5,
@@ -2843,6 +3167,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -2898,11 +3228,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.9716,
+      "simulation_probability": 0.9697,
       "market_move": 3.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
+      "sportsbook": "DraftKings",
+      "american_odds": -101,
+      "implied_probability": 0.5025,
       "raw_ev_pct": 23.2,
       "edge_pct": 104.76,
       "confidence": 96.4,
@@ -2911,6 +3241,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -2965,11 +3301,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.9138,
+      "simulation_probability": 0.9157,
       "market_move": 0.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -115,
-      "implied_probability": 0.5349,
+      "sportsbook": "FanDuel",
+      "american_odds": -125,
+      "implied_probability": 0.5556,
       "raw_ev_pct": 17.7,
       "edge_pct": 66.67,
       "confidence": 96.4,
@@ -2978,6 +3314,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3032,11 +3374,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8284,
+      "simulation_probability": 0.8252,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": -130,
-      "implied_probability": 0.5652,
+      "american_odds": -136,
+      "implied_probability": 0.5763,
       "raw_ev_pct": 14.5,
       "edge_pct": 53.1,
       "confidence": 96.4,
@@ -3045,6 +3387,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -3100,7 +3448,7 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7674,
+      "simulation_probability": 0.7663,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
       "american_odds": -106,
@@ -3113,6 +3461,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3167,7 +3521,7 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.835,
+      "simulation_probability": 0.8374,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
       "american_odds": -112,
@@ -3180,6 +3534,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -3235,11 +3595,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.9278,
+      "simulation_probability": 0.9265,
       "market_move": 2.0,
       "sportsbook": "FanDuel",
-      "american_odds": -130,
-      "implied_probability": 0.5652,
+      "american_odds": -118,
+      "implied_probability": 0.5413,
       "raw_ev_pct": 21.9,
       "edge_pct": 72.0,
       "confidence": 96.3,
@@ -3248,6 +3608,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -3303,11 +3669,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.9524,
+      "simulation_probability": 0.9523,
       "market_move": 0.0,
       "sportsbook": "DraftKings",
-      "american_odds": 104,
-      "implied_probability": 0.4902,
+      "american_odds": 108,
+      "implied_probability": 0.4808,
       "raw_ev_pct": 20.3,
       "edge_pct": 206.67,
       "confidence": 96.2,
@@ -3316,6 +3682,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3370,11 +3742,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.9624,
+      "simulation_probability": 0.9636,
       "market_move": 4.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -102,
-      "implied_probability": 0.505,
+      "sportsbook": "DraftKings",
+      "american_odds": -107,
+      "implied_probability": 0.5169,
       "raw_ev_pct": 20.1,
       "edge_pct": 77.58,
       "confidence": 96.2,
@@ -3383,6 +3755,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3437,11 +3815,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.8755,
+      "simulation_probability": 0.875,
       "market_move": 0.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -120,
-      "implied_probability": 0.5455,
+      "sportsbook": "DraftKings",
+      "american_odds": -112,
+      "implied_probability": 0.5283,
       "raw_ev_pct": 25.1,
       "edge_pct": 53.91,
       "confidence": 96.1,
@@ -3450,6 +3828,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3504,11 +3888,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8531,
+      "simulation_probability": 0.8524,
       "market_move": 0.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -118,
-      "implied_probability": 0.5413,
+      "sportsbook": "DraftKings",
+      "american_odds": -106,
+      "implied_probability": 0.5146,
       "raw_ev_pct": 24.9,
       "edge_pct": 45.52,
       "confidence": 96.1,
@@ -3517,6 +3901,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3571,7 +3961,7 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.874,
+      "simulation_probability": 0.87,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
       "american_odds": -122,
@@ -3584,6 +3974,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3638,11 +4034,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8227,
+      "simulation_probability": 0.825,
       "market_move": 1.0,
       "sportsbook": "DraftKings",
-      "american_odds": -119,
-      "implied_probability": 0.5434,
+      "american_odds": -128,
+      "implied_probability": 0.5614,
       "raw_ev_pct": 12.8,
       "edge_pct": 35.17,
       "confidence": 96.1,
@@ -3651,6 +4047,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3705,11 +4107,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.9037,
+      "simulation_probability": 0.9091,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
-      "american_odds": -118,
-      "implied_probability": 0.5413,
+      "american_odds": -113,
+      "implied_probability": 0.5305,
       "raw_ev_pct": 23.4,
       "edge_pct": 83.53,
       "confidence": 96.0,
@@ -3718,6 +4120,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3772,11 +4180,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.8488,
+      "simulation_probability": 0.8503,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": -128,
-      "implied_probability": 0.5614,
+      "american_odds": -114,
+      "implied_probability": 0.5327,
       "raw_ev_pct": 22.9,
       "edge_pct": 45.45,
       "confidence": 96.0,
@@ -3785,6 +4193,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -3840,11 +4254,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8255,
+      "simulation_probability": 0.8246,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": 102,
-      "implied_probability": 0.495,
+      "american_odds": 100,
+      "implied_probability": 0.5,
       "raw_ev_pct": 29.5,
       "edge_pct": 50.53,
       "confidence": 95.9,
@@ -3853,6 +4267,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3907,11 +4327,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.8664,
+      "simulation_probability": 0.8668,
       "market_move": 1.0,
       "sportsbook": "DraftKings",
-      "american_odds": -107,
-      "implied_probability": 0.5169,
+      "american_odds": -116,
+      "implied_probability": 0.537,
       "raw_ev_pct": 21.9,
       "edge_pct": 49.66,
       "confidence": 95.9,
@@ -3920,6 +4340,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -3974,11 +4400,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.9278,
+      "simulation_probability": 0.9265,
       "market_move": 2.0,
       "sportsbook": "FanDuel",
-      "american_odds": -130,
-      "implied_probability": 0.5652,
+      "american_odds": -118,
+      "implied_probability": 0.5413,
       "raw_ev_pct": 14.9,
       "edge_pct": 68.39,
       "confidence": 95.7,
@@ -3987,6 +4413,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -4042,11 +4474,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8255,
+      "simulation_probability": 0.8246,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
-      "american_odds": 102,
-      "implied_probability": 0.495,
+      "american_odds": 100,
+      "implied_probability": 0.5,
       "raw_ev_pct": 19.8,
       "edge_pct": 56.19,
       "confidence": 95.7,
@@ -4055,6 +4487,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -4109,7 +4547,7 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.8062,
+      "simulation_probability": 0.8016,
       "market_move": 1.0,
       "sportsbook": "FanDuel",
       "american_odds": -108,
@@ -4122,6 +4560,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -4176,7 +4620,7 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7513,
+      "simulation_probability": 0.7525,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
       "american_odds": -104,
@@ -4189,10 +4633,163 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
       "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Carla Leite",
+      "team": null,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "PA",
+      "line": 20.5,
+      "pred": 16.2,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -4.3,
+      "consensus_score": 87.0,
+      "consensus_grade": "STRONG",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 78.0,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 89.4,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 87.0,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 75.7,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.7533,
+      "market_move": 0.0,
+      "sportsbook": "FanDuel",
+      "american_odds": -118,
+      "implied_probability": 0.5413,
+      "raw_ev_pct": 13.5,
+      "edge_pct": 20.98,
+      "confidence": 95.5,
+      "final_score": 95.5,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "Carla Leite",
+      "team": null,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "PR",
+      "line": 17.5,
+      "pred": 13.2,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -4.3,
+      "consensus_score": 87.2,
+      "consensus_grade": "STRONG",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 79.5,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 89.4,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 87.0,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 75.9,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.7489,
+      "market_move": 0.0,
+      "sportsbook": "DraftKings",
+      "american_odds": -117,
+      "implied_probability": 0.5392,
+      "raw_ev_pct": 14.4,
+      "edge_pct": 24.57,
+      "confidence": 95.4,
+      "final_score": 95.4,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail",
+        "only 1 sportsbook"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail; only 1 sportsbook"
     },
     {
       "player": "NaLyssa Smith",
@@ -4243,11 +4840,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.8588,
+      "simulation_probability": 0.8591,
       "market_move": 1.0,
       "sportsbook": "DraftKings",
-      "american_odds": -116,
-      "implied_probability": 0.537,
+      "american_odds": -130,
+      "implied_probability": 0.5652,
       "raw_ev_pct": 16.8,
       "edge_pct": 38.38,
       "confidence": 95.4,
@@ -4256,6 +4853,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 1,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail",
         "only 1 sportsbook"
@@ -4311,11 +4914,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7668,
+      "simulation_probability": 0.7702,
       "market_move": 1.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -111,
-      "implied_probability": 0.5261,
+      "sportsbook": "FanDuel",
+      "american_odds": -104,
+      "implied_probability": 0.5098,
       "raw_ev_pct": 24.1,
       "edge_pct": 17.82,
       "confidence": 95.3,
@@ -4324,145 +4927,16 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
       "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Carla Leite",
-      "team": null,
-      "game": "Portland Fire @ Atlanta Dream",
-      "stat": "PA",
-      "line": 20.5,
-      "pred": 16.2,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -4.3,
-      "consensus_score": 87.0,
-      "consensus_grade": "STRONG",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 78.0,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 89.4,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 87.0,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 75.7,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.7481,
-      "market_move": 0.0,
-      "sportsbook": "FanDuel",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
-      "raw_ev_pct": 13.5,
-      "edge_pct": 20.98,
-      "confidence": 95.3,
-      "final_score": 95.3,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "Carla Leite",
-      "team": null,
-      "game": "Portland Fire @ Atlanta Dream",
-      "stat": "PR",
-      "line": 17.5,
-      "pred": 13.2,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -4.3,
-      "consensus_score": 87.2,
-      "consensus_grade": "STRONG",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 79.5,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 89.4,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 87.0,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 75.9,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.7471,
-      "market_move": 0.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -105,
-      "implied_probability": 0.5122,
-      "raw_ev_pct": 14.4,
-      "edge_pct": 24.57,
-      "confidence": 95.2,
-      "final_score": 95.2,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 1,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail",
-        "only 1 sportsbook"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail; only 1 sportsbook"
     },
     {
       "player": "A'ja Wilson",
@@ -4513,19 +4987,25 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.748,
+      "simulation_probability": 0.7468,
       "market_move": 0.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -112,
-      "implied_probability": 0.5283,
+      "sportsbook": "FanDuel",
+      "american_odds": -118,
+      "implied_probability": 0.5413,
       "raw_ev_pct": 21.5,
       "edge_pct": 16.36,
-      "confidence": 94.1,
-      "final_score": 94.1,
+      "confidence": 93.9,
+      "final_score": 93.9,
       "final_action": "LEAN",
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -4593,6 +5073,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -4647,11 +5133,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.9939,
+      "simulation_probability": 0.9938,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
-      "american_odds": -140,
-      "implied_probability": 0.5833,
+      "american_odds": -144,
+      "implied_probability": 0.5902,
       "raw_ev_pct": 3.0,
       "edge_pct": 120.0,
       "confidence": 92.2,
@@ -4660,73 +5146,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
-    },
-    {
-      "player": "A'ja Wilson",
-      "team": null,
-      "game": "Phoenix Mercury @ Las Vegas Aces",
-      "stat": "PRA",
-      "line": 37.5,
-      "pred": 32.2,
-      "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -5.3,
-      "consensus_score": 90.5,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 87.0,
-          "agree": true
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 97.4,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 100,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 72.4,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "BET",
-      "matchup_label": "GOOD",
-      "deepseek_rating": null,
-      "simulation_probability": 0.748,
-      "market_move": 0.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -112,
-      "implied_probability": 0.5283,
-      "raw_ev_pct": 18.8,
-      "edge_pct": 14.13,
-      "confidence": 92.1,
-      "final_score": 92.1,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
-      "history_games": 10,
-      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -4781,11 +5206,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.7521,
+      "simulation_probability": 0.754,
       "market_move": 0.0,
       "sportsbook": "DraftKings",
-      "american_odds": -114,
-      "implied_probability": 0.5327,
+      "american_odds": -113,
+      "implied_probability": 0.5305,
       "raw_ev_pct": 17.5,
       "edge_pct": 14.2,
       "confidence": 92.1,
@@ -4794,6 +5219,85 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [
+        "EV outside 2-20% guardrail"
+      ],
+      "decision_reason": "EV outside 2-20% guardrail"
+    },
+    {
+      "player": "A'ja Wilson",
+      "team": null,
+      "game": "Phoenix Mercury @ Las Vegas Aces",
+      "stat": "PRA",
+      "line": 37.5,
+      "pred": 32.2,
+      "signal": "UNDER",
+      "conf": "HIGH",
+      "ev_pct": 25,
+      "edge": -5.3,
+      "consensus_score": 90.5,
+      "consensus_grade": "ELITE",
+      "engine_agreement": "6/6",
+      "votes": [
+        {
+          "engine": "Projection EV",
+          "score": 87.0,
+          "agree": true
+        },
+        {
+          "engine": "Projection Edge",
+          "score": 97.4,
+          "agree": true
+        },
+        {
+          "engine": "Player Intelligence",
+          "score": 100,
+          "agree": true
+        },
+        {
+          "engine": "Matchup Intelligence",
+          "score": 72.4,
+          "agree": true
+        },
+        {
+          "engine": "Injury Engine",
+          "score": 88,
+          "agree": true
+        },
+        {
+          "engine": "Market Engine",
+          "score": 82,
+          "agree": true
+        }
+      ],
+      "recommendation": "BET",
+      "matchup_label": "GOOD",
+      "deepseek_rating": null,
+      "simulation_probability": 0.7468,
+      "market_move": 0.0,
+      "sportsbook": "FanDuel",
+      "american_odds": -118,
+      "implied_probability": 0.5413,
+      "raw_ev_pct": 18.8,
+      "edge_pct": 14.13,
+      "confidence": 92.0,
+      "final_score": 92.0,
+      "final_action": "LEAN",
+      "eligible_for_bet": false,
+      "history_games": 10,
+      "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -4848,11 +5352,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.9959,
+      "simulation_probability": 0.9955,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
-      "american_odds": -146,
-      "implied_probability": 0.5935,
+      "american_odds": -144,
+      "implied_probability": 0.5902,
       "raw_ev_pct": 4.2,
       "edge_pct": 300.0,
       "confidence": 91.9,
@@ -4861,6 +5365,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -4915,11 +5425,11 @@
       "recommendation": "BET",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.9989,
+      "simulation_probability": 0.9986,
       "market_move": 1.0,
-      "sportsbook": "FanDuel",
-      "american_odds": 144,
-      "implied_probability": 0.4098,
+      "sportsbook": "DraftKings",
+      "american_odds": -170,
+      "implied_probability": 0.6296,
       "raw_ev_pct": -2.3,
       "edge_pct": 204.0,
       "confidence": 91.8,
@@ -4928,6 +5438,12 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
@@ -4982,11 +5498,11 @@
       "recommendation": "BET",
       "matchup_label": "NEUTRAL",
       "deepseek_rating": null,
-      "simulation_probability": 0.9898,
+      "simulation_probability": 0.9896,
       "market_move": 0.0,
       "sportsbook": "FanDuel",
-      "american_odds": -158,
-      "implied_probability": 0.6124,
+      "american_odds": -132,
+      "implied_probability": 0.569,
       "raw_ev_pct": 0.7,
       "edge_pct": 260.0,
       "confidence": 91.0,
@@ -4995,34 +5511,42 @@
       "eligible_for_bet": false,
       "history_games": 10,
       "book_count": 2,
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
       "guardrail_failures": [
         "EV outside 2-20% guardrail"
       ],
       "decision_reason": "EV outside 2-20% guardrail"
-    },
+    }
+  ],
+  "qualified_bets": [
     {
-      "player": "Jackie Young",
+      "player": "Rhyne Howard",
       "team": null,
-      "game": "Phoenix Mercury @ Las Vegas Aces",
-      "stat": "PRA",
-      "line": 29.5,
-      "pred": 24.0,
+      "game": "Portland Fire @ Atlanta Dream",
+      "stat": "REB",
+      "line": 4.5,
+      "pred": 2.8,
       "signal": "UNDER",
-      "conf": "HIGH",
-      "ev_pct": 25,
-      "edge": -5.5,
-      "consensus_score": 90.3,
-      "consensus_grade": "ELITE",
-      "engine_agreement": "6/6",
+      "conf": "MED",
+      "ev_pct": 13.49,
+      "edge": -1.7,
+      "consensus_score": 77.1,
+      "consensus_grade": "PLAYABLE",
+      "engine_agreement": "5/6",
       "votes": [
         {
           "engine": "Projection EV",
-          "score": 80.8,
-          "agree": true
+          "score": 40.0,
+          "agree": false
         },
         {
           "engine": "Projection Edge",
-          "score": 99.0,
+          "score": 68.6,
           "agree": true
         },
         {
@@ -5032,7 +5556,7 @@
         },
         {
           "engine": "Matchup Intelligence",
-          "score": 75.9,
+          "score": 73.4,
           "agree": true
         },
         {
@@ -5046,27 +5570,30 @@
           "agree": true
         }
       ],
-      "recommendation": "BET",
+      "recommendation": "LEAN",
       "matchup_label": "GOOD",
       "deepseek_rating": null,
-      "simulation_probability": 0.6962,
+      "simulation_probability": 0.6863,
       "market_move": 1.0,
       "sportsbook": "DraftKings",
-      "american_odds": -109,
-      "implied_probability": 0.5215,
-      "raw_ev_pct": 15.2,
-      "edge_pct": 18.64,
-      "confidence": 90.2,
-      "final_score": 90.2,
-      "final_action": "LEAN",
-      "eligible_for_bet": false,
+      "american_odds": -153,
+      "implied_probability": 0.6047,
+      "raw_ev_pct": -8.8,
+      "edge_pct": 37.78,
+      "confidence": 79.1,
+      "final_score": 79.1,
+      "final_action": "BET",
+      "eligible_for_bet": true,
       "history_games": 10,
       "book_count": 2,
-      "guardrail_failures": [
-        "EV outside 2-20% guardrail"
-      ],
-      "decision_reason": "EV outside 2-20% guardrail"
+      "injury_status": "ACTIVE",
+      "injury_detail": null,
+      "projected_minutes": null,
+      "minutes_delta": null,
+      "injury_projection_factor": null,
+      "injury_confidence_penalty": 0,
+      "guardrail_failures": [],
+      "decision_reason": "Qualified across score, probability, EV, history, books, agreement and injury status."
     }
-  ],
-  "qualified_bets": []
+  ]
 }
