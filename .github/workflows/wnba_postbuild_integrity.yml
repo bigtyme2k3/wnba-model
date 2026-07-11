@@ -1,0 +1,78 @@
+name: WNBA Postbuild Integrity
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for active slate'
+        required: false
+        default: ''
+  workflow_run:
+    workflows: ["WNBA Intelligence Foundation"]
+    types: [completed]
+
+concurrency:
+  group: wnba-postbuild-integrity
+  cancel-in-progress: false
+
+jobs:
+  integrity:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Resolve target date
+        run: |
+          TARGET="${{ github.event.inputs.date }}"
+          if [ -z "$TARGET" ]; then TARGET=$(python active_slate_date.py); fi
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+      - name: Validate postbuild scripts
+        run: python -m py_compile wnba_special_market_guard.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py patch_dashboard_v4_player_props_polish.py patch_dashboard_v4_results.py
+      - name: Rebuild complete player history
+        run: python wnba_v4_prop_context.py
+      - name: Normalize special markets and hide unsupported props
+        run: python wnba_special_market_guard.py
+      - name: Rebuild V4 dashboard
+        run: python build_dashboard_v4.py
+      - name: Apply V4 display patches
+        run: |
+          python patch_dashboard_v4_team_context.py
+          python patch_dashboard_v4_layout_and_slate.py
+          python patch_dashboard_v4_prop_header.py
+          python patch_dashboard_v4_game_filter.py
+          python patch_dashboard_v4_player_props_polish.py
+          python patch_dashboard_v4_results.py
+      - name: Verify supported markets and sportsbook policy
+        run: |
+          python - <<'PY'
+          import json
+          data=json.load(open('data/dashboard/wnba_master.json'))
+          supported=set(data.get('special_market_diagnostics',{}).get('supported_markets',[]))
+          assert supported, data.get('special_market_diagnostics')
+          allowed={'DraftKings','FanDuel','Fanatics'}
+          for row in data.get('props',[]):
+              assert row.get('stat') in supported,(row.get('player'),row.get('stat'))
+              for key in ('best_over_book','best_under_book','book','best_book'):
+                  value=row.get(key)
+                  if value: assert value in allowed,(key,value)
+          assert 'window.WNBA_RESULTS_DATA' in open('docs/index.html',encoding='utf-8').read()
+          print(data.get('special_market_diagnostics'))
+          PY
+      - name: Commit postbuild integrity
+        run: |
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/master/*.json data/dashboard/*.json docs/index.html
+          git diff --cached --quiet && echo "No postbuild changes" && exit 0
+          git commit -m "Apply WNBA postbuild integrity - ${{ env.TARGET }}"
+          git pull --rebase origin main
+          git push
