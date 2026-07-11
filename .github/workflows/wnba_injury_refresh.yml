@@ -25,7 +25,7 @@ jobs:
   injury-refresh:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
@@ -49,7 +49,7 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Injury target: $TARGET"
       - name: Validate injury pipeline
-        run: python -m py_compile scrape_injuries.py wnba_injury_intelligence.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_portfolio_dashboard.py wnba_master_source_builder.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_injuries.py
+        run: python -m py_compile scrape_injuries.py wnba_injury_intelligence.py wnba_player_intelligence.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_portfolio_dashboard.py wnba_master_source_builder.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_injuries.py
       - name: Refresh official injury reports
         run: python scrape_injuries.py --date "${{ env.TARGET }}" --out data/raw
       - name: Verify injury source freshness
@@ -61,20 +61,24 @@ jobs:
           assert s.get('status') in {'ok','warning'}, s
           print('Injury source:',s)
           PY
+      - name: Rebuild player intelligence with current injuries
+        run: python wnba_player_intelligence.py --date "${{ env.TARGET }}"
+        continue-on-error: true
       - name: Build injury intelligence and minute redistribution
         run: python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
       - name: Rebuild injury-sensitive model layers
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.rebuild_model != 'false' }}
         run: |
           python player_points.py --date "${{ env.TARGET }}" --out data/raw || true
+          python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}" || true
           python wnba_consensus_engine.py --date "${{ env.TARGET }}" || true
           python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
-          python wnba_monte_carlo_engine.py --date "${{ env.TARGET }}" --sims 10000 || true
+          python wnba_monte_carlo_engine.py --date "${{ env.TARGET }}" --sims 20000
           python wnba_projection_ai.py --date "${{ env.TARGET }}" || true
           python wnba_market_engine.py --date "${{ env.TARGET }}" || true
+          python wnba_decision_engine_final.py --date "${{ env.TARGET }}"
           python wnba_portfolio_optimizer_v2.py --date "${{ env.TARGET }}" --bankroll 500 || true
-          python wnba_decision_engine_final.py --date "${{ env.TARGET }}" || true
           python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
           python wnba_risk_allocation.py --date "${{ env.TARGET }}" --capital 500 || true
           python wnba_portfolio_dashboard.py --date "${{ env.TARGET }}" || true
@@ -92,16 +96,25 @@ jobs:
           python patch_dashboard_v4_phase6_batch1.py
           python patch_dashboard_v4_results.py
           python patch_dashboard_v4_injuries.py
-      - name: Verify injury guardrails
+      - name: Verify injury guardrails and propagation
         run: |
           python - <<'PY'
           import json
           report=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
           master=json.load(open('data/dashboard/wnba_master.json'))
+          decisions=json.load(open('data/dashboard/wnba_decision_engine_final.json'))
           for row in master.get('props',[]):
               if row.get('injury_status') in {'OUT','DOUBTFUL'}:
                   assert row.get('eligible') is False
                   assert row.get('final_action') == 'PASS'
+          for row in decisions.get('qualified_bets',[]):
+              assert row.get('injury_status') not in {'OUT','DOUBTFUL'}, row
+          for row in decisions.get('top_decisions',[]):
+              if row.get('injury_status') in {'OUT','DOUBTFUL'}:
+                  assert row.get('final_action') == 'PASS', row
+                  assert row.get('eligible_for_bet') is False, row
+              if row.get('injury_status') in {'QUESTIONABLE','UNKNOWN'}:
+                  assert row.get('final_action') != 'BET', row
           assert 'window.WNBA_INJURY_DATA' in open('docs/index.html',encoding='utf-8').read()
           print('Injury guardrails verified:',report['summary'])
           PY
@@ -110,7 +123,7 @@ jobs:
           set -e
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add data/raw/injuries*.csv data/raw/injuries_status.json data/raw/minute_projections.csv data/warehouse/*.json data/dashboard/*.json data/master/*.json docs/index.html
+          git add data/raw/injuries*.csv data/raw/injuries_status.json data/raw/minute_projections.csv data/raw/player_points*.csv data/warehouse/*.json data/dashboard/*.json data/master/*.json docs/index.html
           git diff --cached --quiet && echo "No injury changes" && exit 0
           git commit -m "Refresh WNBA injuries - ${{ env.TARGET }}"
           for attempt in 1 2 3 4 5; do
