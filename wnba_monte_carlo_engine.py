@@ -41,8 +41,40 @@ def sf(v: Any, d: float = 0.0) -> float:
         return d
 
 
+def clean_scalar(value: Any) -> Any:
+    """Convert pandas/numpy values and non-finite floats into strict JSON values."""
+    if value is None:
+        return None
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if hasattr(value, "item"):
+        try:
+            return clean_scalar(value.item())
+        except Exception:
+            pass
+    return value
+
+
+def json_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [json_safe(item) for item in value]
+    return clean_scalar(value)
+
+
+def text(value: Any, default: str = "") -> str:
+    cleaned = clean_scalar(value)
+    return default if cleaned is None else str(cleaned)
+
+
 def norm(v: Any) -> str:
-    return str(v or "").strip().lower().replace("’", "'")
+    return text(v).strip().lower().replace("’", "'")
 
 
 def load_points(target: str) -> tuple[pd.DataFrame, str]:
@@ -70,9 +102,9 @@ def matchup_map() -> Dict[str, dict]:
     data = load_json("data/warehouse/wnba_matchup_intelligence.json", {})
     out = {}
     for row in data.get("matchups", []) if isinstance(data, dict) else []:
-        key = f"{norm(row.get('player'))}|{str(row.get('stat','')).upper()}|{norm(row.get('game'))}"
+        key = f"{norm(row.get('player'))}|{text(row.get('stat')).upper()}|{norm(row.get('game'))}"
         out[key] = row
-        out[f"{norm(row.get('player'))}|{str(row.get('stat','')).upper()}|"] = row
+        out[f"{norm(row.get('player'))}|{text(row.get('stat')).upper()}|"] = row
     return out
 
 
@@ -80,9 +112,9 @@ def consensus_map() -> Dict[str, dict]:
     data = load_json("data/warehouse/wnba_consensus_engine.json", {})
     out = {}
     for row in data.get("all_consensus", []) if isinstance(data, dict) else []:
-        key = f"{norm(row.get('player'))}|{str(row.get('stat','')).upper()}|{norm(row.get('game'))}"
+        key = f"{norm(row.get('player'))}|{text(row.get('stat')).upper()}|{norm(row.get('game'))}"
         out[key] = row
-        out[f"{norm(row.get('player'))}|{str(row.get('stat','')).upper()}|"] = row
+        out[f"{norm(row.get('player'))}|{text(row.get('stat')).upper()}|"] = row
     return out
 
 
@@ -103,20 +135,20 @@ def stat_volatility(stat: str, pred: float, role: float, minutes_trend: str) -> 
 
 
 def simulate_row(row: dict, players: Dict[str, dict], matchups: Dict[str, dict], cons: Dict[str, dict], sims: int) -> dict:
-    player = row.get("player")
-    stat = str(row.get("stat", "PTS")).upper()
-    game = row.get("game", "")
+    player = text(row.get("player"), "Unknown Player")
+    stat = text(row.get("stat"), "PTS").upper()
+    game = text(row.get("game"))
     key = f"{norm(player)}|{stat}|{norm(game)}"
     pinfo = players.get(norm(player), {})
     matchup = matchups.get(key) or matchups.get(f"{norm(player)}|{stat}|") or {}
     consensus = cons.get(key) or cons.get(f"{norm(player)}|{stat}|") or {}
     pred = sf(row.get("pred"), sf(consensus.get("pred"), 0))
     line = sf(row.get("line"), sf(consensus.get("line"), pred))
-    signal = str(row.get("signal", consensus.get("signal", ""))).upper()
+    signal = text(row.get("signal", consensus.get("signal", ""))).upper()
     role = sf(row.get("role_score"), sf((pinfo.get("intelligence") or {}).get("role_score"), 50))
     matchup_score = sf(matchup.get("matchup_score"), 55)
-    minutes_trend = str(row.get("minutes_trend", (pinfo.get("recent_form") or {}).get("minutes_trend", "STABLE"))).upper()
-    injury = str(row.get("injury_status", (pinfo.get("injury") or {}).get("status", "ACTIVE"))).upper()
+    minutes_trend = text(row.get("minutes_trend", (pinfo.get("recent_form") or {}).get("minutes_trend", "STABLE")), "STABLE").upper()
+    injury = text(row.get("injury_status", (pinfo.get("injury") or {}).get("status", "ACTIVE")), "ACTIVE").upper()
     history_games = int(sf(row.get("history_games", row.get("history_games_available", consensus.get("history_games", 0)))))
     if not pred:
         pred = line
@@ -141,7 +173,7 @@ def simulate_row(row: dict, players: Dict[str, dict], matchups: Dict[str, dict],
     quantile = lambda p: vals[int(clamp(p, 0, 0.999) * (len(vals) - 1))]
     return {
         "player": player,
-        "team": row.get("team"),
+        "team": text(row.get("team")) or None,
         "game": game,
         "stat": stat,
         "line": line,
@@ -183,7 +215,7 @@ def build(target: str, sims: int) -> Dict[str, Any]:
                 skipped += 1
                 print(f"WARN simulation skipped: {exc}")
     rows.sort(key=lambda row: (row["signal_probability"], -sf(row["projection_sd"])), reverse=True)
-    report = {
+    report = json_safe({
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target,
         "input_source": source_path,
@@ -198,7 +230,7 @@ def build(target: str, sims: int) -> Dict[str, Any]:
         },
         "top_simulations": rows[:50],
         "all_simulations": rows,
-    }
+    })
     os.makedirs("data/warehouse", exist_ok=True)
     os.makedirs("data/dashboard", exist_ok=True)
     for path in ["data/warehouse/wnba_monte_carlo_engine.json", "data/dashboard/wnba_monte_carlo_engine.json"]:
