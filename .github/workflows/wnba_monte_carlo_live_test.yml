@@ -1,0 +1,120 @@
+name: WNBA Monte Carlo Live Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target slate date (YYYY-MM-DD), leave blank for active Eastern slate'
+        required: false
+        default: ''
+      simulations:
+        description: 'Simulations per prop'
+        required: false
+        default: '20000'
+      minimum_probability:
+        description: 'Minimum model probability'
+        required: false
+        default: '0.70'
+      minimum_ev:
+        description: 'Minimum EV as decimal'
+        required: false
+        default: '0.02'
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  live-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+
+      - name: Resolve target date
+        run: |
+          TARGET="${{ github.event.inputs.date }}"
+          if [ -z "$TARGET" ]; then TARGET=$(python active_slate_date.py); fi
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Target slate: $TARGET"
+
+      - name: Validate live-test scripts
+        run: python -m py_compile wnba_monte_carlo_engine.py wnba_monte_carlo_live_test.py
+
+      - name: Verify current inputs
+        run: |
+          python - <<'PY'
+          import json, os
+          required=[
+            'data/raw/player_points_today.csv',
+            'data/warehouse/wnba_player_intelligence.json',
+            'data/warehouse/wnba_matchup_intelligence.json',
+            'data/warehouse/wnba_consensus_engine.json',
+            'data/warehouse/wnba_sportsbook_consensus.json',
+          ]
+          print({p: os.path.exists(p) for p in required})
+          assert os.path.exists('data/warehouse/wnba_sportsbook_consensus.json')
+          consensus=json.load(open('data/warehouse/wnba_sportsbook_consensus.json'))
+          assert consensus.get('target_date') == os.environ['TARGET'], (consensus.get('target_date'), os.environ['TARGET'])
+          assert consensus.get('summary',{}).get('markets',0)>0
+          PY
+
+      - name: Run high-volume Monte Carlo simulation
+        run: python wnba_monte_carlo_engine.py --date "${{ env.TARGET }}" --sims "${{ github.event.inputs.simulations }}"
+
+      - name: Freeze paper-trading live-test card
+        run: |
+          python wnba_monte_carlo_live_test.py \
+            --date "${{ env.TARGET }}" \
+            --min-probability "${{ github.event.inputs.minimum_probability }}" \
+            --min-ev "${{ github.event.inputs.minimum_ev }}" \
+            --min-books 2 \
+            --min-history 5
+
+      - name: Verify locked test snapshot
+        run: |
+          python - <<'PY'
+          import json, glob, os
+          report=json.load(open('data/dashboard/wnba_monte_carlo_live_test.json'))
+          assert report['mode']=='PAPER_TEST_ONLY'
+          assert report['locked'] is True
+          assert report['target_date']==os.environ['TARGET']
+          assert all(r['sportsbook'] in {'DraftKings','FanDuel','Fanatics'} for r in report['live_test_card'])
+          assert all(r['model_probability']>=report['rules']['minimum_probability'] for r in report['live_test_card'])
+          assert glob.glob(f"data/history/live_tests/monte_carlo_live_test_{os.environ['TARGET']}_*.json")
+          print('Live-test card:', report['summary'])
+          PY
+
+      - name: Commit immutable test snapshot
+        run: |
+          set -e
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/warehouse/wnba_monte_carlo_engine.json data/dashboard/wnba_monte_carlo_engine.json data/dashboard/wnba_monte_carlo_live_test.json data/history/live_tests/*.json
+          git diff --cached --quiet && echo "No live-test changes" && exit 0
+          git commit -m "Freeze WNBA Monte Carlo live test - ${{ env.TARGET }}"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 3))
+          done
+          exit 1
