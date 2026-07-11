@@ -26,6 +26,7 @@ CSS=r'''
 .nextTip{display:inline-flex;gap:8px;align-items:center;margin:0 0 12px;color:#cbd7f1;font-size:12px}
 .nextTip b{color:var(--green)}
 .gamesIntro{margin-bottom:12px;color:var(--muted);font-size:12px}
+.predScore{font-size:20px;color:var(--green);font-weight:900;margin-top:4px}
 @media(max-width:900px){
  .gameSummary{grid-template-columns:68px 1fr auto;gap:8px}
  .gameMatchup{font-size:14px}.gameStars{font-size:13px}.detailGrid{grid-template-columns:1fr}
@@ -53,6 +54,8 @@ function validGamePlay(r){
   return validLine(r.line??r.consensus_line)&&['OVER','UNDER','YES','NO'].includes(side)&&(edgeOf(r)>0||['BET','LEAN','WATCH'].includes(action));
 }
 function bestGamePlay(g){
+  const gp=g.best_game_play||g.prediction?.best_play;
+  if(gp&&gp.pick)return {label:String(gp.pick),edge:Number(gp.edge||0),confidence:Number(gp.confidence||0),row:gp,gameLevel:true};
   const rows=gameRows(g).filter(validGamePlay);
   rows.sort((a,b)=>edgeOf(b)-edgeOf(a)||confOf(b)-confOf(a));
   const r=rows[0];
@@ -64,12 +67,18 @@ function bestGamePlay(g){
 }
 function stars(c){const n=c>=85?5:c>=75?4:c>=65?3:c>=55?2:c>0?1:0;return n?'★'.repeat(n)+'☆'.repeat(5-n):'—'}
 function timeOnly(v){if(!v)return 'TBD';const d=new Date(v);return isNaN(d)?String(v):d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}
-function detailPlay(r){if(!r)return '';return `<div class="detailBox"><div class="label mono">Model Play</div><b class="mono">${E(S(r.signal||r.side))} ${E(S(r.stat||r.market))} ${E(S(r.line||r.consensus_line))}</b><div class="small mono">Edge ${edgeOf(r).toFixed(1)}% · Confidence ${confOf(r).toFixed(0)}</div></div>`}
+function detailPlay(r){if(!r)return '';return `<div class="detailBox"><div class="label mono">Player Prop</div><b class="mono">${E(S(r.signal||r.side))} ${E(S(r.stat||r.market))} ${E(S(r.line||r.consensus_line))}</b><div class="small mono">Edge ${edgeOf(r).toFixed(1)}% · Confidence ${confOf(r).toFixed(0)}</div></div>`}
+function predictionBoxes(g){
+  const p=g.prediction||{};
+  if(!Object.keys(p).length)return '';
+  const hp=Number(p.home_win_probability||0),ap=Number(p.away_win_probability||0);
+  return `<div class="detailBox"><div class="label mono">Model Score</div><div class="predScore mono">${E(S(p.predicted_away_points))}–${E(S(p.predicted_home_points))}</div><div class="small mono">${E(S(g.away_team))} @ ${E(S(g.home_team))}</div></div><div class="detailBox"><div class="label mono">Spread Prediction</div><div class="mono">Model margin: ${Number(p.predicted_home_margin||0)>=0?'+':''}${E(S(p.predicted_home_margin))} home</div><div class="mono">Pick: ${E(S(p.spread_pick,'—'))}</div><div class="small mono">Edge ${E(S(Math.abs(Number(p.spread_edge||0)).toFixed(1)))} pts</div></div><div class="detailBox"><div class="label mono">Total Prediction</div><div class="mono">Model total: ${E(S(p.predicted_total))}</div><div class="mono">Pick: ${E(S(p.total_pick,'—'))}</div><div class="small mono">Edge ${E(S(Math.abs(Number(p.total_edge||0)).toFixed(1)))} pts</div></div><div class="detailBox"><div class="label mono">Win Probability</div><div class="mono">${E(S(g.home_team))}: ${(hp*100).toFixed(1)}%</div><div class="mono">${E(S(g.away_team))}: ${(ap*100).toFixed(1)}%</div><div class="small mono">History sample ${E(S(p.sample_games,0))} games/team</div></div>`
+}
 function simpleGameCard(g){
-  const best=bestGamePlay(g),rows=gameRows(g).filter(validGamePlay).sort((a,b)=>edgeOf(b)-edgeOf(a)).slice(0,4);
+  const best=bestGamePlay(g),rows=gameRows(g).filter(validGamePlay).sort((a,b)=>edgeOf(b)-edgeOf(a)).slice(0,3);
   const icons=[g.travel_flag?'✈️':'',g.back_to_back?'🔄':'',g.injury_flag?'🏥':''].filter(Boolean).join(' ');
   const bestClass=best.row?'gameBest':'gameBest none';
-  return `<div class="gameCard simple" onclick="this.classList.toggle('open')"><div class="gameSummary"><div class="gameTime mono">${E(timeOnly(g.start_time||g.commence_time||g.date))}</div><div><div class="gameMatchup mono">${E(game(g))}</div><div class="${bestClass} mono">${E(best.label)}${best.edge?`<span class="gameEdge">+${best.edge.toFixed(1)} edge</span>`:''}</div></div><div class="gameStars" title="Model confidence">${stars(best.confidence)}</div></div><div class="gameMeta"><span class="small mono">${icons||'Tap for details'}</span></div><div class="gameDetails"><div class="detailGrid"><div class="detailBox"><div class="label mono">Market</div><div class="mono">Spread ${validLine(g.spread)?E(S(g.spread)):'—'}</div><div class="mono">Total ${validLine(g.total)?E(S(g.total)):'—'}</div></div><div class="detailBox"><div class="label mono">Game Status</div><div class="mono">${E(S(g.status,'Pregame'))}</div><div class="small mono">${E(fmt(g.start_time||g.commence_time||g.date))}</div></div>${rows.map(detailPlay).join('')}</div></div></div>`
+  return `<div class="gameCard simple" onclick="this.classList.toggle('open')"><div class="gameSummary"><div class="gameTime mono">${E(timeOnly(g.start_time||g.commence_time||g.date))}</div><div><div class="gameMatchup mono">${E(game(g))}</div><div class="${bestClass} mono">${E(best.label)}${best.edge?`<span class="gameEdge">+${best.edge.toFixed(1)} edge</span>`:''}</div></div><div class="gameStars" title="Model confidence">${stars(best.confidence)}</div></div><div class="gameMeta"><span class="small mono">${icons||'Tap for spread, total and win probability'}</span></div><div class="gameDetails"><div class="detailGrid">${predictionBoxes(g)}<div class="detailBox"><div class="label mono">Live Market</div><div class="mono">Home spread ${validLine(g.spread)?E(S(g.spread)):'—'}</div><div class="mono">Total ${validLine(g.total)?E(S(g.total)):'—'}</div></div><div class="detailBox"><div class="label mono">Game Status</div><div class="mono">${E(S(g.status,'Pregame'))}</div><div class="small mono">${E(fmt(g.start_time||g.commence_time||g.date))}</div></div>${rows.map(detailPlay).join('')}</div></div></div>`
 }
 function nextTip(t){
   const now=Date.now(),future=t.map(g=>({g,d:new Date(g.start_time||g.commence_time||g.date)})).filter(x=>!isNaN(x.d)&&x.d.getTime()>now).sort((a,b)=>a.d-b.d)[0];
@@ -80,7 +89,7 @@ function nextTip(t){
 function resultCard(g){return `<div class="gameCard"><div class="row"><div><b class="mono">${E(game(g))}</b><div class="small mono">Final</div></div><div class="score mono">${E(score(g))}</div></div></div>`}
 function games(){
   const allToday=uniqueGames(DATA.today_games),upcoming=allToday.filter(g=>!isFinalGame(g)),completedToday=allToday.filter(isFinalGame),previous=uniqueGames(DATA.yesterday_games),results=uniqueGames([...completedToday,...previous]);
-  return `<div class="section"><h2 class="mono">Tonight</h2><div class="gamesIntro mono">One best qualified play per game. Tap a card for full details.</div>${nextTip(upcoming)}${upcoming.map(simpleGameCard).join('')||'<div class="empty mono">No remaining games tonight.</div>'}</div><div class="section"><h2 class="mono">Recent Results</h2>${results.map(resultCard).join('')||'<div class="empty mono">No completed results.</div>'}</div>`
+  return `<div class="section"><h2 class="mono">Tonight</h2><div class="gamesIntro mono">Best spread or total play per game. Tap for model score and win probability.</div>${nextTip(upcoming)}${upcoming.map(simpleGameCard).join('')||'<div class="empty mono">No remaining games tonight.</div>'}</div><div class="section"><h2 class="mono">Recent Results</h2>${results.map(resultCard).join('')||'<div class="empty mono">No completed results.</div>'}</div>`
 }
 '''
 
@@ -93,6 +102,6 @@ def main():
     html=html.replace("const tabs=[['games','Games'],['props','Player Props'],['books','Sportsbooks'],['best','Best Bets'],['portfolio','Portfolio'],['ai','AI Center'],['results','Results'],['health','V4 Health']];","const tabs=[['games','Games'],['props','Player Props'],['best','Best Bets'],['portfolio','Portfolio'],['ai','AI Center'],['results','Results'],['health','V4 Health']];")
     html=re.sub(r'function games\(\)\{.*?\}\nfunction propsRaw\(\)',JS+'\nfunction propsRaw()',html,flags=re.S)
     HTML.write_text(html,encoding='utf-8')
-    print('Phase 6 batch 1.1 applied: unique active games and qualified plays only')
+    print('Phase 6 Games now shows spread, total and win probability predictions')
 
 if __name__=='__main__':main()
