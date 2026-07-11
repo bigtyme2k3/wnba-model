@@ -21,7 +21,7 @@ concurrency:
 jobs:
   phase5-learning:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     permissions:
       contents: write
 
@@ -58,7 +58,7 @@ jobs:
           echo "Phase 5 grading date: $TARGET"
 
       - name: Validate Phase 5 scripts
-        run: python -m py_compile wnba_historical_database.py wnba_closing_line_tracker.py wnba_phase5_learning_engine.py wnba_terminal_ui.py patch_terminal_ui.py
+        run: python -m py_compile wnba_historical_database.py wnba_closing_line_tracker.py wnba_phase5_learning_engine.py wnba_phase5_backtest.py wnba_results_dashboard_builder.py wnba_terminal_ui.py patch_terminal_ui.py patch_dashboard_v4_results.py
 
       - name: Record current model decisions
         run: python wnba_historical_database.py --date "${{ env.TARGET }}"
@@ -70,31 +70,47 @@ jobs:
       - name: Grade and build calibration learning database
         run: python wnba_phase5_learning_engine.py --date "${{ env.TARGET }}"
 
+      - name: Build historical backtest and learned feature weights
+        run: python wnba_phase5_backtest.py --date "${{ env.TARGET }}"
+
+      - name: Build readable graded results payload
+        run: python wnba_results_dashboard_builder.py
+
       - name: Rebuild terminal bundle
         run: python wnba_terminal_ui.py --date "${{ env.TARGET }}"
 
-      - name: Publish Phase 5 dashboard
+      - name: Publish Phase 5 terminal
         run: python patch_terminal_ui.py
+
+      - name: Publish readable Results tab
+        run: python patch_dashboard_v4_results.py
 
       - name: Verify Phase 5 outputs
         run: |
           python - <<'PY'
           import json, os
           report=json.load(open('data/dashboard/wnba_phase5_learning.json'))
+          backtest=json.load(open('data/dashboard/wnba_phase5_backtest.json'))
           assert 'performance' in report
           assert 'calibration' in report
           assert 'feature_importance' in report
+          assert 'recent_graded' in report
+          assert 'thresholds' in backtest
+          assert 'learned_weights' in backtest
           assert os.path.exists('data/history/wnba_graded_bets.csv')
           terminal=json.load(open('data/dashboard/terminal_ui.json'))
           assert 'phase5' in terminal
+          html=open('docs/index.html',encoding='utf-8').read()
+          assert 'window.WNBA_RESULTS_DATA' in html
           print('Phase 5 verified:', report['performance'])
+          print('Backtest status:', backtest['learning_status'])
           PY
 
       - name: Commit Phase 5 learning state
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add -A data/history data/warehouse data/dashboard docs/index.html
+          git add -A data/history data/warehouse data/dashboard config/wnba_learned_weights.json docs/index.html
           git diff --cached --quiet && echo "No Phase 5 changes" && exit 0
           git commit -m "Update WNBA Phase 5 learning - ${{ env.TARGET }}"
           git pull --rebase origin main
