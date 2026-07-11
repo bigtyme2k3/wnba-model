@@ -1,0 +1,108 @@
+name: WNBA Injury Refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for active Eastern slate'
+        required: false
+        default: ''
+      rebuild_model:
+        description: 'Rebuild projections, Monte Carlo, decisions and dashboard?'
+        required: false
+        default: 'true'
+  schedule:
+    - cron: '15 14,16,18,20,22,0 * * *'
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  injury-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Resolve target date
+        run: |
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Injury target: $TARGET"
+      - name: Validate injury pipeline
+        run: python -m py_compile scrape_injuries.py wnba_injury_intelligence.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_portfolio_dashboard.py wnba_master_source_builder.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_injuries.py
+      - name: Refresh official injury reports
+        run: python scrape_injuries.py --date "${{ env.TARGET }}" --out data/raw
+      - name: Build injury intelligence and minute redistribution
+        run: python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
+      - name: Rebuild injury-sensitive model layers
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.rebuild_model != 'false' }}
+        run: |
+          python player_points.py --date "${{ env.TARGET }}" --out data/raw || true
+          python wnba_matchup_intelligence.py --date "${{ env.TARGET }}" || true
+          python wnba_consensus_engine.py --date "${{ env.TARGET }}" || true
+          python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
+          python wnba_monte_carlo_engine.py --date "${{ env.TARGET }}" --sims 10000 || true
+          python wnba_projection_ai.py --date "${{ env.TARGET }}" || true
+          python wnba_market_engine.py --date "${{ env.TARGET }}" || true
+          python wnba_portfolio_optimizer_v2.py --date "${{ env.TARGET }}" --bankroll 500 || true
+          python wnba_decision_engine_final.py --date "${{ env.TARGET }}" || true
+          python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
+          python wnba_risk_allocation.py --date "${{ env.TARGET }}" --capital 500 || true
+          python wnba_portfolio_dashboard.py --date "${{ env.TARGET }}" || true
+          python wnba_master_source_builder.py --date "${{ env.TARGET }}"
+          python wnba_v4_prop_context.py
+          python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
+      - name: Rebuild and patch dashboard
+        run: |
+          python build_dashboard_v4.py
+          python patch_dashboard_v4_team_context.py
+          python patch_dashboard_v4_layout_and_slate.py
+          python patch_dashboard_v4_prop_header.py
+          python patch_dashboard_v4_game_filter.py
+          python patch_dashboard_v4_player_props_polish.py
+          python patch_dashboard_v4_phase6_batch1.py
+          python patch_dashboard_v4_results.py
+          python patch_dashboard_v4_injuries.py
+      - name: Verify injury guardrails
+        run: |
+          python - <<'PY'
+          import json
+          report=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
+          master=json.load(open('data/dashboard/wnba_master.json'))
+          for row in master.get('props',[]):
+              if row.get('injury_status') in {'OUT','DOUBTFUL'}:
+                  assert row.get('eligible') is False
+                  assert row.get('final_action') == 'PASS'
+          assert 'window.WNBA_INJURY_DATA' in open('docs/index.html',encoding='utf-8').read()
+          print('Injury guardrails verified:',report['summary'])
+          PY
+      - name: Commit injury refresh
+        run: |
+          set -e
+          git config user.name "WNBA Model Bot"
+          git config user.email "actions@github.com"
+          git add data/raw/injuries*.csv data/raw/injuries_status.json data/raw/minute_projections.csv data/warehouse/*.json data/dashboard/*.json data/master/*.json docs/index.html
+          git diff --cached --quiet && echo "No injury changes" && exit 0
+          git commit -m "Refresh WNBA injuries - ${{ env.TARGET }}"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*3))
+          done
+          exit 1
