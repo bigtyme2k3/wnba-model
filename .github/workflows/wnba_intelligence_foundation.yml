@@ -55,16 +55,7 @@ jobs:
 
       - name: Validate intelligence scripts
         run: |
-          python -m py_compile \
-            active_slate_date.py scrape_odds.py scrape_odds_props.py line_shopping.py wnba_stats_fallback_from_boxscores.py sports_skills_core_provider.py wnba_data_warehouse.py \
-            wnba_player_intelligence.py wnba_stats_quality.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py wnba_sportsbook_consensus.py \
-            player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py \
-            wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py \
-            wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py \
-            wnba_reasoning_layer.py wnba_portfolio_dashboard.py wnba_ai_coach.py \
-            wnba_source_health.py wnba_historical_database.py wnba_master_database.py wnba_master_source_builder.py \
-            wnba_results_grader.py wnba_closing_line_tracker.py wnba_betting_ledger.py \
-            wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py patch_dashboard_navigation_v2.py patch_prop_box_colors.py build_dashboard_v4.py wnba_v4_props_guard.py wnba_v4_prop_context.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py wnba_v4_player_props_audit.py
+          python -m py_compile active_slate_date.py scrape_odds.py scrape_odds_props.py line_shopping.py wnba_stats_fallback_from_boxscores.py sports_skills_core_provider.py wnba_data_warehouse.py wnba_player_intelligence.py wnba_stats_quality.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py wnba_sportsbook_consensus.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_reasoning_layer.py wnba_portfolio_dashboard.py wnba_ai_coach.py wnba_source_health.py wnba_historical_database.py wnba_master_database.py wnba_master_source_builder.py wnba_results_grader.py wnba_closing_line_tracker.py wnba_betting_ledger.py wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py patch_dashboard_navigation_v2.py patch_prop_box_colors.py build_dashboard_v4.py wnba_v4_props_guard.py wnba_v4_prop_context.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py patch_dashboard_v4_player_props_polish.py wnba_v4_player_props_audit.py
 
       - name: Fetch current game odds from The Odds API
         if: ${{ github.event_name == 'schedule' || github.event.inputs.refresh_odds_api != 'false' }}
@@ -75,12 +66,7 @@ jobs:
 
       - name: Validate committed wehoop player stats
         run: |
-          if [ -s data/raw/wnba_players_live.json ] && [ -s data/raw/boxscores_wehoop.csv ]; then
-            echo "✓ wehoop player stats and boxscores are available"
-          else
-            echo "⚠ committed wehoop files are missing; using cached boxscore fallback"
-            python wnba_stats_fallback_from_boxscores.py --out data/raw
-          fi
+          if [ -s data/raw/wnba_players_live.json ] && [ -s data/raw/boxscores_wehoop.csv ]; then echo "✓ wehoop player stats and boxscores are available"; else echo "⚠ committed wehoop files are missing; using cached boxscore fallback"; python wnba_stats_fallback_from_boxscores.py --out data/raw; fi
 
       - name: Refresh sports-skills core provider
         run: python sports_skills_core_provider.py --season ${{ env.YEAR }} --out data/wnba --warehouse data/warehouse
@@ -126,9 +112,8 @@ jobs:
         run: python wnba_odds_health.py --date ${{ env.TARGET }}
         continue-on-error: true
 
-      - name: Build sportsbook consensus
+      - name: Build sportsbook consensus — DK FD Fanatics only
         run: python wnba_sportsbook_consensus.py --date ${{ env.TARGET }}
-        continue-on-error: true
 
       - name: Build matchup intelligence
         run: python wnba_matchup_intelligence.py --date ${{ env.TARGET }}
@@ -187,7 +172,7 @@ jobs:
       - name: Guard V4 props availability
         run: python wnba_v4_props_guard.py
 
-      - name: Enrich V4 prop team context
+      - name: Enrich full last-five and last-ten prop history
         run: python wnba_v4_prop_context.py
 
       - name: Audit V4 player props
@@ -243,6 +228,25 @@ jobs:
 
       - name: Fix Dashboard V4 single-game prop filtering
         run: python patch_dashboard_v4_game_filter.py
+
+      - name: Apply final player props polish
+        run: python patch_dashboard_v4_player_props_polish.py
+
+      - name: Verify sportsbook and history restrictions
+        run: |
+          python - <<'PY'
+          import json
+          data=json.load(open('data/dashboard/wnba_master.json'))
+          allowed={'DraftKings','FanDuel','Fanatics'}
+          for prop in data.get('props',[]):
+              for key in ('best_over_book','best_under_book','book','best_book'):
+                  value=prop.get(key)
+                  if value: assert value in allowed,(key,value)
+          diag=data.get('prop_history_diagnostics',{})
+          assert diag.get('game_rows',0)>0,diag
+          print('Sportsbooks verified:',data.get('summary',{}).get('books'))
+          print('History diagnostics:',diag)
+          PY
 
       - name: Commit and push
         run: |
