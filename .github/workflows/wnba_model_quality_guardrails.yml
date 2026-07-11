@@ -8,7 +8,7 @@ on:
         required: false
         default: ''
   workflow_run:
-    workflows: ["WNBA Intelligence Foundation"]
+    workflows: ["WNBA Postbuild Integrity"]
     types: [completed]
 
 concurrency:
@@ -25,44 +25,33 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Sync latest repository
         run: git pull --rebase origin main
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Resolve target date
         run: |
           TARGET="${{ github.event.inputs.date }}"
           if [ -z "$TARGET" ]; then TARGET=$(python active_slate_date.py); fi
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Using quality target: $TARGET"
-
       - name: Validate quality scripts
         run: python -m py_compile wnba_data_warehouse.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_model_quality_audit.py wnba_risk_allocation.py wnba_portfolio_dashboard.py
-
       - name: Repair and validate data warehouse
         run: python wnba_data_warehouse.py --date "${{ env.TARGET }}"
-
       - name: Rebuild normalized final decisions
         run: python wnba_decision_engine_final.py --date "${{ env.TARGET }}"
-
       - name: Build strict diversified betting card
         run: python wnba_portfolio_optimizer_v2.py --date "${{ env.TARGET }}" --bankroll 500
-
       - name: Refresh risk allocation
         run: python wnba_risk_allocation.py --date "${{ env.TARGET }}" --capital 500
         continue-on-error: true
-
       - name: Refresh portfolio dashboard
         run: python wnba_portfolio_dashboard.py --date "${{ env.TARGET }}"
         continue-on-error: true
-
       - name: Run model quality audit
         run: python wnba_model_quality_audit.py --date "${{ env.TARGET }}"
-
       - name: Commit quality-controlled outputs
         run: |
           git config user.name "WNBA Model Bot"
