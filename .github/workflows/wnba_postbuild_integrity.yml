@@ -12,7 +12,7 @@ on:
     types: [completed]
 
 concurrency:
-  group: wnba-postbuild-integrity
+  group: wnba-main-writer
   cancel-in-progress: false
 
 jobs:
@@ -69,10 +69,24 @@ jobs:
           PY
       - name: Commit postbuild integrity
         run: |
+          set -e
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           git add data/master/*.json data/dashboard/*.json docs/index.html
           git diff --cached --quiet && echo "No postbuild changes" && exit 0
           git commit -m "Apply WNBA postbuild integrity - ${{ env.TARGET }}"
-          git pull --rebase origin main
-          git push
+
+          for attempt in 1 2 3 4 5; do
+            echo "Push attempt $attempt of 5"
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo "Postbuild integrity pushed successfully"
+              exit 0
+            fi
+            echo "Remote changed during push; retrying..."
+            sleep $((attempt * 3))
+          done
+
+          echo "Failed to push after 5 attempts"
+          exit 1
