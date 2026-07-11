@@ -11,6 +11,9 @@ on:
         description: 'Rebuild projections, Monte Carlo, decisions and dashboard?'
         required: false
         default: 'true'
+  workflow_run:
+    workflows: ["WNBA Intelligence Foundation"]
+    types: [completed]
   schedule:
     - cron: '15 14,16,18,20,22,0 * * *'
 
@@ -20,6 +23,7 @@ concurrency:
 
 jobs:
   injury-refresh:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -40,17 +44,27 @@ jobs:
           pip install -r requirements.txt
       - name: Resolve target date
         run: |
-          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          REQUESTED="${{ github.event.inputs.date }}"
+          TARGET=$(python active_slate_date.py --date "$REQUESTED")
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Injury target: $TARGET"
       - name: Validate injury pipeline
         run: python -m py_compile scrape_injuries.py wnba_injury_intelligence.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_portfolio_dashboard.py wnba_master_source_builder.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_injuries.py
       - name: Refresh official injury reports
         run: python scrape_injuries.py --date "${{ env.TARGET }}" --out data/raw
+      - name: Verify injury source freshness
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('data/raw/injuries_status.json'))
+          assert s.get('target_date') == '${{ env.TARGET }}', s
+          assert s.get('status') in {'ok','warning'}, s
+          print('Injury source:',s)
+          PY
       - name: Build injury intelligence and minute redistribution
         run: python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
       - name: Rebuild injury-sensitive model layers
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.rebuild_model != 'false' }}
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.rebuild_model != 'false' }}
         run: |
           python player_points.py --date "${{ env.TARGET }}" --out data/raw || true
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}" || true
