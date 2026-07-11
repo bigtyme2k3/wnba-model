@@ -36,7 +36,7 @@ jobs:
           if [ -z "$TARGET" ]; then TARGET=$(python active_slate_date.py); fi
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
       - name: Validate postbuild scripts
-        run: python -m py_compile wnba_special_market_guard.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py patch_dashboard_v4_player_props_polish.py patch_dashboard_v4_results.py
+        run: python -m py_compile wnba_special_market_guard.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py patch_dashboard_v4_player_props_polish.py patch_dashboard_v4_results.py patch_dashboard_v4_phase6_batch1.py
       - name: Rebuild complete player history
         run: python wnba_v4_prop_context.py
       - name: Normalize special markets and hide unsupported props
@@ -51,7 +51,8 @@ jobs:
           python patch_dashboard_v4_game_filter.py
           python patch_dashboard_v4_player_props_polish.py
           python patch_dashboard_v4_results.py
-      - name: Verify supported markets and sportsbook policy
+          python patch_dashboard_v4_phase6_batch1.py
+      - name: Verify supported markets sportsbook policy and Phase 6 layout
         run: |
           python - <<'PY'
           import json
@@ -64,8 +65,13 @@ jobs:
               for key in ('best_over_book','best_under_book','book','best_book'):
                   value=row.get(key)
                   if value: assert value in allowed,(key,value)
-          assert 'window.WNBA_RESULTS_DATA' in open('docs/index.html',encoding='utf-8').read()
+          html=open('docs/index.html',encoding='utf-8').read()
+          assert 'window.WNBA_RESULTS_DATA' in html
+          assert 'PHASE6_BATCH1_START' in html
+          assert "['books','Sportsbooks']" not in html
+          assert 'function simpleGameCard' in html
           print(data.get('special_market_diagnostics'))
+          print('Phase 6 batch 1 verified')
           PY
       - name: Commit postbuild integrity
         run: |
