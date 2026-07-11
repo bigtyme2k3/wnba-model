@@ -11,6 +11,9 @@ on:
         description: 'Capture closing lines before grading?'
         required: false
         default: 'false'
+  workflow_run:
+    workflows: ["WNBA V4 Intelligence Terminal Cleanup"]
+    types: [completed]
   schedule:
     - cron: '30 9 * * *'
 
@@ -20,6 +23,7 @@ concurrency:
 
 jobs:
   phase5-learning:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
