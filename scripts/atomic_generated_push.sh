@@ -4,6 +4,21 @@ set -euo pipefail
 MESSAGE=${1:?commit message required}
 shift
 FILES=("$@")
+
+# Persistent generated histories used by downstream grading and CLV. Add them
+# automatically when present so callers cannot accidentally drop state.
+for persistent in \
+  data/history/wnba_alt_market_snapshots.jsonl
+do
+  if [ -e "$persistent" ]; then
+    found=false
+    for supplied in "${FILES[@]}"; do
+      if [ "$supplied" = "$persistent" ]; then found=true; break; fi
+    done
+    if [ "$found" = false ]; then FILES+=("$persistent"); fi
+  fi
+done
+
 if [ ${#FILES[@]} -eq 0 ]; then
   echo "No generated paths supplied"
   exit 2
