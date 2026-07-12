@@ -1,23 +1,26 @@
 {
-  "generated_at_utc": "2026-07-12T14:39:03.634025+00:00",
+  "generated_at_utc": "2026-07-12T17:17:05.076037+00:00",
   "target_date": "2026-07-12",
+  "status": "ok",
   "history_records": 1107,
   "graded_records": 143,
+  "minimum_sample": 40,
+  "update_applied": true,
+  "update_reason": "bounded update accepted",
+  "validation_score": 0.5465,
   "engine_weights": {
-    "Projection EV": 0.1646,
-    "Projection Edge": 0.1361,
-    "Player Intelligence": 0.1361,
-    "Matchup Intelligence": 0.1361,
-    "Injury Engine": 0.1361,
-    "Market Engine": 0.1551,
-    "DeepSeek Engine": 0.1361
+    "Projection EV": 0.1752,
+    "Projection Edge": 0.1425,
+    "Player Intelligence": 0.1328,
+    "Matchup Intelligence": 0.1328,
+    "Injury Engine": 0.1328,
+    "Market Engine": 0.1513,
+    "DeepSeek Engine": 0.1328
   },
-  "notes": [
-    "Applied conservative learning adjustment from 143 graded records."
-  ],
-  "next_learning_needs": [
-    "actual stat results",
-    "closing lines",
-    "engine-level vote outcome attribution"
-  ]
+  "safety": {
+    "max_single_update": 0.02,
+    "weight_floor": 0.05,
+    "weight_ceiling": 0.3,
+    "rollback_on_validation_drop": true
+  }
 }

@@ -1,14 +1,14 @@
 {
-  "generated_at_utc": "2026-07-12T17:16:16.904478+00:00",
+  "generated_at_utc": "2026-07-12T17:17:05.374410+00:00",
   "version": "4.0",
   "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
   "qa": {
-    "overall_status": "red",
+    "overall_status": "green",
     "repository_qa_status": "yellow",
     "output_qa_status": "green",
     "acceptance_status": "green",
     "foundation_acceptance_status": "green",
-    "feedback_acceptance_status": "missing",
+    "feedback_acceptance_status": "green",
     "output_summary": {
       "evaluated_rows": 344,
       "inspected_rows": 75,
@@ -35,12 +35,16 @@
       "passed": 5,
       "failed": 0
     },
-    "feedback_acceptance_summary": {}
+    "feedback_acceptance_summary": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0
+    }
   },
   "summary": {
     "modules": 25,
-    "completion_pct": 64.0,
-    "production_ready": 16,
+    "completion_pct": 80.0,
+    "production_ready": 20,
     "manifest_status_counts": {
       "planned": 5,
       "partial": 0,
@@ -54,11 +58,11 @@
       "missing": 0
     },
     "qa_status_counts": {
-      "green": 21,
+      "green": 25,
       "yellow": 0,
-      "red": 4
+      "red": 0
     },
-    "release_blockers": 4,
+    "release_blockers": 0,
     "warnings": 0
   },
   "modules": [
@@ -471,17 +475,25 @@
       "purpose": "Capture deduplicated line snapshots and calculate directional line and price CLV.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_clv_summary.json",
-      "rows": 1,
+      "rows": 0,
       "runtime_status": "active",
       "valid_zero_output": true,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M16",
+            "test": "line and price CLV math",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -495,14 +507,28 @@
       "rows": 1,
       "runtime_status": "active",
       "valid_zero_output": true,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M17",
+            "test": "grading and P/L math",
+            "passed": true,
+            "detail": ""
+          },
+          {
+            "module": "M17",
+            "test": "duplicate grading protection",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -516,14 +542,22 @@
       "rows": 1,
       "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M18",
+            "test": "minimum sample and bounded weights",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -534,17 +568,25 @@
       "purpose": "Explain BET, LEAN, WATCH and PASS actions with positive factors, negative factors, guardrails and selection failures.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_reasoning_layer.json",
-      "rows": 50,
+      "rows": 75,
       "runtime_status": "active",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "valid_zero_output": true,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M19",
+            "test": "complete action explanation",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -662,121 +704,8 @@
       "warnings": []
     }
   ],
-  "release_blockers": [
-    {
-      "id": "M16",
-      "module": "CLV Tracker",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M17",
-      "module": "Results Grading",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M18",
-      "module": "Self Learning",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M19",
-      "module": "Model Explainability",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    }
-  ],
+  "release_blockers": [],
   "next_build_order": [
-    {
-      "id": "M16",
-      "name": "CLV Tracker",
-      "owner_file": "wnba_closing_line_tracker.py",
-      "status": "active",
-      "purpose": "Capture deduplicated line snapshots and calculate directional line and price CLV.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_clv_summary.json",
-      "rows": 1,
-      "runtime_status": "active",
-      "valid_zero_output": true,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M17",
-      "name": "Results Grading",
-      "owner_file": "wnba_results_grader.py",
-      "status": "active",
-      "purpose": "Grade win, loss, push, void and pending outcomes with duplicate protection, profit/loss, ROI and missing-data reasons.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_results_grading.json",
-      "rows": 1,
-      "runtime_status": "active",
-      "valid_zero_output": true,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M18",
-      "name": "Self Learning",
-      "owner_file": "wnba_self_learning.py",
-      "status": "active",
-      "purpose": "Apply minimum-sample, bounded and validation-gated weight updates from finalized outcomes and CLV.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_self_learning.json",
-      "rows": 1,
-      "runtime_status": "active",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M19",
-      "name": "Model Explainability",
-      "owner_file": "wnba_reasoning_layer.py",
-      "status": "active",
-      "purpose": "Explain BET, LEAN, WATCH and PASS actions with positive factors, negative factors, guardrails and selection failures.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_reasoning_layer.json",
-      "rows": 50,
-      "runtime_status": "active",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
     {
       "id": "M21",
       "name": "Model Calibration",
@@ -848,6 +777,25 @@
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [],
+      "warnings": []
+    },
+    {
+      "id": "M25",
+      "name": "Ensemble Learning",
+      "owner_file": "wnba_v4_status_engine.py",
+      "status": "planned",
+      "purpose": "Combine rules, market, projection, simulation, and self-learning scores.",
+      "owner_exists": true,
+      "output": "",
+      "rows": 0,
+      "runtime_status": "scaffolded",
+      "valid_zero_output": false,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "scaffolded",
       "production_ready": false,
       "acceptance": null,
       "blockers": [],
