@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-12T17:17:05.247406+00:00`
+Generated: `2026-07-12T17:25:30.903743+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -34,11 +34,11 @@ Generated: `2026-07-12T17:17:05.247406+00:00`
 | M18 | Self Learning | active | green | 100 | `wnba_self_learning.py` |
 | M19 | Model Explainability | active | green | 100 | `wnba_reasoning_layer.py` |
 | M20 | Dashboard V4 | active | green | 100 | `patch_dashboard_navigation_v2.py` |
-| M21 | Model Calibration | planned | green | 100 | `wnba_v4_status_engine.py` |
-| M22 | Feature Importance | planned | green | 100 | `wnba_v4_status_engine.py` |
-| M23 | Hyperparameter Optimization | planned | green | 100 | `wnba_v4_status_engine.py` |
-| M24 | Daily Retraining | planned | green | 100 | `wnba_self_learning.py` |
-| M25 | Ensemble Learning | planned | green | 100 | `wnba_v4_status_engine.py` |
+| M21 | Model Calibration | active | green | 100 | `wnba_model_calibration.py` |
+| M22 | Feature Importance | active | green | 100 | `wnba_feature_importance.py` |
+| M23 | Hyperparameter Optimization | active | green | 100 | `wnba_hyperparameter_optimizer.py` |
+| M24 | Daily Retraining | active | green | 100 | `wnba_daily_retraining.py` |
+| M25 | Ensemble Learning | active | green | 100 | `wnba_ensemble_learning.py` |
 
 ## Release blockers
 
