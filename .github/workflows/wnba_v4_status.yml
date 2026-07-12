@@ -12,6 +12,7 @@ concurrency:
 jobs:
   build-v4-status:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write
     steps:
@@ -26,17 +27,60 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Validate V4 files
-        run: python -m py_compile wnba_v4_status_engine.py
+      - name: Validate V4 QA and dashboard files
+        run: |
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py wnba_v4_status_engine.py build_dashboard_v4.py patch_dashboard_v4_qa_health.py
 
-      - name: Build V4 status
+      - name: Build repository QA report
+        run: python qa_v4.py
+
+      - name: Build semantic output QA report
+        run: python qa_v4_outputs_v2.py
+
+      - name: Build QA-integrated V4 status
         run: python wnba_v4_status_engine.py
 
-      - name: Commit V4 status
+      - name: Build Dashboard V4
+        run: python build_dashboard_v4.py
+
+      - name: Patch Dashboard V4 team context
+        run: python patch_dashboard_v4_team_context.py
+
+      - name: Patch Dashboard V4 layout and slate chips
+        run: python patch_dashboard_v4_layout_and_slate.py
+
+      - name: Fix Dashboard V4 prop header overlap
+        run: python patch_dashboard_v4_prop_header.py
+
+      - name: Fix Dashboard V4 single-game prop filtering
+        run: python patch_dashboard_v4_game_filter.py
+
+      - name: Apply final player props polish
+        run: python patch_dashboard_v4_player_props_polish.py
+
+      - name: Apply QA Health Command Center
+        run: python patch_dashboard_v4_qa_health.py
+
+      - name: Verify QA dashboard integration
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          status=json.load(open('data/dashboard/wnba_v4_status.json', encoding='utf-8'))
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          assert status.get('qa',{}).get('overall_status') in {'green','yellow','red'}, status.get('qa')
+          assert len(status.get('modules',[])) == 25, len(status.get('modules',[]))
+          assert all('qa_grade' in m and 'production_ready' in m for m in status['modules'])
+          assert 'v4-qa-health-script' in html
+          assert 'V4 QA Command Center' in html
+          print('QA dashboard verified:', status['summary'])
+          PY
+
+      - name: Commit V4 QA status and dashboard
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add config/v4_modules.json data/dashboard/wnba_v4_status.json docs/VERSION_4_ROADMAP.md
-          git diff --cached --quiet && echo "No V4 status changes" && exit 0
-          git commit -m "Update WNBA V4 status"
+          git add config/v4_modules.json data/dashboard/wnba_v4_status.json data/dashboard/wnba_v4_qa.json data/dashboard/wnba_v4_output_qa.json docs/V4_QA_REPORT.md docs/V4_OUTPUT_QA_REPORT.md docs/VERSION_4_ROADMAP.md docs/index.html
+          git diff --cached --quiet && echo "No V4 QA status changes" && exit 0
+          git commit -m "Update WNBA V4 QA health dashboard"
           git push || (git pull --rebase origin main && git push)
