@@ -42,7 +42,7 @@ jobs:
           pip install -r requirements.txt
       - name: Validate production files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py
           bash -n scripts/atomic_generated_push.sh
       - name: Run all acceptance suites
         run: |
@@ -71,6 +71,7 @@ jobs:
           python wnba_historical_play_by_play.py --season "${{ env.SEASON_YEAR }}" --apply
           python wnba_opponent_stat_rankings.py --date "${{ env.TARGET }}"
           python wnba_position_opponent_rankings.py --date "${{ env.TARGET }}"
+          python wnba_pace_minutes_opponent_rankings.py --date "${{ env.TARGET }}"
       - name: Build prediction and feedback chain
         run: |
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
@@ -95,6 +96,7 @@ jobs:
           python wnba_alt_streaks_warehouse_upgrade.py --date "${{ env.TARGET }}"
           python wnba_alt_streaks_opponent_context.py
           python wnba_alt_streaks_position_context.py
+          python wnba_alt_streaks_pace_minutes_context.py
       - name: Build QA and V4 status
         run: |
           python qa_v4.py
@@ -123,6 +125,7 @@ jobs:
           pbp=json.load(open('data/raw/wnba_historical_play_by_play.json'))
           ranks=json.load(open('data/dashboard/wnba_opponent_stat_rankings.json'))
           position_ranks=json.load(open('data/dashboard/wnba_position_opponent_rankings.json'))
+          adjusted_ranks=json.load(open('data/dashboard/wnba_pace_minutes_opponent_rankings.json'))
           acceptance=json.load(open('data/dashboard/wnba_player_game_log_acceptance.json'))
           assert acceptance['status']=='green'
           assert logs.get('status')=='ok'
@@ -132,8 +135,9 @@ jobs:
           assert pbp.get('status')=='ok'
           assert ranks.get('status')=='ok'
           assert position_ranks.get('status')=='ok'
-          assert ranks.get('methodology',{}).get('rank_direction')=='1 = easiest / highest allowed'
-          assert position_ranks.get('methodology',{}).get('rank_direction')=='1 = easiest / highest allowed'
+          assert adjusted_ranks.get('status')=='ok'
+          assert adjusted_ranks.get('methodology',{}).get('rank_direction')=='1 = easiest / highest adjusted allowed'
+          assert adjusted_ranks.get('methodology',{}).get('workload_adjustment')=='stat per 36 player minutes'
           ids=[r.get('record_id') for r in logs.get('records',[])]
           assert len(ids)==len(set(ids))
           for row in logs.get('records',[]):
@@ -153,21 +157,23 @@ jobs:
               assert row['l5_games']<=5 and row['l10_games']<=10
               assert row['season_games']>=row['l10_games']>=row['l5_games']
               if row.get('opponent_rank') is not None:
-                  assert row.get('opponent_rank_source') in {'wnba_opponent_stat_rankings','wnba_position_opponent_rankings'}
+                  assert row.get('opponent_rank_source') in {'wnba_opponent_stat_rankings','wnba_position_opponent_rankings','wnba_pace_minutes_opponent_rankings'}
                   assert row.get('opponent_rank_definition')
-              if row.get('opponent_rank_source')=='wnba_position_opponent_rankings':
+              if row.get('opponent_rank_source')=='wnba_pace_minutes_opponent_rankings':
                   assert row.get('position_group') in {'G','F','C'}
-                  assert ' vs ' in row.get('opponent_label','')
+                  assert row.get('opponent_average_game_possessions') is not None
+                  assert row.get('opponent_average_player_minutes') is not None
+                  assert 'pace/min adjusted' in row.get('opponent_label','')
           html=Path('docs/index.html').read_text(encoding='utf-8')
           assert 'ALT Streaks' in html and '<th>L5</th><th>L10</th><th>Season</th>' in html
-          print('V4 + POSITION OPPONENT RANKINGS:',status['summary'],alt['summary'],position_ranks['summary'])
+          print('V4 + PACE/MINUTES OPPONENT RANKINGS:',status['summary'],alt['summary'],adjusted_ranks['summary'])
           PY
       - name: Commit complete V4 atomically
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Add position-adjusted opponent rankings" \
+            "Add pace and minutes adjusted opponent rankings" \
             'data/raw/wnba_historical_play_by_play.json' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
