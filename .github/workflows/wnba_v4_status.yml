@@ -23,7 +23,7 @@ concurrency:
 jobs:
   build-v4-status:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 55
     permissions:
       contents: write
     steps:
@@ -42,7 +42,7 @@ jobs:
           pip install -r requirements.txt
       - name: Validate production files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py
           bash -n scripts/atomic_generated_push.sh
       - name: Run all acceptance suites
         run: |
@@ -65,6 +65,10 @@ jobs:
           python wnba_player_game_log_warehouse.py --date "${{ env.TARGET }}"
           python wnba_player_game_log_archive.py merge
           python wnba_player_game_log_backfill.py --season "${{ env.SEASON_YEAR }}"
+      - name: Collect and apply historical play by play
+        run: |
+          python wnba_historical_play_by_play.py --season "${{ env.SEASON_YEAR }}" --collect
+          python wnba_historical_play_by_play.py --season "${{ env.SEASON_YEAR }}" --apply
       - name: Build prediction and feedback chain
         run: |
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
@@ -112,11 +116,14 @@ jobs:
           status=json.load(open('data/dashboard/wnba_v4_status.json'))
           alt=json.load(open('data/dashboard/wnba_alt_streaks.json'))
           logs=json.load(open('data/dashboard/wnba_player_game_logs.json'))
+          pbp=json.load(open('data/raw/wnba_historical_play_by_play.json'))
           acceptance=json.load(open('data/dashboard/wnba_player_game_log_acceptance.json'))
           assert acceptance['status']=='green'
           assert logs.get('status')=='ok'
           assert logs.get('summary',{}).get('historical_backfill') is True
+          assert logs.get('summary',{}).get('historical_pbp_backfill') is True
           assert logs.get('summary',{}).get('records',0)>0
+          assert pbp.get('status')=='ok'
           ids=[r.get('record_id') for r in logs.get('records',[])]
           assert len(ids)==len(set(ids))
           for row in logs.get('records',[]):
@@ -138,14 +145,15 @@ jobs:
               assert row.get('opponent_rank') is None
           html=Path('docs/index.html').read_text(encoding='utf-8')
           assert 'ALT Streaks' in html and '<th>L5</th><th>L10</th><th>Season</th>' in html
-          print('V4 + SEASON BACKFILL + ALT STREAKS:',status['summary'],logs['summary'],alt['summary'])
+          print('V4 + HISTORICAL PBP + ALT STREAKS:',status['summary'],logs['summary'],alt['summary'],pbp['summary'])
           PY
       - name: Commit complete V4 atomically
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Backfill current WNBA season player game logs" \
+            "Backfill historical WNBA player quarter splits" \
+            'data/raw/wnba_historical_play_by_play.json' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
             'data/history/wnba_player_game_logs_before_build.json' \
