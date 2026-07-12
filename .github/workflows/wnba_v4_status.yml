@@ -75,7 +75,7 @@ jobs:
       - name: Apply QA Health Command Center
         run: python patch_dashboard_v4_qa_health.py
 
-      - name: Restore game selection and Results tab
+      - name: Restore quick game preview and Results tab
         run: python patch_dashboard_v4_core_interactions.py
 
       - name: Verify dashboard integration
@@ -89,9 +89,12 @@ jobs:
           assert len(status.get('modules',[])) == 25
           assert 'v4-qa-health-script' in html
           assert 'v4-core-interactions-script' in html
-          assert 'Tap to view this game' in html
+          assert 'Quick Game Preview' in html
+          assert 'Projected Margin' in html
+          assert 'Projected Total' in html
+          assert 'Top 3 Game Picks' in html
           assert 'Results & Grading' in html
-          print('V4 dashboard interactions verified')
+          print('V4 dashboard preview and results verified')
           PY
 
       - name: Commit V4 dashboard atomically
