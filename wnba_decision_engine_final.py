@@ -152,17 +152,30 @@ def build(target):
         if not enough_edge: reasons.append("projection edge below 5%")
         if not enough_agreement: reasons.append("fewer than four engines agree")
         if not injury_eligible: reasons.append(f"{injury_status} injury status")
-        if injury_status in {"QUESTIONABLE", "UNKNOWN"}: reasons.append(f"{injury_status} injury confidence penalty applied")
 
-        eligible = all([supported, valid_market, valid_ev, enough_history, enough_books, enough_probability, enough_edge, enough_agreement, injury_eligible])
-        if eligible and injury_status not in {"QUESTIONABLE", "UNKNOWN"} and final_score >= 78:
+        prequalified = all([supported, valid_market, valid_ev, enough_history, enough_books, enough_probability, enough_edge, enough_agreement, injury_eligible])
+        selection_reasons = []
+        if prequalified and injury_status in {"QUESTIONABLE", "UNKNOWN"}:
+            selection_reasons.append(f"{injury_status} injury status limits recommendation to LEAN")
+        if prequalified and final_score < 78:
+            selection_reasons.append(f"final score {final_score:.1f} below 78 BET threshold")
+
+        eligible_for_bet = prequalified and injury_status not in {"QUESTIONABLE", "UNKNOWN"} and final_score >= 78
+        if eligible_for_bet:
             action = "BET"
-        elif injury_eligible and supported and valid_market and enough_history and final_score >= 68:
+        elif prequalified or (injury_eligible and supported and valid_market and enough_history and final_score >= 68):
             action = "LEAN"
         elif injury_eligible and supported and valid_market and final_score >= 55:
             action = "WATCH"
         else:
             action = "PASS"
+
+        if eligible_for_bet:
+            decision_reason = "Qualified across guardrails, score threshold, and injury policy."
+        elif prequalified:
+            decision_reason = "; ".join(selection_reasons) or "Passed guardrails but was not selected as a final bet."
+        else:
+            decision_reason = "; ".join(reasons)
 
         decisions.append(clean_json({
             **row,
@@ -178,7 +191,8 @@ def build(target):
             "confidence": final_score,
             "final_score": final_score,
             "final_action": action,
-            "eligible_for_bet": eligible,
+            "prequalified_for_bet": prequalified,
+            "eligible_for_bet": eligible_for_bet,
             "history_games": history_games,
             "book_count": book_count,
             "injury_status": injury_status,
@@ -188,7 +202,8 @@ def build(target):
             "injury_projection_factor": injury.get("projection_factor") or prop.get("injury_projection_factor"),
             "injury_confidence_penalty": injury_penalty,
             "guardrail_failures": reasons,
-            "decision_reason": "Qualified across score, probability, EV, history, books, agreement and injury status." if eligible else "; ".join(reasons),
+            "selection_failures": selection_reasons,
+            "decision_reason": decision_reason,
         }))
 
     decisions.sort(key=lambda row: (row.get("final_action") == "BET", row.get("final_score", 0)), reverse=True)
@@ -198,8 +213,27 @@ def build(target):
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target,
         "scoring_scale": "0-100",
-        "summary": {"rows": len(decisions), "bets": len(bets), "leans": len(leans), "watch": sum(1 for row in decisions if row.get("final_action") == "WATCH"), "passes": sum(1 for row in decisions if row.get("final_action") == "PASS"), "injury_blocked": sum(1 for row in decisions if row.get("injury_status") in {"OUT", "DOUBTFUL"})},
-        "guardrails": {"supported_stats": sorted(SUPPORTED_STATS), "minimum_probability": 0.56, "minimum_ev_pct": 2, "maximum_ev_pct": 20, "minimum_history_games": 5, "minimum_books": 2, "minimum_edge_pct": 5, "minimum_engine_agreement": 4, "injury_policy": {"OUT": "PASS", "DOUBTFUL": "PASS", "QUESTIONABLE": "max LEAN with confidence penalty", "PROBABLE": "eligible with small penalty"}},
+        "summary": {
+            "rows": len(decisions),
+            "bets": len(bets),
+            "leans": len(leans),
+            "watch": sum(1 for row in decisions if row.get("final_action") == "WATCH"),
+            "passes": sum(1 for row in decisions if row.get("final_action") == "PASS"),
+            "prequalified": sum(1 for row in decisions if row.get("prequalified_for_bet")),
+            "injury_blocked": sum(1 for row in decisions if row.get("injury_status") in {"OUT", "DOUBTFUL"}),
+        },
+        "guardrails": {
+            "supported_stats": sorted(SUPPORTED_STATS),
+            "minimum_probability": 0.56,
+            "minimum_ev_pct": 2,
+            "maximum_ev_pct": 20,
+            "minimum_history_games": 5,
+            "minimum_books": 2,
+            "minimum_edge_pct": 5,
+            "minimum_engine_agreement": 4,
+            "minimum_final_score": 78,
+            "injury_policy": {"OUT": "PASS", "DOUBTFUL": "PASS", "QUESTIONABLE": "max LEAN with confidence penalty", "PROBABLE": "eligible with small penalty"},
+        },
         "top_decisions": decisions[:75],
         "qualified_bets": bets,
     })
