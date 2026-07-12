@@ -1,0 +1,64 @@
+name: WNBA V4 QA
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - '**.py'
+      - 'config/**'
+      - 'data/dashboard/**'
+      - '.github/workflows/**'
+      - 'requirements.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wnba-v4-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile all tracked Python files
+        run: |
+          python - <<'PY'
+          import pathlib, py_compile, sys
+          failures=[]
+          ignored={'.git','.venv','venv','node_modules'}
+          for path in pathlib.Path('.').rglob('*.py'):
+              if any(part in ignored for part in path.parts):
+                  continue
+              try:
+                  py_compile.compile(str(path), doraise=True)
+              except Exception as exc:
+                  failures.append((str(path), str(exc)))
+          for path, error in failures:
+              print(f'::error file={path}::{error}')
+          print(f'Compiled Python files; failures={len(failures)}')
+          sys.exit(1 if failures else 0)
+          PY
+
+      - name: Run V4 QA command center
+        run: python qa_v4.py --strict
+
+      - name: Upload QA reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-v4-qa-report
+          path: |
+            data/dashboard/wnba_v4_qa.json
+            docs/V4_QA_REPORT.md
+          if-no-files-found: warn
