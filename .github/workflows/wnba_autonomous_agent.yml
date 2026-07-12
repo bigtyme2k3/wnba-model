@@ -11,13 +11,13 @@ on:
     - cron: '35 13 * * *'
 
 concurrency:
-  group: wnba-autonomous-agent
+  group: wnba-main-writer
   cancel-in-progress: false
 
 jobs:
   run-agent:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
       contents: write
 
@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Sync latest repo
-        run: git pull --rebase origin main
+        run: git pull --ff-only origin main
 
       - uses: actions/setup-python@v5
         with:
@@ -51,6 +51,7 @@ jobs:
           python -m py_compile wnba_backtest_engine.py
           python -m py_compile wnba_source_shopping.py
           python -m py_compile wnba_vote_layer_v2.py
+          bash -n scripts/atomic_generated_push.sh
 
       - name: Build backtest engine
         run: python wnba_backtest_engine.py --date ${{ env.TARGET }}
@@ -75,11 +76,12 @@ jobs:
         run: python patch_terminal_ui.py
         continue-on-error: true
 
-      - name: Commit and push
+      - name: Commit and push atomically
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add data/warehouse/*.json data/dashboard/*.json docs/index.html
-          git diff --cached --quiet && echo "No autonomous agent changes" && exit 0
-          git commit -m "Update WNBA autonomous agent - ${{ env.TARGET }}"
-          git push || (git pull --rebase origin main && git push)
+          bash scripts/atomic_generated_push.sh \
+            "Update WNBA autonomous agent - ${{ env.TARGET }}" \
+            'data/warehouse/*.json' \
+            'data/dashboard/*.json' \
+            'docs/index.html'
