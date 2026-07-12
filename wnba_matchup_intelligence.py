@@ -28,12 +28,35 @@ def sf(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def clean_json(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(k): clean_json(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [clean_json(v) for v in value]
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if value is None or isinstance(value, (str, int, bool)):
+        return value
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+    try:
+        if hasattr(value, "item"):
+            return clean_json(value.item())
+    except Exception:
+        pass
+    return str(value)
+
+
 def clamp(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
 
 
 def norm(value: Any) -> str:
-    return " ".join(str(value or "").strip().lower().replace("’", "'").split())
+    cleaned = clean_json(value)
+    return " ".join(str(cleaned or "").strip().lower().replace("’", "'").split())
 
 
 def read_points(target: str) -> pd.DataFrame:
@@ -58,15 +81,15 @@ def rows(payload: Any, *keys: str) -> list[dict[str, Any]]:
 
 
 def lookup(rows_: list[dict[str, Any]], field: str) -> dict[str, dict[str, Any]]:
-    return {norm(row.get(field)): row for row in rows_ if row.get(field)}
+    return {norm(row.get(field)): row for row in rows_ if norm(row.get(field))}
 
 
 def game_key(row: dict[str, Any]) -> str:
-    return str(row.get("game") or "").strip()
+    return norm(row.get("game"))
 
 
 def rest_context(team: str, game: str, schedule: list[dict[str, Any]]) -> tuple[int | None, bool]:
-    current = next((x for x in schedule if game_key(x) == game), None)
+    current = next((x for x in schedule if game_key(x) == norm(game)), None)
     if not current:
         return None, False
     rest_map = current.get("rest_days") if isinstance(current.get("rest_days"), dict) else {}
@@ -74,7 +97,8 @@ def rest_context(team: str, game: str, schedule: list[dict[str, Any]]) -> tuple[
     if rest is None:
         for key in ("home_rest_days", "away_rest_days"):
             if team and team in game and current.get(key) is not None:
-                rest = current.get(key); break
+                rest = current.get(key)
+                break
     days = int(sf(rest, -1)) if rest is not None else None
     return (days if days is not None and days >= 0 else None), days == 0
 
@@ -101,14 +125,14 @@ def build(target: str) -> dict[str, Any]:
 
     if not points.empty:
         for _, source in points.iterrows():
-            row = source.to_dict()
+            row = clean_json(source.to_dict())
             player = str(row.get("player") or "").strip()
             if not player:
                 continue
             team = str(row.get("team") or "").strip(); opp = str(row.get("opp") or "").strip(); game = str(row.get("game") or "")
             stat = str(row.get("stat") or "").upper().replace("THREES", "3PM")
             intel = players.get(norm(player), {}); injury = injuries.get(norm(player), {})
-            pace = pbp_games.get(game, {})
+            pace = pbp_games.get(norm(game), {})
             opp_strength = team_strength(opp, standings)
             role = sf((intel.get("intelligence") or {}).get("role_score"), sf(row.get("role_score"), 50))
             recent = intel.get("recent_form", {}) if isinstance(intel.get("recent_form"), dict) else {}
@@ -121,7 +145,7 @@ def build(target: str) -> dict[str, Any]:
             defense_adjustment = clamp((0.5 - opp_strength) * 18, -5.4, 5.4)
             rest_adjustment = -3.0 if back_to_back else 1.0 if rest_days is not None and rest_days >= 2 else 0.0
             venue_adjustment = 1.5 if home else -0.5
-            trend_adjustment = (3 if minutes_trend == "UP" else -3 if minutes_trend == "DOWN" else 0)
+            trend_adjustment = 3 if minutes_trend == "UP" else -3 if minutes_trend == "DOWN" else 0
             if stat in {"PTS", "PRA", "PA", "PR", "3PM"}:
                 trend_adjustment += 2 if performance_trend == "UP" else -2 if performance_trend == "DOWN" else 0
             injury_status = str(injury.get("severity") or row.get("injury_status") or "ACTIVE").upper()
@@ -135,13 +159,13 @@ def build(target: str) -> dict[str, Any]:
             total_adjustment = sum(components.values())
             score = clamp(60 + total_adjustment, 0, 100)
             output.append({
-                "player": player, "team": team, "opp": opp, "game": game, "stat": stat,
+                "player": player, "team": team or None, "opp": opp or None, "game": game or None, "stat": stat or None,
                 "line": row.get("line"), "pred": row.get("pred"), "signal": row.get("signal"), "conf": row.get("conf"),
                 "matchup_score": round(score, 1),
                 "matchup_label": "EXCELLENT" if score >= 80 else "GOOD" if score >= 68 else "NEUTRAL" if score >= 52 else "DIFFICULT",
                 "components": components, "total_adjustment": round(total_adjustment, 2),
-                "opponent_strength": round(opp_strength, 3), "pace_40": pace.get("pace_40"),
-                "pace_mode": pace.get("mode", "missing"), "pace_confidence": pace.get("data_confidence", 0),
+                "opponent_strength": round(opp_strength, 3), "pace_40": clean_json(pace.get("pace_40")),
+                "pace_mode": pace.get("mode", "missing"), "pace_confidence": sf(pace.get("data_confidence"), 0),
                 "rest_days": rest_days, "back_to_back": back_to_back, "home": home,
                 "injury_status": injury_status, "role_score": round(role, 1),
                 "minutes_trend": minutes_trend, "performance_trend": performance_trend,
@@ -150,15 +174,16 @@ def build(target: str) -> dict[str, Any]:
             })
 
     output.sort(key=lambda x: x["matchup_score"], reverse=True)
-    report = {
+    report = clean_json({
         "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target, "status": "ok",
         "summary": {"rows": len(output), "excellent": sum(x["matchup_label"] == "EXCELLENT" for x in output),
                     "good": sum(x["matchup_label"] == "GOOD" for x in output), "back_to_back": sum(x["back_to_back"] for x in output)},
         "matchups": output,
-    }
+    })
     os.makedirs("data/warehouse", exist_ok=True); os.makedirs("data/dashboard", exist_ok=True)
     for path in ("data/warehouse/wnba_matchup_intelligence.json", "data/dashboard/wnba_matchup_intelligence.json"):
-        json.dump(report, open(path, "w", encoding="utf-8"), indent=2, allow_nan=False)
+        with open(path, "w", encoding="utf-8") as handle:
+            json.dump(report, handle, indent=2, allow_nan=False)
     return report
 
 
