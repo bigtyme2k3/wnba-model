@@ -28,12 +28,34 @@ def sf(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def clean_json(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(k): clean_json(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [clean_json(v) for v in value]
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if value is None or isinstance(value, (str, int, bool)):
+        return value
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+    try:
+        if hasattr(value, "item"):
+            return clean_json(value.item())
+    except Exception:
+        pass
+    return str(value)
+
+
 def clamp(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
 
 
 def key(row: dict[str, Any]) -> tuple[str, str, str]:
-    return (str(row.get("player") or "").strip().lower(), str(row.get("game") or "").strip().lower(), str(row.get("stat") or "").strip().upper().replace("THREES", "3PM"))
+    return (str(clean_json(row.get("player")) or "").strip().lower(), str(clean_json(row.get("game")) or "").strip().lower(), str(clean_json(row.get("stat")) or "").strip().upper().replace("THREES", "3PM"))
 
 
 def read_points(target: str) -> pd.DataFrame:
@@ -61,8 +83,7 @@ def recent_values(row: dict[str, Any]) -> list[float]:
     for field in ("last10", "recent", "history", "recent_values"):
         value = row.get(field)
         if isinstance(value, list):
-            numbers = [sf(x, math.nan) for x in value]
-            return [x for x in numbers if math.isfinite(x)]
+            return [x for x in (sf(v, math.nan) for v in value) if math.isfinite(x)]
     return []
 
 
@@ -83,7 +104,8 @@ def build(target: str) -> dict[str, Any]:
 
     if not points.empty:
         for _, source in points.iterrows():
-            row = source.to_dict(); row["stat"] = str(row.get("stat") or "").upper().replace("THREES", "3PM")
+            row = clean_json(source.to_dict())
+            row["stat"] = str(row.get("stat") or "").upper().replace("THREES", "3PM")
             player = str(row.get("player") or "").strip()
             if not player:
                 continue
@@ -120,7 +142,7 @@ def build(target: str) -> dict[str, Any]:
                 "signal": row.get("signal"), "base_projection": round(base, 2), "recent_mean": round(recent_mean, 2),
                 "season_mean": round(season_mean, 2), "sim_median": round(sim_median, 2), "projected_minutes": round(minutes, 1),
                 "minutes_factor": round(minutes_factor, 3), "usage_factor": round(usage_factor, 3),
-                "matchup_score": matchup.get("matchup_score"), "injury_status": injury_status,
+                "matchup_score": clean_json(matchup.get("matchup_score")), "injury_status": injury_status,
                 "ai_projection": round(final, 2), "ai_edge": round(final - line, 2),
                 "variance": round(variance, 2), "interval_80": [round(lower, 2), round(upper, 2)],
                 "projection_confidence": round(confidence, 1), "feature_contributions": contributions,
@@ -129,15 +151,16 @@ def build(target: str) -> dict[str, Any]:
             })
 
     output.sort(key=lambda x: abs(sf(x.get("ai_edge"))), reverse=True)
-    report = {
+    report = clean_json({
         "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target, "status": "ok",
         "summary": {"rows": len(output), "strong_edges": sum(abs(sf(x.get("ai_edge"))) >= 2 for x in output),
                     "high_confidence": sum(sf(x.get("projection_confidence")) >= 75 for x in output)},
         "projections": output,
-    }
+    })
     os.makedirs("data/warehouse", exist_ok=True); os.makedirs("data/dashboard", exist_ok=True)
     for path in ("data/warehouse/wnba_projection_ai.json", "data/dashboard/wnba_projection_ai.json"):
-        json.dump(report, open(path, "w", encoding="utf-8"), indent=2, allow_nan=False)
+        with open(path, "w", encoding="utf-8") as handle:
+            json.dump(report, handle, indent=2, allow_nan=False)
     return report
 
 
