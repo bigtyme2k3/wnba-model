@@ -43,7 +43,7 @@ jobs:
           pip install -r requirements.txt
       - name: Validate production files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py qa_alt_performance_tracker.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py patch_dashboard_v4_alt_performance.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py qa_alt_performance_tracker.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py patch_dashboard_v4_alt_performance.py patch_dashboard_v4_remove_sportsbook_tab.py
           bash -n scripts/atomic_generated_push.sh
       - name: Run all acceptance suites
         run: |
@@ -124,7 +124,8 @@ jobs:
           python patch_dashboard_v4_core_interactions.py
           python patch_dashboard_v4_alt_streaks.py
           python patch_dashboard_v4_alt_performance.py
-      - name: Verify V4 ALT tracking and performance
+          python patch_dashboard_v4_remove_sportsbook_tab.py
+      - name: Verify V4 ALT tracking and navigation
         run: |
           python - <<'PY'
           import json
@@ -155,14 +156,17 @@ jobs:
           assert len(ids)==len(set(ids))
           html=Path('docs/index.html').read_text(encoding='utf-8')
           assert 'ALT Performance' in html and 'v4-alt-performance-script' in html
-          print('V4 + ALT PERFORMANCE:',status['summary'],perf['summary'])
+          assert "['books','Sportsbooks']" not in html
+          assert '>Sportsbooks<' not in html
+          assert 'best_over_book' in html or 'best_book' in html
+          print('V4 + CLEAN NAVIGATION:',status['summary'],perf['summary'])
           PY
       - name: Commit complete V4 atomically
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Track and grade ALT Streak performance" \
+            "Remove standalone Sportsbooks tab" \
             'data/raw/wnba_historical_play_by_play.json' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
