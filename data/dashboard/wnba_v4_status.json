@@ -1,15 +1,15 @@
 {
-  "generated_at_utc": "2026-07-12T15:39:53.174240+00:00",
+  "generated_at_utc": "2026-07-12T15:41:37.353772+00:00",
   "version": "4.0",
   "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
   "qa": {
-    "overall_status": "red",
+    "overall_status": "green",
     "repository_qa_status": "yellow",
     "output_qa_status": "green",
-    "acceptance_status": "missing",
-    "repository_qa_generated_at": "2026-07-12T15:39:53.011811+00:00",
-    "output_qa_generated_at": "2026-07-12T15:39:53.076679+00:00",
-    "acceptance_generated_at": null,
+    "acceptance_status": "green",
+    "repository_qa_generated_at": "2026-07-12T15:41:37.247225+00:00",
+    "output_qa_generated_at": "2026-07-12T15:41:37.290608+00:00",
+    "acceptance_generated_at": "2026-07-12T15:41:36.953260+00:00",
     "output_summary": {
       "evaluated_rows": 344,
       "inspected_rows": 75,
@@ -26,12 +26,16 @@
         "master": "2026-07-12"
       }
     },
-    "acceptance_summary": {}
+    "acceptance_summary": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0
+    }
   },
   "summary": {
     "modules": 25,
-    "completion_pct": 32.0,
-    "production_ready": 8,
+    "completion_pct": 52.0,
+    "production_ready": 13,
     "manifest_status_counts": {
       "planned": 5,
       "partial": 7,
@@ -39,17 +43,17 @@
       "validated": 0
     },
     "runtime_status_counts": {
-      "active": 19,
-      "wired": 2,
+      "active": 21,
+      "wired": 0,
       "scaffolded": 4,
       "missing": 0
     },
     "qa_status_counts": {
-      "green": 20,
+      "green": 25,
       "yellow": 0,
-      "red": 5
+      "red": 0
     },
-    "release_blockers": 5,
+    "release_blockers": 0,
     "warnings": 0
   },
   "modules": [
@@ -251,17 +255,31 @@
       "purpose": "Project game margin, spread edge, side selection, and cover probability without inventing edge when upstream projections are unavailable.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_game_market_model.json",
-      "rows": 0,
-      "runtime_status": "wired",
+      "rows": 4,
+      "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M11/M12",
+            "test": "game projection schema and bounded probabilities",
+            "passed": true,
+            "detail": ""
+          },
+          {
+            "module": "M11/M12",
+            "test": "market baseline never invents an edge",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -272,17 +290,31 @@
       "purpose": "Project game total, over/under edge, selection, and probability without inventing edge when upstream projections are unavailable.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_game_market_model.json",
-      "rows": 0,
-      "runtime_status": "wired",
+      "rows": 4,
+      "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M11/M12",
+            "test": "game projection schema and bounded probabilities",
+            "passed": true,
+            "detail": ""
+          },
+          {
+            "module": "M11/M12",
+            "test": "market baseline never invents an edge",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -296,14 +328,28 @@
       "rows": 75,
       "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M13",
+            "test": "American odds implied probability",
+            "passed": true,
+            "detail": ""
+          },
+          {
+            "module": "M13",
+            "test": "final BET eligibility contract",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -317,14 +363,28 @@
       "rows": 0,
       "runtime_status": "active",
       "valid_zero_output": true,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M14",
+            "test": "diversification and exposure limits",
+            "passed": true,
+            "detail": ""
+          },
+          {
+            "module": "M14",
+            "test": "valid no-bet pass day",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -338,14 +398,22 @@
       "rows": 0,
       "runtime_status": "active",
       "valid_zero_output": true,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M15",
+            "test": "position and card exposure caps",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -539,43 +607,7 @@
       "warnings": []
     }
   ],
-  "release_blockers": [
-    {
-      "id": "M11",
-      "module": "Spread Model",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M12",
-      "module": "Totals Model",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M13",
-      "module": "Expected Value Engine",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M14",
-      "module": "Portfolio Optimizer",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M15",
-      "module": "Risk Allocation",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    }
-  ],
+  "release_blockers": [],
   "next_build_order": [
     {
       "id": "M07",
@@ -635,108 +667,98 @@
       "warnings": []
     },
     {
-      "id": "M11",
-      "name": "Spread Model",
-      "owner_file": "wnba_game_market_model.py",
-      "status": "active",
-      "purpose": "Project game margin, spread edge, side selection, and cover probability without inventing edge when upstream projections are unavailable.",
+      "id": "M16",
+      "name": "CLV Tracker",
+      "owner_file": "wnba_closing_line_tracker.py",
+      "status": "partial",
+      "purpose": "Track opening, current, and closing line value.",
       "owner_exists": true,
-      "output": "data/dashboard/wnba_game_market_model.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M12",
-      "name": "Totals Model",
-      "owner_file": "wnba_game_market_model.py",
-      "status": "active",
-      "purpose": "Project game total, over/under edge, selection, and probability without inventing edge when upstream projections are unavailable.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_game_market_model.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M13",
-      "name": "Expected Value Engine",
-      "owner_file": "wnba_decision_engine_final.py",
-      "status": "active",
-      "purpose": "Convert projection edges and prices into expected value decisions with final eligibility and guardrail separation.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_decision_engine_final.json",
-      "rows": 75,
+      "output": "data/dashboard/wnba_clv_summary.json",
+      "rows": 1,
       "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
       "production_ready": false,
       "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "blockers": [],
       "warnings": []
     },
     {
-      "id": "M14",
-      "name": "Portfolio Optimizer",
-      "owner_file": "wnba_portfolio_optimizer_v2.py",
-      "status": "active",
-      "purpose": "Build a diversified card with player, game, Kelly, card-size, and daily-exposure limits, including valid pass days.",
+      "id": "M17",
+      "name": "Results Grading",
+      "owner_file": "wnba_results_grader.py",
+      "status": "partial",
+      "purpose": "Grade picks after final scores and player results are available.",
       "owner_exists": true,
-      "output": "data/dashboard/wnba_portfolio_optimizer_v2.json",
-      "rows": 0,
+      "output": "data/dashboard/wnba_results_grading.json",
+      "rows": 1,
       "runtime_status": "active",
-      "valid_zero_output": true,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
+      "valid_zero_output": false,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
       "production_ready": false,
       "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "blockers": [],
       "warnings": []
     },
     {
-      "id": "M15",
-      "name": "Risk Allocation",
-      "owner_file": "wnba_risk_allocation.py",
-      "status": "active",
-      "purpose": "Assign capped stakes, bankroll exposure, units, and team exposure buckets.",
+      "id": "M18",
+      "name": "Self Learning",
+      "owner_file": "wnba_self_learning.py",
+      "status": "partial",
+      "purpose": "Adjust weights from outcomes, CLV, and error patterns.",
       "owner_exists": true,
-      "output": "data/dashboard/wnba_risk_allocation.json",
-      "rows": 0,
+      "output": "data/dashboard/wnba_self_learning.json",
+      "rows": 1,
       "runtime_status": "active",
-      "valid_zero_output": true,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
+      "valid_zero_output": false,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
       "production_ready": false,
       "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "blockers": [],
+      "warnings": []
+    },
+    {
+      "id": "M19",
+      "name": "Model Explainability",
+      "owner_file": "wnba_reasoning_layer.py",
+      "status": "partial",
+      "purpose": "Explain why a pick exists and which factors mattered.",
+      "owner_exists": true,
+      "output": "data/dashboard/wnba_reasoning_layer.json",
+      "rows": 50,
+      "runtime_status": "active",
+      "valid_zero_output": false,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [],
+      "warnings": []
+    },
+    {
+      "id": "M21",
+      "name": "Model Calibration",
+      "owner_file": "wnba_v4_status_engine.py",
+      "status": "planned",
+      "purpose": "Compare predicted probability buckets to actual hit rates.",
+      "owner_exists": true,
+      "output": "",
+      "rows": 0,
+      "runtime_status": "scaffolded",
+      "valid_zero_output": false,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "scaffolded",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [],
       "warnings": []
     }
   ]
