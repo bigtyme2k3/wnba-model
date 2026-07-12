@@ -1,0 +1,834 @@
+{
+  "generated_at_utc": "2026-07-12T14:36:51.107747+00:00",
+  "status": "yellow",
+  "overall_score": 100.0,
+  "summary": {
+    "modules": 25,
+    "green_modules": 25,
+    "yellow_modules": 0,
+    "red_modules": 0,
+    "dashboard_json_files": 47,
+    "invalid_json_files": 0,
+    "empty_json_files": 2,
+    "workflows": 23,
+    "high_risk_workflows": 1
+  },
+  "modules": [
+    {
+      "id": "M01",
+      "module": "Source Registry",
+      "declared_status": "active",
+      "owner_file": "config/source_registry.json",
+      "owner_exists": true,
+      "syntax_ok": null,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M02",
+      "module": "Schedule Core",
+      "declared_status": "active",
+      "owner_file": "wnba_master_source_builder.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M03",
+      "module": "Odds Source Manager",
+      "declared_status": "active",
+      "owner_file": "odds_source_manager.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M04",
+      "module": "Sportsbook Consensus",
+      "declared_status": "active",
+      "owner_file": "wnba_sportsbook_consensus.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M05",
+      "module": "Player Stats Warehouse",
+      "declared_status": "active",
+      "owner_file": "wnba_player_intelligence.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M06",
+      "module": "Boxscore Fallback",
+      "declared_status": "active",
+      "owner_file": "wnba_stats_fallback_from_boxscores.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M07",
+      "module": "Play-by-Play Layer",
+      "declared_status": "partial",
+      "owner_file": "sports_skills_core_provider.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M08",
+      "module": "Matchup Intelligence",
+      "declared_status": "partial",
+      "owner_file": "wnba_matchup_intelligence.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M09",
+      "module": "Projection Engine",
+      "declared_status": "partial",
+      "owner_file": "wnba_projection_ai.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M10",
+      "module": "Player Props Model",
+      "declared_status": "active",
+      "owner_file": "player_points.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M11",
+      "module": "Spread Model",
+      "declared_status": "partial",
+      "owner_file": "wnba_decision_engine_final.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M12",
+      "module": "Totals Model",
+      "declared_status": "partial",
+      "owner_file": "wnba_decision_engine_final.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M13",
+      "module": "Expected Value Engine",
+      "declared_status": "partial",
+      "owner_file": "wnba_decision_engine_final.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M14",
+      "module": "Portfolio Optimizer",
+      "declared_status": "partial",
+      "owner_file": "wnba_portfolio_optimizer_v2.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M15",
+      "module": "Risk Allocation",
+      "declared_status": "partial",
+      "owner_file": "wnba_risk_allocation.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M16",
+      "module": "CLV Tracker",
+      "declared_status": "partial",
+      "owner_file": "wnba_closing_line_tracker.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M17",
+      "module": "Results Grading",
+      "declared_status": "partial",
+      "owner_file": "wnba_results_grader.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M18",
+      "module": "Self Learning",
+      "declared_status": "partial",
+      "owner_file": "wnba_self_learning.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M19",
+      "module": "Model Explainability",
+      "declared_status": "partial",
+      "owner_file": "wnba_reasoning_layer.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M20",
+      "module": "Dashboard V4",
+      "declared_status": "active",
+      "owner_file": "patch_dashboard_navigation_v2.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M21",
+      "module": "Model Calibration",
+      "declared_status": "planned",
+      "owner_file": "wnba_v4_status_engine.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M22",
+      "module": "Feature Importance",
+      "declared_status": "planned",
+      "owner_file": "wnba_v4_status_engine.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M23",
+      "module": "Hyperparameter Optimization",
+      "declared_status": "planned",
+      "owner_file": "wnba_v4_status_engine.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M24",
+      "module": "Daily Retraining",
+      "declared_status": "planned",
+      "owner_file": "wnba_self_learning.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    },
+    {
+      "id": "M25",
+      "module": "Ensemble Learning",
+      "declared_status": "planned",
+      "owner_file": "wnba_v4_status_engine.py",
+      "owner_exists": true,
+      "syntax_ok": true,
+      "qa_score": 100,
+      "grade": "green",
+      "issues": []
+    }
+  ],
+  "data": [
+    {
+      "path": "data/dashboard/daily_action_report_v2.json",
+      "valid": true,
+      "bytes": 777,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/deepseek_portfolio_optimizer.json",
+      "valid": true,
+      "bytes": 8339,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/market_timing_intelligence.json",
+      "valid": true,
+      "bytes": 18457,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/master_feed.json",
+      "valid": true,
+      "bytes": 209183,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/minutes_usage_intelligence.json",
+      "valid": true,
+      "bytes": 27361,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/projection_accuracy.json",
+      "valid": true,
+      "bytes": 497,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/projection_intelligence_v2.json",
+      "valid": true,
+      "bytes": 25582,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/results_review_center.json",
+      "valid": true,
+      "bytes": 10378,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/terminal_ui.json",
+      "valid": true,
+      "bytes": 2264982,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_ai_coach.json",
+      "valid": true,
+      "bytes": 11491,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_autonomous_agent.json",
+      "valid": true,
+      "bytes": 22545,
+      "rows": 12,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_backtest_engine.json",
+      "valid": true,
+      "bytes": 57455,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_betting_ledger_summary.json",
+      "valid": true,
+      "bytes": 35841,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_clv_summary.json",
+      "valid": true,
+      "bytes": 225,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_consensus_engine.json",
+      "valid": true,
+      "bytes": 429014,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_context_engine.json",
+      "valid": true,
+      "bytes": 31181,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_data_warehouse.json",
+      "valid": true,
+      "bytes": 1180,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_decision_engine_final.json",
+      "valid": true,
+      "bytes": 141486,
+      "rows": 75,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_game_predictions.json",
+      "valid": true,
+      "bytes": 6179,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_historical_summary.json",
+      "valid": true,
+      "bytes": 64710,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_injury_intelligence.json",
+      "valid": true,
+      "bytes": 1824,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_live_odds_layer.json",
+      "valid": true,
+      "bytes": 2200,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_market_engine.json",
+      "valid": true,
+      "bytes": 100976,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_master.json",
+      "valid": true,
+      "bytes": 1296660,
+      "rows": 7,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_master_database_summary.json",
+      "valid": true,
+      "bytes": 1505,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_master_source_health.json",
+      "valid": true,
+      "bytes": 2229,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_matchup_intelligence.json",
+      "valid": true,
+      "bytes": 226543,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_model_quality_audit.json",
+      "valid": true,
+      "bytes": 438,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_monte_carlo_engine.json",
+      "valid": true,
+      "bytes": 346477,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_odds_health.json",
+      "valid": true,
+      "bytes": 1032,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_phase5_backtest.json",
+      "valid": true,
+      "bytes": 7470,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_phase5_learning.json",
+      "valid": true,
+      "bytes": 104136,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_player_intelligence.json",
+      "valid": true,
+      "bytes": 328145,
+      "rows": 321,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_portfolio_dashboard.json",
+      "valid": true,
+      "bytes": 630,
+      "rows": 0,
+      "empty": true
+    },
+    {
+      "path": "data/dashboard/wnba_portfolio_optimizer_v2.json",
+      "valid": true,
+      "bytes": 493,
+      "rows": 0,
+      "empty": true
+    },
+    {
+      "path": "data/dashboard/wnba_projection_ai.json",
+      "valid": true,
+      "bytes": 131746,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_reasoning_layer.json",
+      "valid": true,
+      "bytes": 17814,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_results_grading.json",
+      "valid": true,
+      "bytes": 239,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_risk_allocation.json",
+      "valid": true,
+      "bytes": 390,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_self_learning.json",
+      "valid": true,
+      "bytes": 603,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_source_health.json",
+      "valid": true,
+      "bytes": 5198,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_source_shopping.json",
+      "valid": true,
+      "bytes": 69603,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_sportsbook_consensus.json",
+      "valid": true,
+      "bytes": 154373,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_stats_quality.json",
+      "valid": true,
+      "bytes": 937,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_v4_player_props_audit.json",
+      "valid": true,
+      "bytes": 41606,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_v4_status.json",
+      "valid": true,
+      "bytes": 12501,
+      "rows": 1,
+      "empty": false
+    },
+    {
+      "path": "data/dashboard/wnba_vote_layer_v2.json",
+      "valid": true,
+      "bytes": 15667,
+      "rows": 1,
+      "empty": false
+    }
+  ],
+  "workflows": [
+    {
+      "path": ".github/workflows/bootstrap.yml",
+      "steps": 9,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/daily_action_report_v2_extension.yml",
+      "steps": 9,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/deepseek_master_prediction_extension.yml",
+      "steps": 5,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/deepseek_portfolio_optimizer_extension.yml",
+      "steps": 5,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/market_timing_extension.yml",
+      "steps": 9,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/minutes_usage_extension.yml",
+      "steps": 9,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/results_review_center_extension.yml",
+      "steps": 9,
+      "continue_on_error": 1,
+      "masked_failure_ratio": 0.111,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/results_tracker.yml",
+      "steps": 6,
+      "continue_on_error": 1,
+      "masked_failure_ratio": 0.167,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/v4_qa.yml",
+      "steps": 7,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": false,
+      "self_push": false,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_autonomous_agent.yml",
+      "steps": 11,
+      "continue_on_error": 5,
+      "masked_failure_ratio": 0.455,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "medium"
+    },
+    {
+      "path": ".github/workflows/wnba_closing_line_snapshots.yml",
+      "steps": 5,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_data_warehouse.yml",
+      "steps": 5,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_injury_refresh.yml",
+      "steps": 12,
+      "continue_on_error": 1,
+      "masked_failure_ratio": 0.083,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_intelligence_foundation.yml",
+      "steps": 52,
+      "continue_on_error": 27,
+      "masked_failure_ratio": 0.519,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "high"
+    },
+    {
+      "path": ".github/workflows/wnba_model_quality_guardrails.yml",
+      "steps": 10,
+      "continue_on_error": 2,
+      "masked_failure_ratio": 0.2,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_monte_carlo_live_test.yml",
+      "steps": 9,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_multi_source_fetch.yml",
+      "steps": 10,
+      "continue_on_error": 2,
+      "masked_failure_ratio": 0.2,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_phase5_learning.yml",
+      "steps": 14,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_postbuild_integrity.yml",
+      "steps": 10,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_v4_player_props_audit.yml",
+      "steps": 4,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_v4_player_props_polish.yml",
+      "steps": 11,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_v4_status.yml",
+      "steps": 14,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    },
+    {
+      "path": ".github/workflows/wnba_v4_terminal_cleanup.yml",
+      "steps": 8,
+      "continue_on_error": 0,
+      "masked_failure_ratio": 0.0,
+      "contents_write": true,
+      "self_push": true,
+      "risk": "low"
+    }
+  ],
+  "release_blockers": []
+}

@@ -1,22 +1,53 @@
 {
-  "generated_at_utc": "2026-07-11T14:39:08.474682+00:00",
+  "generated_at_utc": "2026-07-12T14:36:51.249992+00:00",
   "version": "4.0",
   "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
+  "qa": {
+    "overall_status": "yellow",
+    "repository_qa_status": "yellow",
+    "output_qa_status": "yellow",
+    "repository_qa_generated_at": "2026-07-12T14:36:51.107747+00:00",
+    "output_qa_generated_at": "2026-07-12T14:36:51.175467+00:00",
+    "output_summary": {
+      "evaluated_rows": 328,
+      "inspected_rows": 75,
+      "qualified_bets": 0,
+      "portfolio_bets": 0,
+      "risk_rows": 0,
+      "errors": 0,
+      "warnings": 11,
+      "info": 1,
+      "target_dates": {
+        "decisions": "2026-07-12",
+        "portfolio": "2026-07-12",
+        "risk": "2026-07-12",
+        "master": "2026-07-12"
+      }
+    }
+  },
   "summary": {
     "modules": 25,
-    "completion_pct": 116.0,
+    "completion_pct": 32.0,
+    "production_ready": 8,
     "manifest_status_counts": {
       "planned": 5,
       "partial": 12,
-      "active": 29,
+      "active": 8,
       "validated": 0
     },
     "runtime_status_counts": {
-      "active": 29,
-      "wired": 0,
+      "active": 20,
+      "wired": 1,
       "scaffolded": 4,
       "missing": 0
-    }
+    },
+    "qa_status_counts": {
+      "green": 23,
+      "yellow": 2,
+      "red": 0
+    },
+    "release_blockers": 0,
+    "warnings": 22
   },
   "modules": [
     {
@@ -28,7 +59,13 @@
       "owner_exists": true,
       "output": "config/source_registry.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M02",
@@ -38,8 +75,14 @@
       "purpose": "Use the official daily slate as the game source of truth.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_master.json",
-      "rows": 200,
-      "runtime_status": "active"
+      "rows": 268,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M03",
@@ -50,7 +93,13 @@
       "owner_exists": true,
       "output": "data/raw/odds_source_status.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M04",
@@ -60,8 +109,14 @@
       "purpose": "Normalize multi-book lines and best over/under prices.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_sportsbook_consensus.json",
-      "rows": 200,
-      "runtime_status": "active"
+      "rows": 285,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M05",
@@ -72,7 +127,13 @@
       "owner_exists": true,
       "output": "data/raw/wnba_players_live.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M06",
@@ -83,7 +144,13 @@
       "owner_exists": true,
       "output": "data/raw/wnba_stats_fallback_status.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M07",
@@ -94,7 +161,13 @@
       "owner_exists": true,
       "output": "data/wnba/scores.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M08",
@@ -104,8 +177,14 @@
       "purpose": "Add pace, defense, rest, home/away, and matchup adjustments.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_matchup_intelligence.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 328,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M09",
@@ -115,8 +194,14 @@
       "purpose": "Blend last 5, last 10, season, matchup, usage, and market inputs.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_projection_ai.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 328,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M10",
@@ -126,8 +211,14 @@
       "purpose": "Generate prop projection, side, edge, sportsbook, and history display.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_master.json",
-      "rows": 200,
-      "runtime_status": "active"
+      "rows": 268,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M11",
@@ -137,8 +228,14 @@
       "purpose": "Rate side/spread opportunities from schedule, odds, and matchup data.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_decision_engine_final.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 75,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M12",
@@ -148,8 +245,14 @@
       "purpose": "Rate over/under opportunities from tempo, efficiency, and market totals.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_decision_engine_final.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 75,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M13",
@@ -159,8 +262,26 @@
       "purpose": "Convert projection edges and prices into expected value decisions.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_decision_engine_final.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 75,
+      "runtime_status": "active",
+      "qa_score": 75,
+      "qa_grade": "yellow",
+      "effective_status": "attention",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": [
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET"
+      ]
     },
     {
       "id": "M14",
@@ -170,8 +291,26 @@
       "purpose": "Rank card construction while limiting correlated exposure.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_portfolio_optimizer_v2.json",
-      "rows": 1,
-      "runtime_status": "active"
+      "rows": 0,
+      "runtime_status": "wired",
+      "qa_score": 75,
+      "qa_grade": "yellow",
+      "effective_status": "attention",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": [
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET"
+      ]
     },
     {
       "id": "M15",
@@ -182,7 +321,13 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_risk_allocation.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M16",
@@ -193,7 +338,13 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_clv_summary.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M17",
@@ -204,7 +355,13 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_results_grading.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M18",
@@ -215,7 +372,13 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_self_learning.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M19",
@@ -226,7 +389,13 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_reasoning_layer.json",
       "rows": 50,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M20",
@@ -237,7 +406,13 @@
       "owner_exists": true,
       "output": "docs/index.html",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M21",
@@ -248,7 +423,13 @@
       "owner_exists": true,
       "output": "",
       "rows": 0,
-      "runtime_status": "scaffolded"
+      "runtime_status": "scaffolded",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "scaffolded",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M22",
@@ -259,7 +440,13 @@
       "owner_exists": true,
       "output": "",
       "rows": 0,
-      "runtime_status": "scaffolded"
+      "runtime_status": "scaffolded",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "scaffolded",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M23",
@@ -270,7 +457,13 @@
       "owner_exists": true,
       "output": "",
       "rows": 0,
-      "runtime_status": "scaffolded"
+      "runtime_status": "scaffolded",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "scaffolded",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M24",
@@ -281,7 +474,13 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_self_learning.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M25",
@@ -292,9 +491,16 @@
       "owner_exists": true,
       "output": "",
       "rows": 0,
-      "runtime_status": "scaffolded"
+      "runtime_status": "scaffolded",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "scaffolded",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     }
   ],
+  "release_blockers": [],
   "next_build_order": [
     {
       "id": "M07",
@@ -305,7 +511,13 @@
       "owner_exists": true,
       "output": "data/wnba/scores.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M08",
@@ -315,8 +527,14 @@
       "purpose": "Add pace, defense, rest, home/away, and matchup adjustments.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_matchup_intelligence.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 328,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M09",
@@ -326,8 +544,14 @@
       "purpose": "Blend last 5, last 10, season, matchup, usage, and market inputs.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_projection_ai.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 328,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M11",
@@ -337,8 +561,14 @@
       "purpose": "Rate side/spread opportunities from schedule, odds, and matchup data.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_decision_engine_final.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 75,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M12",
@@ -348,8 +578,14 @@
       "purpose": "Rate over/under opportunities from tempo, efficiency, and market totals.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_decision_engine_final.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 75,
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     },
     {
       "id": "M13",
@@ -359,8 +595,26 @@
       "purpose": "Convert projection edges and prices into expected value decisions.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_decision_engine_final.json",
-      "rows": 241,
-      "runtime_status": "active"
+      "rows": 75,
+      "runtime_status": "active",
+      "qa_score": 75,
+      "qa_grade": "yellow",
+      "effective_status": "attention",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": [
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET"
+      ]
     },
     {
       "id": "M14",
@@ -370,8 +624,26 @@
       "purpose": "Rank card construction while limiting correlated exposure.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_portfolio_optimizer_v2.json",
-      "rows": 1,
-      "runtime_status": "active"
+      "rows": 0,
+      "runtime_status": "wired",
+      "qa_score": 75,
+      "qa_grade": "yellow",
+      "effective_status": "attention",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": [
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET",
+        "ELIGIBLE_NOT_BET: Eligible row was not promoted to BET"
+      ]
     },
     {
       "id": "M15",
@@ -382,7 +654,13 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_risk_allocation.json",
       "rows": 1,
-      "runtime_status": "active"
+      "runtime_status": "active",
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
+      "production_ready": false,
+      "blockers": [],
+      "warnings": []
     }
   ]
 }
