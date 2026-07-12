@@ -1,17 +1,17 @@
 {
-  "generated_at_utc": "2026-07-11T13:13:01.844515+00:00",
-  "target_date": "2026-07-10",
+  "generated_at_utc": "2026-07-12T10:57:05.852975+00:00",
+  "target_date": "2026-07-11",
   "status": "active",
   "newly_graded": 0,
-  "history_rows": 810,
+  "history_rows": 1009,
   "performance": {
     "graded": 143,
     "wins": 81,
     "losses": 62,
     "pushes": 0,
     "win_rate": 0.5664,
-    "units_profit": 11.636,
-    "roi": 0.0814,
+    "units_profit": 10.551,
+    "roi": 0.0738,
     "clv_samples": 0,
     "average_clv": null,
     "positive_clv_rate": null
@@ -36,11 +36,11 @@
       },
       {
         "bin": "60-64",
-        "n": 3,
+        "n": 5,
         "predicted_rate": 0.625,
-        "actual_rate": 1.0,
-        "wins": 3,
-        "losses": 0
+        "actual_rate": 0.8,
+        "wins": 4,
+        "losses": 1
       },
       {
         "bin": "65-69",
@@ -52,35 +52,35 @@
       },
       {
         "bin": "70-74",
-        "n": 8,
+        "n": 6,
         "predicted_rate": 0.725,
-        "actual_rate": 0.75,
-        "wins": 6,
+        "actual_rate": 0.667,
+        "wins": 4,
         "losses": 2
       },
       {
         "bin": "75-79",
-        "n": 11,
+        "n": 10,
         "predicted_rate": 0.775,
-        "actual_rate": 0.636,
-        "wins": 7,
+        "actual_rate": 0.6,
+        "wins": 6,
         "losses": 4
       },
       {
         "bin": "80-84",
-        "n": 44,
+        "n": 43,
         "predicted_rate": 0.825,
-        "actual_rate": 0.5,
+        "actual_rate": 0.512,
         "wins": 22,
-        "losses": 22
+        "losses": 21
       },
       {
         "bin": "85-89",
-        "n": 28,
+        "n": 26,
         "predicted_rate": 0.875,
         "actual_rate": 0.5,
-        "wins": 14,
-        "losses": 14
+        "wins": 13,
+        "losses": 13
       },
       {
         "bin": "90-94",
@@ -99,10 +99,28 @@
         "losses": 0
       }
     ],
-    "brier_score": 0.3275,
-    "graded_binary_rows": 107
+    "brier_score": 0.3293,
+    "graded_binary_rows": 103
   },
   "feature_importance": [
+    {
+      "feature": "book_count",
+      "samples": 50,
+      "importance": 0.1041,
+      "direction": "positive"
+    },
+    {
+      "feature": "history_games",
+      "samples": 50,
+      "importance": 0.1041,
+      "direction": "positive"
+    },
+    {
+      "feature": "simulation_probability",
+      "samples": 50,
+      "importance": 0.0914,
+      "direction": "negative"
+    },
     {
       "feature": "consensus_score",
       "samples": 143,
@@ -110,9 +128,9 @@
       "direction": "negative"
     },
     {
-      "feature": "simulation_probability",
-      "samples": 36,
-      "importance": 0.0638,
+      "feature": "edge_pct",
+      "samples": 50,
+      "importance": 0.0255,
       "direction": "negative"
     },
     {
@@ -120,24 +138,6 @@
       "samples": 143,
       "importance": 0.019,
       "direction": "positive"
-    },
-    {
-      "feature": "edge_pct",
-      "samples": 36,
-      "importance": 0.0162,
-      "direction": "negative"
-    },
-    {
-      "feature": "book_count",
-      "samples": 36,
-      "importance": 0,
-      "direction": "neutral"
-    },
-    {
-      "feature": "history_games",
-      "samples": 36,
-      "importance": 0,
-      "direction": "neutral"
     }
   ],
   "performance_by_stat": [
@@ -148,8 +148,8 @@
       "losses": 13,
       "pushes": 0,
       "win_rate": 0.6061,
-      "units_profit": 5.182,
-      "roi": 0.157,
+      "units_profit": 5.234,
+      "roi": 0.1586,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -161,8 +161,8 @@
       "losses": 9,
       "pushes": 0,
       "win_rate": 0.5714,
-      "units_profit": 1.909,
-      "roi": 0.0909,
+      "units_profit": 1.404,
+      "roi": 0.0669,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -200,8 +200,8 @@
       "losses": 9,
       "pushes": 0,
       "win_rate": 0.4375,
-      "units_profit": -2.636,
-      "roi": -0.1648,
+      "units_profit": -3.07,
+      "roi": -0.1919,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -226,8 +226,8 @@
       "losses": 2,
       "pushes": 0,
       "win_rate": 0.8333,
-      "units_profit": 7.091,
-      "roi": 0.5909,
+      "units_profit": 6.916,
+      "roi": 0.5763,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -239,8 +239,8 @@
       "losses": 2,
       "pushes": 0,
       "win_rate": 0.7143,
-      "units_profit": 2.545,
-      "roi": 0.3636,
+      "units_profit": 2.521,
+      "roi": 0.3602,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -249,26 +249,39 @@
   "performance_by_action": [
     {
       "final_action": "UNKNOWN",
-      "graded": 107,
-      "wins": 62,
-      "losses": 45,
+      "graded": 93,
+      "wins": 53,
+      "losses": 40,
       "pushes": 0,
-      "win_rate": 0.5794,
-      "units_profit": 11.364,
-      "roi": 0.1062,
+      "win_rate": 0.5699,
+      "units_profit": 8.182,
+      "roi": 0.088,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
     },
     {
       "final_action": "PASS",
-      "graded": 36,
-      "wins": 19,
-      "losses": 17,
+      "graded": 48,
+      "wins": 27,
+      "losses": 21,
       "pushes": 0,
-      "win_rate": 0.5278,
-      "units_profit": 0.273,
-      "roi": 0.0076,
+      "win_rate": 0.5625,
+      "units_profit": 2.407,
+      "roi": 0.0502,
+      "clv_samples": 0,
+      "average_clv": null,
+      "positive_clv_rate": null
+    },
+    {
+      "final_action": "WATCH",
+      "graded": 2,
+      "wins": 1,
+      "losses": 1,
+      "pushes": 0,
+      "win_rate": 0.5,
+      "units_profit": -0.038,
+      "roi": -0.0192,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -277,94 +290,51 @@
   "performance_by_book": [
     {
       "sportsbook": "UNKNOWN",
-      "graded": 143,
-      "wins": 81,
-      "losses": 62,
+      "graded": 129,
+      "wins": 72,
+      "losses": 57,
       "pushes": 0,
-      "win_rate": 0.5664,
-      "units_profit": 11.636,
-      "roi": 0.0814,
+      "win_rate": 0.5581,
+      "units_profit": 8.455,
+      "roi": 0.0655,
+      "clv_samples": 0,
+      "average_clv": null,
+      "positive_clv_rate": null
+    },
+    {
+      "sportsbook": "FanDuel",
+      "graded": 8,
+      "wins": 6,
+      "losses": 2,
+      "pushes": 0,
+      "win_rate": 0.75,
+      "units_profit": 2.779,
+      "roi": 0.3474,
+      "clv_samples": 0,
+      "average_clv": null,
+      "positive_clv_rate": null
+    },
+    {
+      "sportsbook": "DraftKings",
+      "graded": 6,
+      "wins": 3,
+      "losses": 3,
+      "pushes": 0,
+      "win_rate": 0.5,
+      "units_profit": -0.683,
+      "roi": -0.1138,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
     }
   ],
-  "automatic_card": [
-    {
-      "player": "Natasha Cloud",
-      "team": null,
-      "game": "Chicago Sky @ Los Angeles Sparks",
-      "stat": "REB",
-      "line": 3.5,
-      "pred": 2.0,
-      "signal": "UNDER",
-      "conf": "MED",
-      "ev_pct": 18.23,
-      "edge": -1.5,
-      "consensus_score": 75.0,
-      "consensus_grade": "PLAYABLE",
-      "engine_agreement": "5/6",
-      "votes": [
-        {
-          "engine": "Projection EV",
-          "score": 46.0,
-          "agree": false
-        },
-        {
-          "engine": "Projection Edge",
-          "score": 67.0,
-          "agree": true
-        },
-        {
-          "engine": "Player Intelligence",
-          "score": 86.9,
-          "agree": true
-        },
-        {
-          "engine": "Matchup Intelligence",
-          "score": 66.0,
-          "agree": true
-        },
-        {
-          "engine": "Injury Engine",
-          "score": 88,
-          "agree": true
-        },
-        {
-          "engine": "Market Engine",
-          "score": 82,
-          "agree": true
-        }
-      ],
-      "recommendation": "LEAN",
-      "matchup_label": "NEUTRAL",
-      "deepseek_rating": null,
-      "simulation_probability": 0.6705,
-      "market_move": 0.0,
-      "sportsbook": "DraftKings",
-      "american_odds": -131,
-      "implied_probability": 0.5671,
-      "raw_ev_pct": -5.3,
-      "edge_pct": 42.86,
-      "confidence": 80.3,
-      "final_score": 80.3,
-      "final_action": "BET",
-      "eligible_for_bet": true,
-      "history_games": 10,
-      "book_count": 2,
-      "guardrail_failures": [],
-      "decision_reason": "Qualified across score, probability, EV, history, books and agreement.",
-      "portfolio_score": 80.3,
-      "recommended_stake": 12.5,
-      "kelly_fraction": 0.025,
-      "risk_band": "MED"
-    }
-  ],
+  "automatic_card": [],
   "card_summary": {
-    "qualified_candidates": 1,
-    "card_size": 1,
-    "total_stake": 12.5,
-    "exposure_pct": 2.5
+    "qualified_candidates": 0,
+    "card_size": 0,
+    "total_stake": 0,
+    "exposure_pct": 0.0,
+    "injury_blocked": 0
   },
   "learning_readiness": {
     "minimum_for_basic_calibration": 50,
@@ -1770,7 +1740,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869959+00:00",
       "opponent": "Portland Fire",
-      "opponent_abbr": "POR"
+      "opponent_abbr": "POR",
+      "confidence": 33.7,
+      "final_score": 33.7,
+      "simulation_probability": 0.5561,
+      "american_odds": -113,
+      "sportsbook": "DraftKings",
+      "edge_pct": 5.22,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Chelsea Gray|Las Vegas Aces @ Portland Fire|RA|11.5|OVER",
@@ -1794,7 +1773,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869954+00:00",
       "opponent": "Portland Fire",
-      "opponent_abbr": "POR"
+      "opponent_abbr": "POR",
+      "confidence": 34.3,
+      "final_score": 34.3,
+      "simulation_probability": 0.5575,
+      "american_odds": -114,
+      "sportsbook": "FanDuel",
+      "edge_pct": 6.09,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Jewell Loyd|Las Vegas Aces @ Portland Fire|REB|2.5|OVER",
@@ -1866,7 +1854,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869938+00:00",
       "opponent": "Indiana Fever",
-      "opponent_abbr": "IND"
+      "opponent_abbr": "IND",
+      "confidence": 40.3,
+      "final_score": 40.3,
+      "simulation_probability": 0.5458,
+      "american_odds": -214,
+      "sportsbook": "DraftKings",
+      "edge_pct": 13.33,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Kelsey Mitchell|Indiana Fever @ Phoenix Mercury|REB|2.5|UNDER",
@@ -2065,7 +2062,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869894+00:00",
       "opponent": "Portland Fire",
-      "opponent_abbr": "POR"
+      "opponent_abbr": "POR",
+      "confidence": 63.0,
+      "final_score": 63.0,
+      "simulation_probability": 0.5781,
+      "american_odds": 130,
+      "sportsbook": "FanDuel",
+      "edge_pct": 33.33,
+      "final_action": "WATCH",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Kelsey Mitchell|Indiana Fever @ Phoenix Mercury|3PM|2.5|OVER",
@@ -2233,7 +2239,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869855+00:00",
       "opponent": "Portland Fire",
-      "opponent_abbr": "POR"
+      "opponent_abbr": "POR",
+      "confidence": 48.3,
+      "final_score": 48.3,
+      "simulation_probability": 0.6047,
+      "american_odds": -122,
+      "sportsbook": "FanDuel",
+      "edge_pct": 13.33,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Alyssa Thomas|Indiana Fever @ Phoenix Mercury|REB|6.5|OVER",
@@ -2281,7 +2296,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869842+00:00",
       "opponent": "Indiana Fever",
-      "opponent_abbr": "IND"
+      "opponent_abbr": "IND",
+      "confidence": 39.9,
+      "final_score": 39.9,
+      "simulation_probability": 0.5514,
+      "american_odds": -136,
+      "sportsbook": "FanDuel",
+      "edge_pct": 60.0,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Kahleah Copper|Indiana Fever @ Phoenix Mercury|RA|5.5|UNDER",
@@ -2425,7 +2449,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869703+00:00",
       "opponent": "Portland Fire",
-      "opponent_abbr": "POR"
+      "opponent_abbr": "POR",
+      "confidence": 39.7,
+      "final_score": 39.7,
+      "simulation_probability": 0.5952,
+      "american_odds": -147,
+      "sportsbook": "DraftKings",
+      "edge_pct": 13.85,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Chelsea Gray|Las Vegas Aces @ Portland Fire|PTS|13.5|UNDER",
@@ -2521,7 +2554,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869617+00:00",
       "opponent": "Indiana Fever",
-      "opponent_abbr": "IND"
+      "opponent_abbr": "IND",
+      "confidence": 64.6,
+      "final_score": 64.6,
+      "simulation_probability": 0.6179,
+      "american_odds": -104,
+      "sportsbook": "FanDuel",
+      "edge_pct": 12.68,
+      "final_action": "WATCH",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|A'ja Wilson|Las Vegas Aces @ Portland Fire|REB|8.5|OVER",
@@ -2905,7 +2947,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869468+00:00",
       "opponent": "Las Vegas Aces",
-      "opponent_abbr": "LV"
+      "opponent_abbr": "LV",
+      "confidence": 40.5,
+      "final_score": 40.5,
+      "simulation_probability": 0.588,
+      "american_odds": -133,
+      "sportsbook": "DraftKings",
+      "edge_pct": 12.73,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Natisha Hiedeman|Seattle Storm @ Atlanta Dream|AST|3.5|OVER",
@@ -2953,7 +3004,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869457+00:00",
       "opponent": "Seattle Storm",
-      "opponent_abbr": "SEA"
+      "opponent_abbr": "SEA",
+      "confidence": 41.6,
+      "final_score": 41.6,
+      "simulation_probability": 0.567,
+      "american_odds": -102,
+      "sportsbook": "FanDuel",
+      "edge_pct": 6.67,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Flau'jae Johnson|Seattle Storm @ Atlanta Dream|AST|5.5|UNDER",
@@ -3248,7 +3308,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869382+00:00",
       "opponent": "Las Vegas Aces",
-      "opponent_abbr": "LV"
+      "opponent_abbr": "LV",
+      "confidence": 48.2,
+      "final_score": 48.2,
+      "simulation_probability": 0.6197,
+      "american_odds": -154,
+      "sportsbook": "FanDuel",
+      "edge_pct": 32.0,
+      "final_action": "PASS",
+      "book_count": 2,
+      "history_games": 10
     },
     {
       "history_key": "2026-07-09|Sarah Ashlee Barker|Las Vegas Aces @ Portland Fire|RA|6.5|OVER",
@@ -3359,10 +3428,10 @@
       "wins": 81,
       "losses": 62,
       "pushes": 0,
-      "units": 11.636,
+      "units": 10.551,
       "date": "2026-07-09",
-      "roi": 0.0814
+      "roi": 0.0738
     }
   ],
-  "results_updated_at_utc": "2026-07-11T13:13:01.956535+00:00"
+  "results_updated_at_utc": "2026-07-12T10:57:05.975229+00:00"
 }
