@@ -1,13 +1,15 @@
 {
-  "generated_at_utc": "2026-07-12T15:38:19.830851+00:00",
+  "generated_at_utc": "2026-07-12T15:39:53.174240+00:00",
   "version": "4.0",
   "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
   "qa": {
-    "overall_status": "green",
+    "overall_status": "red",
     "repository_qa_status": "yellow",
     "output_qa_status": "green",
-    "repository_qa_generated_at": "2026-07-12T15:38:19.704426+00:00",
-    "output_qa_generated_at": "2026-07-12T15:38:19.765777+00:00",
+    "acceptance_status": "missing",
+    "repository_qa_generated_at": "2026-07-12T15:39:53.011811+00:00",
+    "output_qa_generated_at": "2026-07-12T15:39:53.076679+00:00",
+    "acceptance_generated_at": null,
     "output_summary": {
       "evaluated_rows": 344,
       "inspected_rows": 75,
@@ -23,12 +25,13 @@
         "risk": "2026-07-12",
         "master": "2026-07-12"
       }
-    }
+    },
+    "acceptance_summary": {}
   },
   "summary": {
     "modules": 25,
-    "completion_pct": 40.0,
-    "production_ready": 10,
+    "completion_pct": 32.0,
+    "production_ready": 8,
     "manifest_status_counts": {
       "planned": 5,
       "partial": 7,
@@ -36,17 +39,17 @@
       "validated": 0
     },
     "runtime_status_counts": {
-      "active": 18,
-      "wired": 3,
+      "active": 19,
+      "wired": 2,
       "scaffolded": 4,
       "missing": 0
     },
     "qa_status_counts": {
-      "green": 25,
+      "green": 20,
       "yellow": 0,
-      "red": 0
+      "red": 5
     },
-    "release_blockers": 0,
+    "release_blockers": 5,
     "warnings": 0
   },
   "modules": [
@@ -60,10 +63,12 @@
       "output": "config/source_registry.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "validated",
       "production_ready": true,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -77,10 +82,12 @@
       "output": "data/dashboard/wnba_master.json",
       "rows": 269,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "validated",
       "production_ready": true,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -94,10 +101,12 @@
       "output": "data/raw/odds_source_status.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "validated",
       "production_ready": true,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -111,10 +120,12 @@
       "output": "data/dashboard/wnba_sportsbook_consensus.json",
       "rows": 286,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "validated",
       "production_ready": true,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -128,10 +139,12 @@
       "output": "data/raw/wnba_players_live.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "validated",
       "production_ready": true,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -145,10 +158,12 @@
       "output": "data/raw/wnba_stats_fallback_status.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "validated",
       "production_ready": true,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -162,10 +177,12 @@
       "output": "data/wnba/scores.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -179,10 +196,12 @@
       "output": "data/dashboard/wnba_matchup_intelligence.json",
       "rows": 344,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -196,10 +215,12 @@
       "output": "data/dashboard/wnba_projection_ai.json",
       "rows": 344,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -213,10 +234,12 @@
       "output": "data/dashboard/wnba_master.json",
       "rows": 269,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "validated",
       "production_ready": true,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -227,14 +250,18 @@
       "status": "active",
       "purpose": "Project game margin, spread edge, side selection, and cover probability without inventing edge when upstream projections are unavailable.",
       "owner_exists": true,
-      "output": "",
+      "output": "data/dashboard/wnba_game_market_model.json",
       "rows": 0,
       "runtime_status": "wired",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "wired",
+      "valid_zero_output": false,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
       "production_ready": false,
-      "blockers": [],
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -244,14 +271,18 @@
       "status": "active",
       "purpose": "Project game total, over/under edge, selection, and probability without inventing edge when upstream projections are unavailable.",
       "owner_exists": true,
-      "output": "",
+      "output": "data/dashboard/wnba_game_market_model.json",
       "rows": 0,
       "runtime_status": "wired",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "wired",
+      "valid_zero_output": false,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
       "production_ready": false,
-      "blockers": [],
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -264,11 +295,15 @@
       "output": "data/dashboard/wnba_decision_engine_final.json",
       "rows": 75,
       "runtime_status": "active",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "validated",
-      "production_ready": true,
-      "blockers": [],
+      "valid_zero_output": false,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -280,12 +315,16 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_portfolio_optimizer_v2.json",
       "rows": 0,
-      "runtime_status": "wired",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "wired",
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
       "production_ready": false,
-      "blockers": [],
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -296,13 +335,17 @@
       "purpose": "Assign capped stakes, bankroll exposure, units, and team exposure buckets.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_risk_allocation.json",
-      "rows": 1,
+      "rows": 0,
       "runtime_status": "active",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "validated",
-      "production_ready": true,
-      "blockers": [],
+      "valid_zero_output": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -315,10 +358,12 @@
       "output": "data/dashboard/wnba_clv_summary.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -332,10 +377,12 @@
       "output": "data/dashboard/wnba_results_grading.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -349,10 +396,12 @@
       "output": "data/dashboard/wnba_self_learning.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -366,10 +415,12 @@
       "output": "data/dashboard/wnba_reasoning_layer.json",
       "rows": 50,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -383,10 +434,12 @@
       "output": "docs/index.html",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "validated",
       "production_ready": true,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -400,10 +453,12 @@
       "output": "",
       "rows": 0,
       "runtime_status": "scaffolded",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "scaffolded",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -417,10 +472,12 @@
       "output": "",
       "rows": 0,
       "runtime_status": "scaffolded",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "scaffolded",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -434,10 +491,12 @@
       "output": "",
       "rows": 0,
       "runtime_status": "scaffolded",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "scaffolded",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -451,10 +510,12 @@
       "output": "data/dashboard/wnba_self_learning.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -468,15 +529,53 @@
       "output": "",
       "rows": 0,
       "runtime_status": "scaffolded",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "scaffolded",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     }
   ],
-  "release_blockers": [],
+  "release_blockers": [
+    {
+      "id": "M11",
+      "module": "Spread Model",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    },
+    {
+      "id": "M12",
+      "module": "Totals Model",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    },
+    {
+      "id": "M13",
+      "module": "Expected Value Engine",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    },
+    {
+      "id": "M14",
+      "module": "Portfolio Optimizer",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    },
+    {
+      "id": "M15",
+      "module": "Risk Allocation",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    }
+  ],
   "next_build_order": [
     {
       "id": "M07",
@@ -488,10 +587,12 @@
       "output": "data/wnba/scores.json",
       "rows": 1,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -505,10 +606,12 @@
       "output": "data/dashboard/wnba_matchup_intelligence.json",
       "rows": 344,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -522,10 +625,12 @@
       "output": "data/dashboard/wnba_projection_ai.json",
       "rows": 344,
       "runtime_status": "active",
+      "valid_zero_output": false,
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
       "production_ready": false,
+      "acceptance": null,
       "blockers": [],
       "warnings": []
     },
@@ -536,14 +641,18 @@
       "status": "active",
       "purpose": "Project game margin, spread edge, side selection, and cover probability without inventing edge when upstream projections are unavailable.",
       "owner_exists": true,
-      "output": "",
+      "output": "data/dashboard/wnba_game_market_model.json",
       "rows": 0,
       "runtime_status": "wired",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "wired",
+      "valid_zero_output": false,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
       "production_ready": false,
-      "blockers": [],
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -553,14 +662,39 @@
       "status": "active",
       "purpose": "Project game total, over/under edge, selection, and probability without inventing edge when upstream projections are unavailable.",
       "owner_exists": true,
-      "output": "",
+      "output": "data/dashboard/wnba_game_market_model.json",
       "rows": 0,
       "runtime_status": "wired",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "wired",
+      "valid_zero_output": false,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
       "production_ready": false,
-      "blockers": [],
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "M13",
+      "name": "Expected Value Engine",
+      "owner_file": "wnba_decision_engine_final.py",
+      "status": "active",
+      "purpose": "Convert projection edges and prices into expected value decisions with final eligibility and guardrail separation.",
+      "owner_exists": true,
+      "output": "data/dashboard/wnba_decision_engine_final.json",
+      "rows": 75,
+      "runtime_status": "active",
+      "valid_zero_output": false,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -572,46 +706,37 @@
       "owner_exists": true,
       "output": "data/dashboard/wnba_portfolio_optimizer_v2.json",
       "rows": 0,
-      "runtime_status": "wired",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "wired",
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
       "production_ready": false,
-      "blockers": [],
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
-      "id": "M16",
-      "name": "CLV Tracker",
-      "owner_file": "wnba_closing_line_tracker.py",
-      "status": "partial",
-      "purpose": "Track opening, current, and closing line value.",
+      "id": "M15",
+      "name": "Risk Allocation",
+      "owner_file": "wnba_risk_allocation.py",
+      "status": "active",
+      "purpose": "Assign capped stakes, bankroll exposure, units, and team exposure buckets.",
       "owner_exists": true,
-      "output": "data/dashboard/wnba_clv_summary.json",
-      "rows": 1,
+      "output": "data/dashboard/wnba_risk_allocation.json",
+      "rows": 0,
       "runtime_status": "active",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
       "production_ready": false,
-      "blockers": [],
-      "warnings": []
-    },
-    {
-      "id": "M17",
-      "name": "Results Grading",
-      "owner_file": "wnba_results_grader.py",
-      "status": "partial",
-      "purpose": "Grade picks after final scores and player results are available.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_results_grading.json",
-      "rows": 1,
-      "runtime_status": "active",
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "active",
-      "production_ready": false,
-      "blockers": [],
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     }
   ]
