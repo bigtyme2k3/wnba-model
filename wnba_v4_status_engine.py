@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -110,6 +111,20 @@ def output_qa_modules(code: str) -> set[str]:
     return mapping.get(code, set())
 
 
+def aggregate_findings(items: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
+    errors: Counter[str] = Counter()
+    warnings: Counter[str] = Counter()
+    for item in items:
+        text = f"{item.get('code')}: {item.get('message')}"
+        target = errors if item.get("level") == "error" else warnings
+        target[text] += 1
+
+    def render(counter: Counter[str]) -> list[str]:
+        return [f"{text} ×{count}" if count > 1 else text for text, count in counter.items()]
+
+    return render(errors), render(warnings)
+
+
 def main() -> None:
     manifest = load_json(CONFIG, {"modules": []})
     repo_qa = load_json(DASH / "wnba_v4_qa.json", {})
@@ -121,12 +136,8 @@ def main() -> None:
     for module in manifest.get("modules", []):
         runtime = infer_runtime_status(module)
         repo_item = repo_by_id.get(module.get("id"), {})
-        blockers, warnings = [], []
-        for item in output_findings:
-            if module.get("id") not in output_qa_modules(str(item.get("code"))):
-                continue
-            text = f"{item.get('code')}: {item.get('message')}"
-            (blockers if item.get("level") == "error" else warnings).append(text)
+        mapped = [item for item in output_findings if module.get("id") in output_qa_modules(str(item.get("code")))]
+        blockers, warnings = aggregate_findings(mapped)
         if not runtime["owner_exists"]:
             blockers.append("Owner file missing")
         if repo_item.get("syntax_ok") is False:
