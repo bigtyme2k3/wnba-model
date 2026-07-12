@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-12T15:26:46.356425+00:00`
+Generated: `2026-07-12T15:30:56.574712+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -69,5 +69,5 @@ Generated: `2026-07-12T15:26:46.356425+00:00`
 | `.github/workflows/wnba_postbuild_integrity.yml` | 10 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_player_props_audit.yml` | 4 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_player_props_polish.yml` | 11 | 0 | 0.0 | low | True |
-| `.github/workflows/wnba_v4_status.yml` | 15 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_v4_status.yml` | 18 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_v4_terminal_cleanup.yml` | 8 | 0 | 0.0 | low | True |
