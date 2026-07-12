@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-12T17:05:04.366442+00:00`
+Generated: `2026-07-12T17:15:15.723397+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -29,10 +29,10 @@ Generated: `2026-07-12T17:05:04.366442+00:00`
 | M13 | Expected Value Engine | active | green | 100 | `wnba_decision_engine_final.py` |
 | M14 | Portfolio Optimizer | active | green | 100 | `wnba_portfolio_optimizer_v2.py` |
 | M15 | Risk Allocation | active | green | 100 | `wnba_risk_allocation.py` |
-| M16 | CLV Tracker | partial | green | 100 | `wnba_closing_line_tracker.py` |
-| M17 | Results Grading | partial | green | 100 | `wnba_results_grader.py` |
-| M18 | Self Learning | partial | green | 100 | `wnba_self_learning.py` |
-| M19 | Model Explainability | partial | green | 100 | `wnba_reasoning_layer.py` |
+| M16 | CLV Tracker | active | green | 100 | `wnba_closing_line_tracker.py` |
+| M17 | Results Grading | active | green | 100 | `wnba_results_grader.py` |
+| M18 | Self Learning | active | green | 100 | `wnba_self_learning.py` |
+| M19 | Model Explainability | active | green | 100 | `wnba_reasoning_layer.py` |
 | M20 | Dashboard V4 | active | green | 100 | `patch_dashboard_navigation_v2.py` |
 | M21 | Model Calibration | planned | green | 100 | `wnba_v4_status_engine.py` |
 | M22 | Feature Importance | planned | green | 100 | `wnba_v4_status_engine.py` |
