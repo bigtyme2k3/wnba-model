@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 HTML = Path("docs/index.html")
+PERFORMANCE = Path("data/dashboard/wnba_alt_performance.json")
 
 CSS = r'''
 <style id="v4-consolidated-navigation-style">
@@ -40,7 +42,7 @@ SCRIPT = r'''
     const altPerf=safe(window.altPerformance,'<div class="section"><div class="empty mono">ALT Performance is collecting data.</div></div>');
     const resultView=safe(window.results||results);
     const portfolioView=safe(window.portfolio||portfolio);
-    return `<div class="section"><h2 class="mono">Performance Center</h2><div class="navSectionNote mono">Results, ALT validation, ROI, and bankroll allocation in one place.</div><div class="performanceJump"><button onclick="document.getElementById('alt-performance-block')?.scrollIntoView({behavior:'smooth'})">ALT Performance</button><button onclick="document.getElementById('results-block')?.scrollIntoView({behavior:'smooth'})">Results</button><button onclick="document.getElementById('portfolio-block')?.scrollIntoView({behavior:'smooth'})">Portfolio</button></div></div><div id="alt-performance-block">${altPerf}</div><div id="results-block">${resultView}</div><div id="portfolio-block">${portfolioView}</div>`;
+    return `<div class="section"><h2 class="mono">Performance Center</h2><div class="navSectionNote mono">Results, ALT validation, certified CLV, ROI, and bankroll allocation in one place.</div><div class="performanceJump"><button onclick="document.getElementById('alt-performance-block')?.scrollIntoView({behavior:'smooth'})">ALT Performance</button><button onclick="document.getElementById('results-block')?.scrollIntoView({behavior:'smooth'})">Results</button><button onclick="document.getElementById('portfolio-block')?.scrollIntoView({behavior:'smooth'})">Portfolio</button></div></div><div id="alt-performance-block">${altPerf}</div><div id="results-block">${resultView}</div><div id="portfolio-block">${portfolioView}</div>`;
   }
   function modelView(){
     const aiView=safe(window.ai||ai);
@@ -81,10 +83,38 @@ def replace_block(html: str, start_marker: str, end_marker: str, replacement: st
     return html[:start] + replacement.strip() + html[end + len(end_marker):]
 
 
+def refresh_clv_context() -> None:
+    try:
+        performance = json.load(PERFORMANCE.open(encoding="utf-8")) if PERFORMANCE.exists() else {}
+        target = str(performance.get("target_date") or "")
+        if target:
+            from wnba_alt_closing_line_tracker import report, resolve, snapshot
+            snapshot(target)
+            resolve(target)
+            report(target)
+        from wnba_alt_performance_clv_context import main as attach_clv
+        attach_clv()
+    except Exception as exc:
+        print("ALT CLV context warning:", exc)
+
+
 def main() -> None:
     if not HTML.exists():
         raise SystemExit("docs/index.html missing")
+
+    refresh_clv_context()
     html = HTML.read_text(encoding="utf-8")
+
+    # Refresh the already-embedded ALT Performance payload after CLV enrichment.
+    if PERFORMANCE.exists():
+        try:
+            payload = json.load(PERFORMANCE.open(encoding="utf-8"))
+            data_script = f'<script id="v4-alt-performance-data">DATA.alt_performance={json.dumps(payload,separators=(",",":"),ensure_ascii=False)};</script>'
+            if 'id="v4-alt-performance-data"' in html:
+                html = replace_block(html, '<script id="v4-alt-performance-data">', '</script>', data_script)
+        except Exception as exc:
+            print("ALT Performance data refresh warning:", exc)
+
     if 'id="v4-consolidated-navigation-style"' in html:
         html = replace_block(html, '<style id="v4-consolidated-navigation-style">', '</style>', CSS)
     else:
@@ -94,7 +124,15 @@ def main() -> None:
     else:
         html = html.replace("</body>", SCRIPT + "</body>")
     HTML.write_text(html, encoding="utf-8")
-    print("V4 navigation consolidated into Today, Props, ALT, Best Bets, Performance, and Model Center")
+
+    # Add the visual CLV cards after the refreshed performance payload exists.
+    try:
+        from patch_dashboard_v4_alt_clv import main as patch_clv
+        patch_clv()
+    except Exception as exc:
+        print("ALT CLV dashboard warning:", exc)
+
+    print("V4 navigation consolidated with certified ALT CLV in Performance Center")
 
 
 if __name__ == "__main__":
