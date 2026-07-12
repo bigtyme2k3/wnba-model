@@ -1,117 +1,91 @@
-"""
-wnba_results_grader.py
-----------------------
-Grades historical model recommendations when actual player stat data is available.
-
-Current data inputs are intentionally flexible:
-- data/raw/player_results_<date>.csv
-- data/raw/boxscore_player_stats_<date>.csv
-- data/raw/wnba_boxscores_<date>.csv
-
-Expected useful columns:
-player, pts, reb, ast, threes/3pm, pra, pa, pr, ra
-
-Outputs:
-- data/warehouse/wnba_results_grading.json
-- data/dashboard/wnba_results_grading.json
-- updates data/history/wnba_model_history.jsonl with outcome/actual when possible
-"""
+"""M17 deterministic results grading with duplicate protection and P/L accounting."""
 from __future__ import annotations
-
-import argparse, json, os
-from datetime import date, datetime, timezone
-from typing import Any, Dict, List
+import argparse,json,math,os
+from datetime import date,datetime,timezone
+from typing import Any
 import pandas as pd
 
-HISTORY_PATH="data/history/wnba_model_history.jsonl"
+HISTORY_PATH='data/history/wnba_model_history.jsonl'
 
-
-def norm(v): return str(v or "").strip().lower().replace("’", "'")
-def sf(v, d=0.0):
+def norm(v): return ' '.join(str(v or '').strip().lower().replace('’',"'").split())
+def sf(v,d=None):
     try:
-        if v is None or str(v).lower()=="nan" or v=="": return d
-        return float(v)
-    except Exception: return d
+        n=float(v); return n if math.isfinite(n) else d
+    except Exception:return d
 
+def clean(v: Any)->Any:
+    if isinstance(v,dict):return {str(k):clean(x) for k,x in v.items()}
+    if isinstance(v,(list,tuple)):return [clean(x) for x in v]
+    if isinstance(v,float):return v if math.isfinite(v) else None
+    if v is None or isinstance(v,(str,int,bool)):return v
+    try:
+        if pd.isna(v):return None
+    except Exception:pass
+    try:
+        if hasattr(v,'item'):return clean(v.item())
+    except Exception:pass
+    return str(v)
 
 def read_history():
-    rows=[]
+    out=[]
     if os.path.exists(HISTORY_PATH):
-        with open(HISTORY_PATH, encoding="utf-8") as f:
-            for line in f:
-                try: rows.append(json.loads(line))
-                except Exception: pass
-    return rows
-
+        for line in open(HISTORY_PATH,encoding='utf-8'):
+            try:out.append(json.loads(line))
+            except Exception:pass
+    return out
 
 def write_history(rows):
-    os.makedirs(os.path.dirname(HISTORY_PATH), exist_ok=True)
-    with open(HISTORY_PATH,"w",encoding="utf-8") as f:
-        for r in rows: f.write(json.dumps(r,separators=(",",":"))+"\n")
-
+    os.makedirs(os.path.dirname(HISTORY_PATH),exist_ok=True)
+    with open(HISTORY_PATH,'w',encoding='utf-8') as f:
+        for r in rows:f.write(json.dumps(clean(r),separators=(',',':'),allow_nan=False)+'\n')
 
 def load_actuals(target):
-    paths=[f"data/raw/player_results_{target}.csv",f"data/raw/boxscore_player_stats_{target}.csv",f"data/raw/wnba_boxscores_{target}.csv"]
-    for p in paths:
+    for p in (f'data/raw/player_results_{target}.csv',f'data/raw/boxscore_player_stats_{target}.csv',f'data/raw/wnba_boxscores_{target}.csv'):
         if os.path.exists(p):
             try:
                 df=pd.read_csv(p)
-                if not df.empty and "player" in df.columns:
-                    print(f"Loaded actuals: {p} ({len(df)} rows)")
-                    return df
-            except Exception as exc: print(f"WARN actuals read failed {p}: {exc}")
-    return pd.DataFrame()
+                if not df.empty and 'player' in df.columns:return df,p
+            except Exception:pass
+    return pd.DataFrame(),None
 
+def actual_value(row,stat):
+    stat=str(stat or '').upper(); pts=sf(row.get('pts',row.get('PTS')),0); reb=sf(row.get('reb',row.get('REB')),0); ast=sf(row.get('ast',row.get('AST')),0); th=sf(row.get('threes',row.get('3pm',row.get('3PM',row.get('fg3m')))),0)
+    return {'PTS':pts,'REB':reb,'AST':ast,'3PM':th,'PRA':pts+reb+ast,'PA':pts+ast,'PR':pts+reb,'RA':reb+ast}.get(stat,sf(row.get(stat.lower())))
 
-def actual_value(row, stat):
-    stat=str(stat or "").upper()
-    pts=sf(row.get("pts", row.get("PTS",0)))
-    reb=sf(row.get("reb", row.get("REB",0)))
-    ast=sf(row.get("ast", row.get("AST",0)))
-    th=sf(row.get("threes", row.get("3pm", row.get("3PM", row.get("fg3m",0)))))
-    if stat=="PTS": return pts
-    if stat=="REB": return reb
-    if stat=="AST": return ast
-    if stat=="3PM": return th
-    if stat=="PRA": return pts+reb+ast
-    if stat=="PA": return pts+ast
-    if stat=="PR": return pts+reb
-    if stat=="RA": return reb+ast
-    return row.get(stat.lower())
+def grade(signal,actual,line):
+    if actual is None or line is None:return 'PENDING'
+    if actual==line:return 'PUSH'
+    s=str(signal or '').upper()
+    if s in {'OVER','YES'}:return 'WIN' if actual>line else 'LOSS'
+    if s in {'UNDER','NO'}:return 'WIN' if actual<line else 'LOSS'
+    return 'VOID'
 
-
-def grade(signal, actual, line):
-    if actual is None or line is None: return None
-    signal=str(signal or "").upper()
-    actual=sf(actual); line=sf(line)
-    if actual==line: return "PUSH"
-    if signal in {"OVER","YES"}: return "WIN" if actual>line else "LOSS"
-    if signal in {"UNDER","NO"}: return "WIN" if actual<line else "LOSS"
-    return None
-
+def profit(outcome,stake,odds):
+    stake=sf(stake,0) or 0; odds=sf(odds,-110) or -110
+    if outcome=='WIN':return stake*(100/abs(odds) if odds<0 else odds/100)
+    if outcome=='LOSS':return -stake
+    return 0.0
 
 def build(target):
-    hist=read_history(); actuals=load_actuals(target); actual_map={}
-    if not actuals.empty:
-        for _,r in actuals.iterrows(): actual_map[norm(r.get("player"))]=r.to_dict()
-    graded=0; wins=losses=pushes=0
+    hist=read_history(); actuals,source=load_actuals(target); amap={norm(r.get('player')):clean(r.to_dict()) for _,r in actuals.iterrows()} if not actuals.empty else {}
+    counts={k:0 for k in ('WIN','LOSS','PUSH','VOID','PENDING')}; graded=0; total_stake=0.0; pnl=0.0; missing=[]
     for r in hist:
-        if r.get("date")!=target or r.get("outcome") in {"WIN","LOSS","PUSH"}: continue
-        a=actual_map.get(norm(r.get("player")))
-        if not a: continue
-        val=actual_value(a, r.get("stat")); out=grade(r.get("signal"), val, r.get("line"))
-        if out:
-            r["actual"]=val; r["outcome"]=out; r["graded_at_utc"]=datetime.now(timezone.utc).isoformat(); graded+=1
-            wins += 1 if out=="WIN" else 0; losses += 1 if out=="LOSS" else 0; pushes += 1 if out=="PUSH" else 0
-    write_history(hist)
-    total_dec=max(1,wins+losses)
-    report={"generated_at_utc":datetime.now(timezone.utc).isoformat(),"target_date":target,"actual_source_rows":len(actuals),"graded_this_run":graded,"wins":wins,"losses":losses,"pushes":pushes,"win_rate":round(wins/total_dec,4),"status":"ok" if graded else "waiting_for_actuals"}
-    os.makedirs("data/warehouse",exist_ok=True); os.makedirs("data/dashboard",exist_ok=True)
-    for p in ["data/warehouse/wnba_results_grading.json","data/dashboard/wnba_results_grading.json"]:
-        with open(p,"w",encoding="utf-8") as f: json.dump(report,f,indent=2)
+        if r.get('date')!=target:continue
+        if r.get('outcome') in {'WIN','LOSS','PUSH','VOID'}:
+            counts[r['outcome']]+=1; continue
+        a=amap.get(norm(r.get('player')))
+        if not a:
+            counts['PENDING']+=1; missing.append({'player':r.get('player'),'reason':'actual player row unavailable'}); continue
+        val=actual_value(a,r.get('stat')); out=grade(r.get('signal'),val,sf(r.get('line')))
+        if out=='PENDING':missing.append({'player':r.get('player'),'reason':'actual stat or line unavailable'})
+        r['actual']=val; r['outcome']=out; r['graded_at_utc']=datetime.now(timezone.utc).isoformat(); stake=sf(r.get('stake',r.get('recommended_stake')),0) or 0; p=profit(out,stake,r.get('american_odds')); r['profit_loss']=round(p,2)
+        counts[out]+=1; graded+=out in {'WIN','LOSS','PUSH','VOID'}; total_stake+=stake if out in {'WIN','LOSS'} else 0; pnl+=p
+    write_history(hist); decisions=counts['WIN']+counts['LOSS']; roi=pnl/total_stake if total_stake else 0
+    report={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'ok' if graded else 'waiting_for_actuals','actual_source':source,'summary':{'graded_this_run':graded,**{k.lower():v for k,v in counts.items()},'win_rate':round(counts['WIN']/decisions,4) if decisions else 0,'total_stake':round(total_stake,2),'profit_loss':round(pnl,2),'roi':round(roi,4)},'missing_actuals':missing[:100]}
+    os.makedirs('data/warehouse',exist_ok=True);os.makedirs('data/dashboard',exist_ok=True)
+    for p in ('data/warehouse/wnba_results_grading.json','data/dashboard/wnba_results_grading.json'):json.dump(clean(report),open(p,'w',encoding='utf-8'),indent=2,allow_nan=False)
     return report
 
-
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("--date",default=str(date.today())); args=ap.parse_args(); print(f"✅ Results grading: {build(args.date)}")
-if __name__=="__main__": main()
+    ap=argparse.ArgumentParser();ap.add_argument('--date',default=str(date.today()));a=ap.parse_args();print('Results grading:',build(a.date)['summary'])
+if __name__=='__main__':main()
