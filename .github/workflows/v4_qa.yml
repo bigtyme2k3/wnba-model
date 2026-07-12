@@ -53,6 +53,9 @@ jobs:
       - name: Run V4 QA command center
         run: python qa_v4.py --strict
 
+      - name: Run semantic model output QA
+        run: python qa_v4_outputs_v2.py --strict
+
       - name: Upload QA reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -60,5 +63,7 @@ jobs:
           name: wnba-v4-qa-report
           path: |
             data/dashboard/wnba_v4_qa.json
+            data/dashboard/wnba_v4_output_qa.json
             docs/V4_QA_REPORT.md
+            docs/V4_OUTPUT_QA_REPORT.md
           if-no-files-found: warn
