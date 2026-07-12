@@ -41,7 +41,7 @@ jobs:
           pip install -r requirements.txt
       - name: Validate production files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py patch_dashboard_v4_alt_streaks.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py
           bash -n scripts/atomic_generated_push.sh
       - name: Run all acceptance suites
         run: |
@@ -54,10 +54,14 @@ jobs:
         run: |
           TARGET=$(python active_slate_date.py)
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-      - name: Build prediction and feedback chain
+      - name: Build cumulative player game-log warehouse
         run: |
+          python wnba_player_game_log_archive.py snapshot
           python wnba_play_by_play_layer.py --date "${{ env.TARGET }}"
           python wnba_player_game_log_warehouse.py --date "${{ env.TARGET }}"
+          python wnba_player_game_log_archive.py merge
+      - name: Build prediction and feedback chain
+        run: |
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
           python wnba_projection_ai.py --date "${{ env.TARGET }}"
           python wnba_game_market_model.py --date "${{ env.TARGET }}"
@@ -77,6 +81,7 @@ jobs:
           python wnba_ensemble_learning.py --date "${{ env.TARGET }}"
           python wnba_alt_streaks.py --date "${{ env.TARGET }}"
           python wnba_alt_streaks_correctness.py
+          python wnba_alt_streaks_warehouse_upgrade.py --date "${{ env.TARGET }}"
       - name: Build QA and V4 status
         run: |
           python qa_v4.py
@@ -94,7 +99,7 @@ jobs:
           python patch_dashboard_v4_game_market_data.py
           python patch_dashboard_v4_core_interactions.py
           python patch_dashboard_v4_alt_streaks.py
-      - name: Verify V4 and game-log warehouse
+      - name: Verify V4 warehouse and ALT Streaks
         run: |
           python - <<'PY'
           import json
@@ -105,6 +110,9 @@ jobs:
           acceptance=json.load(open('data/dashboard/wnba_player_game_log_acceptance.json'))
           assert acceptance['status']=='green'
           assert logs.get('status')=='ok'
+          assert logs.get('summary',{}).get('archive_cumulative') is True
+          ids=[r.get('record_id') for r in logs.get('records',[])]
+          assert len(ids)==len(set(ids))
           for row in logs.get('records',[]):
               q=row['data_quality']['quarter_data_status']
               assert q in {'complete','partial','unavailable'}
@@ -116,20 +124,24 @@ jobs:
           for i in range(1,26): assert modules[f'M{i:02d}']['production_ready']
           assert status['summary']['production_ready']==25
           assert alt.get('status')=='ok'
-          assert all('recent_games' in r and 'last10_games' not in r for r in alt.get('rows',[]))
-          assert all(r.get('season_hits') is None for r in alt.get('rows',[]))
-          assert all(r.get('opponent_rank') is None for r in alt.get('rows',[]))
+          assert alt.get('source')=='player_game_log_warehouse+daily_prop_market'
+          for row in alt.get('rows',[]):
+              assert row.get('history_source')=='player_game_log_warehouse'
+              assert row['l5_games']<=5 and row['l10_games']<=10
+              assert row['season_games']>=row['l10_games']>=row['l5_games']
+              assert row.get('opponent_rank') is None
           html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert 'ALT Streaks' in html and 'v4-alt-streaks-script' in html
-          print('V4 + PLAYER GAME LOG WAREHOUSE:',status['summary'],logs['summary'])
+          assert 'ALT Streaks' in html and '<th>L5</th><th>L10</th><th>Season</th>' in html
+          print('V4 + CUMULATIVE PLAYER LOGS + ALT STREAKS:',status['summary'],logs['summary'],alt['summary'])
           PY
       - name: Commit complete V4 atomically
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Build player game log warehouse" \
+            "Connect cumulative player logs to ALT Streaks" \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
+            'data/history/wnba_player_game_logs_before_build.json' \
             'docs/V4_*REPORT.md' \
             'docs/index.html'
