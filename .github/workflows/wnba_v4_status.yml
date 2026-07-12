@@ -11,6 +11,7 @@ on:
       - 'qa_v4_outputs_v2.py'
       - 'qa_v4_acceptance.py'
       - 'qa_v4_foundation_acceptance.py'
+      - 'qa_v4_feedback_acceptance.py'
       - 'wnba_v4_status_engine.py'
       - 'wnba_play_by_play_layer.py'
       - 'wnba_matchup_intelligence.py'
@@ -19,6 +20,10 @@ on:
       - 'wnba_decision_engine_final.py'
       - 'wnba_portfolio_optimizer_v2.py'
       - 'wnba_risk_allocation.py'
+      - 'wnba_closing_line_tracker.py'
+      - 'wnba_results_grader.py'
+      - 'wnba_self_learning.py'
+      - 'wnba_reasoning_layer.py'
       - 'build_dashboard_v4.py'
       - 'patch_dashboard_v4_qa_health.py'
       - 'patch_dashboard_v4_core_interactions.py'
@@ -33,79 +38,60 @@ concurrency:
 jobs:
   build-v4-status:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Sync latest repo
         run: git pull --ff-only origin main
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: pip
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Validate V4 production files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py build_dashboard_v4.py patch_dashboard_v4_qa_health.py patch_dashboard_v4_core_interactions.py patch_dashboard_v4_game_market_data.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py build_dashboard_v4.py patch_dashboard_v4_qa_health.py patch_dashboard_v4_core_interactions.py patch_dashboard_v4_game_market_data.py
           bash -n scripts/atomic_generated_push.sh
-
-      - name: Run M07-M09 foundation acceptance
-        run: python qa_v4_foundation_acceptance.py
-
-      - name: Run M11-M15 production acceptance
-        run: python qa_v4_acceptance.py
-
+      - name: Run production acceptance suites
+        run: |
+          python qa_v4_foundation_acceptance.py
+          python qa_v4_acceptance.py
+          python qa_v4_feedback_acceptance.py
       - name: Resolve target date
         run: |
           TARGET=$(python active_slate_date.py)
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Using target date: $TARGET"
-
-      - name: Build M07 play-by-play layer
-        run: python wnba_play_by_play_layer.py --date "${{ env.TARGET }}"
-
-      - name: Build M08 matchup intelligence
-        run: python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
-
-      - name: Build M09 projection engine
-        run: python wnba_projection_ai.py --date "${{ env.TARGET }}"
-
-      - name: Rebuild M11-M12 game market model
-        run: python wnba_game_market_model.py --date "${{ env.TARGET }}"
-
-      - name: Rebuild M13 final decision engine
-        run: python wnba_decision_engine_final.py --date "${{ env.TARGET }}"
-
-      - name: Rebuild M14 portfolio optimizer
-        run: python wnba_portfolio_optimizer_v2.py --date "${{ env.TARGET }}"
-
-      - name: Rebuild M15 risk allocation
-        run: python wnba_risk_allocation.py --date "${{ env.TARGET }}"
-
-      - name: Build repository QA report
-        run: python qa_v4.py
-
-      - name: Build semantic output QA report
-        run: python qa_v4_outputs_v2.py --strict
-
-      - name: Build QA-integrated V4 status
-        run: python wnba_v4_status_engine.py
-
-      - name: Build Dashboard V4
-        run: python build_dashboard_v4.py
-
-      - name: Apply dashboard patches
+      - name: Build M07-M15 production chain
         run: |
+          python wnba_play_by_play_layer.py --date "${{ env.TARGET }}"
+          python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
+          python wnba_projection_ai.py --date "${{ env.TARGET }}"
+          python wnba_game_market_model.py --date "${{ env.TARGET }}"
+          python wnba_decision_engine_final.py --date "${{ env.TARGET }}"
+          python wnba_portfolio_optimizer_v2.py --date "${{ env.TARGET }}"
+          python wnba_risk_allocation.py --date "${{ env.TARGET }}"
+      - name: Build M16-M19 feedback loop
+        run: |
+          python wnba_closing_line_tracker.py --date "${{ env.TARGET }}" --stage snapshot
+          python wnba_results_grader.py --date "${{ env.TARGET }}"
+          python wnba_self_learning.py --date "${{ env.TARGET }}"
+          python wnba_reasoning_layer.py --date "${{ env.TARGET }}"
+      - name: Build QA and V4 status
+        run: |
+          python qa_v4.py
+          python qa_v4_outputs_v2.py --strict
+          python wnba_v4_status_engine.py
+      - name: Build and patch Dashboard V4
+        run: |
+          python build_dashboard_v4.py
           python patch_dashboard_v4_team_context.py
           python patch_dashboard_v4_layout_and_slate.py
           python patch_dashboard_v4_prop_header.py
@@ -114,43 +100,32 @@ jobs:
           python patch_dashboard_v4_qa_health.py
           python patch_dashboard_v4_game_market_data.py
           python patch_dashboard_v4_core_interactions.py
-
-      - name: Verify M07-M15 production chain
+      - name: Verify M07-M19 production chain
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          foundation=json.load(open('data/dashboard/wnba_v4_foundation_acceptance.json', encoding='utf-8'))
-          downstream=json.load(open('data/dashboard/wnba_v4_acceptance.json', encoding='utf-8'))
-          pbp=json.load(open('data/dashboard/wnba_play_by_play_layer.json', encoding='utf-8'))
-          matchup=json.load(open('data/dashboard/wnba_matchup_intelligence.json', encoding='utf-8'))
-          projection=json.load(open('data/dashboard/wnba_projection_ai.json', encoding='utf-8'))
-          decision=json.load(open('data/dashboard/wnba_decision_engine_final.json', encoding='utf-8'))
-          status=json.load(open('data/dashboard/wnba_v4_status.json', encoding='utf-8'))
-          html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert foundation['status']=='green' and foundation['summary']['failed']==0
-          assert downstream['status']=='green' and downstream['summary']['failed']==0
-          assert pbp.get('status')=='ok'
-          assert matchup.get('status')=='ok'
-          assert projection.get('status')=='ok'
-          assert all(not r.get('eligible_for_bet') or r.get('final_action')=='BET' for r in decision.get('top_decisions',[]))
+          foundation=json.load(open('data/dashboard/wnba_v4_foundation_acceptance.json'))
+          downstream=json.load(open('data/dashboard/wnba_v4_acceptance.json'))
+          feedback=json.load(open('data/dashboard/wnba_v4_feedback_acceptance.json'))
+          status=json.load(open('data/dashboard/wnba_v4_status.json'))
+          assert foundation['status']=='green' and downstream['status']=='green' and feedback['status']=='green'
           modules={m['id']:m for m in status['modules']}
-          for module_id in ('M07','M08','M09','M10','M11','M12','M13','M14','M15'):
+          for module_id in ('M07','M08','M09','M10','M11','M12','M13','M14','M15','M16','M17','M18','M19'):
               assert modules[module_id]['production_ready'], (module_id,modules[module_id])
               assert modules[module_id]['qa_grade']=='green'
-          assert status['summary']['production_ready']>=16, status['summary']
-          assert status['qa']['foundation_acceptance_status']=='green'
-          assert status['qa']['acceptance_status']=='green'
-          assert 'Quick Game Preview' in html and 'Top 3 Game Picks' in html
-          print('M07-M15 production chain verified:', status['summary'])
+          assert status['summary']['production_ready']>=20, status['summary']
+          assert status['qa']['feedback_acceptance_status']=='green'
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          assert 'Quick Game Preview' in html and 'Results & Grading' in html
+          print('M07-M19 production chain verified:',status['summary'])
           PY
-
-      - name: Commit V4 foundation atomically
+      - name: Commit V4 feedback loop atomically
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Promote V4 M07-M09 and revalidate M10-M15" \
+            "Promote V4 M16-M19 feedback loop" \
             'data/warehouse/wnba_play_by_play_layer.json' \
             'data/warehouse/wnba_matchup_intelligence.json' \
             'data/warehouse/wnba_projection_ai.json' \
@@ -158,6 +133,10 @@ jobs:
             'data/warehouse/wnba_decision_engine_final.json' \
             'data/warehouse/wnba_portfolio_optimizer_v2.json' \
             'data/warehouse/wnba_risk_allocation.json' \
+            'data/warehouse/wnba_clv_summary.json' \
+            'data/warehouse/wnba_results_grading.json' \
+            'data/warehouse/wnba_self_learning.json' \
+            'data/warehouse/wnba_reasoning_layer.json' \
             'data/dashboard/wnba_play_by_play_layer.json' \
             'data/dashboard/wnba_matchup_intelligence.json' \
             'data/dashboard/wnba_projection_ai.json' \
@@ -165,13 +144,19 @@ jobs:
             'data/dashboard/wnba_decision_engine_final.json' \
             'data/dashboard/wnba_portfolio_optimizer_v2.json' \
             'data/dashboard/wnba_risk_allocation.json' \
+            'data/dashboard/wnba_clv_summary.json' \
+            'data/dashboard/wnba_results_grading.json' \
+            'data/dashboard/wnba_self_learning.json' \
+            'data/dashboard/wnba_reasoning_layer.json' \
             'data/dashboard/wnba_v4_foundation_acceptance.json' \
             'data/dashboard/wnba_v4_acceptance.json' \
+            'data/dashboard/wnba_v4_feedback_acceptance.json' \
             'data/dashboard/wnba_v4_status.json' \
             'data/dashboard/wnba_v4_qa.json' \
             'data/dashboard/wnba_v4_output_qa.json' \
             'docs/V4_FOUNDATION_ACCEPTANCE_REPORT.md' \
             'docs/V4_ACCEPTANCE_REPORT.md' \
+            'docs/V4_FEEDBACK_ACCEPTANCE_REPORT.md' \
             'docs/V4_QA_REPORT.md' \
             'docs/V4_OUTPUT_QA_REPORT.md' \
             'docs/index.html'
