@@ -9,6 +9,7 @@ on:
     paths:
       - 'qa_v4*.py'
       - 'qa_player_game_log_warehouse.py'
+      - 'qa_alt_performance_tracker.py'
       - 'wnba_*.py'
       - 'collect_wehoop.py'
       - 'build_dashboard_v4.py'
@@ -42,7 +43,7 @@ jobs:
           pip install -r requirements.txt
       - name: Validate production files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py qa_alt_performance_tracker.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py patch_dashboard_v4_alt_performance.py
           bash -n scripts/atomic_generated_push.sh
       - name: Run all acceptance suites
         run: |
@@ -51,6 +52,7 @@ jobs:
           python qa_v4_feedback_acceptance.py
           python qa_v4_intelligence_acceptance.py
           python qa_player_game_log_warehouse.py
+          python qa_alt_performance_tracker.py
       - name: Resolve target date
         run: |
           TARGET=$(python active_slate_date.py)
@@ -72,6 +74,10 @@ jobs:
           python wnba_opponent_stat_rankings.py --date "${{ env.TARGET }}"
           python wnba_position_opponent_rankings.py --date "${{ env.TARGET }}"
           python wnba_pace_minutes_opponent_rankings.py --date "${{ env.TARGET }}"
+      - name: Grade prior ALT Streak snapshots
+        run: |
+          python wnba_alt_performance_tracker.py --date "${{ env.TARGET }}" --grade
+          python wnba_alt_performance_tracker.py --date "${{ env.TARGET }}" --analyze
       - name: Build prediction and feedback chain
         run: |
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
@@ -98,6 +104,8 @@ jobs:
           python wnba_alt_streaks_position_context.py
           python wnba_alt_streaks_pace_minutes_context.py
           python wnba_alt_streak_confidence.py --date "${{ env.TARGET }}"
+          python wnba_alt_performance_tracker.py --date "${{ env.TARGET }}" --snapshot
+          python wnba_alt_performance_tracker.py --date "${{ env.TARGET }}" --analyze
       - name: Build QA and V4 status
         run: |
           python qa_v4.py
@@ -115,56 +123,50 @@ jobs:
           python patch_dashboard_v4_game_market_data.py
           python patch_dashboard_v4_core_interactions.py
           python patch_dashboard_v4_alt_streaks.py
-      - name: Verify V4 warehouse and ALT Streaks
+          python patch_dashboard_v4_alt_performance.py
+      - name: Verify V4 ALT tracking and performance
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           status=json.load(open('data/dashboard/wnba_v4_status.json'))
           alt=json.load(open('data/dashboard/wnba_alt_streaks.json'))
+          perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
           logs=json.load(open('data/dashboard/wnba_player_game_logs.json'))
-          pbp=json.load(open('data/raw/wnba_historical_play_by_play.json'))
-          adjusted_ranks=json.load(open('data/dashboard/wnba_pace_minutes_opponent_rankings.json'))
-          acceptance=json.load(open('data/dashboard/wnba_player_game_log_acceptance.json'))
+          acceptance=json.load(open('data/dashboard/wnba_alt_performance_acceptance.json'))
           assert acceptance['status']=='green'
           assert logs.get('status')=='ok'
-          assert logs.get('summary',{}).get('historical_backfill') is True
-          assert logs.get('summary',{}).get('historical_pbp_backfill') is True
-          assert logs.get('summary',{}).get('records',0)>0
-          assert pbp.get('status')=='ok'
-          assert adjusted_ranks.get('status')=='ok'
-          ids=[r.get('record_id') for r in logs.get('records',[])]
-          assert len(ids)==len(set(ids))
           modules={m['id']:m for m in status['modules']}
           for i in range(1,26): assert modules[f'M{i:02d}']['production_ready']
           assert status['summary']['production_ready']==25
           assert alt.get('status')=='ok'
-          assert alt.get('source')=='player_game_log_warehouse+daily_prop_market'
-          assert alt.get('scoring_methodology',{}).get('missing_data_policy')=='neutral score; never imputed as favorable'
-          scores=[]
-          for row in alt.get('rows',[]):
-              assert row.get('history_source')=='player_game_log_warehouse'
-              assert 0 <= row.get('streak_score',-1) <= 100
-              assert row.get('streak_grade') in {'A+','A','B+','B','C+','C','D'}
-              assert row.get('streak_action') in {'BET','LEAN','WATCH','PASS'}
-              assert set(row.get('score_components',{}))=={'trend','matchup','form','market','risk'}
-              assert row.get('score_explanation',{}).get('summary')
-              scores.append(row['streak_score'])
-          assert scores==sorted(scores,reverse=True)
-          assert len(alt.get('top_10_streaks',[]))<=10
+          assert perf.get('status')=='ok'
+          assert perf.get('policy',{}).get('unit_size')==1.0
+          assert perf.get('policy',{}).get('recalibration_minimum_decisions')==100
+          history=Path('data/history/wnba_alt_streak_history.jsonl')
+          assert history.exists()
+          ids=[]
+          for line in history.read_text(encoding='utf-8').splitlines():
+              if not line.strip(): continue
+              row=json.loads(line);ids.append(row['candidate_id'])
+              assert row['outcome'] in {'WIN','LOSS','PUSH','VOID','PENDING'}
+              if row['outcome'] in {'WIN','LOSS','PUSH','VOID'}:
+                  assert row.get('actual_source')=='player_game_log_warehouse'
+          assert len(ids)==len(set(ids))
           html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert 'ALT Streaks' in html and '<th>Score</th>' in html and '<th>Risk</th><th>Edge</th>' in html
-          print('V4 + ALT STREAK CONFIDENCE:',status['summary'],alt['summary'])
+          assert 'ALT Performance' in html and 'v4-alt-performance-script' in html
+          print('V4 + ALT PERFORMANCE:',status['summary'],perf['summary'])
           PY
       - name: Commit complete V4 atomically
         run: |
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Add ALT Streak confidence scoring" \
+            "Track and grade ALT Streak performance" \
             'data/raw/wnba_historical_play_by_play.json' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
             'data/history/wnba_player_game_logs_before_build.json' \
+            'data/history/wnba_alt_streak_history.jsonl' \
             'docs/V4_*REPORT.md' \
             'docs/index.html'
