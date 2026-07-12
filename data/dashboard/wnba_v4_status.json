@@ -1,17 +1,14 @@
 {
-  "generated_at_utc": "2026-07-12T17:15:15.888520+00:00",
+  "generated_at_utc": "2026-07-12T17:16:16.904478+00:00",
   "version": "4.0",
   "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
   "qa": {
-    "overall_status": "green",
+    "overall_status": "red",
     "repository_qa_status": "yellow",
     "output_qa_status": "green",
     "acceptance_status": "green",
     "foundation_acceptance_status": "green",
-    "repository_qa_generated_at": "2026-07-12T17:15:15.723397+00:00",
-    "output_qa_generated_at": "2026-07-12T17:15:15.786880+00:00",
-    "acceptance_generated_at": "2026-07-12T17:15:14.293192+00:00",
-    "foundation_acceptance_generated_at": "2026-07-12T17:15:14.201299+00:00",
+    "feedback_acceptance_status": "missing",
     "output_summary": {
       "evaluated_rows": 344,
       "inspected_rows": 75,
@@ -37,12 +34,13 @@
       "tests": 5,
       "passed": 5,
       "failed": 0
-    }
+    },
+    "feedback_acceptance_summary": {}
   },
   "summary": {
     "modules": 25,
-    "completion_pct": 80.0,
-    "production_ready": 20,
+    "completion_pct": 64.0,
+    "production_ready": 16,
     "manifest_status_counts": {
       "planned": 5,
       "partial": 0,
@@ -56,11 +54,11 @@
       "missing": 0
     },
     "qa_status_counts": {
-      "green": 25,
+      "green": 21,
       "yellow": 0,
-      "red": 0
+      "red": 4
     },
-    "release_blockers": 0,
+    "release_blockers": 4,
     "warnings": 0
   },
   "modules": [
@@ -475,13 +473,15 @@
       "output": "data/dashboard/wnba_clv_summary.json",
       "rows": 1,
       "runtime_status": "active",
-      "valid_zero_output": false,
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "validated",
-      "production_ready": true,
+      "valid_zero_output": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
       "acceptance": null,
-      "blockers": [],
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -494,13 +494,15 @@
       "output": "data/dashboard/wnba_results_grading.json",
       "rows": 1,
       "runtime_status": "active",
-      "valid_zero_output": false,
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "validated",
-      "production_ready": true,
+      "valid_zero_output": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
       "acceptance": null,
-      "blockers": [],
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -514,12 +516,14 @@
       "rows": 1,
       "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "validated",
-      "production_ready": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
       "acceptance": null,
-      "blockers": [],
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -533,12 +537,14 @@
       "rows": 50,
       "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "validated",
-      "production_ready": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
       "acceptance": null,
-      "blockers": [],
+      "blockers": [
+        "Production acceptance report missing"
+      ],
       "warnings": []
     },
     {
@@ -656,8 +662,121 @@
       "warnings": []
     }
   ],
-  "release_blockers": [],
+  "release_blockers": [
+    {
+      "id": "M16",
+      "module": "CLV Tracker",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    },
+    {
+      "id": "M17",
+      "module": "Results Grading",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    },
+    {
+      "id": "M18",
+      "module": "Self Learning",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    },
+    {
+      "id": "M19",
+      "module": "Model Explainability",
+      "items": [
+        "Production acceptance report missing"
+      ]
+    }
+  ],
   "next_build_order": [
+    {
+      "id": "M16",
+      "name": "CLV Tracker",
+      "owner_file": "wnba_closing_line_tracker.py",
+      "status": "active",
+      "purpose": "Capture deduplicated line snapshots and calculate directional line and price CLV.",
+      "owner_exists": true,
+      "output": "data/dashboard/wnba_clv_summary.json",
+      "rows": 1,
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "M17",
+      "name": "Results Grading",
+      "owner_file": "wnba_results_grader.py",
+      "status": "active",
+      "purpose": "Grade win, loss, push, void and pending outcomes with duplicate protection, profit/loss, ROI and missing-data reasons.",
+      "owner_exists": true,
+      "output": "data/dashboard/wnba_results_grading.json",
+      "rows": 1,
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "M18",
+      "name": "Self Learning",
+      "owner_file": "wnba_self_learning.py",
+      "status": "active",
+      "purpose": "Apply minimum-sample, bounded and validation-gated weight updates from finalized outcomes and CLV.",
+      "owner_exists": true,
+      "output": "data/dashboard/wnba_self_learning.json",
+      "rows": 1,
+      "runtime_status": "active",
+      "valid_zero_output": false,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "M19",
+      "name": "Model Explainability",
+      "owner_file": "wnba_reasoning_layer.py",
+      "status": "active",
+      "purpose": "Explain BET, LEAN, WATCH and PASS actions with positive factors, negative factors, guardrails and selection failures.",
+      "owner_exists": true,
+      "output": "data/dashboard/wnba_reasoning_layer.json",
+      "rows": 50,
+      "runtime_status": "active",
+      "valid_zero_output": false,
+      "qa_score": 75,
+      "qa_grade": "red",
+      "effective_status": "blocked",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [
+        "Production acceptance report missing"
+      ],
+      "warnings": []
+    },
     {
       "id": "M21",
       "name": "Model Calibration",
@@ -729,25 +848,6 @@
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "active",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [],
-      "warnings": []
-    },
-    {
-      "id": "M25",
-      "name": "Ensemble Learning",
-      "owner_file": "wnba_v4_status_engine.py",
-      "status": "planned",
-      "purpose": "Combine rules, market, projection, simulation, and self-learning scores.",
-      "owner_exists": true,
-      "output": "",
-      "rows": 0,
-      "runtime_status": "scaffolded",
-      "valid_zero_output": false,
-      "qa_score": 100,
-      "qa_grade": "green",
-      "effective_status": "scaffolded",
       "production_ready": false,
       "acceptance": null,
       "blockers": [],
