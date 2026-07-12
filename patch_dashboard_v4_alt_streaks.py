@@ -29,8 +29,9 @@ SCRIPT = r"""
     const stats=['ALL',...new Set(all.map(r=>r.stat).filter(Boolean))];
     const odds=['ALL','-150','-300','-500+'];
     let rows=all.filter(r=>(altStat==='ALL'||r.stat===altStat)&&(altOdds==='ALL'||oddsBand(r.best_odds)===altOdds));
-    const body=rows.map(r=>`<tr><td><div class="altPlayer">${esc(r.player)}</div><div class="small mono">${esc(val(r.team))}</div></td><td class="altStat mono">${esc(r.stat)}</td><td class="mono"><b>${esc(r.side==='UNDER'?'U':'O')} ${esc(r.alt_line)}</b><div class="small mono">${esc(r.line_type)}</div></td><td><div class="altStreak mono">${esc(r.streak)}</div><div class="small mono">straight</div></td><td class="${pctClass(r.last10_pct)} mono">${esc(r.last10_hits)}/${esc(r.last10_games)}<div class="small">${Math.round(Number(r.last10_pct||0)*100)}%</div></td><td class="${pctClass(r.season_pct)} mono">${r.season_hits===null||r.season_hits===undefined?'—':`${esc(r.season_hits)}/${esc(r.season_games)}`}<div class="small">${r.season_pct===null||r.season_pct===undefined?'':Math.round(Number(r.season_pct)*100)+'%'}</div></td><td class="mono">${esc(val(r.average))}</td><td class="mono">${esc(val(r.opponent_rank))}<div class="small">${esc(val(r.opponent_label,''))}</div></td><td class="mono"><b>${esc(val(r.best_odds))}</b><div class="altBook">${esc(val(r.best_book))}</div></td></tr>`).join('');
-    return `<div class="section"><div class="row"><div><h2 class="mono">ALT Streaks</h2><div class="small mono">Alternate and standard lines on active streaks of 3+ games.</div></div><div class="altCount mono">${rows.length} rows</div></div><div class="label mono">Stat Type</div><div class="altFilters">${buttons(stats,altStat,'setAltStat')}</div><div class="label mono">Odds Tier</div><div class="altFilters">${buttons(odds,altOdds,'setAltOdds')}</div><div class="altTableWrap"><table class="altTable"><thead><tr><th>Player</th><th>Stat</th><th>Line</th><th>Streak</th><th>L10</th><th>Season</th><th>Avg</th><th>Opp Rank</th><th>Best Odds</th></tr></thead><tbody>${body||`<tr><td colspan="9"><div class="altEmpty mono">No qualifying streak rows with verified history and supplied lines.</div></td></tr>`}</tbody></table></div><div class="altPolicy mono">${esc(val(payload.data_policy,'Real history and sportsbook lines only.'))}</div></div>`;
+    const body=rows.map(r=>`<tr><td><div class="altPlayer">${esc(r.player)}</div><div class="small mono">${esc(val(r.team))}</div></td><td class="altStat mono">${esc(r.stat)}</td><td class="mono"><b>${esc(r.side==='UNDER'?'U':'O')} ${esc(r.alt_line)}</b><div class="small mono">${esc(r.line_type)}</div></td><td><div class="altStreak mono">${esc(r.streak)}</div><div class="small mono">straight</div></td><td class="${pctClass(r.recent_pct)} mono">${esc(val(r.recent_hits))}/${esc(val(r.recent_games))}<div class="small">${r.recent_pct===null||r.recent_pct===undefined?'':Math.round(Number(r.recent_pct)*100)+'%'}</div></td><td class="mono">${r.season_hits===null||r.season_hits===undefined?'—':`${esc(r.season_hits)}/${esc(r.season_games)}`}</td><td class="mono">${esc(val(r.average))}</td><td class="mono">${r.opponent_rank===null||r.opponent_rank===undefined?'—':esc(r.opponent_rank)}<div class="small">${esc(val(r.opponent_label,''))}</div></td><td class="mono"><b>${esc(val(r.best_odds))}</b><div class="altBook">${esc(val(r.best_book))}</div></td></tr>`).join('');
+    const recentLabel=rows.length&&rows.every(r=>r.recent_label===rows[0].recent_label)?rows[0].recent_label:'Recent';
+    return `<div class="section"><div class="row"><div><h2 class="mono">ALT Streaks</h2><div class="small mono">Alternate and standard lines on active streaks of 3+ verified recent games.</div></div><div class="altCount mono">${rows.length} rows</div></div><div class="label mono">Stat Type</div><div class="altFilters">${buttons(stats,altStat,'setAltStat')}</div><div class="label mono">Odds Tier</div><div class="altFilters">${buttons(odds,altOdds,'setAltOdds')}</div><div class="altTableWrap"><table class="altTable"><thead><tr><th>Player</th><th>Stat</th><th>Line</th><th>Streak</th><th>${esc(recentLabel)}</th><th>Season</th><th>Avg</th><th>Opp Rank</th><th>Best Odds</th></tr></thead><tbody>${body||`<tr><td colspan="9"><div class="altEmpty mono">No qualifying streak rows with verified history and supplied lines.</div></td></tr>`}</tbody></table></div><div class="altPolicy mono">${esc(val(payload.data_policy,'Verified recent history and sportsbook lines only.'))}</div></div>`;
   };
   const oldRender=window.render;
   window.render=function(view){
@@ -65,25 +66,15 @@ def replace_block(html: str, start_marker: str, end_marker: str, replacement: st
 def main() -> None:
     if not HTML.exists():
         raise SystemExit("docs/index.html missing")
-    payload = {}
     try:
         payload = json.load(DATA.open(encoding="utf-8")) if DATA.exists() else {}
     except Exception:
         payload = {}
     html = HTML.read_text(encoding="utf-8")
     data_script = f'<script id="v4-alt-streaks-data">DATA.alt_streaks={json.dumps(payload, separators=(",", ":"), ensure_ascii=False)};</script>'
-    if 'id="v4-alt-streaks-data"' in html:
-        html = replace_block(html, '<script id="v4-alt-streaks-data">', '</script>', data_script)
-    else:
-        html = html.replace("</body>", data_script + "</body>")
-    if 'id="v4-alt-streaks-style"' in html:
-        html = replace_block(html, '<style id="v4-alt-streaks-style">', '</style>', CSS)
-    else:
-        html = html.replace("</head>", CSS + "</head>")
-    if 'id="v4-alt-streaks-script"' in html:
-        html = replace_block(html, '<script id="v4-alt-streaks-script">', '</script>', SCRIPT)
-    else:
-        html = html.replace("</body>", SCRIPT + "</body>")
+    html = replace_block(html, '<script id="v4-alt-streaks-data">', '</script>', data_script) if 'id="v4-alt-streaks-data"' in html else html.replace("</body>", data_script + "</body>")
+    html = replace_block(html, '<style id="v4-alt-streaks-style">', '</style>', CSS) if 'id="v4-alt-streaks-style"' in html else html.replace("</head>", CSS + "</head>")
+    html = replace_block(html, '<script id="v4-alt-streaks-script">', '</script>', SCRIPT) if 'id="v4-alt-streaks-script"' in html else html.replace("</body>", SCRIPT + "</body>")
     HTML.write_text(html, encoding="utf-8")
     print(f"ALT Streaks tab applied with {len(payload.get('rows', [])) if isinstance(payload, dict) else 0} rows")
 
