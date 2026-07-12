@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-12T14:42:28.002036+00:00`
+Generated: `2026-07-12T15:05:37.964591+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -57,7 +57,7 @@ Generated: `2026-07-12T14:42:28.002036+00:00`
 | `.github/workflows/results_review_center_extension.yml` | 9 | 1 | 0.111 | low | True |
 | `.github/workflows/results_tracker.yml` | 6 | 1 | 0.167 | low | True |
 | `.github/workflows/v4_qa.yml` | 7 | 0 | 0.0 | low | False |
-| `.github/workflows/wnba_autonomous_agent.yml` | 11 | 5 | 0.455 | medium | True |
+| `.github/workflows/wnba_autonomous_agent.yml` | 11 | 5 | 0.455 | medium | False |
 | `.github/workflows/wnba_closing_line_snapshots.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_data_warehouse.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_injury_refresh.yml` | 12 | 1 | 0.083 | low | True |
