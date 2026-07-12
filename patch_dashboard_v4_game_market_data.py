@@ -17,7 +17,14 @@ def main() -> None:
         payload = json.load(DATA.open(encoding="utf-8")) if DATA.exists() else {}
     except Exception:
         payload = {}
-    block = f'{MARKER_START}window.GAME_MARKET={json.dumps(payload, separators=(",", ":"), ensure_ascii=False)};{MARKER_END}'
+    encoded = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+    script = (
+        f"window.GAME_MARKET={encoded};"
+        "DATA.game_market=window.GAME_MARKET;"
+        "DATA.projection=Object.assign({},DATA.projection||{},"
+        "{games:[...((DATA.projection||{}).games||[]),...((window.GAME_MARKET||{}).games||[])]});"
+    )
+    block = f"{MARKER_START}{script}{MARKER_END}"
     html = HTML.read_text(encoding="utf-8")
     start = html.find(MARKER_START)
     if start >= 0:
