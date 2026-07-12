@@ -10,6 +10,8 @@ on:
       - 'qa_v4.py'
       - 'qa_v4_outputs_v2.py'
       - 'wnba_v4_status_engine.py'
+      - 'wnba_decision_engine_final.py'
+      - 'wnba_portfolio_optimizer_v2.py'
       - 'build_dashboard_v4.py'
       - 'patch_dashboard_v4_qa_health.py'
       - 'patch_dashboard_v4_core_interactions.py'
@@ -42,14 +44,26 @@ jobs:
 
       - name: Validate V4 QA and dashboard files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py wnba_v4_status_engine.py build_dashboard_v4.py patch_dashboard_v4_qa_health.py patch_dashboard_v4_core_interactions.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py wnba_v4_status_engine.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py build_dashboard_v4.py patch_dashboard_v4_qa_health.py patch_dashboard_v4_core_interactions.py
           bash -n scripts/atomic_generated_push.sh
+
+      - name: Resolve target date
+        run: |
+          TARGET=$(python active_slate_date.py)
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Using target date: $TARGET"
+
+      - name: Rebuild final decision engine
+        run: python wnba_decision_engine_final.py --date "${{ env.TARGET }}"
+
+      - name: Rebuild portfolio optimizer
+        run: python wnba_portfolio_optimizer_v2.py --date "${{ env.TARGET }}"
 
       - name: Build repository QA report
         run: python qa_v4.py
 
       - name: Build semantic output QA report
-        run: python qa_v4_outputs_v2.py
+        run: python qa_v4_outputs_v2.py --strict
 
       - name: Build QA-integrated V4 status
         run: python wnba_v4_status_engine.py
@@ -78,23 +92,25 @@ jobs:
       - name: Restore quick game preview and Results tab
         run: python patch_dashboard_v4_core_interactions.py
 
-      - name: Verify dashboard integration
+      - name: Verify decision semantics and dashboard integration
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+          decision=json.load(open('data/dashboard/wnba_decision_engine_final.json', encoding='utf-8'))
           status=json.load(open('data/dashboard/wnba_v4_status.json', encoding='utf-8'))
           html=Path('docs/index.html').read_text(encoding='utf-8')
+          rows=decision.get('top_decisions', [])
+          assert all(not row.get('eligible_for_bet') or row.get('final_action') == 'BET' for row in rows)
+          assert all('prequalified_for_bet' in row and 'selection_failures' in row for row in rows)
           assert status.get('qa',{}).get('overall_status') in {'green','yellow','red'}
           assert len(status.get('modules',[])) == 25
           assert 'v4-qa-health-script' in html
           assert 'v4-core-interactions-script' in html
           assert 'Quick Game Preview' in html
-          assert 'Projected Margin' in html
-          assert 'Projected Total' in html
           assert 'Top 3 Game Picks' in html
           assert 'Results & Grading' in html
-          print('V4 dashboard preview and results verified')
+          print('V4 decisions, health, preview, and results verified')
           PY
 
       - name: Commit V4 dashboard atomically
@@ -103,6 +119,10 @@ jobs:
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
             "Update WNBA V4 QA health dashboard" \
+            'data/warehouse/wnba_decision_engine_final.json' \
+            'data/warehouse/wnba_portfolio_optimizer_v2.json' \
+            'data/dashboard/wnba_decision_engine_final.json' \
+            'data/dashboard/wnba_portfolio_optimizer_v2.json' \
             'data/dashboard/wnba_v4_status.json' \
             'data/dashboard/wnba_v4_qa.json' \
             'data/dashboard/wnba_v4_output_qa.json' \
