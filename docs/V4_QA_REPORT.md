@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-12T15:41:37.247225+00:00`
+Generated: `2026-07-12T16:53:13.428192+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -20,9 +20,9 @@ Generated: `2026-07-12T15:41:37.247225+00:00`
 | M04 | Sportsbook Consensus | active | green | 100 | `wnba_sportsbook_consensus.py` |
 | M05 | Player Stats Warehouse | active | green | 100 | `wnba_player_intelligence.py` |
 | M06 | Boxscore Fallback | active | green | 100 | `wnba_stats_fallback_from_boxscores.py` |
-| M07 | Play-by-Play Layer | partial | green | 100 | `sports_skills_core_provider.py` |
-| M08 | Matchup Intelligence | partial | green | 100 | `wnba_matchup_intelligence.py` |
-| M09 | Projection Engine | partial | green | 100 | `wnba_projection_ai.py` |
+| M07 | Play-by-Play Layer | active | green | 100 | `wnba_play_by_play_layer.py` |
+| M08 | Matchup Intelligence | active | green | 100 | `wnba_matchup_intelligence.py` |
+| M09 | Projection Engine | active | green | 100 | `wnba_projection_ai.py` |
 | M10 | Player Props Model | active | green | 100 | `player_points.py` |
 | M11 | Spread Model | active | green | 100 | `wnba_game_market_model.py` |
 | M12 | Totals Model | active | green | 100 | `wnba_game_market_model.py` |
