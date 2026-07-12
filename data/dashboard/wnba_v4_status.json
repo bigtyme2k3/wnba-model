@@ -1,17 +1,17 @@
 {
-  "generated_at_utc": "2026-07-12T16:54:31.531900+00:00",
+  "generated_at_utc": "2026-07-12T17:05:04.531261+00:00",
   "version": "4.0",
   "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
   "qa": {
-    "overall_status": "red",
+    "overall_status": "green",
     "repository_qa_status": "yellow",
     "output_qa_status": "green",
     "acceptance_status": "green",
-    "foundation_acceptance_status": "missing",
-    "repository_qa_generated_at": "2026-07-12T16:54:31.373280+00:00",
-    "output_qa_generated_at": "2026-07-12T16:54:31.437741+00:00",
-    "acceptance_generated_at": "2026-07-12T16:54:30.902673+00:00",
-    "foundation_acceptance_generated_at": null,
+    "foundation_acceptance_status": "green",
+    "repository_qa_generated_at": "2026-07-12T17:05:04.366442+00:00",
+    "output_qa_generated_at": "2026-07-12T17:05:04.429709+00:00",
+    "acceptance_generated_at": "2026-07-12T17:05:03.001712+00:00",
+    "foundation_acceptance_generated_at": "2026-07-12T17:05:02.912065+00:00",
     "output_summary": {
       "evaluated_rows": 344,
       "inspected_rows": 75,
@@ -33,12 +33,16 @@
       "passed": 7,
       "failed": 0
     },
-    "foundation_acceptance_summary": {}
+    "foundation_acceptance_summary": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0
+    }
   },
   "summary": {
     "modules": 25,
-    "completion_pct": 52.0,
-    "production_ready": 13,
+    "completion_pct": 64.0,
+    "production_ready": 16,
     "manifest_status_counts": {
       "planned": 5,
       "partial": 4,
@@ -46,17 +50,17 @@
       "validated": 0
     },
     "runtime_status_counts": {
-      "active": 20,
-      "wired": 1,
+      "active": 21,
+      "wired": 0,
       "scaffolded": 4,
       "missing": 0
     },
     "qa_status_counts": {
-      "green": 22,
+      "green": 25,
       "yellow": 0,
-      "red": 3
+      "red": 0
     },
-    "release_blockers": 3,
+    "release_blockers": 0,
     "warnings": 0
   },
   "modules": [
@@ -182,17 +186,31 @@
       "purpose": "Normalize event feeds, estimate possessions and pace, track substitutions, and explicitly label fallback data.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_play_by_play_layer.json",
-      "rows": 0,
-      "runtime_status": "wired",
+      "rows": 7,
+      "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M07",
+            "test": "normalizes events, possessions and substitutions",
+            "passed": true,
+            "detail": ""
+          },
+          {
+            "module": "M07",
+            "test": "labels fallback without inventing observed data",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -206,14 +224,22 @@
       "rows": 344,
       "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M08",
+            "test": "rest, venue, pace, defense, role and injury trace",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -227,14 +253,28 @@
       "rows": 344,
       "runtime_status": "active",
       "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M09",
+            "test": "projection trace, uncertainty and confidence",
+            "passed": true,
+            "detail": ""
+          },
+          {
+            "module": "M09",
+            "test": "injury adjustment remains bounded",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -616,93 +656,8 @@
       "warnings": []
     }
   ],
-  "release_blockers": [
-    {
-      "id": "M07",
-      "module": "Play-by-Play Layer",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M08",
-      "module": "Matchup Intelligence",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M09",
-      "module": "Projection Engine",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    }
-  ],
+  "release_blockers": [],
   "next_build_order": [
-    {
-      "id": "M07",
-      "name": "Play-by-Play Layer",
-      "owner_file": "wnba_play_by_play_layer.py",
-      "status": "active",
-      "purpose": "Normalize event feeds, estimate possessions and pace, track substitutions, and explicitly label fallback data.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_play_by_play_layer.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M08",
-      "name": "Matchup Intelligence",
-      "owner_file": "wnba_matchup_intelligence.py",
-      "status": "active",
-      "purpose": "Combine pace, opponent strength, rest, venue, role, trends, and injury context with auditable components.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_matchup_intelligence.json",
-      "rows": 344,
-      "runtime_status": "active",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M09",
-      "name": "Projection Engine",
-      "owner_file": "wnba_projection_ai.py",
-      "status": "active",
-      "purpose": "Produce explainable player projections with minutes, usage, matchup, pace, injury, uncertainty, and source trace.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_projection_ai.json",
-      "rows": 344,
-      "runtime_status": "active",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
     {
       "id": "M16",
       "name": "CLV Tracker",
@@ -793,6 +748,63 @@
       "qa_score": 100,
       "qa_grade": "green",
       "effective_status": "scaffolded",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [],
+      "warnings": []
+    },
+    {
+      "id": "M22",
+      "name": "Feature Importance",
+      "owner_file": "wnba_v4_status_engine.py",
+      "status": "planned",
+      "purpose": "Track which features help predictions and which create noise.",
+      "owner_exists": true,
+      "output": "",
+      "rows": 0,
+      "runtime_status": "scaffolded",
+      "valid_zero_output": false,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "scaffolded",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [],
+      "warnings": []
+    },
+    {
+      "id": "M23",
+      "name": "Hyperparameter Optimization",
+      "owner_file": "wnba_v4_status_engine.py",
+      "status": "planned",
+      "purpose": "Tune model weights with optuna when enough historical results exist.",
+      "owner_exists": true,
+      "output": "",
+      "rows": 0,
+      "runtime_status": "scaffolded",
+      "valid_zero_output": false,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "scaffolded",
+      "production_ready": false,
+      "acceptance": null,
+      "blockers": [],
+      "warnings": []
+    },
+    {
+      "id": "M24",
+      "name": "Daily Retraining",
+      "owner_file": "wnba_self_learning.py",
+      "status": "planned",
+      "purpose": "Automate daily model refresh, validation, and safe weight updates.",
+      "owner_exists": true,
+      "output": "data/dashboard/wnba_self_learning.json",
+      "rows": 1,
+      "runtime_status": "active",
+      "valid_zero_output": false,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "active",
       "production_ready": false,
       "acceptance": null,
       "blockers": [],

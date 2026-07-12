@@ -1,6 +1,6 @@
 # WNBA V4 Model Output QA
 
-Generated: `2026-07-12T16:54:31.437741+00:00`
+Generated: `2026-07-12T17:05:04.429709+00:00`
 
 **Status:** GREEN
 
