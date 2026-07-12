@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-12T15:30:56.574712+00:00`
+Generated: `2026-07-12T15:38:19.704426+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -24,11 +24,11 @@ Generated: `2026-07-12T15:30:56.574712+00:00`
 | M08 | Matchup Intelligence | partial | green | 100 | `wnba_matchup_intelligence.py` |
 | M09 | Projection Engine | partial | green | 100 | `wnba_projection_ai.py` |
 | M10 | Player Props Model | active | green | 100 | `player_points.py` |
-| M11 | Spread Model | partial | green | 100 | `wnba_decision_engine_final.py` |
-| M12 | Totals Model | partial | green | 100 | `wnba_decision_engine_final.py` |
-| M13 | Expected Value Engine | partial | green | 100 | `wnba_decision_engine_final.py` |
-| M14 | Portfolio Optimizer | partial | green | 100 | `wnba_portfolio_optimizer_v2.py` |
-| M15 | Risk Allocation | partial | green | 100 | `wnba_risk_allocation.py` |
+| M11 | Spread Model | active | green | 100 | `wnba_game_market_model.py` |
+| M12 | Totals Model | active | green | 100 | `wnba_game_market_model.py` |
+| M13 | Expected Value Engine | active | green | 100 | `wnba_decision_engine_final.py` |
+| M14 | Portfolio Optimizer | active | green | 100 | `wnba_portfolio_optimizer_v2.py` |
+| M15 | Risk Allocation | active | green | 100 | `wnba_risk_allocation.py` |
 | M16 | CLV Tracker | partial | green | 100 | `wnba_closing_line_tracker.py` |
 | M17 | Results Grading | partial | green | 100 | `wnba_results_grader.py` |
 | M18 | Self Learning | partial | green | 100 | `wnba_self_learning.py` |
