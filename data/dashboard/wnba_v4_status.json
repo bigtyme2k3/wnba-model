@@ -1,15 +1,15 @@
 {
-  "generated_at_utc": "2026-07-12T17:26:20.283552+00:00",
+  "generated_at_utc": "2026-07-12T17:27:03.471944+00:00",
   "version": "4.0",
   "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
   "qa": {
-    "overall_status": "red",
+    "overall_status": "green",
     "repository_qa_status": "yellow",
     "output_qa_status": "green",
     "acceptance_status": "green",
     "foundation_acceptance_status": "green",
     "feedback_acceptance_status": "green",
-    "intelligence_acceptance_status": "missing",
+    "intelligence_acceptance_status": "green",
     "output_summary": {
       "evaluated_rows": 344,
       "inspected_rows": 75,
@@ -41,12 +41,16 @@
       "passed": 5,
       "failed": 0
     },
-    "intelligence_acceptance_summary": {}
+    "intelligence_acceptance_summary": {
+      "tests": 5,
+      "passed": 5,
+      "failed": 0
+    }
   },
   "summary": {
     "modules": 25,
-    "completion_pct": 80.0,
-    "production_ready": 20,
+    "completion_pct": 100.0,
+    "production_ready": 25,
     "manifest_status_counts": {
       "planned": 0,
       "partial": 0,
@@ -54,17 +58,17 @@
       "validated": 0
     },
     "runtime_status_counts": {
-      "active": 20,
-      "wired": 5,
+      "active": 25,
+      "wired": 0,
       "scaffolded": 0,
       "missing": 0
     },
     "qa_status_counts": {
-      "green": 20,
+      "green": 25,
       "yellow": 0,
-      "red": 5
+      "red": 0
     },
-    "release_blockers": 5,
+    "release_blockers": 0,
     "warnings": 0
   },
   "modules": [
@@ -618,17 +622,25 @@
       "purpose": "Measure Brier score, ECE, reliability buckets, and bounded confidence correction.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_model_calibration.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "rows": 7,
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M21",
+            "test": "bounded calibration metrics",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -639,17 +651,25 @@
       "purpose": "Rank outcome-linked features and track importance drift without claiming significance on small samples.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_feature_importance.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "rows": 9,
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M22",
+            "test": "importance ranking and drift schema",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -660,17 +680,25 @@
       "purpose": "Run deterministic champion-challenger tuning with minimum samples, improvement thresholds, and rollback safety.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_hyperparameter_optimizer.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "rows": 1,
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M23",
+            "test": "champion challenger safety",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -681,17 +709,25 @@
       "purpose": "Audit the learning pipeline daily and promote only validated improvements; otherwise hold production safely.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_daily_retraining.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "rows": 1,
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M24",
+            "test": "safe hold without enough data",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     },
     {
@@ -702,162 +738,28 @@
       "purpose": "Combine projection edge, EV, simulation, market, calibration, optimization, and learning into a bounded final decision.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_ensemble_learning.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
+      "rows": 75,
+      "runtime_status": "active",
+      "valid_zero_output": true,
+      "qa_score": 100,
+      "qa_grade": "green",
+      "effective_status": "validated",
+      "production_ready": true,
+      "acceptance": {
+        "passed": true,
+        "tests": [
+          {
+            "module": "M25",
+            "test": "bounded ensemble decision contract",
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      "blockers": [],
       "warnings": []
     }
   ],
-  "release_blockers": [
-    {
-      "id": "M21",
-      "module": "Model Calibration",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M22",
-      "module": "Feature Importance",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M23",
-      "module": "Hyperparameter Optimization",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M24",
-      "module": "Daily Retraining",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    },
-    {
-      "id": "M25",
-      "module": "Ensemble Learning",
-      "items": [
-        "Production acceptance report missing"
-      ]
-    }
-  ],
-  "next_build_order": [
-    {
-      "id": "M21",
-      "name": "Model Calibration",
-      "owner_file": "wnba_model_calibration.py",
-      "status": "active",
-      "purpose": "Measure Brier score, ECE, reliability buckets, and bounded confidence correction.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_model_calibration.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M22",
-      "name": "Feature Importance",
-      "owner_file": "wnba_feature_importance.py",
-      "status": "active",
-      "purpose": "Rank outcome-linked features and track importance drift without claiming significance on small samples.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_feature_importance.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M23",
-      "name": "Hyperparameter Optimization",
-      "owner_file": "wnba_hyperparameter_optimizer.py",
-      "status": "active",
-      "purpose": "Run deterministic champion-challenger tuning with minimum samples, improvement thresholds, and rollback safety.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_hyperparameter_optimizer.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M24",
-      "name": "Daily Retraining",
-      "owner_file": "wnba_daily_retraining.py",
-      "status": "active",
-      "purpose": "Audit the learning pipeline daily and promote only validated improvements; otherwise hold production safely.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_daily_retraining.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "M25",
-      "name": "Ensemble Learning",
-      "owner_file": "wnba_ensemble_learning.py",
-      "status": "active",
-      "purpose": "Combine projection edge, EV, simulation, market, calibration, optimization, and learning into a bounded final decision.",
-      "owner_exists": true,
-      "output": "data/dashboard/wnba_ensemble_learning.json",
-      "rows": 0,
-      "runtime_status": "wired",
-      "valid_zero_output": false,
-      "qa_score": 75,
-      "qa_grade": "red",
-      "effective_status": "blocked",
-      "production_ready": false,
-      "acceptance": null,
-      "blockers": [
-        "Production acceptance report missing"
-      ],
-      "warnings": []
-    }
-  ]
+  "release_blockers": [],
+  "next_build_order": []
 }
