@@ -4,6 +4,18 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '45 13 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'qa_v4.py'
+      - 'qa_v4_outputs_v2.py'
+      - 'wnba_v4_status_engine.py'
+      - 'build_dashboard_v4.py'
+      - 'patch_dashboard_v4_qa_health.py'
+      - 'config/v4_modules.json'
+      - 'data/dashboard/wnba_v4_qa.json'
+      - 'data/dashboard/wnba_v4_output_qa.json'
+      - '.github/workflows/wnba_v4_status.yml'
 
 concurrency:
   group: wnba-v4-status
