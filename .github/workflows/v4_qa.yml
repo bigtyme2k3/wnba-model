@@ -56,6 +56,29 @@ jobs:
       - name: Run semantic model output QA
         run: python qa_v4_outputs_v2.py --strict
 
+      - name: Build QA-integrated module status
+        run: python wnba_v4_status_engine.py
+
+      - name: Build and patch QA Health dashboard
+        run: |
+          python build_dashboard_v4.py
+          python patch_dashboard_v4_qa_health.py
+
+      - name: Verify QA Health integration
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          status=json.load(open('data/dashboard/wnba_v4_status.json', encoding='utf-8'))
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          assert len(status.get('modules',[])) == 25
+          assert all({'qa_grade','qa_score','production_ready','effective_status','blockers','warnings'} <= set(m) for m in status['modules'])
+          assert status.get('qa',{}).get('overall_status') in {'green','yellow','red'}
+          assert 'v4-qa-health-script' in html
+          assert 'V4 QA Command Center' in html
+          print('QA Health dashboard integration verified')
+          PY
+
       - name: Upload QA reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -64,6 +87,8 @@ jobs:
           path: |
             data/dashboard/wnba_v4_qa.json
             data/dashboard/wnba_v4_output_qa.json
+            data/dashboard/wnba_v4_status.json
             docs/V4_QA_REPORT.md
             docs/V4_OUTPUT_QA_REPORT.md
+            docs/index.html
           if-no-files-found: warn
