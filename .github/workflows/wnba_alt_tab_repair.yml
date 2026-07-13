@@ -1,0 +1,60 @@
+name: WNBA ALT Tab Repair
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'patch_dashboard_v4_force_alt_tab.py'
+      - 'patch_dashboard_v4_alt_streaks.py'
+      - '.github/workflows/wnba_alt_tab_repair.yml'
+  workflow_run:
+    workflows: ["WNBA Version 4 Status", "WNBA Mission Control"]
+    types: [completed]
+
+concurrency:
+  group: wnba-alt-tab-repair
+  cancel-in-progress: true
+
+jobs:
+  repair-alt-navigation:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate repair scripts
+        run: python -m py_compile patch_dashboard_v4_alt_streaks.py patch_dashboard_v4_force_alt_tab.py
+      - name: Reapply ALT data and UI
+        run: |
+          python patch_dashboard_v4_alt_streaks.py
+          python patch_dashboard_v4_force_alt_tab.py
+      - name: Verify ALT tab is permanent
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          assert 'v4-alt-streaks-script' in html
+          assert 'v4-force-alt-tab-script' in html
+          assert 'ALT Streaks' in html
+          assert 'data-view="alt"' in html
+          assert 'MutationObserver' in html
+          assert 'window.altStreaks' in html
+          print('ALT TAB REPAIR VERIFIED')
+          PY
+      - name: Commit repaired dashboard
+        run: |
+          git config user.name "WNBA ALT Repair Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Repair permanent ALT Streaks navigation" \
+            'docs/index.html'
