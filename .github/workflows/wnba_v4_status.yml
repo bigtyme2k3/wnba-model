@@ -47,7 +47,6 @@ jobs:
           python qa_ancillary_projection_v2.py
           python qa_unified_player_simulation_v2.py
           python qa_cross_market_top_plays.py
-          python qa_parlay_optimizer_v2.py
       - name: Resolve target date
         run: |
           TARGET=$(python active_slate_date.py)
@@ -124,6 +123,7 @@ jobs:
           python wnba_model_picks_ledger.py analyze --date "${{ env.TARGET }}"
       - name: Run post-build data acceptance suites
         run: |
+          python qa_parlay_optimizer_v2.py
           python qa_projection_performance.py
           python qa_model_explainability.py
           python qa_market_intelligence.py
