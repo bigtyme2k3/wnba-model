@@ -1,0 +1,75 @@
+name: WNBA Model Explainability
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["WNBA Version 4 Status"]
+    types: [completed]
+
+concurrency:
+  group: wnba-model-explainability
+  cancel-in-progress: false
+
+jobs:
+  explain-top-plays:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate explainability files
+        run: python -m py_compile wnba_model_explainability.py qa_model_explainability.py patch_dashboard_v4_explainability.py
+      - name: Run acceptance tests
+        run: python qa_model_explainability.py
+      - name: Resolve target date
+        run: |
+          TARGET=$(python active_slate_date.py)
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+      - name: Build source-backed explanations
+        run: python wnba_model_explainability.py --date "${{ env.TARGET }}"
+      - name: Add Why panels to Best Bets
+        run: python patch_dashboard_v4_explainability.py
+      - name: Verify explanation contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.load(open('data/dashboard/wnba_model_explainability.json'))
+          acceptance=json.load(open('data/dashboard/wnba_model_explainability_acceptance.json'))
+          assert acceptance['status']=='green'
+          assert payload['status']=='ok'
+          for row in payload.get('explanations',[]):
+              assert row['explanation_version']=='1.0'
+              assert isinstance(row['features'],list)
+              assert isinstance(row['biggest_positives'],list)
+              assert isinstance(row['biggest_risks'],list)
+              assert isinstance(row['unavailable_inputs'],list)
+              for feature in row['features']:
+                  assert feature['direction'] in {'positive','negative','neutral'}
+                  assert feature['source']
+                  assert isinstance(feature['available'],bool)
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          assert 'v4-explainability-script' in html
+          assert 'toggleWhy' in html
+          assert 'Why?' in html
+          assert 'window.whyMarkup' in html
+          print('MODEL EXPLAINABILITY:',payload['summary'])
+          PY
+      - name: Commit explainability atomically
+        run: |
+          git config user.name "WNBA Explainability Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Build model explainability and Why panels" \
+            'data/warehouse/wnba_model_explainability.json' \
+            'data/dashboard/wnba_model_explainability*.json' \
+            'docs/index.html'
