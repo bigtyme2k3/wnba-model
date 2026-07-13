@@ -2,74 +2,21 @@ name: WNBA Controlled Recalibration
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["WNBA Version 4 Status"]
-    types: [completed]
-
-concurrency:
-  group: wnba-controlled-recalibration
-  cancel-in-progress: false
 
 jobs:
-  calibration-lab:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+  manual-validation:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Sync latest repository
-        run: git pull --ff-only origin main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Validate calibration files
-        run: python -m py_compile wnba_controlled_recalibration.py qa_controlled_recalibration.py patch_dashboard_v4_calibration_lab.py
-      - name: Run acceptance tests
-        run: python qa_controlled_recalibration.py
-      - name: Resolve slate date
+      - name: Validate controlled recalibration
         run: |
+          python -m py_compile wnba_controlled_recalibration.py qa_controlled_recalibration.py
+          python qa_controlled_recalibration.py
           TARGET=$(python active_slate_date.py)
-          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-      - name: Build reviewable proposals
-        run: python wnba_controlled_recalibration.py --date "${{ env.TARGET }}"
-      - name: Add Calibration Lab to dashboard
-        run: python patch_dashboard_v4_calibration_lab.py
-      - name: Verify controls and dashboard
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          payload=json.load(open('data/dashboard/wnba_controlled_recalibration.json'))
-          acceptance=json.load(open('data/dashboard/wnba_controlled_recalibration_acceptance.json'))
-          assert acceptance['status']=='green'
-          assert payload['status']=='ok'
-          assert payload['policy']['production_weights_modified'] is False
-          assert payload['policy']['approval_requires_manual_review'] is True
-          assert payload['policy']['maximum_single_update_pct']==5
-          for row in payload.get('proposals',[]):
-              assert row['status'] in {'LOCKED','TESTING','APPROVED','REJECTED'}
-              assert .95 <= row['proposed']['mean_multiplier'] <= 1.05
-              assert .95 <= row['proposed']['variance_multiplier'] <= 1.05
-              assert row['production_applied'] is False
-              if row['sample_size'] < 100: assert row['status']=='LOCKED'
-              if row['sample_size'] < 200: assert row['proposed']['variance_multiplier']==1.0
-          html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert 'v4-calibration-lab-script' in html
-          assert 'Calibration Lab' in html
-          assert 'window.calibrationLab' in html
-          print('CONTROLLED RECALIBRATION:',payload['summary'])
-          PY
-      - name: Commit calibration lab atomically
-        run: |
-          git config user.name "WNBA Calibration Bot"
-          git config user.email "actions@github.com"
-          bash scripts/atomic_generated_push.sh \
-            "Update controlled recalibration lab" \
-            'data/warehouse/wnba_controlled_recalibration.json' \
-            'data/dashboard/wnba_controlled_recalibration*.json' \
-            'data/history/wnba_recalibration_proposals.jsonl' \
-            'docs/index.html'
+          python wnba_controlled_recalibration.py --date "$TARGET"
+          echo "Manual validation only. Production dashboard publishing is owned by WNBA Version 4 Status."
