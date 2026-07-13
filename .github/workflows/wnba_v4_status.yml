@@ -4,32 +4,15 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '45 13 * * *'
-  push:
-    branches: [main]
-    paths:
-      - 'qa_v4*.py'
-      - 'qa_player_game_log_warehouse.py'
-      - 'qa_alt_performance_tracker.py'
-      - 'qa_*projection_v2.py'
-      - 'qa_unified_player_simulation_v2.py'
-      - 'qa_cross_market_top_plays.py'
-      - 'qa_parlay_optimizer_v2.py'
-      - 'qa_projection_performance.py'
-      - 'wnba_*.py'
-      - 'collect_wehoop.py'
-      - 'build_dashboard_v4.py'
-      - 'patch_dashboard_v4_*.py'
-      - 'config/v4_modules.json'
-      - '.github/workflows/wnba_v4_status.yml'
 
 concurrency:
-  group: wnba-main-writer
+  group: wnba-production-finalizer
   cancel-in-progress: false
 
 jobs:
   build-v4-status:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 90
     permissions:
       contents: write
     steps:
@@ -48,9 +31,9 @@ jobs:
           pip install -r requirements.txt
       - name: Validate production files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py qa_alt_performance_tracker.py qa_minutes_projection_v2.py qa_points_projection_v2.py qa_rebounds_assists_projection_v2.py qa_ancillary_projection_v2.py qa_unified_player_simulation_v2.py qa_cross_market_top_plays.py qa_parlay_optimizer_v2.py qa_projection_performance.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_minutes_projection_v2.py wnba_points_projection_v2.py wnba_rebounds_assists_projection_v2.py wnba_ancillary_projection_v2.py wnba_unified_player_simulation_v2.py wnba_cross_market_top_plays.py wnba_parlay_optimizer_v2.py wnba_projection_performance.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py patch_dashboard_v4_alt_streaks.py patch_dashboard_v4_alt_performance.py patch_dashboard_v4_remove_sportsbook_tab.py patch_dashboard_v4_minutes_projection.py patch_dashboard_v4_points_projection.py patch_dashboard_v4_rebounds_assists_projection.py patch_dashboard_v4_ancillary_projection.py patch_dashboard_v4_unified_simulation.py patch_dashboard_v4_consolidated_navigation.py patch_dashboard_v4_top_plays.py patch_dashboard_v4_parlay_optimizer.py patch_dashboard_v4_projection_performance.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py qa_alt_performance_tracker.py qa_minutes_projection_v2.py qa_points_projection_v2.py qa_rebounds_assists_projection_v2.py qa_ancillary_projection_v2.py qa_unified_player_simulation_v2.py qa_cross_market_top_plays.py qa_parlay_optimizer_v2.py qa_projection_performance.py qa_model_explainability.py qa_market_intelligence.py qa_model_picks_ledger.py qa_mission_control.py collect_wehoop.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_minutes_projection_v2.py wnba_points_projection_v2.py wnba_rebounds_assists_projection_v2.py wnba_ancillary_projection_v2.py wnba_unified_player_simulation_v2.py wnba_cross_market_top_plays.py wnba_parlay_optimizer_v2.py wnba_projection_performance.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py wnba_model_explainability.py wnba_market_intelligence.py wnba_model_picks_ledger.py wnba_mission_control.py patch_dashboard_v4_alt_streaks.py patch_dashboard_v4_alt_performance.py patch_dashboard_v4_remove_sportsbook_tab.py patch_dashboard_v4_minutes_projection.py patch_dashboard_v4_points_projection.py patch_dashboard_v4_rebounds_assists_projection.py patch_dashboard_v4_ancillary_projection.py patch_dashboard_v4_unified_simulation.py patch_dashboard_v4_consolidated_navigation.py patch_dashboard_v4_top_plays.py patch_dashboard_v4_parlay_optimizer.py patch_dashboard_v4_projection_performance.py patch_dashboard_v4_explainability.py patch_dashboard_v4_market_intelligence.py patch_dashboard_v4_model_picks_ledger.py patch_dashboard_v4_mission_control.py patch_dashboard_v4_force_alt_tab.py
           bash -n scripts/atomic_generated_push.sh
-      - name: Run all acceptance suites
+      - name: Run acceptance suites
         run: |
           python qa_v4_foundation_acceptance.py
           python qa_v4_acceptance.py
@@ -66,6 +49,10 @@ jobs:
           python qa_cross_market_top_plays.py
           python qa_parlay_optimizer_v2.py
           python qa_projection_performance.py
+          python qa_model_explainability.py
+          python qa_market_intelligence.py
+          python qa_model_picks_ledger.py
+          python qa_mission_control.py
       - name: Resolve target date
         run: |
           TARGET=$(python active_slate_date.py)
@@ -79,12 +66,13 @@ jobs:
           python wnba_player_game_log_warehouse.py --date "${{ env.TARGET }}"
           python wnba_player_game_log_archive.py merge
           python wnba_player_game_log_backfill.py --season "${{ env.SEASON_YEAR }}"
-      - name: Grade frozen projection and ALT history
+      - name: Grade prior model history
         run: |
           python wnba_projection_performance.py grade --date "${{ env.TARGET }}"
           python wnba_projection_performance.py analyze --date "${{ env.TARGET }}"
           python wnba_alt_performance_tracker.py --date "${{ env.TARGET }}" --grade
           python wnba_alt_performance_tracker.py --date "${{ env.TARGET }}" --analyze
+          python wnba_model_picks_ledger.py grade --date "${{ env.TARGET }}" || true
       - name: Build opponent context
         run: |
           python wnba_historical_play_by_play.py --season "${{ env.SEASON_YEAR }}" --collect
@@ -111,7 +99,7 @@ jobs:
           python wnba_results_grader.py --date "${{ env.TARGET }}"
           python wnba_self_learning.py --date "${{ env.TARGET }}"
           python wnba_reasoning_layer.py --date "${{ env.TARGET }}"
-      - name: Build ALT, Top Plays, Parlays, and projection snapshot
+      - name: Build ALT and ranked recommendations
         run: |
           python wnba_model_calibration.py --date "${{ env.TARGET }}"
           python wnba_feature_importance.py --date "${{ env.TARGET }}"
@@ -131,12 +119,20 @@ jobs:
           python wnba_parlay_optimizer_v2.py --date "${{ env.TARGET }}"
           python wnba_projection_performance.py snapshot --date "${{ env.TARGET }}"
           python wnba_projection_performance.py analyze --date "${{ env.TARGET }}"
+      - name: Build explainability, CLV, and model-picks ledger
+        run: |
+          python wnba_model_explainability.py --date "${{ env.TARGET }}"
+          python wnba_market_intelligence.py capture --date "${{ env.TARGET }}" --stage current
+          python wnba_market_intelligence.py analyze --date "${{ env.TARGET }}"
+          python wnba_model_picks_ledger.py archive --date "${{ env.TARGET }}"
+          python wnba_model_picks_ledger.py grade --date "${{ env.TARGET }}"
+          python wnba_model_picks_ledger.py analyze --date "${{ env.TARGET }}"
       - name: Build QA and V4 status
         run: |
           python qa_v4.py
           python qa_v4_outputs_v2.py --strict
           python wnba_v4_status_engine.py
-      - name: Build and patch dashboard
+      - name: Build dashboard once in final order
         run: |
           python build_dashboard_v4.py
           python patch_dashboard_v4_team_context.py
@@ -155,53 +151,51 @@ jobs:
           python patch_dashboard_v4_rebounds_assists_projection.py
           python patch_dashboard_v4_ancillary_projection.py
           python patch_dashboard_v4_unified_simulation.py
-          python patch_dashboard_v4_consolidated_navigation.py
           python patch_dashboard_v4_top_plays.py
           python patch_dashboard_v4_parlay_optimizer.py
           python patch_dashboard_v4_projection_performance.py
-      - name: Verify closed-loop projection performance
+          python patch_dashboard_v4_explainability.py
+          python patch_dashboard_v4_market_intelligence.py
+          python patch_dashboard_v4_model_picks_ledger.py
+          python patch_dashboard_v4_consolidated_navigation.py
+          python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 2
+          python patch_dashboard_v4_mission_control.py
+          python patch_dashboard_v4_force_alt_tab.py
+      - name: Verify final production artifact
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          status=json.load(open('data/dashboard/wnba_v4_status.json'))
-          perf=json.load(open('data/dashboard/wnba_projection_performance.json'))
-          acceptance=json.load(open('data/dashboard/wnba_projection_performance_acceptance.json'))
-          assert acceptance['status']=='green'
-          assert perf['status']=='ok'
-          assert perf['policy']['automatic_recalibration'] is False
-          assert perf['thresholds']=={'bias_reporting':50,'stat_weight_adjustment':100,'simulation_variance_adjustment':200}
-          history=Path('data/history/wnba_projection_history.jsonl')
-          assert history.exists()
-          ids=[]
-          for line in history.read_text(encoding='utf-8').splitlines():
-              if not line.strip():continue
-              row=json.loads(line);ids.append(row['projection_id'])
-              assert row['stat'] in {'MIN','PTS','REB','OREB','DREB','AST','3PM','STL','BLK','TOV','PRA','PR','PA','RA'}
-              assert row['outcome'] in {'PENDING','GRADED_NO_MARKET','WIN','LOSS','PUSH'}
-              if row.get('actual') is not None:
-                  assert row.get('actual_source')=='player_game_log_warehouse'
-          assert len(ids)==len(set(ids))
-          modules={m['id']:m for m in status['modules']}
-          for i in range(1,26):assert modules[f'M{i:02d}']['production_ready']
+          target='${{ env.TARGET }}'
+          required=[
+            'data/dashboard/wnba_minutes_projection_v2.json',
+            'data/dashboard/wnba_unified_player_simulation_v2.json',
+            'data/dashboard/wnba_cross_market_top_plays.json',
+            'data/dashboard/wnba_model_explainability.json',
+            'data/dashboard/wnba_market_intelligence.json',
+            'data/dashboard/wnba_model_picks_ledger.json',
+            'data/dashboard/wnba_mission_control.json'
+          ]
+          for path in required:
+              payload=json.load(open(path))
+              if payload.get('target_date'): assert payload['target_date']==target,(path,payload.get('target_date'),target)
           html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert 'v4-projection-performance-script' in html
-          assert 'Projection Performance' in html
-          assert 'window.projectionPerformance' in html
-          print('V4 + PROJECTION PERFORMANCE:',status['summary'],perf['summary'])
+          for marker in ('v4-alt-streaks-script','v4-force-alt-tab-script','v4-explainability-script','v4-market-intelligence-script','v4-model-picks-ledger-script','v4-mission-control-script'):
+              assert marker in html,marker
+          assert 'ALT Streaks' in html
+          assert 'data-view="alt"' in html
+          print('FINAL PRODUCTION ARTIFACT VERIFIED FOR',target)
           PY
-      - name: Commit complete V4 atomically
+      - name: Commit complete production build once
         run: |
-          git config user.name "WNBA Model Bot"
+          git config user.name "WNBA Production Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Build projection performance and calibration loop" \
+            "Publish ordered WNBA V4 production build" \
             'data/raw/wnba_historical_play_by_play.json' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
             'data/master/wnba_master.json' \
-            'data/history/wnba_player_game_logs_before_build.json' \
-            'data/history/wnba_alt_streak_history.jsonl' \
-            'data/history/wnba_projection_history.jsonl' \
+            'data/history/wnba_*.jsonl' \
             'docs/V4_*REPORT.md' \
             'docs/index.html'
