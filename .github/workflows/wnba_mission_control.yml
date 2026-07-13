@@ -29,6 +29,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
       - name: Validate Mission Control files
         run: python -m py_compile wnba_mission_control.py qa_mission_control.py patch_dashboard_v4_mission_control.py
       - name: Run acceptance tests
