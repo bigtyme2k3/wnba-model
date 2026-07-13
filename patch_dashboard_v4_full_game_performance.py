@@ -1,0 +1,22 @@
+from __future__ import annotations
+import json
+from pathlib import Path
+HTML=Path('docs/index.html');DATA=Path('data/dashboard/wnba_full_game_performance.json')
+CSS=r'''<style id="v4-full-game-performance-style">.fgpGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.fgpCard{border:1px solid #21314b;border-radius:14px;padding:14px;background:#0a1322}.fgpValue{font-size:26px;font-weight:950}.fgpTable{width:100%;border-collapse:collapse;margin-top:12px}.fgpTable th,.fgpTable td{padding:8px;border-bottom:1px solid #1d2b42;text-align:left;font-size:12px}.fgpLock{color:#8fa0bd}.fgpEligible{color:#00e39b}</style>'''
+SCRIPT=r'''<script id="v4-full-game-performance-script">(function(){window.fullGamePerformance=function(){const p=DATA.full_game_performance||{},s=p.summary||{},c=p.calibration_status||{},bands=Array.isArray(p.pair_probability_calibration)?p.pair_probability_calibration:[];const rows=bands.map(r=>`<tr><td>${E(r.band)}</td><td>${E(r.count)}</td><td>${(Number(r.predicted||0)*100).toFixed(1)}%</td><td>${(Number(r.actual||0)*100).toFixed(1)}%</td><td>${(Number(r.calibration_error||0)*100).toFixed(1)}%</td></tr>`).join('');const status=(name,val)=>`<div class="small mono ${val==='ELIGIBLE'?'fgpEligible':'fgpLock'}">${E(name)}: ${E(val)}</div>`;return `<div class="section"><h2 class="mono">Game Simulation Performance</h2><div class="small mono">Frozen full-game simulations graded against final scores and verified player results.</div><div class="fgpGrid"><div class="fgpCard"><div class="small">Games Graded</div><div class="fgpValue mono">${E(s.games_graded||0)}</div></div><div class="fgpCard"><div class="small">Total MAE</div><div class="fgpValue mono">${s.total_mae==null?'—':E(s.total_mae)}</div></div><div class="fgpCard"><div class="small">Margin MAE</div><div class="fgpValue mono">${s.margin_mae==null?'—':E(s.margin_mae)}</div></div><div class="fgpCard"><div class="small">Total Coverage</div><div class="fgpValue mono">${s.total_p10_p90_coverage==null?'—':(Number(s.total_p10_p90_coverage)*100).toFixed(1)+'%'}</div></div><div class="fgpCard"><div class="small">Margin Coverage</div><div class="fgpValue mono">${s.margin_p10_p90_coverage==null?'—':(Number(s.margin_p10_p90_coverage)*100).toFixed(1)+'%'}</div></div><div class="fgpCard"><div class="small">Direct Pair Hit</div><div class="fgpValue mono">${s.direct_pair_hit_rate==null?'—':(Number(s.direct_pair_hit_rate)*100).toFixed(1)+'%'}</div></div></div><table class="fgpTable"><thead><tr><th>Pair Band</th><th>N</th><th>Predicted</th><th>Actual</th><th>Error</th></tr></thead><tbody>${rows||'<tr><td colspan="5">No direct-pair grades yet.</td></tr>'}</tbody></table><div class="fgpCard">${status('Pace variance',c.pace_variance||'LOCKED')}${status('Efficiency variance',c.efficiency_variance||'LOCKED')}${status('Overtime probability',c.overtime_probability||'LOCKED')}${status('Cross-player correlation',c.cross_player_correlation||'LOCKED')}</div></div>`};const previous=window.projectionPerformance;window.projectionPerformance=function(){const base=typeof previous==='function'?previous():'';return base+window.fullGamePerformance()};})();</script>'''
+def replace_block(html,start,end,replacement):
+ i=html.find(start)
+ if i<0:return html
+ j=html.find(end,i)
+ if j<0:return html
+ return html[:i]+replacement.strip()+html[j+len(end):]
+def main():
+ if not HTML.exists():raise SystemExit('docs/index.html missing')
+ try:payload=json.load(DATA.open(encoding='utf-8')) if DATA.exists() else {}
+ except Exception:payload={}
+ html=HTML.read_text(encoding='utf-8');data=f'<script id="v4-full-game-performance-data">DATA.full_game_performance={json.dumps(payload,separators=(",",":"),ensure_ascii=False)};</script>'
+ html=replace_block(html,'<script id="v4-full-game-performance-data">','</script>',data) if 'id="v4-full-game-performance-data"' in html else html.replace('</body>',data+'</body>')
+ html=replace_block(html,'<style id="v4-full-game-performance-style">','</style>',CSS) if 'id="v4-full-game-performance-style"' in html else html.replace('</head>',CSS+'</head>')
+ html=replace_block(html,'<script id="v4-full-game-performance-script">','</script>',SCRIPT) if 'id="v4-full-game-performance-script"' in html else html.replace('</body>',SCRIPT+'</body>')
+ HTML.write_text(html,encoding='utf-8');print('Game Simulation Performance added to Performance Center')
+if __name__=='__main__':main()
