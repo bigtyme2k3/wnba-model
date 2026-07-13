@@ -1,14 +1,14 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-12T23:15:43.903949+00:00`
+Generated: `2026-07-13T00:10:11.052862+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 68 checked, 0 invalid, 3 empty
-- Workflows: 23 checked, 1 high risk
+- Dashboard JSON: 70 checked, 0 invalid, 3 empty
+- Workflows: 24 checked, 1 high risk
 
 ## Module QA
 
@@ -57,6 +57,7 @@ Generated: `2026-07-12T23:15:43.903949+00:00`
 | `.github/workflows/results_review_center_extension.yml` | 9 | 1 | 0.111 | low | True |
 | `.github/workflows/results_tracker.yml` | 6 | 1 | 0.167 | low | True |
 | `.github/workflows/v4_qa.yml` | 7 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_alt_market_watch.yml` | 11 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_autonomous_agent.yml` | 11 | 5 | 0.455 | medium | False |
 | `.github/workflows/wnba_closing_line_snapshots.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_data_warehouse.yml` | 5 | 0 | 0.0 | low | True |
@@ -69,5 +70,5 @@ Generated: `2026-07-12T23:15:43.903949+00:00`
 | `.github/workflows/wnba_postbuild_integrity.yml` | 10 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_player_props_audit.yml` | 4 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_player_props_polish.yml` | 11 | 0 | 0.0 | low | True |
-| `.github/workflows/wnba_v4_status.yml` | 15 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_v4_status.yml` | 16 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_v4_terminal_cleanup.yml` | 8 | 0 | 0.0 | low | True |
