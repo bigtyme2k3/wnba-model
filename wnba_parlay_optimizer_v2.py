@@ -1,129 +1,103 @@
 """Correlation-aware Parlay Optimizer v2.
 
-Same-player pairs use direct joint probabilities emitted by the unified player
-simulation. Cross-player parlays are allowed only as conservative estimates and
-are clearly labeled because their joint outcomes are not simulated together.
-The optimizer avoids duplicate markets, contradictory legs, excessive game
-concentration, and low-quality or unpriced selections.
+Same-player pairs use unified player simulations. Same-game cross-player pairs
+use direct probabilities from Full-Game Simulation v2. Only combinations across
+different games retain a conservative independence estimate.
 """
 from __future__ import annotations
-
-import argparse
-import itertools
-import json
-import math
-from datetime import date, datetime, timezone
+import argparse,itertools,json,math
+from datetime import date,datetime,timezone
 from pathlib import Path
 from typing import Any
 
 UNIFIED=Path('data/dashboard/wnba_unified_player_simulation_v2.json')
+FULL_GAME=Path('data/dashboard/wnba_full_game_simulation_v2.json')
 TOP=Path('data/dashboard/wnba_cross_market_top_plays.json')
 OUTS=[Path('data/warehouse/wnba_parlay_optimizer_v2.json'),Path('data/dashboard/wnba_parlay_optimizer_v2.json')]
-MAX_LEGS=3
-MIN_LEG_PROB=.52
-MIN_JOINT_PROB=.18
+MIN_LEG_PROB=.52;MIN_JOINT_PROB=.18
 
-
-def load(path:Path,default:Any)->Any:
-    try:return json.load(path.open(encoding='utf-8')) if path.exists() else default
-    except Exception:return default
-
-def dump(path:Path,payload:Any)->None:
-    path.parent.mkdir(parents=True,exist_ok=True)
-    with path.open('w',encoding='utf-8') as h:json.dump(payload,h,indent=2,allow_nan=False)
+def load(p:Path,d:Any)->Any:
+    try:return json.load(p.open(encoding='utf-8')) if p.exists() else d
+    except Exception:return d
+def dump(p:Path,x:Any)->None:
+    p.parent.mkdir(parents=True,exist_ok=True);json.dump(x,p.open('w',encoding='utf-8'),indent=2,allow_nan=False)
 def num(v:Any)->float|None:
     try:
         x=float(v);return x if math.isfinite(x) else None
     except Exception:return None
-def decimal_from_american(o:Any)->float|None:
+def dec(o:Any)->float|None:
     x=num(o)
     if x is None or x==0:return None
     return 1+100/-x if x<0 else 1+x/100
-def clamp(v:float,a:float,b:float)->float:return max(a,min(b,v))
-def leg_key(leg:dict[str,Any])->tuple:
-    return (str(leg.get('player') or ''),str(leg.get('game') or ''),str(leg.get('stat')),str(leg.get('side')),num(leg.get('line')))
-def contradictory(a:dict[str,Any],b:dict[str,Any])->bool:
-    return leg_key(a)[:-1]==leg_key(b)[:-1] and a.get('side')!=b.get('side')
-def duplicate(a:dict[str,Any],b:dict[str,Any])->bool:return leg_key(a)==leg_key(b)
-def parlay_decimal(legs:list[dict[str,Any]])->float|None:
-    result=1.0
+def parlay_dec(legs:list[dict[str,Any]])->float|None:
+    out=1.0
     for leg in legs:
-        d=decimal_from_american(leg.get('odds'))
+        d=dec(leg.get('odds'))
         if d is None:return None
-        result*=d
-    return result
-def ev_from_prob(prob:float,decimal:float|None)->float|None:
-    return None if decimal is None else prob*(decimal-1)-(1-prob)
-def score(prob:float,ev:float|None,quality:float,method:str,correlation_lift:float=0)->float:
-    ev_score=50 if ev is None else clamp(50+ev*180,0,100)
-    prob_score=clamp((prob-.12)*150,0,100)
-    method_bonus=8 if method=='DIRECT_JOINT_SIMULATION' else 0
-    corr_bonus=clamp(correlation_lift*250,-12,12)
-    return round(clamp(.42*ev_score+.38*prob_score+.20*quality+method_bonus+corr_bonus,0,100),1)
-def risk_label(value:float,method:str)->str:
-    if method!='DIRECT_JOINT_SIMULATION':return 'High'
-    return 'Low' if value>=78 else 'Medium' if value>=62 else 'High'
-
-def build_same_player(unified:dict[str,Any])->list[dict[str,Any]]:
+        out*=d
+    return out
+def ev(prob:float,d:float|None)->float|None:return None if d is None else prob*(d-1)-(1-prob)
+def key(leg:dict[str,Any])->tuple:return (str(leg.get('player') or ''),str(leg.get('stat')),str(leg.get('side')),num(leg.get('line')))
+def score(prob:float,value:float|None,confidence:float,direct:bool)->float:
+    e=50 if value is None else max(0,min(100,50+value*180));p=max(0,min(100,(prob-.12)*150));return round(max(0,min(100,.45*e+.35*p+.20*confidence+(8 if direct else 0))),1)
+def finalize(kind:str,game:str,legs:list[dict[str,Any]],joint:float,method:str,confidence:float,correlation:float=0,warning:str|None=None)->dict[str,Any]|None:
+    d=parlay_dec(legs)
+    if d is None or joint<MIN_JOINT_PROB:return None
+    value=ev(joint,d);direct=method in {'DIRECT_JOINT_SIMULATION','DIRECT_FULL_GAME_SIMULATION'};s=score(joint,value,confidence,direct)
+    action='BET' if direct and value is not None and value>=.06 and joint>=.24 else 'LEAN' if value is not None and value>0 else 'PASS'
+    return {'parlay_type':kind,'game':game,'legs':legs,'joint_probability':round(joint,4),'correlation':round(correlation,4),'calculation_method':method,'decimal_odds_estimate':round(d,4),'expected_value_per_unit':round(value,4) if value is not None else None,'confidence':round(confidence,1),'score':s,'risk_level':'Low' if direct and s>=78 else 'Medium' if direct and s>=62 else 'High','action':action,'warning':warning}
+def same_player(unified:dict[str,Any])->list[dict[str,Any]]:
     out=[]
-    for player in unified.get('players',[]):
-        if not isinstance(player,dict):continue
-        market_map={(m.get('stat'),m.get('side'),num(m.get('line'))):m for m in player.get('markets',[]) if isinstance(m,dict)}
-        for pair in player.get('same_player_pairs',[]):
+    for p in unified.get('players',[]):
+        mmap={(m.get('stat'),m.get('side'),num(m.get('line'))):m for m in p.get('markets',[])}
+        for pair in p.get('same_player_pairs',[]):
             legs=[]
             for spec in pair.get('legs',[]):
-                market=market_map.get((spec.get('stat'),spec.get('side'),num(spec.get('line'))))
-                if market:
-                    legs.append({'player':player.get('player'),'game':f"{player.get('team','')} vs {player.get('opponent','')}",'stat':market.get('stat'),'side':market.get('side'),'line':market.get('line'),'odds':market.get('odds'),'sportsbook':market.get('sportsbook'),'hit_probability':market.get('hit_probability')})
-            if len(legs)!=2:continue
-            decimal=parlay_decimal(legs);joint=num(pair.get('joint_probability'))
-            if joint is None or joint<MIN_JOINT_PROB or decimal is None:continue
-            ev=ev_from_prob(joint,decimal);lift=num(pair.get('correlation_lift')) or 0
-            quality=num(player.get('confidence')) or 50
-            out.append({'parlay_type':'SAME_PLAYER','player':player.get('player'),'game':legs[0]['game'],'legs':legs,'joint_probability':round(joint,4),'independent_probability':round((num(legs[0].get('hit_probability')) or 0)*(num(legs[1].get('hit_probability')) or 0),4),'correlation_lift':round(lift,4),'calculation_method':'DIRECT_JOINT_SIMULATION','decimal_odds_estimate':round(decimal,4),'expected_value_per_unit':round(ev,4) if ev is not None else None,'confidence':round(quality,1),'score':score(joint,ev,quality,'DIRECT_JOINT_SIMULATION',lift),'risk_level':risk_label(score(joint,ev,quality,'DIRECT_JOINT_SIMULATION',lift),'DIRECT_JOINT_SIMULATION'),'action':'BET' if ev is not None and ev>=.06 and joint>=.24 else 'LEAN' if ev is not None and ev>0 else 'PASS'})
+                m=mmap.get((spec.get('stat'),spec.get('side'),num(spec.get('line'))))
+                if m:legs.append({'player':p.get('player'),'stat':m.get('stat'),'side':m.get('side'),'line':m.get('line'),'odds':m.get('odds'),'sportsbook':m.get('sportsbook')})
+            if len(legs)==2:
+                row=finalize('SAME_PLAYER',f"{p.get('team','')} vs {p.get('opponent','')}",legs,num(pair.get('joint_probability')) or 0,'DIRECT_JOINT_SIMULATION',num(p.get('confidence')) or 50,num(pair.get('correlation_lift')) or 0)
+                if row:out.append(row)
     return out
-
-def build_cross_player(top:dict[str,Any])->list[dict[str,Any]]:
-    pool=[]
-    for row in top.get('portfolio',[]):
-        if not isinstance(row,dict) or not row.get('player'):continue
-        if row.get('decision') not in {'BET','LEAN'}:continue
-        p=num(row.get('hit_probability'));odds=num(row.get('odds'))
-        if p is None or p<MIN_LEG_PROB or odds is None:continue
-        pool.append({'player':row.get('player'),'game':row.get('game'),'stat':row.get('stat'),'side':row.get('side'),'line':row.get('line'),'odds':odds,'sportsbook':row.get('sportsbook'),'hit_probability':p,'confidence':row.get('confidence'),'data_quality_status':row.get('data_quality_status')})
+def direct_full_game(full:dict[str,Any],top:dict[str,Any])->list[dict[str,Any]]:
+    market_map={key(r):r for r in top.get('top_plays',[]) if r.get('player')}
+    out=[]
+    for g in full.get('games',[]):
+        for pair in g.get('direct_cross_player_pairs',[]):
+            legs=[]
+            for spec in pair.get('legs',[]):
+                m=market_map.get(key(spec))
+                if m:legs.append({'player':m.get('player'),'stat':m.get('stat'),'side':m.get('side'),'line':m.get('line'),'odds':m.get('odds'),'sportsbook':m.get('sportsbook')})
+            if len(legs)==2:
+                confidence=sum(num(market_map.get(key(x),{}).get('confidence')) or 50 for x in pair.get('legs',[]))/2
+                row=finalize('SAME_GAME_CROSS_PLAYER',g.get('game'),legs,num(pair.get('joint_probability')) or 0,'DIRECT_FULL_GAME_SIMULATION',confidence,num(pair.get('correlation')) or 0)
+                if row:out.append(row)
+    return out
+def cross_game(top:dict[str,Any])->list[dict[str,Any]]:
+    pool=[r for r in top.get('portfolio',[]) if r.get('player') and num(r.get('hit_probability')) is not None and num(r.get('hit_probability'))>=MIN_LEG_PROB and num(r.get('odds')) is not None]
     out=[]
     for size in (2,3):
         for combo in itertools.combinations(pool,size):
-            if len({leg['player'] for leg in combo})<size:continue
-            if any(duplicate(a,b) or contradictory(a,b) for i,a in enumerate(combo) for b in combo[i+1:]):continue
-            game_counts={g:sum(1 for leg in combo if leg['game']==g) for g in {leg['game'] for leg in combo}}
-            if max(game_counts.values())>2:continue
-            independent=math.prod(leg['hit_probability'] for leg in combo)
-            # Conservative haircut for unmodeled cross-player dependence.
-            penalty=.94 if len(game_counts)==size else .88
-            joint=independent*penalty
-            if joint<MIN_JOINT_PROB:continue
-            decimal=parlay_decimal(list(combo));ev=ev_from_prob(joint,decimal)
-            quality=sum(num(leg.get('confidence')) or 50 for leg in combo)/size
-            out.append({'parlay_type':'CROSS_PLAYER','player':None,'game':'Multiple' if len(game_counts)>1 else combo[0]['game'],'legs':list(combo),'joint_probability':round(joint,4),'independent_probability':round(independent,4),'correlation_lift':round(joint-independent,4),'calculation_method':'CONSERVATIVE_INDEPENDENCE_ESTIMATE','decimal_odds_estimate':round(decimal,4) if decimal is not None else None,'expected_value_per_unit':round(ev,4) if ev is not None else None,'confidence':round(quality,1),'score':score(joint,ev,quality,'CONSERVATIVE_INDEPENDENCE_ESTIMATE',joint-independent),'risk_level':'High','action':'LEAN' if ev is not None and ev>=.03 else 'PASS','warning':'Cross-player joint probability is estimated, not directly simulated.'})
+            if len({r.get('player') for r in combo})<size or len({r.get('game') for r in combo})<size:continue
+            legs=[{'player':r.get('player'),'stat':r.get('stat'),'side':r.get('side'),'line':r.get('line'),'odds':r.get('odds'),'sportsbook':r.get('sportsbook')} for r in combo]
+            joint=math.prod(num(r.get('hit_probability')) or 0 for r in combo)*.94
+            confidence=sum(num(r.get('confidence')) or 50 for r in combo)/size
+            row=finalize('CROSS_GAME','Multiple',legs,joint,'CONSERVATIVE_INDEPENDENCE_ESTIMATE',confidence,0,'Cross-game probability is conservatively estimated, not jointly simulated.')
+            if row:out.append(row)
     return out
-
 def dedupe(rows:list[dict[str,Any]])->list[dict[str,Any]]:
     best={}
-    for row in rows:
-        key=tuple(sorted(leg_key(leg) for leg in row.get('legs',[])))
-        current=best.get(key)
-        if current is None or row['score']>current['score']:best[key]=row
+    for r in rows:
+        k=tuple(sorted(key(x) for x in r['legs']))
+        if k not in best or r['score']>best[k]['score']:best[k]=r
     return list(best.values())
 def build(target:str)->dict[str,Any]:
-    unified=load(UNIFIED,{});top=load(TOP,{})
-    rows=dedupe(build_same_player(unified)+build_cross_player(top))
-    rows.sort(key=lambda r:(r['score'],num(r.get('expected_value_per_unit')) or -999,r['joint_probability']),reverse=True)
-    for i,row in enumerate(rows,1):row['rank']=i;row['recommended_units']=.25 if row['action']=='BET' else .1 if row['action']=='LEAN' else 0
-    payload={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'ok','summary':{'candidates':len(rows),'same_player':sum(r['parlay_type']=='SAME_PLAYER' for r in rows),'cross_player':sum(r['parlay_type']=='CROSS_PLAYER' for r in rows),'bets':sum(r['action']=='BET' for r in rows),'leans':sum(r['action']=='LEAN' for r in rows)},'parlays':rows[:30],'methodology':{'same_player':'direct joint probability from unified player simulations','cross_player':'conservative independence estimate with explicit haircut','pricing':'estimated by multiplying decimal odds because sportsbook SGP repricing may differ','constraints':{'max_legs':MAX_LEGS,'minimum_leg_probability':MIN_LEG_PROB,'minimum_joint_probability':MIN_JOINT_PROB},'stake_policy':'0.25 units for BET, 0.10 units for LEAN, zero for PASS','warning':'Sportsbooks may reject combinations or reprice correlated legs.'}}
+    rows=dedupe(same_player(load(UNIFIED,{}))+direct_full_game(load(FULL_GAME,{}),load(TOP,{}))+cross_game(load(TOP,{})))
+    rows.sort(key=lambda r:(r['score'],num(r.get('expected_value_per_unit')) or -999),reverse=True)
+    for i,r in enumerate(rows,1):r['rank']=i;r['recommended_units']=.25 if r['action']=='BET' else .1 if r['action']=='LEAN' else 0
+    payload={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'ok','summary':{'candidates':len(rows),'same_player':sum(r['parlay_type']=='SAME_PLAYER' for r in rows),'direct_full_game':sum(r['calculation_method']=='DIRECT_FULL_GAME_SIMULATION' for r in rows),'estimated_cross_game':sum(r['calculation_method']=='CONSERVATIVE_INDEPENDENCE_ESTIMATE' for r in rows),'bets':sum(r['action']=='BET' for r in rows),'leans':sum(r['action']=='LEAN' for r in rows)},'parlays':rows[:30],'methodology':{'same_player':'direct unified-player joint simulation','same_game_cross_player':'direct full-game joint simulation','cross_game':'conservative independence estimate','pricing':'decimal odds multiplication is an estimate; sportsbook SGP repricing may differ'}}
     for p in OUTS:dump(p,payload)
     print('Parlay Optimizer v2:',payload['summary']);return payload
-
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--date',default=str(date.today()));args=ap.parse_args();build(args.date)
+    ap=argparse.ArgumentParser();ap.add_argument('--date',default=str(date.today()));a=ap.parse_args();build(a.date)
 if __name__=='__main__':main()
