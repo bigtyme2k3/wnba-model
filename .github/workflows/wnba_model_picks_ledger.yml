@@ -2,88 +2,23 @@ name: WNBA Model Picks Ledger
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["WNBA Version 4 Status", "WNBA Model Explainability", "WNBA Market Intelligence", "WNBA Mission Control"]
-    types: [completed]
-  schedule:
-    - cron: '45 11 * * *'
-
-concurrency:
-  group: wnba-model-picks-ledger
-  cancel-in-progress: false
 
 jobs:
-  archive-grade-report:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+  manual-validation:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Sync latest repository
-        run: git pull --ff-only origin main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Validate ledger files
-        run: python -m py_compile wnba_model_picks_ledger.py qa_model_picks_ledger.py patch_dashboard_v4_model_picks_ledger.py
-      - name: Run acceptance tests
-        run: python qa_model_picks_ledger.py
-      - name: Resolve target date
+      - name: Validate model picks ledger
         run: |
+          python -m py_compile wnba_model_picks_ledger.py qa_model_picks_ledger.py
+          python qa_model_picks_ledger.py
           TARGET=$(python active_slate_date.py)
-          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-      - name: Grade and enrich prior picks
-        run: python wnba_model_picks_ledger.py grade --date "${{ env.TARGET }}"
-      - name: Archive current published picks
-        run: python wnba_model_picks_ledger.py archive --date "${{ env.TARGET }}"
-      - name: Re-enrich and build analytics
-        run: |
-          python wnba_model_picks_ledger.py grade --date "${{ env.TARGET }}"
-          python wnba_model_picks_ledger.py analyze --date "${{ env.TARGET }}"
-      - name: Patch Performance Center
-        run: python patch_dashboard_v4_model_picks_ledger.py
-      - name: Verify ledger contract
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          payload=json.load(open('data/dashboard/wnba_model_picks_ledger.json'))
-          acceptance=json.load(open('data/dashboard/wnba_model_picks_ledger_acceptance.json'))
-          assert acceptance['status']=='green'
-          assert payload['status']=='ok'
-          assert payload['policy']['personal_wagers_tracked'] is False
-          assert payload['policy']['flat_unit_evaluation'] is True
-          history=Path('data/history/wnba_model_picks_ledger.jsonl')
-          assert history.exists()
-          ids=[]
-          for line in history.read_text(encoding='utf-8').splitlines():
-              if not line.strip(): continue
-              row=json.loads(line);ids.append(row['pick_id'])
-              assert row['immutable'] is True
-              assert row['decision'] in {'BET','LEAN'}
-              assert row['outcome'] in {'PENDING','WIN','LOSS','PUSH'}
-              assert row['flat_unit_stake']==1.0
-              assert row['model_version']
-          assert len(ids)==len(set(ids))
-          assert len(payload['windows'])==3
-          assert {r['days'] for r in payload['windows']}=={7,14,30}
-          html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert 'v4-model-picks-ledger-script' in html
-          assert 'Model Picks History' in html
-          assert 'filterModelPicks' in html
-          print('MODEL PICKS LEDGER:',payload['summary'])
-          PY
-      - name: Commit ledger atomically
-        run: |
-          git config user.name "WNBA Model Picks Bot"
-          git config user.email "actions@github.com"
-          bash scripts/atomic_generated_push.sh \
-            "Archive and grade model picks ledger" \
-            'data/history/wnba_model_picks_ledger.jsonl' \
-            'data/warehouse/wnba_model_picks_ledger.json' \
-            'data/dashboard/wnba_model_picks_ledger*.json' \
-            'docs/index.html'
+          python wnba_model_picks_ledger.py grade --date "$TARGET"
+          python wnba_model_picks_ledger.py archive --date "$TARGET"
+          python wnba_model_picks_ledger.py analyze --date "$TARGET"
+          echo "Manual validation only. Production dashboard publishing is owned by WNBA Version 4 Status."
