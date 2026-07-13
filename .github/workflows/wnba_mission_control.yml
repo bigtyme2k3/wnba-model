@@ -2,170 +2,21 @@ name: WNBA Mission Control
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["WNBA Version 4 Status", "WNBA Model Explainability", "WNBA Market Intelligence"]
-    types: [completed]
-  schedule:
-    - cron: '15 12 * * *'
-    - cron: '15 15 * * *'
-
-concurrency:
-  group: wnba-mission-control
-  cancel-in-progress: false
 
 jobs:
-  reliability-gate:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+  manual-diagnostic:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Sync latest repository
-        run: git pull --ff-only origin main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: pip
-      - name: Install dependencies
+      - name: Validate Mission Control
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Validate Mission Control files
-        run: python -m py_compile wnba_mission_control.py qa_mission_control.py patch_dashboard_v4_mission_control.py
-      - name: Run acceptance tests
-        run: python qa_mission_control.py
-      - name: Resolve target date
-        run: |
+          python -m py_compile wnba_mission_control.py qa_mission_control.py
+          python qa_mission_control.py
           TARGET=$(python active_slate_date.py)
-          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "SEASON_YEAR=${TARGET:0:4}" >> "$GITHUB_ENV"
-      - name: Initial reliability evaluation
-        run: python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 0
-      - name: Detect stale core projection chain
-        id: core
-        run: |
-          VALUE=$(python - <<'PY'
-          import json
-          p=json.load(open('data/dashboard/wnba_mission_control.json'))
-          core={'minutes','unified','top_plays','explainability'}
-          print('true' if any(r['id'] in core and r['status']!='GREEN' for r in p['checks']) else 'false')
-          PY
-          )
-          echo "required=$VALUE" >> "$GITHUB_OUTPUT"
-      - name: Repair current-date projection chain
-        if: steps.core.outputs.required == 'true'
-        run: |
-          python wnba_player_game_log_archive.py snapshot
-          python wnba_play_by_play_layer.py --date "${{ env.TARGET }}"
-          python wnba_player_game_log_warehouse.py --date "${{ env.TARGET }}"
-          python wnba_player_game_log_archive.py merge
-          python wnba_opponent_stat_rankings.py --date "${{ env.TARGET }}"
-          python wnba_position_opponent_rankings.py --date "${{ env.TARGET }}"
-          python wnba_pace_minutes_opponent_rankings.py --date "${{ env.TARGET }}"
-          python wnba_minutes_projection_v2.py --date "${{ env.TARGET }}"
-          python wnba_points_projection_v2.py --date "${{ env.TARGET }}"
-          python wnba_rebounds_assists_projection_v2.py --date "${{ env.TARGET }}"
-          python wnba_ancillary_projection_v2.py --date "${{ env.TARGET }}"
-          python wnba_unified_player_simulation_v2.py --date "${{ env.TARGET }}"
-          python wnba_cross_market_top_plays.py --date "${{ env.TARGET }}"
-          python wnba_model_explainability.py --date "${{ env.TARGET }}"
-          python wnba_projection_performance.py snapshot --date "${{ env.TARGET }}"
-          python wnba_model_picks_ledger.py archive --date "${{ env.TARGET }}" || true
-          python wnba_model_picks_ledger.py analyze --date "${{ env.TARGET }}" || true
-      - name: Re-evaluate after core repair
-        if: steps.core.outputs.required == 'true'
-        run: python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 0
-      - name: Determine whether ALT retry is required
-        id: retry0
-        run: |
-          VALUE=$(python - <<'PY'
-          import json
-          p=json.load(open('data/dashboard/wnba_mission_control.json'))
-          print('true' if p['summary']['retry_required']>0 else 'false')
-          PY
-          )
-          echo "required=$VALUE" >> "$GITHUB_OUTPUT"
-      - name: Retry ALT pipeline attempt 1
-        if: steps.retry0.outputs.required == 'true'
-        run: |
-          python wnba_alt_streaks.py --date "${{ env.TARGET }}"
-          python wnba_alt_streaks_correctness.py
-          python wnba_alt_streaks_warehouse_upgrade.py --date "${{ env.TARGET }}"
-          python wnba_alt_streaks_opponent_context.py
-          python wnba_alt_streaks_position_context.py
-          python wnba_alt_streaks_pace_minutes_context.py
-          python wnba_alt_streak_confidence.py --date "${{ env.TARGET }}"
-          python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 1
-      - name: Determine whether second retry is required
-        id: retry1
-        run: |
-          VALUE=$(python - <<'PY'
-          import json
-          p=json.load(open('data/dashboard/wnba_mission_control.json'))
-          print('true' if p['summary']['retry_required']>0 else 'false')
-          PY
-          )
-          echo "required=$VALUE" >> "$GITHUB_OUTPUT"
-      - name: Retry ALT pipeline attempt 2
-        if: steps.retry1.outputs.required == 'true'
-        run: |
-          sleep 20
-          python wnba_alt_streaks.py --date "${{ env.TARGET }}"
-          python wnba_alt_streaks_correctness.py
-          python wnba_alt_streaks_warehouse_upgrade.py --date "${{ env.TARGET }}"
-          python wnba_alt_streaks_opponent_context.py
-          python wnba_alt_streaks_position_context.py
-          python wnba_alt_streaks_pace_minutes_context.py
-          python wnba_alt_streak_confidence.py --date "${{ env.TARGET }}"
-          python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 2
-      - name: Refresh affected dashboard sections
-        run: |
-          python patch_dashboard_v4_minutes_projection.py
-          python patch_dashboard_v4_points_projection.py
-          python patch_dashboard_v4_rebounds_assists_projection.py
-          python patch_dashboard_v4_ancillary_projection.py
-          python patch_dashboard_v4_unified_simulation.py
-          python patch_dashboard_v4_top_plays.py
-          python patch_dashboard_v4_explainability.py
-          python patch_dashboard_v4_alt_streaks.py
-          python patch_dashboard_v4_model_picks_ledger.py || true
-          python patch_dashboard_v4_mission_control.py
-          python patch_dashboard_v4_force_alt_tab.py
-      - name: Final reliability evaluation
-        run: python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 2
-      - name: Repatch final Mission Control state
-        run: python patch_dashboard_v4_mission_control.py
-      - name: Verify publication gate
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          payload=json.load(open('data/dashboard/wnba_mission_control.json'))
-          acceptance=json.load(open('data/dashboard/wnba_mission_control_acceptance.json'))
-          assert acceptance['status']=='green'
-          assert payload['status']=='ok'
-          assert payload['publication_status'] in {'READY','DEGRADED','BLOCKED'}
-          assert payload['policy']['silent_empty_sections_allowed'] is False
-          for row in payload['checks']:
-              assert row['status'] in {'GREEN','YELLOW','RED'}
-          html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert 'v4-mission-control-script' in html
-          assert 'v4-force-alt-tab-script' in html
-          assert 'ALT Streaks' in html
-          print('MISSION CONTROL:',payload['publication_status'],payload['summary'])
-          PY
-      - name: Commit repaired reliability state atomically
-        run: |
-          git config user.name "WNBA Mission Control Bot"
-          git config user.email "actions@github.com"
-          bash scripts/atomic_generated_push.sh \
-            "Repair stale projection chain and update Mission Control" \
-            'data/warehouse/wnba_*.json' \
-            'data/dashboard/wnba_*.json' \
-            'data/history/wnba_projection_history.jsonl' \
-            'data/history/wnba_model_picks_ledger.jsonl' \
-            'docs/index.html'
+          python wnba_mission_control.py --date "$TARGET" --retry-count 2
+          echo "Manual diagnostic only. Production repair and publishing are owned by WNBA Version 4 Status."
