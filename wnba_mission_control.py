@@ -1,9 +1,9 @@
 """WNBA V4 Mission Control and publication reliability gate.
 
 Validates slate date, freshness, row counts, alternate-line availability, model
-outputs, QA, explainability, CLV capture, and dashboard publication. Critical
-failures block publishing; optional-source failures publish a clearly labeled
-degraded report and request bounded retries.
+outputs, QA, explainability, CLV capture, model-pick archiving, and dashboard
+publication. Critical failures block publishing; optional-source failures publish
+a clearly labeled degraded report and request bounded retries.
 """
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ CHECKS=[
  {'id':'top_plays','name':'Top Plays','path':'data/dashboard/wnba_cross_market_top_plays.json','keys':['top_plays'],'minimum':1,'critical':False},
  {'id':'explainability','name':'Explainability','path':'data/dashboard/wnba_model_explainability.json','keys':['explanations'],'minimum':1,'critical':False},
  {'id':'clv_snapshot','name':'CLV Snapshot','path':'data/history/wnba_market_observations.jsonl','keys':[],'minimum':1,'critical':False},
+ {'id':'picks_ledger','name':'Model Picks Ledger','path':'data/history/wnba_model_picks_ledger.jsonl','keys':[],'minimum':1,'critical':False},
  {'id':'qa','name':'V4 QA','path':'data/dashboard/wnba_v4_status.json','keys':['modules'],'minimum':1,'critical':True},
  {'id':'dashboard','name':'Dashboard Publish','path':'docs/index.html','keys':[],'minimum':1,'critical':True},
 ]
