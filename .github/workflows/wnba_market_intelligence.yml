@@ -7,88 +7,22 @@ on:
         description: 'Observation stage: current or closing'
         required: false
         default: 'current'
-  workflow_run:
-    workflows: ["WNBA Version 4 Status", "WNBA Model Explainability"]
-    types: [completed]
-  schedule:
-    - cron: '0,30 12-23 * * *'
-    - cron: '0,30 0-4 * * *'
-
-concurrency:
-  group: wnba-market-intelligence
-  cancel-in-progress: false
 
 jobs:
-  capture-and-analyze:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+  manual-validation:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Sync latest repository
-        run: git pull --ff-only origin main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Validate market intelligence files
-        run: python -m py_compile wnba_market_intelligence.py qa_market_intelligence.py patch_dashboard_v4_market_intelligence.py
-      - name: Run acceptance tests
-        run: python qa_market_intelligence.py
-      - name: Resolve target date
+      - name: Validate market intelligence
         run: |
+          python -m py_compile wnba_market_intelligence.py qa_market_intelligence.py
+          python qa_market_intelligence.py
           TARGET=$(python active_slate_date.py)
-          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          STAGE="${{ github.event.inputs.stage }}"
-          if [ -z "$STAGE" ]; then STAGE=current; fi
-          echo "STAGE=$STAGE" >> "$GITHUB_ENV"
-      - name: Capture immutable market observation
-        run: python wnba_market_intelligence.py capture --date "${{ env.TARGET }}" --stage "${{ env.STAGE }}"
-      - name: Build CLV and movement analytics
-        run: python wnba_market_intelligence.py analyze --date "${{ env.TARGET }}"
-      - name: Patch Performance Center
-        run: python patch_dashboard_v4_market_intelligence.py
-      - name: Verify CLV contract
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          payload=json.load(open('data/dashboard/wnba_market_intelligence.json'))
-          acceptance=json.load(open('data/dashboard/wnba_market_intelligence_acceptance.json'))
-          assert acceptance['status']=='green'
-          assert payload['status']=='ok'
-          assert payload['methodology']['sportsbook_scanner'] is False
-          assert payload['feedback']['automatic_model_changes'] is False
-          history=Path('data/history/wnba_market_observations.jsonl')
-          assert history.exists()
-          ids=[]
-          for line in history.read_text(encoding='utf-8').splitlines():
-              if not line.strip(): continue
-              row=json.loads(line);ids.append(row['observation_id'])
-              assert row['immutable'] is True
-              assert row['stage'] in {'opening','recommendation','current','closing'}
-              assert row['line'] is not None and row['odds'] is not None
-          assert len(ids)==len(set(ids))
-          for row in payload.get('records',[]):
-              assert row['movement_classification'] in {'STEAM_TOWARD_MODEL','STEAM_AWAY_FROM_MODEL','REVERSE_LINE_MOVEMENT','MEANINGFUL_MOVE','STABLE'}
-              assert 0 <= row['market_efficiency_score'] <= 100
-              assert isinstance(row['timeline'],list)
-          html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert 'v4-market-intelligence-script' in html
-          assert 'Closing Line Value & Market Movement' in html
-          assert 'window.marketIntelligence' in html
-          print('MARKET INTELLIGENCE:',payload['summary'])
-          PY
-      - name: Commit market history atomically
-        run: |
-          git config user.name "WNBA Market Intelligence Bot"
-          git config user.email "actions@github.com"
-          bash scripts/atomic_generated_push.sh \
-            "Capture CLV and line movement intelligence" \
-            'data/history/wnba_market_observations.jsonl' \
-            'data/warehouse/wnba_market_intelligence.json' \
-            'data/dashboard/wnba_market_intelligence*.json' \
-            'docs/index.html'
+          python wnba_market_intelligence.py capture --date "$TARGET" --stage "${{ github.event.inputs.stage }}"
+          python wnba_market_intelligence.py analyze --date "$TARGET"
+          echo "Manual validation only. Production dashboard publishing is owned by WNBA Version 4 Status."
