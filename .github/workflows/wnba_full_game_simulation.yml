@@ -2,86 +2,21 @@ name: WNBA Full Game Simulation
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["WNBA Version 4 Status"]
-    types: [completed]
-
-concurrency:
-  group: wnba-full-game-simulation
-  cancel-in-progress: false
 
 jobs:
-  full-game-simulation:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+  manual-validation:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Sync latest repository
-        run: git pull --ff-only origin main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Validate simulation files
+      - name: Validate full-game simulation
         run: |
-          python -m py_compile wnba_full_game_simulation_v2.py qa_full_game_simulation_v2.py wnba_parlay_optimizer_v2.py patch_dashboard_v4_full_game_simulation.py patch_dashboard_v4_parlay_optimizer.py
-      - name: Run acceptance tests
-        run: python qa_full_game_simulation_v2.py
-      - name: Resolve slate date
-        run: |
+          python -m py_compile wnba_full_game_simulation_v2.py qa_full_game_simulation_v2.py
+          python qa_full_game_simulation_v2.py
           TARGET=$(python active_slate_date.py)
-          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-      - name: Build full-game simulations
-        run: python wnba_full_game_simulation_v2.py --date "${{ env.TARGET }}"
-      - name: Rebuild direct-probability parlays
-        run: python wnba_parlay_optimizer_v2.py --date "${{ env.TARGET }}"
-      - name: Update dashboard
-        run: |
-          python patch_dashboard_v4_full_game_simulation.py
-          python patch_dashboard_v4_parlay_optimizer.py
-      - name: Verify full-game and direct parlay contract
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          full=json.load(open('data/dashboard/wnba_full_game_simulation_v2.json'))
-          parlays=json.load(open('data/dashboard/wnba_parlay_optimizer_v2.json'))
-          acceptance=json.load(open('data/dashboard/wnba_full_game_simulation_v2_acceptance.json'))
-          assert acceptance['status']=='green'
-          assert full['status']==parlays['status']=='ok'
-          assert full['summary']['simulations_per_game']==10000
-          for game in full.get('games',[]):
-              assert game['simulation_count']==10000
-              s=game['score_distribution']
-              assert s['total_p10'] <= s['total_mean'] <= s['total_p90']
-              assert 0 <= s['overtime_probability'] <= 1
-              for pair in game.get('direct_cross_player_pairs',[]):
-                  assert pair['calculation_method']=='DIRECT_FULL_GAME_SIMULATION'
-                  assert 0 <= pair['joint_probability'] <= 1
-          for row in parlays.get('parlays',[]):
-              if row['parlay_type']=='SAME_GAME_CROSS_PLAYER':
-                  assert row['calculation_method']=='DIRECT_FULL_GAME_SIMULATION'
-              if row['calculation_method']=='CONSERVATIVE_INDEPENDENCE_ESTIMATE':
-                  assert row['parlay_type']=='CROSS_GAME'
-                  assert row.get('warning')
-          html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert 'v4-full-game-simulation-script' in html
-          assert 'Full-Game Simulation v2' in html
-          assert 'DIRECT_FULL_GAME_SIMULATION' in json.dumps(parlays) or full['summary']['direct_cross_player_pairs']==0
-          print('FULL GAME SIMULATION:',full['summary'],parlays['summary'])
-          PY
-      - name: Commit full-game outputs atomically
-        run: |
-          git config user.name "WNBA Full Game Bot"
-          git config user.email "actions@github.com"
-          bash scripts/atomic_generated_push.sh \
-            "Build full-game simulation and direct SGP probabilities" \
-            'data/warehouse/wnba_full_game_simulation_v2.json' \
-            'data/dashboard/wnba_full_game_simulation_v2*.json' \
-            'data/warehouse/wnba_parlay_optimizer_v2.json' \
-            'data/dashboard/wnba_parlay_optimizer_v2.json' \
-            'docs/index.html'
+          python wnba_full_game_simulation_v2.py --date "$TARGET"
+          echo "Manual validation only. Production dashboard publishing is owned by WNBA Version 4 Status."
