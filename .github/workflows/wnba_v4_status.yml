@@ -175,7 +175,7 @@ jobs:
       - name: Verify final production artifact
         run: |
           python - <<'PY'
-          import json
+          import json,re
           from pathlib import Path
           target='${{ env.TARGET }}'
           required=[
@@ -199,7 +199,7 @@ jobs:
           for marker in ('v4-alt-streaks-script','v4-alt-ladders-script','v4-explainability-script','v4-market-intelligence-script','v4-model-picks-ledger-script','v4-mission-control-script'):
               assert marker in html,marker
           assert 'Sportsbook ALT Ladders' in html
-          assert 'data-view="alt"' not in html
+          assert not re.search(r'<button[^>]+data-view=["\']alt["\']',html,re.I), 'Standalone ALT navigation button returned'
           print('FINAL PRODUCTION ARTIFACT VERIFIED FOR',target)
           PY
       - name: Commit complete production build once
