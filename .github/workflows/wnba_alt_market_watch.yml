@@ -12,8 +12,6 @@ on:
         required: false
         default: 'false'
   schedule:
-    # Broad UTC coverage every 30 minutes. The Python gate uses each game's
-    # actual start time, so Saturday matinees and unusual weekday starts work.
     - cron: '7,37 * * * *'
 
 concurrency:
@@ -30,26 +28,21 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Sync latest repository
         run: git pull --ff-only origin main
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: pip
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Resolve active Eastern slate
         run: |
           TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Watching game start times for $TARGET"
-
       - name: Check actual game start times
         id: due
         run: |
@@ -63,12 +56,11 @@ jobs:
           )
           if [ "${{ github.event.inputs.force_refresh }}" = "true" ]; then RUN=true; fi
           echo "run_refresh=$RUN" >> "$GITHUB_OUTPUT"
-
       - name: Validate market-watch scripts
         if: steps.due.outputs.run_refresh == 'true'
         run: |
-          python -m py_compile wnba_alt_market_watch_due.py wnba_alt_closing_line_tracker.py wnba_alt_streaks.py wnba_alt_streaks_warehouse_upgrade.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_clv_context.py
-
+          python -m py_compile scrape_odds_props.py wnba_alt_market_warehouse.py qa_alt_market_warehouse.py wnba_alt_market_watch_due.py wnba_alt_closing_line_tracker.py wnba_alt_streaks.py wnba_alt_streaks_warehouse_upgrade.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_clv_context.py
+          python qa_alt_market_warehouse.py
       - name: Refresh current player-prop markets
         if: steps.due.outputs.run_refresh == 'true'
         env:
@@ -78,8 +70,10 @@ jobs:
           python line_shopping.py --date "${{ env.TARGET }}" --out data/raw || true
           python player_points.py --date "${{ env.TARGET }}" --out data/raw || true
           python wnba_sportsbook_consensus.py --date "${{ env.TARGET }}" || true
-
-      - name: Rebuild current ALT market board
+      - name: Build exact sportsbook ALT warehouse
+        if: steps.due.outputs.run_refresh == 'true'
+        run: python wnba_alt_market_warehouse.py --date "${{ env.TARGET }}"
+      - name: Rebuild current streak context
         if: steps.due.outputs.run_refresh == 'true'
         run: |
           python wnba_alt_streaks.py --date "${{ env.TARGET }}"
@@ -89,7 +83,6 @@ jobs:
           python wnba_alt_streaks_position_context.py
           python wnba_alt_streaks_pace_minutes_context.py
           python wnba_alt_streak_confidence.py --date "${{ env.TARGET }}"
-
       - name: Capture verified pregame snapshot
         if: steps.due.outputs.run_refresh == 'true'
         run: |
@@ -99,14 +92,17 @@ jobs:
           python wnba_alt_performance_clv_context.py
           python wnba_alt_market_watch_due.py --date "${{ env.TARGET }}" --mark-complete > /tmp/alt_marked.json
           cat /tmp/alt_marked.json
-
-      - name: Verify no post-start capture
+      - name: Verify exact ladder contract and no post-start capture
         if: steps.due.outputs.run_refresh == 'true'
         run: |
           python - <<'PY'
           import json
           from datetime import datetime
           from pathlib import Path
+          warehouse=json.load(open('data/dashboard/wnba_alt_market_warehouse.json'))
+          assert warehouse['data_contract']['book_specific_lines_preserved'] is True
+          assert warehouse['data_contract']['cross_book_line_averaging'] is False
+          assert warehouse['data_contract']['dd_td_supported'] is False
           path=Path('data/history/wnba_alt_market_snapshots.jsonl')
           if path.exists():
               for line in path.read_text(encoding='utf-8').splitlines():
@@ -115,25 +111,23 @@ jobs:
                   if row.get('game_start_utc') and row.get('captured_at_utc'):
                       assert datetime.fromisoformat(row['captured_at_utc']) <= datetime.fromisoformat(row['game_start_utc'])
           due=json.load(open('data/dashboard/wnba_alt_market_watch_due.json'))
-          assert due['policy']['weekday_assumptions'] is False
           assert due['policy']['early_weekend_games_supported'] is True
-          print('Game-time-aware market watch verified:',due['policy'])
+          print('Exact sportsbook ALT warehouse verified:',warehouse['summary'])
           PY
-
       - name: Commit market snapshots atomically
         if: steps.due.outputs.run_refresh == 'true'
         run: |
           git config user.name "WNBA Market Watch Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Capture game-time-aware ALT pregame markets" \
+            "Capture exact sportsbook ALT ladders" \
             'data/raw/player_points_*.csv' \
             'data/raw/player_points_today.csv' \
+            'data/raw/alt_props_bookmakers_*.csv' \
             'data/warehouse/wnba_alt_*.json' \
             'data/dashboard/wnba_alt_*.json' \
             'data/history/wnba_alt_market_snapshots.jsonl' \
             'data/history/wnba_alt_market_watch_state.json'
-
       - name: No checkpoint due
         if: steps.due.outputs.run_refresh != 'true'
         run: echo "No game-specific market checkpoint is due."
