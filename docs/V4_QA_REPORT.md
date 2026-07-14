@@ -1,13 +1,13 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-14T01:36:35.344204+00:00`
+Generated: `2026-07-14T12:38:29.901511+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 97 checked, 0 invalid, 3 empty
+- Dashboard JSON: 97 checked, 0 invalid, 4 empty
 - Workflows: 32 checked, 1 high risk
 
 ## Module QA
@@ -78,5 +78,5 @@ Generated: `2026-07-14T01:36:35.344204+00:00`
 | `.github/workflows/wnba_postbuild_integrity.yml` | 10 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_player_props_audit.yml` | 4 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_player_props_polish.yml` | 11 | 0 | 0.0 | low | True |
-| `.github/workflows/wnba_v4_status.yml` | 18 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_v4_status.yml` | 19 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_v4_terminal_cleanup.yml` | 8 | 0 | 0.0 | low | True |
