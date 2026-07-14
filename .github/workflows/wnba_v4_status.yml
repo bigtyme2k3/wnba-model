@@ -31,7 +31,7 @@ jobs:
           pip install -r requirements.txt
       - name: Validate production files
         run: |
-          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py qa_alt_performance_tracker.py qa_alt_market_warehouse.py qa_minutes_projection_v2.py qa_points_projection_v2.py qa_rebounds_assists_projection_v2.py qa_ancillary_projection_v2.py qa_unified_player_simulation_v2.py qa_cross_market_top_plays.py qa_parlay_optimizer_v2.py qa_projection_performance.py qa_model_explainability.py qa_market_intelligence.py qa_model_picks_ledger.py qa_mission_control.py collect_wehoop.py scrape_odds_props.py wnba_alt_market_warehouse.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_minutes_projection_v2.py wnba_points_projection_v2.py wnba_rebounds_assists_projection_v2.py wnba_ancillary_projection_v2.py wnba_unified_player_simulation_v2.py wnba_cross_market_top_plays.py wnba_parlay_optimizer_v2.py wnba_projection_performance.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py wnba_model_explainability.py wnba_market_intelligence.py wnba_model_picks_ledger.py wnba_mission_control.py patch_dashboard_v4_alt_streaks.py patch_dashboard_v4_alt_ladders.py patch_dashboard_v4_alt_performance.py patch_dashboard_v4_remove_sportsbook_tab.py patch_dashboard_v4_minutes_projection.py patch_dashboard_v4_points_projection.py patch_dashboard_v4_rebounds_assists_projection.py patch_dashboard_v4_ancillary_projection.py patch_dashboard_v4_unified_simulation.py patch_dashboard_v4_consolidated_navigation.py patch_dashboard_v4_top_plays.py patch_dashboard_v4_parlay_optimizer.py patch_dashboard_v4_projection_performance.py patch_dashboard_v4_explainability.py patch_dashboard_v4_market_intelligence.py patch_dashboard_v4_model_picks_ledger.py patch_dashboard_v4_mission_control.py patch_dashboard_v4_force_alt_tab.py
+          python -m py_compile qa_v4.py qa_v4_outputs_v2.py qa_v4_acceptance.py qa_v4_foundation_acceptance.py qa_v4_feedback_acceptance.py qa_v4_intelligence_acceptance.py qa_player_game_log_warehouse.py qa_alt_performance_tracker.py qa_alt_market_warehouse.py qa_minutes_projection_v2.py qa_points_projection_v2.py qa_rebounds_assists_projection_v2.py qa_ancillary_projection_v2.py qa_unified_player_simulation_v2.py qa_cross_market_top_plays.py qa_parlay_optimizer_v2.py qa_projection_performance.py qa_model_explainability.py qa_market_intelligence.py qa_model_picks_ledger.py qa_mission_control.py collect_wehoop.py scrape_odds_props.py line_shopping.py player_points.py wnba_sportsbook_consensus.py wnba_master_source_builder.py wnba_alt_market_warehouse.py wnba_v4_status_engine.py wnba_play_by_play_layer.py wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py wnba_historical_play_by_play.py wnba_minutes_projection_v2.py wnba_points_projection_v2.py wnba_rebounds_assists_projection_v2.py wnba_ancillary_projection_v2.py wnba_unified_player_simulation_v2.py wnba_cross_market_top_plays.py wnba_parlay_optimizer_v2.py wnba_projection_performance.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py wnba_matchup_intelligence.py wnba_projection_ai.py wnba_game_market_model.py wnba_decision_engine_final.py wnba_portfolio_optimizer_v2.py wnba_risk_allocation.py wnba_closing_line_tracker.py wnba_results_grader.py wnba_self_learning.py wnba_reasoning_layer.py wnba_model_calibration.py wnba_feature_importance.py wnba_hyperparameter_optimizer.py wnba_daily_retraining.py wnba_ensemble_learning.py wnba_alt_streaks.py wnba_alt_streaks_correctness.py wnba_alt_streaks_warehouse_upgrade.py wnba_model_explainability.py wnba_market_intelligence.py wnba_model_picks_ledger.py wnba_mission_control.py patch_dashboard_v4_alt_streaks.py patch_dashboard_v4_alt_ladders.py patch_dashboard_v4_alt_performance.py patch_dashboard_v4_remove_sportsbook_tab.py patch_dashboard_v4_minutes_projection.py patch_dashboard_v4_points_projection.py patch_dashboard_v4_rebounds_assists_projection.py patch_dashboard_v4_ancillary_projection.py patch_dashboard_v4_unified_simulation.py patch_dashboard_v4_consolidated_navigation.py patch_dashboard_v4_top_plays.py patch_dashboard_v4_parlay_optimizer.py patch_dashboard_v4_projection_performance.py patch_dashboard_v4_explainability.py patch_dashboard_v4_market_intelligence.py patch_dashboard_v4_model_picks_ledger.py patch_dashboard_v4_mission_control.py patch_dashboard_v4_force_alt_tab.py
           bash -n scripts/atomic_generated_push.sh
       - name: Run pre-build unit acceptance suites
         run: |
@@ -58,6 +58,9 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           python scrape_odds_props.py --date "${{ env.TARGET }}" --out data/raw || true
+          python line_shopping.py --date "${{ env.TARGET }}" --out data/raw || true
+          python player_points.py --date "${{ env.TARGET }}" --out data/raw || true
+          python wnba_sportsbook_consensus.py --date "${{ env.TARGET }}" || true
           python wnba_alt_market_warehouse.py --date "${{ env.TARGET }}"
       - name: Collect and build player warehouse
         run: |
@@ -68,6 +71,18 @@ jobs:
           python wnba_player_game_log_archive.py merge
           python wnba_player_game_log_backfill.py --season "${{ env.SEASON_YEAR }}"
           python wnba_alt_market_warehouse.py --date "${{ env.TARGET }}"
+      - name: Build synchronized current-slate master
+        run: |
+          python wnba_master_source_builder.py --date "${{ env.TARGET }}"
+          python - <<'PY'
+          import json
+          target='${{ env.TARGET }}'
+          for path in ('data/master/wnba_master.json','data/dashboard/wnba_master.json'):
+              payload=json.load(open(path))
+              assert payload.get('target_date')==target,(path,payload.get('target_date'),target)
+              assert payload.get('schema_version')=='master-v5-active-slate'
+          print('CURRENT-SLATE MASTER VERIFIED:',target)
+          PY
       - name: Grade prior model history
         run: |
           python wnba_projection_performance.py grade --date "${{ env.TARGET }}"
@@ -136,8 +151,16 @@ jobs:
           python qa_model_explainability.py
           python qa_market_intelligence.py
           python qa_model_picks_ledger.py
-      - name: Build QA and V4 status
+      - name: Refresh master and build QA and V4 status
         run: |
+          python wnba_master_source_builder.py --date "${{ env.TARGET }}"
+          python - <<'PY'
+          import json
+          target='${{ env.TARGET }}'
+          master=json.load(open('data/master/wnba_master.json'))
+          assert master.get('target_date')==target,(master.get('target_date'),target)
+          print('PRE-QA MASTER DATE:',master['target_date'])
+          PY
           python qa_v4.py
           python qa_v4_outputs_v2.py --strict
           python wnba_v4_status_engine.py
@@ -179,6 +202,8 @@ jobs:
           from pathlib import Path
           target='${{ env.TARGET }}'
           required=[
+            'data/master/wnba_master.json',
+            'data/dashboard/wnba_master.json',
             'data/dashboard/wnba_minutes_projection_v2.json',
             'data/dashboard/wnba_unified_player_simulation_v2.json',
             'data/dashboard/wnba_cross_market_top_plays.json',
