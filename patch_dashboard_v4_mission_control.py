@@ -22,4 +22,9 @@ def main():
     html=replace_block(html,'<style id="v4-mission-control-style">','</style>',CSS) if 'id="v4-mission-control-style"' in html else html.replace('</head>',CSS+'</head>')
     html=replace_block(html,'<script id="v4-mission-control-script">','</script>',SCRIPT) if 'id="v4-mission-control-script"' in html else html.replace('</body>',SCRIPT+'</body>')
     HTML.write_text(html,encoding='utf-8');print('Mission Control added to V4 Health')
+    try:
+        from patch_dashboard_v4_live_results import main as patch_live_results
+        patch_live_results()
+    except Exception as exc:
+        print('Live Results Engine tile warning:',exc)
 if __name__=='__main__':main()
