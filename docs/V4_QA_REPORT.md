@@ -1,14 +1,14 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-14T15:13:27.877655+00:00`
+Generated: `2026-07-15T15:13:46.071239+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 97 checked, 0 invalid, 3 empty
-- Workflows: 32 checked, 1 high risk
+- Dashboard JSON: 98 checked, 0 invalid, 5 empty
+- Workflows: 33 checked, 1 high risk
 
 ## Module QA
 
@@ -67,6 +67,7 @@ Generated: `2026-07-14T15:13:27.877655+00:00`
 | `.github/workflows/wnba_full_game_simulation.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_injury_refresh.yml` | 12 | 1 | 0.083 | low | True |
 | `.github/workflows/wnba_intelligence_foundation.yml` | 52 | 27 | 0.519 | high | True |
+| `.github/workflows/wnba_live_results_engine.yml` | 14 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_market_intelligence.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_mission_control.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_model_explainability.yml` | 1 | 0 | 0.0 | low | False |
