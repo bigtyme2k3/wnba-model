@@ -1,17 +1,17 @@
 {
-  "generated_at_utc": "2026-07-15T11:06:47.866916+00:00",
-  "target_date": "2026-07-14",
+  "generated_at_utc": "2026-07-16T11:15:57.943390+00:00",
+  "target_date": "2026-07-15",
   "status": "active",
   "newly_graded": 0,
-  "history_rows": 1315,
+  "history_rows": 1416,
   "performance": {
     "graded": 143,
     "wins": 81,
     "losses": 62,
     "pushes": 0,
     "win_rate": 0.5664,
-    "units_profit": 11.413,
-    "roi": 0.0798,
+    "units_profit": 11.324,
+    "roi": 0.0792,
     "clv_samples": 0,
     "average_clv": null,
     "positive_clv_rate": null
@@ -68,18 +68,18 @@
       },
       {
         "bin": "80-84",
-        "n": 43,
+        "n": 44,
         "predicted_rate": 0.825,
-        "actual_rate": 0.512,
-        "wins": 22,
+        "actual_rate": 0.523,
+        "wins": 23,
         "losses": 21
       },
       {
         "bin": "85-89",
-        "n": 22,
+        "n": 21,
         "predicted_rate": 0.875,
-        "actual_rate": 0.5,
-        "wins": 11,
+        "actual_rate": 0.476,
+        "wins": 10,
         "losses": 11
       },
       {
@@ -99,20 +99,26 @@
         "losses": 0
       }
     ],
-    "brier_score": 0.3194,
+    "brier_score": 0.3195,
     "graded_binary_rows": 104
   },
   "feature_importance": [
     {
       "feature": "history_games",
-      "samples": 59,
-      "importance": 0.0938,
+      "samples": 60,
+      "importance": 0.1101,
+      "direction": "positive"
+    },
+    {
+      "feature": "book_count",
+      "samples": 60,
+      "importance": 0.0969,
       "direction": "positive"
     },
     {
       "feature": "simulation_probability",
-      "samples": 59,
-      "importance": 0.093,
+      "samples": 60,
+      "importance": 0.0934,
       "direction": "negative"
     },
     {
@@ -122,22 +128,16 @@
       "direction": "negative"
     },
     {
-      "feature": "book_count",
-      "samples": 59,
-      "importance": 0.0799,
-      "direction": "positive"
+      "feature": "edge_pct",
+      "samples": 60,
+      "importance": 0.0215,
+      "direction": "negative"
     },
     {
       "feature": "ev_pct",
       "samples": 143,
       "importance": 0.019,
       "direction": "positive"
-    },
-    {
-      "feature": "edge_pct",
-      "samples": 59,
-      "importance": 0.0188,
-      "direction": "negative"
     }
   ],
   "performance_by_stat": [
@@ -148,8 +148,8 @@
       "losses": 13,
       "pushes": 0,
       "win_rate": 0.6061,
-      "units_profit": 5.269,
-      "roi": 0.1597,
+      "units_profit": 5.179,
+      "roi": 0.1569,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -249,13 +249,13 @@
   "performance_by_action": [
     {
       "final_action": "UNKNOWN",
-      "graded": 84,
-      "wins": 47,
+      "graded": 83,
+      "wins": 46,
       "losses": 37,
       "pushes": 0,
-      "win_rate": 0.5595,
-      "units_profit": 5.727,
-      "roi": 0.0682,
+      "win_rate": 0.5542,
+      "units_profit": 4.818,
+      "roi": 0.0581,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -274,6 +274,19 @@
       "positive_clv_rate": null
     },
     {
+      "final_action": "LEAN",
+      "graded": 5,
+      "wins": 4,
+      "losses": 1,
+      "pushes": 0,
+      "win_rate": 0.8,
+      "units_profit": 2.428,
+      "roi": 0.4855,
+      "clv_samples": 0,
+      "average_clv": null,
+      "positive_clv_rate": null
+    },
+    {
       "final_action": "WATCH",
       "graded": 5,
       "wins": 3,
@@ -285,44 +298,31 @@
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
-    },
-    {
-      "final_action": "LEAN",
-      "graded": 4,
-      "wins": 3,
-      "losses": 1,
-      "pushes": 0,
-      "win_rate": 0.75,
-      "units_profit": 1.608,
-      "roi": 0.402,
-      "clv_samples": 0,
-      "average_clv": null,
-      "positive_clv_rate": null
     }
   ],
   "performance_by_book": [
     {
       "sportsbook": "UNKNOWN",
-      "graded": 119,
-      "wins": 67,
+      "graded": 118,
+      "wins": 66,
       "losses": 52,
       "pushes": 0,
-      "win_rate": 0.563,
-      "units_profit": 8.909,
-      "roi": 0.0749,
+      "win_rate": 0.5593,
+      "units_profit": 8.0,
+      "roi": 0.0678,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
     },
     {
       "sportsbook": "FanDuel",
-      "graded": 15,
-      "wins": 10,
+      "graded": 16,
+      "wins": 11,
       "losses": 5,
       "pushes": 0,
-      "win_rate": 0.6667,
-      "units_profit": 4.4,
-      "roi": 0.2933,
+      "win_rate": 0.6875,
+      "units_profit": 5.219,
+      "roi": 0.3262,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -3484,10 +3484,10 @@
       "wins": 81,
       "losses": 62,
       "pushes": 0,
-      "units": 11.413,
+      "units": 11.324,
       "date": "2026-07-09",
-      "roi": 0.0798
+      "roi": 0.0792
     }
   ],
-  "results_updated_at_utc": "2026-07-15T11:06:47.955028+00:00"
+  "results_updated_at_utc": "2026-07-16T11:15:58.060581+00:00"
 }
