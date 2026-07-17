@@ -1,13 +1,13 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-16T15:23:50.648200+00:00`
+Generated: `2026-07-17T15:04:41.905619+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 98 checked, 0 invalid, 5 empty
+- Dashboard JSON: 98 checked, 0 invalid, 4 empty
 - Workflows: 33 checked, 1 high risk
 
 ## Module QA
