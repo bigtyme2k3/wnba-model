@@ -1,0 +1,114 @@
+name: WNBA Player Props History Repair
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target slate date (YYYY-MM-DD), blank uses active slate'
+        required: false
+        default: ''
+
+concurrency:
+  group: wnba-player-props-history-repair
+  cancel-in-progress: false
+
+jobs:
+  repair-player-props-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Resolve target date
+        run: |
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "SEASON_YEAR=${TARGET:0:4}" >> "$GITHUB_ENV"
+      - name: Validate repair pipeline
+        run: python -m py_compile wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py player_points.py wnba_player_props_history_repair.py wnba_sportsbook_consensus.py wnba_master_source_builder.py build_dashboard_v4.py patch_dashboard_v4_player_props_polish.py
+      - name: Refresh canonical player game logs
+        run: |
+          python collect_wehoop.py --current --out data/raw
+          python wnba_player_game_log_archive.py snapshot
+          python wnba_play_by_play_layer.py --date "${{ env.TARGET }}"
+          python wnba_player_game_log_warehouse.py --date "${{ env.TARGET }}"
+          python wnba_player_game_log_archive.py merge
+          python wnba_player_game_log_backfill.py --season "${{ env.SEASON_YEAR }}"
+      - name: Rebuild and repair current Player Props
+        run: |
+          python player_points.py --date "${{ env.TARGET }}" --out data/raw
+          python wnba_player_props_history_repair.py --date "${{ env.TARGET }}"
+          python wnba_sportsbook_consensus.py --date "${{ env.TARGET }}"
+          python wnba_master_source_builder.py --date "${{ env.TARGET }}"
+      - name: Verify no synthetic history or DD/TD
+        run: |
+          python - <<'PY'
+          import json,pandas as pd
+          target='${{ env.TARGET }}'
+          report=json.load(open('data/dashboard/wnba_player_props_history_repair.json'))
+          assert report['policy']['synthetic_history_allowed'] is False
+          assert report['policy']['zero_placeholders_allowed'] is False
+          assert report['policy']['dd_td_removed'] is True
+          df=pd.read_csv(f'data/raw/player_points_{target}.csv')
+          assert not df['stat'].astype(str).str.upper().isin({'DD','TD'}).any()
+          for col in ('history_source','history_games','history_latest_date'):
+              assert col in df.columns,col
+          print('PLAYER PROPS HISTORY VERIFIED:',report['summary'])
+          PY
+      - name: Rebuild dashboard
+        run: |
+          python build_dashboard_v4.py
+          python patch_dashboard_v4_team_context.py
+          python patch_dashboard_v4_layout_and_slate.py
+          python patch_dashboard_v4_prop_header.py
+          python patch_dashboard_v4_game_filter.py
+          python patch_dashboard_v4_player_props_polish.py
+          python patch_dashboard_v4_qa_health.py
+          python patch_dashboard_v4_game_market_data.py
+          python patch_dashboard_v4_core_interactions.py
+          python patch_dashboard_v4_alt_streaks.py
+          python patch_dashboard_v4_alt_ladders.py
+          python patch_dashboard_v4_alt_performance.py
+          python patch_dashboard_v4_remove_sportsbook_tab.py
+          python patch_dashboard_v4_minutes_projection.py
+          python patch_dashboard_v4_points_projection.py
+          python patch_dashboard_v4_rebounds_assists_projection.py
+          python patch_dashboard_v4_ancillary_projection.py
+          python patch_dashboard_v4_unified_simulation.py
+          python patch_dashboard_v4_top_plays.py
+          python patch_dashboard_v4_parlay_optimizer.py
+          python patch_dashboard_v4_projection_performance.py
+          python patch_dashboard_v4_explainability.py
+          python patch_dashboard_v4_market_intelligence.py
+          python patch_dashboard_v4_model_picks_ledger.py
+          python patch_dashboard_v4_consolidated_navigation.py
+          python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 2
+          python patch_dashboard_v4_mission_control.py
+          python patch_dashboard_v4_force_alt_tab.py
+      - name: Commit repaired Player Props
+        run: |
+          git config user.name "WNBA Player History Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Repair Player Props from verified game logs" \
+            'data/raw/player_points_*.csv' \
+            'data/warehouse/wnba_player_game_logs.json' \
+            'data/dashboard/wnba_player_game_logs.json' \
+            'data/dashboard/wnba_player_props_history_repair.json' \
+            'data/dashboard/wnba_sportsbook_consensus.json' \
+            'data/master/wnba_master.json' \
+            'data/dashboard/wnba_master.json' \
+            'docs/index.html'
