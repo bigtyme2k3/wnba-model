@@ -1,407 +1,273 @@
-"""
-collect_wehoop.py
------------------
-Pulls WNBA data from two sources:
-  1. Sportsdataverse pre-built .rds releases  (2003–2024, historical)
-  2. ESPN public API                           (current season, live)
+"""Collect WNBA team/player box scores from Sportsdataverse and ESPN."""
+from __future__ import annotations
 
-Replaces Basketball-Reference scraper. No R needed — pyreadr reads .rds in Python.
+import argparse
+import os
+import tempfile
+import time
+from datetime import date, timedelta
 
-Data collected:
-  - Team box scores per game (pts, reb, ast, to, fg_pct, fg3_pct, ft_pct)
-  - Player box scores per game (for props model)
-  - Season schedules (rest days, home/away)
-
-Usage:
-    python collect_wehoop.py --start 2022 --end 2024   # historical
-    python collect_wehoop.py --current                  # today's season
-    python collect_wehoop.py --start 2022 --current     # both
-"""
-
-import os, time, argparse, requests, json
 import pandas as pd
-from datetime import date, datetime
+import requests
 
-OUT_DIR  = "data/raw"
-HEADERS  = {"User-Agent": "Mozilla/5.0 (research project)"}
-
-# ── URL patterns ───────────────────────────────────────────────────────────────
+OUT_DIR = "data/raw"
+HEADERS = {"User-Agent": "Mozilla/5.0 (research project)"}
 SDV_BASE = "https://github.com/sportsdataverse/sportsdataverse-data/releases/download"
 ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba"
-
 SDV_URLS = {
-    "team_box":    f"{SDV_BASE}/espn_wnba_team_boxscores/team_box_{{year}}.rds",
-    "player_box":  f"{SDV_BASE}/espn_wnba_player_boxscores/player_box_{{year}}.rds",
-    "schedule":    f"{SDV_BASE}/espn_wnba_schedules/wnba_schedule_{{year}}.rds",
+    "team_box": f"{SDV_BASE}/espn_wnba_team_boxscores/team_box_{{year}}.rds",
+    "player_box": f"{SDV_BASE}/espn_wnba_player_boxscores/player_box_{{year}}.rds",
+    "schedule": f"{SDV_BASE}/espn_wnba_schedules/wnba_schedule_{{year}}.rds",
 }
-
-# Columns we care about from team box
 TEAM_BOX_COLS = [
-    "game_id","season","game_date","game_date_time",
-    "team_id","team_name","team_location","team_abbreviation",
-    "home_away",
-    "field_goals_made","field_goals_attempted","field_goal_pct",
-    "three_point_field_goals_made","three_point_field_goals_attempted","three_point_field_goal_pct",
-    "free_throws_made","free_throws_attempted","free_throw_pct",
-    "offensive_rebounds","defensive_rebounds","rebounds",
-    "assists","steals","blocks","turnovers","fouls",
-    "points",
-    "largest_lead","team_turnovers","total_technical_fouls",
+    "game_id", "season", "game_date", "game_date_time", "team_id", "team_name",
+    "team_location", "team_abbreviation", "home_away", "field_goals_made",
+    "field_goals_attempted", "field_goal_pct", "three_point_field_goals_made",
+    "three_point_field_goals_attempted", "three_point_field_goal_pct",
+    "free_throws_made", "free_throws_attempted", "free_throw_pct",
+    "offensive_rebounds", "defensive_rebounds", "rebounds", "assists", "steals",
+    "blocks", "turnovers", "fouls", "points", "largest_lead", "team_turnovers",
+    "total_technical_fouls",
 ]
-
 PLAYER_BOX_COLS = [
-    "game_id","season","game_date","team_name","team_location","team_abbreviation",
-    "athlete_id","athlete_display_name","athlete_position_abbreviation",
-    "home_away","starter","did_not_play",
-    "minutes","field_goals_made","field_goals_attempted","three_point_field_goals_made",
-    "three_point_field_goals_attempted","free_throws_made","free_throws_attempted",
-    "offensive_rebounds","defensive_rebounds","rebounds",
-    "assists","steals","blocks","turnovers","fouls","points","plus_minus",
+    "game_id", "season", "game_date", "team_name", "team_location",
+    "team_abbreviation", "athlete_id", "athlete_display_name",
+    "athlete_position_abbreviation", "home_away", "starter", "did_not_play",
+    "minutes", "field_goals_made", "field_goals_attempted",
+    "three_point_field_goals_made", "three_point_field_goals_attempted",
+    "free_throws_made", "free_throws_attempted", "offensive_rebounds",
+    "defensive_rebounds", "rebounds", "assists", "steals", "blocks", "turnovers",
+    "fouls", "points", "plus_minus",
 ]
 
-
-# ── RDS reader ────────────────────────────────────────────────────────────────
 
 def read_rds_url(url: str) -> pd.DataFrame:
-    """Download and parse an .rds file into a DataFrame using pyreadr."""
-    try:
-        import pyreadr
-    except ImportError:
-        raise ImportError("Install pyreadr: pip install pyreadr --break-system-packages")
-
-    import tempfile
-    resp = requests.get(url, headers=HEADERS, timeout=60, allow_redirects=True)
-    if resp.status_code == 404:
+    import pyreadr
+    response = requests.get(url, headers=HEADERS, timeout=60, allow_redirects=True)
+    if response.status_code == 404:
         return pd.DataFrame()
-    resp.raise_for_status()
-
+    response.raise_for_status()
     with tempfile.NamedTemporaryFile(suffix=".rds", delete=False) as tmp:
-        tmp.write(resp.content)
-        tmp_path = tmp.name
-
+        tmp.write(response.content)
+        path = tmp.name
     try:
-        result = pyreadr.read_r(tmp_path)
-        df = list(result.values())[0]
+        result = pyreadr.read_r(path)
+        return list(result.values())[0]
     finally:
-        os.unlink(tmp_path)
-
-    return df
+        os.unlink(path)
 
 
-# ── Historical data (SDV releases) ───────────────────────────────────────────
-
-def fetch_historical_season(year: int, out_dir: str):
+def fetch_historical_season(year: int, out_dir: str) -> None:
     print(f"\n── Season {year} (Sportsdataverse) ──")
-
-    # Team box scores
-    url = SDV_URLS["team_box"].format(year=year)
-    print(f"  Downloading team box scores...", end="", flush=True)
-    df = read_rds_url(url)
-    if df.empty:
-        print(f" [404 — not available]")
-    else:
-        cols = [c for c in TEAM_BOX_COLS if c in df.columns]
-        df   = df[cols].copy()
-        # Compute derived stats
-        if "points" in df.columns:
-            df["pts"] = pd.to_numeric(df["points"], errors="coerce")
-        path = os.path.join(out_dir, f"wehoop_team_box_{year}.csv")
+    for kind, filename in (
+        ("team_box", f"wehoop_team_box_{year}.csv"),
+        ("player_box", f"wehoop_player_box_{year}.csv"),
+        ("schedule", f"wehoop_schedule_{year}.csv"),
+    ):
+        print(f"  Downloading {kind}...", end="", flush=True)
+        df = read_rds_url(SDV_URLS[kind].format(year=year))
+        if df.empty:
+            print(" [404 — not available]")
+            continue
+        if kind == "team_box":
+            df = df[[c for c in TEAM_BOX_COLS if c in df.columns]].copy()
+            if "points" in df.columns:
+                df["pts"] = pd.to_numeric(df["points"], errors="coerce")
+        elif kind == "player_box":
+            df = df[[c for c in PLAYER_BOX_COLS if c in df.columns]].copy()
+        path = os.path.join(out_dir, filename)
         df.to_csv(path, index=False)
         print(f" {len(df)} rows → {path}")
+        time.sleep(1)
 
-    time.sleep(2)
-
-    # Player box scores
-    url = SDV_URLS["player_box"].format(year=year)
-    print(f"  Downloading player box scores...", end="", flush=True)
-    df = read_rds_url(url)
-    if df.empty:
-        print(f" [404 — not available]")
-    else:
-        cols = [c for c in PLAYER_BOX_COLS if c in df.columns]
-        df   = df[cols].copy()
-        path = os.path.join(out_dir, f"wehoop_player_box_{year}.csv")
-        df.to_csv(path, index=False)
-        print(f" {len(df)} rows → {path}")
-
-    time.sleep(2)
-
-    # Schedule
-    url = SDV_URLS["schedule"].format(year=year)
-    print(f"  Downloading schedule...", end="", flush=True)
-    df = read_rds_url(url)
-    if df.empty:
-        print(f" [404 — not available]")
-    else:
-        path = os.path.join(out_dir, f"wehoop_schedule_{year}.csv")
-        df.to_csv(path, index=False)
-        print(f" {len(df)} rows → {path}")
-
-    time.sleep(2)
-
-
-# ── Current season (ESPN API, game by game) ───────────────────────────────────
 
 def fetch_espn_scoreboard(target_date: str) -> list:
-    """Get all games for a date from ESPN."""
-    url    = f"{ESPN_BASE}/scoreboard"
-    params = {"dates": target_date.replace("-",""), "limit": 50}
-    resp   = requests.get(url, headers=HEADERS, params=params, timeout=15)
-    resp.raise_for_status()
-    return resp.json().get("events", [])
+    response = requests.get(
+        f"{ESPN_BASE}/scoreboard",
+        headers=HEADERS,
+        params={"dates": target_date.replace("-", ""), "limit": 50},
+        timeout=20,
+    )
+    response.raise_for_status()
+    return response.json().get("events", [])
 
 
 def fetch_espn_boxscore(game_id: str) -> dict:
-    """Get full box score for a single game from ESPN."""
-    url    = f"{ESPN_BASE}/summary"
-    params = {"event": game_id}
-    resp   = requests.get(url, headers=HEADERS, params=params, timeout=15)
-    resp.raise_for_status()
-    return resp.json()
+    response = requests.get(
+        f"{ESPN_BASE}/summary", headers=HEADERS, params={"event": game_id}, timeout=20
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+def competitor_index(summary: dict) -> dict[str, dict]:
+    competition = summary.get("header", {}).get("competitions", [{}])[0]
+    result = {}
+    for competitor in competition.get("competitors", []):
+        team_id = str(competitor.get("team", {}).get("id", ""))
+        if team_id:
+            result[team_id] = competitor
+    return result
+
+
+def number(value):
+    try:
+        return float(str(value).replace("%", ""))
+    except (TypeError, ValueError):
+        return None
 
 
 def parse_espn_team_box(summary: dict, game_date: str, season: int) -> list:
-    """Extract team-level stats from ESPN game summary."""
+    competition = summary.get("header", {}).get("competitions", [{}])[0]
+    game_id = str(competition.get("id", ""))
+    competitors = competitor_index(summary)
     rows = []
-    comps = summary.get("header",{}).get("competitions",[{}])[0]
-    game_id = comps.get("id","")
-
-    for team_data in summary.get("boxscore",{}).get("teams",[]):
-        team    = team_data.get("team",{})
-        stats   = {s["name"]: s["displayValue"]
-                   for s in team_data.get("statistics",[])}
-        home_away = team_data.get("homeAway","")
-
-        def g(key):
-            val = stats.get(key,"")
-            try: return float(val.replace("%",""))
-            except: return None
-
+    for team_data in summary.get("boxscore", {}).get("teams", []):
+        team = team_data.get("team", {})
+        team_id = str(team.get("id", ""))
+        competitor = competitors.get(team_id, {})
+        stats = {s.get("name"): s.get("displayValue") for s in team_data.get("statistics", [])}
+        score = number(competitor.get("score"))
+        home_away = competitor.get("homeAway") or team_data.get("homeAway") or ""
         rows.append({
-            "game_id":          game_id,
-            "season":           season,
-            "game_date":        game_date,
-            "team_name":        team.get("name",""),
-            "team_location":    team.get("location",""),
-            "team_abbreviation":team.get("abbreviation",""),
-            "home_away":        home_away,
-            "pts":              g("points"),
-            "field_goal_pct":   g("fieldGoalPct"),
-            "three_point_pct":  g("threePointPct"),
-            "free_throw_pct":   g("freeThrowPct"),
-            "rebounds":         g("totalRebounds"),
-            "assists":          g("assists"),
-            "steals":           g("steals"),
-            "blocks":           g("blocks"),
-            "turnovers":        g("turnovers"),
-            "fouls":            g("fouls"),
-            "offensive_rebounds": g("offensiveRebounds"),
-            "source":           "espn_api",
+            "game_id": game_id,
+            "season": season,
+            "game_date": game_date,
+            "team_id": team_id,
+            "team_name": team.get("name", ""),
+            "team_location": team.get("location", ""),
+            "team_abbreviation": team.get("abbreviation", ""),
+            "home_away": home_away,
+            "points": score,
+            "pts": score,
+            "field_goal_pct": number(stats.get("fieldGoalPct")),
+            "three_point_pct": number(stats.get("threePointPct")),
+            "free_throw_pct": number(stats.get("freeThrowPct")),
+            "rebounds": number(stats.get("totalRebounds")),
+            "assists": number(stats.get("assists")),
+            "steals": number(stats.get("steals")),
+            "blocks": number(stats.get("blocks")),
+            "turnovers": number(stats.get("turnovers")),
+            "fouls": number(stats.get("fouls")),
+            "offensive_rebounds": number(stats.get("offensiveRebounds")),
+            "source": "espn_api",
         })
     return rows
 
 
 def parse_espn_player_box(summary: dict, game_date: str, season: int) -> list:
-    """Extract player-level stats from ESPN game summary."""
+    competition = summary.get("header", {}).get("competitions", [{}])[0]
+    game_id = str(competition.get("id", ""))
+    competitors = competitor_index(summary)
     rows = []
-    game_id = summary.get("header",{}).get("competitions",[{}])[0].get("id","")
-
-    for team_data in summary.get("boxscore",{}).get("players",[]):
-        team    = team_data.get("team",{})
-        home_away = team_data.get("homeAway","")
-
-        for stat_group in team_data.get("statistics",[]):
-            labels = stat_group.get("labels",[])
-            for athlete in stat_group.get("athletes",[]):
-                pl      = athlete.get("athlete",{})
-                vals    = athlete.get("stats",[])
-                sd      = dict(zip(labels, vals))
-
-                def gv(key, default=None):
-                    try: return float(sd.get(key,"")) if sd.get(key,"") not in ("--","") else default
-                    except: return default
-
+    for team_data in summary.get("boxscore", {}).get("players", []):
+        team = team_data.get("team", {})
+        home_away = competitors.get(str(team.get("id", "")), {}).get("homeAway", "")
+        for group in team_data.get("statistics", []):
+            labels = group.get("labels", [])
+            for athlete in group.get("athletes", []):
+                player = athlete.get("athlete", {})
+                values = dict(zip(labels, athlete.get("stats", [])))
                 rows.append({
-                    "game_id":      game_id,
-                    "season":       season,
-                    "game_date":    game_date,
-                    "team_name":    team.get("name",""),
-                    "team_abbr":    team.get("abbreviation",""),
-                    "home_away":    home_away,
-                    "player_id":    pl.get("id",""),
-                    "player_name":  pl.get("displayName",""),
-                    "position":     pl.get("position",{}).get("abbreviation",""),
-                    "starter":      athlete.get("starter", False),
+                    "game_id": game_id, "season": season, "game_date": game_date,
+                    "team_name": team.get("name", ""),
+                    "team_location": team.get("location", ""),
+                    "team_abbr": team.get("abbreviation", ""), "home_away": home_away,
+                    "player_id": player.get("id", ""),
+                    "player_name": player.get("displayName", ""),
+                    "position": player.get("position", {}).get("abbreviation", ""),
+                    "starter": athlete.get("starter", False),
                     "did_not_play": athlete.get("didNotPlay", False),
-                    "minutes":      gv("MIN"),
-                    "pts":          gv("PTS"),
-                    "reb":          gv("REB"),
-                    "ast":          gv("AST"),
-                    "stl":          gv("STL"),
-                    "blk":          gv("BLK"),
-                    "tov":          gv("TO"),
-                    "fg_made":      gv("FGM"),
-                    "fg_att":       gv("FGA"),
-                    "threes_made":  gv("3PM"),
-                    "threes_att":   gv("3PA"),
-                    "ft_made":      gv("FTM"),
-                    "ft_att":       gv("FTA"),
-                    "plus_minus":   gv("+/-"),
-                    "source":       "espn_api",
+                    "minutes": number(values.get("MIN")), "pts": number(values.get("PTS")),
+                    "reb": number(values.get("REB")), "ast": number(values.get("AST")),
+                    "stl": number(values.get("STL")), "blk": number(values.get("BLK")),
+                    "tov": number(values.get("TO")), "fg_made": number(values.get("FGM")),
+                    "fg_att": number(values.get("FGA")), "threes_made": number(values.get("3PM")),
+                    "threes_att": number(values.get("3PA")), "ft_made": number(values.get("FTM")),
+                    "ft_att": number(values.get("FTA")), "plus_minus": number(values.get("+/-")),
+                    "source": "espn_api",
                 })
     return rows
 
 
-def fetch_current_season(season_year: int, out_dir: str):
-    """
-    Pull full current season box scores from ESPN API.
-    Goes month by month through the WNBA season (May–Oct).
-    """
+def fetch_current_season(season_year: int, out_dir: str) -> None:
     print(f"\n── Season {season_year} (ESPN API — current) ──")
     today = date.today()
-
-    team_rows, player_rows = [], []
-    seen_games = set()
-
-    # WNBA season: May 14 through Sept 22
-    from datetime import timedelta
-    start = date(season_year, 5, 14)
-    end   = min(date(season_year, 9, 22), today)
-
-    current = start
+    current = date(season_year, 5, 1)
+    end = min(date(season_year, 10, 31), today)
+    team_rows, player_rows, seen_games = [], [], set()
     while current <= end:
-        date_str = str(current)
+        date_str = current.isoformat()
         try:
-            events = fetch_espn_scoreboard(date_str)
-            for event in events:
-                gid    = event.get("id","")
-                status = event.get("status",{}).get("type",{}).get("name","")
-                if "FINAL" not in status.upper() and current < today:
-                    current += timedelta(days=1)
+            for event in fetch_espn_scoreboard(date_str):
+                game_id = str(event.get("id", ""))
+                status = str(event.get("status", {}).get("type", {}).get("name", ""))
+                if "FINAL" not in status.upper() or game_id in seen_games:
                     continue
-                if gid in seen_games:
-                    current += timedelta(days=1)
-                    continue
-                seen_games.add(gid)
-
-                try:
-                    summary = fetch_espn_boxscore(gid)
-                    team_rows   += parse_espn_team_box(summary, date_str, season_year)
-                    player_rows += parse_espn_player_box(summary, date_str, season_year)
-                    time.sleep(0.5)
-                except Exception as e:
-                    print(f"    [WARN] Game {gid}: {e}")
-        except Exception as e:
-            print(f"  [WARN] {date_str}: {e}")
-
+                seen_games.add(game_id)
+                summary = fetch_espn_boxscore(game_id)
+                team_rows.extend(parse_espn_team_box(summary, date_str, season_year))
+                player_rows.extend(parse_espn_player_box(summary, date_str, season_year))
+                time.sleep(0.35)
+        except Exception as exc:
+            print(f"  [WARN] {date_str}: {exc}")
         current += timedelta(days=1)
-        if current.day == 1:
-            print(f"  Through {date_str}: {len(seen_games)} games")
-        time.sleep(0.3)
-
+        time.sleep(0.15)
     print(f"  Total: {len(seen_games)} games")
-
     if team_rows:
-        df = pd.DataFrame(team_rows)
         path = os.path.join(out_dir, f"wehoop_team_box_{season_year}.csv")
-        df.to_csv(path, index=False)
-        print(f"  Team box → {path} ({len(df)} rows)")
-
+        pd.DataFrame(team_rows).to_csv(path, index=False)
+        print(f"  Team box → {path} ({len(team_rows)} rows)")
     if player_rows:
-        df = pd.DataFrame(player_rows)
         path = os.path.join(out_dir, f"wehoop_player_box_{season_year}.csv")
-        df.to_csv(path, index=False)
-        print(f"  Player box → {path} ({len(df)} rows)")
+        pd.DataFrame(player_rows).to_csv(path, index=False)
+        print(f"  Player box → {path} ({len(player_rows)} rows)")
 
 
-# ── Build master dataset from wehoop files ────────────────────────────────────
-
-def build_wehoop_master(out_dir: str):
-    """
-    Combine all wehoop_team_box_*.csv files into a single master
-    that merge_data.py can read alongside scores and odds.
-    """
-    files = sorted([f for f in os.listdir(out_dir) if f.startswith("wehoop_team_box_")])
+def build_wehoop_master(out_dir: str) -> None:
+    files = sorted(f for f in os.listdir(out_dir) if f.startswith("wehoop_team_box_") and f.endswith(".csv"))
     if not files:
         print("  No wehoop team box files found.")
         return
-
-    dfs = []
-    for f in files:
-        df = pd.read_csv(os.path.join(out_dir, f))
-        dfs.append(df)
-        print(f"  Loaded {f}: {len(df)} rows")
-
-    master = pd.concat(dfs, ignore_index=True)
-
-    # Pivot to one row per game (home + away side by side)
-    if "home_away" in master.columns:
-        home = master[master["home_away"]=="home"].copy()
-        away = master[master["home_away"]=="away"].copy()
-
-        home_rename = {c: f"home_{c}" for c in home.columns if c not in ["game_id","season","game_date"]}
-        away_rename = {c: f"away_{c}" for c in away.columns if c not in ["game_id","season","game_date"]}
-
-        home = home.rename(columns=home_rename)
-        away = away.rename(columns=away_rename)
-
-        game_df = home.merge(away, on=["game_id","season","game_date"], how="inner")
-
-        # Compute actual spread and total
-        if "home_pts" in game_df.columns and "away_pts" in game_df.columns:
-            game_df["home_pts"]     = pd.to_numeric(game_df["home_pts"], errors="coerce")
-            game_df["away_pts"]     = pd.to_numeric(game_df["away_pts"], errors="coerce")
-            game_df["actual_spread"]= game_df["home_pts"] - game_df["away_pts"]
-            game_df["actual_total"] = game_df["home_pts"] + game_df["away_pts"]
-
-        path = os.path.join(out_dir, "wehoop_games_master.csv")
-        game_df.to_csv(path, index=False)
-        print(f"\n  Master game file → {path} ({len(game_df)} games)")
-    else:
+    master = pd.concat([pd.read_csv(os.path.join(out_dir, f)) for f in files], ignore_index=True)
+    if "home_away" not in master.columns:
         master.to_csv(os.path.join(out_dir, "wehoop_master.csv"), index=False)
+        return
+    home = master[master["home_away"].astype(str).str.lower() == "home"].copy()
+    away = master[master["home_away"].astype(str).str.lower() == "away"].copy()
+    keys = [c for c in ("game_id", "season", "game_date") if c in master.columns]
+    home = home.rename(columns={c: f"home_{c}" for c in home.columns if c not in keys})
+    away = away.rename(columns={c: f"away_{c}" for c in away.columns if c not in keys})
+    games = home.merge(away, on=keys, how="inner")
+    if "home_pts" in games.columns and "away_pts" in games.columns:
+        games["actual_spread"] = pd.to_numeric(games["home_pts"], errors="coerce") - pd.to_numeric(games["away_pts"], errors="coerce")
+        games["actual_total"] = pd.to_numeric(games["home_pts"], errors="coerce") + pd.to_numeric(games["away_pts"], errors="coerce")
+    path = os.path.join(out_dir, "wehoop_games_master.csv")
+    games.to_csv(path, index=False)
+    print(f"  Master game file → {path} ({len(games)} games)")
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
-
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Collect WNBA data via wehoop/ESPN")
-    parser.add_argument("--start",   type=int, default=None, help="First historical year")
-    parser.add_argument("--end",     type=int, default=2024,  help="Last historical year")
-    parser.add_argument("--current", action="store_true",    help="Also pull current season from ESPN")
-    parser.add_argument("--out",     default="data/raw")
-    parser.add_argument("--master",  action="store_true",    help="Build master game CSV after download")
+    parser.add_argument("--start", type=int, default=None)
+    parser.add_argument("--end", type=int, default=2024)
+    parser.add_argument("--current", action="store_true")
+    parser.add_argument("--out", default=OUT_DIR)
+    parser.add_argument("--master", action="store_true")
     args = parser.parse_args()
-
     os.makedirs(args.out, exist_ok=True)
-
     print("\n═══ WNBA Data Collection — wehoop + ESPN ═══\n")
-
-    # Historical via SDV
     if args.start:
-        try:
-            import pyreadr
-        except ImportError:
-            print("[INFO] Installing pyreadr for .rds file support...")
-            os.system("pip install pyreadr --break-system-packages -q")
-            import pyreadr
-
         for year in range(args.start, args.end + 1):
             try:
                 fetch_historical_season(year, args.out)
-            except Exception as e:
-                print(f"  [ERROR] Season {year}: {e}")
-                continue
-
-    # Current season via ESPN
+            except Exception as exc:
+                print(f"  [ERROR] Season {year}: {exc}")
     if args.current:
-        current_year = date.today().year
-        fetch_current_season(current_year, args.out)
-
-    # Build master
+        fetch_current_season(date.today().year, args.out)
     if args.master or args.start or args.current:
         print("\nBuilding master game dataset...")
         build_wehoop_master(args.out)
-
     print("\n✅ wehoop collection complete.")
 
 
