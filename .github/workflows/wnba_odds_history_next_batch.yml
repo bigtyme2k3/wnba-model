@@ -1,0 +1,139 @@
+name: WNBA Odds History Next Batch
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: 'Backfill range start (YYYY-MM-DD)'
+        required: true
+        default: '2024-05-01'
+      end_date:
+        description: 'Backfill range end (YYYY-MM-DD)'
+        required: true
+        default: '2024-10-31'
+      batch_size:
+        description: 'Maximum new daily snapshots in this batch'
+        required: true
+        default: '7'
+      snapshot_hour_utc:
+        description: 'Daily snapshot hour UTC'
+        required: true
+        default: '22'
+      mode:
+        description: 'plan_only or execute'
+        required: true
+        type: choice
+        options:
+          - plan_only
+          - execute
+        default: plan_only
+      confirmation:
+        description: 'Type SPEND CREDITS when mode=execute'
+        required: false
+        default: ''
+
+concurrency:
+  group: wnba-odds-history-next-batch
+  cancel-in-progress: false
+
+jobs:
+  plan-and-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependency
+        run: pip install requests
+
+      - name: Validate scripts without API use
+        run: |
+          python -m py_compile \
+            wnba_odds_history_warehouse.py \
+            wnba_odds_history_backfill_planner.py \
+            wnba_odds_history_execute_plan.py \
+            wnba_odds_history_dashboard.py
+
+      - name: Build next missing batch plan
+        run: |
+          python wnba_odds_history_backfill_planner.py \
+            --start '${{ inputs.start_date }}' \
+            --end '${{ inputs.end_date }}' \
+            --hour-utc '${{ inputs.snapshot_hour_utc }}' \
+            --batch-size '${{ inputs.batch_size }}'
+
+      - name: Display and validate plan
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/warehouse/wnba_odds_history_backfill_plan.json'))
+          print(json.dumps(p,indent=2))
+          assert p['batch_requests'] <= int('${{ inputs.batch_size }}')
+          print(f"Estimated credits: {p['estimated_credits']}")
+          PY
+
+      - name: Require explicit credit confirmation
+        if: inputs.mode == 'execute'
+        run: |
+          test '${{ inputs.confirmation }}' = 'SPEND CREDITS' || {
+            echo 'Execution blocked. Enter SPEND CREDITS exactly.'
+            exit 1
+          }
+
+      - name: Execute planned requests
+        if: inputs.mode == 'execute'
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          python wnba_odds_history_execute_plan.py \
+            --max-requests '${{ inputs.batch_size }}'
+          python wnba_odds_history_dashboard.py
+
+      - name: Verify database after execution
+        if: inputs.mode == 'execute'
+        run: |
+          python - <<'PY'
+          import json,sqlite3
+          con=sqlite3.connect('data/warehouse/wnba_odds_history.sqlite')
+          assert con.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
+          summary=json.load(open('data/warehouse/wnba_odds_history_summary.json'))
+          dashboard=json.load(open('data/dashboard/wnba_odds_history_dashboard.json'))
+          assert summary['games']==dashboard['summary']['games']
+          assert summary['snapshots']==dashboard['summary']['snapshots']
+          print('NEXT BATCH VERIFIED',summary)
+          PY
+
+      - name: Commit plan only
+        if: inputs.mode == 'plan_only'
+        run: |
+          git config user.name 'WNBA Odds Warehouse Bot'
+          git config user.email 'actions@github.com'
+          git add data/warehouse/wnba_odds_history_backfill_plan.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Plan next WNBA historical odds batch'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Commit executed batch
+        if: inputs.mode == 'execute'
+        run: |
+          git config user.name 'WNBA Odds Warehouse Bot'
+          git config user.email 'actions@github.com'
+          git add \
+            data/warehouse/wnba_odds_history.sqlite \
+            data/warehouse/wnba_odds_history_summary.json \
+            data/warehouse/wnba_odds_history_backfill_plan.json \
+            data/warehouse/wnba_odds_history_dashboard.json \
+            data/dashboard/wnba_odds_history_dashboard.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Backfill next WNBA historical odds batch'
+          git pull --rebase origin main
+          git push origin HEAD:main
