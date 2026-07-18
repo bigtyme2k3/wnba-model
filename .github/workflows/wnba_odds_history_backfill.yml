@@ -42,8 +42,9 @@ jobs:
 
       - name: Validate warehouse code without using API credits
         run: |
-          python -m py_compile wnba_odds_history_warehouse.py qa_odds_history_warehouse.py
+          python -m py_compile wnba_odds_history_warehouse.py qa_odds_history_warehouse.py wnba_odds_history_dashboard.py qa_odds_history_dashboard.py
           python qa_odds_history_warehouse.py
+          python qa_odds_history_dashboard.py
           python wnba_odds_history_warehouse.py init
 
       - name: Validate request budget
@@ -78,28 +79,41 @@ jobs:
             --hour-utc '${{ inputs.snapshot_hour_utc }}' \
             --max-requests '${{ inputs.max_requests }}'
 
-      - name: Verify database integrity
+      - name: Build warehouse dashboard analytics
+        run: python wnba_odds_history_dashboard.py
+
+      - name: Verify database integrity and dashboard output
         run: |
           python wnba_odds_history_warehouse.py summary
           python - <<'PY'
           import json, sqlite3
           summary=json.load(open('data/warehouse/wnba_odds_history_summary.json'))
+          dashboard=json.load(open('data/dashboard/wnba_odds_history_dashboard.json'))
           con=sqlite3.connect('data/warehouse/wnba_odds_history.sqlite')
           assert con.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
           assert summary['bookmakers'] == ['draftkings','fanduel']
           assert summary['markets'] == ['h2h','spreads','totals']
+          assert dashboard['integrity'] == 'ok'
+          assert dashboard['summary']['games'] == summary['games']
+          assert dashboard['summary']['odds_rows'] == summary['odds_rows']
+          assert len(dashboard['bookmaker_coverage']) <= 2
           print('WAREHOUSE VERIFIED', summary)
+          print('DASHBOARD VERIFIED', dashboard['summary'])
           PY
 
-      - name: Commit warehouse
+      - name: Commit warehouse and dashboard analytics
         run: |
           git config user.name 'WNBA Odds Warehouse Bot'
           git config user.email 'actions@github.com'
-          git add data/warehouse/wnba_odds_history.sqlite data/warehouse/wnba_odds_history_summary.json
+          git add \
+            data/warehouse/wnba_odds_history.sqlite \
+            data/warehouse/wnba_odds_history_summary.json \
+            data/warehouse/wnba_odds_history_dashboard.json \
+            data/dashboard/wnba_odds_history_dashboard.json
           if git diff --cached --quiet; then
             echo 'No warehouse changes to commit.'
             exit 0
           fi
-          git commit -m 'Backfill WNBA historical odds warehouse'
+          git commit -m 'Backfill WNBA historical odds warehouse and refresh dashboard analytics'
           git pull --rebase origin main
           git push origin HEAD:main
