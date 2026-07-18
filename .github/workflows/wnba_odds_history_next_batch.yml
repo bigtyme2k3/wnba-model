@@ -33,7 +33,7 @@ on:
         default: ''
 
 concurrency:
-  group: wnba-odds-history-next-batch
+  group: wnba-odds-history-writes
   cancel-in-progress: false
 
 jobs:
@@ -165,19 +165,46 @@ jobs:
       - name: Commit plan only
         if: inputs.mode == 'plan_only'
         run: |
+          set -euo pipefail
           git config user.name 'WNBA Odds Warehouse Bot'
           git config user.email 'actions@github.com'
+          cp data/warehouse/wnba_odds_history_backfill_plan.json /tmp/wnba_odds_history_backfill_plan.json
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/warehouse
+          cp /tmp/wnba_odds_history_backfill_plan.json data/warehouse/wnba_odds_history_backfill_plan.json
           git add data/warehouse/wnba_odds_history_backfill_plan.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Plan next WNBA historical odds batch'
-          git pull --rebase origin main
           git push origin HEAD:main
 
       - name: Commit executed batch
         if: inputs.mode == 'execute'
         run: |
+          set -euo pipefail
           git config user.name 'WNBA Odds Warehouse Bot'
           git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-generated
+          mkdir -p /tmp/wnba-generated/data/warehouse /tmp/wnba-generated/data/dashboard
+          cp data/warehouse/wnba_odds_history.sqlite /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_summary.json /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_backfill_plan.json /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_dashboard.json /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_trends.json /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_results.json /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_outcomes.json /tmp/wnba-generated/data/warehouse/
+          cp data/dashboard/wnba_odds_history_dashboard.json /tmp/wnba-generated/data/dashboard/
+          cp data/dashboard/wnba_odds_history_trends.json /tmp/wnba-generated/data/dashboard/
+          cp data/dashboard/wnba_odds_history_results.json /tmp/wnba-generated/data/dashboard/
+          cp data/dashboard/wnba_odds_history_outcomes.json /tmp/wnba-generated/data/dashboard/
+
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/warehouse data/dashboard
+          cp -f /tmp/wnba-generated/data/warehouse/* data/warehouse/
+          cp -f /tmp/wnba-generated/data/dashboard/* data/dashboard/
+
           git add \
             data/warehouse/wnba_odds_history.sqlite \
             data/warehouse/wnba_odds_history_summary.json \
@@ -192,5 +219,4 @@ jobs:
             data/dashboard/wnba_odds_history_outcomes.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Backfill WNBA odds, attach results, and grade outcomes'
-          git pull --rebase origin main
           git push origin HEAD:main
