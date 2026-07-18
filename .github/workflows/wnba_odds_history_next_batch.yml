@@ -39,7 +39,7 @@ concurrency:
 jobs:
   plan-and-run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
       contents: write
     steps:
@@ -51,8 +51,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependency
-        run: pip install requests
+      - name: Install dependencies
+        run: pip install requests pandas pyreadr
 
       - name: Validate scripts without API use
         run: |
@@ -62,8 +62,12 @@ jobs:
             wnba_odds_history_execute_plan.py \
             wnba_odds_history_dashboard.py \
             wnba_odds_history_trend_engine.py \
-            qa_odds_history_trend_engine.py
+            wnba_odds_history_results_importer.py \
+            wnba_odds_history_outcome_engine.py \
+            qa_odds_history_trend_engine.py \
+            qa_odds_history_results.py
           python qa_odds_history_trend_engine.py
+          python qa_odds_history_results.py
 
       - name: Build next missing batch plan
         run: |
@@ -91,15 +95,28 @@ jobs:
             exit 1
           }
 
-      - name: Execute planned requests
+      - name: Execute planned odds requests
         if: inputs.mode == 'execute'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           python wnba_odds_history_execute_plan.py \
             --max-requests '${{ inputs.batch_size }}'
+
+      - name: Download credit-free historical results
+        if: inputs.mode == 'execute'
+        run: |
+          START_YEAR=$(echo '${{ inputs.start_date }}' | cut -c1-4)
+          END_YEAR=$(echo '${{ inputs.end_date }}' | cut -c1-4)
+          python collect_wehoop.py --start "$START_YEAR" --end "$END_YEAR" --out data/raw
+
+      - name: Attach results and build analytics
+        if: inputs.mode == 'execute'
+        run: |
+          python wnba_odds_history_results_importer.py
           python wnba_odds_history_dashboard.py
           python wnba_odds_history_trend_engine.py
+          python wnba_odds_history_outcome_engine.py
 
       - name: Verify database after execution
         if: inputs.mode == 'execute'
@@ -111,12 +128,16 @@ jobs:
           summary=json.load(open('data/warehouse/wnba_odds_history_summary.json'))
           dashboard=json.load(open('data/dashboard/wnba_odds_history_dashboard.json'))
           trends=json.load(open('data/dashboard/wnba_odds_history_trends.json'))
+          results=json.load(open('data/dashboard/wnba_odds_history_results.json'))
+          outcomes=json.load(open('data/dashboard/wnba_odds_history_outcomes.json'))
           assert summary['games']==dashboard['summary']['games']
-          assert summary['snapshots']==dashboard['summary']['snapshots']
           assert summary['games']==trends['summary']['games']
-          assert trends['outcome_analytics']['status'] in {'waiting_for_final_scores','partial_results_available'}
+          assert results['summary']['warehouse_games']==summary['games']
+          assert outcomes['summary']['warehouse_games']==summary['games']
+          assert outcomes['summary']['completed_games']==results['summary']['games_with_results']
           print('NEXT BATCH VERIFIED',summary)
-          print('TREND ENGINE VERIFIED',trends['summary'])
+          print('RESULT MATCHING',results['summary'])
+          print('OUTCOME ANALYTICS',outcomes['summary'])
           PY
 
       - name: Commit plan only
@@ -142,8 +163,12 @@ jobs:
             data/warehouse/wnba_odds_history_dashboard.json \
             data/dashboard/wnba_odds_history_dashboard.json \
             data/warehouse/wnba_odds_history_trends.json \
-            data/dashboard/wnba_odds_history_trends.json
+            data/dashboard/wnba_odds_history_trends.json \
+            data/warehouse/wnba_odds_history_results.json \
+            data/dashboard/wnba_odds_history_results.json \
+            data/warehouse/wnba_odds_history_outcomes.json \
+            data/dashboard/wnba_odds_history_outcomes.json
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Backfill next WNBA historical odds batch and refresh trends'
+          git commit -m 'Backfill WNBA odds, attach results, and grade outcomes'
           git pull --rebase origin main
           git push origin HEAD:main
