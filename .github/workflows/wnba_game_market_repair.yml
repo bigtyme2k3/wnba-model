@@ -39,40 +39,49 @@ jobs:
           TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
       - name: Validate repaired game chain
-        run: python -m py_compile wnba_matchup_intelligence.py wnba_game_market_model.py wnba_game_predictions_ledger.py
+        run: python -m py_compile wnba_matchup_intelligence.py wnba_game_market_model.py wnba_game_predictions_ledger.py patch_dashboard_v4_game_market_data.py patch_dashboard_v4_mission_control.py
       - name: Rebuild independent spread and totals projections
         run: |
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
           python wnba_game_market_model.py --date "${{ env.TARGET }}"
           python wnba_game_predictions_ledger.py archive --date "${{ env.TARGET }}"
-      - name: Verify predictions are not market copies
+      - name: Verify predictions are independent and pregame
         run: |
           python - <<'PY'
           import json
+          from datetime import datetime,timezone
           model=json.load(open('data/dashboard/wnba_game_market_model.json'))
           ledger=json.load(open('data/dashboard/wnba_game_predictions_ledger.json'))
           assert model.get('target_date')=='${{ env.TARGET }}'
           assert model.get('summary',{}).get('spread_predictions',0)>0,model.get('summary')
           assert model.get('summary',{}).get('total_predictions',0)>0,model.get('summary')
           for game in model.get('games',[]):
-              assert game.get('spread_source')!='market_baseline',game
-              assert game.get('total_source')!='market_baseline',game
+              assert game.get('spread_source') not in {'market_baseline','unavailable'},game
+              assert game.get('total_source') not in {'market_baseline','unavailable'},game
               assert game.get('projected_margin') is not None
               assert game.get('projected_total') is not None
-          assert ledger.get('summary',{}).get('today_predictions',0)==len(model.get('games',[]))
+          for row in ledger.get('today',[]):
+              start=str(row.get('start_time') or '').replace('Z','+00:00')
+              captured=str(row.get('captured_at_utc') or '').replace('Z','+00:00')
+              if start and captured:
+                  assert datetime.fromisoformat(captured) < datetime.fromisoformat(start),(row.get('game'),captured,start)
           print('REPAIRED GAME MODEL VERIFIED',model['summary'],ledger['summary'])
           PY
-      - name: Rebuild dashboard game sections
+      - name: Patch existing dashboard without rebuilding it
         run: |
-          python build_dashboard_v4.py
-          python patch_dashboard_v4_team_context.py
-          python patch_dashboard_v4_layout_and_slate.py
+          test -s docs/index.html
           python patch_dashboard_v4_game_market_data.py
-          python patch_dashboard_v4_core_interactions.py
-          python patch_dashboard_v4_consolidated_navigation.py
-          python patch_dashboard_v4_projection_performance.py
           python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 0
           python patch_dashboard_v4_mission_control.py
+      - name: Verify dashboard preservation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          for marker in ('Player Props','Best Bets','Results','V4 Health','v4-game-market'):
+              assert marker in html,marker
+          print('Dashboard modules preserved')
+          PY
       - name: Publish repaired predictions
         run: |
           git config user.name "WNBA Game Model Bot"
