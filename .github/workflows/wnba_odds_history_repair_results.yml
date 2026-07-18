@@ -9,7 +9,7 @@ on:
         default: '2026'
 
 concurrency:
-  group: wnba-odds-history-repair-results
+  group: wnba-odds-history-writes
   cancel-in-progress: false
 
 jobs:
@@ -77,8 +77,28 @@ jobs:
 
       - name: Commit repaired results
         run: |
+          set -euo pipefail
           git config user.name 'WNBA Odds Warehouse Bot'
           git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-generated
+          mkdir -p /tmp/wnba-generated/data/warehouse /tmp/wnba-generated/data/dashboard
+          cp data/warehouse/wnba_odds_history.sqlite /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_dashboard.json /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_trends.json /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_results.json /tmp/wnba-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_outcomes.json /tmp/wnba-generated/data/warehouse/
+          cp data/dashboard/wnba_odds_history_dashboard.json /tmp/wnba-generated/data/dashboard/
+          cp data/dashboard/wnba_odds_history_trends.json /tmp/wnba-generated/data/dashboard/
+          cp data/dashboard/wnba_odds_history_results.json /tmp/wnba-generated/data/dashboard/
+          cp data/dashboard/wnba_odds_history_outcomes.json /tmp/wnba-generated/data/dashboard/
+
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/warehouse data/dashboard
+          cp -f /tmp/wnba-generated/data/warehouse/* data/warehouse/
+          cp -f /tmp/wnba-generated/data/dashboard/* data/dashboard/
+
           git add \
             data/warehouse/wnba_odds_history.sqlite \
             data/warehouse/wnba_odds_history_dashboard.json \
@@ -91,5 +111,4 @@ jobs:
             data/dashboard/wnba_odds_history_outcomes.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Repair WNBA results and rebuild outcome analytics'
-          git pull --rebase origin main
           git push origin HEAD:main
