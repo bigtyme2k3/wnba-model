@@ -39,7 +39,17 @@ jobs:
           TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
       - name: Validate repaired game chain
-        run: python -m py_compile wnba_matchup_intelligence.py wnba_game_market_model.py wnba_game_predictions_ledger.py patch_dashboard_v4_game_market_data.py patch_dashboard_v4_mission_control.py
+        run: python -m py_compile wnba_standings_fallback.py wnba_matchup_intelligence.py wnba_game_market_model.py wnba_game_predictions_ledger.py patch_dashboard_v4_game_market_data.py patch_dashboard_v4_mission_control.py
+      - name: Repair missing standings source
+        run: |
+          python wnba_standings_fallback.py
+          python - <<'PY'
+          import json
+          payload=json.load(open('data/warehouse/wnba_standings.json'))
+          rows=payload.get('standings',payload) if isinstance(payload,dict) else payload
+          assert isinstance(rows,list) and len(rows)>=10,len(rows) if isinstance(rows,list) else type(rows)
+          print('TEAM STRENGTH SOURCE VERIFIED:',len(rows),'teams')
+          PY
       - name: Rebuild independent spread and totals projections
         run: |
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
@@ -49,9 +59,12 @@ jobs:
         run: |
           python - <<'PY'
           import json
-          from datetime import datetime,timezone
+          from datetime import datetime
           model=json.load(open('data/dashboard/wnba_game_market_model.json'))
           ledger=json.load(open('data/dashboard/wnba_game_predictions_ledger.json'))
+          standings=json.load(open('data/warehouse/wnba_standings.json'))
+          teams=standings.get('standings',standings) if isinstance(standings,dict) else standings
+          assert len(teams)>=10
           assert model.get('target_date')=='${{ env.TARGET }}'
           assert model.get('summary',{}).get('spread_predictions',0)>0,model.get('summary')
           assert model.get('summary',{}).get('total_predictions',0)>0,model.get('summary')
@@ -88,6 +101,8 @@ jobs:
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
             "Publish repaired WNBA spread and totals predictions" \
+            'data/warehouse/wnba_standings.json' \
+            'data/dashboard/wnba_standings.json' \
             'data/warehouse/wnba_matchup_intelligence.json' \
             'data/dashboard/wnba_matchup_intelligence.json' \
             'data/warehouse/wnba_game_market_model.json' \
