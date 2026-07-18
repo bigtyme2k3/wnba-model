@@ -1,0 +1,90 @@
+name: WNBA Spread Totals Repair
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), blank uses active Eastern slate'
+        required: false
+        default: ''
+  schedule:
+    - cron: '15 14 * * *'
+
+concurrency:
+  group: wnba-game-market-repair
+  cancel-in-progress: false
+
+jobs:
+  build-and-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Resolve active slate
+        run: |
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+      - name: Validate repaired game chain
+        run: python -m py_compile wnba_matchup_intelligence.py wnba_game_market_model.py wnba_game_predictions_ledger.py
+      - name: Rebuild independent spread and totals projections
+        run: |
+          python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
+          python wnba_game_market_model.py --date "${{ env.TARGET }}"
+          python wnba_game_predictions_ledger.py archive --date "${{ env.TARGET }}"
+      - name: Verify predictions are not market copies
+        run: |
+          python - <<'PY'
+          import json
+          model=json.load(open('data/dashboard/wnba_game_market_model.json'))
+          ledger=json.load(open('data/dashboard/wnba_game_predictions_ledger.json'))
+          assert model.get('target_date')=='${{ env.TARGET }}'
+          assert model.get('summary',{}).get('spread_predictions',0)>0,model.get('summary')
+          assert model.get('summary',{}).get('total_predictions',0)>0,model.get('summary')
+          for game in model.get('games',[]):
+              assert game.get('spread_source')!='market_baseline',game
+              assert game.get('total_source')!='market_baseline',game
+              assert game.get('projected_margin') is not None
+              assert game.get('projected_total') is not None
+          assert ledger.get('summary',{}).get('today_predictions',0)==len(model.get('games',[]))
+          print('REPAIRED GAME MODEL VERIFIED',model['summary'],ledger['summary'])
+          PY
+      - name: Rebuild dashboard game sections
+        run: |
+          python build_dashboard_v4.py
+          python patch_dashboard_v4_team_context.py
+          python patch_dashboard_v4_layout_and_slate.py
+          python patch_dashboard_v4_game_market_data.py
+          python patch_dashboard_v4_core_interactions.py
+          python patch_dashboard_v4_consolidated_navigation.py
+          python patch_dashboard_v4_projection_performance.py
+          python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 0
+          python patch_dashboard_v4_mission_control.py
+      - name: Publish repaired predictions
+        run: |
+          git config user.name "WNBA Game Model Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Publish repaired WNBA spread and totals predictions" \
+            'data/warehouse/wnba_matchup_intelligence.json' \
+            'data/dashboard/wnba_matchup_intelligence.json' \
+            'data/warehouse/wnba_game_market_model.json' \
+            'data/dashboard/wnba_game_market_model.json' \
+            'data/warehouse/wnba_game_predictions_ledger.json' \
+            'data/dashboard/wnba_game_predictions_ledger.json' \
+            'data/history/wnba_game_predictions.jsonl' \
+            'data/dashboard/wnba_mission_control.json' \
+            'docs/index.html'
