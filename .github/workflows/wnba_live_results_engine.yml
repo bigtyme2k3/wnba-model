@@ -45,7 +45,7 @@ jobs:
           echo "SEASON_YEAR=${TARGET:0:4}" >> "$GITHUB_ENV"
       - name: Validate live-results system
         run: |
-          python -m py_compile wnba_live_results_engine.py qa_live_results_engine.py wnba_results_grader.py patch_dashboard_v4_live_results.py
+          python -m py_compile wnba_live_results_engine.py qa_live_results_engine.py wnba_results_grader.py wnba_game_predictions_ledger.py patch_dashboard_v4_live_results.py
           python qa_live_results_engine.py
       - name: Refresh credit-free schedule and game status
         run: python collect_wehoop.py --current --out data/raw
@@ -74,6 +74,7 @@ jobs:
         if: steps.monitor.outputs.run_grading == 'true'
         run: |
           python wnba_results_grader.py --date "${{ env.TARGET }}"
+          python wnba_game_predictions_ledger.py grade --date "${{ env.TARGET }}"
           python wnba_projection_performance.py grade --date "${{ env.TARGET }}"
           python wnba_projection_performance.py analyze --date "${{ env.TARGET }}"
           python wnba_alt_performance_tracker.py --date "${{ env.TARGET }}" --grade
@@ -137,12 +138,14 @@ jobs:
           from pathlib import Path
           target='${{ env.TARGET }}'
           live=json.load(open('data/dashboard/wnba_live_results_engine.json'))
+          ledger=json.load(open('data/dashboard/wnba_game_predictions_ledger.json'))
           assert live.get('target_date')==target
+          assert ledger.get('target_date')==target
           assert live.get('summary',{}).get('queued',0)==0,live.get('grading_queue')
           html=Path('docs/index.html').read_text(encoding='utf-8')
           assert 'v4-live-results-script' in html
           assert 'Live Results Engine' in html
-          print('POSTGAME PIPELINE VERIFIED',live['summary'])
+          print('POSTGAME PIPELINE VERIFIED',live['summary'],ledger['summary'])
           PY
       - name: Publish graded results and refreshed player histories
         if: steps.monitor.outputs.run_grading == 'true'
