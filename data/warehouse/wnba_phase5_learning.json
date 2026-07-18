@@ -1,9 +1,9 @@
 {
-  "generated_at_utc": "2026-07-17T11:02:29.916291+00:00",
-  "target_date": "2026-07-16",
+  "generated_at_utc": "2026-07-18T10:45:16.016352+00:00",
+  "target_date": "2026-07-17",
   "status": "active",
   "newly_graded": 0,
-  "history_rows": 1500,
+  "history_rows": 1592,
   "performance": {
     "graded": 143,
     "wins": 81,
@@ -36,11 +36,11 @@
       },
       {
         "bin": "60-64",
-        "n": 5,
+        "n": 6,
         "predicted_rate": 0.625,
-        "actual_rate": 0.8,
+        "actual_rate": 0.667,
         "wins": 4,
-        "losses": 1
+        "losses": 2
       },
       {
         "bin": "65-69",
@@ -99,27 +99,15 @@
         "losses": 0
       }
     ],
-    "brier_score": 0.3195,
-    "graded_binary_rows": 104
+    "brier_score": 0.3202,
+    "graded_binary_rows": 105
   },
   "feature_importance": [
     {
       "feature": "history_games",
-      "samples": 60,
-      "importance": 0.1101,
+      "samples": 61,
+      "importance": 0.1233,
       "direction": "positive"
-    },
-    {
-      "feature": "book_count",
-      "samples": 60,
-      "importance": 0.0969,
-      "direction": "positive"
-    },
-    {
-      "feature": "simulation_probability",
-      "samples": 60,
-      "importance": 0.0934,
-      "direction": "negative"
     },
     {
       "feature": "consensus_score",
@@ -128,16 +116,28 @@
       "direction": "negative"
     },
     {
-      "feature": "edge_pct",
-      "samples": 60,
-      "importance": 0.0215,
+      "feature": "simulation_probability",
+      "samples": 61,
+      "importance": 0.0776,
       "direction": "negative"
+    },
+    {
+      "feature": "book_count",
+      "samples": 61,
+      "importance": 0.0698,
+      "direction": "positive"
     },
     {
       "feature": "ev_pct",
       "samples": 143,
       "importance": 0.019,
       "direction": "positive"
+    },
+    {
+      "feature": "edge_pct",
+      "samples": 61,
+      "importance": 0.0184,
+      "direction": "negative"
     }
   ],
   "performance_by_stat": [
@@ -249,13 +249,13 @@
   "performance_by_action": [
     {
       "final_action": "UNKNOWN",
-      "graded": 83,
+      "graded": 82,
       "wins": 46,
-      "losses": 37,
+      "losses": 36,
       "pushes": 0,
-      "win_rate": 0.5542,
-      "units_profit": 4.818,
-      "roi": 0.0581,
+      "win_rate": 0.561,
+      "units_profit": 5.818,
+      "roi": 0.071,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -274,6 +274,19 @@
       "positive_clv_rate": null
     },
     {
+      "final_action": "WATCH",
+      "graded": 6,
+      "wins": 3,
+      "losses": 3,
+      "pushes": 0,
+      "win_rate": 0.5,
+      "units_profit": 0.762,
+      "roi": 0.1269,
+      "clv_samples": 0,
+      "average_clv": null,
+      "positive_clv_rate": null
+    },
+    {
       "final_action": "LEAN",
       "graded": 5,
       "wins": 4,
@@ -285,31 +298,18 @@
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
-    },
-    {
-      "final_action": "WATCH",
-      "graded": 5,
-      "wins": 3,
-      "losses": 2,
-      "pushes": 0,
-      "win_rate": 0.6,
-      "units_profit": 1.762,
-      "roi": 0.3523,
-      "clv_samples": 0,
-      "average_clv": null,
-      "positive_clv_rate": null
     }
   ],
   "performance_by_book": [
     {
       "sportsbook": "UNKNOWN",
-      "graded": 118,
+      "graded": 117,
       "wins": 66,
-      "losses": 52,
+      "losses": 51,
       "pushes": 0,
-      "win_rate": 0.5593,
-      "units_profit": 8.0,
-      "roi": 0.0678,
+      "win_rate": 0.5641,
+      "units_profit": 9.0,
+      "roi": 0.0769,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -329,13 +329,13 @@
     },
     {
       "sportsbook": "DraftKings",
-      "graded": 9,
+      "graded": 10,
       "wins": 4,
-      "losses": 5,
+      "losses": 6,
       "pushes": 0,
-      "win_rate": 0.4444,
-      "units_profit": -1.895,
-      "roi": -0.2106,
+      "win_rate": 0.4,
+      "units_profit": -2.895,
+      "roi": -0.2895,
       "clv_samples": 0,
       "average_clv": null,
       "positive_clv_rate": null
@@ -1681,7 +1681,16 @@
       "clv": null,
       "graded_at_utc": "2026-07-11T00:36:53.869973+00:00",
       "opponent": "Phoenix Mercury",
-      "opponent_abbr": "PHX"
+      "opponent_abbr": "PHX",
+      "confidence": 64.3,
+      "final_score": 64.3,
+      "simulation_probability": 0.6419,
+      "american_odds": -131,
+      "sportsbook": "DraftKings",
+      "edge_pct": 31.76,
+      "final_action": "WATCH",
+      "book_count": 2,
+      "history_games": 0
     },
     {
       "history_key": "2026-07-09|DeWanna Bonner|Indiana Fever @ Phoenix Mercury|REB|6.5|OVER",
@@ -3489,5 +3498,5 @@
       "roi": 0.0792
     }
   ],
-  "results_updated_at_utc": "2026-07-17T11:02:30.054532+00:00"
+  "results_updated_at_utc": "2026-07-18T10:45:16.152248+00:00"
 }
