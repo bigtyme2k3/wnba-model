@@ -54,9 +54,14 @@ jobs:
         run: |
           python wnba_live_results_engine.py --date "${{ env.TARGET }}" > /tmp/live_results.json
           tail -n 1 /tmp/live_results.json
+          cp data/dashboard/wnba_live_results_engine.json data/dashboard/wnba_live_games.json
           RUN=$(python - <<'PY'
           import json
           payload=json.loads(open('/tmp/live_results.json',encoding='utf-8').read().strip().splitlines()[-1])
+          master=json.load(open('data/dashboard/wnba_master.json'))
+          expected=sum(1 for g in master.get('games',[]) if g.get('game_date')=='${{ env.TARGET }}' or g.get('bucket')=='today')
+          if expected:
+              assert payload.get('summary',{}).get('games',0)>0,(expected,payload.get('summary'))
           print('true' if payload.get('run_grading') else 'false')
           PY
           )
@@ -98,6 +103,7 @@ jobs:
           PY
           )
           python wnba_live_results_engine.py --date "${{ env.TARGET }}" $ARGS
+          cp data/dashboard/wnba_live_results_engine.json data/dashboard/wnba_live_games.json
       - name: Rebuild affected dashboard sections once
         if: steps.monitor.outputs.run_grading == 'true'
         run: |
@@ -142,6 +148,7 @@ jobs:
           assert live.get('target_date')==target
           assert ledger.get('target_date')==target
           assert live.get('summary',{}).get('queued',0)==0,live.get('grading_queue')
+          assert all(g.get('status')!='FINAL' or g.get('home_score') is not None for g in live.get('games',[]))
           html=Path('docs/index.html').read_text(encoding='utf-8')
           assert 'v4-live-results-script' in html
           assert 'Live Results Engine' in html
@@ -172,4 +179,5 @@ jobs:
             "Update WNBA live game status" \
             'data/warehouse/wnba_live_results_engine.json' \
             'data/dashboard/wnba_live_results_engine.json' \
+            'data/dashboard/wnba_live_games.json' \
             'data/history/wnba_live_results_state.json'
