@@ -6,11 +6,11 @@ on:
       start_date:
         description: 'Backfill range start (YYYY-MM-DD)'
         required: true
-        default: '2024-05-01'
+        default: '2026-05-15'
       end_date:
         description: 'Backfill range end (YYYY-MM-DD)'
         required: true
-        default: '2024-10-31'
+        default: '2026-07-18'
       batch_size:
         description: 'Maximum new daily snapshots in this batch'
         required: true
@@ -108,7 +108,28 @@ jobs:
         run: |
           START_YEAR=$(echo '${{ inputs.start_date }}' | cut -c1-4)
           END_YEAR=$(echo '${{ inputs.end_date }}' | cut -c1-4)
-          python collect_wehoop.py --start "$START_YEAR" --end "$END_YEAR" --out data/raw
+          CURRENT_YEAR=$(date -u +%Y)
+
+          echo "Requested result seasons: ${START_YEAR}-${END_YEAR}; current year: ${CURRENT_YEAR}"
+
+          if [ "$START_YEAR" -le "$CURRENT_YEAR" ] && [ "$END_YEAR" -ge "$CURRENT_YEAR" ]; then
+            echo "Collecting ${CURRENT_YEAR} results from ESPN current-season API."
+            python collect_wehoop.py --current --out data/raw
+          fi
+
+          if [ "$START_YEAR" -lt "$CURRENT_YEAR" ]; then
+            HIST_END=$END_YEAR
+            if [ "$HIST_END" -ge "$CURRENT_YEAR" ]; then
+              HIST_END=$((CURRENT_YEAR - 1))
+            fi
+            echo "Collecting historical Sportsdataverse seasons ${START_YEAR}-${HIST_END}."
+            python collect_wehoop.py --start "$START_YEAR" --end "$HIST_END" --out data/raw
+          fi
+
+          test -n "$(find data/raw -maxdepth 1 -name 'wehoop_team_box_*.csv' -print -quit)" || {
+            echo 'No team-box result file was produced.'
+            exit 1
+          }
 
       - name: Attach results and build analytics
         if: inputs.mode == 'execute'
@@ -135,6 +156,7 @@ jobs:
           assert results['summary']['warehouse_games']==summary['games']
           assert outcomes['summary']['warehouse_games']==summary['games']
           assert outcomes['summary']['completed_games']==results['summary']['games_with_results']
+          assert results['summary']['source_result_games'] > 0, 'No source results loaded'
           print('NEXT BATCH VERIFIED',summary)
           print('RESULT MATCHING',results['summary'])
           print('OUTCOME ANALYTICS',outcomes['summary'])
