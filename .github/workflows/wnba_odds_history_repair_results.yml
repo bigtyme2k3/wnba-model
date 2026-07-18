@@ -1,0 +1,95 @@
+name: WNBA Odds History Repair Results
+
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: 'Season year to pull from ESPN'
+        required: true
+        default: '2026'
+
+concurrency:
+  group: wnba-odds-history-repair-results
+  cancel-in-progress: false
+
+jobs:
+  repair-results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pandas pyreadr
+
+      - name: Validate scripts
+        run: |
+          python -m py_compile \
+            collect_wehoop.py \
+            wnba_odds_history_results_importer.py \
+            wnba_odds_history_dashboard.py \
+            wnba_odds_history_trend_engine.py \
+            wnba_odds_history_outcome_engine.py
+
+      - name: Download current-season ESPN results
+        run: |
+          CURRENT_YEAR=$(date -u +%Y)
+          test '${{ inputs.season }}' = "$CURRENT_YEAR" || {
+            echo 'This repair workflow currently uses ESPN current-season data only.'
+            exit 1
+          }
+          python collect_wehoop.py --current --out data/raw
+          test -s 'data/raw/wehoop_team_box_${{ inputs.season }}.csv' || {
+            echo 'No ESPN team box file was produced.'
+            exit 1
+          }
+
+      - name: Attach results and rebuild analytics
+        run: |
+          python wnba_odds_history_results_importer.py
+          python wnba_odds_history_dashboard.py
+          python wnba_odds_history_trend_engine.py
+          python wnba_odds_history_outcome_engine.py
+
+      - name: Verify result coverage
+        run: |
+          python - <<'PY'
+          import json, sqlite3
+          con = sqlite3.connect('data/warehouse/wnba_odds_history.sqlite')
+          assert con.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
+          results = json.load(open('data/dashboard/wnba_odds_history_results.json'))
+          outcomes = json.load(open('data/dashboard/wnba_odds_history_outcomes.json'))
+          summary = results['summary']
+          print('RESULT MATCHING', summary)
+          print('OUTCOME ANALYTICS', outcomes['summary'])
+          assert summary['source_result_games'] > 0, 'No source results loaded'
+          assert summary['games_with_results'] > 0, 'No warehouse games matched'
+          assert outcomes['summary']['completed_games'] == summary['games_with_results']
+          PY
+
+      - name: Commit repaired results
+        run: |
+          git config user.name 'WNBA Odds Warehouse Bot'
+          git config user.email 'actions@github.com'
+          git add \
+            data/warehouse/wnba_odds_history.sqlite \
+            data/warehouse/wnba_odds_history_dashboard.json \
+            data/dashboard/wnba_odds_history_dashboard.json \
+            data/warehouse/wnba_odds_history_trends.json \
+            data/dashboard/wnba_odds_history_trends.json \
+            data/warehouse/wnba_odds_history_results.json \
+            data/dashboard/wnba_odds_history_results.json \
+            data/warehouse/wnba_odds_history_outcomes.json \
+            data/dashboard/wnba_odds_history_outcomes.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Repair WNBA results and rebuild outcome analytics'
+          git pull --rebase origin main
+          git push origin HEAD:main
