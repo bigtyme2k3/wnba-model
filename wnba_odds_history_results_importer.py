@@ -53,13 +53,12 @@ def norm_team(value: Any) -> str:
 
 
 def team_value(row: dict[str, str]) -> str:
-    """Return a full franchise name from ESPN or Sportsdataverse columns."""
     name = str(row.get("team_name") or "").strip()
     location = str(row.get("team_location") or "").strip()
     abbreviation = str(row.get("team_abbreviation") or row.get("team_abbr") or "").strip()
-    if location and name and norm_team(name) == name.lower():
+    if location and name:
         combined = f"{location} {name}".strip()
-        if combined:
+        if norm_team(combined) != combined.lower() or norm_team(name) == name.lower():
             return combined
     return name or location or abbreviation
 
@@ -91,6 +90,24 @@ def nearby_dates(value: str) -> list[str]:
     return [(parsed + timedelta(days=offset)).isoformat() for offset in (0, -1, 1)]
 
 
+def build_result(source_game_id: str, game_date: str, home: dict[str, str], away: dict[str, str], source: str) -> dict[str, Any] | None:
+    home_score, away_score = score_value(home), score_value(away)
+    home_team, away_team = team_value(home), team_value(away)
+    if home_score is None or away_score is None or not game_date or not home_team or not away_team:
+        return None
+    return {
+        "source_game_id": source_game_id,
+        "game_date": game_date,
+        "home_team": home_team,
+        "away_team": away_team,
+        "home_team_key": norm_team(home_team),
+        "away_team_key": norm_team(away_team),
+        "home_score": home_score,
+        "away_score": away_score,
+        "source": source,
+    }
+
+
 def load_boxscore_results(raw_dir: Path) -> list[dict[str, Any]]:
     grouped: dict[str, list[dict[str, str]]] = defaultdict(list)
     for path in sorted(raw_dir.glob("wehoop_team_box_*.csv")):
@@ -102,28 +119,25 @@ def load_boxscore_results(raw_dir: Path) -> list[dict[str, Any]]:
 
     results: list[dict[str, Any]] = []
     for source_game_id, rows in grouped.items():
+        game_date = next((date_value(r) for r in rows if date_value(r)), "")
         home = next((r for r in rows if str(r.get("home_away") or "").lower() == "home"), None)
         away = next((r for r in rows if str(r.get("home_away") or "").lower() == "away"), None)
-        if not home or not away:
+        if home and away:
+            result = build_result(source_game_id, game_date, home, away, "wehoop_or_espn_team_box")
+            if result:
+                results.append(result)
             continue
-        home_score, away_score = score_value(home), score_value(away)
-        if home_score is None or away_score is None:
-            continue
-        home_team, away_team = team_value(home), team_value(away)
-        game_date = date_value(home) or date_value(away)
-        if not game_date or not home_team or not away_team:
-            continue
-        results.append({
-            "source_game_id": source_game_id,
-            "game_date": game_date,
-            "home_team": home_team,
-            "away_team": away_team,
-            "home_team_key": norm_team(home_team),
-            "away_team_key": norm_team(away_team),
-            "home_score": home_score,
-            "away_score": away_score,
-            "source": "wehoop_or_espn_team_box",
-        })
+
+        # ESPN current-season boxscore team rows can omit homeAway. Preserve both
+        # orientations; the exact warehouse matchup determines the correct one.
+        scored = [r for r in rows if score_value(r) is not None and team_value(r)]
+        if len(scored) == 2:
+            first = build_result(source_game_id, game_date, scored[0], scored[1], "espn_team_box_inferred")
+            second = build_result(source_game_id, game_date, scored[1], scored[0], "espn_team_box_inferred")
+            if first:
+                results.append(first)
+            if second:
+                results.append(second)
     return results
 
 
@@ -175,7 +189,8 @@ def attach(db_path: Path, raw_dir: Path) -> dict[str, Any]:
             "warehouse_games": total, "games_with_results": completed,
             "games_without_results": total - completed, "matched_this_run": len(matched),
             "unmatched_this_run": len(unmatched), "ambiguous_this_run": len(ambiguous),
-            "source_result_games": len(source_rows),
+            "source_result_games": len({row["source_game_id"] for row in source_rows}),
+            "source_result_orientations": len(source_rows),
             "result_coverage_pct": round(completed * 100 / total, 2) if total else 0.0,
         },
         "matched": matched, "unmatched": unmatched, "ambiguous": ambiguous,
