@@ -1,0 +1,105 @@
+name: WNBA Odds History Backfill
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: 'Start date (YYYY-MM-DD)'
+        required: true
+      end_date:
+        description: 'End date (YYYY-MM-DD)'
+        required: true
+      snapshot_hour_utc:
+        description: 'Daily snapshot hour UTC (0-23); 22 is a compact pregame baseline'
+        required: false
+        default: '22'
+      max_requests:
+        description: 'Hard request cap for this run'
+        required: false
+        default: '10'
+
+concurrency:
+  group: wnba-odds-history-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependency
+        run: pip install requests
+
+      - name: Validate warehouse code without using API credits
+        run: |
+          python -m py_compile wnba_odds_history_warehouse.py qa_odds_history_warehouse.py
+          python qa_odds_history_warehouse.py
+          python wnba_odds_history_warehouse.py init
+
+      - name: Validate request budget
+        shell: bash
+        run: |
+          python - <<'PY'
+          from datetime import date, timedelta
+          start=date.fromisoformat('${{ inputs.start_date }}')
+          end=date.fromisoformat('${{ inputs.end_date }}')
+          if end < start:
+              raise SystemExit('end_date must not precede start_date')
+          days=0
+          current=start
+          while current <= end:
+              if 5 <= current.month <= 10:
+                  days += 1
+              current += timedelta(days=1)
+          cap=int('${{ inputs.max_requests }}')
+          if days > cap:
+              raise SystemExit(f'Request needs {days} snapshots but cap is {cap}')
+          estimated=days*30
+          print(f'Approved snapshots: {days}; estimated historical credits: {estimated}')
+          PY
+
+      - name: Pull historical DraftKings and FanDuel markets
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          python wnba_odds_history_warehouse.py backfill \
+            --start '${{ inputs.start_date }}' \
+            --end '${{ inputs.end_date }}' \
+            --hour-utc '${{ inputs.snapshot_hour_utc }}' \
+            --max-requests '${{ inputs.max_requests }}'
+
+      - name: Verify database integrity
+        run: |
+          python wnba_odds_history_warehouse.py summary
+          python - <<'PY'
+          import json, sqlite3
+          summary=json.load(open('data/warehouse/wnba_odds_history_summary.json'))
+          con=sqlite3.connect('data/warehouse/wnba_odds_history.sqlite')
+          assert con.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
+          assert summary['bookmakers'] == ['draftkings','fanduel']
+          assert summary['markets'] == ['h2h','spreads','totals']
+          print('WAREHOUSE VERIFIED', summary)
+          PY
+
+      - name: Commit warehouse
+        run: |
+          git config user.name 'WNBA Odds Warehouse Bot'
+          git config user.email 'actions@github.com'
+          git add data/warehouse/wnba_odds_history.sqlite data/warehouse/wnba_odds_history_summary.json
+          if git diff --cached --quiet; then
+            echo 'No warehouse changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Backfill WNBA historical odds warehouse'
+          git pull --rebase origin main
+          git push origin HEAD:main
