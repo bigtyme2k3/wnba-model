@@ -1,25 +1,105 @@
 {
-  "generated_at_utc": "2026-07-18T19:24:50.055223+00:00",
-  "target_date": "2026-07-18",
+  "generated_at_utc": "2026-07-19T13:07:47.118229+00:00",
+  "target_date": "2026-07-19",
   "status": "watching",
   "run_grading": false,
   "summary": {
-    "games": 0,
-    "scheduled": 0,
+    "games": 5,
+    "scheduled": 2,
     "live": 0,
-    "final": 0,
+    "final": 3,
     "newly_final": 0,
     "queued": 0,
-    "graded_total": 0
+    "graded_total": 3
   },
-  "games": [],
-  "transitions": [],
+  "games": [
+    {
+      "game_id": "c994942b2c3f226511066929a832dcd1",
+      "game_date": "2026-07-19",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "away_team": "Los Angeles Sparks",
+      "home_team": "Dallas Wings",
+      "start_time": "2026-07-19T17:00:00Z",
+      "status": "SCHEDULED",
+      "status_detail": "Pregame",
+      "away_score": null,
+      "home_score": null,
+      "source": "master_schedule"
+    },
+    {
+      "game_id": "816ff571af3364f94a70ee7d377cff0d",
+      "game_date": "2026-07-19",
+      "game": "Chicago Sky @ Atlanta Dream",
+      "away_team": "Chicago Sky",
+      "home_team": "Atlanta Dream",
+      "start_time": "2026-07-19T20:00:00Z",
+      "status": "SCHEDULED",
+      "status_detail": "Pregame",
+      "away_score": null,
+      "home_score": null,
+      "source": "master_schedule"
+    },
+    {
+      "game_id": "401857077",
+      "game_date": "2026-07-19",
+      "game": "New York Liberty @ Indiana Fever",
+      "away_team": "New York Liberty",
+      "home_team": "Indiana Fever",
+      "start_time": "",
+      "status": "FINAL",
+      "status_detail": "STATUS_FINAL",
+      "away_score": 88.0,
+      "home_score": 108.0,
+      "source": "data/raw/scores_today.csv"
+    },
+    {
+      "game_id": "401857078",
+      "game_date": "2026-07-19",
+      "game": "Portland Fire @ Minnesota Lynx",
+      "away_team": "Portland Fire",
+      "home_team": "Minnesota Lynx",
+      "start_time": "",
+      "status": "FINAL",
+      "status_detail": "STATUS_FINAL",
+      "away_score": 93.0,
+      "home_score": 101.0,
+      "source": "data/raw/scores_today.csv"
+    },
+    {
+      "game_id": "401857079",
+      "game_date": "2026-07-19",
+      "game": "Washington Mystics @ Golden State Valkyries",
+      "away_team": "Washington Mystics",
+      "home_team": "Golden State Valkyries",
+      "start_time": "",
+      "status": "FINAL",
+      "status_detail": "STATUS_FINAL",
+      "away_score": 69.0,
+      "home_score": 74.0,
+      "source": "data/raw/scores_today.csv"
+    }
+  ],
+  "transitions": [
+    {
+      "game_id": "c994942b2c3f226511066929a832dcd1",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "from": "UNKNOWN",
+      "to": "SCHEDULED"
+    },
+    {
+      "game_id": "816ff571af3364f94a70ee7d377cff0d",
+      "game": "Chicago Sky @ Atlanta Dream",
+      "from": "UNKNOWN",
+      "to": "SCHEDULED"
+    }
+  ],
   "newly_final_games": [],
   "grading_queue": [],
   "policy": {
     "odds_api_used": false,
     "poll_interval_minutes": 15,
     "grade_once_per_game": true,
-    "trigger": "new or ungraded FINAL game"
+    "trigger": "new or ungraded FINAL game",
+    "schedule_fallback": "active-slate master"
   }
 }
