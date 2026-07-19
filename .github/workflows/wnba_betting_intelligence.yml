@@ -1,0 +1,84 @@
+name: WNBA Betting Intelligence
+
+on:
+  workflow_dispatch:
+    inputs:
+      min_games:
+        description: 'Minimum graded games per discovered angle'
+        required: true
+        default: '12'
+      question:
+        description: 'Optional natural-language research question (prints answer in logs)'
+        required: false
+        default: ''
+  workflow_run:
+    workflows:
+      - WNBA Odds History Next Batch
+      - WNBA Odds History Repair Results
+    types: [completed]
+
+concurrency:
+  group: wnba-odds-history-writes
+  cancel-in-progress: false
+
+jobs:
+  build-intelligence:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate intelligence engine
+        run: python -m py_compile wnba_betting_intelligence.py
+
+      - name: Build all intelligence phases
+        env:
+          MIN_GAMES: ${{ inputs.min_games || '12' }}
+        run: |
+          python wnba_betting_intelligence.py --min-games "$MIN_GAMES"
+
+      - name: Answer optional warehouse question
+        if: github.event_name == 'workflow_dispatch' && inputs.question != ''
+        run: python wnba_betting_intelligence.py --ask '${{ inputs.question }}'
+
+      - name: Verify intelligence output
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_betting_intelligence.json'))
+          assert p['status'] in {'ready','waiting_for_results'}
+          assert 'research_api' in p
+          assert 'trend_discovery' in p
+          assert 'streak_and_martingale' in p
+          assert 'opportunity_scanner' in p
+          print('INTELLIGENCE VERIFIED')
+          print(json.dumps(p['summary'],indent=2))
+          PY
+
+      - name: Commit intelligence outputs
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Betting Intelligence Bot'
+          git config user.email 'actions@github.com'
+          rm -rf /tmp/wnba-intelligence
+          mkdir -p /tmp/wnba-intelligence/data/warehouse /tmp/wnba-intelligence/data/dashboard
+          cp data/warehouse/wnba_betting_intelligence.json /tmp/wnba-intelligence/data/warehouse/
+          cp data/dashboard/wnba_betting_intelligence.json /tmp/wnba-intelligence/data/dashboard/
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/warehouse data/dashboard
+          cp -f /tmp/wnba-intelligence/data/warehouse/* data/warehouse/
+          cp -f /tmp/wnba-intelligence/data/dashboard/* data/dashboard/
+          git add data/warehouse/wnba_betting_intelligence.json data/dashboard/wnba_betting_intelligence.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Refresh WNBA betting intelligence research'
+          git push origin HEAD:main
