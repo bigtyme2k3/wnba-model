@@ -68,6 +68,7 @@ jobs:
             wnba_game_market_model.py \
             wnba_cross_market_top_plays.py \
             wnba_full_game_simulation_v2.py \
+            wnba_prop_bet_cards.py \
             wnba_game_predictions_ledger.py \
             patch_dashboard_v4_game_market_data.py \
             patch_dashboard_v4_core_interactions.py \
@@ -77,6 +78,7 @@ jobs:
             patch_dashboard_v4_ancillary_projection.py \
             patch_dashboard_v4_unified_simulation.py \
             patch_dashboard_v4_top_plays.py \
+            patch_dashboard_v4_prop_bet_cards.py \
             patch_dashboard_v4_consolidated_navigation.py
 
       - name: Refresh schedule, player data, and master slate
@@ -99,12 +101,13 @@ jobs:
           python wnba_ancillary_projection_v2.py --date "${{ env.TARGET }}"
           python wnba_unified_player_simulation_v2.py --date "${{ env.TARGET }}"
 
-      - name: Build game projections and simulations
+      - name: Build game projections, trends, and simulations
         run: |
           python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
           python wnba_game_market_model.py --date "${{ env.TARGET }}"
           python wnba_cross_market_top_plays.py --date "${{ env.TARGET }}"
           python wnba_full_game_simulation_v2.py --date "${{ env.TARGET }}"
+          python wnba_prop_bet_cards.py --date "${{ env.TARGET }}"
           python wnba_game_predictions_ledger.py archive --date "${{ env.TARGET }}"
 
       - name: Verify current projections and simulation
@@ -115,18 +118,25 @@ jobs:
           game=json.load(open('data/dashboard/wnba_game_market_model.json'))
           full=json.load(open('data/dashboard/wnba_full_game_simulation_v2.json'))
           unified=json.load(open('data/dashboard/wnba_unified_player_simulation_v2.json'))
+          cards=json.load(open('data/dashboard/wnba_prop_bet_cards.json'))
           assert game.get('target_date') == target, (game.get('target_date'), target)
           assert game.get('summary',{}).get('spread_predictions',0) > 0, game.get('summary')
           assert game.get('summary',{}).get('total_predictions',0) > 0, game.get('summary')
           assert full.get('target_date') == target, (full.get('target_date'), target)
           assert full.get('summary',{}).get('games_simulated',0) > 0, full.get('summary')
           assert unified.get('target_date') == target, (unified.get('target_date'), target)
+          assert cards.get('target_date') == target, (cards.get('target_date'), target)
           for row in game.get('games',[]):
               assert row.get('projected_margin') is not None, row
               assert row.get('projected_total') is not None, row
+          for card in cards.get('ranked_cards',[]):
+              assert card.get('research_grade') is not None
+              assert card.get('letter_grade')
+              assert card.get('action') in {'BET','LEAN'}
           print('PREGAME PROJECTIONS ACTIVE', game['summary'])
           print('FULL GAME SIMULATION ACTIVE', full['summary'])
           print('PLAYER SIMULATION ACTIVE', unified.get('summary'))
+          print('PROP BET CARDS ACTIVE', cards.get('summary'))
           PY
 
       - name: Patch and publish dashboard
@@ -140,6 +150,7 @@ jobs:
           python patch_dashboard_v4_ancillary_projection.py
           python patch_dashboard_v4_unified_simulation.py
           python patch_dashboard_v4_top_plays.py
+          python patch_dashboard_v4_prop_bet_cards.py
           python patch_dashboard_v4_consolidated_navigation.py
 
       - name: Verify dashboard projection display
@@ -147,7 +158,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           html=Path('docs/index.html').read_text(encoding='utf-8')
-          for marker in ('v4-game-market','v4-core-interactions-script','v4-unified-simulation','Projected Margin','Projected Total'):
+          for marker in ('v4-game-market','v4-core-interactions-script','v4-unified-simulation','v4-prop-bet-cards-script','Player Props & Best Bets','Projected Margin','Projected Total'):
               assert marker in html, marker
           print('PREGAME DASHBOARD VERIFIED')
           PY
@@ -157,7 +168,7 @@ jobs:
           git config user.name "WNBA Pregame Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Refresh WNBA pregame projections and full game simulations" \
+            "Refresh WNBA pregame projections, trends, and simulations" \
             'data/raw/boxscores_wehoop.csv' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
