@@ -41,7 +41,7 @@ jobs:
           echo "Using target date: $TARGET"
 
       - name: Validate cleanup scripts
-        run: python -m py_compile wnba_source_health.py wnba_terminal_ui.py patch_terminal_ui.py
+        run: python -m py_compile wnba_source_health.py wnba_terminal_ui.py patch_terminal_ui.py patch_dashboard_v4_consolidated_navigation.py
 
       - name: Refresh source health labels and counts
         run: python wnba_source_health.py --date "${{ env.TARGET }}"
@@ -50,9 +50,11 @@ jobs:
         run: python wnba_terminal_ui.py --date "${{ env.TARGET }}"
 
       - name: Embed current intelligence into V4
-        run: python patch_terminal_ui.py
+        run: |
+          python patch_terminal_ui.py
+          python patch_dashboard_v4_consolidated_navigation.py
 
-      - name: Verify populated terminal
+      - name: Verify populated terminal and simplified navigation
         run: |
           python - <<'PY'
           import json
@@ -66,9 +68,11 @@ jobs:
           assert quality.get('checks',{}).get('scores_0_100'), quality
           html=open('docs/index.html',encoding='utf-8').read()
           assert 'WNBA_TERMINAL_UI_PATCH_START' in html
-          assert 'wehoop / ESPN Stats' in html
+          assert 'v4-consolidated-navigation-script' in html
+          assert "['health','System Health']" in html
+          assert "show-system-health" in html
           print('Terminal verified:', summary)
-          print('Model quality verified:', quality.get('counts'))
+          print('Simplified navigation verified')
           PY
 
       - name: Commit terminal cleanup
@@ -77,5 +81,5 @@ jobs:
           git config user.email "actions@github.com"
           git add data/dashboard/terminal_ui.json data/dashboard/wnba_source_health.json data/warehouse/wnba_source_health.json docs/index.html
           git diff --cached --quiet && echo "No terminal cleanup changes" && exit 0
-          git commit -m "Populate quality-controlled V4 intelligence terminal"
-          git push || (git pull --rebase origin main && python wnba_source_health.py --date "${{ env.TARGET }}" && python wnba_terminal_ui.py --date "${{ env.TARGET }}" && python patch_terminal_ui.py && git add data/dashboard/terminal_ui.json data/dashboard/wnba_source_health.json data/warehouse/wnba_source_health.json docs/index.html && git commit -m "Populate quality-controlled V4 intelligence terminal" && git push)
+          git commit -m "Simplify V4 navigation and isolate system diagnostics"
+          git push || (git pull --rebase origin main && python wnba_source_health.py --date "${{ env.TARGET }}" && python wnba_terminal_ui.py --date "${{ env.TARGET }}" && python patch_terminal_ui.py && python patch_dashboard_v4_consolidated_navigation.py && git add data/dashboard/terminal_ui.json data/dashboard/wnba_source_health.json data/warehouse/wnba_source_health.json docs/index.html && git commit -m "Simplify V4 navigation and isolate system diagnostics" && git push)
