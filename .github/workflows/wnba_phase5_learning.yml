@@ -27,7 +27,7 @@ jobs:
   phase5-learning:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     permissions:
       contents: write
 
@@ -49,7 +49,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas
+          pip install pandas requests pyreadr
 
       - name: Resolve grading dates
         run: |
@@ -69,7 +69,7 @@ jobs:
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
           today=datetime.now(ZoneInfo('America/New_York')).date()
-          print(' '.join((today-timedelta(days=i)).isoformat() for i in range(1,4)))
+          print(' '.join((today-timedelta(days=i)).isoformat() for i in range(0,4)))
           PY
             )
           fi
@@ -78,10 +78,38 @@ jobs:
           echo "Phase 5 grading dates: $DATES"
 
       - name: Validate Phase 5 scripts
-        run: python -m py_compile wnba_historical_database.py wnba_closing_line_tracker.py wnba_phase5_learning_engine.py wnba_phase5_backtest.py wnba_results_dashboard_builder.py wnba_terminal_ui.py patch_terminal_ui.py patch_dashboard_v4_results.py
+        run: |
+          python -m py_compile \
+            wnba_historical_database.py \
+            wnba_closing_line_tracker.py \
+            wnba_phase5_actuals_bridge.py \
+            wnba_phase5_learning_engine.py \
+            wnba_phase5_backtest.py \
+            wnba_results_dashboard_builder.py \
+            wnba_terminal_ui.py \
+            patch_terminal_ui.py \
+            patch_dashboard_v4_results.py
+
+      - name: Refresh official current-season results
+        run: |
+          python collect_wehoop.py --current --out data/raw
+          python wnba_phase5_actuals_bridge.py | tee /tmp/phase5_actuals_bridge.json
+          python - <<'PY'
+          import csv
+          rows=list(csv.DictReader(open('data/raw/boxscores_wehoop.csv',encoding='utf-8')))
+          assert rows, 'Phase 5 actual-result bridge produced no rows'
+          assert any(r.get('game_date') and r.get('player') and r.get('pts') not in (None,'') for r in rows)
+          print('PHASE 5 ACTUALS READY',len(rows),rows[-1].get('game_date'))
+          PY
 
       - name: Grade recent dates and rebuild calibration
         run: |
+          BEFORE=$(python - <<'PY'
+          import json
+          try: print(json.load(open('data/dashboard/wnba_phase5_learning.json')).get('performance',{}).get('graded',0))
+          except Exception: print(0)
+          PY
+          )
           for TARGET in $DATES; do
             echo "Processing $TARGET"
             python wnba_historical_database.py --date "$TARGET"
@@ -92,6 +120,12 @@ jobs:
           done
           python wnba_phase5_backtest.py --date "$LATEST_TARGET"
           python wnba_results_dashboard_builder.py
+          AFTER=$(python - <<'PY'
+          import json
+          print(json.load(open('data/dashboard/wnba_phase5_learning.json')).get('performance',{}).get('graded',0))
+          PY
+          )
+          echo "Phase 5 graded rows: $BEFORE -> $AFTER"
 
       - name: Rebuild terminal and Results tab
         run: |
@@ -102,9 +136,11 @@ jobs:
       - name: Verify Phase 5 outputs
         run: |
           python - <<'PY'
-          import json, os
+          import csv, json, os
           report=json.load(open('data/dashboard/wnba_phase5_learning.json'))
           backtest=json.load(open('data/dashboard/wnba_phase5_backtest.json'))
+          actuals=list(csv.DictReader(open('data/raw/boxscores_wehoop.csv',encoding='utf-8')))
+          assert actuals, 'No normalized actuals available'
           assert 'performance' in report
           assert 'calibration' in report
           assert 'feature_importance' in report
@@ -114,8 +150,10 @@ jobs:
           assert os.path.exists('data/history/wnba_graded_bets.csv')
           html=open('docs/index.html',encoding='utf-8').read()
           assert 'window.WNBA_RESULTS_DATA' in html
+          latest_actual=max(r['game_date'] for r in actuals if r.get('game_date'))
           print('Phase 5 verified:', report['performance'])
           print('Newly graded:', report.get('newly_graded'))
+          print('Latest actual date:',latest_actual)
           PY
 
       - name: Commit Phase 5 learning state
@@ -124,6 +162,7 @@ jobs:
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
             "Refresh WNBA graded results through $LATEST_TARGET" \
+            'data/raw/boxscores_wehoop.csv' \
             'data/history/wnba_graded_bets.csv' \
             'data/history/wnba_*.jsonl' \
             'data/warehouse/wnba_*.json' \
