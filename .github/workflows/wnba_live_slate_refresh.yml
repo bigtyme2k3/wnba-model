@@ -1,0 +1,108 @@
+name: WNBA Live Slate Refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      horizon_hours:
+        description: 'Daily report horizon in hours'
+        required: true
+        default: '72'
+  schedule:
+    - cron: '40 13 * * *'
+
+concurrency:
+  group: wnba-odds-history-writes
+  cancel-in-progress: false
+
+jobs:
+  refresh-live-slate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Validate live pipeline
+        run: |
+          python -m py_compile \
+            wnba_odds_history_warehouse.py \
+            wnba_live_slate_refresh.py \
+            wnba_betting_intelligence.py \
+            wnba_daily_ai_report.py
+
+      - name: Pull current FanDuel and DraftKings odds
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python wnba_live_slate_refresh.py
+
+      - name: Rebuild betting intelligence
+        run: python wnba_betting_intelligence.py --min-games 12
+
+      - name: Generate current daily AI report
+        env:
+          HORIZON_HOURS: ${{ github.event.inputs.horizon_hours || '72' }}
+        run: python wnba_daily_ai_report.py --horizon-hours "$HORIZON_HOURS"
+
+      - name: Verify live slate outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          status=json.loads(Path('data/dashboard/wnba_live_slate_status.json').read_text())
+          intel=json.loads(Path('data/dashboard/wnba_betting_intelligence.json').read_text())
+          report=json.loads(Path('data/dashboard/wnba_daily_ai_report.json').read_text())
+          assert status['status'] in {'slate_available','no_upcoming_markets'}
+          assert intel['status'] in {'ready','waiting_for_results'}
+          assert report['status'] in {'slate_available','no_current_slate'}
+          print('LIVE SLATE VERIFIED')
+          print(json.dumps({'live':status['warehouse'],'intelligence':intel['summary'],'report':report['summary']},indent=2))
+          PY
+
+      - name: Commit refreshed slate and reports
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Odds Warehouse Bot'
+          git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-live-generated
+          mkdir -p /tmp/wnba-live-generated/data/warehouse /tmp/wnba-live-generated/data/dashboard
+          cp data/warehouse/wnba_odds_history.sqlite /tmp/wnba-live-generated/data/warehouse/
+          cp data/warehouse/wnba_odds_history_summary.json /tmp/wnba-live-generated/data/warehouse/
+          cp data/warehouse/wnba_live_slate_status.json /tmp/wnba-live-generated/data/warehouse/
+          cp data/warehouse/wnba_betting_intelligence.json /tmp/wnba-live-generated/data/warehouse/
+          cp data/warehouse/wnba_daily_ai_report.json /tmp/wnba-live-generated/data/warehouse/
+          cp data/dashboard/wnba_live_slate_status.json /tmp/wnba-live-generated/data/dashboard/
+          cp data/dashboard/wnba_betting_intelligence.json /tmp/wnba-live-generated/data/dashboard/
+          cp data/dashboard/wnba_daily_ai_report.json /tmp/wnba-live-generated/data/dashboard/
+          cp data/dashboard/wnba_daily_ai_report.md /tmp/wnba-live-generated/data/dashboard/
+
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/warehouse data/dashboard
+          cp -f /tmp/wnba-live-generated/data/warehouse/* data/warehouse/
+          cp -f /tmp/wnba-live-generated/data/dashboard/* data/dashboard/
+
+          git add \
+            data/warehouse/wnba_odds_history.sqlite \
+            data/warehouse/wnba_odds_history_summary.json \
+            data/warehouse/wnba_live_slate_status.json \
+            data/warehouse/wnba_betting_intelligence.json \
+            data/warehouse/wnba_daily_ai_report.json \
+            data/dashboard/wnba_live_slate_status.json \
+            data/dashboard/wnba_betting_intelligence.json \
+            data/dashboard/wnba_daily_ai_report.json \
+            data/dashboard/wnba_daily_ai_report.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Refresh live WNBA slate and daily intelligence'
+          git push origin HEAD:main
