@@ -1,0 +1,83 @@
+name: WNBA Prop Card Results and Calibration
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Date to grade (YYYY-MM-DD); blank checks active slate and prior 3 days'
+        required: false
+        default: ''
+  workflow_run:
+    workflows: ['WNBA Postgame Learning Pipeline']
+    types: [completed]
+  schedule:
+    - cron: '30 10 * * *'
+
+concurrency:
+  group: wnba-prop-card-calibration
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  grade-and-calibrate:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Resolve grading dates
+        run: |
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            echo "DATES=$TARGET" >> "$GITHUB_ENV"
+          else
+            DATES=$(python - <<PY
+          from datetime import date,timedelta
+          d=date.fromisoformat('$TARGET')
+          print(' '.join((d-timedelta(days=i)).isoformat() for i in range(3,-1,-1)))
+          PY
+          )
+            echo "DATES=$DATES" >> "$GITHUB_ENV"
+          fi
+      - name: Grade archived prop cards
+        run: |
+          python -m py_compile wnba_prop_card_performance.py
+          for D in $DATES; do
+            python wnba_prop_card_performance.py grade --date "$D"
+          done
+          python wnba_prop_card_performance.py analyze --date "$TARGET"
+      - name: Verify calibration outputs
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open('data/dashboard/wnba_prop_card_performance.json'))
+          s=r.get('summary',{})
+          assert 'archived' in s and 'graded' in s and 'roi' in s
+          for key in ('by_grade','by_stat','by_action','by_sportsbook','by_ev_band'):
+              assert isinstance(r.get(key),list), key
+          print('PROP CARD CALIBRATION ACTIVE',s)
+          PY
+      - name: Publish prop card learning state
+        run: |
+          git config user.name "WNBA Calibration Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Grade and calibrate WNBA prop cards" \
+            'data/history/wnba_prop_card_ledger.jsonl' \
+            'data/dashboard/wnba_prop_card_performance.json' \
+            'data/warehouse/wnba_prop_card_performance.json'
