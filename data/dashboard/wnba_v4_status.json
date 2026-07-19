@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-18T14:41:17.611614+00:00",
+  "generated_at_utc": "2026-07-19T14:56:04.163891+00:00",
   "version": "4.0",
   "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
   "qa": {
@@ -11,7 +11,7 @@
     "feedback_acceptance_status": "green",
     "intelligence_acceptance_status": "green",
     "output_summary": {
-      "evaluated_rows": 303,
+      "evaluated_rows": 466,
       "inspected_rows": 75,
       "qualified_bets": 0,
       "portfolio_bets": 0,
@@ -20,10 +20,10 @@
       "warnings": 0,
       "info": 1,
       "target_dates": {
-        "decisions": "2026-07-18",
-        "portfolio": "2026-07-18",
-        "risk": "2026-07-18",
-        "master": "2026-07-18"
+        "decisions": "2026-07-19",
+        "portfolio": "2026-07-19",
+        "risk": "2026-07-19",
+        "master": "2026-07-19"
       }
     },
     "acceptance_summary": {
@@ -99,7 +99,7 @@
       "purpose": "Use the official daily slate as the game source of truth.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_master.json",
-      "rows": 184,
+      "rows": 172,
       "runtime_status": "active",
       "valid_zero_output": false,
       "qa_score": 100,
@@ -194,7 +194,7 @@
       "purpose": "Normalize event feeds, estimate possessions and pace, track substitutions, and explicitly label fallback data.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_play_by_play_layer.json",
-      "rows": 7,
+      "rows": 6,
       "runtime_status": "active",
       "valid_zero_output": true,
       "qa_score": 100,
@@ -229,7 +229,7 @@
       "purpose": "Combine pace, opponent strength, rest, venue, role, trends, and injury context with auditable components.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_matchup_intelligence.json",
-      "rows": 303,
+      "rows": 6,
       "runtime_status": "active",
       "valid_zero_output": true,
       "qa_score": 100,
@@ -258,7 +258,7 @@
       "purpose": "Produce explainable player projections with minutes, usage, matchup, pace, injury, uncertainty, and source trace.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_projection_ai.json",
-      "rows": 303,
+      "rows": 464,
       "runtime_status": "active",
       "valid_zero_output": true,
       "qa_score": 100,
@@ -293,7 +293,7 @@
       "purpose": "Generate prop projection, side, edge, sportsbook, and history display.",
       "owner_exists": true,
       "output": "data/dashboard/wnba_master.json",
-      "rows": 184,
+      "rows": 172,
       "runtime_status": "active",
       "valid_zero_output": false,
       "qa_score": 100,
@@ -330,7 +330,7 @@
           },
           {
             "module": "M11/M12",
-            "test": "market baseline never invents an edge",
+            "test": "missing model never invents a market edge",
             "passed": true,
             "detail": ""
           }
@@ -365,7 +365,7 @@
           },
           {
             "module": "M11/M12",
-            "test": "market baseline never invents an edge",
+            "test": "missing model never invents a market edge",
             "passed": true,
             "detail": ""
           }

@@ -1,14 +1,14 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-18T14:41:17.496659+00:00`
+Generated: `2026-07-19T14:56:04.070578+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 99 checked, 0 invalid, 5 empty
-- Workflows: 34 checked, 1 high risk
+- Dashboard JSON: 111 checked, 0 invalid, 4 empty
+- Workflows: 39 checked, 1 high risk
 
 ## Module QA
 
@@ -60,14 +60,17 @@ Generated: `2026-07-18T14:41:17.496659+00:00`
 | `.github/workflows/wnba_alt_market_watch.yml` | 12 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_alt_tab_repair.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_autonomous_agent.yml` | 11 | 5 | 0.455 | medium | False |
+| `.github/workflows/wnba_betting_intelligence.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_closing_line_snapshots.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_controlled_recalibration.yml` | 1 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_daily_ai_report.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_data_warehouse.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_full_game_performance.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_full_game_simulation.yml` | 1 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_game_market_repair.yml` | 12 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_injury_refresh.yml` | 12 | 1 | 0.083 | low | True |
 | `.github/workflows/wnba_intelligence_foundation.yml` | 52 | 27 | 0.519 | high | True |
-| `.github/workflows/wnba_live_results_engine.yml` | 14 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_live_slate_refresh.yml` | 7 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_market_intelligence.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_mission_control.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_model_explainability.yml` | 1 | 0 | 0.0 | low | False |
@@ -75,10 +78,12 @@ Generated: `2026-07-18T14:41:17.496659+00:00`
 | `.github/workflows/wnba_model_quality_guardrails.yml` | 10 | 2 | 0.2 | low | True |
 | `.github/workflows/wnba_monte_carlo_live_test.yml` | 9 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_multi_source_fetch.yml` | 10 | 2 | 0.2 | low | True |
-| `.github/workflows/wnba_phase5_learning.yml` | 14 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_odds_history_backfill.yml` | 7 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_odds_history_next_batch.yml` | 11 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_odds_history_repair_results.yml` | 6 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_player_props_history_repair.yml` | 9 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_postbuild_integrity.yml` | 10 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_postgame_learning_pipeline.yml` | 13 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_v4_player_props_audit.yml` | 4 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_player_props_polish.yml` | 11 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_status.yml` | 19 | 0 | 0.0 | low | False |
-| `.github/workflows/wnba_v4_terminal_cleanup.yml` | 8 | 0 | 0.0 | low | True |
