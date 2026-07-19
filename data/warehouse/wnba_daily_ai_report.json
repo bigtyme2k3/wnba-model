@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-19T01:23:28.980152Z",
+  "generated_at_utc": "2026-07-19T02:02:30.169422Z",
   "status": "slate_available",
   "horizon_hours": 72,
   "summary": {
@@ -7,7 +7,13 @@
     "signals_in_report": 2,
     "stale_signals_suppressed": 19,
     "signals_beyond_horizon": 0,
-    "source_trends": 100
+    "source_trends": 100,
+    "quality_grades": {
+      "Strong Research Play": 0,
+      "Lean": 0,
+      "Watch": 2,
+      "Pass": 0
+    }
   },
   "top_signals": [
     {
@@ -35,6 +41,23 @@
       ],
       "matched_angle_count": 1,
       "confidence_label": "low-research-interest",
+      "bet_quality": {
+        "score": 62.2,
+        "grade": "Watch",
+        "best_available_spread": 10.5,
+        "line_shop_edge_points": 1.0,
+        "average_sample": 18.0,
+        "average_wilson_low_pct": 54.78,
+        "average_estimated_roi_minus_110": 48.48,
+        "components": {
+          "historical_confidence": 24.5,
+          "sample_size": 12.8,
+          "independent_angle_count": 5.0,
+          "estimated_roi": 15.0,
+          "line_shop_value": 5.0
+        },
+        "note": "Exploratory research grade, not a wager recommendation."
+      },
       "top_reasons": [
         {
           "market": "ATS",
@@ -43,7 +66,8 @@
           "record": "14-4-0",
           "win_pct": 77.78,
           "estimated_roi_minus_110": 48.48,
-          "sample": 18
+          "sample": 18,
+          "wilson_low_pct": 54.78
         }
       ]
     },
@@ -72,6 +96,23 @@
       ],
       "matched_angle_count": 1,
       "confidence_label": "low-research-interest",
+      "bet_quality": {
+        "score": 57.2,
+        "grade": "Watch",
+        "best_available_spread": 10.5,
+        "line_shop_edge_points": 0.0,
+        "average_sample": 18.0,
+        "average_wilson_low_pct": 54.78,
+        "average_estimated_roi_minus_110": 48.48,
+        "components": {
+          "historical_confidence": 24.5,
+          "sample_size": 12.8,
+          "independent_angle_count": 5.0,
+          "estimated_roi": 15.0,
+          "line_shop_value": 0.0
+        },
+        "note": "Exploratory research grade, not a wager recommendation."
+      },
       "top_reasons": [
         {
           "market": "ATS",
@@ -80,7 +121,8 @@
           "record": "14-4-0",
           "win_pct": 77.78,
           "estimated_roi_minus_110": 48.48,
-          "sample": 18
+          "sample": 18,
+          "wilson_low_pct": 54.78
         }
       ]
     }
@@ -115,6 +157,23 @@
           ],
           "matched_angle_count": 1,
           "confidence_label": "low-research-interest",
+          "bet_quality": {
+            "score": 62.2,
+            "grade": "Watch",
+            "best_available_spread": 10.5,
+            "line_shop_edge_points": 1.0,
+            "average_sample": 18.0,
+            "average_wilson_low_pct": 54.78,
+            "average_estimated_roi_minus_110": 48.48,
+            "components": {
+              "historical_confidence": 24.5,
+              "sample_size": 12.8,
+              "independent_angle_count": 5.0,
+              "estimated_roi": 15.0,
+              "line_shop_value": 5.0
+            },
+            "note": "Exploratory research grade, not a wager recommendation."
+          },
           "top_reasons": [
             {
               "market": "ATS",
@@ -123,7 +182,8 @@
               "record": "14-4-0",
               "win_pct": 77.78,
               "estimated_roi_minus_110": 48.48,
-              "sample": 18
+              "sample": 18,
+              "wilson_low_pct": 54.78
             }
           ]
         },
@@ -152,6 +212,23 @@
           ],
           "matched_angle_count": 1,
           "confidence_label": "low-research-interest",
+          "bet_quality": {
+            "score": 57.2,
+            "grade": "Watch",
+            "best_available_spread": 10.5,
+            "line_shop_edge_points": 0.0,
+            "average_sample": 18.0,
+            "average_wilson_low_pct": 54.78,
+            "average_estimated_roi_minus_110": 48.48,
+            "components": {
+              "historical_confidence": 24.5,
+              "sample_size": 12.8,
+              "independent_angle_count": 5.0,
+              "estimated_roi": 15.0,
+              "line_shop_value": 0.0
+            },
+            "note": "Exploratory research grade, not a wager recommendation."
+          },
           "top_reasons": [
             {
               "market": "ATS",
@@ -160,7 +237,8 @@
               "record": "14-4-0",
               "win_pct": 77.78,
               "estimated_roi_minus_110": 48.48,
-              "sample": 18
+              "sample": 18,
+              "wilson_low_pct": 54.78
             }
           ]
         }
@@ -289,8 +367,24 @@
       "wilson_low_pct": 49.51
     }
   ],
+  "quality_methodology": {
+    "maximum_score": 100,
+    "weights": {
+      "historical_confidence": 35,
+      "sample_size": 20,
+      "independent_angle_count": 20,
+      "estimated_roi": 15,
+      "line_shop_value": 10
+    },
+    "thresholds": {
+      "Strong Research Play": 80,
+      "Lean": 65,
+      "Watch": 50,
+      "Pass": 0
+    }
+  },
   "guardrails": [
-    "Signals are historical matches, not guaranteed predictions.",
+    "Quality grades are exploratory research labels, not guaranteed predictions.",
     "Do not combine overlapping angles as independent evidence.",
     "Confirm injuries, rest, and current sportsbook prices before wagering.",
     "Use flat stakes for evaluation; martingale progression is not recommended."
