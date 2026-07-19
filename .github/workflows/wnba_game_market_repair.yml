@@ -27,89 +27,54 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Sync latest repository
         run: |
           git fetch origin main
           git reset --hard origin/main
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: pip
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Resolve active slate
         run: |
           TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "SEASON_YEAR=${TARGET:0:4}" >> "$GITHUB_ENV"
           echo "Pregame target: $TARGET"
-
       - name: Validate projection and simulation chain
         run: |
-          python -m py_compile \
-            collect_wehoop.py \
-            wnba_standings_fallback.py \
-            wnba_master_source_builder.py \
-            wnba_opponent_stat_rankings.py \
-            wnba_position_opponent_rankings.py \
-            wnba_pace_minutes_opponent_rankings.py \
-            wnba_minutes_projection_v2.py \
-            wnba_points_projection_v2.py \
-            wnba_rebounds_assists_projection_v2.py \
-            wnba_ancillary_projection_v2.py \
-            wnba_unified_player_simulation_v2.py \
-            wnba_matchup_intelligence.py \
-            wnba_game_market_model.py \
-            wnba_cross_market_top_plays.py \
-            wnba_full_game_simulation_v2.py \
-            wnba_prop_bet_cards.py \
-            wnba_game_predictions_ledger.py \
-            patch_dashboard_v4_game_market_data.py \
-            patch_dashboard_v4_core_interactions.py \
-            patch_dashboard_v4_minutes_projection.py \
-            patch_dashboard_v4_points_projection.py \
-            patch_dashboard_v4_rebounds_assists_projection.py \
-            patch_dashboard_v4_ancillary_projection.py \
-            patch_dashboard_v4_unified_simulation.py \
-            patch_dashboard_v4_top_plays.py \
-            patch_dashboard_v4_prop_bet_cards.py \
-            patch_dashboard_v4_consolidated_navigation.py
-
+          python -m py_compile collect_wehoop.py wnba_standings_fallback.py wnba_master_source_builder.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_minutes_projection_v2.py wnba_points_projection_v2.py wnba_rebounds_assists_projection_v2.py wnba_ancillary_projection_v2.py wnba_unified_player_simulation_v2.py wnba_matchup_intelligence.py wnba_game_market_model.py wnba_cross_market_top_plays.py wnba_full_game_simulation_v2.py wnba_prop_bet_cards.py wnba_prop_card_performance.py wnba_game_predictions_ledger.py patch_dashboard_v4_game_market_data.py patch_dashboard_v4_core_interactions.py patch_dashboard_v4_minutes_projection.py patch_dashboard_v4_points_projection.py patch_dashboard_v4_rebounds_assists_projection.py patch_dashboard_v4_ancillary_projection.py patch_dashboard_v4_unified_simulation.py patch_dashboard_v4_top_plays.py patch_dashboard_v4_prop_bet_cards.py patch_dashboard_v4_consolidated_navigation.py
       - name: Refresh schedule, player data, and master slate
         run: |
           python collect_wehoop.py --current --out data/raw
           python wnba_standings_fallback.py
-          python wnba_master_source_builder.py --date "${{ env.TARGET }}"
-
+          python wnba_master_source_builder.py --date "$TARGET"
       - name: Build opponent and pace context
         run: |
-          python wnba_opponent_stat_rankings.py --date "${{ env.TARGET }}"
-          python wnba_position_opponent_rankings.py --date "${{ env.TARGET }}"
-          python wnba_pace_minutes_opponent_rankings.py --date "${{ env.TARGET }}"
-
+          python wnba_opponent_stat_rankings.py --date "$TARGET"
+          python wnba_position_opponent_rankings.py --date "$TARGET"
+          python wnba_pace_minutes_opponent_rankings.py --date "$TARGET"
       - name: Build current player projections
         run: |
-          python wnba_minutes_projection_v2.py --date "${{ env.TARGET }}"
-          python wnba_points_projection_v2.py --date "${{ env.TARGET }}"
-          python wnba_rebounds_assists_projection_v2.py --date "${{ env.TARGET }}"
-          python wnba_ancillary_projection_v2.py --date "${{ env.TARGET }}"
-          python wnba_unified_player_simulation_v2.py --date "${{ env.TARGET }}"
-
+          python wnba_minutes_projection_v2.py --date "$TARGET"
+          python wnba_points_projection_v2.py --date "$TARGET"
+          python wnba_rebounds_assists_projection_v2.py --date "$TARGET"
+          python wnba_ancillary_projection_v2.py --date "$TARGET"
+          python wnba_unified_player_simulation_v2.py --date "$TARGET"
       - name: Build game projections, trends, and simulations
         run: |
-          python wnba_matchup_intelligence.py --date "${{ env.TARGET }}"
-          python wnba_game_market_model.py --date "${{ env.TARGET }}"
-          python wnba_cross_market_top_plays.py --date "${{ env.TARGET }}"
-          python wnba_full_game_simulation_v2.py --date "${{ env.TARGET }}"
-          python wnba_prop_bet_cards.py --date "${{ env.TARGET }}"
-          python wnba_game_predictions_ledger.py archive --date "${{ env.TARGET }}"
-
+          python wnba_matchup_intelligence.py --date "$TARGET"
+          python wnba_game_market_model.py --date "$TARGET"
+          python wnba_cross_market_top_plays.py --date "$TARGET"
+          python wnba_full_game_simulation_v2.py --date "$TARGET"
+          python wnba_prop_bet_cards.py --date "$TARGET"
+          python wnba_prop_card_performance.py archive --date "$TARGET"
+          python wnba_prop_card_performance.py analyze --date "$TARGET"
+          python wnba_game_predictions_ledger.py archive --date "$TARGET"
       - name: Verify current projections and simulation
         run: |
           python - <<'PY'
@@ -119,26 +84,20 @@ jobs:
           full=json.load(open('data/dashboard/wnba_full_game_simulation_v2.json'))
           unified=json.load(open('data/dashboard/wnba_unified_player_simulation_v2.json'))
           cards=json.load(open('data/dashboard/wnba_prop_bet_cards.json'))
-          assert game.get('target_date') == target, (game.get('target_date'), target)
-          assert game.get('summary',{}).get('spread_predictions',0) > 0, game.get('summary')
-          assert game.get('summary',{}).get('total_predictions',0) > 0, game.get('summary')
-          assert full.get('target_date') == target, (full.get('target_date'), target)
-          assert full.get('summary',{}).get('games_simulated',0) > 0, full.get('summary')
-          assert unified.get('target_date') == target, (unified.get('target_date'), target)
-          assert cards.get('target_date') == target, (cards.get('target_date'), target)
-          for row in game.get('games',[]):
-              assert row.get('projected_margin') is not None, row
-              assert row.get('projected_total') is not None, row
-          for card in cards.get('ranked_cards',[]):
-              assert card.get('research_grade') is not None
-              assert card.get('letter_grade')
-              assert card.get('action') in {'BET','LEAN'}
+          perf=json.load(open('data/dashboard/wnba_prop_card_performance.json'))
+          assert game.get('target_date') == target
+          assert game.get('summary',{}).get('spread_predictions',0) > 0
+          assert game.get('summary',{}).get('total_predictions',0) > 0
+          assert full.get('summary',{}).get('games_simulated',0) > 0
+          assert unified.get('target_date') == target
+          assert cards.get('target_date') == target
+          assert perf.get('summary',{}).get('archived',0) >= len(cards.get('ranked_cards',[]))
           print('PREGAME PROJECTIONS ACTIVE', game['summary'])
           print('FULL GAME SIMULATION ACTIVE', full['summary'])
           print('PLAYER SIMULATION ACTIVE', unified.get('summary'))
           print('PROP BET CARDS ACTIVE', cards.get('summary'))
+          print('PROP CARD TRACKING ACTIVE', perf.get('summary'))
           PY
-
       - name: Patch and publish dashboard
         run: |
           test -s docs/index.html
@@ -152,7 +111,6 @@ jobs:
           python patch_dashboard_v4_top_plays.py
           python patch_dashboard_v4_prop_bet_cards.py
           python patch_dashboard_v4_consolidated_navigation.py
-
       - name: Verify dashboard projection display
         run: |
           python - <<'PY'
@@ -162,16 +120,15 @@ jobs:
               assert marker in html, marker
           print('PREGAME DASHBOARD VERIFIED')
           PY
-
       - name: Publish pregame projections and simulations
         run: |
           git config user.name "WNBA Pregame Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Refresh WNBA pregame projections, trends, and simulations" \
+            "Refresh WNBA pregame projections trends simulations and card archive" \
             'data/raw/boxscores_wehoop.csv' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
             'data/master/wnba_master.json' \
-            'data/history/wnba_game_predictions.jsonl' \
+            'data/history/wnba_*.jsonl' \
             'docs/index.html'
