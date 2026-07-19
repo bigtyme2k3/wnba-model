@@ -1,225 +1,110 @@
-"""Build calibrated player-prop bet cards and verified historical trend context."""
+"""Build Player Props & Best Bets V2 from simulations, prices, and verified history."""
 from __future__ import annotations
-
-import argparse
-import json
-import math
-from datetime import date, datetime, timezone
+import argparse,json,math
+from datetime import date,datetime,timezone
 from pathlib import Path
 from typing import Any
-
-MASTER_PATHS = [Path("data/master/wnba_master.json"), Path("data/dashboard/wnba_master.json")]
-LOGS = Path("data/warehouse/wnba_player_game_logs.json")
-OUTS = [Path("data/warehouse/wnba_prop_bet_cards.json"), Path("data/dashboard/wnba_prop_bet_cards.json")]
-
-
-def load(path: Path, default: Any) -> Any:
-    try:
-        return json.load(path.open(encoding="utf-8")) if path.exists() else default
-    except Exception:
-        return default
-
-
-def dump(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    json.dump(payload, path.open("w", encoding="utf-8"), indent=2, allow_nan=False)
-
-
-def num(value: Any) -> float | None:
-    try:
-        x = float(value)
-        return x if math.isfinite(x) else None
-    except Exception:
-        return None
-
-
-def norm(value: Any) -> str:
-    return " ".join(str(value or "").strip().lower().replace("’", "'").split())
-
-
-def clamp(value: float, low: float, high: float) -> float:
-    return max(low, min(high, value))
-
-
-def stat_value(row: dict[str, Any], stat: str) -> float | None:
-    stat = str(stat or "").upper()
-    scoring = row.get("scoring") or {}
-    box = row.get("boxscore") or {}
-    pts = num(scoring.get("total_pts") if isinstance(scoring, dict) else None)
-    reb = num(box.get("reb") if isinstance(box, dict) else None)
-    ast = num(box.get("ast") if isinstance(box, dict) else None)
-    threes = num(scoring.get("three_pm") if isinstance(scoring, dict) else None)
-    stl = num(box.get("stl") if isinstance(box, dict) else None)
-    blk = num(box.get("blk") if isinstance(box, dict) else None)
-    tov = num(box.get("tov") if isinstance(box, dict) else None)
-    values = {
-        "PTS": pts, "REB": reb, "AST": ast, "3PM": threes, "STL": stl, "BLK": blk, "TOV": tov,
-        "PRA": None if None in (pts, reb, ast) else pts + reb + ast,
-        "PR": None if None in (pts, reb) else pts + reb,
-        "PA": None if None in (pts, ast) else pts + ast,
-        "RA": None if None in (reb, ast) else reb + ast,
-    }
-    return values.get(stat)
-
-
-def histories() -> dict[str, list[dict[str, Any]]]:
-    payload = load(LOGS, {"records": []})
-    records = payload.get("records", []) if isinstance(payload, dict) else []
-    out: dict[str, list[dict[str, Any]]] = {}
-    for row in records:
-        if not isinstance(row, dict) or not row.get("player"):
-            continue
-        out.setdefault(norm(row.get("player")), []).append(row)
-    for rows in out.values():
-        rows.sort(key=lambda r: (str(r.get("game_date") or ""), str(r.get("game_id") or "")), reverse=True)
-    return out
-
-
-def hit(value: float, side: str, line: float) -> bool:
-    return value > line if side == "OVER" else value < line
-
-
-def window(rows: list[dict[str, Any]], stat: str, side: str, line: float, n: int) -> dict[str, Any]:
-    values: list[float] = []
-    opponents: list[str] = []
-    for row in rows:
-        value = stat_value(row, stat)
-        if value is None:
-            continue
-        values.append(round(value, 2))
-        opponents.append(str(row.get("opponent") or row.get("opponent_team") or ""))
-        if len(values) >= n:
-            break
-    wins = sum(hit(v, side, line) for v in values)
-    return {
-        "sample": len(values),
-        "hits": wins,
-        "hit_rate": round(wins / len(values), 4) if values else None,
-        "average": round(sum(values) / len(values), 2) if values else None,
-        "values": values,
-        "opponents": opponents,
-    }
-
-
-def american_decimal(odds: Any) -> float | None:
-    x = num(odds)
-    if x is None or x == 0:
-        return None
-    return 1 + (100 / abs(x) if x < 0 else x / 100)
-
-
-def grade_letter(score: float) -> str:
-    if score >= 90: return "A+"
-    if score >= 84: return "A"
-    if score >= 78: return "B+"
-    if score >= 72: return "B"
-    if score >= 65: return "C+"
-    if score >= 58: return "C"
-    return "PASS"
-
-
-def build_card(prop: dict[str, Any], player_rows: list[dict[str, Any]]) -> dict[str, Any] | None:
-    stat = str(prop.get("stat") or "").upper()
-    line = num(prop.get("line") if prop.get("line") is not None else prop.get("consensus_line"))
-    side = str(prop.get("signal") or prop.get("side") or "").upper()
-    if stat not in {"PTS","REB","AST","3PM","STL","BLK","TOV","PRA","PR","PA","RA"} or line is None or side not in {"OVER","UNDER"}:
-        return None
-
-    sim = prop.get("unified_simulation_v2") or {}
-    best_market = sim.get("best_market") or {}
-    probability = num(best_market.get("hit_probability"))
-    if probability is None:
-        probability = num(prop.get("simulation_probability"))
-    odds = prop.get("best_price") or (prop.get("best_over_price") if side == "OVER" else prop.get("best_under_price"))
-    decimal = american_decimal(odds)
-    ev = num(best_market.get("expected_value_per_unit"))
-    if ev is None and probability is not None and decimal is not None:
-        ev = probability * decimal - 1
-
-    l5 = window(player_rows, stat, side, line, 5)
-    l10 = window(player_rows, stat, side, line, 10)
-    l20 = window(player_rows, stat, side, line, 20)
-    trend_rates = [x["hit_rate"] for x in (l5, l10, l20) if x["hit_rate"] is not None]
-    trend_rate = sum(trend_rates) / len(trend_rates) if trend_rates else 0.5
-
-    data_quality = str(sim.get("data_quality_status") or prop.get("data_quality_status") or "limited")
-    quality_score = {"complete": 1.0, "partial": 0.7, "limited": 0.4}.get(data_quality, 0.35)
-    sim_conf = (num(sim.get("confidence")) or num(prop.get("projection_confidence_v2")) or 50) / 100
-    books = int(num(prop.get("book_count")) or 0)
-
-    probability_component = clamp(((probability or 0.5) - 0.5) / 0.25, 0, 1) * 35
-    ev_component = clamp((ev or 0) / 0.20, 0, 1) * 20
-    trend_component = clamp((trend_rate - 0.45) / 0.30, 0, 1) * 15
-    quality_component = quality_score * 15
-    confidence_component = clamp(sim_conf, 0, 1) * 10
-    books_component = clamp(books / 3, 0, 1) * 5
-    score = round(clamp(probability_component + ev_component + trend_component + quality_component + confidence_component + books_component, 0, 95), 1)
-
-    reasons = []
-    risks = []
-    if probability is not None: reasons.append(f"10,000-run simulation hit probability {probability:.1%}")
-    if ev is not None: reasons.append(f"Expected value {ev:+.1%} at listed price")
-    if l10["sample"]: reasons.append(f"Historical line hit rate {l10['hits']}/{l10['sample']} over last {l10['sample']} games")
-    if books >= 2: reasons.append(f"Line compared across {books} sportsbooks")
-    if data_quality != "complete": risks.append(f"Projection data quality is {data_quality}")
-    if l20["sample"] < 10: risks.append("Limited verified historical sample")
-    if probability is None: risks.append("Simulation probability unavailable")
-    if ev is None: risks.append("Price-based expected value unavailable")
-    if books < 2: risks.append("Only one sportsbook price available")
-
-    action = "BET" if score >= 78 and probability is not None and probability >= 0.56 and ev is not None and ev >= 0.03 else "LEAN" if score >= 65 else "WATCH" if score >= 55 else "PASS"
-    return {
-        "player": prop.get("player"), "team": prop.get("team"), "game": prop.get("game"), "stat": stat,
-        "side": side, "signal": side, "line": line, "sportsbook": prop.get("best_book") or prop.get("book"), "odds": odds,
-        "projection": prop.get("projection") or prop.get("proj") or prop.get("pred"),
-        "simulation_probability": round(probability, 4) if probability is not None else None,
-        "expected_value": round(ev, 4) if ev is not None else None,
-        "recommended_units": best_market.get("recommended_units"),
-        "research_grade": score, "letter_grade": grade_letter(score), "action": action,
-        "trend": {"last5": l5, "last10": l10, "last20": l20},
-        "data_quality": data_quality, "book_count": books, "reasons": reasons[:5], "risks": risks[:5],
-        "source": "calibrated_prop_bet_card_v1",
-    }
-
-
-def build(target: str) -> dict[str, Any]:
-    master = next((load(path, {}) for path in MASTER_PATHS if path.exists()), {})
-    hist = histories()
-    cards = []
-    enriched_props = []
-    for prop in master.get("props", []) or []:
-        row = dict(prop)
-        card = build_card(row, hist.get(norm(row.get("player")), []))
-        if card:
-            row["bet_card"] = card
-            cards.append(card)
-        enriched_props.append(row)
-    cards.sort(key=lambda x: (x["action"] != "BET", -x["research_grade"], -(x.get("expected_value") or -9)))
-    ranked = [c for c in cards if c["action"] in {"BET", "LEAN"}][:30]
-    for path in MASTER_PATHS:
-        payload = load(path, {})
-        if not payload:
-            continue
-        payload["props"] = enriched_props
-        payload["best_bets"] = ranked
-        payload["prop_bet_cards"] = {"count": len(cards), "ranked": len(ranked), "source": "data/dashboard/wnba_prop_bet_cards.json"}
-        if isinstance(payload.get("summary"), dict):
-            payload["summary"]["best_bets"] = len(ranked)
-        dump(path, payload)
-    report = {
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target, "status": "ok",
-        "summary": {"cards": len(cards), "bets": sum(c["action"] == "BET" for c in cards), "leans": sum(c["action"] == "LEAN" for c in cards), "watch": sum(c["action"] == "WATCH" for c in cards)},
-        "ranked_cards": ranked, "all_cards": cards,
-        "scoring_note": "Research grade is not a win probability. Simulation probability and expected value are displayed separately.",
-    }
-    for path in OUTS: dump(path, report)
-    print("PROP BET CARDS ACTIVE", report["summary"])
-    return report
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(); parser.add_argument("--date", default=str(date.today())); args = parser.parse_args(); build(args.date)
-
-
-if __name__ == "__main__":
-    main()
+MASTER_PATHS=[Path('data/master/wnba_master.json'),Path('data/dashboard/wnba_master.json')]
+LOGS=Path('data/warehouse/wnba_player_game_logs.json')
+OUTS=[Path('data/warehouse/wnba_prop_bet_cards.json'),Path('data/dashboard/wnba_prop_bet_cards.json')]
+SUPPORTED={'PTS','REB','AST','3PM','STL','BLK','TOV','PRA','PR','PA','RA'}
+def load(p:Path,d:Any)->Any:
+ try:return json.load(p.open(encoding='utf-8')) if p.exists() else d
+ except Exception:return d
+def dump(p:Path,x:Any)->None:p.parent.mkdir(parents=True,exist_ok=True);json.dump(x,p.open('w',encoding='utf-8'),indent=2,allow_nan=False)
+def num(v:Any)->float|None:
+ try:
+  x=float(v);return x if math.isfinite(x) else None
+ except Exception:return None
+def norm(v:Any)->str:return ' '.join(str(v or '').strip().lower().replace('’',"'").split())
+def clamp(v:float,a:float,b:float)->float:return max(a,min(b,v))
+def stat_value(r:dict[str,Any],stat:str)->float|None:
+ s=r.get('scoring') or {};b=r.get('boxscore') or {};pts=num(s.get('total_pts'));reb=num(b.get('reb'));ast=num(b.get('ast'))
+ vals={'PTS':pts,'REB':reb,'AST':ast,'3PM':num(s.get('three_pm')),'STL':num(b.get('stl')),'BLK':num(b.get('blk')),'TOV':num(b.get('tov')),
+ 'PRA':None if None in (pts,reb,ast) else pts+reb+ast,'PR':None if None in (pts,reb) else pts+reb,'PA':None if None in (pts,ast) else pts+ast,'RA':None if None in (reb,ast) else reb+ast}
+ return vals.get(stat)
+def histories()->dict[str,list[dict[str,Any]]]:
+ p=load(LOGS,{'records':[]});out={}
+ for r in p.get('records',[]) if isinstance(p,dict) else []:
+  if isinstance(r,dict) and r.get('player'):out.setdefault(norm(r['player']),[]).append(r)
+ for rows in out.values():rows.sort(key=lambda r:(str(r.get('game_date') or ''),str(r.get('game_id') or '')),reverse=True)
+ return out
+def hit(v:float,side:str,line:float)->bool:return v>line if side=='OVER' else v<line
+def summary(rows:list[dict[str,Any]],stat:str,side:str,line:float,n:int|None=None,opp:str='',loc:str='')->dict[str,Any]:
+ vals=[]
+ for r in rows:
+  if opp and norm(r.get('opponent') or r.get('opponent_team'))!=norm(opp):continue
+  where=str(r.get('location') or r.get('home_away') or '').upper()
+  if loc and where and not where.startswith(loc[0]):continue
+  v=stat_value(r,stat)
+  if v is None:continue
+  vals.append(round(v,2))
+  if n and len(vals)>=n:break
+ wins=sum(hit(v,side,line) for v in vals)
+ return {'sample':len(vals),'hits':wins,'hit_rate':round(wins/len(vals),4) if vals else None,'average':round(sum(vals)/len(vals),2) if vals else None,'values':vals}
+def decimal(o:Any)->float|None:
+ x=num(o)
+ if x is None or x==0:return None
+ return 1+(100/abs(x) if x<0 else x/100)
+def fair(prob:float|None)->int|None:
+ if prob is None or prob<=0 or prob>=1:return None
+ return round(-100*prob/(1-prob)) if prob>=.5 else round(100*(1-prob)/prob)
+def kelly(prob:float|None,odds:Any)->float|None:
+ d=decimal(odds)
+ if prob is None or d is None or d<=1:return None
+ b=d-1;return clamp((b*prob-(1-prob))/b,0,1)
+def letter(s:float)->str:
+ return 'A+' if s>=92 else 'A' if s>=87 else 'B+' if s>=82 else 'B' if s>=76 else 'C+' if s>=70 else 'C' if s>=64 else 'D' if s>=58 else 'PASS'
+def opponent(game:str,team:str)->str:
+ p=[x.strip() for x in str(game or '').split(' @ ') if x.strip()];return next((x for x in p if norm(x)!=norm(team)),p[0] if p else '')
+def location(game:str,team:str)->str:
+ p=[x.strip() for x in str(game or '').split(' @ ') if x.strip()];return 'HOME' if len(p)==2 and norm(p[1])==norm(team) else 'AWAY' if len(p)==2 else ''
+def build_card(prop:dict[str,Any],rows:list[dict[str,Any]])->dict[str,Any]|None:
+ stat=str(prop.get('stat') or '').upper();line=num(prop.get('line') if prop.get('line') is not None else prop.get('consensus_line'));side=str(prop.get('signal') or prop.get('side') or '').upper()
+ if stat not in SUPPORTED or line is None or side not in {'OVER','UNDER'}:return None
+ sim=prop.get('unified_simulation_v2') or {};market=sim.get('best_market') or {};prob=num(market.get('hit_probability')) or num(prop.get('simulation_probability'))
+ odds=prop.get('best_price') or (prop.get('best_over_price') if side=='OVER' else prop.get('best_under_price'));dec=decimal(odds);ev=num(market.get('expected_value_per_unit'))
+ if ev is None and prob is not None and dec is not None:ev=prob*dec-1
+ team=str(prop.get('team') or '');game=str(prop.get('game') or '');opp=opponent(game,team);loc=location(game,team)
+ l5=summary(rows,stat,side,line,5);l10=summary(rows,stat,side,line,10);l20=summary(rows,stat,side,line,20);season=summary(rows,stat,side,line);vsopp=summary(rows,stat,side,line,opp=opp) if opp else summary([],stat,side,line);split=summary(rows,stat,side,line,loc=loc) if loc else summary([],stat,side,line)
+ rates=[x['hit_rate'] for x in (l5,l10,l20,season) if x['hit_rate'] is not None];trend=sum(rates)/len(rates) if rates else .5
+ quality=str(sim.get('data_quality_status') or prop.get('data_quality_status') or 'limited');q={'complete':1,'partial':.7,'limited':.4}.get(quality,.35);conf=(num(sim.get('confidence')) or num(prop.get('projection_confidence_v2')) or 50)/100;books=int(num(prop.get('book_count')) or 0);cons=min(1,(books/4)*.65+conf*.35)
+ projection=num(prop.get('projection') or prop.get('proj') or prop.get('pred'));edge=None if projection is None else projection-line if side=='OVER' else line-projection;opening=num(prop.get('opening_line') or prop.get('open_line'));movement=None if opening is None else line-opening;k=kelly(prob,odds)
+ comp={'simulation':clamp(((prob or .5)-.5)/.22,0,1)*30,'ev':clamp((ev or 0)/.16,0,1)*22,'history':clamp((trend-.45)/.30,0,1)*16,'quality':q*12,'confidence':clamp(conf,0,1)*8,'consensus':cons*7,'opponent':clamp(((vsopp.get('hit_rate') or .5)-.45)/.30,0,1)*5 if vsopp.get('sample',0)>=3 else 0};score=round(clamp(sum(comp.values()),0,95),1)
+ reasons=[];risks=[]
+ if prob is not None:reasons.append(f'10,000-run simulation: {prob:.1%} hit probability')
+ if ev is not None:reasons.append(f'Expected value: {ev:+.1%} at {odds}')
+ if l10['sample']:reasons.append(f'Last 10: {l10["hits"]}/{l10["sample"]}, average {l10["average"]}')
+ if season['sample']:reasons.append(f'Season: {season["hits"]}/{season["sample"]} against this line')
+ if vsopp['sample']>=3:reasons.append(f'Vs {opp}: {vsopp["hits"]}/{vsopp["sample"]}')
+ if split['sample']>=5:reasons.append(f'{loc.title()} split: {split["hits"]}/{split["sample"]}')
+ if edge is not None:reasons.append(f'Model projection edge: {edge:+.2f}')
+ if books>=2:reasons.append(f'Compared across {books} sportsbooks')
+ if quality!='complete':risks.append(f'Projection data quality: {quality}')
+ if season['sample']<10:risks.append('Limited verified season sample')
+ if prob is None:risks.append('Simulation probability unavailable')
+ if ev is None:risks.append('Price-based EV unavailable')
+ if books<2:risks.append('Only one sportsbook price available')
+ if movement is None:risks.append('Opening line unavailable; movement and CLV withheld')
+ action='BET' if score>=82 and prob is not None and prob>=.57 and ev is not None and ev>=.035 else 'LEAN' if score>=72 and (ev or 0)>0 else 'WATCH' if score>=62 else 'PASS'
+ clv='POSITIVE' if movement is not None and ((side=='OVER' and movement<0) or (side=='UNDER' and movement>0)) else 'NEGATIVE' if movement is not None and movement!=0 else 'FLAT' if movement==0 else 'UNAVAILABLE'
+ return {'player':prop.get('player'),'team':team,'game':game,'opponent':opp,'location':loc,'stat':stat,'side':side,'signal':side,'line':line,'sportsbook':prop.get('best_book') or prop.get('book'),'odds':odds,'projection':projection,'projection_edge':round(edge,2) if edge is not None else None,'simulation_probability':round(prob,4) if prob is not None else None,'fair_odds':fair(prob),'expected_value':round(ev,4) if ev is not None else None,'kelly_fraction':round(k,4) if k is not None else None,'recommended_units':round(min(1,(k or 0)*2.5),2) if k is not None else None,'research_grade':score,'letter_grade':letter(score),'action':action,'consensus_score':round(cons*100,1),'book_count':books,'trend':{'last5':l5,'last10':l10,'last20':l20,'season':season,'opponent':vsopp,'location':split},'line_movement':round(movement,2) if movement is not None else None,'clv_projection':clv,'data_quality':quality,'score_components':{k:round(v,2) for k,v in comp.items()},'reasons':reasons[:8],'risks':risks[:6],'source':'calibrated_prop_bet_card_v2'}
+def build(target:str)->dict[str,Any]:
+ master=next((load(p,{}) for p in MASTER_PATHS if p.exists()),{});hist=histories();cards=[];enriched=[]
+ for prop in master.get('props',[]) or []:
+  row=dict(prop);card=build_card(row,hist.get(norm(row.get('player')),[]))
+  if card:row['bet_card']=card;cards.append(card)
+  enriched.append(row)
+ cards.sort(key=lambda x:(x['action']!='BET',-(x.get('expected_value') or -9),-x['research_grade']));ranked=[c for c in cards if c['action'] in {'BET','LEAN'}][:30]
+ for p in MASTER_PATHS:
+  payload=load(p,{})
+  if not payload:continue
+  payload['props']=enriched;payload['best_bets']=ranked;payload['prop_bet_cards']={'count':len(cards),'ranked':len(ranked),'version':'2.0','source':'data/dashboard/wnba_prop_bet_cards.json'}
+  if isinstance(payload.get('summary'),dict):payload['summary']['best_bets']=len(ranked)
+  dump(p,payload)
+ report={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'ok','schema_version':'2.0','summary':{'cards':len(cards),'bets':sum(c['action']=='BET' for c in cards),'leans':sum(c['action']=='LEAN' for c in cards),'watch':sum(c['action']=='WATCH' for c in cards),'history_attached':sum(c['trend']['season']['sample']>0 for c in cards)},'ranked_cards':ranked,'all_cards':cards,'scoring_note':'Research grade is a ranking score, not win probability. Ranked primarily by expected value after minimum quality gates.'}
+ for p in OUTS:dump(p,report)
+ print('PROP BET CARDS V2 ACTIVE',report['summary']);return report
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--date',default=str(date.today()));a=ap.parse_args();build(a.date)
+if __name__=='__main__':main()
