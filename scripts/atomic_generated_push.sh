@@ -27,14 +27,35 @@ fi
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 
-# Preserve only generated outputs produced by this workflow. The latest remote
-# source tree is always used as the commit base, preventing rebase conflicts.
+# Resolve optional globs before resetting the repository. Several pipelines pass
+# dated output patterns that legitimately have no match on quiet/no-game runs.
+# Git rejects unmatched pathspecs, so only concrete files are carried forward.
+EXPANDED_FILES=()
 for path in "${FILES[@]}"; do
   if compgen -G "$path" > /dev/null; then
     while IFS= read -r file; do
+      [ -f "$file" ] || continue
+      EXPANDED_FILES+=("$file")
       mkdir -p "$TMP/$(dirname "$file")"
       cp -p "$file" "$TMP/$file"
     done < <(compgen -G "$path")
+  else
+    echo "Optional generated path had no matches: $path"
+  fi
+done
+
+if [ ${#EXPANDED_FILES[@]} -eq 0 ]; then
+  echo "No generated files were produced; nothing to publish"
+  exit 0
+fi
+
+# De-duplicate concrete paths while preserving order.
+UNIQUE_FILES=()
+declare -A SEEN=()
+for file in "${EXPANDED_FILES[@]}"; do
+  if [ -z "${SEEN[$file]+x}" ]; then
+    UNIQUE_FILES+=("$file")
+    SEEN[$file]=1
   fi
 done
 
@@ -44,11 +65,9 @@ for attempt in 1 2 3 4; do
   git fetch origin main
   git reset --hard origin/main
 
-  if [ -d "$TMP" ]; then
-    cp -a "$TMP/." .
-  fi
+  cp -a "$TMP/." .
 
-  git add -- "${FILES[@]}"
+  git add -- "${UNIQUE_FILES[@]}"
   if git diff --cached --quiet; then
     echo "No generated changes after syncing main"
     exit 0
