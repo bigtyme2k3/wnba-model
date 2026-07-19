@@ -1,0 +1,81 @@
+name: WNBA Daily AI Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      horizon_hours:
+        description: 'Future slate window in hours'
+        required: true
+        default: '72'
+  schedule:
+    - cron: '0 14 * * *'
+
+concurrency:
+  group: wnba-odds-history-writes
+  cancel-in-progress: false
+
+jobs:
+  build-report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate report generator
+        run: python -m py_compile wnba_daily_ai_report.py
+
+      - name: Refresh betting intelligence
+        run: python wnba_betting_intelligence.py --min-games 12
+
+      - name: Build daily AI report
+        env:
+          HORIZON: ${{ inputs.horizon_hours || '72' }}
+        run: python wnba_daily_ai_report.py --horizon-hours "$HORIZON"
+
+      - name: Verify report
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_daily_ai_report.json'))
+          assert p['status'] in {'slate_available','no_current_slate'}
+          assert 'stale_signals_suppressed' in p['summary']
+          print('DAILY REPORT VERIFIED')
+          print(json.dumps(p['summary'],indent=2))
+          PY
+
+      - name: Commit daily report outputs
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Odds Warehouse Bot'
+          git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-daily-report
+          mkdir -p /tmp/wnba-daily-report/data/dashboard /tmp/wnba-daily-report/data/warehouse
+          cp data/dashboard/wnba_betting_intelligence.json /tmp/wnba-daily-report/data/dashboard/
+          cp data/warehouse/wnba_betting_intelligence.json /tmp/wnba-daily-report/data/warehouse/
+          cp data/dashboard/wnba_daily_ai_report.json /tmp/wnba-daily-report/data/dashboard/
+          cp data/dashboard/wnba_daily_ai_report.md /tmp/wnba-daily-report/data/dashboard/
+          cp data/warehouse/wnba_daily_ai_report.json /tmp/wnba-daily-report/data/warehouse/
+
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/dashboard data/warehouse
+          cp -f /tmp/wnba-daily-report/data/dashboard/* data/dashboard/
+          cp -f /tmp/wnba-daily-report/data/warehouse/* data/warehouse/
+
+          git add \
+            data/dashboard/wnba_betting_intelligence.json \
+            data/warehouse/wnba_betting_intelligence.json \
+            data/dashboard/wnba_daily_ai_report.json \
+            data/dashboard/wnba_daily_ai_report.md \
+            data/warehouse/wnba_daily_ai_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Refresh WNBA daily AI research report'
+          git push origin HEAD:main
