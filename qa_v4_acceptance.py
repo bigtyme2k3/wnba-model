@@ -57,7 +57,14 @@ def test_m11_m12() -> list[dict[str, Any]]:
                 "games": [{"game": "Away @ Home", "bucket": "today", "spread": -3.5, "total": 161.5}]
             }
             matchup = {
-                "games": [{"game": "Away @ Home", "projected_margin": -1.0, "projected_total": 166.0}]
+                "games": [{
+                    "game": "Away @ Home",
+                    "projected_margin": -1.0,
+                    "projected_total": 166.0,
+                    "projected_home_score": 82.5,
+                    "projected_away_score": 83.5,
+                    "projection_source": "matchup_intelligence",
+                }]
             }
             json.dump(master, open("data/dashboard/wnba_master.json", "w"))
             json.dump(matchup, open("data/dashboard/wnba_matchup_intelligence.json", "w"))
@@ -69,8 +76,9 @@ def test_m11_m12() -> list[dict[str, Any]]:
                 "market_total", "projected_total", "total_pick", "total_probability", "top_picks",
             }
             assert required <= set(row), required - set(row)
-            assert row["spread_source"] == "upstream_projection"
-            assert row["total_source"] == "upstream_projection"
+            assert row["spread_source"] == "matchup_intelligence"
+            assert row["total_source"] == "matchup_intelligence"
+            assert row["model_available"] is True
             assert 0 <= row["spread_probability"] <= 1
             assert 0 <= row["total_probability"] <= 1
             assert len(row["top_picks"]) <= 3
@@ -80,16 +88,17 @@ def test_m11_m12() -> list[dict[str, Any]]:
             os.makedirs("data/dashboard", exist_ok=True)
             json.dump({"games": [{"game": "Away @ Home", "bucket": "today", "spread": -3.5, "total": 161.5}]}, open("data/dashboard/wnba_master.json", "w"))
             row = game_model.build("2099-01-01")["games"][0]
-            assert row["spread_source"] == "market_baseline"
-            assert row["total_source"] == "market_baseline"
-            assert row["spread_probability"] == 0.5
-            assert row["total_probability"] == 0.5
+            assert row["spread_source"] == "unavailable"
+            assert row["total_source"] == "unavailable"
+            assert row["spread_probability"] is None
+            assert row["total_probability"] is None
             assert row["spread_pick"] == "PASS"
             assert row["total_pick"] == "PASS"
             assert row["top_picks"] == []
+            assert row["model_available"] is False
 
     tests.append(check("M11/M12", "game projection schema and bounded probabilities", game_schema))
-    tests.append(check("M11/M12", "market baseline never invents an edge", no_fake_edge))
+    tests.append(check("M11/M12", "missing model never invents a market edge", no_fake_edge))
     return tests
 
 
