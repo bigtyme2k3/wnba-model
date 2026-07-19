@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -45,6 +45,13 @@ def implied_probability(american: float) -> float:
     return 100 / (american + 100) if american > 0 else abs(american) / (abs(american) + 100)
 
 
+def parse_date(value: Any) -> date | None:
+    try:
+        return date.fromisoformat(str(value)[:10])
+    except (TypeError, ValueError):
+        return None
+
+
 def finding(level: str, code: str, message: str, **context: Any) -> dict[str, Any]:
     return {"level": level, "code": code, "message": message, "context": context}
 
@@ -71,8 +78,34 @@ def audit() -> dict[str, Any]:
     }.items():
         if isinstance(doc, dict) and doc.get("target_date"):
             dates[name] = str(doc["target_date"])
-    if len(set(dates.values())) > 1:
-        findings.append(finding("error", "DATE_MISMATCH", "Outputs reference different target dates", dates=dates))
+
+    core_dates = {name: value for name, value in dates.items() if name in {"decisions", "portfolio", "risk"}}
+    if len(set(core_dates.values())) > 1:
+        findings.append(finding("error", "CORE_DATE_MISMATCH", "Decision, portfolio, and risk outputs reference different target dates", dates=dates))
+    elif dates.get("master") and core_dates:
+        core_value = next(iter(core_dates.values()))
+        master_date = parse_date(dates.get("master"))
+        core_date = parse_date(core_value)
+        day_gap = (master_date - core_date).days if master_date and core_date else None
+        if dates["master"] != core_value:
+            if day_gap == 1 and not qualified and not portfolio:
+                findings.append(finding(
+                    "info",
+                    "VALID_SLATE_ROLLOVER",
+                    "Master advanced to the next slate while prior-slate decision outputs correctly contain no qualified bets",
+                    dates=dates,
+                    day_gap=day_gap,
+                ))
+            elif day_gap in {0, 1}:
+                findings.append(finding(
+                    "warning",
+                    "OUTPUT_REFRESH_PENDING",
+                    "Master and decision outputs are temporarily on adjacent slate dates",
+                    dates=dates,
+                    day_gap=day_gap,
+                ))
+            else:
+                findings.append(finding("error", "DATE_MISMATCH", "Outputs reference materially different target dates", dates=dates, day_gap=day_gap))
 
     seen: dict[tuple[str, ...], int] = {}
     for index, row in enumerate(decision_rows):
@@ -161,7 +194,7 @@ def audit() -> dict[str, Any]:
         findings.append(finding("error", "STAKE_EXCEEDS_BANKROLL", "Portfolio stake exceeds bankroll", total_stake=total_stake, bankroll=bankroll))
 
     if not qualified and not portfolio:
-        findings.append(finding("info", "VALID_PASS_DAY", "No bets qualified and portfolio is empty", evaluated_rows=int(expected_rows) if finite(expected_rows) else len(decision_rows)))
+        findings.append(finding("info", "VALID_PASS_DAY", "No qualified bets today; portfolio correctly remains empty", evaluated_rows=int(expected_rows) if finite(expected_rows) else len(decision_rows)))
     elif qualified and not portfolio:
         findings.append(finding("error", "PORTFOLIO_SILENT_FAILURE", "Qualified bets exist but portfolio is empty", qualified_bets=len(qualified)))
     elif not qualified and portfolio:
