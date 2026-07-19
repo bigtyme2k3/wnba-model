@@ -1,0 +1,240 @@
+name: WNBA Postgame Learning Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), blank uses active Eastern slate'
+        required: false
+        default: ''
+      force_grade:
+        description: 'Force grading and learning even without a new final transition'
+        required: false
+        default: 'false'
+      closing_snapshot:
+        description: 'Capture a closing-line snapshot before learning'
+        required: false
+        default: 'false'
+  schedule:
+    - cron: '*/15 * * * *'
+
+concurrency:
+  group: wnba-postgame-learning-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  postgame-learning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install shared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Resolve active slate and grading window
+        run: |
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "SEASON_YEAR=${TARGET:0:4}" >> "$GITHUB_ENV"
+          DATES=$(python - <<PY
+          from datetime import date, timedelta
+          d=date.fromisoformat('$TARGET')
+          print(' '.join((d-timedelta(days=i)).isoformat() for i in range(3,-1,-1)))
+          PY
+          )
+          echo "DATES=$DATES" >> "$GITHUB_ENV"
+          echo "Postgame target: $TARGET; grading window: $DATES"
+
+      - name: Validate consolidated pipeline
+        run: |
+          python -m py_compile \
+            wnba_live_results_engine.py qa_live_results_engine.py \
+            wnba_results_grader.py wnba_game_predictions_ledger.py \
+            wnba_projection_performance.py wnba_alt_performance_tracker.py \
+            wnba_model_picks_ledger.py wnba_phase5_actuals_bridge.py \
+            wnba_phase5_learning_engine.py wnba_phase5_backtest.py \
+            wnba_results_dashboard_builder.py wnba_terminal_ui.py \
+            patch_terminal_ui.py patch_dashboard_v4_results.py
+          python qa_live_results_engine.py
+
+      - name: Refresh official schedule and game status
+        run: python collect_wehoop.py --current --out data/raw
+
+      - name: Detect final-game transitions
+        id: monitor
+        run: |
+          python wnba_live_results_engine.py --date "$TARGET" > /tmp/live_results.json
+          tail -n 1 /tmp/live_results.json
+          cp data/dashboard/wnba_live_results_engine.json data/dashboard/wnba_live_games.json
+          RUN=$(python - <<'PY'
+          import json, os
+          payload=json.loads(open('/tmp/live_results.json',encoding='utf-8').read().strip().splitlines()[-1])
+          forced=os.environ.get('FORCE_GRADE','false').lower()=='true'
+          print('true' if forced or payload.get('run_grading') else 'false')
+          PY
+          )
+          echo "run_grading=$RUN" >> "$GITHUB_OUTPUT"
+        env:
+          FORCE_GRADE: ${{ github.event.inputs.force_grade }}
+
+      - name: Refresh player results and cumulative warehouse
+        if: steps.monitor.outputs.run_grading == 'true'
+        run: |
+          python wnba_play_by_play_layer.py --date "$TARGET"
+          python wnba_player_game_log_archive.py snapshot
+          python wnba_player_game_log_warehouse.py --date "$TARGET"
+          python wnba_player_game_log_archive.py merge
+          python wnba_player_game_log_backfill.py --season "$SEASON_YEAR"
+          python wnba_phase5_actuals_bridge.py
+
+      - name: Grade all model ledgers
+        if: steps.monitor.outputs.run_grading == 'true'
+        run: |
+          python wnba_results_grader.py --date "$TARGET"
+          python wnba_game_predictions_ledger.py grade --date "$TARGET"
+          python wnba_projection_performance.py grade --date "$TARGET"
+          python wnba_projection_performance.py analyze --date "$TARGET"
+          python wnba_alt_performance_tracker.py --date "$TARGET" --grade
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          python wnba_model_picks_ledger.py grade --date "$TARGET"
+          python wnba_model_picks_ledger.py analyze --date "$TARGET"
+
+      - name: Run Phase 5 learning and calibration
+        if: steps.monitor.outputs.run_grading == 'true'
+        run: |
+          BEFORE=$(python - <<'PY'
+          import json
+          try: print(json.load(open('data/dashboard/wnba_phase5_learning.json')).get('performance',{}).get('graded',0))
+          except Exception: print(0)
+          PY
+          )
+          for D in $DATES; do
+            python wnba_historical_database.py --date "$D"
+            if [ "${{ github.event.inputs.closing_snapshot }}" = "true" ] && [ "$D" = "$TARGET" ]; then
+              python wnba_closing_line_tracker.py --date "$D" --stage close
+            fi
+            python wnba_phase5_learning_engine.py --date "$D"
+          done
+          python wnba_phase5_backtest.py --date "$TARGET"
+          python wnba_results_dashboard_builder.py
+          python - <<PY
+          import json
+          paths=['data/dashboard/wnba_phase5_learning.json','data/warehouse/wnba_phase5_learning.json']
+          for path in paths:
+              data=json.load(open(path))
+              after=data.get('performance',{}).get('graded',0)
+              data['target_date']='$TARGET'
+              data['grading_dates']='$DATES'.split()
+              data['newly_graded']=max(0,after-int('$BEFORE'))
+              json.dump(data,open(path,'w'),indent=2,allow_nan=False)
+          print('Phase 5 graded rows:', '$BEFORE', '->', after)
+          PY
+
+      - name: Refresh learning outputs and dashboard
+        if: steps.monitor.outputs.run_grading == 'true'
+        run: |
+          python wnba_self_learning.py --date "$TARGET"
+          python wnba_model_calibration.py --date "$TARGET"
+          python wnba_reasoning_layer.py --date "$TARGET"
+          python wnba_master_source_builder.py --date "$TARGET"
+          python build_dashboard_v4.py
+          for patch in \
+            patch_dashboard_v4_team_context.py \
+            patch_dashboard_v4_layout_and_slate.py \
+            patch_dashboard_v4_prop_header.py \
+            patch_dashboard_v4_game_filter.py \
+            patch_dashboard_v4_player_props_polish.py \
+            patch_dashboard_v4_qa_health.py \
+            patch_dashboard_v4_game_market_data.py \
+            patch_dashboard_v4_core_interactions.py \
+            patch_dashboard_v4_alt_streaks.py \
+            patch_dashboard_v4_alt_ladders.py \
+            patch_dashboard_v4_alt_performance.py \
+            patch_dashboard_v4_remove_sportsbook_tab.py \
+            patch_dashboard_v4_minutes_projection.py \
+            patch_dashboard_v4_points_projection.py \
+            patch_dashboard_v4_rebounds_assists_projection.py \
+            patch_dashboard_v4_ancillary_projection.py \
+            patch_dashboard_v4_unified_simulation.py \
+            patch_dashboard_v4_top_plays.py \
+            patch_dashboard_v4_parlay_optimizer.py \
+            patch_dashboard_v4_projection_performance.py \
+            patch_dashboard_v4_explainability.py \
+            patch_dashboard_v4_market_intelligence.py \
+            patch_dashboard_v4_model_picks_ledger.py \
+            patch_dashboard_v4_consolidated_navigation.py \
+            patch_dashboard_v4_mission_control.py \
+            patch_dashboard_v4_live_results.py \
+            patch_dashboard_v4_force_alt_tab.py; do
+              [ -f "$patch" ] && python "$patch"
+          done
+          python wnba_mission_control.py --date "$TARGET" --retry-count 0
+          python wnba_terminal_ui.py --date "$TARGET"
+          python patch_terminal_ui.py
+          python patch_dashboard_v4_results.py
+
+      - name: Mark final games graded
+        if: steps.monitor.outputs.run_grading == 'true'
+        run: |
+          ARGS=$(python - <<'PY'
+          import json, shlex
+          payload=json.load(open('data/dashboard/wnba_live_results_engine.json'))
+          print(' '.join('--mark-graded '+shlex.quote(str(g['game_id'])) for g in payload.get('grading_queue',[])))
+          PY
+          )
+          python wnba_live_results_engine.py --date "$TARGET" $ARGS
+          cp data/dashboard/wnba_live_results_engine.json data/dashboard/wnba_live_games.json
+
+      - name: Verify consolidated outputs
+        if: steps.monitor.outputs.run_grading == 'true'
+        run: |
+          python - <<'PY'
+          import json, os
+          report=json.load(open('data/dashboard/wnba_phase5_learning.json'))
+          live=json.load(open('data/dashboard/wnba_live_results_engine.json'))
+          assert report.get('target_date')==os.environ['TARGET'], report.get('target_date')
+          assert report.get('grading_dates'), report
+          assert report.get('performance',{}).get('graded',0)>0, report
+          assert live.get('summary',{}).get('queued',0)==0, live.get('grading_queue')
+          assert os.path.exists('data/history/wnba_graded_bets.csv')
+          html=open('docs/index.html',encoding='utf-8').read()
+          assert 'window.WNBA_RESULTS_DATA' in html
+          print('CONSOLIDATED POSTGAME PIPELINE VERIFIED')
+          print(report['performance'])
+          PY
+
+      - name: Publish generated state
+        run: |
+          git config user.name "WNBA Pipeline Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Refresh WNBA postgame grading learning and dashboard - $TARGET" \
+            'data/raw/player_results_*.csv' \
+            'data/raw/boxscore_player_stats_*.csv' \
+            'data/raw/wnba_boxscores_*.csv' \
+            'data/raw/boxscores_wehoop.csv' \
+            'data/history/wnba_*.jsonl' \
+            'data/history/wnba_*.csv' \
+            'data/warehouse/wnba_*.json' \
+            'data/dashboard/wnba_*.json' \
+            'data/master/wnba_master.json' \
+            'config/wnba_learned_weights.json' \
+            'docs/index.html'
