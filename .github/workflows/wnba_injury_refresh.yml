@@ -33,7 +33,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Sync latest repository
-        run: git pull --rebase origin main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -55,15 +57,21 @@ jobs:
       - name: Verify injury source freshness
         run: |
           python - <<'PY'
-          import json
+          import json, os
+          from datetime import datetime, timezone
           s=json.load(open('data/raw/injuries_status.json'))
-          assert s.get('target_date') == '${{ env.TARGET }}', s
-          assert s.get('status') in {'ok','warning'}, s
-          print('Injury source:',s)
+          assert s.get('target_date') == os.environ['TARGET'], s
+          assert s.get('status') == 'ok', s
+          stamp=s.get('completed_at_utc') or s.get('generated_at_utc')
+          assert stamp, s
+          age=(datetime.now(timezone.utc)-datetime.fromisoformat(stamp.replace('Z','+00:00'))).total_seconds()
+          assert 0 <= age < 1800, {'age_seconds':age, **s}
+          assert int(s.get('teams_checked',0)) >= 15, s
+          assert os.path.exists(f"data/raw/injuries_{os.environ['TARGET']}.csv")
+          print('INJURY FEED FRESH',s)
           PY
       - name: Rebuild player intelligence with current injuries
         run: python wnba_player_intelligence.py --date "${{ env.TARGET }}"
-        continue-on-error: true
       - name: Build injury intelligence and minute redistribution
         run: python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
       - name: Rebuild injury-sensitive model layers
@@ -99,10 +107,12 @@ jobs:
       - name: Verify injury guardrails and propagation
         run: |
           python - <<'PY'
-          import json
+          import json, os
           report=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
+          player=json.load(open('data/dashboard/wnba_player_intelligence.json'))
           master=json.load(open('data/dashboard/wnba_master.json'))
           decisions=json.load(open('data/dashboard/wnba_decision_engine_final.json'))
+          assert player.get('target_date') == os.environ['TARGET'], player.get('target_date')
           for row in master.get('props',[]):
               if row.get('injury_status') in {'OUT','DOUBTFUL'}:
                   assert row.get('eligible') is False
@@ -116,20 +126,19 @@ jobs:
               if row.get('injury_status') in {'QUESTIONABLE','UNKNOWN'}:
                   assert row.get('final_action') != 'BET', row
           assert 'window.WNBA_INJURY_DATA' in open('docs/index.html',encoding='utf-8').read()
-          print('Injury guardrails verified:',report['summary'])
+          print('INJURY PIPELINE VERIFIED', report['summary'])
           PY
       - name: Commit injury refresh
         run: |
-          set -e
           git config user.name "WNBA Model Bot"
           git config user.email "actions@github.com"
-          git add data/raw/injuries*.csv data/raw/injuries_status.json data/raw/minute_projections.csv data/raw/player_points*.csv data/warehouse/*.json data/dashboard/*.json data/master/*.json docs/index.html
-          git diff --cached --quiet && echo "No injury changes" && exit 0
-          git commit -m "Refresh WNBA injuries - ${{ env.TARGET }}"
-          for attempt in 1 2 3 4 5; do
-            git fetch origin main
-            git rebase origin/main
-            if git push origin HEAD:main; then exit 0; fi
-            sleep $((attempt*3))
-          done
-          exit 1
+          bash scripts/atomic_generated_push.sh \
+            "Refresh WNBA injuries - ${{ env.TARGET }}" \
+            'data/raw/injuries*.csv' \
+            'data/raw/injuries_status.json' \
+            'data/raw/minute_projections.csv' \
+            'data/raw/player_points*.csv' \
+            'data/warehouse/wnba_*.json' \
+            'data/dashboard/wnba_*.json' \
+            'data/master/wnba_master.json' \
+            'docs/index.html'
