@@ -1,6 +1,6 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-20T17:04:34.766992Z
+Generated: 2026-07-20T19:16:03.116544Z
 
 ## Slate summary
 
@@ -10,26 +10,10 @@ Generated: 2026-07-20T17:04:34.766992Z
 
 ## Game — 2026-07-21T00:00:00Z
 
-### Dallas Wings +3.5 (draftkings)
-Bet quality: **Watch — 61.3/100**
-Research level: **low-research-interest** | signal 19.06 | 1 matched angles
-Best line: +3.5 | line-shop edge: +0 points
-
-- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
-
-### Dallas Wings +3.5 (fanduel)
-Bet quality: **Watch — 61.3/100**
-Research level: **low-research-interest** | signal 19.06 | 1 matched angles
-Best line: +3.5 | line-shop edge: +0 points
-
-- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
-
-## Game — 2026-07-21T00:00:00Z
-
-### Toronto Tempo +11.5 (draftkings)
-Bet quality: **Watch — 57.2/100**
+### Toronto Tempo +10.5 (draftkings)
+Bet quality: **Watch — 62.2/100**
 Research level: **low-research-interest** | signal 14.07 | 1 matched angles
-Best line: +11.5 | line-shop edge: +0 points
+Best line: +11.5 | line-shop edge: +1 points
 
 - home|underdog|9_plus: 14-4-0 (77.78%, n=18, Wilson floor 54.78%)
 
@@ -39,6 +23,22 @@ Research level: **low-research-interest** | signal 14.07 | 1 matched angles
 Best line: +11.5 | line-shop edge: +0 points
 
 - home|underdog|9_plus: 14-4-0 (77.78%, n=18, Wilson floor 54.78%)
+
+## Game — 2026-07-21T00:00:00Z
+
+### Dallas Wings +5.5 (draftkings)
+Bet quality: **Watch — 61.3/100**
+Research level: **low-research-interest** | signal 19.06 | 1 matched angles
+Best line: +5.5 | line-shop edge: +0 points
+
+- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
+
+### Dallas Wings +5.5 (fanduel)
+Bet quality: **Watch — 61.3/100**
+Research level: **low-research-interest** | signal 19.06 | 1 matched angles
+Best line: +5.5 | line-shop edge: +0 points
+
+- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
 
 ## Game — 2026-07-21T02:00:00Z
 
