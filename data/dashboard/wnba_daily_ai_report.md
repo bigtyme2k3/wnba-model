@@ -1,6 +1,6 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-20T15:32:22.657321Z
+Generated: 2026-07-20T15:55:58.011600Z
 
 ## Slate summary
 
