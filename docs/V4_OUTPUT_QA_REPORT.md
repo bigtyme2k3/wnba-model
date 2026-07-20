@@ -1,6 +1,6 @@
 # WNBA V4 Model Output QA
 
-Generated: `2026-07-19T19:36:12.247073+00:00`
+Generated: `2026-07-20T15:35:12.000075+00:00`
 
 **Status:** GREEN
 
@@ -14,7 +14,7 @@ Generated: `2026-07-19T19:36:12.247073+00:00`
 - **Errors:** 0
 - **Warnings:** 0
 - **Info:** 1
-- **Target Dates:** {'decisions': '2026-07-19', 'portfolio': '2026-07-19', 'risk': '2026-07-19', 'master': '2026-07-19'}
+- **Target Dates:** {'decisions': '2026-07-20', 'portfolio': '2026-07-20', 'risk': '2026-07-20', 'master': '2026-07-20'}
 
 ## Findings
 
