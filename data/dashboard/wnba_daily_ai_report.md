@@ -1,12 +1,28 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-20T12:17:02.726908Z
+Generated: 2026-07-20T13:28:59.001670Z
 
 ## Slate summary
 
-- 3 games
-- 6 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 4, 'Watch': 2, 'Pass': 0}
+- 6 games
+- 11 team/book signals
+- Grades: {'Strong Research Play': 0, 'Lean': 6, 'Watch': 5, 'Pass': 0}
+
+## Game — 2026-07-21T00:00:00Z
+
+### Dallas Wings +3.5 (fanduel)
+Bet quality: **Lean — 66.3/100**
+Research level: **low-research-interest** | signal 19.06 | 1 matched angles
+Best line: +4.5 | line-shop edge: +1 points
+
+- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
+
+### Dallas Wings +4.5 (draftkings)
+Bet quality: **Watch — 61.3/100**
+Research level: **low-research-interest** | signal 19.06 | 1 matched angles
+Best line: +4.5 | line-shop edge: +0 points
+
+- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
 
 ## Game — 2026-07-21T00:00:00Z
 
@@ -26,18 +42,18 @@ Best line: +10.5 | line-shop edge: +0 points
 
 ## Game — 2026-07-21T02:00:00Z
 
-### Golden State Valkyries -7.5 (draftkings)
+### Golden State Valkyries -8.5 (draftkings)
 Bet quality: **Lean — 68.9/100**
 Research level: **medium-research-interest** | signal 41.83 | 2 matched angles
-Best line: -7.5 | line-shop edge: +0 points
+Best line: -8.5 | line-shop edge: +0 points
 
 - Golden State Valkyries|favorite: 18-4-0 (81.82%, n=22, Wilson floor 61.48%)
 - Golden State Valkyries: 28-14-0 (66.67%, n=42, Wilson floor 51.55%)
 
-### Golden State Valkyries -7.5 (fanduel)
+### Golden State Valkyries -8.5 (fanduel)
 Bet quality: **Lean — 68.9/100**
 Research level: **medium-research-interest** | signal 41.83 | 2 matched angles
-Best line: -7.5 | line-shop edge: +0 points
+Best line: -8.5 | line-shop edge: +0 points
 
 - Golden State Valkyries|favorite: 18-4-0 (81.82%, n=22, Wilson floor 61.48%)
 - Golden State Valkyries: 28-14-0 (66.67%, n=42, Wilson floor 51.55%)
@@ -59,6 +75,32 @@ Best line: +10.5 | line-shop edge: +0 points
 
 - Seattle Storm|home: 16-4-0 (80.0%, n=20, Wilson floor 58.4%)
 - home|underdog|9_plus: 14-4-0 (77.78%, n=18, Wilson floor 54.78%)
+
+## Game — 2026-07-22T19:10:00Z
+
+### Seattle Storm +9.5 (draftkings)
+Bet quality: **Lean — 67.0/100**
+Research level: **medium-research-interest** | signal 39.65 | 2 matched angles
+Best line: +9.5 | line-shop edge: +0 points
+
+- Seattle Storm|home: 16-4-0 (80.0%, n=20, Wilson floor 58.4%)
+- home|underdog|9_plus: 14-4-0 (77.78%, n=18, Wilson floor 54.78%)
+
+## Game — 2026-07-22T23:30:00Z
+
+### Washington Mystics +5.5 (draftkings)
+Bet quality: **Watch — 61.3/100**
+Research level: **low-research-interest** | signal 19.06 | 1 matched angles
+Best line: +5.5 | line-shop edge: +0 points
+
+- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
+
+### Washington Mystics +5.5 (fanduel)
+Bet quality: **Watch — 61.3/100**
+Research level: **low-research-interest** | signal 19.06 | 1 matched angles
+Best line: +5.5 | line-shop edge: +0 points
+
+- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
 
 ## Guardrails
 
