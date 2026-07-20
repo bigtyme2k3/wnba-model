@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 from datetime import date, datetime, timezone
 from typing import Any, Dict
@@ -27,9 +28,34 @@ def safe_float(v: Any, default: float = 0.0) -> float:
         if v is None or v == "" or str(v).lower() == "nan":
             return default
         value = float(v)
-        return value if pd.notna(value) else default
+        return value if math.isfinite(value) else default
     except Exception:
         return default
+
+
+def json_safe(value: Any) -> Any:
+    """Recursively convert pandas/numpy/NaN values into strict JSON values."""
+    if value is None:
+        return None
+    if isinstance(value, dict):
+        return {str(k): json_safe(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [json_safe(v) for v in value]
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+    if hasattr(value, "item"):
+        try:
+            value = value.item()
+        except Exception:
+            pass
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    if isinstance(value, (str, int, float, bool)):
+        return value
+    return str(value)
 
 
 def norm(value: Any) -> str:
@@ -48,14 +74,12 @@ def load_points(target: str) -> pd.DataFrame:
 
 def injury_lookup(target: str) -> Dict[str, dict]:
     out: Dict[str, dict] = {}
-    # Supplemental normalized feed first.
     rows = load_json("data/warehouse/wnba_injuries.json", [])
     if isinstance(rows, list):
         for row in rows:
             name = norm(row.get("player"))
             if name:
                 out[name] = row
-    # Current ESPN/manual report overrides stale supplemental values.
     for path in [f"data/raw/injuries_{target}.csv", "data/raw/injuries_today.csv"]:
         if not os.path.exists(path):
             continue
@@ -68,7 +92,7 @@ def injury_lookup(target: str) -> Dict[str, dict]:
         for row in frame.to_dict("records"):
             name = norm(row.get("player"))
             if name:
-                out[name] = row
+                out[name] = json_safe(row)
         if not frame.empty:
             break
     return out
@@ -110,7 +134,7 @@ def build(target: str) -> dict:
     point_lookup = {}
     if not points.empty and "player" in points.columns:
         for _, row in points.iterrows():
-            point_lookup[norm(row.get("player"))] = row.to_dict()
+            point_lookup[norm(row.get("player"))] = json_safe(row.to_dict())
 
     records = []
     for name, player in players.items():
@@ -130,12 +154,10 @@ def build(target: str) -> dict:
             "team": player.get("team"),
             "position": player.get("pos"),
             "season": {
-                "gp": safe_float(player.get("gp"), 0),
-                "ppg": ppg,
+                "gp": safe_float(player.get("gp"), 0), "ppg": ppg,
                 "reb": safe_float(player.get("reb"), safe_float(player.get("rpg"), 0)),
                 "ast": safe_float(player.get("ast"), safe_float(player.get("apg"), 0)),
-                "mpg": mpg,
-                "usage": safe_float(player.get("usage"), 0),
+                "mpg": mpg, "usage": safe_float(player.get("usage"), 0),
                 "ts_pct": safe_float(player.get("ts_pct"), safe_float(player.get("ts"), 0)),
             },
             "recent_form": {
@@ -144,17 +166,16 @@ def build(target: str) -> dict:
                 "last5_ast": safe_float(player.get("roll5_ast"), safe_float(player.get("ast"), safe_float(player.get("apg"), 0))),
                 "last5_mpg": recent_mpg,
                 "last5_threes": safe_float(player.get("roll5_threes"), 0),
-                "points_trend": trend_label(ppg, recent_points),
-                "minutes_trend": trend_label(mpg, recent_mpg),
+                "points_trend": trend_label(ppg, recent_points), "minutes_trend": trend_label(mpg, recent_mpg),
             },
             "injury": {
                 "status": status,
                 "detail": adjustment.get("detail") or injury.get("detail"),
                 "source": adjustment.get("source") or injury.get("source"),
-                "projected_minutes": adjustment.get("projected_minutes"),
-                "minutes_delta": adjustment.get("minutes_delta"),
-                "projection_factor": adjustment.get("projection_factor"),
-                "confidence_penalty": adjustment.get("confidence_penalty", 0),
+                "projected_minutes": safe_float(adjustment.get("projected_minutes"), 0) if adjustment.get("projected_minutes") is not None else None,
+                "minutes_delta": safe_float(adjustment.get("minutes_delta"), 0) if adjustment.get("minutes_delta") is not None else None,
+                "projection_factor": safe_float(adjustment.get("projection_factor"), 1) if adjustment.get("projection_factor") is not None else None,
+                "confidence_penalty": safe_float(adjustment.get("confidence_penalty"), 0),
                 "is_out": bool(adjustment.get("is_out")) or status in {"OUT", "DOUBTFUL"},
                 "updated_at_utc": adjustment.get("updated_at_utc") or injury.get("scraped_at"),
             },
@@ -163,18 +184,16 @@ def build(target: str) -> dict:
                 "signal": point.get("signal"), "conf": point.get("conf"), "market_status": point.get("market_status"),
             },
             "intelligence": {
-                "role_score": role_score(player),
-                "is_rotation_core": role_score(player) >= 70,
-                "is_recent_minutes_up": recent_mpg > mpg + 2,
-                "is_recent_scoring_up": recent_points > ppg + 2,
+                "role_score": role_score(player), "is_rotation_core": role_score(player) >= 70,
+                "is_recent_minutes_up": recent_mpg > mpg + 2, "is_recent_scoring_up": recent_points > ppg + 2,
                 "injury_available": status not in {"OUT", "DOUBTFUL"},
             },
             "updated_at_utc": datetime.now(timezone.utc).isoformat(),
         }
-        records.append(record)
+        records.append(json_safe(record))
 
     records.sort(key=lambda row: row["intelligence"]["role_score"], reverse=True)
-    report = {
+    report = json_safe({
         "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target, "players": records,
         "summary": {
             "players": len(records),
@@ -184,7 +203,7 @@ def build(target: str) -> dict:
             "projection_records_matched": sum(1 for row in records if row["projection_snapshot"]["pred"] is not None),
             "core_rotation_players": sum(1 for row in records if row["intelligence"]["is_rotation_core"]),
         },
-    }
+    })
     os.makedirs("data/warehouse", exist_ok=True)
     os.makedirs("data/dashboard", exist_ok=True)
     for path in ["data/warehouse/wnba_player_intelligence.json", "data/dashboard/wnba_player_intelligence.json"]:
