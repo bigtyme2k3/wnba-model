@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-20T15:35:11.949879+00:00`
+Generated: `2026-07-20T20:47:04.641261+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -68,7 +68,7 @@ Generated: `2026-07-20T15:35:11.949879+00:00`
 | `.github/workflows/wnba_full_game_performance.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_full_game_simulation.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_game_market_repair.yml` | 12 | 0 | 0.0 | low | False |
-| `.github/workflows/wnba_injury_refresh.yml` | 12 | 1 | 0.083 | low | True |
+| `.github/workflows/wnba_injury_refresh.yml` | 12 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_intelligence_foundation.yml` | 52 | 27 | 0.519 | high | True |
 | `.github/workflows/wnba_live_slate_refresh.yml` | 7 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_market_intelligence.yml` | 1 | 0 | 0.0 | low | False |
