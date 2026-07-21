@@ -26,6 +26,7 @@ PROP_MARKETS = {
     "player_points": "pts", "player_rebounds": "reb", "player_assists": "ast", "player_threes": "threes",
     "player_points_rebounds_assists": "pra", "player_points_assists": "pa",
     "player_points_rebounds": "pr", "player_rebounds_assists": "ra",
+    "player_points_q1": "q1_pts",
 }
 ALT_PROP_MARKETS = {
     "player_points_alternate": "PTS", "player_rebounds_alternate": "REB",
