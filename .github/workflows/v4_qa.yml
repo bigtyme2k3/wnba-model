@@ -72,11 +72,14 @@ jobs:
           status=json.load(open('data/dashboard/wnba_v4_status.json', encoding='utf-8'))
           html=Path('docs/index.html').read_text(encoding='utf-8')
           assert len(status.get('modules',[])) == 25
-          assert all({'qa_grade','qa_score','production_ready','effective_status','blockers','warnings'} <= set(m) for m in status['modules'])
+          required={'qa_grade','qa_score','production_ready','effective_status','blockers','warnings','health_state','health_message','last_updated_utc','age_minutes','valid_zero_output'}
+          assert all(required <= set(m) for m in status['modules'])
           assert status.get('qa',{}).get('overall_status') in {'green','yellow','red'}
           assert 'v4-qa-health-script' in html
-          assert 'V4 QA Command Center' in html
-          print('QA Health dashboard integration verified')
+          assert 'V4 Module Health' in html
+          assert 'Valid No-op' in html
+          assert 'Last Updated' in html
+          print('Freshness-aware System Health dashboard integration verified')
           PY
 
       - name: Upload QA reports
