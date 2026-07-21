@@ -1,14 +1,19 @@
 {
-  "generated_at_utc": "2026-07-21T00:01:06.539491+00:00",
+  "generated_at_utc": "2026-07-21T00:20:42.348496+00:00",
   "target_date": "2026-07-20",
-  "status": "ok",
+  "status": "warning",
   "summary": {
     "warehouse_records": 3986,
     "games_with_possession_estimate": 0,
+    "player_minutes_lookup": 3973,
     "ranking_rows": 0,
     "minimum_samples": 12,
-    "skipped_missing_minutes": 357,
-    "skipped_missing_pace": 98811
+    "skipped_missing_minutes": 269,
+    "skipped_missing_pace": 98899,
+    "team_rows": 398,
+    "player_rows": 4824,
+    "team_direct_estimates": 0,
+    "team_derived_estimates": 0
   },
   "rankings": [],
   "by_stat_position": {
@@ -151,17 +156,17 @@
   "methodology": {
     "workload_adjustment": "stat per 36 player minutes",
     "pace_adjustment": "scaled to 80 possessions",
-    "possession_formula": "FGA - OREB + TOV + 0.44 * FTA; game estimate is average of both teams",
+    "possession_formula": "FGA - OREB + TOV + 0.44 * FTA; game estimate averages available team estimates",
+    "fallback": "Incomplete team box rows are reconstructed from player box attempts and player minutes",
     "rank_direction": "1 = easiest / highest adjusted allowed",
     "position_groups": {
       "G": "guards",
       "F": "forwards",
       "C": "centers"
     },
-    "quarter_policy": "complete quarter records only",
     "minimum_samples": 12,
-    "limitations": "Possessions are estimates; hybrid positions map to one broad group.",
-    "possession_source_files": [
+    "source_files": [
+      "data/raw/wehoop_player_box_2026.csv",
       "data/raw/wehoop_team_box_2026.csv"
     ]
   }
