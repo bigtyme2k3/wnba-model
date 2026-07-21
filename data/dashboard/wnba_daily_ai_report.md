@@ -1,12 +1,12 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-21T15:47:20.999804Z
+Generated: 2026-07-21T16:58:45.669233Z
 
 ## Slate summary
 
 - 4 games
 - 8 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 2, 'Watch': 4, 'Pass': 2}
+- Grades: {'Strong Research Play': 0, 'Lean': 2, 'Watch': 2, 'Pass': 4}
 
 ## Game — 2026-07-22T19:10:00Z
 
@@ -27,25 +27,25 @@ Best line: +9.5 | line-shop edge: +0 points
 ## Game — 2026-07-22T23:00:00Z
 
 ### Chicago Sky +9.5 (draftkings)
-Bet quality: **Watch — 54.1/100**
+Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +1 points
+Best line: +9.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
-### Chicago Sky +10.5 (fanduel)
+### Chicago Sky +9.5 (fanduel)
 Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
+Best line: +9.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
 ## Game — 2026-07-23T00:00:00Z
 
-### Connecticut Sun +9.5 (draftkings)
-Bet quality: **Watch — 54.1/100**
+### Connecticut Sun +10.5 (draftkings)
+Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +1 points
+Best line: +10.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
