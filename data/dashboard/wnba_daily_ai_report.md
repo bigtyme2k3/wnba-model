@@ -1,6 +1,6 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-21T16:58:45.669233Z
+Generated: 2026-07-21T18:52:16.272955Z
 
 ## Slate summary
 
@@ -10,10 +10,10 @@ Generated: 2026-07-21T16:58:45.669233Z
 
 ## Game — 2026-07-22T19:10:00Z
 
-### Seattle Storm +9.5 (draftkings)
-Bet quality: **Lean — 66.7/100**
+### Seattle Storm +8.5 (draftkings)
+Bet quality: **Lean — 71.7/100**
 Research level: **low-research-interest** | signal 25.57 | 1 matched angles
-Best line: +9.5 | line-shop edge: +0 points
+Best line: +9.5 | line-shop edge: +1 points
 
 - Seattle Storm|home: 16-4-0 (80.0%, n=20, Wilson floor 58.4%)
 
@@ -58,17 +58,17 @@ Best line: +10.5 | line-shop edge: +0 points
 
 ## Game — 2026-07-23T02:00:00Z
 
-### Portland Fire +5.5 (draftkings)
+### Portland Fire +4.5 (draftkings)
 Bet quality: **Watch — 61.3/100**
 Research level: **low-research-interest** | signal 19.06 | 1 matched angles
-Best line: +5.5 | line-shop edge: +0 points
+Best line: +4.5 | line-shop edge: +0 points
 
 - home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
 
-### Portland Fire +5.5 (fanduel)
+### Portland Fire +4.5 (fanduel)
 Bet quality: **Watch — 61.3/100**
 Research level: **low-research-interest** | signal 19.06 | 1 matched angles
-Best line: +5.5 | line-shop edge: +0 points
+Best line: +4.5 | line-shop edge: +0 points
 
 - home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
 
