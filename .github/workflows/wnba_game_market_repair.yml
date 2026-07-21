@@ -47,10 +47,11 @@ jobs:
           echo "Pregame target: $TARGET"
       - name: Validate projection and simulation chain
         run: |
-          python -m py_compile collect_wehoop.py wnba_standings_fallback.py wnba_master_source_builder.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_minutes_projection_v2.py wnba_points_projection_v2.py wnba_rebounds_assists_projection_v2.py wnba_ancillary_projection_v2.py wnba_unified_player_simulation_v2.py wnba_matchup_intelligence.py wnba_game_market_model.py wnba_cross_market_top_plays.py wnba_full_game_simulation_v2.py wnba_prop_bet_cards.py wnba_prop_card_performance.py wnba_game_predictions_ledger.py wnba_game_props_q1.py patch_dashboard_v4_game_market_data.py patch_dashboard_v4_core_interactions.py patch_dashboard_v4_minutes_projection.py patch_dashboard_v4_points_projection.py patch_dashboard_v4_rebounds_assists_projection.py patch_dashboard_v4_ancillary_projection.py patch_dashboard_v4_unified_simulation.py patch_dashboard_v4_top_plays.py patch_dashboard_v4_prop_bet_cards.py patch_dashboard_v4_game_props.py patch_dashboard_v4_consolidated_navigation.py
-      - name: Refresh schedule, player data, and master slate
+          python -m py_compile collect_wehoop.py wnba_q1_history_collector.py wnba_standings_fallback.py wnba_master_source_builder.py wnba_opponent_stat_rankings.py wnba_position_opponent_rankings.py wnba_pace_minutes_opponent_rankings.py wnba_minutes_projection_v2.py wnba_points_projection_v2.py wnba_rebounds_assists_projection_v2.py wnba_ancillary_projection_v2.py wnba_unified_player_simulation_v2.py wnba_matchup_intelligence.py wnba_game_market_model.py wnba_cross_market_top_plays.py wnba_full_game_simulation_v2.py wnba_prop_bet_cards.py wnba_prop_card_performance.py wnba_game_predictions_ledger.py wnba_game_props_q1.py patch_dashboard_v4_game_market_data.py patch_dashboard_v4_core_interactions.py patch_dashboard_v4_minutes_projection.py patch_dashboard_v4_points_projection.py patch_dashboard_v4_rebounds_assists_projection.py patch_dashboard_v4_ancillary_projection.py patch_dashboard_v4_unified_simulation.py patch_dashboard_v4_top_plays.py patch_dashboard_v4_prop_bet_cards.py patch_dashboard_v4_game_props.py patch_dashboard_v4_consolidated_navigation.py
+      - name: Refresh schedule, player data, master slate, and Q1 history
         run: |
           python collect_wehoop.py --current --out data/raw
+          python wnba_q1_history_collector.py --season "$SEASON_YEAR"
           python wnba_standings_fallback.py
           python wnba_master_source_builder.py --date "$TARGET"
       - name: Build opponent and pace context
@@ -87,6 +88,7 @@ jobs:
           cards=json.load(open('data/dashboard/wnba_prop_bet_cards.json'))
           perf=json.load(open('data/dashboard/wnba_prop_card_performance.json'))
           q1=json.load(open('data/dashboard/wnba_game_props_q1.json'))
+          q1hist=json.load(open('data/dashboard/wnba_q1_team_history.json'))
           assert game.get('target_date') == target
           assert game.get('summary',{}).get('spread_predictions',0) > 0
           assert game.get('summary',{}).get('total_predictions',0) > 0
@@ -94,12 +96,14 @@ jobs:
           assert unified.get('target_date') == target
           assert cards.get('target_date') == target
           assert q1.get('target_date') == target
-          assert q1.get('summary',{}).get('games',0) >= 0
+          assert q1hist.get('summary',{}).get('records',0) > 0
+          assert q1.get('summary',{}).get('games_with_verified_q1_history',0) > 0
           assert perf.get('summary',{}).get('archived',0) >= len(cards.get('ranked_cards',[]))
           print('PREGAME PROJECTIONS ACTIVE', game['summary'])
           print('FULL GAME SIMULATION ACTIVE', full['summary'])
           print('PLAYER SIMULATION ACTIVE', unified.get('summary'))
           print('PROP BET CARDS ACTIVE', cards.get('summary'))
+          print('Q1 HISTORY ACTIVE', q1hist.get('summary'))
           print('Q1 GAME PROPS ACTIVE', q1.get('summary'))
           print('PROP CARD TRACKING ACTIVE', perf.get('summary'))
           PY
@@ -131,7 +135,7 @@ jobs:
           git config user.name "WNBA Pregame Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Refresh WNBA pregame projections trends simulations Q1 props and card archive" \
+            "Refresh WNBA pregame projections trends simulations verified Q1 props and card archive" \
             'data/raw/boxscores_wehoop.csv' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
