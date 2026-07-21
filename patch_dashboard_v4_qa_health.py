@@ -12,7 +12,7 @@ SCRIPT=r'''<script id="v4-qa-health-script">
  const ago=m=>{if(m===undefined||m===null)return 'Unknown';m=Number(m);if(m<60)return `${Math.round(m)} min ago`;if(m<1440)return `${(m/60).toFixed(1)} hr ago`;return `${(m/1440).toFixed(1)} days ago`};
  const issues=(b,w)=>{b=arr(b);w=arr(w);if(!b.length&&!w.length)return '<span class="issueNone mono">None</span>';return `${b.length?`<ul class="issueList">${b.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}${w.length?`<ul class="warnList">${w.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}`};
  window.health=function(){
-  const v=DATA.v4||{},s=v.summary||{},qa=v.qa||{},mods=arr(v.modules),hc=s.health_state_counts||{},qac=s.qa_status_counts||{};
+  const v=DATA.v4||{},s=v.summary||{},qa=v.qa||{},mods=arr(v.modules),hc=s.health_state_counts||{};
   const cards=`<div class="healthKpis"><div class="healthKpi"><div class="label mono">Overall QA</div><div class="v mono ${cls(qa.overall_status)}">${esc(String(qa.overall_status||'unknown').toUpperCase())}</div></div><div class="healthKpi"><div class="label mono">Green</div><div class="v mono qa-green">${esc(val(hc.green,0))}</div></div><div class="healthKpi"><div class="label mono">Valid No-op</div><div class="v mono qa-blue">${esc(val(hc.blue,0))}</div></div><div class="healthKpi"><div class="label mono">Needs Attention</div><div class="v mono qa-yellow">${esc(val(hc.yellow,0))}</div></div><div class="healthKpi"><div class="label mono">Failed</div><div class="v mono qa-red">${esc(val(hc.red,0))}</div></div></div>`;
   const legend=`<div class="legend"><span><i class="g"></i>Active and fresh</span><span><i class="b"></i>Valid no-op / no qualifying rows</span><span><i class="y"></i>Stale or unexpectedly empty</span><span><i class="r"></i>Missing or failed</span></div>`;
   const rows=mods.map(m=>`<tr class="health-${esc(m.health_state||'unknown')}"><td>${esc(m.id)}</td><td><b>${esc(m.name)}</b><div class="small mono">${esc(val(m.owner_file))}</div></td><td>${pill(m.health_state)}</td><td>${esc(val(m.runtime_status))}</td><td class="mono">${esc(val(m.rows,0))}</td><td class="freshCell"><div class="mono">${esc(ago(m.age_minutes))}</div><div class="small mono">${esc(val(m.last_updated_utc,'No timestamp'))}</div></td><td><div>${esc(val(m.health_message))}</div><div class="healthMessage">${m.valid_zero_output?'Zero rows are expected for the current slate.':'Output is expected when the module has work to process.'}</div></td><td>${issues(m.blockers,m.warnings)}</td></tr>`).join('');
@@ -21,15 +21,33 @@ SCRIPT=r'''<script id="v4-qa-health-script">
  };
 })();
 </script>'''
-def replace(html,marker,end,replacement):
- i=html.find(marker)
- if i<0:return html
- j=html.find(end,i)
- return html if j<0 else html[:i]+replacement.strip()+html[j+len(end):]
+
+def replace_block(html: str, marker: str, closing: str, replacement: str) -> str:
+    start=html.find(marker)
+    if start<0:return html
+    end=html.find(closing,start)
+    if end<0:return html
+    return html[:start]+replacement.strip()+html[end+len(closing):]
+
+def inject_before(html: str, closing: str, block: str) -> str:
+    idx=html.lower().rfind(closing.lower())
+    return html[:idx]+block+'\n'+html[idx:] if idx>=0 else html+'\n'+block+'\n'
+
 def main():
- if not PATH.exists():raise SystemExit('docs/index.html does not exist')
- html=PATH.read_text(encoding='utf-8')
- html=replace(html,'<style id="v4-qa-health-style">','</style>',CSS) if 'id="v4-qa-health-style"' in html else html.replace('</head>',CSS+'</head>')
- html=replace(html,'<script id="v4-qa-health-script">','</script>',SCRIPT) if 'id="v4-qa-health-script"' in html else html.replace('</body>',SCRIPT+'</body>')
- PATH.write_text(html,encoding='utf-8');print('Dashboard V4 freshness-aware health integration applied')
+    if not PATH.exists():raise SystemExit('docs/index.html does not exist')
+    html=PATH.read_text(encoding='utf-8')
+    if 'id="v4-qa-health-style"' in html:
+        html=replace_block(html,'<style id="v4-qa-health-style">','</style>',CSS)
+    else:
+        html=inject_before(html,'</head>',CSS)
+    if 'id="v4-qa-health-script"' in html:
+        html=replace_block(html,'<script id="v4-qa-health-script">','</script>',SCRIPT)
+    else:
+        html=inject_before(html,'</body>',SCRIPT)
+    PATH.write_text(html,encoding='utf-8')
+    written=PATH.read_text(encoding='utf-8')
+    required=('v4-qa-health-style','v4-qa-health-script','V4 Module Health','Valid No-op','Last Updated')
+    missing=[value for value in required if value not in written]
+    if missing:raise SystemExit(f'QA health patch incomplete; missing: {missing}')
+    print('Dashboard V4 freshness-aware health integration applied and verified')
 if __name__=='__main__':main()
