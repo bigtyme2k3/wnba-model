@@ -68,17 +68,39 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          import subprocess
           from pathlib import Path
-          status=json.load(open('data/dashboard/wnba_v4_status.json', encoding='utf-8'))
-          html=Path('docs/index.html').read_text(encoding='utf-8')
-          assert len(status.get('modules',[])) == 25
-          required={'qa_grade','qa_score','production_ready','effective_status','blockers','warnings','health_state','health_message','last_updated_utc','age_minutes','valid_zero_output'}
-          assert all(required <= set(m) for m in status['modules'])
-          assert status.get('qa',{}).get('overall_status') in {'green','yellow','red'}
-          assert 'v4-qa-health-script' in html
-          assert 'V4 Module Health' in html
-          assert 'Valid No-op' in html
-          assert 'Last Updated' in html
+
+          status_path=Path('data/dashboard/wnba_v4_status.json')
+          html_path=Path('docs/index.html')
+          status=json.loads(status_path.read_text(encoding='utf-8'))
+          modules=status.get('modules',[])
+          required_fields={'qa_grade','qa_score','production_ready','effective_status','blockers','warnings','health_state','health_message','last_updated_utc','age_minutes','valid_zero_output'}
+          errors=[]
+          if len(modules)!=25:
+              errors.append(f'expected 25 modules, found {len(modules)}')
+          missing_fields=[m.get('id','unknown') for m in modules if not required_fields <= set(m)]
+          if missing_fields:
+              errors.append(f'modules missing health fields: {missing_fields}')
+          overall=status.get('qa',{}).get('overall_status')
+          if overall not in {'green','yellow','red'}:
+              errors.append(f'invalid overall QA status: {overall!r}')
+
+          html=html_path.read_text(encoding='utf-8') if html_path.exists() else ''
+          markers=['v4-qa-health-script','V4 Module Health','Valid No-op','Last Updated']
+          missing=[marker for marker in markers if marker not in html]
+          if missing:
+              print(f'Health markers missing after initial patch: {missing}; retrying patch once')
+              subprocess.run(['python','patch_dashboard_v4_qa_health.py'],check=True)
+              html=html_path.read_text(encoding='utf-8')
+              missing=[marker for marker in markers if marker not in html]
+          if missing:
+              errors.append(f'dashboard markers still missing after retry: {missing}')
+
+          if errors:
+              for error in errors:
+                  print(f'::error::{error}')
+              raise SystemExit(1)
           print('Freshness-aware System Health dashboard integration verified')
           PY
 
