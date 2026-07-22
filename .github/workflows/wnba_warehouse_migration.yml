@@ -1,0 +1,74 @@
+name: WNBA Warehouse Migration
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Inventory only or execute migration"
+        required: true
+        default: inventory
+        type: choice
+        options:
+          - inventory
+          - execute
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Compile migration code
+        run: |
+          python -m py_compile wnba_warehouse_migration_bridge.py
+          python -m py_compile wnba_odds_warehouse_v2.py
+
+      - name: Run inventory
+        if: inputs.mode == 'inventory'
+        run: python wnba_warehouse_migration_bridge.py
+
+      - name: Execute migration
+        if: inputs.mode == 'execute'
+        run: python wnba_warehouse_migration_bridge.py --execute
+
+      - name: Verify report
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/warehouse/wnba_warehouse_migration_report.json')
+          if not p.exists(): raise SystemExit('migration report missing')
+          r=json.loads(p.read_text())
+          print(json.dumps(r,indent=2))
+          if r.get('mode')=='execute' and not r.get('validation',{}).get('passed'):
+              raise SystemExit('migration validation did not pass')
+          PY
+
+      - name: Commit migration outputs
+        if: inputs.mode == 'execute'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/warehouse/wnba_odds_warehouse_v2.sqlite data/warehouse/wnba_warehouse_migration_report.json
+          git diff --cached --quiet || git commit -m "Migrate legacy odds warehouse into V2"
+          git push
+
+      - name: Upload migration report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-warehouse-migration-report
+          path: data/warehouse/wnba_warehouse_migration_report.json
