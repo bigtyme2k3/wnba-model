@@ -1,801 +1,3680 @@
 {
-  "generated_at_utc": "2026-07-22T13:14:13.804865Z",
-  "database": "data/warehouse/wnba_odds_warehouse_v2.sqlite",
-  "graded_wagers": 4376,
-  "movement_series": 3602,
-  "sportsbooks": [
+  "generated_at_utc": "2026-07-22T15:22:20.031316Z",
+  "status": "ready",
+  "database": "data/warehouse/wnba_odds_history.sqlite",
+  "summary": {
+    "game_book_rows": 404,
+    "completed_game_book_rows": 334,
+    "discovered_trends": 100,
+    "upcoming_opportunities": 42
+  },
+  "research_api": {
+    "ats_by_book": [
+      {
+        "angle": "draftkings",
+        "wins": 85,
+        "losses": 82,
+        "pushes": 0,
+        "graded": 167,
+        "win_pct": 50.9,
+        "roi_at_minus_110": -2.83,
+        "wilson_low_pct": 43.38
+      },
+      {
+        "angle": "fanduel",
+        "wins": 85,
+        "losses": 82,
+        "pushes": 0,
+        "graded": 167,
+        "win_pct": 50.9,
+        "roi_at_minus_110": -2.83,
+        "wilson_low_pct": 43.38
+      }
+    ],
+    "home_ats_by_spread_bucket": [
+      {
+        "angle": "draftkings|3_to_5_5",
+        "wins": 31,
+        "losses": 19,
+        "pushes": 0,
+        "graded": 50,
+        "win_pct": 62.0,
+        "roi_at_minus_110": 18.36,
+        "wilson_low_pct": 48.15
+      },
+      {
+        "angle": "fanduel|3_to_5_5",
+        "wins": 30,
+        "losses": 20,
+        "pushes": 0,
+        "graded": 50,
+        "win_pct": 60.0,
+        "roi_at_minus_110": 14.55,
+        "wilson_low_pct": 46.18
+      },
+      {
+        "angle": "draftkings|pick_to_2_5",
+        "wins": 20,
+        "losses": 19,
+        "pushes": 0,
+        "graded": 39,
+        "win_pct": 51.28,
+        "roi_at_minus_110": -2.1,
+        "wilson_low_pct": 36.2
+      },
+      {
+        "angle": "fanduel|pick_to_2_5",
+        "wins": 19,
+        "losses": 18,
+        "pushes": 0,
+        "graded": 37,
+        "win_pct": 51.35,
+        "roi_at_minus_110": -1.97,
+        "wilson_low_pct": 35.89
+      },
+      {
+        "angle": "fanduel|6_to_8_5",
+        "wins": 20,
+        "losses": 23,
+        "pushes": 0,
+        "graded": 43,
+        "win_pct": 46.51,
+        "roi_at_minus_110": -11.21,
+        "wilson_low_pct": 32.51
+      },
+      {
+        "angle": "draftkings|9_plus",
+        "wins": 16,
+        "losses": 19,
+        "pushes": 0,
+        "graded": 35,
+        "win_pct": 45.71,
+        "roi_at_minus_110": -12.73,
+        "wilson_low_pct": 30.47
+      },
+      {
+        "angle": "fanduel|9_plus",
+        "wins": 16,
+        "losses": 21,
+        "pushes": 0,
+        "graded": 37,
+        "win_pct": 43.24,
+        "roi_at_minus_110": -17.44,
+        "wilson_low_pct": 28.67
+      },
+      {
+        "angle": "draftkings|6_to_8_5",
+        "wins": 18,
+        "losses": 25,
+        "pushes": 0,
+        "graded": 43,
+        "win_pct": 41.86,
+        "roi_at_minus_110": -20.08,
+        "wilson_low_pct": 28.38
+      }
+    ],
+    "overs_by_total_bucket": [
+      {
+        "angle": "draftkings|180_plus",
+        "wins": 11,
+        "losses": 3,
+        "pushes": 0,
+        "graded": 14,
+        "win_pct": 78.57,
+        "roi_at_minus_110": 50.0,
+        "wilson_low_pct": 52.41
+      },
+      {
+        "angle": "fanduel|180_plus",
+        "wins": 12,
+        "losses": 4,
+        "pushes": 0,
+        "graded": 16,
+        "win_pct": 75.0,
+        "roi_at_minus_110": 43.18,
+        "wilson_low_pct": 50.5
+      },
+      {
+        "angle": "fanduel|170s",
+        "wins": 39,
+        "losses": 31,
+        "pushes": 0,
+        "graded": 70,
+        "win_pct": 55.71,
+        "roi_at_minus_110": 6.36,
+        "wilson_low_pct": 44.08
+      },
+      {
+        "angle": "draftkings|160s",
+        "wins": 39,
+        "losses": 34,
+        "pushes": 0,
+        "graded": 73,
+        "win_pct": 53.42,
+        "roi_at_minus_110": 1.99,
+        "wilson_low_pct": 42.1
+      },
+      {
+        "angle": "draftkings|170s",
+        "wins": 38,
+        "losses": 34,
+        "pushes": 0,
+        "graded": 72,
+        "win_pct": 52.78,
+        "roi_at_minus_110": 0.76,
+        "wilson_low_pct": 41.4
+      },
+      {
+        "angle": "fanduel|160s",
+        "wins": 36,
+        "losses": 35,
+        "pushes": 0,
+        "graded": 71,
+        "win_pct": 50.7,
+        "roi_at_minus_110": -3.2,
+        "wilson_low_pct": 39.34
+      },
+      {
+        "angle": "fanduel|under_160",
+        "wins": 5,
+        "losses": 5,
+        "pushes": 0,
+        "graded": 10,
+        "win_pct": 50.0,
+        "roi_at_minus_110": -4.55,
+        "wilson_low_pct": 23.66
+      },
+      {
+        "angle": "draftkings|under_160",
+        "wins": 3,
+        "losses": 5,
+        "pushes": 0,
+        "graded": 8,
+        "win_pct": 37.5,
+        "roi_at_minus_110": -28.41,
+        "wilson_low_pct": 13.68
+      }
+    ],
+    "unders_by_total_bucket": [
+      {
+        "angle": "fanduel|160s",
+        "wins": 35,
+        "losses": 36,
+        "pushes": 0,
+        "graded": 71,
+        "win_pct": 49.3,
+        "roi_at_minus_110": -5.89,
+        "wilson_low_pct": 38.0
+      },
+      {
+        "angle": "draftkings|170s",
+        "wins": 34,
+        "losses": 38,
+        "pushes": 0,
+        "graded": 72,
+        "win_pct": 47.22,
+        "roi_at_minus_110": -9.85,
+        "wilson_low_pct": 36.13
+      },
+      {
+        "angle": "draftkings|160s",
+        "wins": 34,
+        "losses": 39,
+        "pushes": 0,
+        "graded": 73,
+        "win_pct": 46.58,
+        "roi_at_minus_110": -11.08,
+        "wilson_low_pct": 35.59
+      },
+      {
+        "angle": "fanduel|170s",
+        "wins": 31,
+        "losses": 39,
+        "pushes": 0,
+        "graded": 70,
+        "win_pct": 44.29,
+        "roi_at_minus_110": -15.45,
+        "wilson_low_pct": 33.25
+      },
+      {
+        "angle": "draftkings|under_160",
+        "wins": 5,
+        "losses": 3,
+        "pushes": 0,
+        "graded": 8,
+        "win_pct": 62.5,
+        "roi_at_minus_110": 19.32,
+        "wilson_low_pct": 30.57
+      },
+      {
+        "angle": "fanduel|under_160",
+        "wins": 5,
+        "losses": 5,
+        "pushes": 0,
+        "graded": 10,
+        "win_pct": 50.0,
+        "roi_at_minus_110": -4.55,
+        "wilson_low_pct": 23.66
+      },
+      {
+        "angle": "fanduel|180_plus",
+        "wins": 4,
+        "losses": 12,
+        "pushes": 0,
+        "graded": 16,
+        "win_pct": 25.0,
+        "roi_at_minus_110": -52.27,
+        "wilson_low_pct": 10.18
+      },
+      {
+        "angle": "draftkings|180_plus",
+        "wins": 3,
+        "losses": 11,
+        "pushes": 0,
+        "graded": 14,
+        "win_pct": 21.43,
+        "roi_at_minus_110": -59.09,
+        "wilson_low_pct": 7.57
+      }
+    ]
+  },
+  "trend_discovery": [
     {
-      "key": "draftkings",
-      "bets": 2182,
-      "wins": 1091,
-      "losses": 1091,
+      "market": "OVER",
+      "dimension": "total_bucket",
+      "value": "180_plus",
+      "wins": 46,
+      "losses": 14,
       "pushes": 0,
-      "win_pct": 50.0,
-      "units": -102.8866,
-      "roi_pct": -4.72,
-      "avg_price": -89.6091
+      "graded": 60,
+      "win_pct": 76.67,
+      "roi_at_minus_110": 46.36,
+      "wilson_low_pct": 64.56
     },
     {
-      "key": "fanduel",
-      "bets": 2194,
-      "wins": 1097,
-      "losses": 1097,
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Seattle Storm|home",
+      "wins": 16,
+      "losses": 4,
       "pushes": 0,
-      "win_pct": 50.0,
-      "units": -113.3392,
-      "roi_pct": -5.17,
-      "avg_price": -119.3459
-    }
-  ],
-  "markets": [
-    {
-      "key": "totals",
-      "bets": 1462,
-      "wins": 731,
-      "losses": 731,
-      "pushes": 0,
-      "win_pct": 50.0,
-      "units": -66.4421,
-      "roi_pct": -4.54,
-      "avg_price": -109.5041
+      "graded": 20,
+      "win_pct": 80.0,
+      "roi_at_minus_110": 52.73,
+      "wilson_low_pct": 58.4
     },
     {
-      "key": "spreads",
-      "bets": 1464,
-      "wins": 732,
-      "losses": 732,
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Chicago Sky|170s",
+      "wins": 19,
+      "losses": 6,
       "pushes": 0,
-      "win_pct": 50.0,
-      "units": -69.8293,
-      "roi_pct": -4.77,
-      "avg_price": -107.8217
+      "graded": 25,
+      "win_pct": 76.0,
+      "roi_at_minus_110": 45.09,
+      "wilson_low_pct": 56.57
     },
     {
-      "key": "h2h",
-      "bets": 1450,
-      "wins": 725,
-      "losses": 725,
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "home|underdog|3_to_5_5",
+      "wins": 22,
+      "losses": 8,
       "pushes": 0,
-      "win_pct": 50.0,
-      "units": -79.9544,
-      "roi_pct": -5.51,
-      "avg_price": -96.1559
-    }
-  ],
-  "team_markets": [
-    {
-      "key": "Washington Mystics|h2h",
-      "bets": 100,
-      "wins": 50,
-      "losses": 50,
-      "pushes": 0,
-      "win_pct": 50.0,
-      "units": 39.9514,
-      "roi_pct": 39.95,
-      "avg_price": 72.04
+      "graded": 30,
+      "win_pct": 73.33,
+      "roi_at_minus_110": 40.0,
+      "wilson_low_pct": 55.55
     },
     {
-      "key": "Golden State Valkyries|h2h",
-      "bets": 85,
-      "wins": 68,
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Golden State Valkyries|favorite",
+      "wins": 18,
+      "losses": 6,
+      "pushes": 0,
+      "graded": 24,
+      "win_pct": 75.0,
+      "roi_at_minus_110": 43.18,
+      "wilson_low_pct": 55.1
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Los Angeles Sparks|180_plus",
+      "wins": 14,
+      "losses": 4,
+      "pushes": 0,
+      "graded": 18,
+      "win_pct": 77.78,
+      "roi_at_minus_110": 48.48,
+      "wilson_low_pct": 54.78
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Los Angeles Sparks",
+      "wins": 30,
+      "losses": 14,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 68.18,
+      "roi_at_minus_110": 30.17,
+      "wilson_low_pct": 53.44
+    },
+    {
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "away|underdog|9_plus",
+      "wins": 34,
+      "losses": 18,
+      "pushes": 0,
+      "graded": 52,
+      "win_pct": 65.38,
+      "roi_at_minus_110": 24.83,
+      "wilson_low_pct": 51.8
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Toronto Tempo",
+      "wins": 28,
+      "losses": 14,
+      "pushes": 0,
+      "graded": 42,
+      "win_pct": 66.67,
+      "roi_at_minus_110": 27.27,
+      "wilson_low_pct": 51.55
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Indiana Fever",
+      "wins": 30,
+      "losses": 16,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 65.22,
+      "roi_at_minus_110": 24.51,
+      "wilson_low_pct": 50.77
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Chicago Sky",
+      "wins": 30,
+      "losses": 16,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 65.22,
+      "roi_at_minus_110": 24.51,
+      "wilson_low_pct": 50.77
+    },
+    {
+      "market": "OVER",
+      "dimension": "venue",
+      "value": "home",
+      "wins": 183,
+      "losses": 151,
+      "pushes": 0,
+      "graded": 334,
+      "win_pct": 54.79,
+      "roi_at_minus_110": 4.6,
+      "wilson_low_pct": 49.43
+    },
+    {
+      "market": "OVER",
+      "dimension": "venue",
+      "value": "away",
+      "wins": 183,
+      "losses": 151,
+      "pushes": 0,
+      "graded": 334,
+      "win_pct": 54.79,
+      "roi_at_minus_110": 4.6,
+      "wilson_low_pct": 49.43
+    },
+    {
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Golden State Valkyries",
+      "wins": 28,
+      "losses": 16,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 63.64,
+      "roi_at_minus_110": 21.49,
+      "wilson_low_pct": 48.87
+    },
+    {
+      "market": "OVER",
+      "dimension": "total_bucket",
+      "value": "170s",
+      "wins": 154,
+      "losses": 130,
+      "pushes": 0,
+      "graded": 284,
+      "win_pct": 54.23,
+      "roi_at_minus_110": 3.52,
+      "wilson_low_pct": 48.41
+    },
+    {
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "home|underdog|9_plus",
+      "wins": 14,
+      "losses": 6,
+      "pushes": 0,
+      "graded": 20,
+      "win_pct": 70.0,
+      "roi_at_minus_110": 33.64,
+      "wilson_low_pct": 48.1
+    },
+    {
+      "market": "ATS",
+      "dimension": "favorite_status",
+      "value": "underdog",
+      "wins": 176,
+      "losses": 158,
+      "pushes": 0,
+      "graded": 334,
+      "win_pct": 52.69,
+      "roi_at_minus_110": 0.6,
+      "wilson_low_pct": 47.34
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Connecticut Sun|home",
+      "wins": 16,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 24,
+      "win_pct": 66.67,
+      "roi_at_minus_110": 27.27,
+      "wilson_low_pct": 46.71
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Washington Mystics|underdog",
+      "wins": 16,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 24,
+      "win_pct": 66.67,
+      "roi_at_minus_110": 27.27,
+      "wilson_low_pct": 46.71
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Toronto Tempo|170s",
+      "wins": 16,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 24,
+      "win_pct": 66.67,
+      "roi_at_minus_110": 27.27,
+      "wilson_low_pct": 46.71
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Atlanta Dream",
+      "wins": 28,
+      "losses": 18,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 60.87,
+      "roi_at_minus_110": 16.21,
+      "wilson_low_pct": 46.46
+    },
+    {
+      "market": "OVER",
+      "dimension": "total_bucket",
+      "value": "160s",
+      "wins": 150,
+      "losses": 138,
+      "pushes": 0,
+      "graded": 288,
+      "win_pct": 52.08,
+      "roi_at_minus_110": -0.57,
+      "wilson_low_pct": 46.32
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Connecticut Sun|underdog",
+      "wins": 25,
+      "losses": 16,
+      "pushes": 0,
+      "graded": 41,
+      "win_pct": 60.98,
+      "roi_at_minus_110": 16.41,
+      "wilson_low_pct": 45.73
+    },
+    {
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "home|favorite|pick_to_2_5",
+      "wins": 26,
       "losses": 17,
       "pushes": 0,
-      "win_pct": 80.0,
-      "units": 29.0956,
-      "roi_pct": 34.23,
-      "avg_price": -147.4471
+      "graded": 43,
+      "win_pct": 60.47,
+      "roi_at_minus_110": 15.43,
+      "wilson_low_pct": 45.58
     },
     {
-      "key": "Portland Fire|h2h",
-      "bets": 85,
-      "wins": 39,
-      "losses": 46,
+      "market": "ATS",
+      "dimension": "venue",
+      "value": "home",
+      "wins": 170,
+      "losses": 164,
       "pushes": 0,
-      "win_pct": 45.88,
-      "units": 20.876,
-      "roi_pct": 24.56,
-      "avg_price": 179.8706
+      "graded": 334,
+      "win_pct": 50.9,
+      "roi_at_minus_110": -2.83,
+      "wilson_low_pct": 45.56
     },
     {
-      "key": "Golden State Valkyries|spreads",
-      "bets": 89,
-      "wins": 58,
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Connecticut Sun",
+      "wins": 26,
+      "losses": 18,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 59.09,
+      "roi_at_minus_110": 12.81,
+      "wilson_low_pct": 44.41
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team",
+      "value": "Golden State Valkyries",
+      "wins": 26,
+      "losses": 18,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 59.09,
+      "roi_at_minus_110": 12.81,
+      "wilson_low_pct": 44.41
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Minnesota Lynx",
+      "wins": 27,
+      "losses": 19,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 58.7,
+      "roi_at_minus_110": 12.06,
+      "wilson_low_pct": 44.34
+    },
+    {
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "home|favorite|3_to_5_5",
+      "wins": 39,
       "losses": 31,
       "pushes": 0,
-      "win_pct": 65.17,
-      "units": 20.8365,
-      "roi_pct": 23.41,
-      "avg_price": -105.3596
+      "graded": 70,
+      "win_pct": 55.71,
+      "roi_at_minus_110": 6.36,
+      "wilson_low_pct": 44.08
     },
     {
-      "key": "Dallas Wings|h2h",
-      "bets": 102,
-      "wins": 80,
+      "market": "ATS",
+      "dimension": "venue",
+      "value": "away",
+      "wins": 164,
+      "losses": 170,
+      "pushes": 0,
+      "graded": 334,
+      "win_pct": 49.1,
+      "roi_at_minus_110": -6.26,
+      "wilson_low_pct": 43.78
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Toronto Tempo|away",
+      "wins": 12,
+      "losses": 6,
+      "pushes": 0,
+      "graded": 18,
+      "win_pct": 66.67,
+      "roi_at_minus_110": 27.27,
+      "wilson_low_pct": 43.75
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Atlanta Dream|170s",
+      "wins": 12,
+      "losses": 6,
+      "pushes": 0,
+      "graded": 18,
+      "win_pct": 66.67,
+      "roi_at_minus_110": 27.27,
+      "wilson_low_pct": 43.75
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Minnesota Lynx|170s",
+      "wins": 12,
+      "losses": 6,
+      "pushes": 0,
+      "graded": 18,
+      "win_pct": 66.67,
+      "roi_at_minus_110": 27.27,
+      "wilson_low_pct": 43.75
+    },
+    {
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "away|favorite|pick_to_2_5",
+      "wins": 20,
+      "losses": 13,
+      "pushes": 0,
+      "graded": 33,
+      "win_pct": 60.61,
+      "roi_at_minus_110": 15.7,
+      "wilson_low_pct": 43.68
+    },
+    {
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "away|underdog|6_to_8_5",
+      "wins": 28,
+      "losses": 21,
+      "pushes": 0,
+      "graded": 49,
+      "win_pct": 57.14,
+      "roi_at_minus_110": 9.09,
+      "wilson_low_pct": 43.27
+    },
+    {
+      "market": "ATS",
+      "dimension": "spread_bucket",
+      "value": "3_to_5_5",
+      "wins": 100,
+      "losses": 100,
+      "pushes": 0,
+      "graded": 200,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 43.14
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Golden State Valkyries|away",
+      "wins": 14,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 22,
+      "win_pct": 63.64,
+      "roi_at_minus_110": 21.49,
+      "wilson_low_pct": 42.95
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Golden State Valkyries|home",
+      "wins": 14,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 22,
+      "win_pct": 63.64,
+      "roi_at_minus_110": 21.49,
+      "wilson_low_pct": 42.95
+    },
+    {
+      "market": "ATS",
+      "dimension": "spread_bucket",
+      "value": "6_to_8_5",
+      "wins": 86,
+      "losses": 86,
+      "pushes": 0,
+      "graded": 172,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 42.61
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Connecticut Sun|160s",
+      "wins": 19,
+      "losses": 13,
+      "pushes": 0,
+      "graded": 32,
+      "win_pct": 59.38,
+      "roi_at_minus_110": 13.35,
+      "wilson_low_pct": 42.26
+    },
+    {
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Seattle Storm",
+      "wins": 26,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 56.52,
+      "roi_at_minus_110": 7.91,
+      "wilson_low_pct": 42.25
+    },
+    {
+      "market": "UNDER",
+      "dimension": "total_bucket",
+      "value": "160s",
+      "wins": 138,
+      "losses": 150,
+      "pushes": 0,
+      "graded": 288,
+      "win_pct": 47.92,
+      "roi_at_minus_110": -8.52,
+      "wilson_low_pct": 42.21
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Seattle Storm|underdog",
+      "wins": 24,
+      "losses": 18,
+      "pushes": 0,
+      "graded": 42,
+      "win_pct": 57.14,
+      "roi_at_minus_110": 9.09,
+      "wilson_low_pct": 42.21
+    },
+    {
+      "market": "ATS",
+      "dimension": "spread_bucket",
+      "value": "pick_to_2_5",
+      "wins": 76,
+      "losses": 76,
+      "pushes": 0,
+      "graded": 152,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 42.15
+    },
+    {
+      "market": "ATS",
+      "dimension": "favorite_status",
+      "value": "favorite",
+      "wins": 158,
+      "losses": 176,
+      "pushes": 0,
+      "graded": 334,
+      "win_pct": 47.31,
+      "roi_at_minus_110": -9.69,
+      "wilson_low_pct": 42.01
+    },
+    {
+      "market": "ATS",
+      "dimension": "spread_bucket",
+      "value": "9_plus",
+      "wins": 72,
+      "losses": 72,
+      "pushes": 0,
+      "graded": 144,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 41.94
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team_x_total_bucket",
+      "value": "New York Liberty|170s",
+      "wins": 13,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 21,
+      "win_pct": 61.9,
+      "roi_at_minus_110": 18.18,
+      "wilson_low_pct": 40.88
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Portland Fire|underdog",
+      "wins": 20,
+      "losses": 15,
+      "pushes": 0,
+      "graded": 35,
+      "win_pct": 57.14,
+      "roi_at_minus_110": 9.09,
+      "wilson_low_pct": 40.86
+    },
+    {
+      "market": "UNDER",
+      "dimension": "total_bucket",
+      "value": "170s",
+      "wins": 130,
+      "losses": 154,
+      "pushes": 0,
+      "graded": 284,
+      "win_pct": 45.77,
+      "roi_at_minus_110": -12.61,
+      "wilson_low_pct": 40.08
+    },
+    {
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Washington Mystics",
+      "wins": 24,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 54.55,
+      "roi_at_minus_110": 4.13,
+      "wilson_low_pct": 40.07
+    },
+    {
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Portland Fire",
+      "wins": 24,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 54.55,
+      "roi_at_minus_110": 4.13,
+      "wilson_low_pct": 40.07
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Las Vegas Aces",
+      "wins": 24,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 54.55,
+      "roi_at_minus_110": 4.13,
+      "wilson_low_pct": 40.07
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team",
+      "value": "Washington Mystics",
+      "wins": 24,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 54.55,
+      "roi_at_minus_110": 4.13,
+      "wilson_low_pct": 40.07
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team",
+      "value": "Dallas Wings",
+      "wins": 24,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 54.55,
+      "roi_at_minus_110": 4.13,
+      "wilson_low_pct": 40.07
+    },
+    {
+      "market": "UNDER",
+      "dimension": "venue",
+      "value": "home",
+      "wins": 151,
+      "losses": 183,
+      "pushes": 0,
+      "graded": 334,
+      "win_pct": 45.21,
+      "roi_at_minus_110": -13.69,
+      "wilson_low_pct": 39.96
+    },
+    {
+      "market": "UNDER",
+      "dimension": "venue",
+      "value": "away",
+      "wins": 151,
+      "losses": 183,
+      "pushes": 0,
+      "graded": 334,
+      "win_pct": 45.21,
+      "roi_at_minus_110": -13.69,
+      "wilson_low_pct": 39.96
+    },
+    {
+      "market": "UNDER",
+      "dimension": "total_bucket",
+      "value": "under_160",
+      "wins": 20,
+      "losses": 16,
+      "pushes": 0,
+      "graded": 36,
+      "win_pct": 55.56,
+      "roi_at_minus_110": 6.06,
+      "wilson_low_pct": 39.58
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team_x_total_bucket",
+      "value": "Golden State Valkyries|under_160",
+      "wins": 8,
+      "losses": 4,
+      "pushes": 0,
+      "graded": 12,
+      "win_pct": 66.67,
+      "roi_at_minus_110": 27.27,
+      "wilson_low_pct": 39.06
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Washington Mystics|away",
+      "wins": 14,
+      "losses": 10,
+      "pushes": 0,
+      "graded": 24,
+      "win_pct": 58.33,
+      "roi_at_minus_110": 11.36,
+      "wilson_low_pct": 38.83
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "New York Liberty|home",
+      "wins": 14,
+      "losses": 10,
+      "pushes": 0,
+      "graded": 24,
+      "win_pct": 58.33,
+      "roi_at_minus_110": 11.36,
+      "wilson_low_pct": 38.83
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Minnesota Lynx|away",
+      "wins": 12,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 20,
+      "win_pct": 60.0,
+      "roi_at_minus_110": 14.55,
+      "wilson_low_pct": 38.66
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Los Angeles Sparks|170s",
+      "wins": 12,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 20,
+      "win_pct": 60.0,
+      "roi_at_minus_110": 14.55,
+      "wilson_low_pct": 38.66
+    },
+    {
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "away|favorite|6_to_8_5",
+      "wins": 20,
+      "losses": 17,
+      "pushes": 0,
+      "graded": 37,
+      "win_pct": 54.05,
+      "roi_at_minus_110": 3.19,
+      "wilson_low_pct": 38.38
+    },
+    {
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Minnesota Lynx",
+      "wins": 24,
       "losses": 22,
       "pushes": 0,
-      "win_pct": 78.43,
-      "units": 23.8006,
-      "roi_pct": 23.33,
-      "avg_price": -186.9216
+      "graded": 46,
+      "win_pct": 52.17,
+      "roi_at_minus_110": -0.4,
+      "wilson_low_pct": 38.14
     },
     {
-      "key": "Chicago Sky|spreads",
-      "bets": 109,
-      "wins": 65,
-      "losses": 44,
-      "pushes": 0,
-      "win_pct": 59.63,
-      "units": 14.7686,
-      "roi_pct": 13.55,
-      "avg_price": -106.4128
-    },
-    {
-      "key": "Indiana Fever|h2h",
-      "bets": 96,
-      "wins": 64,
-      "losses": 32,
-      "pushes": 0,
-      "win_pct": 66.67,
-      "units": 12.1375,
-      "roi_pct": 12.64,
-      "avg_price": -404.8646
-    },
-    {
-      "key": "Washington Mystics|spreads",
-      "bets": 100,
-      "wins": 58,
-      "losses": 42,
-      "pushes": 0,
-      "win_pct": 58.0,
-      "units": 10.6158,
-      "roi_pct": 10.62,
-      "avg_price": -106.23
-    },
-    {
-      "key": "New York Liberty|h2h",
-      "bets": 109,
-      "wins": 71,
-      "losses": 38,
-      "pushes": 0,
-      "win_pct": 65.14,
-      "units": 8.2408,
-      "roi_pct": 7.56,
-      "avg_price": -199.3028
-    },
-    {
-      "key": "New York Liberty|spreads",
-      "bets": 110,
-      "wins": 61,
-      "losses": 49,
-      "pushes": 0,
-      "win_pct": 55.45,
-      "units": 7.002,
-      "roi_pct": 6.37,
-      "avg_price": -105.8091
-    },
-    {
-      "key": "Connecticut Sun|spreads",
-      "bets": 104,
-      "wins": 57,
-      "losses": 47,
-      "pushes": 0,
-      "win_pct": 54.81,
-      "units": 4.746,
-      "roi_pct": 4.56,
-      "avg_price": -110.4519
-    },
-    {
-      "key": "Minnesota Lynx|h2h",
-      "bets": 92,
-      "wins": 65,
-      "losses": 27,
-      "pushes": 0,
-      "win_pct": 70.65,
-      "units": 3.2695,
-      "roi_pct": 3.55,
-      "avg_price": -375.9891
-    },
-    {
-      "key": "Seattle Storm|spreads",
-      "bets": 87,
-      "wins": 47,
-      "losses": 40,
-      "pushes": 0,
-      "win_pct": 54.02,
-      "units": 2.8696,
-      "roi_pct": 3.3,
-      "avg_price": -107.069
-    },
-    {
-      "key": "Portland Fire|spreads",
-      "bets": 87,
-      "wins": 47,
-      "losses": 40,
-      "pushes": 0,
-      "win_pct": 54.02,
-      "units": 1.6142,
-      "roi_pct": 1.86,
-      "avg_price": -111.8391
-    },
-    {
-      "key": "Los Angeles Sparks|spreads",
-      "bets": 96,
-      "wins": 46,
-      "losses": 50,
-      "pushes": 0,
-      "win_pct": 47.92,
-      "units": -7.8304,
-      "roi_pct": -8.16,
-      "avg_price": -105.2604
-    },
-    {
-      "key": "Indiana Fever|spreads",
-      "bets": 97,
-      "wins": 46,
-      "losses": 51,
-      "pushes": 0,
-      "win_pct": 47.42,
-      "units": -8.801,
-      "roi_pct": -9.07,
-      "avg_price": -103.4227
-    },
-    {
-      "key": "Toronto Tempo|h2h",
-      "bets": 79,
-      "wins": 30,
-      "losses": 49,
-      "pushes": 0,
-      "win_pct": 37.97,
-      "units": -7.5285,
-      "roi_pct": -9.53,
-      "avg_price": 124.3038
-    },
-    {
-      "key": "Dallas Wings|spreads",
-      "bets": 102,
-      "wins": 48,
-      "losses": 54,
-      "pushes": 0,
-      "win_pct": 47.06,
-      "units": -10.8675,
-      "roi_pct": -10.65,
-      "avg_price": -110.2647
-    },
-    {
-      "key": "Phoenix Mercury|spreads",
-      "bets": 96,
-      "wins": 45,
-      "losses": 51,
-      "pushes": 0,
-      "win_pct": 46.88,
-      "units": -10.31,
-      "roi_pct": -10.74,
-      "avg_price": -107.3333
-    },
-    {
-      "key": "Minnesota Lynx|spreads",
-      "bets": 94,
-      "wins": 44,
-      "losses": 50,
-      "pushes": 0,
-      "win_pct": 46.81,
-      "units": -10.1708,
-      "roi_pct": -10.82,
-      "avg_price": -110.8617
-    },
-    {
-      "key": "Los Angeles Sparks|h2h",
-      "bets": 96,
-      "wins": 36,
-      "losses": 60,
-      "pushes": 0,
-      "win_pct": 37.5,
-      "units": -14.3443,
-      "roi_pct": -14.94,
-      "avg_price": 91.7917
-    },
-    {
-      "key": "Atlanta Dream|h2h",
-      "bets": 99,
-      "wins": 64,
-      "losses": 35,
-      "pushes": 0,
-      "win_pct": 64.65,
-      "units": -16.7374,
-      "roi_pct": -16.91,
-      "avg_price": -395.7677
-    },
-    {
-      "key": "Toronto Tempo|spreads",
-      "bets": 79,
-      "wins": 34,
-      "losses": 45,
-      "pushes": 0,
-      "win_pct": 43.04,
-      "units": -13.9946,
-      "roi_pct": -17.71,
-      "avg_price": -109.8481
-    },
-    {
-      "key": "Connecticut Sun|h2h",
-      "bets": 104,
-      "wins": 23,
-      "losses": 81,
-      "pushes": 0,
-      "win_pct": 22.12,
-      "units": -19.7307,
-      "roi_pct": -18.97,
-      "avg_price": 264.0481
-    },
-    {
-      "key": "Atlanta Dream|spreads",
-      "bets": 99,
-      "wins": 41,
-      "losses": 58,
-      "pushes": 0,
-      "win_pct": 41.41,
-      "units": -21.1113,
-      "roi_pct": -21.32,
-      "avg_price": -108.5556
-    },
-    {
-      "key": "Phoenix Mercury|h2h",
-      "bets": 96,
-      "wins": 38,
-      "losses": 58,
-      "pushes": 0,
-      "win_pct": 39.58,
-      "units": -25.2937,
-      "roi_pct": -26.35,
-      "avg_price": 2.8542
-    },
-    {
-      "key": "Las Vegas Aces|h2h",
-      "bets": 111,
-      "wins": 55,
-      "losses": 56,
-      "pushes": 0,
-      "win_pct": 49.55,
-      "units": -36.577,
-      "roi_pct": -32.95,
-      "avg_price": -754.1802
-    },
-    {
-      "key": "Seattle Storm|h2h",
-      "bets": 87,
-      "wins": 18,
-      "losses": 69,
-      "pushes": 0,
-      "win_pct": 20.69,
-      "units": -33.9704,
-      "roi_pct": -39.05,
-      "avg_price": 242.1724
-    },
-    {
-      "key": "Las Vegas Aces|spreads",
-      "bets": 115,
-      "wins": 35,
-      "losses": 80,
-      "pushes": 0,
-      "win_pct": 30.43,
-      "units": -49.1965,
-      "roi_pct": -42.78,
-      "avg_price": -109.1043
-    },
-    {
-      "key": "Chicago Sky|h2h",
-      "bets": 109,
+      "market": "UNDER",
+      "dimension": "team",
+      "value": "Phoenix Mercury",
       "wins": 24,
-      "losses": 85,
+      "losses": 22,
       "pushes": 0,
-      "win_pct": 22.02,
-      "units": -63.1438,
-      "roi_pct": -57.93,
-      "avg_price": 186.4312
+      "graded": 46,
+      "win_pct": 52.17,
+      "roi_at_minus_110": -0.4,
+      "wilson_low_pct": 38.14
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team",
+      "value": "Seattle Storm",
+      "wins": 24,
+      "losses": 22,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 52.17,
+      "roi_at_minus_110": -0.4,
+      "wilson_low_pct": 38.14
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Connecticut Sun",
+      "wins": 23,
+      "losses": 21,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 52.27,
+      "roi_at_minus_110": -0.21,
+      "wilson_low_pct": 37.94
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Las Vegas Aces|favorite",
+      "wins": 22,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 42,
+      "win_pct": 52.38,
+      "roi_at_minus_110": 0.0,
+      "wilson_low_pct": 37.72
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Minnesota Lynx|favorite",
+      "wins": 22,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 42,
+      "win_pct": 52.38,
+      "roi_at_minus_110": 0.0,
+      "wilson_low_pct": 37.72
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "New York Liberty",
+      "wins": 22,
+      "losses": 20,
+      "pushes": 0,
+      "graded": 42,
+      "win_pct": 52.38,
+      "roi_at_minus_110": 0.0,
+      "wilson_low_pct": 37.72
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team_x_total_bucket",
+      "value": "Phoenix Mercury|160s",
+      "wins": 16,
+      "losses": 14,
+      "pushes": 0,
+      "graded": 30,
+      "win_pct": 53.33,
+      "roi_at_minus_110": 1.82,
+      "wilson_low_pct": 36.14
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "New York Liberty|160s",
+      "wins": 10,
+      "losses": 7,
+      "pushes": 0,
+      "graded": 17,
+      "win_pct": 58.82,
+      "roi_at_minus_110": 12.3,
+      "wilson_low_pct": 36.01
+    },
+    {
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Las Vegas Aces",
+      "wins": 22,
+      "losses": 22,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 35.83
+    },
+    {
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Dallas Wings",
+      "wins": 22,
+      "losses": 22,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 35.83
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Portland Fire",
+      "wins": 22,
+      "losses": 22,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 35.83
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team",
+      "value": "Portland Fire",
+      "wins": 22,
+      "losses": 22,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 35.83
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Indiana Fever|170s",
+      "wins": 15,
+      "losses": 13,
+      "pushes": 0,
+      "graded": 28,
+      "win_pct": 53.57,
+      "roi_at_minus_110": 2.27,
+      "wilson_low_pct": 35.81
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Portland Fire|away",
+      "wins": 14,
+      "losses": 12,
+      "pushes": 0,
+      "graded": 26,
+      "win_pct": 53.85,
+      "roi_at_minus_110": 2.8,
+      "wilson_low_pct": 35.46
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Dallas Wings|favorite",
+      "wins": 14,
+      "losses": 12,
+      "pushes": 0,
+      "graded": 26,
+      "win_pct": 53.85,
+      "roi_at_minus_110": 2.8,
+      "wilson_low_pct": 35.46
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Minnesota Lynx|160s",
+      "wins": 13,
+      "losses": 11,
+      "pushes": 0,
+      "graded": 24,
+      "win_pct": 54.17,
+      "roi_at_minus_110": 3.41,
+      "wilson_low_pct": 35.07
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Las Vegas Aces|home",
+      "wins": 12,
+      "losses": 10,
+      "pushes": 0,
+      "graded": 22,
+      "win_pct": 54.55,
+      "roi_at_minus_110": 4.13,
+      "wilson_low_pct": 34.66
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Phoenix Mercury|away",
+      "wins": 12,
+      "losses": 10,
+      "pushes": 0,
+      "graded": 22,
+      "win_pct": 54.55,
+      "roi_at_minus_110": 4.13,
+      "wilson_low_pct": 34.66
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Las Vegas Aces|170s",
+      "wins": 15,
+      "losses": 14,
+      "pushes": 0,
+      "graded": 29,
+      "win_pct": 51.72,
+      "roi_at_minus_110": -1.25,
+      "wilson_low_pct": 34.43
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Dallas Wings|170s",
+      "wins": 15,
+      "losses": 14,
+      "pushes": 0,
+      "graded": 29,
+      "win_pct": 51.72,
+      "roi_at_minus_110": -1.25,
+      "wilson_low_pct": 34.43
+    },
+    {
+      "market": "ATS",
+      "dimension": "team",
+      "value": "Chicago Sky",
+      "wins": 22,
+      "losses": 24,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 47.83,
+      "roi_at_minus_110": -8.7,
+      "wilson_low_pct": 34.12
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Phoenix Mercury",
+      "wins": 22,
+      "losses": 24,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 47.83,
+      "roi_at_minus_110": -8.7,
+      "wilson_low_pct": 34.12
+    },
+    {
+      "market": "OVER",
+      "dimension": "team",
+      "value": "Seattle Storm",
+      "wins": 22,
+      "losses": 24,
+      "pushes": 0,
+      "graded": 46,
+      "win_pct": 47.83,
+      "roi_at_minus_110": -8.7,
+      "wilson_low_pct": 34.12
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team_x_total_bucket",
+      "value": "Washington Mystics|160s",
+      "wins": 14,
+      "losses": 13,
+      "pushes": 0,
+      "graded": 27,
+      "win_pct": 51.85,
+      "roi_at_minus_110": -1.01,
+      "wilson_low_pct": 33.99
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team",
+      "value": "Connecticut Sun",
+      "wins": 21,
+      "losses": 23,
+      "pushes": 0,
+      "graded": 44,
+      "win_pct": 47.73,
+      "roi_at_minus_110": -8.88,
+      "wilson_low_pct": 33.75
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Dallas Wings|home",
+      "wins": 10,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 18,
+      "win_pct": 55.56,
+      "roi_at_minus_110": 6.06,
+      "wilson_low_pct": 33.72
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_venue",
+      "value": "Portland Fire|home",
+      "wins": 10,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 18,
+      "win_pct": 55.56,
+      "roi_at_minus_110": 6.06,
+      "wilson_low_pct": 33.72
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Chicago Sky|160s",
+      "wins": 10,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 18,
+      "win_pct": 55.56,
+      "roi_at_minus_110": 6.06,
+      "wilson_low_pct": 33.72
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team_x_total_bucket",
+      "value": "Portland Fire|160s",
+      "wins": 10,
+      "losses": 8,
+      "pushes": 0,
+      "graded": 18,
+      "win_pct": 55.56,
+      "roi_at_minus_110": 6.06,
+      "wilson_low_pct": 33.72
+    },
+    {
+      "market": "ATS",
+      "dimension": "team_x_role",
+      "value": "Chicago Sky|underdog",
+      "wins": 16,
+      "losses": 16,
+      "pushes": 0,
+      "graded": 32,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 33.63
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team",
+      "value": "New York Liberty",
+      "wins": 20,
+      "losses": 22,
+      "pushes": 0,
+      "graded": 42,
+      "win_pct": 47.62,
+      "roi_at_minus_110": -9.09,
+      "wilson_low_pct": 33.36
+    },
+    {
+      "market": "ATS",
+      "dimension": "venue_x_role_x_bucket",
+      "value": "away|underdog|3_to_5_5",
+      "wins": 31,
+      "losses": 39,
+      "pushes": 0,
+      "graded": 70,
+      "win_pct": 44.29,
+      "roi_at_minus_110": -15.45,
+      "wilson_low_pct": 33.25
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team_x_total_bucket",
+      "value": "Atlanta Dream|160s",
+      "wins": 12,
+      "losses": 11,
+      "pushes": 0,
+      "graded": 23,
+      "win_pct": 52.17,
+      "roi_at_minus_110": -0.4,
+      "wilson_low_pct": 32.96
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Golden State Valkyries|160s",
+      "wins": 14,
+      "losses": 14,
+      "pushes": 0,
+      "graded": 28,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 32.63
+    },
+    {
+      "market": "OVER",
+      "dimension": "team_x_total_bucket",
+      "value": "Seattle Storm|160s",
+      "wins": 14,
+      "losses": 14,
+      "pushes": 0,
+      "graded": 28,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 32.63
+    },
+    {
+      "market": "UNDER",
+      "dimension": "team_x_total_bucket",
+      "value": "Golden State Valkyries|160s",
+      "wins": 14,
+      "losses": 14,
+      "pushes": 0,
+      "graded": 28,
+      "win_pct": 50.0,
+      "roi_at_minus_110": -4.55,
+      "wilson_low_pct": 32.63
     }
   ],
-  "player_markets": [],
-  "clv_by_sportsbook": [
+  "streak_and_martingale": {
+    "current_streaks": [
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Toronto Tempo",
+        "current_ats_loss_streak": 6,
+        "games": 21
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Toronto Tempo",
+        "current_ats_loss_streak": 6,
+        "games": 21
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Minnesota Lynx",
+        "current_ats_loss_streak": 3,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Minnesota Lynx",
+        "current_ats_loss_streak": 3,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "New York Liberty",
+        "current_ats_loss_streak": 3,
+        "games": 21
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "New York Liberty",
+        "current_ats_loss_streak": 3,
+        "games": 21
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Dallas Wings",
+        "current_ats_loss_streak": 2,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Dallas Wings",
+        "current_ats_loss_streak": 2,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Connecticut Sun",
+        "current_ats_loss_streak": 1,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Las Vegas Aces",
+        "current_ats_loss_streak": 1,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Connecticut Sun",
+        "current_ats_loss_streak": 1,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Las Vegas Aces",
+        "current_ats_loss_streak": 1,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Atlanta Dream",
+        "current_ats_loss_streak": 1,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Atlanta Dream",
+        "current_ats_loss_streak": 1,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Golden State Valkyries",
+        "current_ats_loss_streak": 1,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Golden State Valkyries",
+        "current_ats_loss_streak": 1,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Indiana Fever",
+        "current_ats_loss_streak": 0,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Washington Mystics",
+        "current_ats_loss_streak": 0,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Indiana Fever",
+        "current_ats_loss_streak": 0,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Washington Mystics",
+        "current_ats_loss_streak": 0,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Phoenix Mercury",
+        "current_ats_loss_streak": 0,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Chicago Sky",
+        "current_ats_loss_streak": 0,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Phoenix Mercury",
+        "current_ats_loss_streak": 0,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Chicago Sky",
+        "current_ats_loss_streak": 0,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Seattle Storm",
+        "current_ats_loss_streak": 0,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Seattle Storm",
+        "current_ats_loss_streak": 0,
+        "games": 23
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Los Angeles Sparks",
+        "current_ats_loss_streak": 0,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Los Angeles Sparks",
+        "current_ats_loss_streak": 0,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Portland Fire",
+        "current_ats_loss_streak": 0,
+        "games": 22
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Portland Fire",
+        "current_ats_loss_streak": 0,
+        "games": 22
+      }
+    ],
+    "martingale_simulations": [
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Los Angeles Sparks",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 5,
+        "cycles_won": 5,
+        "cycles_failed": 0,
+        "net_units": 4.36,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Los Angeles Sparks",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 5,
+        "cycles_won": 5,
+        "cycles_failed": 0,
+        "net_units": 4.36,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Phoenix Mercury",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Phoenix Mercury",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Minnesota Lynx",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Minnesota Lynx",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Portland Fire",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Portland Fire",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Indiana Fever",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Washington Mystics",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Indiana Fever",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Washington Mystics",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Indiana Fever",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.27,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Indiana Fever",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.27,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Seattle Storm",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.18,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Seattle Storm",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.18,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Phoenix Mercury",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.09,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Phoenix Mercury",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.09,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Chicago Sky",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.0,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Chicago Sky",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 3.0,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Las Vegas Aces",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 2.91,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Las Vegas Aces",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 4,
+        "cycles_failed": 0,
+        "net_units": 2.91,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Washington Mystics",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.73,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Washington Mystics",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.73,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Phoenix Mercury",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.64,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Phoenix Mercury",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.64,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Seattle Storm",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.64,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Seattle Storm",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.64,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Golden State Valkyries",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.36,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Golden State Valkyries",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.36,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Connecticut Sun",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.18,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Connecticut Sun",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 3,
+        "cycles_failed": 0,
+        "net_units": 2.18,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Indiana Fever",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Indiana Fever",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Connecticut Sun",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Connecticut Sun",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Los Angeles Sparks",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Los Angeles Sparks",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "New York Liberty",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "New York Liberty",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Los Angeles Sparks",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.73,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Los Angeles Sparks",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.73,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Golden State Valkyries",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.73,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Golden State Valkyries",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.73,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Connecticut Sun",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.64,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Connecticut Sun",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.64,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Las Vegas Aces",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Las Vegas Aces",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Portland Fire",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Portland Fire",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 2,
+        "cycles_failed": 0,
+        "net_units": 1.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Seattle Storm",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.91,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Seattle Storm",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.91,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Minnesota Lynx",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.91,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Minnesota Lynx",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.91,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Golden State Valkyries",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.91,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Golden State Valkyries",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.91,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Las Vegas Aces",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Las Vegas Aces",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Portland Fire",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Portland Fire",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.82,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "New York Liberty",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 2,
+        "cycles_failed": 1,
+        "net_units": 0.64,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "New York Liberty",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 2,
+        "cycles_failed": 1,
+        "net_units": 0.64,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Dallas Wings",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 3,
+        "cycles_failed": 1,
+        "net_units": 0.36,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Dallas Wings",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 3,
+        "cycles_failed": 1,
+        "net_units": 0.36,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Dallas Wings",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.27,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Dallas Wings",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": 0.27,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Washington Mystics",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 0,
+        "cycles_won": 0,
+        "cycles_failed": 0,
+        "net_units": 0.0,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Washington Mystics",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 0,
+        "cycles_won": 0,
+        "cycles_failed": 0,
+        "net_units": 0.0,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Minnesota Lynx",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 1,
+        "cycles_failed": 1,
+        "net_units": -0.09,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Minnesota Lynx",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 2,
+        "cycles_won": 1,
+        "cycles_failed": 1,
+        "net_units": -0.09,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Chicago Sky",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": -0.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Chicago Sky",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": -0.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Atlanta Dream",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": -0.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Atlanta Dream",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": -0.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Dallas Wings",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": -0.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Dallas Wings",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 1,
+        "cycles_failed": 0,
+        "net_units": -0.45,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "New York Liberty",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 3,
+        "cycles_failed": 1,
+        "net_units": -0.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "New York Liberty",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 3,
+        "cycles_failed": 1,
+        "net_units": -0.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Toronto Tempo",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 0,
+        "cycles_failed": 1,
+        "net_units": -7.0,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Toronto Tempo",
+        "trigger_losses": 3,
+        "max_steps": 5,
+        "cycles": 1,
+        "cycles_won": 0,
+        "cycles_failed": 1,
+        "net_units": -7.0,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Toronto Tempo",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 2,
+        "cycles_failed": 1,
+        "net_units": -13.18,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Toronto Tempo",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 2,
+        "cycles_failed": 1,
+        "net_units": -13.18,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Atlanta Dream",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 3,
+        "cycles_failed": 1,
+        "net_units": -28.27,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Atlanta Dream",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 3,
+        "cycles_failed": 1,
+        "net_units": -28.27,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Atlanta Dream",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 3,
+        "cycles_failed": 1,
+        "net_units": -28.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Atlanta Dream",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 4,
+        "cycles_won": 3,
+        "cycles_failed": 1,
+        "net_units": -28.55,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Chicago Sky",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 2,
+        "cycles_failed": 1,
+        "net_units": -29.18,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Chicago Sky",
+        "trigger_losses": 2,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 2,
+        "cycles_failed": 1,
+        "net_units": -29.18,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "draftkings",
+        "team": "Toronto Tempo",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 2,
+        "cycles_failed": 1,
+        "net_units": -29.27,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      },
+      {
+        "bookmaker_key": "fanduel",
+        "team": "Toronto Tempo",
+        "trigger_losses": 1,
+        "max_steps": 5,
+        "cycles": 3,
+        "cycles_won": 2,
+        "cycles_failed": 1,
+        "net_units": -29.27,
+        "warning": "Descriptive backtest; doubling stakes creates severe tail risk."
+      }
+    ]
+  },
+  "opportunity_scanner": [
     {
-      "key": "draftkings",
-      "observations": 1808,
-      "avg_line_move": 0.0,
-      "avg_price_move": 1.1139,
-      "beat_close_pct": 7.69
+      "game_id": "75daf7a7fbfb4076d78c495cc0285515",
+      "commence_time_utc": "2024-07-02T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -11.5,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
     },
     {
-      "key": "fanduel",
-      "observations": 1770,
-      "avg_line_move": 0.0,
-      "avg_price_move": 1.613,
-      "beat_close_pct": 8.14
+      "game_id": "75daf7a7fbfb4076d78c495cc0285515",
+      "commence_time_utc": "2024-07-02T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -11.5,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
     },
     {
-      "key": "fanatics",
-      "observations": 24,
-      "avg_line_move": 0.0,
-      "avg_price_move": 0.0,
-      "beat_close_pct": 0.0
+      "game_id": "50c8c5c157fa483d1b39f9ef309e5822",
+      "commence_time_utc": "2024-07-06T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -10.0,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "50c8c5c157fa483d1b39f9ef309e5822",
+      "commence_time_utc": "2024-07-06T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -10.0,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "f82cb32e61816c0e2942f973ab27199b",
+      "commence_time_utc": "2024-07-07T22:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -9.0,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "f82cb32e61816c0e2942f973ab27199b",
+      "commence_time_utc": "2024-07-07T22:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -9.0,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "f54323fda88d727eb98df563a723c120",
+      "commence_time_utc": "2026-05-21T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -1.5,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "f54323fda88d727eb98df563a723c120",
+      "commence_time_utc": "2026-05-21T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -1.5,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "dc5bcc793ed414742aabe00774165592",
+      "commence_time_utc": "2026-07-21T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 9.5,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "dc5bcc793ed414742aabe00774165592",
+      "commence_time_utc": "2026-07-21T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 9.5,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "f7800d314f5d93772712ba995e0f9c9e",
+      "commence_time_utc": "2026-07-22T19:10:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 10.5,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "f7800d314f5d93772712ba995e0f9c9e",
+      "commence_time_utc": "2026-07-22T19:10:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Seattle Storm",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 10.5,
+      "signal_score": 25.57,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_venue",
+          "value": "Seattle Storm|home",
+          "wins": 16,
+          "losses": 4,
+          "pushes": 0,
+          "graded": 20,
+          "win_pct": 80.0,
+          "roi_at_minus_110": 52.73,
+          "wilson_low_pct": 58.4
+        }
+      ]
+    },
+    {
+      "game_id": "d241e41ef59b3e68fd634001ab4269c6",
+      "commence_time_utc": "2024-07-02T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Phoenix Mercury",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 3.0,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "d241e41ef59b3e68fd634001ab4269c6",
+      "commence_time_utc": "2024-07-02T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Phoenix Mercury",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 3.0,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "59e3d336462cf9a8fb49249db00f28b1",
+      "commence_time_utc": "2024-07-04T00:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Dallas Wings",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 4.5,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "59e3d336462cf9a8fb49249db00f28b1",
+      "commence_time_utc": "2024-07-04T00:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Dallas Wings",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 5.0,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "21f39a14a3cfa60418b2eada9f32a177",
+      "commence_time_utc": "2024-07-07T23:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Los Angeles Sparks",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 4.0,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "21f39a14a3cfa60418b2eada9f32a177",
+      "commence_time_utc": "2024-07-07T23:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Los Angeles Sparks",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 4.5,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "f8d499fa23c7a4576854388ba749a0ad",
+      "commence_time_utc": "2026-07-21T00:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Dallas Wings",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 5.5,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "f8d499fa23c7a4576854388ba749a0ad",
+      "commence_time_utc": "2026-07-21T00:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Dallas Wings",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 5.5,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "296c93e4672aa39391a786d10bcacac7",
+      "commence_time_utc": "2026-07-23T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Portland Fire",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 5.5,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "296c93e4672aa39391a786d10bcacac7",
+      "commence_time_utc": "2026-07-23T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Portland Fire",
+      "side": "HOME",
+      "role": "underdog",
+      "spread": 5.5,
+      "signal_score": 19.06,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "home|underdog|3_to_5_5",
+          "wins": 22,
+          "losses": 8,
+          "pushes": 0,
+          "graded": 30,
+          "win_pct": 73.33,
+          "roi_at_minus_110": 40.0,
+          "wilson_low_pct": 55.55
+        }
+      ]
+    },
+    {
+      "game_id": "8b88089c696e24b6c7a4cf96e5b401ad",
+      "commence_time_utc": "2026-07-21T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Golden State Valkyries",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -8.5,
+      "signal_score": 16.42,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_role",
+          "value": "Golden State Valkyries|favorite",
+          "wins": 18,
+          "losses": 6,
+          "pushes": 0,
+          "graded": 24,
+          "win_pct": 75.0,
+          "roi_at_minus_110": 43.18,
+          "wilson_low_pct": 55.1
+        }
+      ]
+    },
+    {
+      "game_id": "8b88089c696e24b6c7a4cf96e5b401ad",
+      "commence_time_utc": "2026-07-21T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Golden State Valkyries",
+      "side": "HOME",
+      "role": "favorite",
+      "spread": -8.5,
+      "signal_score": 16.42,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "team_x_role",
+          "value": "Golden State Valkyries|favorite",
+          "wins": 18,
+          "losses": 6,
+          "pushes": 0,
+          "graded": 24,
+          "win_pct": 75.0,
+          "roi_at_minus_110": 43.18,
+          "wilson_low_pct": 55.1
+        }
+      ]
+    },
+    {
+      "game_id": "75daf7a7fbfb4076d78c495cc0285515",
+      "commence_time_utc": "2024-07-02T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Dallas Wings",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 11.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "75daf7a7fbfb4076d78c495cc0285515",
+      "commence_time_utc": "2024-07-02T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Dallas Wings",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 11.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "4a7d4ca7b77c620781643a33954dad8e",
+      "commence_time_utc": "2024-07-03T01:30:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Indiana Fever",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 13.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "4a7d4ca7b77c620781643a33954dad8e",
+      "commence_time_utc": "2024-07-03T01:30:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Indiana Fever",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 13.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "b4e366705cc3e283a0605781b71cf4ce",
+      "commence_time_utc": "2024-07-05T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Washington Mystics",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 15.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "b4e366705cc3e283a0605781b71cf4ce",
+      "commence_time_utc": "2024-07-05T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Washington Mystics",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 15.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "50c8c5c157fa483d1b39f9ef309e5822",
+      "commence_time_utc": "2024-07-06T02:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Chicago Sky",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 10.0,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "50c8c5c157fa483d1b39f9ef309e5822",
+      "commence_time_utc": "2024-07-06T02:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Chicago Sky",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 10.0,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "92b8b69719c1d8d8b8c7a896861003f4",
+      "commence_time_utc": "2024-07-07T00:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Washington Mystics",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 9.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "92b8b69719c1d8d8b8c7a896861003f4",
+      "commence_time_utc": "2024-07-07T00:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Washington Mystics",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 9.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "e5b2350ffe557e3e68a4dfe265fdda57",
+      "commence_time_utc": "2024-07-07T17:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Atlanta Dream",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 11.0,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "e5b2350ffe557e3e68a4dfe265fdda57",
+      "commence_time_utc": "2024-07-07T17:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Atlanta Dream",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 11.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "6de2fe67a419fc6dae996246c29eed34",
+      "commence_time_utc": "2024-07-07T19:30:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Dallas Wings",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 15.0,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "6de2fe67a419fc6dae996246c29eed34",
+      "commence_time_utc": "2024-07-07T19:30:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Dallas Wings",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 15.0,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "f82cb32e61816c0e2942f973ab27199b",
+      "commence_time_utc": "2024-07-07T22:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Chicago Sky",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 9.0,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "f82cb32e61816c0e2942f973ab27199b",
+      "commence_time_utc": "2024-07-07T22:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Chicago Sky",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 9.0,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "b24ebe70fbb0e573642f28bf6b003ff5",
+      "commence_time_utc": "2026-07-23T00:00:00Z",
+      "bookmaker_key": "draftkings",
+      "team": "Connecticut Sun",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 10.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
+    },
+    {
+      "game_id": "b24ebe70fbb0e573642f28bf6b003ff5",
+      "commence_time_utc": "2026-07-23T00:00:00Z",
+      "bookmaker_key": "fanduel",
+      "team": "Connecticut Sun",
+      "side": "AWAY",
+      "role": "underdog",
+      "spread": 10.5,
+      "signal_score": 7.15,
+      "matched_angles": [
+        {
+          "market": "ATS",
+          "dimension": "venue_x_role_x_bucket",
+          "value": "away|underdog|9_plus",
+          "wins": 34,
+          "losses": 18,
+          "pushes": 0,
+          "graded": 52,
+          "win_pct": 65.38,
+          "roi_at_minus_110": 24.83,
+          "wilson_low_pct": 51.8
+        }
+      ]
     }
   ],
-  "clv_by_market": [
-    {
-      "key": "totals",
-      "observations": 1458,
-      "avg_line_move": 0.0,
-      "avg_price_move": -0.0014,
-      "beat_close_pct": 0.0
-    },
-    {
-      "key": "spreads",
-      "observations": 1314,
-      "avg_line_move": 0.0,
-      "avg_price_move": -0.4764,
-      "beat_close_pct": 0.0
-    },
-    {
-      "key": "h2h",
-      "observations": 830,
-      "avg_line_move": null,
-      "avg_price_move": 6.6229,
-      "beat_close_pct": 34.1
-    }
+  "natural_language_examples": [
+    "Indiana Fever as a road underdog ATS",
+    "home favorites ATS",
+    "unders in 170s totals"
   ],
-  "top_trends": [
-    {
-      "trend_key": "team_market|Washington Mystics|h2h",
-      "category": "team_market",
-      "label": "Washington Mystics|h2h",
-      "sample_size": 100,
-      "win_pct": 50.0,
-      "units": 39.9514,
-      "roi_pct": 39.95,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Golden State Valkyries|h2h",
-      "category": "team_market",
-      "label": "Golden State Valkyries|h2h",
-      "sample_size": 85,
-      "win_pct": 80.0,
-      "units": 29.0956,
-      "roi_pct": 34.23,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Portland Fire|h2h",
-      "category": "team_market",
-      "label": "Portland Fire|h2h",
-      "sample_size": 85,
-      "win_pct": 45.88,
-      "units": 20.876,
-      "roi_pct": 24.56,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Golden State Valkyries|spreads",
-      "category": "team_market",
-      "label": "Golden State Valkyries|spreads",
-      "sample_size": 89,
-      "win_pct": 65.17,
-      "units": 20.8365,
-      "roi_pct": 23.41,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Dallas Wings|h2h",
-      "category": "team_market",
-      "label": "Dallas Wings|h2h",
-      "sample_size": 102,
-      "win_pct": 78.43,
-      "units": 23.8006,
-      "roi_pct": 23.33,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Chicago Sky|spreads",
-      "category": "team_market",
-      "label": "Chicago Sky|spreads",
-      "sample_size": 109,
-      "win_pct": 59.63,
-      "units": 14.7686,
-      "roi_pct": 13.55,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Indiana Fever|h2h",
-      "category": "team_market",
-      "label": "Indiana Fever|h2h",
-      "sample_size": 96,
-      "win_pct": 66.67,
-      "units": 12.1375,
-      "roi_pct": 12.64,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Washington Mystics|spreads",
-      "category": "team_market",
-      "label": "Washington Mystics|spreads",
-      "sample_size": 100,
-      "win_pct": 58.0,
-      "units": 10.6158,
-      "roi_pct": 10.62,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|New York Liberty|h2h",
-      "category": "team_market",
-      "label": "New York Liberty|h2h",
-      "sample_size": 109,
-      "win_pct": 65.14,
-      "units": 8.2408,
-      "roi_pct": 7.56,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|New York Liberty|spreads",
-      "category": "team_market",
-      "label": "New York Liberty|spreads",
-      "sample_size": 110,
-      "win_pct": 55.45,
-      "units": 7.002,
-      "roi_pct": 6.37,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Connecticut Sun|spreads",
-      "category": "team_market",
-      "label": "Connecticut Sun|spreads",
-      "sample_size": 104,
-      "win_pct": 54.81,
-      "units": 4.746,
-      "roi_pct": 4.56,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Minnesota Lynx|h2h",
-      "category": "team_market",
-      "label": "Minnesota Lynx|h2h",
-      "sample_size": 92,
-      "win_pct": 70.65,
-      "units": 3.2695,
-      "roi_pct": 3.55,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Seattle Storm|spreads",
-      "category": "team_market",
-      "label": "Seattle Storm|spreads",
-      "sample_size": 87,
-      "win_pct": 54.02,
-      "units": 2.8696,
-      "roi_pct": 3.3,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Portland Fire|spreads",
-      "category": "team_market",
-      "label": "Portland Fire|spreads",
-      "sample_size": 87,
-      "win_pct": 54.02,
-      "units": 1.6142,
-      "roi_pct": 1.86,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "market|totals",
-      "category": "market",
-      "label": "totals",
-      "sample_size": 1462,
-      "win_pct": 50.0,
-      "units": -66.4421,
-      "roi_pct": -4.54,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "sportsbook|draftkings",
-      "category": "sportsbook",
-      "label": "draftkings",
-      "sample_size": 2182,
-      "win_pct": 50.0,
-      "units": -102.8866,
-      "roi_pct": -4.72,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "market|spreads",
-      "category": "market",
-      "label": "spreads",
-      "sample_size": 1464,
-      "win_pct": 50.0,
-      "units": -69.8293,
-      "roi_pct": -4.77,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "sportsbook|fanduel",
-      "category": "sportsbook",
-      "label": "fanduel",
-      "sample_size": 2194,
-      "win_pct": 50.0,
-      "units": -113.3392,
-      "roi_pct": -5.17,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "market|h2h",
-      "category": "market",
-      "label": "h2h",
-      "sample_size": 1450,
-      "win_pct": 50.0,
-      "units": -79.9544,
-      "roi_pct": -5.51,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Los Angeles Sparks|spreads",
-      "category": "team_market",
-      "label": "Los Angeles Sparks|spreads",
-      "sample_size": 96,
-      "win_pct": 47.92,
-      "units": -7.8304,
-      "roi_pct": -8.16,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Indiana Fever|spreads",
-      "category": "team_market",
-      "label": "Indiana Fever|spreads",
-      "sample_size": 97,
-      "win_pct": 47.42,
-      "units": -8.801,
-      "roi_pct": -9.07,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Toronto Tempo|h2h",
-      "category": "team_market",
-      "label": "Toronto Tempo|h2h",
-      "sample_size": 79,
-      "win_pct": 37.97,
-      "units": -7.5285,
-      "roi_pct": -9.53,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Dallas Wings|spreads",
-      "category": "team_market",
-      "label": "Dallas Wings|spreads",
-      "sample_size": 102,
-      "win_pct": 47.06,
-      "units": -10.8675,
-      "roi_pct": -10.65,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Phoenix Mercury|spreads",
-      "category": "team_market",
-      "label": "Phoenix Mercury|spreads",
-      "sample_size": 96,
-      "win_pct": 46.88,
-      "units": -10.31,
-      "roi_pct": -10.74,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Minnesota Lynx|spreads",
-      "category": "team_market",
-      "label": "Minnesota Lynx|spreads",
-      "sample_size": 94,
-      "win_pct": 46.81,
-      "units": -10.1708,
-      "roi_pct": -10.82,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Los Angeles Sparks|h2h",
-      "category": "team_market",
-      "label": "Los Angeles Sparks|h2h",
-      "sample_size": 96,
-      "win_pct": 37.5,
-      "units": -14.3443,
-      "roi_pct": -14.94,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Atlanta Dream|h2h",
-      "category": "team_market",
-      "label": "Atlanta Dream|h2h",
-      "sample_size": 99,
-      "win_pct": 64.65,
-      "units": -16.7374,
-      "roi_pct": -16.91,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Toronto Tempo|spreads",
-      "category": "team_market",
-      "label": "Toronto Tempo|spreads",
-      "sample_size": 79,
-      "win_pct": 43.04,
-      "units": -13.9946,
-      "roi_pct": -17.71,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Connecticut Sun|h2h",
-      "category": "team_market",
-      "label": "Connecticut Sun|h2h",
-      "sample_size": 104,
-      "win_pct": 22.12,
-      "units": -19.7307,
-      "roi_pct": -18.97,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Atlanta Dream|spreads",
-      "category": "team_market",
-      "label": "Atlanta Dream|spreads",
-      "sample_size": 99,
-      "win_pct": 41.41,
-      "units": -21.1113,
-      "roi_pct": -21.32,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Phoenix Mercury|h2h",
-      "category": "team_market",
-      "label": "Phoenix Mercury|h2h",
-      "sample_size": 96,
-      "win_pct": 39.58,
-      "units": -25.2937,
-      "roi_pct": -26.35,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Las Vegas Aces|h2h",
-      "category": "team_market",
-      "label": "Las Vegas Aces|h2h",
-      "sample_size": 111,
-      "win_pct": 49.55,
-      "units": -36.577,
-      "roi_pct": -32.95,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Seattle Storm|h2h",
-      "category": "team_market",
-      "label": "Seattle Storm|h2h",
-      "sample_size": 87,
-      "win_pct": 20.69,
-      "units": -33.9704,
-      "roi_pct": -39.05,
-      "confidence": "medium"
-    },
-    {
-      "trend_key": "team_market|Las Vegas Aces|spreads",
-      "category": "team_market",
-      "label": "Las Vegas Aces|spreads",
-      "sample_size": 115,
-      "win_pct": 30.43,
-      "units": -49.1965,
-      "roi_pct": -42.78,
-      "confidence": "high"
-    },
-    {
-      "trend_key": "team_market|Chicago Sky|h2h",
-      "category": "team_market",
-      "label": "Chicago Sky|h2h",
-      "sample_size": 109,
-      "win_pct": 22.02,
-      "units": -63.1438,
-      "roi_pct": -57.93,
-      "confidence": "high"
-    }
-  ],
-  "health": {
-    "has_graded_wagers": true,
-    "has_line_movement": true,
-    "tables_built": 7
+  "methodology": {
+    "minimum_games": 12,
+    "default_price": -110,
+    "ranking": "Wilson lower confidence bound, then sample size",
+    "warning": "Patterns are exploratory. Validate on unseen seasons before wagering."
   }
 }
