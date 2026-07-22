@@ -7,6 +7,7 @@ on:
       - 'data/warehouse/wnba_odds_warehouse_v2.sqlite'
       - 'data/warehouse/wnba_player_game_logs.json'
       - 'wnba_player_prop_grading_bridge.py'
+      - '.github/workflows/wnba_player_prop_grading_bridge.yml'
 
 permissions:
   contents: write
@@ -63,9 +64,6 @@ jobs:
           if missing:
               raise SystemExit(f'Missing grading tables: {sorted(missing)}')
 
-          # A zero grade count is reported honestly rather than hidden. Fail only
-          # when candidate props and matching event/player data exist but grading
-          # still produced no result, which indicates a bridge regression.
           if (bridge.get('candidate_prop_wagers', 0) > 0
               and bridge.get('events_matched_to_player_logs', 0) > 0
               and bridge.get('graded', 0) == 0):
