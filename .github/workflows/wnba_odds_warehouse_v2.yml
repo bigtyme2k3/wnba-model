@@ -1,0 +1,104 @@
+name: WNBA Odds Warehouse V2
+
+on:
+  workflow_dispatch:
+    inputs:
+      historical_timestamp:
+        description: "ISO timestamp, for example 2026-06-01T22:00:00Z"
+        required: true
+        type: string
+      include_event_markets:
+        description: "Collect Q1/player/alternate markets per event"
+        required: true
+        default: true
+        type: boolean
+      max_event_requests:
+        description: "Maximum event-level API requests"
+        required: true
+        default: "6"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-odds-warehouse-v2
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Compile warehouse scripts
+        run: |
+          python -m py_compile wnba_odds_warehouse_v2.py
+          python -m py_compile wnba_odds_warehouse_v2_grade.py
+
+      - name: Initialize warehouse
+        run: python wnba_odds_warehouse_v2.py init
+
+      - name: Collect historical Odds API markets
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          HISTORICAL_TIMESTAMP: ${{ inputs.historical_timestamp }}
+          INCLUDE_EVENT_MARKETS: ${{ inputs.include_event_markets }}
+          MAX_EVENT_REQUESTS: ${{ inputs.max_event_requests }}
+        run: |
+          EXTRA=""
+          if [ "$INCLUDE_EVENT_MARKETS" = "true" ]; then
+            EXTRA="--include-event-markets"
+          fi
+          python wnba_odds_warehouse_v2.py collect \
+            --date "$HISTORICAL_TIMESTAMP" \
+            --max-event-requests "$MAX_EVENT_REQUESTS" \
+            $EXTRA
+
+      - name: Grade verified game markets and build intelligence
+        run: |
+          python wnba_odds_warehouse_v2_grade.py all \
+            --results data/warehouse/wnba_results.json || \
+          python wnba_odds_warehouse_v2_grade.py intelligence
+
+      - name: Validate warehouse restrictions
+        run: |
+          python - <<'PY'
+          import json, sqlite3
+          from pathlib import Path
+          db = Path('data/warehouse/wnba_odds_warehouse_v2.sqlite')
+          con = sqlite3.connect(db)
+          books = {r[0] for r in con.execute('SELECT DISTINCT bookmaker_key FROM wagers')}
+          allowed = {'draftkings', 'fanduel', 'fanatics'}
+          assert books <= allowed, f'Unexpected books: {books - allowed}'
+          print('WAREHOUSE V2 ACTIVE')
+          print('books:', sorted(books))
+          print('events:', con.execute('SELECT COUNT(*) FROM events').fetchone()[0])
+          print('wagers:', con.execute('SELECT COUNT(*) FROM wagers').fetchone()[0])
+          summary = Path('data/warehouse/wnba_odds_warehouse_v2_summary.json')
+          assert summary.exists()
+          print(json.loads(summary.read_text()))
+          PY
+
+      - name: Commit warehouse outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/warehouse/wnba_odds_warehouse_v2.sqlite \
+                  data/warehouse/wnba_odds_warehouse_v2_summary.json \
+                  data/warehouse/wnba_odds_warehouse_v2_intelligence.json || true
+          if git diff --cached --quiet; then
+            echo "No warehouse changes to commit"
+          else
+            git commit -m "Update WNBA historical odds warehouse v2"
+            git pull --rebase
+            git push
+          fi
