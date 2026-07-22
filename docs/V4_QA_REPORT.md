@@ -1,14 +1,14 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-21T15:27:48.335275+00:00`
+Generated: `2026-07-22T15:25:37.391615+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 114 checked, 0 invalid, 3 empty
-- Workflows: 40 checked, 1 high risk
+- Dashboard JSON: 116 checked, 0 invalid, 2 empty
+- Workflows: 45 checked, 1 high risk
 
 ## Module QA
 
@@ -61,6 +61,7 @@ Generated: `2026-07-21T15:27:48.335275+00:00`
 | `.github/workflows/wnba_alt_tab_repair.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_autonomous_agent.yml` | 11 | 5 | 0.455 | medium | False |
 | `.github/workflows/wnba_betting_intelligence.yml` | 5 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_betting_intelligence_v2.yml` | 7 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_closing_line_snapshots.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_controlled_recalibration.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_daily_ai_report.yml` | 5 | 0 | 0.0 | low | True |
@@ -81,6 +82,9 @@ Generated: `2026-07-21T15:27:48.335275+00:00`
 | `.github/workflows/wnba_odds_history_backfill.yml` | 7 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_odds_history_next_batch.yml` | 11 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_odds_history_repair_results.yml` | 6 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_odds_warehouse_v2.yml` | 7 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_player_prop_grading_bridge.yml` | 8 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_player_prop_intelligence.yml` | 7 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_player_props_history_repair.yml` | 9 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_postbuild_integrity.yml` | 10 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_postgame_learning_pipeline.yml` | 13 | 0 | 0.0 | low | False |
@@ -88,3 +92,4 @@ Generated: `2026-07-21T15:27:48.335275+00:00`
 | `.github/workflows/wnba_v4_player_props_audit.yml` | 4 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_player_props_polish.yml` | 11 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_v4_status.yml` | 19 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_warehouse_migration.yml` | 9 | 0 | 0.0 | low | True |
