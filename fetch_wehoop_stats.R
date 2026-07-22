@@ -54,6 +54,15 @@ known <- if (nrow(existing)) unique(as.character(existing$game_id)) else charact
 missing_ids <- setdiff(as.character(completed$game_id), known)
 message("Completed games: ", nrow(completed), " | cached: ", length(known), " | new: ", length(missing_ids))
 
+# ESPN/wehoop occasionally changes a field type between games (for example,
+# numeric values in one response and text such as "--" in another). Coerce raw
+# provider frames to character before bind_rows; the normalized output below
+# then applies the canonical numeric/date types explicitly.
+raw_as_character <- function(x) {
+  if (is.null(x) || !is.data.frame(x)) return(tibble())
+  as_tibble(x) %>% mutate(across(everything(), as.character))
+}
+
 new_boxes <- list()
 skipped_ids <- character()
 failed_ids <- character()
@@ -70,7 +79,7 @@ for (gid in missing_ids) {
 
   has_rows <- !is.null(box) && is.data.frame(box) && length(nrow(box)) == 1 && !is.na(nrow(box)) && nrow(box) > 0
   if (isTRUE(has_rows)) {
-    new_boxes[[length(new_boxes) + 1]] <- box
+    new_boxes[[length(new_boxes) + 1]] <- raw_as_character(box)
   } else {
     skipped_ids <- c(skipped_ids, gid)
     message("Skipping unavailable player boxscore: ", gid)
@@ -78,6 +87,7 @@ for (gid in missing_ids) {
   Sys.sleep(0.15)
 }
 
+existing <- raw_as_character(existing)
 fresh_boxes <- if (length(new_boxes)) bind_rows(new_boxes) else tibble()
 all_boxes <- bind_rows(existing, fresh_boxes)
 if (nrow(all_boxes) == 0) stop("No wehoop player boxscore rows are available")
@@ -88,7 +98,7 @@ all_boxes <- all_boxes %>%
   arrange(game_date, game_id, athlete_display_name)
 write_csv(all_boxes, cache_path, na = "")
 
-num <- function(x) suppressWarnings(as.numeric(x))
+num <- function(x) suppressWarnings(as.numeric(na_if(trimws(as.character(x)), "")))
 normalized <- all_boxes %>%
   transmute(
     game_id = as.character(game_id),
