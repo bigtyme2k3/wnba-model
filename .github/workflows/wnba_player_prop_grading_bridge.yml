@@ -1,0 +1,113 @@
+name: WNBA Player Prop Grading Bridge (Sprint 5.5)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/warehouse/wnba_odds_warehouse_v2.sqlite'
+      - 'data/warehouse/wnba_player_game_logs.json'
+      - 'wnba_player_prop_grading_bridge.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-player-prop-grading-bridge
+  cancel-in-progress: false
+
+jobs:
+  grade-player-props:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile bridge and Sprint 5 engine
+        run: |
+          python -m py_compile wnba_player_prop_grading_bridge.py
+          python -m py_compile wnba_player_prop_intelligence.py
+
+      - name: Match and grade verified player props
+        run: python wnba_player_prop_grading_bridge.py
+
+      - name: Rebuild Sprint 5 intelligence
+        run: python wnba_player_prop_intelligence.py
+
+      - name: Verify bridge and intelligence outputs
+        run: |
+          python - <<'PY'
+          import json
+          import sqlite3
+          from pathlib import Path
+
+          bridge_path = Path('data/warehouse/wnba_player_prop_grading_bridge.json')
+          intel_path = Path('data/dashboard/wnba_player_prop_intelligence.json')
+          db_path = Path('data/warehouse/wnba_odds_warehouse_v2.sqlite')
+          for path in (bridge_path, intel_path, db_path):
+              if not path.exists():
+                  raise SystemExit(f'Missing required output: {path}')
+
+          bridge = json.loads(bridge_path.read_text())
+          intel = json.loads(intel_path.read_text())
+          con = sqlite3.connect(db_path)
+          tables = {r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+          required_tables = {'player_game_stats', 'player_prop_grades', 'grades'}
+          missing = required_tables - tables
+          if missing:
+              raise SystemExit(f'Missing grading tables: {sorted(missing)}')
+
+          # A zero grade count is reported honestly rather than hidden. Fail only
+          # when candidate props and matching event/player data exist but grading
+          # still produced no result, which indicates a bridge regression.
+          if (bridge.get('candidate_prop_wagers', 0) > 0
+              and bridge.get('events_matched_to_player_logs', 0) > 0
+              and bridge.get('graded', 0) == 0):
+              raise SystemExit('Bridge found candidate props and matched events but graded zero wagers')
+
+          print(json.dumps({
+              'bridge': bridge,
+              'sprint_5': {
+                  'graded_prop_wagers': intel.get('graded_prop_wagers'),
+                  'prop_movement_series': intel.get('prop_movement_series'),
+                  'markets': len(intel.get('market_intelligence', [])),
+                  'players': len(intel.get('player_profiles', [])),
+                  'trends': len(intel.get('top_prop_trends', [])),
+                  'health': intel.get('health'),
+              }
+          }, indent=2))
+          PY
+
+      - name: Commit bridge and rebuilt intelligence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/warehouse/wnba_odds_warehouse_v2.sqlite \
+                  data/warehouse/wnba_player_prop_grading_bridge.json \
+                  data/dashboard/wnba_player_prop_grading_bridge.json \
+                  data/warehouse/wnba_player_prop_intelligence.json \
+                  data/dashboard/wnba_player_prop_intelligence.json
+          if git diff --cached --quiet; then
+            echo 'No player prop grading changes to commit.'
+          else
+            git commit -m 'Grade WNBA player props and rebuild Sprint 5 intelligence'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Upload Sprint 5.5 reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-player-prop-grading-bridge-sprint-5-5
+          path: |
+            data/warehouse/wnba_player_prop_grading_bridge.json
+            data/dashboard/wnba_player_prop_grading_bridge.json
+            data/warehouse/wnba_player_prop_intelligence.json
+            data/dashboard/wnba_player_prop_intelligence.json
+          retention-days: 30
