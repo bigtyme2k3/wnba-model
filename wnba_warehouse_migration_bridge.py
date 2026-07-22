@@ -52,11 +52,11 @@ def migrate(a,b):
         (g['game_id'],g['sport_key'],g['commence_time_utc'],g['game_date_utc'],g['home_team'],g['away_team'],done,g['home_score'],g['away_score'],stamp)); stats['events']+=1
     sm={}
     for s in a.execute('SELECT * FROM snapshots ORDER BY snapshot_time_utc'):
-        x=b.execute('SELECT snapshot_id FROM snapshots WHERE returned_at_utc=? ORDER BY snapshot_id LIMIT 1',(s['snapshot_time_utc'],)).fetchone()
+        x=b.execute("SELECT snapshot_id FROM snapshots WHERE returned_at_utc=? AND endpoint_type='legacy_core' AND event_id='' ORDER BY snapshot_id LIMIT 1",(s['snapshot_time_utc'],)).fetchone()
         if x: sid=int(x[0])
         else:
             sid=b.execute("""INSERT INTO snapshots(requested_at_utc,returned_at_utc,endpoint_type,event_id,previous_snapshot_utc,next_snapshot_utc,requests_last,requests_used,requests_remaining,created_at_utc)
-            VALUES(?,?, 'legacy_core',NULL,?,?,?,?,?,?)""",(s['requested_at_utc'],s['snapshot_time_utc'],s['previous_snapshot_utc'],s['next_snapshot_utc'],s['api_requests_last'],s['api_requests_used'],s['api_requests_remaining'],stamp)).lastrowid
+            VALUES(?,?, 'legacy_core','',?,?,?,?,?,?)""",(s['requested_at_utc'],s['snapshot_time_utc'],s['previous_snapshot_utc'],s['next_snapshot_utc'],s['api_requests_last'],s['api_requests_used'],s['api_requests_remaining'],stamp)).lastrowid
         sm[int(s['snapshot_id'])]=sid; stats['snapshots']+=1
     for o in a.execute('SELECT * FROM odds ORDER BY odds_id'):
         g=games.get(o['game_id']); sid=sm[int(o['snapshot_id'])]
