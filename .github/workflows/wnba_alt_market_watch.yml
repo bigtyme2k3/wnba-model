@@ -59,7 +59,7 @@ jobs:
       - name: Validate market-watch scripts
         if: steps.due.outputs.run_refresh == 'true'
         run: |
-          python -m py_compile scrape_odds_props.py wnba_alt_market_warehouse.py qa_alt_market_warehouse.py wnba_alt_market_watch_due.py wnba_alt_closing_line_tracker.py wnba_alt_streaks.py wnba_alt_streaks_warehouse_upgrade.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_clv_context.py patch_dashboard_v4_alt_streaks_display.py
+          python -m py_compile scrape_odds_props.py wnba_alt_market_warehouse.py qa_alt_market_warehouse.py wnba_alt_market_watch_due.py wnba_alt_closing_line_tracker.py wnba_alt_streaks.py wnba_alt_streaks_warehouse_upgrade.py wnba_alt_streaks_opponent_context.py wnba_alt_streaks_position_context.py wnba_alt_streaks_pace_minutes_context.py wnba_alt_streak_confidence.py wnba_alt_performance_clv_context.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_consolidated_navigation.py
           python qa_alt_market_warehouse.py
       - name: Refresh current player-prop markets
         if: steps.due.outputs.run_refresh == 'true'
@@ -83,17 +83,18 @@ jobs:
           python wnba_alt_streaks_position_context.py
           python wnba_alt_streaks_pace_minutes_context.py
           python wnba_alt_streak_confidence.py --date "${{ env.TARGET }}"
-      - name: Publish ALT streaks to dashboard
+      - name: Publish dedicated ALT Streaks dashboard tab
         if: steps.due.outputs.run_refresh == 'true'
         run: |
           python patch_dashboard_v4_alt_streaks_display.py
+          python patch_dashboard_v4_consolidated_navigation.py
           python - <<'PY'
           from pathlib import Path
           html=Path('docs/index.html').read_text(encoding='utf-8')
-          required=['v4-alt-streaks-display-data','v4-alt-streaks-display-style','v4-alt-streaks-display-script']
+          required=['v4-alt-streaks-display-data','v4-alt-streaks-display-style','v4-alt-streaks-display-script','v4-consolidated-navigation-script',"['altstreaks','ALT Streaks']"]
           missing=[x for x in required if x not in html]
-          if missing: raise SystemExit(f'Missing ALT streak dashboard blocks: {missing}')
-          print('ALT streak dashboard blocks verified')
+          if missing: raise SystemExit(f'Missing ALT streak dashboard integration: {missing}')
+          print('Dedicated ALT Streaks tab verified')
           PY
       - name: Capture verified pregame snapshot
         if: steps.due.outputs.run_refresh == 'true'
@@ -126,13 +127,13 @@ jobs:
           assert due['policy']['early_weekend_games_supported'] is True
           print('Exact sportsbook ALT warehouse verified:',warehouse['summary'])
           PY
-      - name: Commit market snapshots atomically
+      - name: Commit market snapshots and dashboard atomically
         if: steps.due.outputs.run_refresh == 'true'
         run: |
           git config user.name "WNBA Market Watch Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Capture exact sportsbook ALT ladders and publish streak board" \
+            "Capture exact sportsbook ALT ladders and publish ALT Streaks tab" \
             'data/raw/player_points_*.csv' \
             'data/raw/player_points_today.csv' \
             'data/raw/alt_props_bookmakers_*.csv' \
