@@ -1,0 +1,110 @@
+name: WNBA Player & Prop Intelligence (Sprint 5)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/warehouse/wnba_odds_warehouse_v2.sqlite'
+      - 'wnba_player_prop_intelligence.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-player-prop-intelligence
+  cancel-in-progress: false
+
+jobs:
+  player-prop-intelligence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile Sprint 5 engine
+        run: python -m py_compile wnba_player_prop_intelligence.py
+
+      - name: Build player and prop intelligence
+        run: python wnba_player_prop_intelligence.py
+
+      - name: Verify Sprint 5 outputs
+        run: |
+          python - <<'PY'
+          import json
+          import sqlite3
+          from pathlib import Path
+
+          report = Path('data/dashboard/wnba_player_prop_intelligence.json')
+          db = Path('data/warehouse/wnba_odds_warehouse_v2.sqlite')
+          if not report.exists():
+              raise SystemExit('Missing Sprint 5 dashboard JSON')
+
+          payload = json.loads(report.read_text())
+          required = {
+              'sprint', 'graded_prop_wagers', 'prop_movement_series',
+              'market_intelligence', 'player_profiles',
+              'player_market_intelligence', 'player_line_intelligence',
+              'sportsbook_market_intelligence', 'top_prop_trends', 'health'
+          }
+          missing = required - payload.keys()
+          if missing:
+              raise SystemExit(f'Missing Sprint 5 report keys: {sorted(missing)}')
+          if payload['sprint'] != 5:
+              raise SystemExit(f"Unexpected sprint value: {payload['sprint']}")
+
+          con = sqlite3.connect(db)
+          tables = {row[0] for row in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+          expected = {
+              'prop_market_intelligence',
+              'player_prop_intelligence',
+              'player_prop_line_intelligence',
+              'player_prop_sportsbook_intelligence',
+              'prop_sportsbook_intelligence',
+              'prop_trend_intelligence',
+              'player_prop_profiles',
+          }
+          absent = expected - tables
+          if absent:
+              raise SystemExit(f'Missing Sprint 5 tables: {sorted(absent)}')
+
+          print(json.dumps({
+              'sprint': payload['sprint'],
+              'graded_prop_wagers': payload['graded_prop_wagers'],
+              'prop_movement_series': payload['prop_movement_series'],
+              'markets': len(payload['market_intelligence']),
+              'players': len(payload['player_profiles']),
+              'trends': len(payload['top_prop_trends']),
+              'health': payload['health'],
+          }, indent=2))
+          PY
+
+      - name: Commit Sprint 5 outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/warehouse/wnba_odds_warehouse_v2.sqlite \
+                  data/warehouse/wnba_player_prop_intelligence.json \
+                  data/dashboard/wnba_player_prop_intelligence.json
+          if git diff --cached --quiet; then
+            echo 'No Sprint 5 intelligence changes to commit.'
+          else
+            git commit -m 'Build Sprint 5 WNBA player prop intelligence'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Upload Sprint 5 intelligence report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-player-prop-intelligence-sprint-5
+          path: |
+            data/dashboard/wnba_player_prop_intelligence.json
+            data/warehouse/wnba_player_prop_intelligence.json
+          retention-days: 30
