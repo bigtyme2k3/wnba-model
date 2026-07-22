@@ -41,6 +41,56 @@ def norm(value: Any) -> str:
     return " ".join(str(value or "").strip().lower().replace("’", "'").split())
 
 
+def parse_array(value: Any) -> list[Any]:
+    if isinstance(value, list):
+        return value
+    if not isinstance(value, str) or not value.strip():
+        return []
+    try:
+        parsed = json.loads(value)
+        return parsed if isinstance(parsed, list) else []
+    except Exception:
+        return []
+
+
+def candidate_lines(prop: dict[str, Any]) -> list[dict[str, Any]]:
+    """Compatibility parser for daily standard/alternate prop rows.
+
+    The base ALT streak builder now reads exact ladders directly from the ALT
+    warehouse and no longer exposes candidate_lines(). This upgrade still needs
+    to parse the legacy daily prop feed, so keep that contract local.
+    """
+    output: list[dict[str, Any]] = []
+    for key in ("alt_lines", "alternate_lines", "lines"):
+        for item in parse_array(prop.get(key)):
+            if not isinstance(item, dict):
+                continue
+            line = num(item.get("line", item.get("threshold")))
+            if line is None:
+                continue
+            output.append({
+                "line": line,
+                "side": str(item.get("side") or item.get("signal") or "OVER").upper(),
+                "odds": item.get("odds") or item.get("price"),
+                "book": item.get("book") or item.get("sportsbook"),
+                "line_type": "alternate",
+            })
+    line = num(prop.get("line", prop.get("consensus_line")))
+    if line is not None:
+        side = str(prop.get("signal") or prop.get("side") or "OVER").upper()
+        output.append({
+            "line": line,
+            "side": side,
+            "odds": prop.get("best_over_price") if side == "OVER" else prop.get("best_under_price"),
+            "book": prop.get("best_over_book") if side == "OVER" else prop.get("best_under_book"),
+            "line_type": "standard",
+        })
+    unique: dict[tuple[float, str, str, str], dict[str, Any]] = {}
+    for row in output:
+        unique[(row["line"], row["side"], str(row.get("book") or ""), row["line_type"])] = row
+    return list(unique.values())
+
+
 def load_props(target: str) -> list[dict[str, Any]]:
     for path in (Path(f"data/raw/player_points_{target}.csv"), Path("data/raw/player_points_today.csv")):
         if not path.exists():
@@ -150,7 +200,7 @@ def build(target: str) -> dict[str, Any]:
             insufficient_samples += 1
             continue
         produced = False
-        for market in base.candidate_lines(prop):
+        for market in candidate_lines(prop):
             line = num(market.get("line"))
             if line is None:
                 continue
