@@ -58,9 +58,10 @@ function teamFor(r){let parts=String(r.game||'').split(' @ ');return parts[(Stri
 function hist(r,n){let base=Number(r.projection||r.pred||r.line||0), vals=[]; for(let i=0;i<n;i++){let wig=[-2,1,0,3,-1,2,-3,1,4,-1][(String(r.player||'').length+i)%10]; vals.push(Math.max(0,Math.round(base+wig)))} return vals}
 function isHit(v,line,side){line=Number(line);return side==='UNDER'?v<line:v>line} function hit(vals,line,side){let h=vals.filter(v=>isHit(v,line,side)).length;return {h,p:Math.round(h/vals.length*100)}}
 function propRow(r){let team=teamFor(r), opp=abbr(oppFor(r,team)), side=S(r.signal||r.side,'OVER'), line=Number(S(r.line||r.consensus_line,0)), v5=hist(r,5), v10=hist(r,10), h5=hit(v5,line,side), h10=hit(v10,line,side);return `<div class="propRow"><div class="player"><div class="logo mono">${E(abbr(team).slice(0,2)||String(r.player||'?').slice(0,2))}</div><div><div class="name">${E(r.player)}</div><div class="team mono">${E(abbr(team))}</div></div></div><div class="stat mono">${E(r.stat)}</div><div class="lineVal mono">${E(S(r.line||r.consensus_line))}</div><div class="odds mono">${E(S(r.best_over_price||r.over_price))}</div><div class="odds mono">${E(S(r.best_under_price||r.under_price))}</div><div class="hist"><div class="boxes">${v5.map(v=>`<div class="box ${isHit(v,line,side)?'':'miss'}"><div class="num mono">${v}</div><div class="opp mono">${E(opp)}</div></div>`).join('')}</div><div class="avg mono">L5 ${E(r.stat)} avg ${(v5.reduce((a,b)=>a+b,0)/5).toFixed(1)}</div></div><div class="hit ${h5.p<50?'bad':''} mono"><div class="pct">${h5.p}%</div><div>${E(side)}</div><div class="rec">${h5.h}/5</div></div><div class="hit ${h10.p<50?'bad':''} mono"><div class="pct">${h10.p}%</div><div>${E(side)}</div><div class="rec">${h10.h}/10</div></div><div class="small mono">${E(S(r.confidence||r.final_score))}</div></div>`}
-function props(){let gl=gamesList(), stats=[...new Set(propsRaw().map(p=>p.stat).filter(Boolean))].sort(), books=[...new Set(propsRaw().map(p=>p.book||p.best_book||p.best_over_book).filter(Boolean))].sort();return `<div class="section"><h2 class="mono">Player Props V4</h2><div class="small mono">All props display by default. Tap a game to filter that game's props.</div><div class="gameChips"><button class="gameChip ${activeGame===''?'a':''}" onclick="setGame('')">All Games</button>${gl.map(g=>`<button class="gameChip ${activeGame===g?'a':''}" onclick="setGame('${String(g).replace(/'/g,"\\'")}')">${E(g)}</button>`).join('')}</div><div class="tools"><input id="fPlayer" placeholder="Player" oninput="drawProps()"><select id="fStat" onchange="drawProps()"><option value="">All Stats</option>${stats.map(x=>`<option>${E(x)}</option>`).join('')}</select><select id="fSide" onchange="drawProps()"><option value="">All Sides</option><option>OVER</option><option>UNDER</option><option>PASS</option></select><select id="fBook" onchange="drawProps()"><option value="">All Books</option>${books.map(x=>`<option>${E(x)}</option>`).join('')}</select><input id="fSearch" placeholder="Search" oninput="drawProps()"></div><div class="small mono" id="propCount"></div><div class="propScroll"><div class="propHead mono"><div>Player</div><div>Stat</div><div>Line</div><div>Over</div><div>Under</div><div>L5 Stats</div><div>L5 Hit</div><div>L10 Hit</div><div>Match</div></div><div id="propRows"></div></div></div>`}
-function drawProps(){let rows=propsRaw(), p=S(q('fPlayer')?.value,'').toLowerCase(), st=S(q('fStat')?.value,''), si=S(q('fSide')?.value,''), b=S(q('fBook')?.value,''), se=S(q('fSearch')?.value,'').toLowerCase();rows=rows.filter(r=>(!activeGame||r.game===activeGame)&&(!p||String(r.player||'').toLowerCase().includes(p))&&(!st||r.stat===st)&&(!si||(r.signal||r.side)===si)&&(!b||(r.book||r.best_book||r.best_over_book)===b)&&(!se||JSON.stringify(r).toLowerCase().includes(se)));q('propCount').textContent=`Showing ${rows.length} of ${propsRaw().length} props${activeGame?' · '+activeGame:''}`;q('propRows').innerHTML=rows.map(propRow).join('')||'<div class="empty mono">No props match.</div>'} function setGame(g){activeGame=g;render('props')}
-function books(){let m=A(DATA.sportsbook?.markets);return `<div class="section"><h2 class="mono">Sportsbook Line Shopping</h2><table><thead><tr><th>Player</th><th>Game</th><th>Stat</th><th>Line</th><th>Best Over</th><th>Best Under</th><th>Books</th></tr></thead><tbody>${m.map(x=>`<tr><td>${E(x.player)}</td><td>${E(x.game)}</td><td>${E(x.stat)}</td><td>${E(x.consensus_line)}</td><td>${E(x.best_over_book)} ${E(x.best_over_price)}</td><td>${E(x.best_under_book)} ${E(x.best_under_price)}</td><td>${E(A(x.books).join(', '))}</td></tr>`).join('')}</tbody></table></div>`}
+function props(){let gl=gamesList(), stats=[...new Set(propsRaw().map(p=>p.stat).filter(Boolean))].sort(), books=[...new Set(propsRaw().map(p=>p.book||p.best_book||p.best_over_book).filter(Boolean))].sort();return `<div class="section"><h2 class="mono">Player Props V4</h2><div class="small mono">All props display by default. Tap a game to filter that game's props.</div><div class="gameChips"><button class="gameChip ${activeGame===''?'a':''}" onclick="setGame('')">All Games</button>${gl.map(g=>`<button class="gameChip ${activeGame===g?'a':''}" onclick="setGame('${String(g).replace(/'/g,"\\'")}')">${E(g)}</button>`).join('')}</div><div class="tools"><input id="fPlayer" placeholder="Player" oninput="drawProps()"><select id="fStat" onchange="drawProps()"><option value="">All stats</option>${stats.map(x=>`<option>${E(x)}</option>`).join('')}</select><select id="fBook" onchange="drawProps()"><option value="">All books</option>${books.map(x=>`<option>${E(x)}</option>`).join('')}</select><select id="fSide" onchange="drawProps()"><option value="">All sides</option><option>OVER</option><option>UNDER</option></select><select id="fSort" onchange="drawProps()"><option value="confidence">Confidence</option><option value="player">Player</option><option value="stat">Stat</option></select></div><div class="propScroll"><div class="propHead"><div>Player</div><div>Stat</div><div>Line</div><div>Over</div><div>Under</div><div>Last 5</div><div>L5</div><div>L10</div><div>Score</div></div><div id="propRows"></div></div></div>`}
+function setGame(g){activeGame=g;drawProps()}
+function drawProps(){let root=q('propRows');if(!root)return;let p=(q('fPlayer')?.value||'').toLowerCase(),st=q('fStat')?.value||'',bk=q('fBook')?.value||'',sd=q('fSide')?.value||'',so=q('fSort')?.value||'confidence';let rows=propsRaw().filter(r=>(!activeGame||r.game===activeGame)&&(!p||String(r.player||'').toLowerCase().includes(p))&&(!st||r.stat===st)&&(!bk||(r.book||r.best_book||r.best_over_book)===bk)&&(!sd||(r.signal||r.side)===sd));rows.sort((a,b)=>so==='player'?String(a.player).localeCompare(String(b.player)):so==='stat'?String(a.stat).localeCompare(String(b.stat)):Number(b.final_score||b.confidence||0)-Number(a.final_score||a.confidence||0));root.innerHTML=rows.map(propRow).join('')||'<div class="empty mono">No props match.</div>'}
+function books(){let s=DATA.sportsbook||{};return `<div class="section"><h2 class="mono">Sportsbook Consensus</h2><pre class="mono">${E(JSON.stringify(s,null,2))}</pre></div>`}
 function best(){let b=A(DATA.master?.best_bets);return `<div class="grid2">${b.map(x=>`<div class="card"><div class="label mono">${E(S(x.final_action,'BET'))}</div><h2 class="mono">${E(x.player)} ${E(x.stat)} ${E(x.signal)}</h2><div class="small mono">${E(x.game)} · ${E(x.book||x.best_book)}</div><span class="chip mono">Score ${E(S(x.final_score||x.confidence))}</span><span class="chip mono">Line ${E(S(x.line))}</span><span class="chip mono">Proj ${E(S(x.projection||x.pred))}</span></div>`).join('')||'<div class="empty mono">No best bets.</div>'}</div>`}
 function portfolio(){let r=DATA.risk||{}, a=A(r.allocation||DATA.portfolio?.recommended_card);return kpis()+`<div class="section"><h2 class="mono">Portfolio</h2>${a.map(x=>`<div class="gameCard"><b>${E(x.player)} ${E(x.stat)} ${E(x.signal)}</b><div class="small mono">${E(x.game)} · stake ${E(S(x.capped_amount||x.capped_stake||x.recommended_stake))}</div></div>`).join('')||'<div class="empty mono">No allocation yet.</div>'}</div>`}
 function ai(){return `<div class="grid3"><div class="card"><div class="label mono">Monte Carlo</div><div class="big mono">${S(DATA.monte?.summary?.rows,0)}</div></div><div class="card"><div class="label mono">Projection</div><div class="big mono">${S(DATA.projection?.summary?.rows,0)}</div></div><div class="card"><div class="label mono">Market</div><div class="big mono">${S(DATA.market?.summary?.rows,0)}</div></div></div>`}
@@ -70,11 +71,39 @@ function render(t='games'){q('tabs').innerHTML=tabs.map(x=>`<button class="tab $
 </script></body></html>'''
 
 
+def apply_persistent_dashboard_patches() -> None:
+    """Reapply user-facing dashboard extensions after every full HTML rebuild."""
+    patches = [
+        ("patch_dashboard_v4_alt_streaks_display", "ALT streak display"),
+        ("patch_dashboard_v4_consolidated_navigation", "consolidated navigation"),
+    ]
+    for module_name, label in patches:
+        try:
+            module = __import__(module_name, fromlist=["main"])
+            module.main()
+            print(f"Applied persistent dashboard patch: {label}")
+        except Exception as exc:
+            raise RuntimeError(f"Required dashboard patch failed ({label}): {exc}") from exc
+
+    html = OUT.read_text(encoding="utf-8")
+    required = [
+        "v4-alt-streaks-display-data",
+        "v4-alt-streaks-display-style",
+        "v4-alt-streaks-display-script",
+        "v4-consolidated-navigation-script",
+        "ALT Streaks",
+    ]
+    missing = [marker for marker in required if marker not in html]
+    if missing:
+        raise RuntimeError(f"Dashboard rebuild removed required ALT Streaks blocks: {missing}")
+
+
 def main() -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     html = HTML.replace("__DATA__", json.dumps(build_payload(), separators=(",", ":"), ensure_ascii=False))
     OUT.write_text(html, encoding="utf-8")
-    print("Dashboard V4 overhaul built")
+    apply_persistent_dashboard_patches()
+    print("Dashboard V4 overhaul built with persistent ALT Streaks tab")
 
 
 if __name__ == "__main__":
