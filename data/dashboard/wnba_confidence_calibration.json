@@ -1,0 +1,108 @@
+{
+  "sprint": 7,
+  "phase": "historical-confidence-calibration",
+  "generated_at_utc": "2026-07-23T21:53:34.530296+00:00",
+  "status": "ok",
+  "source": {
+    "database_exists": true,
+    "tables_found": [
+      "clv_intelligence",
+      "events",
+      "grades",
+      "market_intelligence",
+      "migration_runs",
+      "player_game_stats",
+      "player_intelligence",
+      "player_prop_grades",
+      "player_prop_intelligence",
+      "player_prop_line_intelligence",
+      "player_prop_profiles",
+      "player_prop_sportsbook_intelligence",
+      "prop_market_intelligence",
+      "prop_sportsbook_intelligence",
+      "prop_trend_intelligence",
+      "roi_intelligence",
+      "snapshots",
+      "sportsbook_intelligence",
+      "sqlite_sequence",
+      "team_intelligence",
+      "trend_intelligence",
+      "wagers"
+    ],
+    "source_tables_used": [
+      "grades"
+    ]
+  },
+  "summary": {
+    "records_loaded": 4376,
+    "settled_records": 4376,
+    "scored_records": 0,
+    "overall_hit_rate": 0.5,
+    "overall_roi": -0.0494,
+    "warning": "Calibration is trustworthy only when historical predictions were generated before outcomes and matched to final grades."
+  },
+  "calibration_metrics": {
+    "sample_size": 0,
+    "brier_score": null,
+    "expected_calibration_error": null,
+    "status": "insufficient_data"
+  },
+  "by_score_band": [
+    {
+      "group": "unscored",
+      "sample_size": 4376,
+      "wins": 2188,
+      "losses": 2188,
+      "hit_rate": 0.5,
+      "roi": -0.0494,
+      "units": -216.226,
+      "avg_probability": null,
+      "avg_clv": null
+    }
+  ],
+  "by_market": [
+    {
+      "group": "unknown",
+      "sample_size": 4376,
+      "wins": 2188,
+      "losses": 2188,
+      "hit_rate": 0.5,
+      "roi": -0.0494,
+      "units": -216.226,
+      "avg_probability": null,
+      "avg_clv": null
+    }
+  ],
+  "by_sportsbook": [
+    {
+      "group": "unknown",
+      "sample_size": 4376,
+      "wins": 2188,
+      "losses": 2188,
+      "hit_rate": 0.5,
+      "roi": -0.0494,
+      "units": -216.226,
+      "avg_probability": null,
+      "avg_clv": null
+    }
+  ],
+  "by_market_type": [
+    {
+      "group": "standard",
+      "sample_size": 4376,
+      "wins": 2188,
+      "losses": 2188,
+      "hit_rate": 0.5,
+      "roi": -0.0494,
+      "units": -216.226,
+      "avg_probability": null,
+      "avg_clv": null
+    }
+  ],
+  "readiness": {
+    "minimum_recommended_sample": 500,
+    "sample_ready": true,
+    "calibration_ready": false,
+    "next_action": "Use calibrated score bands to revise Sprint 6 thresholds only after sample and chronology checks pass."
+  }
+}
