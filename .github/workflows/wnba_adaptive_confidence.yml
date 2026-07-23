@@ -1,0 +1,64 @@
+name: WNBA Adaptive Confidence Engine (Sprint 8)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 15 * * *'
+
+concurrency:
+  group: wnba-adaptive-confidence
+  cancel-in-progress: false
+
+jobs:
+  adaptive-confidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Refresh Sprint 7 calibration
+        run: |
+          python -m py_compile wnba_confidence_calibration.py wnba_adaptive_confidence_engine.py
+          python wnba_confidence_calibration.py
+      - name: Build Sprint 8 adaptive confidence
+        run: python wnba_adaptive_confidence_engine.py
+      - name: Verify Sprint 8 report
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_adaptive_confidence.json')
+          assert p.exists(), 'adaptive confidence report missing'
+          d=json.load(p.open())
+          assert d.get('sprint') == 8
+          curve=d.get('calibration_curve',[])
+          assert curve, 'calibration curve is empty'
+          probs=[x['calibrated_probability'] for x in curve]
+          assert probs == sorted(probs), 'calibrated probabilities are not monotonic'
+          assert all(0 <= x <= 1 for x in probs)
+          print(json.dumps(d.get('summary',{}),indent=2))
+          PY
+      - name: Commit Sprint 8 outputs
+        run: |
+          git config user.name "WNBA Adaptive Confidence Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Build Sprint 8 adaptive confidence calibration" \
+            'data/dashboard/wnba_adaptive_confidence.json' \
+            'data/warehouse/wnba_adaptive_confidence.json' \
+            'data/dashboard/wnba_daily_edges.json'
+      - name: Upload Sprint 8 report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-adaptive-confidence
+          path: |
+            data/dashboard/wnba_adaptive_confidence.json
+            data/warehouse/wnba_adaptive_confidence.json
