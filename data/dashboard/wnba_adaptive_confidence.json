@@ -1,0 +1,41 @@
+{
+  "sprint": 8,
+  "phase": "adaptive-confidence-engine",
+  "generated_at_utc": "2026-07-23T23:08:52.855110+00:00",
+  "status": "ok",
+  "summary": {
+    "calibration_records": 4376,
+    "curve_points": 2,
+    "reliable_for_adaptive_use": true,
+    "moderate_score_threshold": 54.5,
+    "high_score_threshold": 82.0,
+    "daily_edges_updated": 0
+  },
+  "calibration_curve": [
+    {
+      "score_band": "<50",
+      "score_mid": 45.0,
+      "sample_size": 2060,
+      "hit_rate": 0.4286,
+      "roi": -0.1546,
+      "units": -318.386,
+      "calibrated_probability": 0.4286
+    },
+    {
+      "score_band": "50-59",
+      "score_mid": 54.5,
+      "sample_size": 2316,
+      "hit_rate": 0.5635,
+      "roi": 0.0441,
+      "units": 102.16,
+      "calibrated_probability": 0.5635
+    }
+  ],
+  "confidence_policy": {
+    "HIGH": "calibrated probability >= 62%, sample strength >= 55, evidence count >= 4",
+    "MODERATE": "calibrated probability >= 55%, sample strength >= 40, evidence count >= 2",
+    "LOW": "all remaining candidates",
+    "method": "weighted isotonic regression over historical score bands",
+    "warning": "Historical reconstruction lacks original live timestamps for every row; use as adaptive research calibration, not proof of live predictive performance."
+  }
+}
