@@ -1,0 +1,72 @@
+name: WNBA Daily Edge Engine (Sprint 6)
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), blank uses active slate'
+        required: false
+        default: ''
+  schedule:
+    - cron: '20 14 * * *'
+
+concurrency:
+  group: wnba-daily-edge-engine
+  cancel-in-progress: false
+
+jobs:
+  daily-edge-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Resolve target date
+        run: |
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+      - name: Build Sprint 6 daily edges
+        run: |
+          python -m py_compile wnba_daily_edge_engine.py
+          python wnba_daily_edge_engine.py --date "${{ env.TARGET }}"
+      - name: Verify Sprint 6 output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('data/dashboard/wnba_daily_edges.json')
+          assert path.exists(), 'daily edge output missing'
+          payload=json.load(path.open())
+          assert payload.get('sprint') == 6
+          assert payload.get('methodology',{}).get('transparent_components') is True
+          rows=payload.get('top_edges',[])
+          for row in rows:
+              assert 0 <= row['edge_score'] <= 100
+              assert row['confidence'] in {'LOW','MODERATE','HIGH'}
+              assert isinstance(row.get('components'),dict)
+              assert isinstance(row.get('evidence'),list)
+          print(json.dumps(payload.get('summary',{}),indent=2))
+          PY
+      - name: Commit Sprint 6 outputs
+        run: |
+          git config user.name "WNBA Edge Engine Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Build Sprint 6 daily edge intelligence" \
+            'data/dashboard/wnba_daily_edges.json' \
+            'data/warehouse/wnba_daily_edges.json'
+      - name: Upload Sprint 6 report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-daily-edge-engine
+          path: |
+            data/dashboard/wnba_daily_edges.json
+            data/warehouse/wnba_daily_edges.json
