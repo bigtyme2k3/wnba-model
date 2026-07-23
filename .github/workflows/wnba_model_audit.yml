@@ -1,0 +1,59 @@
+name: WNBA All-Star Model Audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 13 * * *'
+
+concurrency:
+  group: wnba-model-audit
+  cancel-in-progress: false
+
+jobs:
+  model-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run model audit
+        run: |
+          python -m py_compile wnba_model_audit.py
+          python wnba_model_audit.py
+      - name: Verify audit report
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_model_audit.json')
+          assert p.exists(), 'audit report missing'
+          d=json.load(p.open())
+          assert d.get('phase') == 'all-star-model-audit'
+          assert isinstance(d.get('counts'),dict)
+          assert isinstance(d.get('duplicates'),dict)
+          assert isinstance(d.get('checks'),dict)
+          print(json.dumps({'status':d.get('status'),'counts':d.get('counts'),'duplicates':d.get('duplicates'),'warnings':d.get('warnings')},indent=2))
+          PY
+      - name: Commit audit outputs
+        run: |
+          git config user.name "WNBA Model Audit Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Run All-Star break model audit" \
+            'data/dashboard/wnba_model_audit.json' \
+            'data/warehouse/wnba_model_audit.json'
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-model-audit
+          path: |
+            data/dashboard/wnba_model_audit.json
+            data/warehouse/wnba_model_audit.json
