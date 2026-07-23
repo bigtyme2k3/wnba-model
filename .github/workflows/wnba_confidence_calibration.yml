@@ -1,0 +1,62 @@
+name: WNBA Confidence Calibration (Sprint 7)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 13 * * 1'
+
+concurrency:
+  group: wnba-confidence-calibration
+  cancel-in-progress: false
+
+jobs:
+  confidence-calibration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build Sprint 7 calibration
+        run: |
+          python -m py_compile wnba_confidence_calibration.py
+          python wnba_confidence_calibration.py
+      - name: Verify Sprint 7 report
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_confidence_calibration.json')
+          assert p.exists(), 'calibration report missing'
+          d=json.load(p.open())
+          assert d.get('sprint') == 7
+          assert d.get('status') in {'ok','insufficient_data'}
+          assert isinstance(d.get('by_score_band'),list)
+          assert isinstance(d.get('by_market'),list)
+          assert isinstance(d.get('by_sportsbook'),list)
+          assert isinstance(d.get('by_market_type'),list)
+          assert isinstance(d.get('calibration_metrics'),dict)
+          print(json.dumps({'status':d.get('status'),'summary':d.get('summary'),'readiness':d.get('readiness')},indent=2))
+          PY
+      - name: Commit Sprint 7 outputs
+        run: |
+          git config user.name "WNBA Calibration Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Build Sprint 7 historical confidence calibration" \
+            'data/dashboard/wnba_confidence_calibration.json' \
+            'data/warehouse/wnba_confidence_calibration.json'
+      - name: Upload Sprint 7 report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-confidence-calibration
+          path: |
+            data/dashboard/wnba_confidence_calibration.json
+            data/warehouse/wnba_confidence_calibration.json
