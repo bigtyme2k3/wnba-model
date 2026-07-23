@@ -1,60 +1,10 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-22T18:44:39.010637Z
+Generated: 2026-07-23T13:07:57.749186Z
 
-## Slate summary
+## No current slate signals
 
-- 3 games
-- 6 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 2, 'Watch': 2, 'Pass': 2}
-
-## Game — 2026-07-22T19:10:00Z
-
-### Seattle Storm +10.5 (draftkings)
-Bet quality: **Lean — 66.7/100**
-Research level: **low-research-interest** | signal 25.57 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
-
-- Seattle Storm|home: 16-4-0 (80.0%, n=20, Wilson floor 58.4%)
-
-### Seattle Storm +10.5 (fanduel)
-Bet quality: **Lean — 66.7/100**
-Research level: **low-research-interest** | signal 25.57 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
-
-- Seattle Storm|home: 16-4-0 (80.0%, n=20, Wilson floor 58.4%)
-
-## Game — 2026-07-23T00:00:00Z
-
-### Connecticut Sun +10.5 (draftkings)
-Bet quality: **Pass — 49.1/100**
-Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
-
-- away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
-
-### Connecticut Sun +10.5 (fanduel)
-Bet quality: **Pass — 49.1/100**
-Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
-
-- away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
-
-## Game — 2026-07-23T02:00:00Z
-
-### Portland Fire +5.5 (draftkings)
-Bet quality: **Watch — 61.3/100**
-Research level: **low-research-interest** | signal 19.06 | 1 matched angles
-Best line: +5.5 | line-shop edge: +0 points
-
-- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
-
-### Portland Fire +5.5 (fanduel)
-Bet quality: **Watch — 61.3/100**
-Research level: **low-research-interest** | signal 19.06 | 1 matched angles
-Best line: +5.5 | line-shop edge: +0 points
-
-- home|underdog|3_to_5_5: 22-8-0 (73.33%, n=30, Wilson floor 55.55%)
+No future opportunities were found inside the selected time horizon. Stale warehouse signals were suppressed.
 
 ## Guardrails
 
