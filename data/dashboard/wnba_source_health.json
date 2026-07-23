@@ -1,6 +1,6 @@
 {
-  "generated_at_utc": "2026-07-22T15:18:55.346766+00:00",
-  "target_date": "2026-07-22",
+  "generated_at_utc": "2026-07-23T15:26:43.955196+00:00",
+  "target_date": "2026-07-23",
   "summary": {
     "sources": 8,
     "ok_or_optional": 7,
@@ -15,31 +15,36 @@
           "status": "ok",
           "provider": "sportsdataverse/wehoop",
           "upstream": "ESPN",
-          "target_date": "2026-07-10",
+          "target_date": "2026-07-23",
           "season": 2026,
-          "completed_games": 183,
-          "player_game_rows": 4540,
-          "players": 321,
-          "latest_game_date": "2026-07-09",
-          "new_games_fetched": 183,
-          "generated_at_utc": "2026-07-10 20:46:35 UTC"
+          "completed_games": 222,
+          "player_game_rows": 5453,
+          "players": 323,
+          "latest_game_date": "2026-07-22",
+          "requested_new_games": 7,
+          "new_games_fetched": 6,
+          "skipped_unavailable_games": 1,
+          "skipped_game_ids": "401857072",
+          "fetch_error_games": 0,
+          "fetch_error_game_ids": [],
+          "generated_at_utc": "2026-07-23 14:41:27 UTC"
         },
         "players": {
           "path": "data/raw/wnba_players_live.json",
           "exists": true,
-          "bytes": 228782,
+          "bytes": 230208,
           "populated": true
         },
         "boxscores": {
           "path": "data/raw/boxscores_wehoop.csv",
           "exists": true,
-          "bytes": 270435,
+          "bytes": 890814,
           "populated": true
         },
         "history": {
           "path": "data/raw/wehoop_player_boxscores.csv",
           "exists": true,
-          "bytes": 2192566,
+          "bytes": 2623390,
           "populated": true
         }
       }
@@ -51,21 +56,21 @@
         "scores": {
           "ok": true,
           "returncode": 0,
-          "bytes": 14059,
+          "bytes": 1301,
           "stderr": "",
           "output_file": "data/wnba/scores.json"
         },
         "injuries": {
           "ok": true,
           "returncode": 0,
-          "bytes": 9167,
+          "bytes": 11936,
           "stderr": "",
           "output_file": "data/wnba/injuries.json"
         },
         "standings": {
           "ok": true,
           "returncode": 0,
-          "bytes": 10756,
+          "bytes": 10768,
           "stderr": "",
           "output_file": "data/wnba/standings.json"
         },
@@ -94,7 +99,7 @@
       "detail": {
         "path": "data/warehouse/wnba_player_intelligence.json",
         "exists": true,
-        "bytes": 401021,
+        "bytes": 403645,
         "populated": true
       }
     },
@@ -104,7 +109,7 @@
       "detail": {
         "path": "data/warehouse/wnba_matchup_intelligence.json",
         "exists": true,
-        "bytes": 551510,
+        "bytes": 6976,
         "populated": true
       }
     },
@@ -114,7 +119,7 @@
       "detail": {
         "path": "data/warehouse/wnba_consensus_engine.json",
         "exists": true,
-        "bytes": 592450,
+        "bytes": 218,
         "populated": true
       }
     },
@@ -124,11 +129,11 @@
       "detail": {
         "raw_status": {
           "status": "ok",
-          "target_date": "2026-07-22",
+          "target_date": "2026-07-23",
           "selected_source": "current_file",
-          "rows": 6,
+          "rows": 7,
           "notes": "Loaded from existing current odds file.",
-          "checked_at_utc": "2026-07-22T15:18:22.676275+00:00",
+          "checked_at_utc": "2026-07-23T15:26:17.685300+00:00",
           "source_priority": [
             "manual",
             "current_file",
@@ -139,25 +144,25 @@
           "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
         },
         "health": {
-          "generated_at_utc": "2026-07-22T15:18:44.852820+00:00",
-          "target_date": "2026-07-22",
+          "generated_at_utc": "2026-07-23T15:26:40.266892+00:00",
+          "target_date": "2026-07-23",
           "status": "ok",
           "label": "Team odds loaded",
           "summary": {
-            "team_odds_rows": 6,
-            "spread_rows": 6,
-            "total_rows": 6,
-            "prop_rows": 471,
-            "active_prop_rows": 471,
+            "team_odds_rows": 7,
+            "spread_rows": 7,
+            "total_rows": 7,
+            "prop_rows": 0,
+            "active_prop_rows": 0,
             "books_detected": []
           },
           "source_status": {
             "status": "ok",
-            "target_date": "2026-07-22",
+            "target_date": "2026-07-23",
             "selected_source": "current_file",
-            "rows": 6,
+            "rows": 7,
             "notes": "Loaded from existing current odds file.",
-            "checked_at_utc": "2026-07-22T15:18:22.676275+00:00",
+            "checked_at_utc": "2026-07-23T15:26:17.685300+00:00",
             "source_priority": [
               "manual",
               "current_file",
@@ -177,7 +182,7 @@
       "status": "ok",
       "detail": {
         "selected_source": "current_file",
-        "rows": 6
+        "rows": 7
       }
     }
   }
