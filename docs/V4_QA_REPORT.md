@@ -1,14 +1,14 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-22T15:25:37.391615+00:00`
+Generated: `2026-07-23T15:39:43.502100+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 116 checked, 0 invalid, 2 empty
-- Workflows: 45 checked, 1 high risk
+- Dashboard JSON: 118 checked, 0 invalid, 10 empty
+- Workflows: 46 checked, 1 high risk
 
 ## Module QA
 
@@ -57,7 +57,7 @@ Generated: `2026-07-22T15:25:37.391615+00:00`
 | `.github/workflows/results_review_center_extension.yml` | 9 | 1 | 0.111 | low | True |
 | `.github/workflows/results_tracker.yml` | 6 | 1 | 0.167 | low | True |
 | `.github/workflows/v4_qa.yml` | 7 | 0 | 0.0 | low | False |
-| `.github/workflows/wnba_alt_market_watch.yml` | 12 | 0 | 0.0 | low | False |
+| `.github/workflows/wnba_alt_market_watch.yml` | 13 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_alt_tab_repair.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_autonomous_agent.yml` | 11 | 5 | 0.455 | medium | False |
 | `.github/workflows/wnba_betting_intelligence.yml` | 5 | 0 | 0.0 | low | True |
@@ -65,6 +65,7 @@ Generated: `2026-07-22T15:25:37.391615+00:00`
 | `.github/workflows/wnba_closing_line_snapshots.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_controlled_recalibration.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_daily_ai_report.yml` | 5 | 0 | 0.0 | low | True |
+| `.github/workflows/wnba_daily_edge_engine.yml` | 7 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_data_warehouse.yml` | 5 | 0 | 0.0 | low | True |
 | `.github/workflows/wnba_full_game_performance.yml` | 1 | 0 | 0.0 | low | False |
 | `.github/workflows/wnba_full_game_simulation.yml` | 1 | 0 | 0.0 | low | False |
