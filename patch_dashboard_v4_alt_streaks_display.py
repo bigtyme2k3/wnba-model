@@ -18,7 +18,7 @@ SCRIPT = r'''<script id="v4-alt-streaks-display-script">
  let mode='alternate';
  function card(r){const vals=(r.recent_values||[]).slice(0,10).join(', ');return `<div class="altStreakCard"><div class="altStreakTop"><div><div class="altStreakLine">${esc(r.side)} ${esc(r.stat)} ${esc(r.alt_line)}</div><div class="altStreakBook">${esc(r.best_book||'Unknown book')} · ${odds(r.best_odds)}</div></div><b>${esc(r.streak)} straight</b></div><div class="altStreakMeta"><div class="altStreakMetric">L10<b>${esc(r.last10_hits??r.l10_hits??'—')}/${esc(r.last10_games??r.l10_games??'—')} · ${pct(r.last10_pct??r.l10_pct)}</b></div><div class="altStreakMetric">Season<b>${esc(r.season_hits??'—')}/${esc(r.season_games??'—')} · ${pct(r.season_pct)}</b></div><div class="altStreakMetric">Average<b>${esc(r.average??'—')}</b></div></div><div class="altStreakValues">Recent: ${esc(vals||'Unavailable')}</div></div>`}
  function render(){const p=(window.DATA&&DATA.alt_streaks)||{};const rows=Array.isArray(p.rows)?p.rows:[];const filtered=rows.filter(r=>mode==='all'||r.line_type===mode);const groups={};filtered.forEach(r=>{(groups[r.player]||(groups[r.player]=[])).push(r)});const players=Object.entries(groups).sort((a,b)=>Math.max(...b[1].map(x=>x.streak||0))-Math.max(...a[1].map(x=>x.streak||0)));const s=p.summary||{};return `<div class="section"><h2 class="mono">ALT Streak Board</h2><div class="small mono">Exact sportsbook thresholds with verified current streaks. Books and lines stay separate.</div><div class="altStreakSummary"><span>${esc(s.alternate_rows||0)} ALT rows</span><span>${esc(s.alternate_players||0)} players</span><span>${esc((s.alternate_books||[]).length)} books</span><span>Minimum streak ${esc(s.minimum_streak||3)}</span></div><div class="altStreakControls"><button class="${mode==='alternate'?'a':''}" onclick="window.setAltStreakMode('alternate')">ALT only</button><button class="${mode==='standard'?'a':''}" onclick="window.setAltStreakMode('standard')">Standard</button><button class="${mode==='all'?'a':''}" onclick="window.setAltStreakMode('all')">All</button></div><div class="altStreakWrap">${players.map(([player,items])=>`<details class="altStreakPlayer"><summary>${esc(player)} <span class="small mono">${items.length} lines · best ${Math.max(...items.map(x=>x.streak||0))} straight</span></summary><div class="altStreakGrid">${items.map(card).join('')}</div></details>`).join('')||'<div class="altStreakEmpty mono">No active streaks match this filter.</div>'}</div></div>`}
- window.setAltStreakMode=function(next){mode=next;const root=document.getElementById('root');if(root&&typeof window.render==='function')window.render('props')};
+ window.setAltStreakMode=function(next){mode=next;const root=document.getElementById('root');if(root&&typeof window.render==='function')window.render('altstreaks')};
  window.altStreaks=render;
 })();
 </script>'''
@@ -43,20 +43,16 @@ def main() -> None:
         payload = {}
     html = HTML.read_text(encoding="utf-8")
     data = f'<script id="v4-alt-streaks-display-data">window.DATA=window.DATA||{{}};DATA.alt_streaks={json.dumps(payload,separators=(",",":"),ensure_ascii=False)};</script>'
-    if 'id="v4-alt-streaks-display-data"' in html:
-        html = replace_block(html, '<script id="v4-alt-streaks-display-data">', '</script>', data)
-    else:
-        html = html.replace('</body>', data + '</body>')
-    if 'id="v4-alt-streaks-display-style"' in html:
-        html = replace_block(html, '<style id="v4-alt-streaks-display-style">', '</style>', CSS)
-    else:
-        html = html.replace('</head>', CSS + '</head>')
-    if 'id="v4-alt-streaks-display-script"' in html:
-        html = replace_block(html, '<script id="v4-alt-streaks-display-script">', '</script>', SCRIPT)
-    else:
-        html = html.replace('</body>', SCRIPT + '</body>')
+    html = replace_block(html, '<script id="v4-alt-streaks-display-data">', '</script>', data) if 'id="v4-alt-streaks-display-data"' in html else html.replace('</body>', data + '</body>')
+    html = replace_block(html, '<style id="v4-alt-streaks-display-style">', '</style>', CSS) if 'id="v4-alt-streaks-display-style"' in html else html.replace('</head>', CSS + '</head>')
+    html = replace_block(html, '<script id="v4-alt-streaks-display-script">', '</script>', SCRIPT) if 'id="v4-alt-streaks-display-script"' in html else html.replace('</body>', SCRIPT + '</body>')
     HTML.write_text(html, encoding="utf-8")
-    print("ALT streak board embedded in Player Props dashboard")
+    try:
+        from patch_dashboard_v4_daily_edges import main as patch_daily_edges
+        patch_daily_edges()
+    except Exception as exc:
+        raise RuntimeError(f"Daily Edges dashboard patch failed: {exc}") from exc
+    print("ALT streak and Daily Edges dashboards embedded")
 
 
 if __name__ == "__main__":
