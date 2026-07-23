@@ -1,7 +1,7 @@
 {
   "sprint": 7,
   "phase": "historical-confidence-calibration",
-  "generated_at_utc": "2026-07-23T21:53:34.530296+00:00",
+  "generated_at_utc": "2026-07-23T22:29:59.729152+00:00",
   "status": "ok",
   "source": {
     "database_exists": true,
@@ -9,6 +9,7 @@
       "clv_intelligence",
       "events",
       "grades",
+      "historical_edge_predictions",
       "market_intelligence",
       "migration_runs",
       "player_game_stats",
@@ -30,22 +31,39 @@
       "wagers"
     ],
     "source_tables_used": [
+      "historical_edge_predictions",
       "grades"
     ]
   },
   "summary": {
-    "records_loaded": 4376,
-    "settled_records": 4376,
-    "scored_records": 0,
+    "records_loaded": 8752,
+    "settled_records": 8752,
+    "scored_records": 4376,
     "overall_hit_rate": 0.5,
     "overall_roi": -0.0494,
     "warning": "Calibration is trustworthy only when historical predictions were generated before outcomes and matched to final grades."
   },
   "calibration_metrics": {
-    "sample_size": 0,
-    "brier_score": null,
-    "expected_calibration_error": null,
-    "status": "insufficient_data"
+    "sample_size": 4376,
+    "brier_score": 0.24643,
+    "expected_calibration_error": 0.04965,
+    "status": "ok",
+    "reliability_curve": [
+      {
+        "probability_band": "40-49%",
+        "sample_size": 2060,
+        "avg_predicted_probability": 0.4816,
+        "actual_hit_rate": 0.4286,
+        "gap": -0.053
+      },
+      {
+        "probability_band": "50-59%",
+        "sample_size": 2316,
+        "avg_predicted_probability": 0.5168,
+        "actual_hit_rate": 0.5635,
+        "gap": 0.0467
+      }
+    ]
   },
   "by_score_band": [
     {
@@ -57,6 +75,28 @@
       "roi": -0.0494,
       "units": -216.226,
       "avg_probability": null,
+      "avg_clv": null
+    },
+    {
+      "group": "50-59",
+      "sample_size": 2316,
+      "wins": 1305,
+      "losses": 1011,
+      "hit_rate": 0.5635,
+      "roi": 0.0441,
+      "units": 102.16,
+      "avg_probability": 0.5168,
+      "avg_clv": null
+    },
+    {
+      "group": "<50",
+      "sample_size": 2060,
+      "wins": 883,
+      "losses": 1177,
+      "hit_rate": 0.4286,
+      "roi": -0.1546,
+      "units": -318.386,
+      "avg_probability": 0.4816,
       "avg_clv": null
     }
   ],
@@ -71,38 +111,71 @@
       "units": -216.226,
       "avg_probability": null,
       "avg_clv": null
+    },
+    {
+      "group": "spreads",
+      "sample_size": 1464,
+      "wins": 732,
+      "losses": 732,
+      "hit_rate": 0.5,
+      "roi": -0.0477,
+      "units": -69.829,
+      "avg_probability": 0.5001,
+      "avg_clv": null
+    },
+    {
+      "group": "totals",
+      "sample_size": 1462,
+      "wins": 731,
+      "losses": 731,
+      "hit_rate": 0.5,
+      "roi": -0.0454,
+      "units": -66.442,
+      "avg_probability": 0.5,
+      "avg_clv": null
+    },
+    {
+      "group": "h2h",
+      "sample_size": 1450,
+      "wins": 725,
+      "losses": 725,
+      "hit_rate": 0.5,
+      "roi": -0.0551,
+      "units": -79.954,
+      "avg_probability": 0.5005,
+      "avg_clv": null
     }
   ],
   "by_sportsbook": [
     {
       "group": "unknown",
-      "sample_size": 4376,
-      "wins": 2188,
-      "losses": 2188,
+      "sample_size": 8752,
+      "wins": 4376,
+      "losses": 4376,
       "hit_rate": 0.5,
       "roi": -0.0494,
-      "units": -216.226,
-      "avg_probability": null,
+      "units": -432.452,
+      "avg_probability": 0.5002,
       "avg_clv": null
     }
   ],
   "by_market_type": [
     {
       "group": "standard",
-      "sample_size": 4376,
-      "wins": 2188,
-      "losses": 2188,
+      "sample_size": 8752,
+      "wins": 4376,
+      "losses": 4376,
       "hit_rate": 0.5,
       "roi": -0.0494,
-      "units": -216.226,
-      "avg_probability": null,
+      "units": -432.452,
+      "avg_probability": 0.5002,
       "avg_clv": null
     }
   ],
   "readiness": {
     "minimum_recommended_sample": 500,
     "sample_ready": true,
-    "calibration_ready": false,
+    "calibration_ready": true,
     "next_action": "Use calibrated score bands to revise Sprint 6 thresholds only after sample and chronology checks pass."
   }
 }
