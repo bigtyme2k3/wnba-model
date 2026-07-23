@@ -35,9 +35,9 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
       - name: Build Sprint 6 daily edges
         run: |
-          python -m py_compile wnba_daily_edge_engine.py
+          python -m py_compile wnba_daily_edge_engine.py patch_dashboard_v4_daily_edges.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_consolidated_navigation.py
           python wnba_daily_edge_engine.py --date "${{ env.TARGET }}"
-      - name: Verify Sprint 6 output
+      - name: Verify Sprint 6.1 evidence QA
         run: |
           python - <<'PY'
           import json
@@ -46,23 +46,43 @@ jobs:
           assert path.exists(), 'daily edge output missing'
           payload=json.load(path.open())
           assert payload.get('sprint') == 6
+          assert payload.get('phase') == '6.1-edge-qa-dashboard'
           assert payload.get('methodology',{}).get('transparent_components') is True
+          qa=payload.get('qa',{})
+          for key in ('score_distribution','evidence_coverage_rates','missing_evidence_counts','component_averages'):
+              assert isinstance(qa.get(key),dict), f'missing QA block: {key}'
           rows=payload.get('top_edges',[])
           for row in rows:
               assert 0 <= row['edge_score'] <= 100
               assert row['confidence'] in {'LOW','MODERATE','HIGH'}
+              assert row.get('market_type') in {'standard','alternate'}
               assert isinstance(row.get('components'),dict)
               assert isinstance(row.get('evidence'),list)
-          print(json.dumps(payload.get('summary',{}),indent=2))
+              assert isinstance(row.get('missing_evidence'),list)
+              assert 0 <= row.get('evidence_count',0) <= 6
+          print(json.dumps({'summary':payload.get('summary',{}),'qa':qa},indent=2))
           PY
-      - name: Commit Sprint 6 outputs
+      - name: Publish Daily Edges dashboard
+        run: |
+          python patch_dashboard_v4_alt_streaks_display.py
+          python patch_dashboard_v4_consolidated_navigation.py
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          required=['v4-daily-edges-data','v4-daily-edges-style','v4-daily-edges-script','Daily Edges','v4-consolidated-navigation-script']
+          missing=[x for x in required if x not in html]
+          if missing: raise SystemExit(f'Missing Daily Edges dashboard blocks: {missing}')
+          print('Daily Edges dashboard verified')
+          PY
+      - name: Commit Sprint 6.1 outputs
         run: |
           git config user.name "WNBA Edge Engine Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Build Sprint 6 daily edge intelligence" \
+            "Build Sprint 6.1 daily edge QA dashboard" \
             'data/dashboard/wnba_daily_edges.json' \
-            'data/warehouse/wnba_daily_edges.json'
+            'data/warehouse/wnba_daily_edges.json' \
+            'docs/index.html'
       - name: Upload Sprint 6 report
         uses: actions/upload-artifact@v4
         with:
@@ -70,3 +90,4 @@ jobs:
           path: |
             data/dashboard/wnba_daily_edges.json
             data/warehouse/wnba_daily_edges.json
+            docs/index.html
