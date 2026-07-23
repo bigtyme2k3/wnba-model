@@ -1,0 +1,77 @@
+name: WNBA Historical Prediction Reconstruction
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 11 * * 1'
+
+concurrency:
+  group: wnba-historical-prediction-reconstruction
+  cancel-in-progress: false
+
+jobs:
+  reconstruct-and-calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build leakage-safe historical predictions
+        run: |
+          python -m py_compile wnba_historical_prediction_reconstruction.py wnba_confidence_calibration.py
+          python wnba_historical_prediction_reconstruction.py
+      - name: Verify reconstruction
+        run: |
+          python - <<'PY'
+          import json, sqlite3
+          from pathlib import Path
+          report=json.load(Path('data/dashboard/wnba_historical_prediction_reconstruction.json').open())
+          assert report.get('methodology',{}).get('future_outcome_leakage_blocked') is True
+          n=report.get('summary',{}).get('predictions_reconstructed',0)
+          assert n > 0, 'no predictions reconstructed'
+          con=sqlite3.connect('data/warehouse/wnba_odds_warehouse_v2.sqlite')
+          count=con.execute('select count(*) from historical_edge_predictions').fetchone()[0]
+          assert count == n, (count,n)
+          bad=con.execute('select count(*) from historical_edge_predictions where edge_score is null or predicted_probability is null').fetchone()[0]
+          assert bad == 0, f'{bad} incomplete reconstructed predictions'
+          print(json.dumps(report.get('summary',{}),indent=2))
+          PY
+      - name: Rerun Sprint 7 calibration
+        run: python wnba_confidence_calibration.py
+      - name: Verify calibrated sample
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.load(Path('data/dashboard/wnba_confidence_calibration.json').open())
+          scored=p.get('summary',{}).get('scored_records',0)
+          assert scored >= 300, f'calibration still lacks scored records: {scored}'
+          assert p.get('calibration_metrics',{}).get('sample_size',0) >= 300
+          print(json.dumps({'summary':p.get('summary',{}),'readiness':p.get('readiness',{}),'metrics':p.get('calibration_metrics',{})},indent=2))
+          PY
+      - name: Commit reconstruction and calibration outputs
+        run: |
+          git config user.name "WNBA Reconstruction Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Reconstruct historical pregame scores and recalibrate" \
+            'data/warehouse/wnba_odds_warehouse_v2.sqlite' \
+            'data/dashboard/wnba_historical_prediction_reconstruction.json' \
+            'data/warehouse/wnba_historical_prediction_reconstruction.json' \
+            'data/dashboard/wnba_confidence_calibration.json' \
+            'data/warehouse/wnba_confidence_calibration.json'
+      - name: Upload research reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-historical-reconstruction-calibration
+          path: |
+            data/dashboard/wnba_historical_prediction_reconstruction.json
+            data/dashboard/wnba_confidence_calibration.json
