@@ -243,7 +243,7 @@ def build_report() -> dict[str, Any]:
         "warnings": [
             *[f"Unexpected empty JSON: {i['path']}" for i in unexpected_empty],
             *[f"High-risk workflow: {i['path']}" for i in risky_workflows],
-            *fv["issues"] if fv["status"] == "yellow" else [],
+            *(fv["issues"] if fv["status"] == "yellow" else []),
         ],
     }
 
