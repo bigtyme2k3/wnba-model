@@ -19,14 +19,12 @@ SCRIPT = r'''<script id="v4-ensemble-intelligence-script">
 })();
 </script>'''
 
-
 def replace_block(html: str, start: str, end: str, replacement: str) -> str:
     i = html.find(start)
     if i < 0: return html
     j = html.find(end, i)
     if j < 0: return html
     return html[:i] + replacement.strip() + html[j + len(end):]
-
 
 def main() -> None:
     if not HTML.exists():
@@ -46,8 +44,12 @@ def main() -> None:
         patch_simulation()
     except Exception as exc:
         print('Sprint 10 dashboard persistence warning:', exc)
-    print('Ensemble Intelligence and Sprint 10 dashboard blocks embedded')
-
+    try:
+        from patch_dashboard_v4_pipeline_status import main as patch_pipeline
+        patch_pipeline()
+    except Exception as exc:
+        print('Sprint 11 dashboard persistence warning:', exc)
+    print('Ensemble, Simulation, and Pipeline dashboard blocks embedded')
 
 if __name__ == '__main__':
     main()
