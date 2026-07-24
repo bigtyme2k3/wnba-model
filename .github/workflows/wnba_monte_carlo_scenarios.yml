@@ -1,0 +1,96 @@
+name: WNBA Monte Carlo Scenario Engine (Sprint 10)
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: Optional slate date YYYY-MM-DD
+        required: false
+        default: ''
+      simulations:
+        description: Simulations per candidate
+        required: false
+        default: '10000'
+  schedule:
+    - cron: '35 15 * * *'
+
+concurrency:
+  group: wnba-monte-carlo-scenarios
+  cancel-in-progress: false
+
+jobs:
+  monte-carlo-scenarios:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Resolve inputs
+        id: inputs
+        env:
+          INPUT_DATE: ${{ github.event.inputs.date }}
+          INPUT_SIMS: ${{ github.event.inputs.simulations }}
+        run: |
+          echo "date=${INPUT_DATE:-}" >> "$GITHUB_OUTPUT"
+          echo "sims=${INPUT_SIMS:-10000}" >> "$GITHUB_OUTPUT"
+      - name: Build Sprint 10 scenario simulations
+        run: |
+          python -m py_compile \
+            wnba_monte_carlo_scenario_engine.py \
+            patch_dashboard_v4_monte_carlo_scenarios.py \
+            patch_dashboard_v4_ensemble_intelligence.py
+          python wnba_monte_carlo_scenario_engine.py \
+            --date "${{ steps.inputs.outputs.date }}" \
+            --sims "${{ steps.inputs.outputs.sims }}"
+      - name: Publish Sprint 10 dashboard
+        run: |
+          python patch_dashboard_v4_ensemble_intelligence.py
+          python patch_dashboard_v4_monte_carlo_scenarios.py
+      - name: Verify Sprint 10 outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_monte_carlo_scenarios.json')
+          assert p.exists(), 'Sprint 10 report missing'
+          d=json.load(p.open())
+          assert d.get('sprint') == 10
+          assert d.get('phase') == 'monte-carlo-scenario-engine'
+          rows=d.get('all_simulations',[])
+          for r in rows:
+              assert 0 <= r['simulation_probability'] <= 1
+              assert 0 <= r['over_probability'] <= 1
+              assert 0 <= r['under_probability'] <= 1
+              assert r['p10'] <= r['median'] <= r['p90']
+              assert r['simulations'] >= 1000
+              assert r.get('scenarios'), 'scenario breakdown missing'
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          required=['v4-monte-carlo-scenarios-data','v4-monte-carlo-scenarios-style','v4-monte-carlo-scenarios-script','Simulation']
+          missing=[x for x in required if x not in html]
+          assert not missing, f'Sprint 10 dashboard blocks missing: {missing}'
+          print(json.dumps(d.get('summary',{}),indent=2))
+          PY
+      - name: Commit Sprint 10 outputs
+        run: |
+          git config user.name "WNBA Simulation Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Build Sprint 10 Monte Carlo scenario intelligence" \
+            'data/dashboard/wnba_monte_carlo_scenarios.json' \
+            'data/warehouse/wnba_monte_carlo_scenarios.json' \
+            'docs/index.html'
+      - name: Upload Sprint 10 report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-monte-carlo-scenarios
+          path: |
+            data/dashboard/wnba_monte_carlo_scenarios.json
+            data/warehouse/wnba_monte_carlo_scenarios.json
