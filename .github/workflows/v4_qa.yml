@@ -10,6 +10,7 @@ on:
       - '**.py'
       - 'config/**'
       - 'data/dashboard/**'
+      - 'data/warehouse/wnba_forward_validation.sqlite'
       - '.github/workflows/**'
       - 'requirements.txt'
 
@@ -52,6 +53,35 @@ jobs:
 
       - name: Run V4 QA command center
         run: python qa_v4.py --strict
+
+      - name: Verify hardened QA classifications
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_v4_qa.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          s=d.get('summary',{})
+          assert 'expected_empty_json_files' in s
+          assert 'unexpected_empty_json_files' in s
+          assert 'forward_validation_status' in s
+          assert d.get('forward_validation',{}).get('status') in {'green','yellow','red'}
+          assert d.get('status') in {'green','yellow','red'}
+          if d.get('operating_context',{}).get('offday_or_break'):
+              assert s.get('expected_empty_json_files',0) >= 0
+          if d.get('status') == 'green':
+              assert s.get('invalid_json_files',0) == 0
+              assert s.get('unexpected_empty_json_files',0) == 0
+              assert s.get('high_risk_workflows',0) == 0
+              assert s.get('forward_validation_status') == 'green'
+          print(json.dumps({
+              'status':d.get('status'),
+              'expected_empty':s.get('expected_empty_json_files'),
+              'unexpected_empty':s.get('unexpected_empty_json_files'),
+              'high_risk_workflows':s.get('high_risk_workflows'),
+              'forward_validation':s.get('forward_validation_status'),
+          },indent=2))
+          PY
 
       - name: Run semantic model output QA
         run: python qa_v4_outputs_v2.py --strict
@@ -113,6 +143,7 @@ jobs:
             data/dashboard/wnba_v4_qa.json
             data/dashboard/wnba_v4_output_qa.json
             data/dashboard/wnba_v4_status.json
+            data/warehouse/wnba_forward_validation.sqlite
             docs/V4_QA_REPORT.md
             docs/V4_OUTPUT_QA_REPORT.md
             docs/index.html
