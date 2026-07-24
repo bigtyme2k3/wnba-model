@@ -41,7 +41,12 @@ def main() -> None:
     html = replace_block(html,'<style id="v4-ensemble-intelligence-style">','</style>',CSS) if 'id="v4-ensemble-intelligence-style"' in html else html.replace('</head>',CSS+'</head>')
     html = replace_block(html,'<script id="v4-ensemble-intelligence-script">','</script>',SCRIPT) if 'id="v4-ensemble-intelligence-script"' in html else html.replace('</body>',SCRIPT+'</body>')
     HTML.write_text(html,encoding='utf-8')
-    print('Ensemble Intelligence dashboard blocks embedded')
+    try:
+        from patch_dashboard_v4_monte_carlo_scenarios import main as patch_simulation
+        patch_simulation()
+    except Exception as exc:
+        print('Sprint 10 dashboard persistence warning:', exc)
+    print('Ensemble Intelligence and Sprint 10 dashboard blocks embedded')
 
 
 if __name__ == '__main__':
