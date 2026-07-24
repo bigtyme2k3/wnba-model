@@ -1,0 +1,72 @@
+name: WNBA Ensemble Intelligence (Sprint 9)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 15 * * *'
+
+concurrency:
+  group: wnba-ensemble-intelligence
+  cancel-in-progress: false
+
+jobs:
+  ensemble-intelligence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build Sprint 9 ensemble intelligence
+        run: |
+          python -m py_compile \
+            wnba_ensemble_intelligence_engine.py \
+            patch_dashboard_v4_ensemble_intelligence.py \
+            patch_dashboard_v4_consolidated_navigation.py
+          python wnba_ensemble_intelligence_engine.py
+      - name: Publish Ensemble dashboard
+        run: |
+          python patch_dashboard_v4_ensemble_intelligence.py
+          python patch_dashboard_v4_consolidated_navigation.py
+      - name: Verify Sprint 9 outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_ensemble_intelligence.json')
+          assert p.exists(), 'ensemble report missing'
+          d=json.load(p.open())
+          assert d.get('sprint') == 9
+          assert d.get('methodology',{}).get('explainable') is True
+          for r in d.get('ranked_edges',[]):
+              assert 0 <= r['ensemble_score'] <= 100
+              assert r['grade'] in {'A+','A','B+','B','C','D'}
+              assert isinstance(r.get('component_breakdown'),dict)
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          for marker in ['v4-ensemble-intelligence-data','v4-ensemble-intelligence-style','v4-ensemble-intelligence-script','Ensemble']:
+              assert marker in html, f'missing dashboard marker: {marker}'
+          print(json.dumps(d.get('summary',{}),indent=2))
+          PY
+      - name: Commit Sprint 9 outputs
+        run: |
+          git config user.name "WNBA Ensemble Intelligence Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Build Sprint 9 ensemble intelligence" \
+            'data/dashboard/wnba_ensemble_intelligence.json' \
+            'data/warehouse/wnba_ensemble_intelligence.json' \
+            'docs/index.html'
+      - name: Upload Sprint 9 report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-ensemble-intelligence
+          path: |
+            data/dashboard/wnba_ensemble_intelligence.json
+            data/warehouse/wnba_ensemble_intelligence.json
