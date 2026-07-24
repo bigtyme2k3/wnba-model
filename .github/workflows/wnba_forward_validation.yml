@@ -1,0 +1,92 @@
+name: WNBA Forward Validation (Sprint 12)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Freeze pregame predictions, grade completed predictions, or both
+        required: true
+        default: both
+        type: choice
+        options: [freeze, grade, both, report]
+      target_date:
+        description: Optional YYYY-MM-DD target date
+        required: false
+        default: ''
+  schedule:
+    - cron: '30 20 * * *'
+    - cron: '30 10 * * *'
+
+concurrency:
+  group: wnba-forward-validation
+  cancel-in-progress: false
+
+jobs:
+  forward-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Resolve mode and date
+        id: args
+        shell: bash
+        run: |
+          MODE="${{ inputs.mode }}"
+          DATE="${{ inputs.target_date }}"
+          [ -z "$MODE" ] && MODE="both"
+          if [ -z "$DATE" ]; then DATE=$(python active_slate_date.py --date "" 2>/dev/null || date -u +%F); fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "date=$DATE" >> "$GITHUB_OUTPUT"
+      - name: Freeze and grade live-forward predictions
+        run: |
+          python -m py_compile wnba_forward_validation_engine.py patch_dashboard_v4_forward_validation.py
+          python wnba_forward_validation_engine.py --mode "${{ steps.args.outputs.mode }}" --date "${{ steps.args.outputs.date }}"
+      - name: Publish validation dashboard
+        run: python patch_dashboard_v4_forward_validation.py
+      - name: Verify Sprint 12 outputs
+        run: |
+          python - <<'PY'
+          import json, sqlite3
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_forward_validation.json')
+          db=Path('data/warehouse/wnba_forward_validation.sqlite')
+          assert p.exists(), 'forward validation report missing'
+          assert db.exists(), 'forward validation database missing'
+          d=json.load(p.open())
+          assert d.get('sprint') == 12
+          s=d.get('summary',{})
+          assert s.get('chronology_valid') is True
+          conn=sqlite3.connect(db)
+          dup=conn.execute('SELECT COUNT(*) FROM (SELECT prediction_id,COUNT(*) c FROM forward_predictions GROUP BY prediction_id HAVING c>1)').fetchone()[0]
+          conn.close()
+          assert dup == 0, f'duplicate frozen predictions: {dup}'
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          assert 'v4-forward-validation-script' in html
+          print(json.dumps(s,indent=2))
+          PY
+      - name: Commit Sprint 12 outputs
+        run: |
+          git config user.name "WNBA Forward Validation Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Freeze and grade Sprint 12 forward predictions" \
+            'data/warehouse/wnba_forward_validation.sqlite' \
+            'data/warehouse/wnba_forward_validation.json' \
+            'data/dashboard/wnba_forward_validation.json' \
+            'docs/index.html'
+      - name: Upload Sprint 12 report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-forward-validation
+          path: |
+            data/dashboard/wnba_forward_validation.json
+            data/warehouse/wnba_forward_validation.json
