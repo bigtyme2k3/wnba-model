@@ -48,7 +48,12 @@ def main() -> None:
     html = replace_block(html, '<style id="v4-alt-clv-style">', '</style>', CSS) if 'id="v4-alt-clv-style"' in html else html.replace("</head>", CSS + "</head>")
     html = replace_block(html, '<script id="v4-alt-clv-script">', '</script>', SCRIPT) if 'id="v4-alt-clv-script"' in html else html.replace("</body>", SCRIPT + "</body>")
     HTML.write_text(html, encoding="utf-8")
-    print("Certified ALT CLV metrics added to Performance")
+    try:
+        from patch_dashboard_v4_ensemble_intelligence import main as ensemble_patch
+        ensemble_patch()
+    except Exception as exc:
+        print("Ensemble dashboard persistence warning:", exc)
+    print("Certified ALT CLV metrics and persistent Ensemble tab added")
 
 
 if __name__ == "__main__":
