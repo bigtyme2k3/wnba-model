@@ -1,0 +1,54 @@
+name: WNBA Market Timeline (Sprint 15 Commit 1)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 */3 * * *'
+
+concurrency:
+  group: wnba-market-timeline
+  cancel-in-progress: false
+
+jobs:
+  build-market-timeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate source code
+        run: python -m py_compile wnba_market_timeline.py qa_market_timeline.py
+
+      - name: Build timeline artifacts from Warehouse V2
+        run: python wnba_market_timeline.py
+
+      - name: Verify timeline integrity
+        run: qa_market_timeline.py
+
+      - name: Show timeline summary
+        run: cat data/dashboard/wnba_market_timeline_summary.json
+
+      - name: Commit timeline artifacts
+        run: |
+          git config user.name 'WNBA Market Timeline Bot'
+          git config user.email 'actions@github.com'
+          git add \
+            data/market/market_snapshots.json \
+            data/market/market_timeline.json \
+            data/market/closing_lines.json \
+            data/dashboard/wnba_market_timeline_summary.json
+          if git diff --cached --quiet; then
+            echo 'No market timeline changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA market timeline artifacts'
+          git pull --rebase origin main
+          git push origin HEAD:main
