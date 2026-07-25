@@ -23,4 +23,8 @@ def main():
  h=h.replace("['pipeline','Pipeline']","['production','Production'],['pipeline','Pipeline']") if "['production','Production']" not in h else h
  h=h.replace("else if(view==='pipeline')root.innerHTML=safe(window.pipelineStatus)","else if(view==='production')root.innerHTML=safe(window.productionReadiness);else if(view==='pipeline')root.innerHTML=safe(window.pipelineStatus)") if "view==='production'" not in h else h
  HTML.write_text(h,encoding='utf-8');print('Sprint 13 Production tab embedded')
+ try:
+  from patch_dashboard_v4_remaining_season import main as patch_remaining
+  patch_remaining()
+ except Exception as exc:print('Remaining Season dashboard persistence warning:',exc)
 if __name__=='__main__':main()
