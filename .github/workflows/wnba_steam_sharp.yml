@@ -1,0 +1,62 @@
+name: WNBA Steam & Sharp Movement (Sprint 15 Commit 3)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '40 */3 * * *'
+
+concurrency:
+  group: wnba-steam-sharp
+  cancel-in-progress: false
+
+jobs:
+  build-steam-sharp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate source code
+        run: python -m py_compile wnba_market_timeline.py wnba_line_movement_engine.py wnba_steam_sharp_engine.py qa_steam_sharp.py
+
+      - name: Refresh canonical market timeline
+        run: python wnba_market_timeline.py
+
+      - name: Refresh line movement intelligence
+        run: python wnba_line_movement_engine.py
+
+      - name: Build steam and sharp intelligence
+        run: python wnba_steam_sharp_engine.py
+
+      - name: Verify steam and sharp integrity
+        run: python qa_steam_sharp.py
+
+      - name: Show steam and sharp summary
+        run: cat data/dashboard/wnba_steam_sharp_summary.json
+
+      - name: Commit steam and sharp artifacts
+        run: |
+          git config user.name 'WNBA Steam Sharp Bot'
+          git config user.email 'actions@github.com'
+          git add \
+            data/market/movement_classifications.json \
+            data/market/steam_alerts.json \
+            data/market/sharp_movements.json \
+            data/market/consensus_movements.json \
+            data/market/market_signals.json \
+            data/dashboard/wnba_steam_sharp_summary.json
+          if git diff --cached --quiet; then
+            echo 'No steam or sharp changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA steam and sharp movement intelligence'
+          git pull --rebase origin main
+          git push origin HEAD:main
