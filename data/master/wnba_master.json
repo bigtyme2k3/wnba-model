@@ -1,6 +1,6 @@
 {
-  "generated_at_utc": "2026-07-25T03:34:31.052868+00:00",
-  "target_date": "2026-07-24",
+  "generated_at_utc": "2026-07-25T14:43:47.224455+00:00",
+  "target_date": "2026-07-25",
   "schema_version": "master-v5-active-slate",
   "registry": {
     "version": "2026-07-08-v1",
@@ -74,8 +74,8 @@
     "deprecated_pattern": "Raw source files and experimental engines should not feed the dashboard directly. They feed master builder or remain legacy."
   },
   "summary": {
-    "games": 0,
-    "today_games": 0,
+    "games": 1,
+    "today_games": 1,
     "yesterday_games": 0,
     "players": 323,
     "props": 0,
@@ -83,7 +83,27 @@
     "sportsbook_markets": 0,
     "books": []
   },
-  "games": [],
+  "games": [
+    {
+      "game_id": "401857320",
+      "game_date": "2026-07-25",
+      "bucket": "today",
+      "game": "TEAM SPOON @ TEAM COOP",
+      "away_team": "TEAM SPOON",
+      "home_team": "TEAM COOP",
+      "away_score": "",
+      "home_score": "",
+      "status": "7/25 - 8:30 PM EDT",
+      "start_time": "2026-07-26T00:30Z",
+      "spread": "",
+      "total": "",
+      "moneyline_home": "",
+      "moneyline_away": "",
+      "home_logo": "",
+      "away_logo": "",
+      "source": "data/wnba/scores.json"
+    }
+  ],
   "players": [
     {
       "player": "A'ja Wilson",
@@ -5591,12 +5611,12 @@
     ],
     "rejected_book_rows": 0,
     "rejected_books": {},
-    "source_used": "data/raw/line_shopping_2026-07-24.csv",
+    "source_used": "data/raw/line_shopping_2026-07-25.csv",
     "stale_sources_rejected": []
   },
   "stats_quality": {
-    "generated_at_utc": "2026-07-24T15:06:54.917353+00:00",
-    "target_date": "2026-07-24",
+    "generated_at_utc": "2026-07-25T14:43:22.442499+00:00",
+    "target_date": "2026-07-25",
     "status": "ok",
     "summary": {
       "live_players": 323,
@@ -5622,8 +5642,8 @@
     "note": "Stats are trusted only when live_players and recent5_rows are populated. Otherwise projections should lean more on market odds and be labeled degraded."
   },
   "source_health": {
-    "generated_at_utc": "2026-07-24T15:07:18.809810+00:00",
-    "target_date": "2026-07-24",
+    "generated_at_utc": "2026-07-25T14:43:47.158054+00:00",
+    "target_date": "2026-07-25",
     "summary": {
       "sources": 8,
       "ok_or_optional": 7,
@@ -5638,7 +5658,7 @@
             "status": "ok",
             "provider": "sportsdataverse/wehoop",
             "upstream": "ESPN",
-            "target_date": "2026-07-24",
+            "target_date": "2026-07-25",
             "season": 2026,
             "completed_games": 222,
             "player_game_rows": 5453,
@@ -5650,7 +5670,7 @@
             "skipped_game_ids": "401857072",
             "fetch_error_games": 0,
             "fetch_error_game_ids": [],
-            "generated_at_utc": "2026-07-24 14:20:45 UTC"
+            "generated_at_utc": "2026-07-25 14:09:59 UTC"
           },
           "players": {
             "path": "data/raw/wnba_players_live.json",
@@ -5686,7 +5706,7 @@
           "injuries": {
             "ok": true,
             "returncode": 0,
-            "bytes": 11936,
+            "bytes": 11943,
             "stderr": "",
             "output_file": "data/wnba/injuries.json"
           },
@@ -5732,7 +5752,7 @@
         "detail": {
           "path": "data/warehouse/wnba_matchup_intelligence.json",
           "exists": true,
-          "bytes": 3619,
+          "bytes": 261,
           "populated": true
         }
       },
@@ -5752,11 +5772,11 @@
         "detail": {
           "raw_status": {
             "status": "ok",
-            "target_date": "2026-07-24",
+            "target_date": "2026-07-25",
             "selected_source": "current_file",
             "rows": 7,
             "notes": "Loaded from existing current odds file.",
-            "checked_at_utc": "2026-07-24T15:06:55.344599+00:00",
+            "checked_at_utc": "2026-07-25T14:43:22.866079+00:00",
             "source_priority": [
               "manual",
               "current_file",
@@ -5767,8 +5787,8 @@
             "api_usage_policy": "The Odds API is optional/manual only to conserve credits."
           },
           "health": {
-            "generated_at_utc": "2026-07-24T15:07:16.208100+00:00",
-            "target_date": "2026-07-24",
+            "generated_at_utc": "2026-07-25T14:43:44.041542+00:00",
+            "target_date": "2026-07-25",
             "status": "ok",
             "label": "Team odds loaded",
             "summary": {
@@ -5781,11 +5801,11 @@
             },
             "source_status": {
               "status": "ok",
-              "target_date": "2026-07-24",
+              "target_date": "2026-07-25",
               "selected_source": "current_file",
               "rows": 7,
               "notes": "Loaded from existing current odds file.",
-              "checked_at_utc": "2026-07-24T15:06:55.344599+00:00",
+              "checked_at_utc": "2026-07-25T14:43:22.866079+00:00",
               "source_priority": [
                 "manual",
                 "current_file",
@@ -5813,59 +5833,59 @@
   "source_matrix": [
     {
       "source": "sports_skills_schedule",
-      "status": "missing",
-      "rows": 0,
+      "status": "ok",
+      "rows": 1,
       "detail": "Primary active slate schedule from data/wnba/scores.json.",
-      "checked_at_utc": "2026-07-25T03:34:31.052610+00:00"
+      "checked_at_utc": "2026-07-25T14:43:47.224118+00:00"
     },
     {
       "source": "sportsdataverse",
-      "status": "optional_package_not_installed",
-      "rows": 0,
+      "status": "optional_package_installed",
+      "rows": 1,
       "detail": "Package schedule backup.",
-      "checked_at_utc": "2026-07-25T03:34:31.052689+00:00"
+      "checked_at_utc": "2026-07-25T14:43:47.224228+00:00"
     },
     {
       "source": "nba_api",
-      "status": "optional_package_not_installed",
+      "status": "optional_package_installed",
       "rows": 323,
       "detail": "Advanced stats falls back to owned boxscore warehouse.",
-      "checked_at_utc": "2026-07-25T03:34:31.052765+00:00"
+      "checked_at_utc": "2026-07-25T14:43:47.224306+00:00"
     },
     {
       "source": "boxscore_warehouse",
       "status": "ok",
       "rows": 323,
       "detail": "wnba_players_live.json generated from official stats or boxscore fallback.",
-      "checked_at_utc": "2026-07-25T03:34:31.052769+00:00"
+      "checked_at_utc": "2026-07-25T14:43:47.224309+00:00"
     },
     {
       "source": "odds_pipeline",
       "status": "missing",
       "rows": 0,
       "detail": "sportsbook consensus markets normalized into master props.",
-      "checked_at_utc": "2026-07-25T03:34:31.052772+00:00"
+      "checked_at_utc": "2026-07-25T14:43:47.224311+00:00"
     },
     {
       "source": "the_odds_api",
       "status": "backup_only",
       "rows": 0,
       "detail": "Do not use as primary because credits burn quickly.",
-      "checked_at_utc": "2026-07-25T03:34:31.052774+00:00"
+      "checked_at_utc": "2026-07-25T14:43:47.224313+00:00"
     },
     {
       "source": "litellm",
-      "status": "optional_package_not_installed",
+      "status": "optional_package_installed",
       "rows": 0,
       "detail": "AI gateway planned; not required for current dashboard.",
-      "checked_at_utc": "2026-07-25T03:34:31.052821+00:00"
+      "checked_at_utc": "2026-07-25T14:43:47.224387+00:00"
     },
     {
       "source": "optuna",
-      "status": "optional_package_not_installed",
+      "status": "optional_package_installed",
       "rows": 0,
       "detail": "Model tuning planned; not required for current dashboard.",
-      "checked_at_utc": "2026-07-25T03:34:31.052865+00:00"
+      "checked_at_utc": "2026-07-25T14:43:47.224453+00:00"
     }
   ],
   "prop_history_diagnostics": {
@@ -5876,19 +5896,19 @@
       "boxscores_2026-07-15.csv": 57,
       "boxscores_2026-07-14.csv": 41,
       "boxscores_2026-07-20.csv": 76,
+      "boxscores_2026-07-10.csv": 61,
+      "boxscores_2026-07-11.csv": 59,
       "boxscores_2026-07-12.csv": 82,
       "boxscores_2026-07-17.csv": 83,
       "boxscores_2026-07-13.csv": 38,
+      "boxscores_2026-07-09.csv": 58,
       "boxscores_2026-07-19.csv": 58,
       "boxscores_2026-07-18.csv": 60,
       "boxscores_2026-07-05.csv": 21,
       "boxscores_2026-07-08.csv": 60,
-      "boxscores_2026-07-10.csv": 61,
       "boxscores_2026-07-04.csv": 40,
       "boxscores_2026-07-07.csv": 37,
-      "boxscores_2026-07-11.csv": 59,
       "boxscores_2026-07-06.csv": 60,
-      "boxscores_2026-07-09.csv": 58,
       "wehoop_player_boxscores.csv": 4471
     },
     "players": 307,
@@ -5899,142 +5919,5 @@
     "props_with_history": 0,
     "props_with_full_last5": 0,
     "players_with_short_history": []
-  },
-  "injury_intelligence": {
-    "target_date": "2026-07-24",
-    "generated_at_utc": "2026-07-25T03:34:31.739033+00:00",
-    "injuries": [],
-    "adjustments": [],
-    "team_impacts": [
-      {
-        "team": "Las Vegas Aces",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Connecticut Sun",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Atlanta Dream",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Chicago Sky",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "JAPAN",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Phoenix Mercury",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Dallas Wings",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "New York Liberty",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Washington Mystics",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Los Angeles Sparks",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Indiana Fever",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Minnesota Lynx",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Golden State Valkyries",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Seattle Storm",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "NIGERIA",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Portland Fire",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      },
-      {
-        "team": "Toronto Tempo",
-        "injuries": 0,
-        "missing_minutes": 0.0,
-        "minutes_reallocated": 0,
-        "impact_level": "LOW"
-      }
-    ],
-    "summary": {
-      "teams_on_slate": 0,
-      "injuries_on_slate": 0,
-      "out_or_doubtful": 0,
-      "questionable": 0,
-      "beneficiaries": 0,
-      "props_adjusted": 0,
-      "props_blocked": 0,
-      "props_limited": 0
-    }
   }
 }
