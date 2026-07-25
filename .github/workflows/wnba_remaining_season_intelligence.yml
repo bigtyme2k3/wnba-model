@@ -1,0 +1,53 @@
+name: WNBA Remaining Season Intelligence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 10 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-remaining-season-intelligence
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build remaining season intelligence
+        run: python wnba_remaining_season_intelligence.py
+      - name: Patch dashboard
+        run: python patch_dashboard_v4_remaining_season.py
+      - name: Verify output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_remaining_season_intelligence.json')
+          assert p.exists(), 'remaining season output missing'
+          d=json.load(p.open())
+          assert 'summary' in d and 'games' in d and 'teams' in d
+          print(json.dumps(d['summary'],indent=2))
+          PY
+      - name: Commit outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/dashboard/wnba_remaining_season_intelligence.json docs/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Update remaining season intelligence'
+          git pull --rebase origin main
+          git push origin main
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-remaining-season-intelligence
+          path: data/dashboard/wnba_remaining_season_intelligence.json
