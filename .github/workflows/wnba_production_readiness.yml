@@ -1,0 +1,80 @@
+name: WNBA Production Readiness (Sprint 13)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_production_readiness.py'
+      - 'patch_dashboard_v4_production_readiness.py'
+      - 'qa_v4.py'
+      - 'data/dashboard/**'
+      - '.github/workflows/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-production-readiness
+  cancel-in-progress: true
+
+jobs:
+  production-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+
+      - name: Compile Sprint 13
+        run: |
+          python -m py_compile wnba_production_readiness.py patch_dashboard_v4_production_readiness.py
+
+      - name: Build production readiness report
+        run: python wnba_production_readiness.py
+
+      - name: Publish Production dashboard
+        run: python patch_dashboard_v4_production_readiness.py
+
+      - name: Verify production gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_production_readiness.json').read_text())
+          assert p['status'] in {'READY','STANDBY','BLOCKED'}
+          assert isinstance(p['ready_for_live_slate'], bool)
+          assert p['summary']['gates'] == len(p['gates'])
+          assert all('passed' in g and 'critical' in g for g in p['gates'])
+          html=Path('docs/index.html').read_text()
+          for marker in ('v4-production-readiness-data','v4-production-readiness-script','Production Readiness'):
+              assert marker in html, marker
+          print(json.dumps({'status':p['status'],'ready_for_live_slate':p['ready_for_live_slate'],'summary':p['summary']},indent=2))
+          PY
+
+      - name: Commit Sprint 13 outputs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/dashboard/wnba_production_readiness.json data/warehouse/wnba_production_readiness.json docs/index.html
+          git diff --cached --quiet || git commit -m "Update Sprint 13 production readiness"
+          git pull --rebase origin main
+          git push
+
+      - name: Upload production readiness report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wnba-production-readiness
+          path: |
+            data/dashboard/wnba_production_readiness.json
+            data/warehouse/wnba_production_readiness.json
+            docs/index.html
+          if-no-files-found: error
