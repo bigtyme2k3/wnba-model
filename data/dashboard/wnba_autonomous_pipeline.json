@@ -1,24 +1,24 @@
 {
   "sprint": 11,
   "phase": "autonomous-orchestration",
-  "generated_at_utc": "2026-07-24T22:01:15.795804+00:00",
-  "target_date": "2026-07-24",
+  "generated_at_utc": "2026-07-25T16:14:11.447476+00:00",
+  "target_date": "2026-07-25",
   "status": "WAIT",
   "readiness": {
     "sprint": 11,
     "phase": "restart-readiness",
-    "generated_at_utc": "2026-07-24T22:01:15.684330+00:00",
-    "target_date": "2026-07-24",
+    "generated_at_utc": "2026-07-25T16:14:11.322171+00:00",
+    "target_date": "2026-07-25",
     "status": "WAIT",
     "counts": {
-      "today_games": 0,
+      "today_games": 1,
       "props": 0,
       "sportsbook_markets": 0,
       "player_logs": 4180,
       "calibration_records": 4376
     },
     "checks": {
-      "regular_season_slate": false,
+      "regular_season_slate": true,
       "current_props": false,
       "sportsbook_markets": false,
       "player_history": true,
@@ -26,7 +26,6 @@
       "dashboard_writable": true
     },
     "blockers": [
-      "regular_season_slate",
       "current_props",
       "sportsbook_markets"
     ],
@@ -42,7 +41,7 @@
       "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_readiness_engine.py",
       "returncode": 0,
       "duration_seconds": 0.09,
-      "stdout_tail": "{\n  \"sprint\": 11,\n  \"phase\": \"restart-readiness\",\n  \"generated_at_utc\": \"2026-07-24T22:01:15.684330+00:00\",\n  \"target_date\": \"2026-07-24\",\n  \"status\": \"WAIT\",\n  \"counts\": {\n    \"today_games\": 0,\n    \"props\": 0,\n    \"sportsbook_markets\": 0,\n    \"player_logs\": 4180,\n    \"calibration_records\": 4376\n  },\n  \"checks\": {\n    \"regular_season_slate\": false,\n    \"current_props\": false,\n    \"sportsbook_markets\": false,\n    \"player_history\": true,\n    \"adaptive_calibration\": true,\n    \"dashboard_writable\": true\n  },\n  \"blockers\": [\n    \"regular_season_slate\",\n    \"current_props\",\n    \"sportsbook_markets\"\n  ],\n  \"reason\": \"Awaiting live regular-season market data.\",\n  \"preserve_last_valid_reports\": true\n}\n",
+      "stdout_tail": "{\n  \"sprint\": 11,\n  \"phase\": \"restart-readiness\",\n  \"generated_at_utc\": \"2026-07-25T16:14:11.322171+00:00\",\n  \"target_date\": \"2026-07-25\",\n  \"status\": \"WAIT\",\n  \"counts\": {\n    \"today_games\": 1,\n    \"props\": 0,\n    \"sportsbook_markets\": 0,\n    \"player_logs\": 4180,\n    \"calibration_records\": 4376\n  },\n  \"checks\": {\n    \"regular_season_slate\": true,\n    \"current_props\": false,\n    \"sportsbook_markets\": false,\n    \"player_history\": true,\n    \"adaptive_calibration\": true,\n    \"dashboard_writable\": true\n  },\n  \"blockers\": [\n    \"current_props\",\n    \"sportsbook_markets\"\n  ],\n  \"reason\": \"Awaiting live regular-season market data.\",\n  \"preserve_last_valid_reports\": true\n}\n",
       "stderr_tail": ""
     },
     {
@@ -68,7 +67,7 @@
       "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_final_qa.py",
       "returncode": 0,
       "duration_seconds": 0.03,
-      "stdout_tail": "{\n  \"sprint\": 11,\n  \"phase\": \"final-qa\",\n  \"generated_at_utc\": \"2026-07-24T22:01:15.754728+00:00\",\n  \"status\": \"PASS\",\n  \"readiness_status\": \"WAIT\",\n  \"checks\": {\n    \"readiness_report_present\": true,\n    \"dashboard_exists\": true,\n    \"adaptive_report_present\": true,\n    \"ensemble_output_present\": true,\n    \"simulation_output_present\": true,\n    \"no_duplicate_edges\": true,\n    \"no_duplicate_ensemble\": true,\n    \"no_duplicate_simulations\": true,\n    \"ensemble_not_ahead_of_edges\": true,\n    \"simulations_not_ahead_of_ensemble\": true,\n    \"lineage_matches_ensemble\": true\n  },\n  \"failed_checks\": [],\n  \"counts\": {\n    \"daily_edges\": 0,\n    \"ensemble\": 0,\n    \"simulations\": 0,\n    \"alt_streaks\": 0\n  },\n  \"green_light\": false\n}\n",
+      "stdout_tail": "{\n  \"sprint\": 11,\n  \"phase\": \"final-qa\",\n  \"generated_at_utc\": \"2026-07-25T16:14:11.390187+00:00\",\n  \"status\": \"PASS\",\n  \"readiness_status\": \"WAIT\",\n  \"checks\": {\n    \"readiness_report_present\": true,\n    \"dashboard_exists\": true,\n    \"adaptive_report_present\": true,\n    \"ensemble_output_present\": true,\n    \"simulation_output_present\": true,\n    \"no_duplicate_edges\": true,\n    \"no_duplicate_ensemble\": true,\n    \"no_duplicate_simulations\": true,\n    \"ensemble_not_ahead_of_edges\": true,\n    \"simulations_not_ahead_of_ensemble\": true,\n    \"lineage_matches_ensemble\": true\n  },\n  \"failed_checks\": [],\n  \"counts\": {\n    \"daily_edges\": 0,\n    \"ensemble\": 0,\n    \"simulations\": 0,\n    \"alt_streaks\": 0\n  },\n  \"green_light\": false\n}\n",
       "stderr_tail": ""
     },
     {
@@ -77,8 +76,8 @@
       "required": false,
       "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python patch_dashboard_v4_pipeline_status.py",
       "returncode": 0,
-      "duration_seconds": 0.04,
-      "stdout_tail": "Sprint 11 Pipeline tab embedded\n",
+      "duration_seconds": 0.05,
+      "stdout_tail": "Forward Validation dashboard embedded\nSprint 13 Production tab embedded\nRemaining Season Intelligence tab embedded\nSprint 11 Pipeline, Sprint 12 Validation, and Sprint 13 Production tabs embedded\n",
       "stderr_tail": ""
     }
   ],
