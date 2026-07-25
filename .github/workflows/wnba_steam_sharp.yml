@@ -42,11 +42,19 @@ jobs:
       - name: Show steam and sharp summary
         run: cat data/dashboard/wnba_steam_sharp_summary.json
 
-      - name: Commit steam and sharp artifacts
+      - name: Commit all refreshed market artifacts
         run: |
           git config user.name 'WNBA Steam Sharp Bot'
           git config user.email 'actions@github.com'
           git add \
+            data/market/market_snapshots.json \
+            data/market/market_timeline.json \
+            data/market/closing_lines.json \
+            data/dashboard/wnba_market_timeline_summary.json \
+            data/market/line_movements.json \
+            data/market/sportsbook_movements.json \
+            data/market/market_volatility.json \
+            data/dashboard/wnba_line_movement_summary.json \
             data/market/movement_classifications.json \
             data/market/steam_alerts.json \
             data/market/sharp_movements.json \
@@ -54,9 +62,9 @@ jobs:
             data/market/market_signals.json \
             data/dashboard/wnba_steam_sharp_summary.json
           if git diff --cached --quiet; then
-            echo 'No steam or sharp changes to commit.'
+            echo 'No market intelligence changes to commit.'
             exit 0
           fi
-          git commit -m 'Refresh WNBA steam and sharp movement intelligence'
+          git commit -m 'Refresh WNBA timeline, line movement, steam and sharp intelligence'
           git pull --rebase origin main
           git push origin HEAD:main
