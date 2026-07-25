@@ -28,5 +28,9 @@ def main():
         from patch_dashboard_v4_forward_validation import main as patch_validation
         patch_validation()
     except Exception as exc:print('Sprint 12 dashboard persistence warning:',exc)
-    print('Sprint 11 Pipeline and Sprint 12 Validation tabs embedded')
+    try:
+        from patch_dashboard_v4_production_readiness import main as patch_production
+        patch_production()
+    except Exception as exc:print('Sprint 13 dashboard persistence warning:',exc)
+    print('Sprint 11 Pipeline, Sprint 12 Validation, and Sprint 13 Production tabs embedded')
 if __name__=='__main__':main()
