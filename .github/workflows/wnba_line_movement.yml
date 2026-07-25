@@ -1,0 +1,61 @@
+name: WNBA Line Movement (Sprint 15 Commit 2)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 */3 * * *'
+
+concurrency:
+  group: wnba-line-movement
+  cancel-in-progress: false
+
+jobs:
+  build-line-movement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate source code
+        run: python -m py_compile wnba_market_timeline.py wnba_line_movement_engine.py qa_line_movement.py
+
+      - name: Refresh canonical market timeline
+        run: python wnba_market_timeline.py
+
+      - name: Build line movement intelligence
+        run: python wnba_line_movement_engine.py
+
+      - name: Verify line movement integrity
+        run: python qa_line_movement.py
+
+      - name: Show movement summary
+        run: cat data/dashboard/wnba_line_movement_summary.json
+
+      - name: Commit line movement artifacts
+        run: |
+          git config user.name 'WNBA Line Movement Bot'
+          git config user.email 'actions@github.com'
+          git add \
+            data/market/market_snapshots.json \
+            data/market/market_timeline.json \
+            data/market/closing_lines.json \
+            data/dashboard/wnba_market_timeline_summary.json \
+            data/market/line_movements.json \
+            data/market/sportsbook_movements.json \
+            data/market/market_volatility.json \
+            data/dashboard/wnba_line_movement_summary.json
+          if git diff --cached --quiet; then
+            echo 'No line movement changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA line movement intelligence'
+          git pull --rebase origin main
+          git push origin HEAD:main
