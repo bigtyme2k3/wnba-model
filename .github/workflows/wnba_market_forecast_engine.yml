@@ -1,0 +1,72 @@
+name: WNBA Market Forecast Engine (Sprint 17 Commit 1)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 */3 * * *'
+
+concurrency:
+  group: wnba-market-forecast-engine
+  cancel-in-progress: false
+
+jobs:
+  build-market-forecast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate source code
+        run: |
+          python -m py_compile \
+            wnba_market_timeline.py \
+            wnba_line_movement_engine.py \
+            wnba_steam_sharp_engine.py \
+            wnba_clv_intelligence.py \
+            wnba_entry_window_intelligence.py \
+            wnba_market_forecast_engine.py \
+            qa_market_forecast_engine.py
+
+      - name: Refresh prerequisite market intelligence
+        run: |
+          python wnba_market_timeline.py
+          python wnba_line_movement_engine.py
+          python wnba_steam_sharp_engine.py
+          python wnba_clv_intelligence.py
+          python wnba_entry_window_intelligence.py
+
+      - name: Build market forecasts
+        run: python wnba_market_forecast_engine.py
+
+      - name: Verify market forecast integrity
+        run: python qa_market_forecast_engine.py
+
+      - name: Show market forecast summary
+        run: cat data/dashboard/wnba_market_forecast_summary.json
+
+      - name: Commit regenerated market intelligence
+        run: |
+          git config user.name 'WNBA Market Forecast Bot'
+          git config user.email 'actions@github.com'
+          git add data/market data/forecast \
+            data/dashboard/wnba_market_timeline_summary.json \
+            data/dashboard/wnba_line_movement_summary.json \
+            data/dashboard/wnba_steam_sharp_summary.json \
+            data/dashboard/wnba_clv_summary.json \
+            data/dashboard/wnba_entry_window_summary.json \
+            data/dashboard/wnba_market_forecast_summary.json
+          if git diff --cached --quiet; then
+            echo 'No market forecast changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA market forecast intelligence'
+          git pull --rebase --autostash origin main
+          git push origin HEAD:main
