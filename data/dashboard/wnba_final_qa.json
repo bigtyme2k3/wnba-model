@@ -1,9 +1,9 @@
 {
   "sprint": 11,
   "phase": "final-qa",
-  "generated_at_utc": "2026-07-25T16:14:11.390187+00:00",
-  "status": "PASS",
-  "readiness_status": "WAIT",
+  "generated_at_utc": "2026-07-26T16:16:53.212135+00:00",
+  "status": "FAIL",
+  "readiness_status": "READY",
   "checks": {
     "readiness_report_present": true,
     "dashboard_exists": true,
@@ -12,17 +12,22 @@
     "simulation_output_present": true,
     "no_duplicate_edges": true,
     "no_duplicate_ensemble": true,
-    "no_duplicate_simulations": true,
+    "no_duplicate_simulations": false,
     "ensemble_not_ahead_of_edges": true,
     "simulations_not_ahead_of_ensemble": true,
-    "lineage_matches_ensemble": true
+    "lineage_matches_ensemble": true,
+    "live_edges_available": true,
+    "live_ensemble_available": true,
+    "live_simulations_available": true
   },
-  "failed_checks": [],
+  "failed_checks": [
+    "no_duplicate_simulations"
+  ],
   "counts": {
-    "daily_edges": 0,
-    "ensemble": 0,
-    "simulations": 0,
-    "alt_streaks": 0
+    "daily_edges": 100,
+    "ensemble": 100,
+    "simulations": 100,
+    "alt_streaks": 34
   },
   "green_light": false
 }
