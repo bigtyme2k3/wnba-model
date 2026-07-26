@@ -1,0 +1,50 @@
+name: WNBA Automated Trend Discovery (Sprint 16 Commit 1)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '25 10 * * *'
+
+concurrency:
+  group: wnba-automated-trend-discovery
+  cancel-in-progress: false
+
+jobs:
+  discover-trends:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate source code
+        run: python -m py_compile wnba_market_timeline.py wnba_line_movement_engine.py wnba_steam_sharp_engine.py wnba_clv_intelligence.py wnba_automated_trend_discovery.py qa_automated_trend_discovery.py
+      - name: Refresh prerequisite intelligence
+        run: |
+          python wnba_market_timeline.py
+          python wnba_line_movement_engine.py
+          python wnba_steam_sharp_engine.py
+          python wnba_clv_intelligence.py
+      - name: Discover repeatable trends
+        run: python wnba_automated_trend_discovery.py
+      - name: Verify trend discovery integrity
+        run: python qa_automated_trend_discovery.py
+      - name: Show trend summary
+        run: cat data/dashboard/wnba_trend_discovery_summary.json
+      - name: Commit regenerated intelligence
+        run: |
+          git config user.name 'WNBA Trend Discovery Bot'
+          git config user.email 'actions@github.com'
+          git add data/market data/trends data/dashboard/wnba_market_timeline_summary.json data/dashboard/wnba_line_movement_summary.json data/dashboard/wnba_steam_sharp_summary.json data/dashboard/wnba_clv_summary.json data/dashboard/wnba_trend_discovery_summary.json
+          if git diff --cached --quiet; then
+            echo 'No trend intelligence changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA automated trend discovery'
+          git pull --rebase origin main
+          git push origin HEAD:main
