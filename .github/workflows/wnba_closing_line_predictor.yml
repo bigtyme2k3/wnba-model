@@ -1,0 +1,49 @@
+name: WNBA Closing Line Predictor (Sprint 17 Commit 2)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '25 */3 * * *'
+
+concurrency:
+  group: wnba-closing-line-predictor
+  cancel-in-progress: false
+
+jobs:
+  build-closing-line-predictor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate source code
+        run: python -m py_compile wnba_market_timeline.py wnba_line_movement_engine.py wnba_steam_sharp_engine.py wnba_closing_line_predictor.py qa_closing_line_predictor.py
+      - name: Refresh prerequisite market intelligence
+        run: |
+          python wnba_market_timeline.py
+          python wnba_line_movement_engine.py
+          python wnba_steam_sharp_engine.py
+      - name: Build refined closing line predictions
+        run: python wnba_closing_line_predictor.py
+      - name: Verify closing line predictor integrity
+        run: python qa_closing_line_predictor.py
+      - name: Show closing line predictor summary
+        run: cat data/dashboard/wnba_closing_line_predictor_summary.json
+      - name: Commit regenerated intelligence
+        run: |
+          git config user.name 'WNBA Closing Line Predictor Bot'
+          git config user.email 'actions@github.com'
+          git add data/market data/forecast data/dashboard
+          if git diff --cached --quiet; then
+            echo 'No closing line predictor changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA closing line predictor intelligence'
+          git pull --rebase --autostash origin main
+          git push origin HEAD:main
