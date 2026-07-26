@@ -1,21 +1,21 @@
 {
   "sprint": 13,
   "phase": "production-readiness",
-  "generated_at_utc": "2026-07-26T15:41:10.563877+00:00",
-  "status": "STANDBY",
+  "generated_at_utc": "2026-07-26T16:25:54.009988+00:00",
+  "status": "READY",
   "ready_for_live_slate": true,
   "operating_context": {
-    "pipeline_readiness": "WAIT",
-    "offday_or_break": true
+    "pipeline_readiness": "READY",
+    "offday_or_break": false
   },
   "summary": {
-    "gates": 8,
-    "passed": 8,
+    "gates": 10,
+    "passed": 10,
     "failed_critical": 0,
     "failed_advisory": 0,
     "daily_edges": 100,
-    "ensemble": 0,
-    "simulations": 0,
+    "ensemble": 100,
+    "simulations": 100,
     "forward_validation_records": 0
   },
   "gates": [
@@ -62,10 +62,22 @@
       "critical": true
     },
     {
-      "name": "live_slate_inputs",
+      "name": "daily_edges_available",
       "passed": true,
-      "detail": "WAIT: live outputs may be empty",
-      "critical": false
+      "detail": "daily edges=100",
+      "critical": true
+    },
+    {
+      "name": "ensemble_coverage",
+      "passed": true,
+      "detail": "ensemble=100, edges=100",
+      "critical": true
+    },
+    {
+      "name": "simulation_coverage",
+      "passed": true,
+      "detail": "simulation=100, ensemble=100",
+      "critical": true
     }
   ],
   "forward_validation_database": {
