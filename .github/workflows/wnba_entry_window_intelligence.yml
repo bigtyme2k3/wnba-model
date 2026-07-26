@@ -1,0 +1,93 @@
+name: WNBA Entry Window Intelligence (Sprint 15 Commit 5)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '55 */3 * * *'
+
+concurrency:
+  group: wnba-entry-window-intelligence
+  cancel-in-progress: false
+
+jobs:
+  build-entry-window-intelligence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate source code
+        run: |
+          python -m py_compile \
+            wnba_market_timeline.py \
+            wnba_line_movement_engine.py \
+            wnba_steam_sharp_engine.py \
+            wnba_clv_intelligence.py \
+            wnba_entry_window_intelligence.py \
+            qa_entry_window_intelligence.py
+
+      - name: Refresh canonical market timeline
+        run: python wnba_market_timeline.py
+
+      - name: Refresh line movement intelligence
+        run: python wnba_line_movement_engine.py
+
+      - name: Refresh steam and sharp intelligence
+        run: python wnba_steam_sharp_engine.py
+
+      - name: Refresh CLV intelligence
+        run: python wnba_clv_intelligence.py
+
+      - name: Build entry window intelligence
+        run: python wnba_entry_window_intelligence.py
+
+      - name: Verify entry window integrity
+        run: python qa_entry_window_intelligence.py
+
+      - name: Show entry window summary
+        run: cat data/dashboard/wnba_entry_window_summary.json
+
+      - name: Commit entry window artifacts
+        run: |
+          git config user.name 'WNBA Entry Window Bot'
+          git config user.email 'actions@github.com'
+          git add \
+            data/market/market_snapshots.json \
+            data/market/market_timeline.json \
+            data/market/closing_lines.json \
+            data/dashboard/wnba_market_timeline_summary.json \
+            data/market/line_movements.json \
+            data/market/sportsbook_movements.json \
+            data/market/market_volatility.json \
+            data/dashboard/wnba_line_movement_summary.json \
+            data/market/movement_classifications.json \
+            data/market/steam_alerts.json \
+            data/market/sharp_movements.json \
+            data/market/consensus_movements.json \
+            data/market/market_signals.json \
+            data/dashboard/wnba_steam_sharp_summary.json \
+            data/market/clv_results.json \
+            data/market/sportsbook_clv.json \
+            data/market/player_clv.json \
+            data/market/team_clv.json \
+            data/market/market_clv.json \
+            data/market/clv_leaderboard.json \
+            data/dashboard/wnba_clv_summary.json \
+            data/market/entry_window_history.json \
+            data/market/entry_window_recommendations.json \
+            data/dashboard/wnba_entry_window_summary.json
+          if git diff --cached --quiet; then
+            echo 'No entry window changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA entry window intelligence'
+          git pull --rebase origin main
+          git push origin HEAD:main
