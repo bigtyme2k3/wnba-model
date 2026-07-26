@@ -1,0 +1,75 @@
+name: WNBA Live Result Grader (Validation Week Commit 2)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Morning UTC run grades completed games after result pipelines have refreshed.
+    - cron: '30 10 * * *'
+
+concurrency:
+  group: wnba-odds-history-writes
+  cancel-in-progress: false
+
+jobs:
+  grade-live-predictions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate grading source
+        run: |
+          python -m py_compile \
+            wnba_warehouse_migration_bridge.py \
+            wnba_live_result_grader.py \
+            qa_live_result_grader.py
+
+      - name: Bridge latest warehouse state
+        run: python wnba_warehouse_migration_bridge.py --execute
+
+      - name: Grade tracked prediction records
+        run: python wnba_live_result_grader.py
+
+      - name: Verify result grading integrity
+        run: python qa_live_result_grader.py
+
+      - name: Show result grading summary
+        run: cat data/dashboard/wnba_live_result_grader_summary.json
+
+      - name: Commit grading artifacts safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Validation Grader Bot'
+          git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-grading-generated
+          mkdir -p /tmp/wnba-grading-generated
+          cp -a data /tmp/wnba-grading-generated/
+
+          git fetch origin main
+          git reset --hard origin/main
+          rm -rf data
+          cp -a /tmp/wnba-grading-generated/data ./data
+
+          git add data/warehouse data/validation data/dashboard
+          if git diff --cached --quiet; then
+            echo 'No live grading changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Grade captured live WNBA prediction records'
+          git push origin HEAD:main
