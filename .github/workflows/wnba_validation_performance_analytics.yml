@@ -1,0 +1,71 @@
+name: WNBA Validation Performance Analytics (Validation Week Commit 3)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 10 * * *'
+
+concurrency:
+  group: wnba-odds-history-writes
+  cancel-in-progress: false
+
+jobs:
+  build-validation-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate analytics source
+        run: |
+          python -m py_compile \
+            wnba_live_result_grader.py \
+            wnba_validation_performance_analytics.py \
+            qa_validation_performance_analytics.py
+
+      - name: Refresh live prediction grading
+        run: python wnba_live_result_grader.py
+
+      - name: Build validation performance analytics
+        run: python wnba_validation_performance_analytics.py
+
+      - name: Verify performance analytics integrity
+        run: python qa_validation_performance_analytics.py
+
+      - name: Show performance analytics summary
+        run: cat data/dashboard/wnba_live_performance_analytics_summary.json
+
+      - name: Commit performance artifacts safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Validation Analytics Bot'
+          git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-performance-generated
+          mkdir -p /tmp/wnba-performance-generated/data/validation /tmp/wnba-performance-generated/data/dashboard
+          cp -a data/validation/. /tmp/wnba-performance-generated/data/validation/
+          cp -a data/dashboard/wnba_live_result_grader_summary.json /tmp/wnba-performance-generated/data/dashboard/ 2>/dev/null || true
+          cp -a data/dashboard/wnba_live_performance_analytics_summary.json /tmp/wnba-performance-generated/data/dashboard/
+
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/validation data/dashboard
+          cp -a /tmp/wnba-performance-generated/data/validation/. data/validation/
+          cp -a /tmp/wnba-performance-generated/data/dashboard/. data/dashboard/
+
+          git add data/validation data/dashboard/wnba_live_result_grader_summary.json data/dashboard/wnba_live_performance_analytics_summary.json
+          if git diff --cached --quiet; then
+            echo 'No validation performance changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA live validation performance analytics'
+          git push origin HEAD:main
