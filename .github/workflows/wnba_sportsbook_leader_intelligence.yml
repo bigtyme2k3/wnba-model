@@ -1,0 +1,66 @@
+name: WNBA Sportsbook Leader Intelligence (Sprint 17 Commit 3)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '50 */3 * * *'
+
+concurrency:
+  group: wnba-sportsbook-leader-intelligence
+  cancel-in-progress: false
+
+jobs:
+  build-sportsbook-leader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate source code
+        run: |
+          python -m py_compile \
+            wnba_market_timeline.py \
+            wnba_line_movement_engine.py \
+            wnba_steam_sharp_engine.py \
+            wnba_clv_intelligence.py \
+            wnba_closing_line_predictor.py \
+            wnba_sportsbook_leader_intelligence.py \
+            qa_sportsbook_leader_intelligence.py
+
+      - name: Refresh prerequisite market intelligence
+        run: |
+          python wnba_market_timeline.py
+          python wnba_line_movement_engine.py
+          python wnba_steam_sharp_engine.py
+          python wnba_clv_intelligence.py
+          python wnba_closing_line_predictor.py
+
+      - name: Build sportsbook leader intelligence
+        run: python wnba_sportsbook_leader_intelligence.py
+
+      - name: Verify sportsbook leader integrity
+        run: python qa_sportsbook_leader_intelligence.py
+
+      - name: Show sportsbook leader summary
+        run: cat data/dashboard/wnba_sportsbook_leader_summary.json
+
+      - name: Commit regenerated intelligence
+        run: |
+          git config user.name 'WNBA Sportsbook Leader Bot'
+          git config user.email 'actions@github.com'
+          git add data/market data/forecast data/dashboard
+          if git diff --cached --quiet; then
+            echo 'No sportsbook leader changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA sportsbook leader intelligence'
+          git pull --rebase origin main
+          git push origin HEAD:main
