@@ -8,8 +8,10 @@ on:
         required: true
         default: '48'
 
+# Share the warehouse write lock with the scheduled live refresh so the two jobs
+# cannot update generated odds artifacts at the same time.
 concurrency:
-  group: wnba-sprint17-live-test
+  group: wnba-odds-history-writes
   cancel-in-progress: false
 
 jobs:
@@ -102,16 +104,56 @@ jobs:
       - name: Show live intelligence brief
         run: cat data/forecast/daily_intelligence_brief.md
 
-      - name: Commit live test artifacts
+      - name: Commit live test artifacts safely
         run: |
           set -euo pipefail
           git config user.name 'WNBA Sprint 17 Live Test Bot'
           git config user.email 'actions@github.com'
-          git add data/warehouse data/market data/forecast data/trends data/dashboard
-          if git diff --cached --quiet; then
-            echo 'No live intelligence changes to commit.'
+
+          # Preserve the generated outputs outside the checkout before syncing to
+          # the newest main branch. This avoids rebasing generated JSON files.
+          rm -rf /tmp/wnba-sprint17-generated
+          mkdir -p /tmp/wnba-sprint17-generated
+          cp -a data/warehouse /tmp/wnba-sprint17-generated/
+          cp -a data/market /tmp/wnba-sprint17-generated/
+          cp -a data/forecast /tmp/wnba-sprint17-generated/
+          cp -a data/trends /tmp/wnba-sprint17-generated/
+          cp -a data/dashboard /tmp/wnba-sprint17-generated/
+
+          restore_and_commit() {
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p data
+            rm -rf data/warehouse data/market data/forecast data/trends data/dashboard
+            cp -a /tmp/wnba-sprint17-generated/warehouse data/
+            cp -a /tmp/wnba-sprint17-generated/market data/
+            cp -a /tmp/wnba-sprint17-generated/forecast data/
+            cp -a /tmp/wnba-sprint17-generated/trends data/
+            cp -a /tmp/wnba-sprint17-generated/dashboard data/
+            git add data/warehouse data/market data/forecast data/trends data/dashboard
+            if git diff --cached --quiet; then
+              echo 'No live intelligence changes to commit.'
+              return 1
+            fi
+            git commit -m 'Refresh Sprint 17 intelligence with live WNBA markets'
+          }
+
+          if ! restore_and_commit; then
             exit 0
           fi
-          git commit -m 'Refresh Sprint 17 intelligence with live WNBA markets'
-          git pull --rebase origin main
-          git push origin HEAD:main
+
+          # Retry from the latest main if another workflow lands during the short
+          # commit window. Generated artifacts remain preserved in /tmp.
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push attempt ${attempt} conflicted; rebuilding commit on latest main."
+            git reset --hard origin/main || true
+            if ! restore_and_commit; then
+              exit 0
+            fi
+          done
+
+          echo 'Unable to push live artifacts after three attempts.'
+          exit 1
