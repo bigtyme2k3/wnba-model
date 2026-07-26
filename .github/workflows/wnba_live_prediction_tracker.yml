@@ -1,0 +1,94 @@
+name: WNBA Live Prediction Tracker (Validation Week Commit 1)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs shortly after the established live-odds refresh checkpoints.
+    - cron: '55 11,13,15,17 * * *'
+
+concurrency:
+  group: wnba-odds-history-writes
+  cancel-in-progress: false
+
+jobs:
+  capture-live-predictions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate tracker source
+        run: |
+          python -m py_compile \
+            wnba_warehouse_migration_bridge.py \
+            wnba_market_timeline.py \
+            wnba_line_movement_engine.py \
+            wnba_steam_sharp_engine.py \
+            wnba_clv_intelligence.py \
+            wnba_entry_window_intelligence.py \
+            wnba_automated_trend_discovery.py \
+            wnba_trend_outcome_validation.py \
+            wnba_closing_line_predictor.py \
+            wnba_sportsbook_leader_normalization.py \
+            wnba_opportunity_scanner.py \
+            wnba_active_slate_scanner.py \
+            wnba_live_prediction_tracker.py \
+            qa_live_prediction_tracker.py
+
+      - name: Bridge latest live warehouse snapshot
+        run: python wnba_warehouse_migration_bridge.py --execute
+
+      - name: Rebuild current market intelligence
+        run: |
+          python wnba_market_timeline.py
+          python wnba_line_movement_engine.py
+          python wnba_steam_sharp_engine.py
+          python wnba_clv_intelligence.py
+          python wnba_entry_window_intelligence.py
+          python wnba_automated_trend_discovery.py
+          python wnba_trend_outcome_validation.py
+          python wnba_closing_line_predictor.py
+          python wnba_sportsbook_leader_normalization.py
+          python wnba_opportunity_scanner.py
+          python wnba_active_slate_scanner.py
+
+      - name: Capture live prediction state
+        run: python wnba_live_prediction_tracker.py
+
+      - name: Verify prediction tracker
+        run: python qa_live_prediction_tracker.py
+
+      - name: Show tracker summary
+        run: cat data/dashboard/wnba_live_prediction_tracker_summary.json
+
+      - name: Commit tracker artifacts safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Validation Tracker Bot'
+          git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-validation-generated
+          mkdir -p /tmp/wnba-validation-generated
+          cp -a data /tmp/wnba-validation-generated/
+
+          git fetch origin main
+          git reset --hard origin/main
+          rm -rf data
+          cp -a /tmp/wnba-validation-generated/data ./data
+
+          git add data/warehouse data/market data/forecast data/trends data/validation data/dashboard
+          if git diff --cached --quiet; then
+            echo 'No live prediction tracker changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Capture live WNBA prediction validation state'
+          git push origin HEAD:main
