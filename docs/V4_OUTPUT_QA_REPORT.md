@@ -1,21 +1,21 @@
 # WNBA V4 Model Output QA
 
-Generated: `2026-07-25T14:52:52.810997+00:00`
+Generated: `2026-07-26T14:55:23.978499+00:00`
 
 **Status:** GREEN
 
 ## Summary
 
-- **Evaluated Rows:** 0
-- **Inspected Rows:** 0
+- **Evaluated Rows:** 302
+- **Inspected Rows:** 75
 - **Qualified Bets:** 0
 - **Portfolio Bets:** 0
 - **Risk Rows:** 0
 - **Errors:** 0
 - **Warnings:** 0
 - **Info:** 1
-- **Target Dates:** {'decisions': '2026-07-25', 'portfolio': '2026-07-25', 'risk': '2026-07-25', 'master': '2026-07-25'}
+- **Target Dates:** {'decisions': '2026-07-26', 'portfolio': '2026-07-26', 'risk': '2026-07-26', 'master': '2026-07-26'}
 
 ## Findings
 
-- **INFO — VALID_PASS_DAY**: No qualified bets today; portfolio correctly remains empty `{"evaluated_rows": 0}`
+- **INFO — VALID_PASS_DAY**: No qualified bets today; portfolio correctly remains empty `{"evaluated_rows": 302}`

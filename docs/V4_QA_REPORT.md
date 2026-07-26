@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-25T14:52:52.774650+00:00`
+Generated: `2026-07-26T14:55:23.937799+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -9,8 +9,8 @@ Operating context: `WAIT` — Awaiting live regular-season market data.
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 133 checked, 0 invalid, 5 expected empty, 8 unexpected empty
-- Workflows: 58 checked, 2 high risk
+- Dashboard JSON: 144 checked, 0 invalid, 2 expected empty, 4 unexpected empty
+- Workflows: 70 checked, 2 high risk
 - Forward validation: green
 
 ## Module QA
@@ -50,12 +50,8 @@ Operating context: `WAIT` — Awaiting live regular-season market data.
 ## Warnings
 
 - Unexpected empty JSON: data/dashboard/wnba_alt_clv.json
-- Unexpected empty JSON: data/dashboard/wnba_autonomous_agent.json
 - Unexpected empty JSON: data/dashboard/wnba_clv_summary.json
-- Unexpected empty JSON: data/dashboard/wnba_daily_ai_report.json
 - Unexpected empty JSON: data/dashboard/wnba_data_lineage.json
-- Unexpected empty JSON: data/dashboard/wnba_decision_engine_final.json
-- Unexpected empty JSON: data/dashboard/wnba_portfolio_dashboard.json
 - Unexpected empty JSON: data/dashboard/wnba_portfolio_optimizer_v2.json
 - High-risk workflow: .github/workflows/wnba_intelligence_foundation.yml
 - High-risk workflow: .github/workflows/wnba_multi_source_fetch.yml
@@ -73,20 +69,26 @@ Operating context: `WAIT` — Awaiting live regular-season market data.
 | `.github/workflows/results_review_center_extension.yml` | 9 | 1 | 0.111 | False | low |
 | `.github/workflows/results_tracker.yml` | 6 | 1 | 0.167 | False | low |
 | `.github/workflows/v4_qa.yml` | 8 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_active_slate_scanner.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_adaptive_confidence.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_alt_market_watch.yml` | 13 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_alt_tab_repair.yml` | 1 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_automated_trend_discovery.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_autonomous_agent.yml` | 11 | 5 | 0.455 | False | medium |
 | `.github/workflows/wnba_autonomous_pipeline.yml` | 9 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_betting_intelligence.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_betting_intelligence_v2.yml` | 7 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_closing_line_predictor.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_closing_line_snapshots.yml` | 5 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_clv_intelligence.yml` | 8 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_confidence_calibration.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_controlled_recalibration.yml` | 1 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_daily_ai_report.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_daily_edge_engine.yml` | 7 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_daily_intelligence_brief.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_data_warehouse.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_ensemble_intelligence.yml` | 6 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_entry_window_intelligence.yml` | 9 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_forward_validation.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_full_game_performance.yml` | 1 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_full_game_simulation.yml` | 1 | 0 | 0.0 | False | low |
@@ -96,6 +98,7 @@ Operating context: `WAIT` — Awaiting live regular-season market data.
 | `.github/workflows/wnba_intelligence_foundation.yml` | 52 | 27 | 0.519 | True | high |
 | `.github/workflows/wnba_line_movement.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_live_slate_refresh.yml` | 7 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_market_forecast_engine.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_market_intelligence.yml` | 1 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_market_timeline.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_mission_control.yml` | 1 | 0 | 0.0 | False | low |
@@ -110,6 +113,7 @@ Operating context: `WAIT` — Awaiting live regular-season market data.
 | `.github/workflows/wnba_odds_history_next_batch.yml` | 11 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_odds_history_repair_results.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_odds_warehouse_v2.yml` | 7 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_opportunity_scanner.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_player_prop_grading_bridge.yml` | 8 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_player_prop_intelligence.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_player_props_history_repair.yml` | 9 | 0 | 0.0 | False | low |
@@ -118,6 +122,10 @@ Operating context: `WAIT` — Awaiting live regular-season market data.
 | `.github/workflows/wnba_production_readiness.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_prop_card_calibration.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_remaining_season_intelligence.yml` | 5 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_sportsbook_leader_intelligence.yml` | 6 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_sportsbook_leader_normalization.yml` | 6 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_steam_sharp.yml` | 7 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_trend_outcome_validation.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v4_player_props_audit.yml` | 4 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v4_player_props_polish.yml` | 11 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v4_status.yml` | 19 | 0 | 0.0 | False | low |
