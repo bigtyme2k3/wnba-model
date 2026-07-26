@@ -1,0 +1,68 @@
+name: WNBA Signal Performance Engine (Validation Week Commit 4)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 10 * * *'
+
+concurrency:
+  group: wnba-odds-history-writes
+  cancel-in-progress: false
+
+jobs:
+  build-signal-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate source code
+        run: |
+          python -m py_compile \
+            wnba_signal_performance_engine.py \
+            qa_signal_performance_engine.py
+
+      - name: Build signal performance analytics
+        run: python wnba_signal_performance_engine.py
+
+      - name: Verify signal performance integrity
+        run: python qa_signal_performance_engine.py
+
+      - name: Show signal performance summary
+        run: cat data/dashboard/wnba_signal_performance_summary.json
+
+      - name: Commit signal performance artifacts safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Signal Performance Bot'
+          git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-signal-performance
+          mkdir -p /tmp/wnba-signal-performance/data/validation /tmp/wnba-signal-performance/data/dashboard
+          cp data/validation/signal_performance.json /tmp/wnba-signal-performance/data/validation/
+          cp data/dashboard/wnba_signal_performance_summary.json /tmp/wnba-signal-performance/data/dashboard/
+
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/validation data/dashboard
+          cp -f /tmp/wnba-signal-performance/data/validation/* data/validation/
+          cp -f /tmp/wnba-signal-performance/data/dashboard/* data/dashboard/
+
+          git add \
+            data/validation/signal_performance.json \
+            data/dashboard/wnba_signal_performance_summary.json
+          if git diff --cached --quiet; then
+            echo 'No signal performance changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA signal performance analytics'
+          git push origin HEAD:main
