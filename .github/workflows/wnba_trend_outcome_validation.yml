@@ -1,0 +1,93 @@
+name: WNBA Trend Outcome Validation (Sprint 16 Commit 2)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '25 7 * * *'
+
+concurrency:
+  group: wnba-trend-outcome-validation
+  cancel-in-progress: false
+
+jobs:
+  validate-trend-outcomes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate source code
+        run: |
+          python -m py_compile \
+            wnba_market_timeline.py \
+            wnba_line_movement_engine.py \
+            wnba_steam_sharp_engine.py \
+            wnba_clv_intelligence.py \
+            wnba_automated_trend_discovery.py \
+            wnba_trend_outcome_validation.py \
+            qa_trend_outcome_validation.py
+
+      - name: Refresh prerequisite intelligence
+        run: |
+          python wnba_market_timeline.py
+          python wnba_line_movement_engine.py
+          python wnba_steam_sharp_engine.py
+          python wnba_clv_intelligence.py
+          python wnba_automated_trend_discovery.py
+
+      - name: Build outcome validation
+        run: python wnba_trend_outcome_validation.py
+
+      - name: Verify outcome validation integrity
+        run: python qa_trend_outcome_validation.py
+
+      - name: Show outcome validation summary
+        run: cat data/dashboard/wnba_trend_outcome_validation_summary.json
+
+      - name: Commit regenerated intelligence
+        run: |
+          git config user.name 'WNBA Trend Validation Bot'
+          git config user.email 'actions@github.com'
+          git add \
+            data/market/market_snapshots.json \
+            data/market/market_timeline.json \
+            data/market/closing_lines.json \
+            data/market/line_movements.json \
+            data/market/sportsbook_movements.json \
+            data/market/market_volatility.json \
+            data/market/movement_classifications.json \
+            data/market/steam_alerts.json \
+            data/market/sharp_movements.json \
+            data/market/consensus_movements.json \
+            data/market/market_signals.json \
+            data/market/clv_results.json \
+            data/market/sportsbook_clv.json \
+            data/market/player_clv.json \
+            data/market/team_clv.json \
+            data/market/market_clv.json \
+            data/market/clv_leaderboard.json \
+            data/trends/automated_trends.json \
+            data/trends/trend_candidates.json \
+            data/trends/outcome_validated_trends.json \
+            data/trends/trend_outcome_records.json \
+            data/dashboard/wnba_market_timeline_summary.json \
+            data/dashboard/wnba_line_movement_summary.json \
+            data/dashboard/wnba_steam_sharp_summary.json \
+            data/dashboard/wnba_clv_summary.json \
+            data/dashboard/wnba_trend_discovery_summary.json \
+            data/dashboard/wnba_trend_outcome_validation_summary.json
+          if git diff --cached --quiet; then
+            echo 'No trend outcome changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Refresh WNBA outcome-validated trend intelligence'
+          git pull --rebase origin main
+          git push origin HEAD:main
