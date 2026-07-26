@@ -1,19 +1,19 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-26T15:10:59.619948Z
+Generated: 2026-07-26T16:32:18.143245Z
 
 ## Slate summary
 
 - 4 games
 - 8 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 4, 'Watch': 2, 'Pass': 2}
+- Grades: {'Strong Research Play': 0, 'Lean': 4, 'Watch': 0, 'Pass': 4}
 
 ## Game — 2026-07-29T00:00:00Z
 
-### Toronto Tempo +14.5 (draftkings)
-Bet quality: **Watch — 54.1/100**
+### Toronto Tempo +15.5 (draftkings)
+Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +15.5 | line-shop edge: +1 points
+Best line: +15.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
@@ -26,10 +26,10 @@ Best line: +15.5 | line-shop edge: +0 points
 
 ## Game — 2026-07-29T01:30:00Z
 
-### Seattle Storm +6.5 (draftkings)
-Bet quality: **Lean — 73.6/100**
+### Seattle Storm +7.5 (draftkings)
+Bet quality: **Lean — 68.6/100**
 Research level: **low-research-interest** | signal 36.0 | 1 matched angles
-Best line: +7.5 | line-shop edge: +1 points
+Best line: +7.5 | line-shop edge: +0 points
 
 - Seattle Storm|home: 18-4-0 (81.82%, n=22, Wilson floor 61.48%)
 
@@ -59,16 +59,16 @@ Best line: +4.5 | line-shop edge: +0 points
 ## Game — 2026-07-29T02:00:00Z
 
 ### Portland Fire +11.5 (draftkings)
-Bet quality: **Watch — 54.1/100**
+Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +12.5 | line-shop edge: +1 points
+Best line: +11.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
-### Portland Fire +12.5 (fanduel)
+### Portland Fire +11.5 (fanduel)
 Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +12.5 | line-shop edge: +0 points
+Best line: +11.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
