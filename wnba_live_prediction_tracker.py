@@ -1,13 +1,14 @@
 """Persist live WNBA market predictions for later grading.
 
-The tracker captures all fresh markets exposed by the coverage scanner, including
-EARLY_MARKET records up to 96 hours before tip and ACTIONABLE records inside 48
-hours. Captures are model states, not executed wagers.
+Primary input is the coverage scanner. If that scanner is empty because sportsbook
+update timestamps are older than the operational freshness threshold, the tracker
+falls back to processed closing-line forecasts for future events inside 96 hours.
+This preserves available early lines for validation without promoting them to bets.
 """
 from __future__ import annotations
 
 import json
-from datetime import datetime,timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -16,14 +17,33 @@ PRED=Path('data/forecast/closing_line_predictions.json')
 TIMELINE=Path('data/market/market_timeline.json')
 OUT=Path('data/validation/live_prediction_tracker.json')
 DASH=Path('data/dashboard/wnba_live_prediction_tracker_summary.json')
+VISIBILITY_HOURS=96
+ACTION_HOURS=48
 
-def now()->str:
-    return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
+
+def now_dt()->datetime:
+    return datetime.now(timezone.utc)
+
+def iso(value:datetime)->str:
+    return value.astimezone(timezone.utc).isoformat().replace('+00:00','Z')
+
+def parse(value:Any)->datetime|None:
+    if not value:return None
+    try:
+        dt=datetime.fromisoformat(str(value).replace('Z','+00:00'))
+        return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt.astimezone(timezone.utc)
+    except (TypeError,ValueError):
+        return None
 
 def load(path:Path)->dict[str,Any]:
     if not path.exists():return {}
     raw=json.loads(path.read_text(encoding='utf-8'))
     return raw if isinstance(raw,dict) else {}
+
+def prediction_rows()->list[dict[str,Any]]:
+    payload=load(PRED)
+    rows=payload.get('predictions',[]) or payload.get('forecasts',[])
+    return rows if isinstance(rows,list) else []
 
 def latest_observation_map()->dict[str,dict[str,Any]]:
     rows=load(TIMELINE).get('markets',[])
@@ -33,11 +53,48 @@ def latest_observation_map()->dict[str,dict[str,Any]]:
         if obs:output[str(row.get('market_id'))]=obs[-1]
     return output
 
+def classify(commence:datetime,current:datetime)->str:
+    hours=(commence-current).total_seconds()/3600
+    return 'ACTIONABLE' if hours<=ACTION_HOURS else 'EARLY_MARKET'
+
+def processed_fallback(rows:list[dict[str,Any]],current:datetime)->list[dict[str,Any]]:
+    """Use already-processed forecasts when the operational scanner is empty.
+
+    Availability capture and immediate-action freshness are separate concepts. A
+    sportsbook line may be available now even when its own last-update timestamp is
+    older than six hours. Such records are retained for research as WATCH/PASS only.
+    """
+    end=current+timedelta(hours=VISIBILITY_HOURS)
+    candidates=[]
+    for p in rows:
+        commence=parse(p.get('commence_time_utc'))
+        if not commence or not (current < commence <= end):continue
+        row=dict(p)
+        status=classify(commence,current)
+        row.update({
+            'market_status':status,
+            'actionable':status=='ACTIONABLE',
+            'validation_capture':True,
+            'hours_to_tip':round((commence-current).total_seconds()/3600,3),
+            'last_update_utc':p.get('current_time_utc') or p.get('snapshot_time_utc') or p.get('market_last_update_utc') or p.get('bookmaker_last_update_utc'),
+            'scanner_recommendation':'WATCH' if status=='EARLY_MARKET' else 'PASS',
+            'coverage_source':'PROCESSED_FORECAST_FALLBACK',
+        })
+        candidates.append(row)
+    return candidates
+
 def run()->dict[str,Any]:
-    captured=now();live_payload=load(LIVE)
-    markets=live_payload.get('markets',[]);markets=markets if isinstance(markets,list) else []
-    prediction_rows=load(PRED).get('predictions',[]) or load(PRED).get('forecasts',[])
-    pred_map={str(x.get('market_id')):x for x in prediction_rows if isinstance(x,dict) and x.get('market_id')}
+    current=now_dt();captured=iso(current)
+    live_payload=load(LIVE)
+    markets=live_payload.get('markets',[])
+    markets=markets if isinstance(markets,list) else []
+    predictions=prediction_rows()
+    source='COVERAGE_SCANNER'
+    if not markets:
+        markets=processed_fallback(predictions,current)
+        source='PROCESSED_FORECAST_FALLBACK' if markets else 'NO_FUTURE_MARKETS'
+
+    pred_map={str(x.get('market_id')):x for x in predictions if isinstance(x,dict) and x.get('market_id')}
     obs_map=latest_observation_map()
     prior=load(OUT);records=prior.get('records',[]);records=records if isinstance(records,list) else []
     seen={(str(x.get('market_id')),str(x.get('snapshot_time_utc'))) for x in records if isinstance(x,dict)}
@@ -46,20 +103,21 @@ def run()->dict[str,Any]:
     for row in markets:
         mid=str(row.get('market_id') or '')
         p=pred_map.get(mid,{});latest=obs_map.get(mid,{})
-        snapshot=row.get('last_update_utc') or latest.get('snapshot_time_utc') or captured
+        snapshot=(row.get('last_update_utc') or row.get('current_time_utc') or row.get('snapshot_time_utc') or
+                  latest.get('snapshot_time_utc') or captured)
         if not mid or (mid,str(snapshot)) in seen:continue
+        status=row.get('market_status') or 'EARLY_MARKET'
         rec={
             'capture_id':f'{snapshot}|{mid}',
             'captured_at_utc':captured,
-            'market_id':mid,
-            'event_id':row.get('event_id'),
+            'market_id':mid,'event_id':row.get('event_id'),
             'commence_time_utc':row.get('commence_time_utc'),
             'home_team':row.get('home_team'),'away_team':row.get('away_team'),
             'bookmaker':row.get('bookmaker'),'market':row.get('market'),
             'participant':row.get('participant'),'selection':row.get('selection'),
-            'market_status':row.get('market_status'),
-            'actionable':bool(row.get('actionable')),
+            'market_status':status,'actionable':bool(row.get('actionable')),
             'validation_capture':bool(row.get('validation_capture',True)),
+            'coverage_source':row.get('coverage_source') or source,
             'hours_to_tip':row.get('hours_to_tip'),
             'opening_line':row.get('opening_line'),'current_line':row.get('current_point'),
             'current_price':row.get('current_price'),'snapshot_time_utc':snapshot,
@@ -68,7 +126,7 @@ def run()->dict[str,Any]:
             'prediction_interval':p.get('projected_point_interval'),
             'forecast_status':row.get('forecast_status') or p.get('forecast_status'),
             'forecast_confidence':row.get('forecast_confidence') or p.get('forecast_confidence'),
-            'scanner_recommendation':row.get('scanner_recommendation'),
+            'scanner_recommendation':row.get('scanner_recommendation') or ('WATCH' if status=='EARLY_MARKET' else 'PASS'),
             'opportunity_score':row.get('live_opportunity_score') or row.get('opportunity_score'),
             'tier':row.get('tier'),'entry_action':row.get('entry_action'),'signal':row.get('signal'),
             'volatility_score':row.get('volatility_score'),'freshness_score':row.get('freshness_score'),
@@ -82,12 +140,11 @@ def run()->dict[str,Any]:
         records.append(rec);added.append(rec);seen.add((mid,str(snapshot)))
     records.sort(key=lambda x:(str(x.get('captured_at_utc')),str(x.get('market_id'))))
     OUT.parent.mkdir(parents=True,exist_ok=True);DASH.parent.mkdir(parents=True,exist_ok=True)
-    OUT.write_text(json.dumps({'generated_at_utc':captured,'methodology':'Append-only captures of fresh early and actionable market states for closing-line and outcome validation.','records':records},indent=2),encoding='utf-8')
+    OUT.write_text(json.dumps({'generated_at_utc':captured,'methodology':'Append-only captures of available future processed market states for closing-line and outcome validation.','records':records},indent=2),encoding='utf-8')
     open_records=sum(x.get('validation_status')=='OPEN' for x in records)
     summary={
-        'generated_at_utc':captured,
-        'status':'READY' if added else ('STANDBY' if not markets else 'NO_CHANGE'),
-        'live_markets_seen':len(markets),
+        'generated_at_utc':captured,'status':'READY' if added else ('STANDBY' if not markets else 'NO_CHANGE'),
+        'capture_source':source,'live_markets_seen':len(markets),
         'early_markets_seen':sum(x.get('market_status')=='EARLY_MARKET' for x in markets),
         'actionable_markets_seen':sum(x.get('market_status')=='ACTIONABLE' for x in markets),
         'records_added':len(added),'records_total':len(records),'open_records':open_records,
