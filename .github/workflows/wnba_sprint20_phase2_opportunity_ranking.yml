@@ -74,9 +74,23 @@ jobs:
           set -euo pipefail
           git config user.name 'WNBA Model Bot'
           git config user.email 'actions@github.com'
-          git add data/history/wnba_edge_database.jsonl data/history/wnba_opportunity_ranking_history.jsonl data/warehouse/wnba_clv_edge_report.json data/dashboard/wnba_clv_edge_report.json data/warehouse/wnba_opportunity_rankings.json data/dashboard/wnba_opportunity_rankings.json
+          git add \
+            data/history/wnba_edge_database.jsonl \
+            data/history/wnba_opportunity_ranking_history.jsonl \
+            data/warehouse/wnba_edge_database.json \
+            data/dashboard/wnba_edge_database.json \
+            data/warehouse/wnba_clv_edge_report.json \
+            data/dashboard/wnba_clv_edge_report.json \
+            data/warehouse/wnba_opportunity_rankings.json \
+            data/dashboard/wnba_opportunity_rankings.json
+          if ! git diff --quiet; then
+            echo 'Unstaged generated files detected:'
+            git status --short
+            git add -u data/history data/warehouse data/dashboard
+          fi
           git diff --cached --quiet && echo 'No opportunity ranking changes' && exit 0
           git commit -m "Update WNBA opportunity rankings - ${TARGET}"
+          test -z "$(git status --porcelain)" || { echo 'Working tree is not clean after commit'; git status --short; exit 1; }
           for attempt in 1 2 3; do
             git fetch origin main
             git rebase origin/main
