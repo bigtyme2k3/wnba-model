@@ -15,6 +15,9 @@ concurrency:
   group: wnba-sprint20-phase2-opportunity-ranking
   cancel-in-progress: false
 
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
 jobs:
   build-opportunity-rankings:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
@@ -74,6 +77,8 @@ jobs:
           set -euo pipefail
           git config user.name 'WNBA Model Bot'
           git config user.email 'actions@github.com'
+          find . -type d -name '__pycache__' -prune -exec rm -rf {} +
+          find . -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
           git add \
             data/history/wnba_edge_database.jsonl \
             data/history/wnba_opportunity_ranking_history.jsonl \
@@ -90,6 +95,8 @@ jobs:
           fi
           git diff --cached --quiet && echo 'No opportunity ranking changes' && exit 0
           git commit -m "Update WNBA opportunity rankings - ${TARGET}"
+          find . -type d -name '__pycache__' -prune -exec rm -rf {} +
+          find . -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
           test -z "$(git status --porcelain)" || { echo 'Working tree is not clean after commit'; git status --short; exit 1; }
           for attempt in 1 2 3; do
             git fetch origin main
