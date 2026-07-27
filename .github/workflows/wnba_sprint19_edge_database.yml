@@ -29,8 +29,9 @@ jobs:
           fetch-depth: 0
 
       - name: Sync latest repository state
-        if: ${{ github.event_name == 'workflow_run' }}
-        run: git pull --rebase origin main
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main
 
       - uses: actions/setup-python@v5
         with:
@@ -96,4 +97,17 @@ jobs:
           git add data/history/wnba_edge_database.jsonl data/warehouse/wnba_edge_database.json data/dashboard/wnba_edge_database.json
           git diff --cached --quiet && echo 'No edge database changes' && exit 0
           git commit -m "Update WNBA edge database - ${TARGET}"
-          git push
+
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Edge database artifacts pushed on attempt ${attempt}."
+              exit 0
+            fi
+
+            echo "Push attempt ${attempt} was rejected; rebasing onto latest main."
+            git fetch origin main
+            git rebase origin/main
+          done
+
+          echo 'Unable to push edge database artifacts after 3 attempts.' >&2
+          exit 1
