@@ -7,7 +7,7 @@ import math
 from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 HISTORY = Path("data/history/wnba_model_history.jsonl")
 OUT_IMPORTANCE = Path("data/audit/feature_importance.json")
@@ -196,7 +196,8 @@ def build(target_date: str) -> Dict[str, Any]:
         xs, ys = [x for x, _ in clean], [int(y) for _, y in clean]
         corr = pearson(xs, [float(y) for y in ys])
         raw_auc = auc(clean)
-        directional_auc = max(raw_auc or 0.5, 1.0 - (raw_auc or 0.5))
+        base_auc = 0.5 if raw_auc is None else raw_auc
+        directional_auc = max(base_auc, 1.0 - base_auc)
         separation = quantile_separation(clean) or 0.0
         mi = mutual_information(clean)
         stability = period_stability(rows, feature)
@@ -218,49 +219,53 @@ def build(target_date: str) -> Dict[str, Any]:
             "direction": "positive" if corr >= 0 else "negative",
             "auc": None if raw_auc is None else round(raw_auc, 6),
             "directional_auc": round(directional_auc, 6),
-            "top_bottom_20pct_spread": round(separation, 6),
+            "quantile_separation": round(separation, 6),
             "mutual_information": round(mi, 6),
             "stability": stability,
-            "redundancy_flag": is_redundant,
+            "redundant": is_redundant,
             "signal_score": round(signal_score, 6),
             "grade": feature_grade,
             "recommendation": "KEEP" if feature_grade in {"A", "B"} else "REVIEW" if feature_grade == "C" else "REMOVE_CANDIDATE",
         })
 
-    audited.sort(key=lambda item: (item["signal_score"], item["samples"]), reverse=True)
-    recommended = [item["feature"] for item in audited if item["grade"] in {"A", "B"} and not item["redundancy_flag"]]
-    review = [item["feature"] for item in audited if item["grade"] == "C" or (item["grade"] in {"A", "B"} and item["redundancy_flag"])]
-    remove = [item["feature"] for item in audited if item["grade"] in {"D", "F"}]
-    grade_counts = {grade_name: sum(item["grade"] == grade_name for item in audited) for grade_name in "ABCDF"}
-    status = "PASS" if recommended else "WARN"
-    now = datetime.now(timezone.utc).isoformat()
+    audited.sort(key=lambda row: (row["signal_score"], row["directional_auc"]), reverse=True)
+    rankings = [{"rank": index + 1, **row} for index, row in enumerate(audited)]
+    keep = [row["feature"] for row in audited if row["recommendation"] == "KEEP"]
+    review = [row["feature"] for row in audited if row["recommendation"] == "REVIEW"]
+    remove = [row["feature"] for row in audited if row["recommendation"] == "REMOVE_CANDIDATE"]
 
-    importance = {
-        "generated_at_utc": now,
+    report = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target_date,
-        "source": str(HISTORY),
         "summary": {
-            "history_records": len(all_rows), "settled_records": len(rows), "features_audited": len(audited),
-            "recommended_features": len(recommended), "redundant_pairs": len(correlation_matrix),
-            "grade_counts": grade_counts, "status": status,
-        },
-        "methodology": {
-            "signal_components": ["correlation", "univariate_auc", "quantile_separation", "mutual_information", "time_stability"],
-            "warning": "This is a univariate signal audit, not causal proof or final multivariate model importance.",
+            "history_records": len(all_rows),
+            "settled_records": len(rows),
+            "features_audited": len(audited),
+            "keep_features": len(keep),
+            "review_features": len(review),
+            "remove_candidates": len(remove),
+            "status": "PASS" if len(rows) >= MIN_FEATURE_SAMPLES and audited else "WARN",
         },
         "features": audited,
     }
-    rankings = {"generated_at_utc": now, "target_date": target_date, "rankings": audited}
-    correlations = {"generated_at_utc": now, "target_date": target_date, "high_correlation_pairs": correlation_matrix}
-    recommendation = {
-        "generated_at_utc": now, "target_date": target_date, "status": status,
-        "keep": recommended, "review": review, "remove_candidates": remove,
-        "deployment_rule": "Feature removal requires market-specific rolling validation in Sprint 21 Phase 2; this audit does not mutate production models.",
+    correlations = {"generated_at_utc": report["generated_at_utc"], "high_correlation_pairs": correlation_matrix}
+    recommended = {
+        "generated_at_utc": report["generated_at_utc"],
+        "keep": keep,
+        "review": review,
+        "remove_candidates": remove,
+        "deployment_rule": "Do not remove features until market-specific rolling validation confirms equal or better out-of-sample performance.",
     }
-    for path, payload in ((OUT_IMPORTANCE, importance), (OUT_RANKINGS, rankings), (OUT_CORRELATIONS, correlations), (OUT_RECOMMENDED, recommendation)):
+
+    for path, payload in (
+        (OUT_IMPORTANCE, report),
+        (OUT_RANKINGS, {"generated_at_utc": report["generated_at_utc"], "features": rankings}),
+        (OUT_CORRELATIONS, correlations),
+        (OUT_RECOMMENDED, recommended),
+    ):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(payload, indent=2, allow_nan=False), encoding="utf-8")
-    return importance
+    return report
 
 
 def main() -> None:
