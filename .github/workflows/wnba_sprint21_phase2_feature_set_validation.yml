@@ -1,0 +1,68 @@
+name: "WNBA Sprint 21 Phase 2 Feature Set Rolling Validation"
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Target date (YYYY-MM-DD); blank uses UTC today"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint-21-phase-2-feature-set-validation
+  cancel-in-progress: false
+
+jobs:
+  validate-feature-sets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Sprint 21 Phase 2 code
+        run: python -m py_compile validate_sprint21_phase2_feature_sets.py qa_sprint21_phase2_feature_sets.py
+      - name: Run Sprint 21 Phase 2 QA
+        run: python qa_sprint21_phase2_feature_sets.py
+      - name: Run rolling feature-set validation
+        env:
+          INPUT_DATE: ${{ inputs.date }}
+        run: |
+          TARGET="${INPUT_DATE:-$(date -u +%F)}"
+          python validate_sprint21_phase2_feature_sets.py --date "$TARGET"
+      - name: Verify validation artifacts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          paths = [
+              Path('data/audit/feature_set_comparison.json'),
+              Path('data/audit/rolling_validation_results.json'),
+              Path('data/audit/best_feature_set.json'),
+              Path('data/audit/market_feature_recommendations.json'),
+          ]
+          for path in paths:
+              assert path.exists() and path.stat().st_size > 20, path
+              json.loads(path.read_text())
+          report = json.loads(paths[0].read_text())
+          summary = report['summary']
+          assert summary['settled_records'] > 0
+          assert summary['candidate_sets'] > 0
+          assert summary['deployment_gate'] in {'PASS', 'HOLD'}
+          assert 'actual' in report['leakage_excluded']
+          print('Sprint 21 Phase 2 verification passed:', summary)
+          PY
+      - name: Commit feature-set validation artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/audit/feature_set_comparison.json data/audit/rolling_validation_results.json data/audit/best_feature_set.json data/audit/market_feature_recommendations.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 21 Phase 2 validation artifacts"
+          git pull --rebase origin main
+          git push origin HEAD:main
