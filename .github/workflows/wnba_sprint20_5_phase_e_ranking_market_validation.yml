@@ -1,0 +1,60 @@
+name: "WNBA Sprint 20.5 Phase E Ranking & Market Validation"
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Target date (YYYY-MM-DD); blank uses UTC today"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint-20-5-phase-e-ranking-market
+  cancel-in-progress: false
+
+jobs:
+  validate-ranking-market-calibration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Phase E code
+        run: python -m py_compile validate_phase_e_ranking_market_calibration.py qa_sprint20_5_phase_e_ranking_market.py
+      - name: Run Phase E QA
+        run: python qa_sprint20_5_phase_e_ranking_market.py
+      - name: Run ranking and market validation
+        env:
+          INPUT_DATE: ${{ inputs.date }}
+        run: |
+          TARGET="${INPUT_DATE:-$(date -u +%F)}"
+          python validate_phase_e_ranking_market_calibration.py --date "$TARGET"
+      - name: Verify outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          paths=[Path('data/audit/phase_e_ranking_market_validation.json'),Path('data/audit/phase_e_segment_validation.json'),Path('data/warehouse/wnba_calibration_deployment_policy.json')]
+          for p in paths:
+              assert p.exists() and p.stat().st_size>20,p
+              json.loads(p.read_text())
+          s=json.loads(paths[0].read_text())['summary']
+          assert s['validation_records']>0
+          assert s['deployment_gate'] in {'PASS','HOLD'}
+          print('Phase E verification passed:',s)
+          PY
+      - name: Commit validation artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/audit/phase_e_ranking_market_validation.json data/audit/phase_e_segment_validation.json data/warehouse/wnba_calibration_deployment_policy.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 20.5 Phase E validation artifacts"
+          git pull --rebase origin main
+          git push origin HEAD:main
