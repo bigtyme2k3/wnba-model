@@ -1,0 +1,93 @@
+name: WNBA Market Enrichment (Validation Week Commit 6)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 11,13,15,17 * * *'
+
+concurrency:
+  group: wnba-odds-history-writes
+  cancel-in-progress: false
+
+jobs:
+  enrich-live-markets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync latest committed intelligence
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Validate enrichment source
+        run: |
+          python -m py_compile \
+            wnba_market_enrichment_engine.py \
+            qa_market_enrichment_engine.py \
+            wnba_live_prediction_tracker.py \
+            qa_live_prediction_tracker.py
+          test -s data/forecast/closing_line_predictions.json
+
+      - name: Build enriched market predictions
+        run: python wnba_market_enrichment_engine.py
+
+      - name: Verify market enrichment integrity
+        run: python qa_market_enrichment_engine.py
+
+      - name: Capture enriched prediction state
+        run: python wnba_live_prediction_tracker.py
+
+      - name: Verify enriched prediction tracker
+        run: python qa_live_prediction_tracker.py
+
+      - name: Show enrichment summary
+        run: cat data/dashboard/wnba_market_enrichment_summary.json
+
+      - name: Show tracker summary
+        run: cat data/dashboard/wnba_live_prediction_tracker_summary.json
+
+      - name: Commit enriched validation artifacts safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Market Enrichment Bot'
+          git config user.email 'actions@github.com'
+
+          rm -rf /tmp/wnba-enrichment-generated
+          mkdir -p /tmp/wnba-enrichment-generated/data/forecast
+          mkdir -p /tmp/wnba-enrichment-generated/data/validation
+          mkdir -p /tmp/wnba-enrichment-generated/data/dashboard
+          cp data/forecast/enriched_market_predictions.json /tmp/wnba-enrichment-generated/data/forecast/
+          cp data/validation/live_prediction_tracker.json /tmp/wnba-enrichment-generated/data/validation/
+          cp data/dashboard/wnba_market_enrichment_summary.json /tmp/wnba-enrichment-generated/data/dashboard/
+          cp data/dashboard/wnba_live_prediction_tracker_summary.json /tmp/wnba-enrichment-generated/data/dashboard/
+
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/forecast data/validation data/dashboard
+          cp /tmp/wnba-enrichment-generated/data/forecast/enriched_market_predictions.json data/forecast/
+          cp /tmp/wnba-enrichment-generated/data/validation/live_prediction_tracker.json data/validation/
+          cp /tmp/wnba-enrichment-generated/data/dashboard/wnba_market_enrichment_summary.json data/dashboard/
+          cp /tmp/wnba-enrichment-generated/data/dashboard/wnba_live_prediction_tracker_summary.json data/dashboard/
+
+          git add \
+            data/forecast/enriched_market_predictions.json \
+            data/validation/live_prediction_tracker.json \
+            data/dashboard/wnba_market_enrichment_summary.json \
+            data/dashboard/wnba_live_prediction_tracker_summary.json
+          if git diff --cached --quiet; then
+            echo 'No enriched market changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Enrich live WNBA validation market states'
+          git push origin HEAD:main
