@@ -1,0 +1,92 @@
+name: WNBA Sprint 20.5 Phase C Calibration Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: Target date (YYYY-MM-DD); blank uses current UTC date
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint-20-5-phase-c-calibration-audit
+  cancel-in-progress: false
+
+jobs:
+  audit-simulation-calibration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+
+      - name: Validate Phase C code
+        run: |
+          python -m py_compile audit_phase_c_simulation_calibration.py qa_sprint20_5_phase_c_calibration.py
+          python qa_sprint20_5_phase_c_calibration.py
+
+      - name: Run simulation calibration audit
+        env:
+          INPUT_DATE: ${{ inputs.date }}
+        run: |
+          TARGET="${INPUT_DATE:-$(date -u +%F)}"
+          python audit_phase_c_simulation_calibration.py --date "$TARGET"
+
+      - name: Verify audit artifacts
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          paths = [
+              Path('data/audit/phase_c_calibration_report.json'),
+              Path('data/audit/probability_calibration_curve.json'),
+              Path('data/audit/simulation_distribution.json'),
+          ]
+          for path in paths:
+              if not path.exists() or path.stat().st_size == 0:
+                  raise SystemExit(f'Missing or empty artifact: {path}')
+              json.load(path.open(encoding='utf-8'))
+          report = json.load(paths[0].open(encoding='utf-8'))
+          summary = report.get('summary', {})
+          required = {'history_records','target_records','target_probability_records','settled_probability_records','status'}
+          missing = required - set(summary)
+          if missing:
+              raise SystemExit(f'Missing summary fields: {sorted(missing)}')
+          print('Sprint 20.5 Phase C verification passed:', summary)
+          PY
+
+      - name: Commit audit artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/audit/phase_c_calibration_report.json data/audit/probability_calibration_curve.json data/audit/simulation_distribution.json
+          if git diff --cached --quiet; then
+            echo "No Phase C artifact changes"
+            exit 0
+          fi
+          git commit -m "Update Sprint 20.5 Phase C audit artifacts"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 3))
+          done
+          exit 1
