@@ -13,7 +13,7 @@ concurrency:
 jobs:
   capture-live-predictions:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     permissions:
       contents: write
 
@@ -25,49 +25,29 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: pip
 
-      - name: Install dependencies
+      - name: Sync latest committed live intelligence
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          git fetch origin main
+          git reset --hard origin/main
 
-      - name: Validate tracker source
+      - name: Validate tracker source and inputs
         run: |
-          python -m py_compile \
-            wnba_warehouse_migration_bridge.py \
-            wnba_market_timeline.py \
-            wnba_line_movement_engine.py \
-            wnba_steam_sharp_engine.py \
-            wnba_clv_intelligence.py \
-            wnba_entry_window_intelligence.py \
-            wnba_automated_trend_discovery.py \
-            wnba_trend_outcome_validation.py \
-            wnba_closing_line_predictor.py \
-            wnba_sportsbook_leader_normalization.py \
-            wnba_opportunity_scanner.py \
-            wnba_active_slate_scanner.py \
-            wnba_live_prediction_tracker.py \
-            qa_live_prediction_tracker.py
+          python -m py_compile wnba_live_prediction_tracker.py qa_live_prediction_tracker.py
+          test -s data/forecast/live_opportunity_scanner.json
+          test -s data/forecast/closing_line_predictions.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          live=json.loads(Path('data/forecast/live_opportunity_scanner.json').read_text())
+          print(json.dumps({
+            'scanner_generated_at_utc': live.get('generated_at_utc'),
+            'markets_available': len(live.get('markets', [])),
+            'status_counts': live.get('status_counts', {})
+          }, indent=2))
+          PY
 
-      - name: Bridge latest live warehouse snapshot
-        run: python wnba_warehouse_migration_bridge.py --execute
-
-      - name: Rebuild current market intelligence
-        run: |
-          python wnba_market_timeline.py
-          python wnba_line_movement_engine.py
-          python wnba_steam_sharp_engine.py
-          python wnba_clv_intelligence.py
-          python wnba_entry_window_intelligence.py
-          python wnba_automated_trend_discovery.py
-          python wnba_trend_outcome_validation.py
-          python wnba_closing_line_predictor.py
-          python wnba_sportsbook_leader_normalization.py
-          python wnba_opportunity_scanner.py
-          python wnba_active_slate_scanner.py
-
-      - name: Capture live prediction state
+      - name: Capture committed live prediction state
         run: python wnba_live_prediction_tracker.py
 
       - name: Verify prediction tracker
@@ -83,15 +63,20 @@ jobs:
           git config user.email 'actions@github.com'
 
           rm -rf /tmp/wnba-validation-generated
-          mkdir -p /tmp/wnba-validation-generated
-          cp -a data /tmp/wnba-validation-generated/
+          mkdir -p /tmp/wnba-validation-generated/data/validation
+          mkdir -p /tmp/wnba-validation-generated/data/dashboard
+          cp data/validation/live_prediction_tracker.json /tmp/wnba-validation-generated/data/validation/
+          cp data/dashboard/wnba_live_prediction_tracker_summary.json /tmp/wnba-validation-generated/data/dashboard/
 
           git fetch origin main
           git reset --hard origin/main
-          rm -rf data
-          cp -a /tmp/wnba-validation-generated/data ./data
+          mkdir -p data/validation data/dashboard
+          cp /tmp/wnba-validation-generated/data/validation/live_prediction_tracker.json data/validation/
+          cp /tmp/wnba-validation-generated/data/dashboard/wnba_live_prediction_tracker_summary.json data/dashboard/
 
-          git add data/warehouse data/market data/forecast data/trends data/validation data/dashboard
+          git add \
+            data/validation/live_prediction_tracker.json \
+            data/dashboard/wnba_live_prediction_tracker_summary.json
           if git diff --cached --quiet; then
             echo 'No live prediction tracker changes to commit.'
             exit 0
