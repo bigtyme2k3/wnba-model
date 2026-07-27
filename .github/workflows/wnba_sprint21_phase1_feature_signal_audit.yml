@@ -1,0 +1,66 @@
+name: "WNBA Sprint 21 Phase 1 Feature Signal Audit"
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Target date (YYYY-MM-DD); blank uses UTC today"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint-21-phase-1-feature-signal-audit
+  cancel-in-progress: false
+
+jobs:
+  audit-feature-signals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Sprint 21 Phase 1 code
+        run: python -m py_compile audit_sprint21_phase1_feature_signals.py qa_sprint21_phase1_feature_signals.py
+      - name: Run Sprint 21 Phase 1 QA
+        run: python qa_sprint21_phase1_feature_signals.py
+      - name: Run feature signal audit
+        env:
+          INPUT_DATE: ${{ inputs.date }}
+        run: |
+          TARGET="${INPUT_DATE:-$(date -u +%F)}"
+          python audit_sprint21_phase1_feature_signals.py --date "$TARGET"
+      - name: Verify audit artifacts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          paths = [
+              Path('data/audit/feature_importance.json'),
+              Path('data/audit/feature_rankings.json'),
+              Path('data/audit/feature_correlations.json'),
+              Path('data/audit/recommended_feature_set.json'),
+          ]
+          for path in paths:
+              assert path.exists() and path.stat().st_size > 20, path
+              json.loads(path.read_text())
+          summary = json.loads(paths[0].read_text())['summary']
+          assert summary['settled_records'] > 0
+          assert summary['features_audited'] > 0
+          assert summary['status'] in {'PASS', 'WARN'}
+          print('Sprint 21 Phase 1 verification passed:', summary)
+          PY
+      - name: Commit feature audit artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/audit/feature_importance.json data/audit/feature_rankings.json data/audit/feature_correlations.json data/audit/recommended_feature_set.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 21 Phase 1 feature audit artifacts"
+          git pull --rebase origin main
+          git push origin HEAD:main
