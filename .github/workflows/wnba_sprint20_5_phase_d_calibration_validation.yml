@@ -1,0 +1,61 @@
+name: "Sprint 20.5 Phase D: probability calibration validation"
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Target date (YYYY-MM-DD); blank uses UTC today"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint-20-5-phase-d-calibration
+  cancel-in-progress: false
+
+jobs:
+  validate-probability-calibration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Phase D code
+        run: python -m py_compile validate_phase_d_probability_calibration.py qa_sprint20_5_phase_d_calibration.py
+      - name: Run Phase D QA
+        run: python qa_sprint20_5_phase_d_calibration.py
+      - name: Run out-of-sample calibration validation
+        env:
+          INPUT_DATE: ${{ inputs.date }}
+        run: |
+          TARGET="${INPUT_DATE:-$(date -u +%F)}"
+          python validate_phase_d_probability_calibration.py --date "$TARGET"
+      - name: Verify outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          paths=[Path('data/audit/phase_d_calibration_validation.json'),Path('data/audit/phase_d_validation_curves.json'),Path('data/warehouse/wnba_probability_calibrator.json')]
+          for path in paths:
+              assert path.exists() and path.stat().st_size>20, path
+              json.loads(path.read_text())
+          report=json.loads(paths[0].read_text())
+          s=report['summary']
+          assert s['training_records']>0 and s['validation_records']>0
+          assert s['deployment_gate'] in {'PASS','HOLD'}
+          print('Phase D verification passed:',s)
+          PY
+      - name: Commit validation artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/audit/phase_d_calibration_validation.json data/audit/phase_d_validation_curves.json data/warehouse/wnba_probability_calibrator.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 20.5 Phase D calibration artifacts"
+          git pull --rebase origin main
+          git push origin HEAD:main
