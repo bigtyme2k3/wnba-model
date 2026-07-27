@@ -1,10 +1,11 @@
-"""QA for live prediction tracker with early-market coverage."""
+"""QA for live prediction tracker with early-market and processed-forecast coverage."""
 from __future__ import annotations
 import json
 from pathlib import Path
 
 TRACKER=Path('data/validation/live_prediction_tracker.json')
 SUMMARY=Path('data/dashboard/wnba_live_prediction_tracker_summary.json')
+
 
 def load(path:Path):
     assert path.exists(),f'Missing {path}'
@@ -15,13 +16,17 @@ def main()->None:
     assert isinstance(records,list)
     keys=[(r.get('market_id'),r.get('snapshot_time_utc')) for r in records]
     assert len(keys)==len(set(keys)),'Duplicate market/snapshot captures'
+    valid_states={'OPEN','CLOSED','CLOSING_CAPTURED','GRADED','UNSUPPORTED','UNRESOLVED','VOID'}
+    valid_sources={'COVERAGE_SCANNER','PROCESSED_FORECAST_FALLBACK',None}
     for r in records:
         assert r.get('market_id') and r.get('captured_at_utc') and r.get('snapshot_time_utc')
-        assert r.get('validation_status') in {'OPEN','CLOSED','GRADED','VOID'}
+        assert r.get('validation_status') in valid_states
         assert r.get('scanner_recommendation') in {'BET_NOW','WATCH','PASS',None}
         assert r.get('market_status') in {'EARLY_MARKET','ACTIONABLE',None}
+        assert r.get('coverage_source') in valid_sources
         if r.get('market_status')=='EARLY_MARKET':
             assert r.get('actionable') is False
+            assert r.get('scanner_recommendation')!='BET_NOW'
         if r.get('market_status')=='ACTIONABLE':
             assert r.get('actionable') is True
         score=r.get('opportunity_score')
@@ -31,8 +36,9 @@ def main()->None:
     assert summary.get('records_total')==len(records)
     assert summary.get('open_records')==sum(r.get('validation_status')=='OPEN' for r in records)
     assert summary.get('status') in {'READY','STANDBY','NO_CHANGE'}
+    assert summary.get('capture_source') in {'COVERAGE_SCANNER','PROCESSED_FORECAST_FALLBACK','NO_FUTURE_MARKETS'}
     added=int(summary.get('records_added') or 0);assert added<=len(records)
     assert int(summary.get('early_records_added') or 0)+int(summary.get('actionable_records_added') or 0)==added
-    print(json.dumps({'status':'PASS','records':len(records),'records_added':added,'early_records_added':summary.get('early_records_added',0),'actionable_records_added':summary.get('actionable_records_added',0),'open_records':summary.get('open_records'),'events_captured':summary.get('events_captured')},indent=2))
+    print(json.dumps({'status':'PASS','capture_source':summary.get('capture_source'),'records':len(records),'records_added':added,'early_records_added':summary.get('early_records_added',0),'actionable_records_added':summary.get('actionable_records_added',0),'open_records':summary.get('open_records'),'events_captured':summary.get('events_captured')},indent=2))
 
 if __name__=='__main__':main()
