@@ -22,10 +22,11 @@ def main():
         root=Path(td);target='2099-01-01'
         old=(f.RANKINGS,f.SHOP,f.MOVEMENT,f.CONSENSUS,f.HISTORY,f.OUTS)
         f.RANKINGS=root/'rank.json';f.SHOP=root/'shop.json';f.MOVEMENT=root/'move.json';f.CONSENSUS=root/'cons.json';f.HISTORY=root/'history.jsonl';f.OUTS=[root/'warehouse.json',root/'dashboard.json']
-        rank={'date':target,'player':'Test Player','game':'A @ B','market':'PTS','side':'OVER','best_book':'FanDuel','best_line':20.5,'best_odds':-105,'expected_value':.10,'model_probability':.60,'confidence':.80,'clv':.5,'opportunity_score':85,'eligible_for_bet':True}
+        # Deliberately strong inputs should clear the weighted index >=82 threshold.
+        rank={'date':target,'player':'Test Player','game':'A @ B','market':'PTS','side':'OVER','best_book':'FanDuel','best_line':20.5,'best_odds':105,'expected_value':.15,'model_probability':.65,'confidence':.90,'clv':1.5,'opportunity_score':95,'eligible_for_bet':True}
         write(f.RANKINGS,{'all_ranked':[rank]})
-        write(f.SHOP,{'markets':[{'date':target,'player':'Test Player','game':'A @ B','market':'PTS','side':'OVER','book_count':3,'price_advantage':.04,'line_range':1.5,'market_disagreement_score':.75}]})
-        write(f.MOVEMENT,{'markets':[{'date':target,'player':'Test Player','game':'A @ B','market':'PTS','side':'OVER','model_market_classification':'MODEL_AHEAD_OF_MOVE','steam_detected':True,'reverse_line_movement':False,'market_confidence_score':80,'stability_score':70}]})
+        write(f.SHOP,{'markets':[{'date':target,'player':'Test Player','game':'A @ B','market':'PTS','side':'OVER','book_count':3,'price_advantage':.07,'line_range':1.5,'market_disagreement_score':.75}]})
+        write(f.MOVEMENT,{'markets':[{'date':target,'player':'Test Player','game':'A @ B','market':'PTS','side':'OVER','model_market_classification':'MODEL_AHEAD_OF_MOVE','steam_detected':True,'reverse_line_movement':False,'market_confidence_score':100,'stability_score':80}]})
         write(f.CONSENSUS,{'markets':[{'player':'Test Player','game':'A @ B','stat':'PTS','best_over_price':110,'best_over_book':'FanDuel','best_under_price':110,'best_under_book':'DraftKings'}]})
         first=f.build(target);second=f.build(target)
         assert first['summary']['scanned_opportunities']==1
@@ -35,6 +36,7 @@ def main():
         assert second['summary']['inserted_history_records']==0
         assert second['summary']['updated_history_records']==0
         row=first['top_opportunities'][0]
+        assert row['opportunity_index']>=82,row['opportunity_index']
         assert row['recommendation']=='STRONG BET'
         assert {'PRICE_OUTLIER','LINE_OUTLIER','MODEL_AHEAD_OF_MARKET','STEAM_CONFIRMED'}<=set(row['market_inefficiencies'])
         assert all(p.exists() and p.stat().st_size>0 for p in f.OUTS)
