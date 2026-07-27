@@ -1,0 +1,84 @@
+name: WNBA Sprint 20 Phase 1 Line Shopping
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), blank for active slate'
+        required: false
+        default: ''
+  workflow_run:
+    workflows: ['WNBA Intelligence Foundation']
+    types: [completed]
+
+concurrency:
+  group: wnba-sprint20-phase1-line-shopping
+  cancel-in-progress: false
+
+jobs:
+  build-line-shopping:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          pip install -r requirements.txt
+      - name: Resolve target date
+        run: |
+          set -euo pipefail
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+      - name: Validate Phase 1 code
+        run: |
+          set -euo pipefail
+          python -m py_compile wnba_line_shopping_engine.py qa_sprint20_phase1_line_shopping.py
+          python qa_sprint20_phase1_line_shopping.py
+      - name: Build sportsbook consensus and line shopping
+        run: |
+          set -euo pipefail
+          python wnba_sportsbook_consensus.py --date "$TARGET"
+          python wnba_line_shopping_engine.py --date "$TARGET"
+      - name: Verify artifacts
+        run: |
+          set -euo pipefail
+          test -s data/warehouse/market_intelligence.json
+          test -s data/dashboard/market_intelligence.json
+          test -s data/history/line_shopping_history.jsonl || true
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('data/warehouse/market_intelligence.json').read_text())
+          required={'markets','multi_book_markets','three_book_markets','best_book_counts'}
+          missing=required-set(report.get('summary',{}))
+          assert not missing, missing
+          assert set(report['summary']['best_book_counts'])=={'DraftKings','FanDuel','Fanatics'}
+          print('Sprint 20 Phase 1 verification passed:',report['summary'])
+          PY
+      - name: Commit Phase 1 artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Model Bot'
+          git config user.email 'actions@github.com'
+          git add data/history/line_shopping_history.jsonl data/warehouse/market_intelligence.json data/dashboard/market_intelligence.json data/warehouse/wnba_sportsbook_consensus.json data/dashboard/wnba_sportsbook_consensus.json
+          git diff --cached --quiet && echo 'No line shopping changes' && exit 0
+          git commit -m "Update WNBA line shopping - ${TARGET}"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then echo "Pushed on attempt $attempt"; exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
