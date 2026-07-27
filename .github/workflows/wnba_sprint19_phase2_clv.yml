@@ -1,0 +1,99 @@
+name: WNBA Sprint 19 Phase 2 CLV
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for active Eastern slate'
+        required: false
+        default: ''
+  workflow_run:
+    workflows: ['WNBA Closing Line Snapshots', 'WNBA Sprint 19 Edge Database']
+    types: [completed]
+
+concurrency:
+  group: wnba-sprint19-phase2-clv
+  cancel-in-progress: false
+
+jobs:
+  build-clv-intelligence:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest main
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Resolve target date
+        run: |
+          set -euo pipefail
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Using target date: $TARGET"
+
+      - name: Validate Phase 2 code
+        run: |
+          set -euo pipefail
+          python -m py_compile wnba_clv_edge_linker.py qa_sprint19_phase2_clv.py
+          python qa_sprint19_phase2_clv.py
+
+      - name: Link closing lines to edge records
+        run: |
+          set -euo pipefail
+          python wnba_clv_edge_linker.py --date "${TARGET}"
+
+      - name: Verify CLV artifacts
+        run: |
+          set -euo pipefail
+          test -s data/history/wnba_edge_database.jsonl
+          test -s data/warehouse/wnba_clv_edge_report.json
+          test -s data/dashboard/wnba_clv_edge_report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('data/warehouse/wnba_clv_edge_report.json').read_text())
+          required = {
+              'edge_records', 'snapshot_records', 'linked_records', 'graded_records',
+              'coverage_rate', 'positive_clv_rate', 'average_line_clv',
+              'by_market', 'by_sportsbook', 'top_positive_clv'
+          }
+          missing = sorted(required - set(report))
+          assert not missing, f'Missing CLV report fields: {missing}'
+          assert report['edge_records'] >= report['graded_records'] >= 0
+          print('Phase 2 CLV verification passed:', {
+              'edge_records': report['edge_records'],
+              'linked_records': report['linked_records'],
+              'graded_records': report['graded_records'],
+              'coverage_rate': report['coverage_rate'],
+          })
+          PY
+
+      - name: Commit Phase 2 artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Model Bot'
+          git config user.email 'actions@github.com'
+          git add data/history/wnba_edge_database.jsonl data/warehouse/wnba_clv_edge_report.json data/dashboard/wnba_clv_edge_report.json
+          git diff --cached --quiet && echo 'No CLV changes' && exit 0
+          git commit -m "Update WNBA CLV intelligence - ${TARGET}"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Pushed CLV artifacts on attempt ${attempt}"
+              exit 0
+            fi
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo 'Unable to push CLV artifacts after three attempts.' >&2
+          exit 1
