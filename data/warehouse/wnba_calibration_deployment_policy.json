@@ -1,0 +1,19 @@
+{
+  "enabled": false,
+  "gate": "HOLD",
+  "selected_method": "platt",
+  "findings": [
+    "weak_global_discrimination",
+    "insufficient_top_bottom_decile_separation",
+    "calibration_damages_ranking",
+    "calibrated_probabilities_collapsed"
+  ],
+  "policy": {
+    "minimum_auc": 0.53,
+    "minimum_top_bottom_decile_spread": 0.08,
+    "maximum_auc_loss_after_calibration": 0.01,
+    "minimum_calibrated_probability_range": 0.08,
+    "requires_calibration_metric_improvement": true,
+    "requires_preserved_ranking": true
+  }
+}

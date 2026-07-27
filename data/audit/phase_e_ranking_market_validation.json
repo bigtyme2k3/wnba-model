@@ -1,0 +1,171 @@
+{
+  "generated_at_utc": "2026-07-27T23:32:56.938419+00:00",
+  "target_date": "2026-07-27",
+  "summary": {
+    "settled_records": 1485,
+    "validation_records": 446,
+    "split_date": "2026-07-18",
+    "raw_auc": 0.505259,
+    "calibrated_auc": 0.494741,
+    "raw_decile_spread": -0.056566,
+    "calibrated_probability_range": 0.021149,
+    "deployment_gate": "HOLD",
+    "status": "WARN"
+  },
+  "raw_validation": {
+    "samples": 446,
+    "auc": 0.505259,
+    "brier": 0.379573,
+    "log_loss": 1.116805,
+    "ece": 0.3435,
+    "top_bottom_decile_win_rate_spread": -0.056566,
+    "deciles": [
+      {
+        "decile": 1,
+        "count": 44,
+        "avg_score": 0.6173,
+        "win_rate": 0.545455
+      },
+      {
+        "decile": 2,
+        "count": 45,
+        "avg_score": 0.702804,
+        "win_rate": 0.666667
+      },
+      {
+        "decile": 3,
+        "count": 44,
+        "avg_score": 0.767807,
+        "win_rate": 0.409091
+      },
+      {
+        "decile": 4,
+        "count": 45,
+        "avg_score": 0.790127,
+        "win_rate": 0.311111
+      },
+      {
+        "decile": 5,
+        "count": 45,
+        "avg_score": 0.816858,
+        "win_rate": 0.311111
+      },
+      {
+        "decile": 6,
+        "count": 44,
+        "avg_score": 0.84015,
+        "win_rate": 0.454545
+      },
+      {
+        "decile": 7,
+        "count": 45,
+        "avg_score": 0.863409,
+        "win_rate": 0.466667
+      },
+      {
+        "decile": 8,
+        "count": 44,
+        "avg_score": 0.890982,
+        "win_rate": 0.545455
+      },
+      {
+        "decile": 9,
+        "count": 45,
+        "avg_score": 0.927727,
+        "win_rate": 0.577778
+      },
+      {
+        "decile": 10,
+        "count": 45,
+        "avg_score": 0.974153,
+        "win_rate": 0.488889
+      }
+    ]
+  },
+  "calibrated_validation": {
+    "samples": 446,
+    "auc": 0.494741,
+    "brier": 0.249771,
+    "log_loss": 0.692689,
+    "ece": 0.013927,
+    "top_bottom_decile_win_rate_spread": 0.05606,
+    "deciles": [
+      {
+        "decile": 1,
+        "count": 44,
+        "avg_score": 0.484863,
+        "win_rate": 0.477273
+      },
+      {
+        "decile": 2,
+        "count": 45,
+        "avg_score": 0.489165,
+        "win_rate": 0.6
+      },
+      {
+        "decile": 3,
+        "count": 44,
+        "avg_score": 0.490506,
+        "win_rate": 0.522727
+      },
+      {
+        "decile": 4,
+        "count": 45,
+        "avg_score": 0.491266,
+        "win_rate": 0.488889
+      },
+      {
+        "decile": 5,
+        "count": 45,
+        "avg_score": 0.491798,
+        "win_rate": 0.444444
+      },
+      {
+        "decile": 6,
+        "count": 44,
+        "avg_score": 0.492268,
+        "win_rate": 0.295455
+      },
+      {
+        "decile": 7,
+        "count": 45,
+        "avg_score": 0.492749,
+        "win_rate": 0.311111
+      },
+      {
+        "decile": 8,
+        "count": 44,
+        "avg_score": 0.493117,
+        "win_rate": 0.431818
+      },
+      {
+        "decile": 9,
+        "count": 45,
+        "avg_score": 0.494044,
+        "win_rate": 0.666667
+      },
+      {
+        "decile": 10,
+        "count": 45,
+        "avg_score": 0.495166,
+        "win_rate": 0.533333
+      }
+    ]
+  },
+  "findings": [
+    "weak_global_discrimination",
+    "insufficient_top_bottom_decile_separation",
+    "calibration_damages_ranking",
+    "calibrated_probabilities_collapsed"
+  ],
+  "segment_count": 23,
+  "deployment_policy": {
+    "minimum_auc": 0.53,
+    "minimum_top_bottom_decile_spread": 0.08,
+    "maximum_auc_loss_after_calibration": 0.01,
+    "minimum_calibrated_probability_range": 0.08,
+    "requires_calibration_metric_improvement": true,
+    "requires_preserved_ranking": true
+  },
+  "recommendation": "KEEP_CALIBRATOR_DISABLED_AND_REBUILD_PROBABILITY_SIGNAL"
+}
