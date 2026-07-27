@@ -1,0 +1,86 @@
+name: WNBA Sprint 20 Phase 2 Opportunity Ranking
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), blank for active slate'
+        required: false
+        default: ''
+  workflow_run:
+    workflows: ['WNBA Sprint 20 Phase 1 Line Shopping']
+    types: [completed]
+
+concurrency:
+  group: wnba-sprint20-phase2-opportunity-ranking
+  cancel-in-progress: false
+
+jobs:
+  build-opportunity-rankings:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          pip install -r requirements.txt
+      - name: Resolve target date
+        run: |
+          set -euo pipefail
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+      - name: Validate Phase 2 code
+        run: |
+          set -euo pipefail
+          python -m py_compile wnba_opportunity_ranker.py qa_sprint20_phase2_opportunity_ranking.py
+          python qa_sprint20_phase2_opportunity_ranking.py
+      - name: Refresh dependencies and rank opportunities
+        run: |
+          set -euo pipefail
+          python wnba_edge_database.py --date "$TARGET"
+          python wnba_clv_edge_linker.py --date "$TARGET"
+          python wnba_opportunity_ranker.py --date "$TARGET"
+      - name: Verify artifacts
+        run: |
+          set -euo pipefail
+          test -s data/warehouse/wnba_opportunity_rankings.json
+          test -s data/dashboard/wnba_opportunity_rankings.json
+          test -s data/history/wnba_opportunity_ranking_history.jsonl || true
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('data/warehouse/wnba_opportunity_rankings.json').read_text())
+          required={'ranked_opportunities','a_tier','b_tier','c_tier','pass','inserted_history_records','updated_history_records'}
+          missing=required-set(report.get('summary',{}))
+          assert not missing, missing
+          scores=[r['opportunity_score'] for r in report.get('all_ranked',[])]
+          assert scores==sorted(scores,reverse=True)
+          print('Sprint 20 Phase 2 verification passed:',report['summary'])
+          PY
+      - name: Commit Phase 2 artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Model Bot'
+          git config user.email 'actions@github.com'
+          git add data/history/wnba_edge_database.jsonl data/history/wnba_opportunity_ranking_history.jsonl data/warehouse/wnba_clv_edge_report.json data/dashboard/wnba_clv_edge_report.json data/warehouse/wnba_opportunity_rankings.json data/dashboard/wnba_opportunity_rankings.json
+          git diff --cached --quiet && echo 'No opportunity ranking changes' && exit 0
+          git commit -m "Update WNBA opportunity rankings - ${TARGET}"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then echo "Pushed on attempt $attempt"; exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
