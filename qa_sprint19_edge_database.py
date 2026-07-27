@@ -46,20 +46,26 @@ def main() -> None:
             Path(edge.MODEL_HISTORY).write_text(json.dumps(source) + "\n", encoding="utf-8")
             first = edge.build("2026-07-27")
             assert first["inserted_records"] == 1
+            assert first["updated_records"] == 0
             assert first["total_records"] == 1
             assert first["target_records"] == 1
 
             second = edge.build("2026-07-27")
             assert second["inserted_records"] == 0
+            assert second["updated_records"] == 0
             assert second["total_records"] == 1
+            assert len(Path(edge.EDGE_HISTORY).read_text(encoding="utf-8").splitlines()) == 1
 
             source.update({"outcome": "WIN", "actual": 24, "profit_loss": 18.18, "closing_line": 20.5})
             Path(edge.MODEL_HISTORY).write_text(json.dumps(source) + "\n", encoding="utf-8")
             settled = edge.build("2026-07-27")
+            assert settled["inserted_records"] == 0
             assert settled["updated_records"] == 1
+            assert settled["total_records"] == 1
             assert settled["settled_records"] == 1
             assert settled["graded_decisions"] == 1
             assert_close(settled["win_rate"], 1.0)
+            assert len(Path(edge.EDGE_HISTORY).read_text(encoding="utf-8").splitlines()) == 1
             assert Path("data/warehouse/wnba_edge_database.json").is_file()
             assert Path("data/dashboard/wnba_edge_database.json").is_file()
         finally:

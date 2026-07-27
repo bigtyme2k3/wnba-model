@@ -1,14 +1,4 @@
-"""Build the canonical Sprint 19 betting-edge database.
-
-The database is a durable, deduplicated record of every archived model decision.
-It combines model projections, market prices, expected value, grading, and CLV
-fields without placing bets.
-
-Outputs:
-- data/history/wnba_edge_database.jsonl
-- data/warehouse/wnba_edge_database.json
-- data/dashboard/wnba_edge_database.json
-"""
+"""Build the canonical Sprint 19 betting-edge database."""
 from __future__ import annotations
 
 import argparse
@@ -83,8 +73,11 @@ def clean(value: Any) -> Any:
 
 
 def edge_key(row: Dict[str, Any]) -> str:
+    """Return the stable key for source rows and already-normalized records."""
     return str(
-        row.get("history_key")
+        row.get("edge_key")
+        or row.get("history_key")
+        or row.get("source_history_key")
         or "|".join(
             str(row.get(field) or "")
             for field in ("date", "player", "game", "stat", "line", "signal")
@@ -125,9 +118,7 @@ def normalized_record(row: Dict[str, Any], now: str) -> Dict[str, Any]:
 
     stake = finite_float(row.get("stake", row.get("recommended_stake")))
     profit_loss = finite_float(row.get("profit_loss", row.get("profit")))
-    roi = None
-    if stake and profit_loss is not None:
-        roi = profit_loss / stake
+    roi = profit_loss / stake if stake and profit_loss is not None else None
 
     closing_line = finite_float(row.get("closing_line"))
     clv = finite_float(row.get("clv"))
@@ -135,47 +126,45 @@ def normalized_record(row: Dict[str, Any], now: str) -> Dict[str, Any]:
         signal = str(row.get("signal") or "").upper()
         clv = closing_line - market_line if signal in {"OVER", "YES"} else market_line - closing_line
 
-    return clean(
-        {
-            "edge_key": edge_key(row),
-            "date": row.get("date"),
-            "captured_at_utc": row.get("captured_at_utc") or now,
-            "updated_at_utc": now,
-            "player": row.get("player"),
-            "team": row.get("team"),
-            "game": row.get("game"),
-            "market": row.get("stat", row.get("market")),
-            "selection": row.get("signal", row.get("selection")),
-            "model_projection": projection,
-            "sportsbook_line": market_line,
-            "projection_edge": projection_edge,
-            "projection_edge_pct": finite_float(row.get("edge_pct")),
-            "american_odds": odds,
-            "sportsbook": row.get("sportsbook") or row.get("book"),
-            "book_count": row.get("book_count"),
-            "implied_probability": implied_prob,
-            "model_probability": model_prob,
-            "probability_edge": (model_prob - implied_prob) if model_prob is not None and implied_prob is not None else None,
-            "expected_value": ev,
-            "expected_value_pct": ev * 100.0 if ev is not None else None,
-            "confidence": probability(row.get("confidence", row.get("final_score"))),
-            "consensus_score": finite_float(row.get("consensus_score")),
-            "engine_agreement": row.get("engine_agreement"),
-            "recommendation": row.get("final_action") or row.get("recommendation"),
-            "eligible_for_bet": bool(row.get("eligible_for_bet", False)),
-            "stake": stake,
-            "status": "SETTLED" if row.get("outcome") in {"WIN", "LOSS", "PUSH", "VOID"} else "OPEN",
-            "result": row.get("outcome") or row.get("result"),
-            "actual": finite_float(row.get("actual")),
-            "profit_loss": profit_loss,
-            "roi": roi,
-            "closing_line": closing_line,
-            "clv": clv,
-            "decision_reason": row.get("decision_reason"),
-            "guardrail_failures": row.get("guardrail_failures", []),
-            "source_history_key": row.get("history_key"),
-        }
-    )
+    return clean({
+        "edge_key": edge_key(row),
+        "date": row.get("date"),
+        "captured_at_utc": row.get("captured_at_utc") or now,
+        "updated_at_utc": now,
+        "player": row.get("player"),
+        "team": row.get("team"),
+        "game": row.get("game"),
+        "market": row.get("stat", row.get("market")),
+        "selection": row.get("signal", row.get("selection")),
+        "model_projection": projection,
+        "sportsbook_line": market_line,
+        "projection_edge": projection_edge,
+        "projection_edge_pct": finite_float(row.get("edge_pct")),
+        "american_odds": odds,
+        "sportsbook": row.get("sportsbook") or row.get("book"),
+        "book_count": row.get("book_count"),
+        "implied_probability": implied_prob,
+        "model_probability": model_prob,
+        "probability_edge": (model_prob - implied_prob) if model_prob is not None and implied_prob is not None else None,
+        "expected_value": ev,
+        "expected_value_pct": ev * 100.0 if ev is not None else None,
+        "confidence": probability(row.get("confidence", row.get("final_score"))),
+        "consensus_score": finite_float(row.get("consensus_score")),
+        "engine_agreement": row.get("engine_agreement"),
+        "recommendation": row.get("final_action") or row.get("recommendation"),
+        "eligible_for_bet": bool(row.get("eligible_for_bet", False)),
+        "stake": stake,
+        "status": "SETTLED" if row.get("outcome") in {"WIN", "LOSS", "PUSH", "VOID"} else "OPEN",
+        "result": row.get("outcome") or row.get("result"),
+        "actual": finite_float(row.get("actual")),
+        "profit_loss": profit_loss,
+        "roi": roi,
+        "closing_line": closing_line,
+        "clv": clv,
+        "decision_reason": row.get("decision_reason"),
+        "guardrail_failures": row.get("guardrail_failures", []),
+        "source_history_key": row.get("history_key") or row.get("source_history_key"),
+    })
 
 
 def write_jsonl(path: str, rows: Iterable[Dict[str, Any]]) -> None:
@@ -183,6 +172,11 @@ def write_jsonl(path: str, rows: Iterable[Dict[str, Any]]) -> None:
     with open(path, "w", encoding="utf-8") as handle:
         for row in rows:
             handle.write(json.dumps(clean(row), separators=(",", ":"), allow_nan=False) + "\n")
+
+
+def material(record: Dict[str, Any]) -> Dict[str, Any]:
+    """Exclude bookkeeping timestamps from idempotency comparisons."""
+    return {key: value for key, value in record.items() if key != "updated_at_utc"}
 
 
 def build(target: str) -> Dict[str, Any]:
@@ -199,9 +193,19 @@ def build(target: str) -> Dict[str, Any]:
         if prior is None:
             existing[key] = record
             inserted += 1
-        elif prior != record:
-            existing[key] = {**prior, **record, "captured_at_utc": prior.get("captured_at_utc") or record.get("captured_at_utc")}
+            continue
+
+        merged = {
+            **prior,
+            **record,
+            "captured_at_utc": prior.get("captured_at_utc") or record.get("captured_at_utc"),
+        }
+        if material(prior) != material(merged):
+            merged["updated_at_utc"] = now
+            existing[key] = merged
             updated += 1
+        else:
+            existing[key] = prior
 
     rows = sorted(existing.values(), key=lambda row: (str(row.get("date") or ""), str(row.get("edge_key") or "")))
     write_jsonl(EDGE_HISTORY, rows)
@@ -229,33 +233,27 @@ def build(target: str) -> Dict[str, Any]:
         bucket["win_rate"] = round(bucket["wins"] / graded, 4) if graded else 0.0
         bucket["profit_loss"] = round(bucket["profit_loss"], 2)
 
-    report = clean(
-        {
-            "generated_at_utc": now,
-            "target_date": target,
-            "source": MODEL_HISTORY,
-            "database": EDGE_HISTORY,
-            "inserted_records": inserted,
-            "updated_records": updated,
-            "total_records": len(rows),
-            "target_records": len(target_rows),
-            "open_records": sum(row.get("status") == "OPEN" for row in rows),
-            "settled_records": len(settled),
-            "graded_decisions": len(decisions),
-            "win_rate": wins / len(decisions) if decisions else 0.0,
-            "total_stake": total_stake,
-            "profit_loss": total_profit,
-            "roi": total_profit / total_stake if total_stake else 0.0,
-            "average_expected_value": sum(row["expected_value"] for row in ev_rows) / len(ev_rows) if ev_rows else 0.0,
-            "by_market": by_market,
-            "top_edges": sorted(
-                target_rows,
-                key=lambda row: finite_float(row.get("expected_value")) or -999.0,
-                reverse=True,
-            )[:50],
-            "recent_records": rows[-100:],
-        }
-    )
+    report = clean({
+        "generated_at_utc": now,
+        "target_date": target,
+        "source": MODEL_HISTORY,
+        "database": EDGE_HISTORY,
+        "inserted_records": inserted,
+        "updated_records": updated,
+        "total_records": len(rows),
+        "target_records": len(target_rows),
+        "open_records": sum(row.get("status") == "OPEN" for row in rows),
+        "settled_records": len(settled),
+        "graded_decisions": len(decisions),
+        "win_rate": wins / len(decisions) if decisions else 0.0,
+        "total_stake": total_stake,
+        "profit_loss": total_profit,
+        "roi": total_profit / total_stake if total_stake else 0.0,
+        "average_expected_value": sum(row["expected_value"] for row in ev_rows) / len(ev_rows) if ev_rows else 0.0,
+        "by_market": by_market,
+        "top_edges": sorted(target_rows, key=lambda row: finite_float(row.get("expected_value")) or -999.0, reverse=True)[:50],
+        "recent_records": rows[-100:],
+    })
 
     for path in ("data/warehouse/wnba_edge_database.json", "data/dashboard/wnba_edge_database.json"):
         os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -269,15 +267,12 @@ def main() -> None:
     parser.add_argument("--date", default=str(date.today()))
     args = parser.parse_args()
     report = build(args.date)
-    print(
-        "Edge database:",
-        {
-            "total_records": report["total_records"],
-            "inserted_records": report["inserted_records"],
-            "updated_records": report["updated_records"],
-            "target_records": report["target_records"],
-        },
-    )
+    print("Edge database:", {
+        "total_records": report["total_records"],
+        "inserted_records": report["inserted_records"],
+        "updated_records": report["updated_records"],
+        "target_records": report["target_records"],
+    })
 
 
 if __name__ == "__main__":
