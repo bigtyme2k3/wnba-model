@@ -1,0 +1,79 @@
+name: WNBA Sprint 20.5 Phase A Calculation Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), blank for active slate'
+        required: false
+        default: ''
+
+concurrency:
+  group: wnba-sprint20-5-phase-a-calculation-audit
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  audit-calculations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Resolve target date
+        run: |
+          set -euo pipefail
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+      - name: Validate Phase A code
+        run: |
+          set -euo pipefail
+          python -m py_compile audit_phase_a_calculations.py qa_sprint20_5_phase_a_calculations.py
+          python qa_sprint20_5_phase_a_calculations.py
+      - name: Run calculation audit
+        run: python audit_phase_a_calculations.py --date "$TARGET"
+      - name: Verify audit artifacts
+        run: |
+          set -euo pipefail
+          test -s data/audit/phase_a_calculation_audit.json
+          test -s data/audit/ev_trace_report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('data/audit/phase_a_calculation_audit.json').read_text())
+          s=report['summary']
+          assert s['formula_mismatches']==0, s
+          assert s['dashboard_scaling_match'] is True, s
+          print('Sprint 20.5 Phase A verification passed:',s)
+          PY
+      - name: Commit audit artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Model Bot'
+          git config user.email 'actions@github.com'
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
+          git add data/audit/phase_a_calculation_audit.json data/audit/ev_trace_report.json
+          git diff --cached --quiet && echo 'No audit changes' && exit 0
+          git commit -m "Update WNBA Phase A calculation audit - ${TARGET}"
+          test -z "$(git status --porcelain)" || { git status --short; exit 1; }
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then echo "Pushed on attempt $attempt"; exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
