@@ -1,0 +1,53 @@
+name: WNBA Sprint 20.5 Phase B Data Flow Audit
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: Target date (YYYY-MM-DD)
+        required: false
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: sprint20-5-phase-b-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  audit-data-flow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate Phase B code
+        run: |
+          python -m py_compile audit_phase_b_data_flow.py qa_sprint20_5_phase_b_data_flow.py
+          python qa_sprint20_5_phase_b_data_flow.py
+      - name: Run probability data-flow audit
+        env:
+          INPUT_DATE: ${{ inputs.target_date }}
+        run: |
+          TARGET="${INPUT_DATE:-$(date -u +%F)}"
+          python audit_phase_b_data_flow.py --date "$TARGET"
+      - name: Verify audit artifacts
+        run: |
+          set -euo pipefail
+          test -s data/audit/phase_b_data_flow_audit.json
+          test -s data/audit/probability_source_trace.json
+          python - <<'PY'
+          import json
+          p=json.load(open('data/audit/phase_b_data_flow_audit.json'))
+          assert 'summary' in p and 'selection_priority' in p
+          assert p['summary']['source_records'] >= 0
+          print('Sprint 20.5 Phase B verification passed:',p['summary'])
+          PY
+      - name: Commit audit artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/audit/phase_b_data_flow_audit.json data/audit/probability_source_trace.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 20.5 Phase B audit artifacts"
+          for n in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin HEAD:"${GITHUB_REF_NAME}" && break || sleep $((n*3)); done
