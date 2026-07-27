@@ -1,0 +1,379 @@
+{
+  "generated_at_utc": "2026-07-27T23:02:57.818107+00:00",
+  "target_date": "2026-07-27",
+  "summary": {
+    "settled_records": 1485,
+    "training_records": 1039,
+    "validation_records": 446,
+    "split_date": "2026-07-18",
+    "raw_validation_brier": 0.379573,
+    "raw_validation_log_loss": 1.116805,
+    "raw_validation_ece": 0.3435,
+    "best_method": "platt",
+    "deployment_gate": "PASS",
+    "status": "PASS"
+  },
+  "raw_validation": {
+    "samples": 446,
+    "brier_score": 0.379573,
+    "log_loss": 1.116805,
+    "ece": 0.3435,
+    "average_probability": 0.819491,
+    "actual_win_rate": 0.477578,
+    "bands": [
+      {
+        "low": 0.5,
+        "high": 0.6,
+        "count": 10,
+        "average_probability": 0.57684,
+        "actual_win_rate": 0.5,
+        "gap": -0.07684
+      },
+      {
+        "low": 0.6,
+        "high": 0.7,
+        "count": 58,
+        "average_probability": 0.649069,
+        "actual_win_rate": 0.655172,
+        "gap": 0.006103
+      },
+      {
+        "low": 0.7,
+        "high": 0.8,
+        "count": 105,
+        "average_probability": 0.768587,
+        "actual_win_rate": 0.361905,
+        "gap": -0.406682
+      },
+      {
+        "low": 0.8,
+        "high": 0.9,
+        "count": 172,
+        "average_probability": 0.84787,
+        "actual_win_rate": 0.465116,
+        "gap": -0.382754
+      },
+      {
+        "low": 0.9,
+        "high": 0.95,
+        "count": 52,
+        "average_probability": 0.921206,
+        "actual_win_rate": 0.538462,
+        "gap": -0.382744
+      },
+      {
+        "low": 0.95,
+        "high": 1,
+        "count": 49,
+        "average_probability": 0.972257,
+        "actual_win_rate": 0.489796,
+        "gap": -0.482461
+      }
+    ]
+  },
+  "candidate_evaluations": [
+    {
+      "model": {
+        "method": "platt",
+        "a": -0.01142665,
+        "b": -0.01381662
+      },
+      "validation": {
+        "samples": 446,
+        "brier_score": 0.249771,
+        "log_loss": 0.692689,
+        "ece": 0.013927,
+        "average_probability": 0.491506,
+        "actual_win_rate": 0.477578,
+        "bands": [
+          {
+            "low": 0,
+            "high": 0.5,
+            "count": 446,
+            "average_probability": 0.491506,
+            "actual_win_rate": 0.477578,
+            "gap": -0.013927
+          }
+        ]
+      },
+      "brier_improvement": 0.129802,
+      "log_loss_improvement": 0.424116,
+      "ece_improvement": 0.329573
+    },
+    {
+      "model": {
+        "method": "linear_shrinkage",
+        "strength": 0.0
+      },
+      "validation": {
+        "samples": 446,
+        "brier_score": 0.25,
+        "log_loss": 0.693147,
+        "ece": 0.022422,
+        "average_probability": 0.5,
+        "actual_win_rate": 0.477578,
+        "bands": [
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "count": 446,
+            "average_probability": 0.5,
+            "actual_win_rate": 0.477578,
+            "gap": -0.022422
+          }
+        ]
+      },
+      "brier_improvement": 0.129573,
+      "log_loss_improvement": 0.423658,
+      "ece_improvement": 0.321078
+    },
+    {
+      "model": {
+        "method": "temperature",
+        "temperature": 8.0
+      },
+      "validation": {
+        "samples": 446,
+        "brier_score": 0.255751,
+        "log_loss": 0.704688,
+        "ece": 0.080848,
+        "average_probability": 0.554607,
+        "actual_win_rate": 0.477578,
+        "bands": [
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "count": 414,
+            "average_probability": 0.548416,
+            "actual_win_rate": 0.478261,
+            "gap": -0.070155
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "count": 29,
+            "average_probability": 0.626282,
+            "actual_win_rate": 0.413793,
+            "gap": -0.212489
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "count": 3,
+            "average_probability": 0.716118,
+            "actual_win_rate": 1.0,
+            "gap": 0.283882
+          }
+        ]
+      },
+      "brier_improvement": 0.123822,
+      "log_loss_improvement": 0.412117,
+      "ece_improvement": 0.262652
+    },
+    {
+      "model": {
+        "method": "isotonic",
+        "blocks": [
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.5,
+            "value": 0.0
+          },
+          {
+            "low": 0.5,
+            "high": 0.9985,
+            "value": 0.4946236559139785
+          },
+          {
+            "low": 0.9989,
+            "high": 0.9989,
+            "value": 1.0
+          },
+          {
+            "low": 0.9994,
+            "high": 0.9994,
+            "value": 1.0
+          },
+          {
+            "low": 0.9995,
+            "high": 0.9995,
+            "value": 1.0
+          },
+          {
+            "low": 0.9996,
+            "high": 0.9996,
+            "value": 1.0
+          },
+          {
+            "low": 0.9996,
+            "high": 0.9996,
+            "value": 1.0
+          },
+          {
+            "low": 1.0,
+            "high": 1.0,
+            "value": 1.0
+          },
+          {
+            "low": 1.0,
+            "high": 1.0,
+            "value": 1.0
+          }
+        ]
+      },
+      "validation": {
+        "samples": 446,
+        "brier_score": 0.249191,
+        "log_loss": 0.715856,
+        "ece": 0.022711,
+        "average_probability": 0.500289,
+        "actual_win_rate": 0.477578,
+        "bands": [
+          {
+            "low": 0,
+            "high": 0.5,
+            "count": 441,
+            "average_probability": 0.494624,
+            "actual_win_rate": 0.473923,
+            "gap": -0.020701
+          },
+          {
+            "low": 0.95,
+            "high": 1,
+            "count": 5,
+            "average_probability": 0.999999,
+            "actual_win_rate": 0.8,
+            "gap": -0.199999
+          }
+        ]
+      },
+      "brier_improvement": 0.130382,
+      "log_loss_improvement": 0.400949,
+      "ece_improvement": 0.320789
+    },
+    {
+      "model": {
+        "method": "identity"
+      },
+      "validation": {
+        "samples": 446,
+        "brier_score": 0.379573,
+        "log_loss": 1.116805,
+        "ece": 0.3435,
+        "average_probability": 0.819491,
+        "actual_win_rate": 0.477578,
+        "bands": [
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "count": 10,
+            "average_probability": 0.57684,
+            "actual_win_rate": 0.5,
+            "gap": -0.07684
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "count": 58,
+            "average_probability": 0.649069,
+            "actual_win_rate": 0.655172,
+            "gap": 0.006103
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "count": 105,
+            "average_probability": 0.768587,
+            "actual_win_rate": 0.361905,
+            "gap": -0.406682
+          },
+          {
+            "low": 0.8,
+            "high": 0.9,
+            "count": 172,
+            "average_probability": 0.84787,
+            "actual_win_rate": 0.465116,
+            "gap": -0.382754
+          },
+          {
+            "low": 0.9,
+            "high": 0.95,
+            "count": 52,
+            "average_probability": 0.921206,
+            "actual_win_rate": 0.538462,
+            "gap": -0.382744
+          },
+          {
+            "low": 0.95,
+            "high": 1,
+            "count": 49,
+            "average_probability": 0.972257,
+            "actual_win_rate": 0.489796,
+            "gap": -0.482461
+          }
+        ]
+      },
+      "brier_improvement": 0.0,
+      "log_loss_improvement": 0.0,
+      "ece_improvement": 0.0
+    }
+  ],
+  "deployment_policy": {
+    "minimum_training_records": 500,
+    "minimum_validation_records": 200,
+    "minimum_log_loss_improvement": 0.01,
+    "minimum_brier_improvement": 0.005,
+    "requires_ece_improvement": true,
+    "uses_chronological_split": true
+  },
+  "selected_calibrator": {
+    "method": "platt",
+    "a": -0.01142665,
+    "b": -0.01381662
+  },
+  "notes": [
+    "Raw simulation_probability is preserved.",
+    "No calibrated probability is used for EV until the deployment gate passes.",
+    "Validation records are strictly later than training records."
+  ]
+}
