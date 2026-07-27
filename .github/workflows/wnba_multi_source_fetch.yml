@@ -68,20 +68,66 @@ jobs:
       - name: Fetch player stats and boxscores from wehoop
         run: Rscript fetch_wehoop_stats.R --date "${{ env.TARGET }}" --out data/raw
 
-      - name: Install sports-skills
-        continue-on-error: true
+      - name: Install optional sports-skills provider
+        id: sports_skills_install
+        shell: bash
         run: |
+          set +e
           python -m pip install --upgrade pip
           pip install git+https://github.com/machina-sports/sports-skills.git
+          rc=$?
+          set -e
+          echo "exit_code=$rc" >> "$GITHUB_OUTPUT"
+          if [ "$rc" -eq 0 ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "sports-skills installed successfully"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "sports-skills unavailable; primary wehoop data remains valid"
+          fi
 
-      - name: Fetch supplemental WNBA data from sports-skills
-        continue-on-error: true
+      - name: Fetch optional supplemental WNBA data
+        id: supplemental_fetch
+        shell: bash
+        env:
+          SPORTS_SKILLS_AVAILABLE: ${{ steps.sports_skills_install.outputs.available }}
         run: |
           mkdir -p data/wnba
-          sports-skills wnba get_scoreboard > data/wnba/scores.json || echo '{}' > data/wnba/scores.json
-          sports-skills wnba get_injuries > data/wnba/injuries.json || echo '{}' > data/wnba/injuries.json
-          sports-skills wnba get_standings --season "$(date -u +%Y)" > data/wnba/standings.json || echo '{}' > data/wnba/standings.json
-          sports-skills wnba get_futures > data/wnba/futures.json || echo '{}' > data/wnba/futures.json
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          available = os.environ.get('SPORTS_SKILLS_AVAILABLE', 'false').lower() == 'true'
+          commands = {
+              'scores.json': ['sports-skills', 'wnba', 'get_scoreboard'],
+              'injuries.json': ['sports-skills', 'wnba', 'get_injuries'],
+              'standings.json': ['sports-skills', 'wnba', 'get_standings', '--season', __import__('datetime').datetime.utcnow().strftime('%Y')],
+              'futures.json': ['sports-skills', 'wnba', 'get_futures'],
+          }
+          results = {}
+          out_dir = Path('data/wnba')
+          for filename, command in commands.items():
+              output_path = out_dir / filename
+              if not available:
+                  output_path.write_text('{}\n')
+                  results[filename] = {'status': 'provider_unavailable', 'exit_code': None}
+                  continue
+              completed = subprocess.run(command, text=True, capture_output=True, check=False)
+              if completed.returncode == 0 and completed.stdout.strip():
+                  output_path.write_text(completed.stdout)
+                  results[filename] = {'status': 'ok', 'exit_code': 0}
+              else:
+                  output_path.write_text('{}\n')
+                  results[filename] = {
+                      'status': 'fetch_failed',
+                      'exit_code': completed.returncode,
+                      'stderr': completed.stderr.strip()[-500:],
+                  }
+          Path('data/wnba/supplemental_fetch_status.json').write_text(json.dumps(results, indent=2) + '\n')
+          print(json.dumps(results, indent=2))
+          PY
 
       - name: Write source status
         run: |
@@ -93,6 +139,7 @@ jobs:
             'primary_stats_source': 'sportsdataverse/wehoop',
             'primary_stats_upstream': 'ESPN',
             'supplemental_source': 'sports-skills',
+            'supplemental_required': False,
             'checked_at_utc': datetime.now(timezone.utc).isoformat(),
             'files': {}
           }
@@ -108,9 +155,25 @@ jobs:
             status['wehoop'] = json.load(open('data/raw/wehoop_stats_status.json'))
           except Exception as exc:
             status['wehoop'] = {'status': 'error', 'error': str(exc)}
+          try:
+            status['supplemental_fetch'] = json.load(open('data/wnba/supplemental_fetch_status.json'))
+          except Exception as exc:
+            status['supplemental_fetch'] = {'status': 'unknown', 'error': str(exc)}
           with open('data/wnba/source_status.json', 'w') as fh:
             json.dump(status, fh, indent=2)
           print(json.dumps(status, indent=2))
+          PY
+
+      - name: Validate primary source health
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          status = json.loads(Path('data/wnba/source_status.json').read_text())
+          wehoop = status.get('wehoop', {})
+          if wehoop.get('status') not in {'ok', 'success', 'healthy'}:
+              raise SystemExit(f"Primary wehoop source is unhealthy: {wehoop}")
+          print('Primary wehoop source is healthy; supplemental source is advisory only.')
           PY
 
       - name: Commit and push

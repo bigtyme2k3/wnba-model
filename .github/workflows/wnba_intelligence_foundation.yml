@@ -36,224 +36,212 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
+          cache: pip
 
-      - name: Install dependencies
+      - name: Install required dependencies
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install sports-skills==0.27.0 || pip install git+https://github.com/machina-sports/sports-skills.git
-          pip install nba_api sportsdataverse litellm optuna || true
+
+      - name: Install optional providers
+        id: optional_providers
+        shell: bash
+        run: |
+          set -u
+          mkdir -p data/health
+          status=available
+          detail='sports-skills installed'
+          if ! pip install sports-skills==0.27.0; then
+            if ! pip install git+https://github.com/machina-sports/sports-skills.git; then
+              status=unavailable
+              detail='sports-skills installation failed; committed and cached sources remain available'
+            fi
+          fi
+          python - <<PY
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          Path('data/health').mkdir(parents=True, exist_ok=True)
+          Path('data/health/wnba_foundation_optional_providers.json').write_text(json.dumps({
+              'checked_at_utc': datetime.now(timezone.utc).isoformat(),
+              'sports_skills': {'status': '${status}', 'detail': '${detail}'},
+          }, indent=2) + '\n')
+          PY
 
       - name: Resolve active Eastern slate date
         run: |
+          set -euo pipefail
           TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
           YEAR=$(python active_slate_date.py --year)
-          echo "TARGET=$TARGET" >> $GITHUB_ENV
-          echo "YEAR=$YEAR" >> $GITHUB_ENV
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "YEAR=$YEAR" >> "$GITHUB_ENV"
           echo "Using active WNBA slate date: $TARGET"
 
       - name: Validate intelligence scripts
         run: |
-          python -m py_compile active_slate_date.py scrape_odds.py scrape_odds_props.py line_shopping.py wnba_stats_fallback_from_boxscores.py sports_skills_core_provider.py wnba_data_warehouse.py wnba_player_intelligence.py wnba_stats_quality.py odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py wnba_sportsbook_consensus.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_reasoning_layer.py wnba_portfolio_dashboard.py wnba_ai_coach.py wnba_source_health.py wnba_historical_database.py wnba_master_database.py wnba_master_source_builder.py wnba_results_grader.py wnba_closing_line_tracker.py wnba_betting_ledger.py wnba_self_learning.py wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py patch_dashboard_navigation_v2.py patch_prop_box_colors.py build_dashboard_v4.py wnba_v4_props_guard.py wnba_v4_prop_context.py patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py patch_dashboard_v4_player_props_polish.py wnba_v4_player_props_audit.py
+          python -m py_compile \
+            active_slate_date.py scrape_odds.py scrape_odds_props.py line_shopping.py \
+            wnba_stats_fallback_from_boxscores.py sports_skills_core_provider.py \
+            wnba_data_warehouse.py wnba_player_intelligence.py wnba_stats_quality.py \
+            odds_source_manager.py wnba_live_odds_layer.py wnba_odds_health.py \
+            wnba_sportsbook_consensus.py player_points.py wnba_matchup_intelligence.py \
+            wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py \
+            wnba_market_engine.py wnba_portfolio_optimizer_v2.py \
+            wnba_decision_engine_final.py wnba_risk_allocation.py \
+            wnba_reasoning_layer.py wnba_portfolio_dashboard.py wnba_ai_coach.py \
+            wnba_source_health.py wnba_historical_database.py wnba_master_database.py \
+            wnba_master_source_builder.py wnba_results_grader.py \
+            wnba_closing_line_tracker.py wnba_betting_ledger.py wnba_self_learning.py \
+            wnba_terminal_ui.py build_dashboard.py patch_terminal_ui.py \
+            patch_dashboard_navigation_v2.py patch_prop_box_colors.py \
+            build_dashboard_v4.py wnba_v4_props_guard.py wnba_v4_prop_context.py \
+            patch_dashboard_v4_team_context.py patch_dashboard_v4_layout_and_slate.py \
+            patch_dashboard_v4_prop_header.py patch_dashboard_v4_game_filter.py \
+            patch_dashboard_v4_player_props_polish.py wnba_v4_player_props_audit.py
 
-      - name: Fetch current game odds from The Odds API
+      - name: Refresh optional market sources
         if: ${{ github.event_name == 'schedule' || github.event.inputs.refresh_odds_api != 'false' }}
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: python scrape_odds.py --date ${{ env.TARGET }} --out data/raw
-        continue-on-error: true
-
-      - name: Validate committed wehoop player stats
         run: |
-          if [ -s data/raw/wnba_players_live.json ] && [ -s data/raw/boxscores_wehoop.csv ]; then echo "✓ wehoop player stats and boxscores are available"; else echo "⚠ committed wehoop files are missing; using cached boxscore fallback"; python wnba_stats_fallback_from_boxscores.py --out data/raw; fi
+          set -u
+          mkdir -p data/health
+          game_odds=ok
+          player_props=ok
+          line_shopping=ok
+          python scrape_odds.py --date "${TARGET}" --out data/raw || game_odds=degraded
+          python scrape_odds_props.py --date "${TARGET}" --out data/raw || player_props=degraded
+          python line_shopping.py --date "${TARGET}" --out data/raw || line_shopping=degraded
+          python - <<PY
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          Path('data/health/wnba_foundation_market_refresh.json').write_text(json.dumps({
+              'checked_at_utc': datetime.now(timezone.utc).isoformat(),
+              'target_date': '${TARGET}',
+              'game_odds': '${game_odds}',
+              'player_props': '${player_props}',
+              'line_shopping': '${line_shopping}',
+          }, indent=2) + '\n')
+          PY
 
-      - name: Refresh sports-skills core provider
-        run: python sports_skills_core_provider.py --season ${{ env.YEAR }} --out data/wnba --warehouse data/warehouse
-        continue-on-error: true
-
-      - name: Build data warehouse
-        run: python wnba_data_warehouse.py --date ${{ env.TARGET }}
-
-      - name: Build player intelligence database
-        run: python wnba_player_intelligence.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build stats quality diagnostics
-        run: python wnba_stats_quality.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Resolve odds source without API credits
-        run: python odds_source_manager.py --date ${{ env.TARGET }} --raw data/raw --manual data/manual/wnba_manual_odds.csv
-
-      - name: Build live odds layer
-        run: python wnba_live_odds_layer.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Fetch current player props from The Odds API
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.refresh_odds_api != 'false' }}
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: python scrape_odds_props.py --date ${{ env.TARGET }} --out data/raw
-        continue-on-error: true
-
-      - name: Build current line shopping props
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.refresh_odds_api != 'false' }}
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: python line_shopping.py --date ${{ env.TARGET }} --out data/raw
-        continue-on-error: true
-
-      - name: Rebuild player props with intelligence
-        run: python player_points.py --date ${{ env.TARGET }} --out data/raw
-        continue-on-error: true
-
-      - name: Build odds health polish
-        run: python wnba_odds_health.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build sportsbook consensus — DK FD Fanatics only
-        run: python wnba_sportsbook_consensus.py --date ${{ env.TARGET }}
-
-      - name: Build matchup intelligence
-        run: python wnba_matchup_intelligence.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build consensus engine
-        run: python wnba_consensus_engine.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build Monte Carlo simulation engine
-        run: python wnba_monte_carlo_engine.py --date ${{ env.TARGET }} --sims 10000
-        continue-on-error: true
-
-      - name: Build projection AI
-        run: python wnba_projection_ai.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Track line snapshot
-        run: python wnba_closing_line_tracker.py --date ${{ env.TARGET }} --stage snapshot
-        continue-on-error: true
-
-      - name: Build market engine
-        run: python wnba_market_engine.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build portfolio optimizer v2
-        run: python wnba_portfolio_optimizer_v2.py --date ${{ env.TARGET }} --bankroll 500
-        continue-on-error: true
-
-      - name: Build final decision engine
-        run: python wnba_decision_engine_final.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build risk allocation
-        run: python wnba_risk_allocation.py --date ${{ env.TARGET }} --capital 500
-        continue-on-error: true
-
-      - name: Build reasoning layer
-        run: python wnba_reasoning_layer.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build portfolio dashboard
-        run: python wnba_portfolio_dashboard.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build AI coach
-        run: python wnba_ai_coach.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build source health
-        run: python wnba_source_health.py --date ${{ env.TARGET }}
-
-      - name: Build normalized master source database
-        run: python wnba_master_source_builder.py --date ${{ env.TARGET }}
-
-      - name: Guard V4 props availability
-        run: python wnba_v4_props_guard.py
-
-      - name: Enrich full last-five and last-ten prop history
-        run: python wnba_v4_prop_context.py
-
-      - name: Audit V4 player props
-        run: python wnba_v4_player_props_audit.py
-        continue-on-error: true
-
-      - name: Update historical database
-        run: python wnba_historical_database.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build ledger summary
-        run: python wnba_betting_ledger.py --date ${{ env.TARGET }} --unit 20
-        continue-on-error: true
-
-      - name: Grade available results
-        run: python wnba_results_grader.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build self-learning weights
-        run: python wnba_self_learning.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Update master database
-        run: python wnba_master_database.py --date ${{ env.TARGET }}
-        continue-on-error: true
-
-      - name: Build base dashboard with corrected date and odds data
-        run: python build_dashboard.py
-
-      - name: Build terminal UI data
-        run: python wnba_terminal_ui.py --date ${{ env.TARGET }}
-
-      - name: Patch dashboard terminal UI
-        run: python patch_terminal_ui.py
-
-      - name: Apply simplified dashboard navigation v2
-        run: python patch_dashboard_navigation_v2.py
-
-      - name: Apply prop history box colors
-        run: python patch_prop_box_colors.py
-
-      - name: Build Dashboard V4 overhaul
-        run: python build_dashboard_v4.py
-
-      - name: Patch Dashboard V4 team context
-        run: python patch_dashboard_v4_team_context.py
-
-      - name: Patch Dashboard V4 layout and slate chips
-        run: python patch_dashboard_v4_layout_and_slate.py
-
-      - name: Fix Dashboard V4 prop header overlap
-        run: python patch_dashboard_v4_prop_header.py
-
-      - name: Fix Dashboard V4 single-game prop filtering
-        run: python patch_dashboard_v4_game_filter.py
-
-      - name: Apply final player props polish
-        run: python patch_dashboard_v4_player_props_polish.py
-
-      - name: Verify sportsbook and history restrictions
+      - name: Ensure primary player data
         run: |
+          set -euo pipefail
+          if [ -s data/raw/wnba_players_live.json ] && [ -s data/raw/boxscores_wehoop.csv ]; then
+            echo 'Primary wehoop player stats and boxscores are available.'
+          else
+            python wnba_stats_fallback_from_boxscores.py --out data/raw
+          fi
+          test -s data/raw/wnba_players_live.json
+          test -s data/raw/boxscores_wehoop.csv
+
+      - name: Refresh optional sports-skills provider
+        run: |
+          set -u
+          if command -v sports-skills >/dev/null 2>&1; then
+            python sports_skills_core_provider.py --season "${YEAR}" --out data/wnba --warehouse data/warehouse || \
+              echo 'sports-skills provider refresh degraded; continuing with primary sources.'
+          else
+            echo 'sports-skills unavailable; continuing with primary sources.'
+          fi
+
+      - name: Build required data foundation
+        run: |
+          set -euo pipefail
+          python wnba_data_warehouse.py --date "${TARGET}"
+          python wnba_player_intelligence.py --date "${TARGET}"
+          python wnba_stats_quality.py --date "${TARGET}"
+          python odds_source_manager.py --date "${TARGET}" --raw data/raw --manual data/manual/wnba_manual_odds.csv
+          python wnba_live_odds_layer.py --date "${TARGET}"
+          python player_points.py --date "${TARGET}" --out data/raw
+          python wnba_odds_health.py --date "${TARGET}"
+          python wnba_sportsbook_consensus.py --date "${TARGET}"
+          python wnba_matchup_intelligence.py --date "${TARGET}"
+
+      - name: Build required modeling stack
+        run: |
+          set -euo pipefail
+          python wnba_consensus_engine.py --date "${TARGET}"
+          python wnba_monte_carlo_engine.py --date "${TARGET}" --sims 10000
+          python wnba_projection_ai.py --date "${TARGET}"
+          python wnba_closing_line_tracker.py --date "${TARGET}" --stage snapshot
+          python wnba_market_engine.py --date "${TARGET}"
+          python wnba_portfolio_optimizer_v2.py --date "${TARGET}" --bankroll 500
+          python wnba_decision_engine_final.py --date "${TARGET}"
+          python wnba_risk_allocation.py --date "${TARGET}" --capital 500
+          python wnba_reasoning_layer.py --date "${TARGET}"
+          python wnba_portfolio_dashboard.py --date "${TARGET}"
+          python wnba_ai_coach.py --date "${TARGET}"
+
+      - name: Build required source and props artifacts
+        run: |
+          set -euo pipefail
+          python wnba_source_health.py --date "${TARGET}"
+          python wnba_master_source_builder.py --date "${TARGET}"
+          python wnba_v4_props_guard.py
+          python wnba_v4_prop_context.py
+          python wnba_v4_player_props_audit.py
+
+      - name: Build required history and learning artifacts
+        run: |
+          set -euo pipefail
+          python wnba_historical_database.py --date "${TARGET}"
+          python wnba_betting_ledger.py --date "${TARGET}" --unit 20
+          python wnba_results_grader.py --date "${TARGET}"
+          python wnba_self_learning.py --date "${TARGET}"
+          python wnba_master_database.py --date "${TARGET}"
+
+      - name: Build and patch Dashboard V4
+        run: |
+          set -euo pipefail
+          python build_dashboard.py
+          python wnba_terminal_ui.py --date "${TARGET}"
+          python patch_terminal_ui.py
+          python patch_dashboard_navigation_v2.py
+          python patch_prop_box_colors.py
+          python build_dashboard_v4.py
+          python patch_dashboard_v4_team_context.py
+          python patch_dashboard_v4_layout_and_slate.py
+          python patch_dashboard_v4_prop_header.py
+          python patch_dashboard_v4_game_filter.py
+          python patch_dashboard_v4_player_props_polish.py
+
+      - name: Verify production outputs
+        run: |
+          set -euo pipefail
           python - <<'PY'
           import json
-          data=json.load(open('data/dashboard/wnba_master.json'))
-          allowed={'DraftKings','FanDuel','Fanatics'}
-          for prop in data.get('props',[]):
-              for key in ('best_over_book','best_under_book','book','best_book'):
-                  value=prop.get(key)
-                  if value: assert value in allowed,(key,value)
-          diag=data.get('prop_history_diagnostics',{})
-          assert diag.get('game_rows',0)>0,diag
-          print('Sportsbooks verified:',data.get('summary',{}).get('books'))
-          print('History diagnostics:',diag)
+          from pathlib import Path
+
+          required = [
+              Path('data/dashboard/wnba_master.json'),
+              Path('data/master/wnba_master.json'),
+              Path('docs/index.html'),
+          ]
+          missing = [str(path) for path in required if not path.exists() or path.stat().st_size == 0]
+          assert not missing, f'Missing or empty production outputs: {missing}'
+
+          data = json.loads(Path('data/dashboard/wnba_master.json').read_text())
+          allowed = {'DraftKings', 'FanDuel', 'Fanatics'}
+          for prop in data.get('props', []):
+              for key in ('best_over_book', 'best_under_book', 'book', 'best_book'):
+                  value = prop.get(key)
+                  if value:
+                      assert value in allowed, (key, value)
+          diagnostics = data.get('prop_history_diagnostics', {})
+          assert diagnostics.get('game_rows', 0) > 0, diagnostics
+          print('Production output verification passed.')
           PY
 
       - name: Commit and push
         run: |
-          git config user.name "WNBA Model Bot"
-          git config user.email "actions@github.com"
+          set -euo pipefail
+          git config user.name 'WNBA Model Bot'
+          git config user.email 'actions@github.com'
           git status --short
-          git add config/*.json docs/*.md data/master/*.json data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/*.csv data/raw/*.json data/history/*.jsonl docs/index.html
-          git diff --cached --quiet && echo "No intelligence foundation changes" && exit 0
-          git commit -m "Update WNBA intelligence foundation - ${{ env.TARGET }}"
+          git add config/*.json docs/*.md data/master/*.json data/wnba/*.json data/warehouse/*.json data/dashboard/*.json data/raw/*.csv data/raw/*.json data/history/*.jsonl data/health/*.json docs/index.html
+          git diff --cached --quiet && echo 'No intelligence foundation changes' && exit 0
+          git commit -m "Update WNBA intelligence foundation - ${TARGET}"
           git push || (git pull --rebase origin main && git push)
