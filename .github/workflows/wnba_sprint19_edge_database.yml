@@ -1,0 +1,99 @@
+name: WNBA Sprint 19 Edge Database
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), leave blank for active Eastern slate'
+        required: false
+        default: ''
+  workflow_run:
+    workflows: ['WNBA Intelligence Foundation']
+    types: [completed]
+
+concurrency:
+  group: wnba-sprint19-edge-database
+  cancel-in-progress: false
+
+jobs:
+  build-edge-database:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository state
+        if: ${{ github.event_name == 'workflow_run' }}
+        run: git pull --rebase origin main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Resolve target date
+        run: |
+          set -euo pipefail
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Using target date: $TARGET"
+
+      - name: Validate Phase 1 code
+        run: |
+          set -euo pipefail
+          python -m py_compile wnba_edge_database.py qa_sprint19_edge_database.py
+          python qa_sprint19_edge_database.py
+
+      - name: Refresh grading and build edge database
+        run: |
+          set -euo pipefail
+          python wnba_results_grader.py --date "${TARGET}"
+          python wnba_edge_database.py --date "${TARGET}"
+
+      - name: Verify edge artifacts
+        run: |
+          set -euo pipefail
+          test -s data/history/wnba_edge_database.jsonl || test -s data/warehouse/wnba_edge_database.json
+          test -s data/warehouse/wnba_edge_database.json
+          test -s data/dashboard/wnba_edge_database.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('data/warehouse/wnba_edge_database.json').read_text())
+          required = {
+              'total_records', 'target_records', 'open_records', 'settled_records',
+              'win_rate', 'profit_loss', 'roi', 'average_expected_value',
+              'by_market', 'top_edges'
+          }
+          missing = sorted(required - set(report))
+          assert not missing, f'Missing edge database fields: {missing}'
+          assert report['total_records'] >= 0
+          print('Sprint 19 edge artifact verification passed:', {
+              'total_records': report['total_records'],
+              'target_records': report['target_records'],
+              'settled_records': report['settled_records'],
+          })
+          PY
+
+      - name: Commit Phase 1 artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Model Bot'
+          git config user.email 'actions@github.com'
+          git add data/history/wnba_edge_database.jsonl data/warehouse/wnba_edge_database.json data/dashboard/wnba_edge_database.json
+          git diff --cached --quiet && echo 'No edge database changes' && exit 0
+          git commit -m "Update WNBA edge database - ${TARGET}"
+          git push
