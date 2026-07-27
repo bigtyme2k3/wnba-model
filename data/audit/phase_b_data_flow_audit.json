@@ -1,0 +1,1515 @@
+{
+  "generated_at_utc": "2026-07-27T21:55:08.472845+00:00",
+  "target_date": "2026-07-27",
+  "status": "WARN",
+  "summary": {
+    "source_records": 81,
+    "matched_edge_records": 81,
+    "unmatched_edge_records": 0,
+    "suspicious_records": 8,
+    "selected_field_counts": {
+      "simulation_probability": 81
+    },
+    "field_availability": {
+      "simulation_probability": 81,
+      "confidence": 81,
+      "final_score": 81,
+      "consensus_score": 81
+    },
+    "findings": {
+      "selected_probability_gte_95pct": 8
+    }
+  },
+  "selection_priority": [
+    "simulation_probability",
+    "model_probability",
+    "probability",
+    "confidence",
+    "final_score",
+    "consensus_score"
+  ],
+  "data_flow": [
+    "data/history/wnba_model_history.jsonl",
+    "wnba_edge_database.py:model_probability_for",
+    "data/history/wnba_edge_database.jsonl",
+    "wnba_opportunity_finder.py",
+    "wnba_professional_dashboard.py"
+  ],
+  "diagnosis": "The first non-null field in selection_priority becomes model_probability. Score-like fields are unsafe fallbacks unless explicitly calibrated as probabilities.",
+  "top_traces": [
+    {
+      "key": "2026-07-27|Rhyne Howard|Atlanta Dream @ Dallas Wings|3PM|2.5|UNDER",
+      "player": "Rhyne Howard",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9992,
+      "edge_model_probability": 0.9992,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9992,
+        "confidence": 0.938,
+        "final_score": 0.938,
+        "consensus_score": 0.871
+      },
+      "flags": [
+        "EXTREME_PROBABILITY"
+      ]
+    },
+    {
+      "key": "2026-07-27|Kelsey Plum|New York Liberty @ Los Angeles Sparks|3PM|1.5|UNDER",
+      "player": "Kelsey Plum",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9992,
+      "edge_model_probability": 0.9992,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9992,
+        "confidence": 0.938,
+        "final_score": 0.938,
+        "consensus_score": 0.871
+      },
+      "flags": [
+        "EXTREME_PROBABILITY"
+      ]
+    },
+    {
+      "key": "2026-07-27|Kahleah Copper|Golden State Valkyries @ Phoenix Mercury|3PM|1.5|UNDER",
+      "player": "Kahleah Copper",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9986,
+      "edge_model_probability": 0.9986,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9986,
+        "confidence": 0.9359999999999999,
+        "final_score": 0.9359999999999999,
+        "consensus_score": 0.866
+      },
+      "flags": [
+        "EXTREME_PROBABILITY"
+      ]
+    },
+    {
+      "key": "2026-07-27|Natisha Hiedeman|Indiana Fever @ Seattle Storm|3PM|1.5|UNDER",
+      "player": "Natisha Hiedeman",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9971,
+      "edge_model_probability": 0.9971,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9971,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.861
+      },
+      "flags": [
+        "EXTREME_PROBABILITY"
+      ]
+    },
+    {
+      "key": "2026-07-27|Carla Leite|Portland Fire @ Las Vegas Aces|3PM|0.5|UNDER",
+      "player": "Carla Leite",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9939,
+      "edge_model_probability": 0.9939,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9939,
+        "confidence": 0.961,
+        "final_score": 0.961,
+        "consensus_score": 0.888
+      },
+      "flags": [
+        "EXTREME_PROBABILITY"
+      ]
+    },
+    {
+      "key": "2026-07-27|Rhyne Howard|Atlanta Dream @ Dallas Wings|PTS|17.5|UNDER",
+      "player": "Rhyne Howard",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9724,
+      "edge_model_probability": 0.9724,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9724,
+        "confidence": 0.9359999999999999,
+        "final_score": 0.9359999999999999,
+        "consensus_score": 0.865
+      },
+      "flags": [
+        "EXTREME_PROBABILITY"
+      ]
+    },
+    {
+      "key": "2026-07-27|Arike Ogunbowale|Atlanta Dream @ Dallas Wings|3PM|1.5|UNDER",
+      "player": "Arike Ogunbowale",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9673,
+      "edge_model_probability": 0.9673,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9673,
+        "confidence": 0.96,
+        "final_score": 0.96,
+        "consensus_score": 0.885
+      },
+      "flags": [
+        "EXTREME_PROBABILITY"
+      ]
+    },
+    {
+      "key": "2026-07-27|Kelsey Mitchell|Indiana Fever @ Seattle Storm|3PM|2.5|UNDER",
+      "player": "Kelsey Mitchell",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9516,
+      "edge_model_probability": 0.9516,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9516,
+        "confidence": 0.958,
+        "final_score": 0.958,
+        "consensus_score": 0.88
+      },
+      "flags": [
+        "EXTREME_PROBABILITY"
+      ]
+    },
+    {
+      "key": "2026-07-27|Rhyne Howard|Atlanta Dream @ Dallas Wings|PR|21.5|UNDER",
+      "player": "Rhyne Howard",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9404,
+      "edge_model_probability": 0.9404,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9404,
+        "confidence": 0.938,
+        "final_score": 0.938,
+        "consensus_score": 0.871
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|A'ja Wilson|Portland Fire @ Las Vegas Aces|PTS|26.5|UNDER",
+      "player": "A'ja Wilson",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9362,
+      "edge_model_probability": 0.9362,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9362,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.863
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Rhyne Howard|Atlanta Dream @ Dallas Wings|PA|20.5|UNDER",
+      "player": "Rhyne Howard",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9346,
+      "edge_model_probability": 0.9346,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9346,
+        "confidence": 0.9390000000000001,
+        "final_score": 0.9390000000000001,
+        "consensus_score": 0.8740000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Rhyne Howard|Atlanta Dream @ Dallas Wings|PRA|25.5|UNDER",
+      "player": "Rhyne Howard",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9325,
+      "edge_model_probability": 0.9325,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9325,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.861
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|A'ja Wilson|Portland Fire @ Las Vegas Aces|PR|36.5|UNDER",
+      "player": "A'ja Wilson",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9176,
+      "edge_model_probability": 0.9176,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9176,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.863
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Allisha Gray|Atlanta Dream @ Dallas Wings|3PM|1.5|UNDER",
+      "player": "Allisha Gray",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.9115,
+      "edge_model_probability": 0.9115,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.9115,
+        "confidence": 0.9570000000000001,
+        "final_score": 0.9570000000000001,
+        "consensus_score": 0.8759999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jackie Young|Portland Fire @ Las Vegas Aces|PTS|16.5|UNDER",
+      "player": "Jackie Young",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8994,
+      "edge_model_probability": 0.8994,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8994,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.863
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Carla Leite|Portland Fire @ Las Vegas Aces|PTS|15.5|UNDER",
+      "player": "Carla Leite",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.899,
+      "edge_model_probability": 0.899,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.899,
+        "confidence": 0.9640000000000001,
+        "final_score": 0.9640000000000001,
+        "consensus_score": 0.8959999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Veronica Burton|Golden State Valkyries @ Phoenix Mercury|PTS|11.5|UNDER",
+      "player": "Veronica Burton",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8977,
+      "edge_model_probability": 0.8977,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8977,
+        "confidence": 0.9329999999999999,
+        "final_score": 0.9329999999999999,
+        "consensus_score": 0.857
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Breanna Stewart|New York Liberty @ Los Angeles Sparks|PTS|21.5|UNDER",
+      "player": "Breanna Stewart",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8913,
+      "edge_model_probability": 0.8913,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8913,
+        "confidence": 0.94,
+        "final_score": 0.94,
+        "consensus_score": 0.877
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Awa Fam|Indiana Fever @ Seattle Storm|PTS|11.5|UNDER",
+      "player": "Awa Fam",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8912,
+      "edge_model_probability": 0.8912,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8912,
+        "confidence": 0.9390000000000001,
+        "final_score": 0.9390000000000001,
+        "consensus_score": 0.872
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Kayla McBride|Toronto Tempo @ Minnesota Lynx|3PM|2.5|UNDER",
+      "player": "Kayla McBride",
+      "market": "3PM",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8891,
+      "edge_model_probability": 0.8891,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8891,
+        "confidence": 0.945,
+        "final_score": 0.945,
+        "consensus_score": 0.843
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Sabrina Ionescu|New York Liberty @ Los Angeles Sparks|PTS|18.5|UNDER",
+      "player": "Sabrina Ionescu",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8859,
+      "edge_model_probability": 0.8859,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8859,
+        "confidence": 0.965,
+        "final_score": 0.965,
+        "consensus_score": 0.9
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|A'ja Wilson|Portland Fire @ Las Vegas Aces|PRA|39.5|UNDER",
+      "player": "A'ja Wilson",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8842,
+      "edge_model_probability": 0.8842,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8842,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.863
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Allisha Gray|Atlanta Dream @ Dallas Wings|PTS|19.5|UNDER",
+      "player": "Allisha Gray",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8837,
+      "edge_model_probability": 0.8837,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8837,
+        "confidence": 0.9640000000000001,
+        "final_score": 0.9640000000000001,
+        "consensus_score": 0.8959999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jackie Young|Portland Fire @ Las Vegas Aces|PA|23.5|UNDER",
+      "player": "Jackie Young",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8837,
+      "edge_model_probability": 0.8837,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8837,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.863
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jonquel Jones|New York Liberty @ Los Angeles Sparks|PTS|14.5|UNDER",
+      "player": "Jonquel Jones",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8785,
+      "edge_model_probability": 0.8785,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8785,
+        "confidence": 0.9359999999999999,
+        "final_score": 0.9359999999999999,
+        "consensus_score": 0.866
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Azzi Fudd|Atlanta Dream @ Dallas Wings|PTS|13.5|UNDER",
+      "player": "Azzi Fudd",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8767,
+      "edge_model_probability": 0.8767,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8767,
+        "confidence": 0.966,
+        "final_score": 0.966,
+        "consensus_score": 0.902
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Marina Mabrey|Toronto Tempo @ Minnesota Lynx|PTS|20.5|UNDER",
+      "player": "Marina Mabrey",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8656,
+      "edge_model_probability": 0.8656,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8656,
+        "confidence": 0.937,
+        "final_score": 0.937,
+        "consensus_score": 0.8690000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Breanna Stewart|New York Liberty @ Los Angeles Sparks|PA|25.5|UNDER",
+      "player": "Breanna Stewart",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8637,
+      "edge_model_probability": 0.8637,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8637,
+        "confidence": 0.9359999999999999,
+        "final_score": 0.9359999999999999,
+        "consensus_score": 0.866
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Olivia Miles|Toronto Tempo @ Minnesota Lynx|PTS|17.5|UNDER",
+      "player": "Olivia Miles",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.862,
+      "edge_model_probability": 0.862,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.862,
+        "confidence": 0.9329999999999999,
+        "final_score": 0.9329999999999999,
+        "consensus_score": 0.857
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Alyssa Thomas|Golden State Valkyries @ Phoenix Mercury|PA|23.5|UNDER",
+      "player": "Alyssa Thomas",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.86,
+      "edge_model_probability": 0.86,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.86,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.861
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Veronica Burton|Golden State Valkyries @ Phoenix Mercury|PA|17.5|UNDER",
+      "player": "Veronica Burton",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8585,
+      "edge_model_probability": 0.8585,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8585,
+        "confidence": 0.934,
+        "final_score": 0.934,
+        "consensus_score": 0.8590000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Kahleah Copper|Golden State Valkyries @ Phoenix Mercury|PA|21.5|UNDER",
+      "player": "Kahleah Copper",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8579,
+      "edge_model_probability": 0.8579,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8579,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.863
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Sabrina Ionescu|New York Liberty @ Los Angeles Sparks|PA|23.5|UNDER",
+      "player": "Sabrina Ionescu",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8567,
+      "edge_model_probability": 0.8567,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8567,
+        "confidence": 0.97,
+        "final_score": 0.97,
+        "consensus_score": 0.914
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Natisha Hiedeman|Indiana Fever @ Seattle Storm|PTS|14.5|UNDER",
+      "player": "Natisha Hiedeman",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8506,
+      "edge_model_probability": 0.8506,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8506,
+        "confidence": 0.937,
+        "final_score": 0.937,
+        "consensus_score": 0.867
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Veronica Burton|Golden State Valkyries @ Phoenix Mercury|PRA|21.5|UNDER",
+      "player": "Veronica Burton",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.849,
+      "edge_model_probability": 0.849,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.849,
+        "confidence": 0.934,
+        "final_score": 0.934,
+        "consensus_score": 0.8590000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Natasha Howard|Toronto Tempo @ Minnesota Lynx|PTS|11.5|UNDER",
+      "player": "Natasha Howard",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8465,
+      "edge_model_probability": 0.8465,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8465,
+        "confidence": 0.934,
+        "final_score": 0.934,
+        "consensus_score": 0.858
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Alyssa Thomas|Golden State Valkyries @ Phoenix Mercury|PTS|13.5|UNDER",
+      "player": "Alyssa Thomas",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8438,
+      "edge_model_probability": 0.8438,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8438,
+        "confidence": 0.9390000000000001,
+        "final_score": 0.9390000000000001,
+        "consensus_score": 0.8740000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Olivia Miles|Toronto Tempo @ Minnesota Lynx|PA|24.5|UNDER",
+      "player": "Olivia Miles",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8436,
+      "edge_model_probability": 0.8436,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8436,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.861
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jessica Shepard|Atlanta Dream @ Dallas Wings|PTS|13.5|UNDER",
+      "player": "Jessica Shepard",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8424,
+      "edge_model_probability": 0.8424,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8424,
+        "confidence": 0.9390000000000001,
+        "final_score": 0.9390000000000001,
+        "consensus_score": 0.873
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jessica Shepard|Atlanta Dream @ Dallas Wings|PTS|14.5|UNDER",
+      "player": "Jessica Shepard",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8424,
+      "edge_model_probability": 0.8424,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8424,
+        "confidence": 0.9359999999999999,
+        "final_score": 0.9359999999999999,
+        "consensus_score": 0.866
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Awa Fam|Indiana Fever @ Seattle Storm|PR|18.5|UNDER",
+      "player": "Awa Fam",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8421,
+      "edge_model_probability": 0.8421,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8421,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.861
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Alyssa Thomas|Golden State Valkyries @ Phoenix Mercury|PRA|31.5|UNDER",
+      "player": "Alyssa Thomas",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8416,
+      "edge_model_probability": 0.8416,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8416,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.862
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Flau'jae Johnson|Indiana Fever @ Seattle Storm|PTS|14.5|UNDER",
+      "player": "Flau'jae Johnson",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8404,
+      "edge_model_probability": 0.8404,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8404,
+        "confidence": 0.956,
+        "final_score": 0.956,
+        "consensus_score": 0.875
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Kahleah Copper|Golden State Valkyries @ Phoenix Mercury|PR|22.5|UNDER",
+      "player": "Kahleah Copper",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8371,
+      "edge_model_probability": 0.8371,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8371,
+        "confidence": 0.938,
+        "final_score": 0.938,
+        "consensus_score": 0.87
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Veronica Burton|Golden State Valkyries @ Phoenix Mercury|PR|14.5|UNDER",
+      "player": "Veronica Burton",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8336,
+      "edge_model_probability": 0.8336,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8336,
+        "confidence": 0.9359999999999999,
+        "final_score": 0.9359999999999999,
+        "consensus_score": 0.865
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Carla Leite|Portland Fire @ Las Vegas Aces|PR|17.5|UNDER",
+      "player": "Carla Leite",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8301,
+      "edge_model_probability": 0.8301,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8301,
+        "confidence": 0.965,
+        "final_score": 0.965,
+        "consensus_score": 0.9009999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Breanna Stewart|New York Liberty @ Los Angeles Sparks|PR|30.5|UNDER",
+      "player": "Breanna Stewart",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8293,
+      "edge_model_probability": 0.8293,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8293,
+        "confidence": 0.9390000000000001,
+        "final_score": 0.9390000000000001,
+        "consensus_score": 0.873
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jordin Canada|Atlanta Dream @ Dallas Wings|PTS|11.5|UNDER",
+      "player": "Jordin Canada",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8288,
+      "edge_model_probability": 0.8288,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8288,
+        "confidence": 0.9620000000000001,
+        "final_score": 0.9620000000000001,
+        "consensus_score": 0.89
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Natisha Hiedeman|Indiana Fever @ Seattle Storm|PR|17.5|UNDER",
+      "player": "Natisha Hiedeman",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8278,
+      "edge_model_probability": 0.8278,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8278,
+        "confidence": 0.9359999999999999,
+        "final_score": 0.9359999999999999,
+        "consensus_score": 0.8640000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Carla Leite|Portland Fire @ Las Vegas Aces|PA|21.5|UNDER",
+      "player": "Carla Leite",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8256,
+      "edge_model_probability": 0.8256,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8256,
+        "confidence": 0.965,
+        "final_score": 0.965,
+        "consensus_score": 0.9009999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jessica Shepard|Atlanta Dream @ Dallas Wings|PA|19.5|UNDER",
+      "player": "Jessica Shepard",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8224,
+      "edge_model_probability": 0.8224,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8224,
+        "confidence": 0.934,
+        "final_score": 0.934,
+        "consensus_score": 0.86
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Alyssa Thomas|Golden State Valkyries @ Phoenix Mercury|PR|21.5|UNDER",
+      "player": "Alyssa Thomas",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8218,
+      "edge_model_probability": 0.8218,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8218,
+        "confidence": 0.94,
+        "final_score": 0.94,
+        "consensus_score": 0.877
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Alyssa Thomas|Golden State Valkyries @ Phoenix Mercury|PR|22.5|UNDER",
+      "player": "Alyssa Thomas",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8218,
+      "edge_model_probability": 0.8218,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8218,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.861
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Courtney Williams|Toronto Tempo @ Minnesota Lynx|PTS|13.5|UNDER",
+      "player": "Courtney Williams",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8213,
+      "edge_model_probability": 0.8213,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8213,
+        "confidence": 0.934,
+        "final_score": 0.934,
+        "consensus_score": 0.858
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Sabrina Ionescu|New York Liberty @ Los Angeles Sparks|PR|22.5|UNDER",
+      "player": "Sabrina Ionescu",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8203,
+      "edge_model_probability": 0.8203,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8203,
+        "confidence": 0.9670000000000001,
+        "final_score": 0.9670000000000001,
+        "consensus_score": 0.9059999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Sabrina Ionescu|New York Liberty @ Los Angeles Sparks|PRA|27.5|UNDER",
+      "player": "Sabrina Ionescu",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8195,
+      "edge_model_probability": 0.8195,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8195,
+        "confidence": 0.972,
+        "final_score": 0.972,
+        "consensus_score": 0.92
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Caitlin Clark|Indiana Fever @ Seattle Storm|PR|24.5|UNDER",
+      "player": "Caitlin Clark",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8194,
+      "edge_model_probability": 0.8194,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8194,
+        "confidence": 0.934,
+        "final_score": 0.934,
+        "consensus_score": 0.858
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Caitlin Clark|Indiana Fever @ Seattle Storm|PA|28.5|UNDER",
+      "player": "Caitlin Clark",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8182,
+      "edge_model_probability": 0.8182,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8182,
+        "confidence": 0.935,
+        "final_score": 0.935,
+        "consensus_score": 0.862
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Shakira Austin|Connecticut Sun @ Washington Mystics|PTS|15.5|UNDER",
+      "player": "Shakira Austin",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8148,
+      "edge_model_probability": 0.8148,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8148,
+        "confidence": 0.958,
+        "final_score": 0.958,
+        "consensus_score": 0.88
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Carla Leite|Portland Fire @ Las Vegas Aces|PRA|24.5|UNDER",
+      "player": "Carla Leite",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8132,
+      "edge_model_probability": 0.8132,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8132,
+        "confidence": 0.96,
+        "final_score": 0.96,
+        "consensus_score": 0.887
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jonquel Jones|New York Liberty @ Los Angeles Sparks|PRA|26.5|UNDER",
+      "player": "Jonquel Jones",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8112,
+      "edge_model_probability": 0.8112,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8112,
+        "confidence": 0.934,
+        "final_score": 0.934,
+        "consensus_score": 0.86
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Natisha Hiedeman|Indiana Fever @ Seattle Storm|PA|19.5|UNDER",
+      "player": "Natisha Hiedeman",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8107,
+      "edge_model_probability": 0.8107,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8107,
+        "confidence": 0.937,
+        "final_score": 0.937,
+        "consensus_score": 0.868
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Kahleah Copper|Golden State Valkyries @ Phoenix Mercury|PRA|24.5|UNDER",
+      "player": "Kahleah Copper",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8084,
+      "edge_model_probability": 0.8084,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8084,
+        "confidence": 0.938,
+        "final_score": 0.938,
+        "consensus_score": 0.871
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Azzi Fudd|Atlanta Dream @ Dallas Wings|PRA|17.5|UNDER",
+      "player": "Azzi Fudd",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8065,
+      "edge_model_probability": 0.8065,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8065,
+        "confidence": 0.968,
+        "final_score": 0.968,
+        "consensus_score": 0.9079999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Natisha Hiedeman|Indiana Fever @ Seattle Storm|PRA|22.5|UNDER",
+      "player": "Natisha Hiedeman",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8049,
+      "edge_model_probability": 0.8049,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8049,
+        "confidence": 0.938,
+        "final_score": 0.938,
+        "consensus_score": 0.87
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Caitlin Clark|Indiana Fever @ Seattle Storm|PRA|32.5|UNDER",
+      "player": "Caitlin Clark",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8047,
+      "edge_model_probability": 0.8047,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8047,
+        "confidence": 0.934,
+        "final_score": 0.934,
+        "consensus_score": 0.8590000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jordin Canada|Atlanta Dream @ Dallas Wings|PR|15.5|UNDER",
+      "player": "Jordin Canada",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.8027,
+      "edge_model_probability": 0.8027,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.8027,
+        "confidence": 0.961,
+        "final_score": 0.961,
+        "consensus_score": 0.889
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jessica Shepard|Atlanta Dream @ Dallas Wings|PR|26.5|UNDER",
+      "player": "Jessica Shepard",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.794,
+      "edge_model_probability": 0.794,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.794,
+        "confidence": 0.938,
+        "final_score": 0.938,
+        "consensus_score": 0.87
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jessica Shepard|Atlanta Dream @ Dallas Wings|PR|25.5|UNDER",
+      "player": "Jessica Shepard",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.794,
+      "edge_model_probability": 0.794,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.794,
+        "confidence": 0.937,
+        "final_score": 0.937,
+        "consensus_score": 0.8690000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Awa Fam|Indiana Fever @ Seattle Storm|PRA|20.5|UNDER",
+      "player": "Awa Fam",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7924,
+      "edge_model_probability": 0.7924,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7924,
+        "confidence": 0.9390000000000001,
+        "final_score": 0.9390000000000001,
+        "consensus_score": 0.872
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Awa Fam|Indiana Fever @ Seattle Storm|PRA|21.5|UNDER",
+      "player": "Awa Fam",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7924,
+      "edge_model_probability": 0.7924,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7924,
+        "confidence": 0.9359999999999999,
+        "final_score": 0.9359999999999999,
+        "consensus_score": 0.8640000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Allisha Gray|Atlanta Dream @ Dallas Wings|PRA|24.5|UNDER",
+      "player": "Allisha Gray",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7839,
+      "edge_model_probability": 0.7839,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7839,
+        "confidence": 0.97,
+        "final_score": 0.97,
+        "consensus_score": 0.9129999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Allisha Gray|Atlanta Dream @ Dallas Wings|PRA|25.5|UNDER",
+      "player": "Allisha Gray",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7839,
+      "edge_model_probability": 0.7839,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7839,
+        "confidence": 0.963,
+        "final_score": 0.963,
+        "consensus_score": 0.895
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Flau'jae Johnson|Indiana Fever @ Seattle Storm|PA|17.5|UNDER",
+      "player": "Flau'jae Johnson",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7664,
+      "edge_model_probability": 0.7664,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7664,
+        "confidence": 0.9520000000000001,
+        "final_score": 0.9520000000000001,
+        "consensus_score": 0.863
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jordin Canada|Atlanta Dream @ Dallas Wings|PRA|23.5|UNDER",
+      "player": "Jordin Canada",
+      "market": "PRA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7637,
+      "edge_model_probability": 0.7637,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7637,
+        "confidence": 0.961,
+        "final_score": 0.961,
+        "consensus_score": 0.888
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Jordin Canada|Atlanta Dream @ Dallas Wings|PA|19.5|UNDER",
+      "player": "Jordin Canada",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7594,
+      "edge_model_probability": 0.7594,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7594,
+        "confidence": 0.9590000000000001,
+        "final_score": 0.9590000000000001,
+        "consensus_score": 0.883
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Shakira Austin|Connecticut Sun @ Washington Mystics|PR|25.5|UNDER",
+      "player": "Shakira Austin",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7522,
+      "edge_model_probability": 0.7522,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7522,
+        "confidence": 0.937,
+        "final_score": 0.937,
+        "consensus_score": 0.871
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Shakira Austin|Connecticut Sun @ Washington Mystics|PA|17.5|UNDER",
+      "player": "Shakira Austin",
+      "market": "PA",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7515,
+      "edge_model_probability": 0.7515,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7515,
+        "confidence": 0.958,
+        "final_score": 0.958,
+        "consensus_score": 0.8809999999999999
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Flau'jae Johnson|Indiana Fever @ Seattle Storm|PR|19.5|UNDER",
+      "player": "Flau'jae Johnson",
+      "market": "PR",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.7487,
+      "edge_model_probability": 0.7487,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.7487,
+        "confidence": 0.9520000000000001,
+        "final_score": 0.9520000000000001,
+        "consensus_score": 0.866
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Shakira Austin|Connecticut Sun @ Washington Mystics|PTS|14.5|UNDER",
+      "player": "Shakira Austin",
+      "market": "PTS",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.743,
+      "edge_model_probability": 0.743,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.743,
+        "confidence": 0.945,
+        "final_score": 0.945,
+        "consensus_score": 0.8640000000000001
+      },
+      "flags": []
+    },
+    {
+      "key": "2026-07-27|Marina Mabrey|Toronto Tempo @ Minnesota Lynx|REB|3.5|UNDER",
+      "player": "Marina Mabrey",
+      "market": "REB",
+      "selected_field": "simulation_probability",
+      "selected_probability": 0.709,
+      "edge_model_probability": 0.709,
+      "matching_source_fields": [
+        "simulation_probability"
+      ],
+      "available_probability_candidates": {
+        "simulation_probability": 0.709,
+        "confidence": 0.7829999999999999,
+        "final_score": 0.7829999999999999,
+        "consensus_score": 0.708
+      },
+      "flags": []
+    }
+  ]
+}
