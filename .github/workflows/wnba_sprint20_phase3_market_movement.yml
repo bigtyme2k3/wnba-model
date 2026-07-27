@@ -1,0 +1,100 @@
+name: WNBA Sprint 20 Phase 3 Market Movement
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD), blank for active slate'
+        required: false
+        default: ''
+      stage:
+        description: 'Snapshot stage: open, snapshot, or close'
+        required: false
+        default: 'snapshot'
+  workflow_run:
+    workflows: ['WNBA Sprint 20 Phase 2 Opportunity Ranking']
+    types: [completed]
+
+concurrency:
+  group: wnba-sprint20-phase3-market-movement
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  build-market-movement:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          pip install -r requirements.txt
+      - name: Resolve target date and stage
+        run: |
+          set -euo pipefail
+          TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
+          STAGE="${{ github.event.inputs.stage }}"
+          test -n "$STAGE" || STAGE=snapshot
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "STAGE=$STAGE" >> "$GITHUB_ENV"
+      - name: Validate Phase 3 code
+        run: |
+          set -euo pipefail
+          python -m py_compile wnba_market_movement_engine.py qa_sprint20_phase3_market_movement.py
+          python qa_sprint20_phase3_market_movement.py
+      - name: Capture snapshot and build movement intelligence
+        run: |
+          set -euo pipefail
+          python wnba_closing_line_tracker.py --date "$TARGET" --stage "$STAGE"
+          python wnba_market_movement_engine.py --date "$TARGET"
+      - name: Verify artifacts
+        run: |
+          set -euo pipefail
+          test -s data/warehouse/market_movement.json
+          test -s data/dashboard/market_movement.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('data/warehouse/market_movement.json').read_text())
+          required={'tracked_markets','steam_alerts','reverse_line_movements','multi_book_markets','inserted_history_records','updated_history_records'}
+          missing=required-set(report.get('summary',{}))
+          assert not missing,missing
+          for row in report.get('markets',[]):
+              times=[str(x.get('captured_at_utc') or '') for x in row.get('timeline',[])]
+              assert times==sorted(times)
+          print('Sprint 20 Phase 3 verification passed:',report['summary'])
+          PY
+      - name: Commit Phase 3 artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Model Bot'
+          git config user.email 'actions@github.com'
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
+          git add data/history/wnba_line_snapshots.jsonl data/history/market_movement_history.jsonl data/warehouse/market_movement.json data/dashboard/market_movement.json data/warehouse/wnba_clv_summary.json data/dashboard/wnba_clv_summary.json
+          if ! git diff --quiet; then git add -u data/history data/warehouse data/dashboard; fi
+          git diff --cached --quiet && echo 'No market movement changes' && exit 0
+          git commit -m "Update WNBA market movement - ${TARGET} ${STAGE}"
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          test -z "$(git status --porcelain)" || { git status --short; exit 1; }
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then echo "Pushed on attempt $attempt"; exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
