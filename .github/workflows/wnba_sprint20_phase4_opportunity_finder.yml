@@ -66,8 +66,9 @@ jobs:
           missing=required-set(report.get('summary',{}))
           assert not missing,missing
           rows=report.get('all_opportunities',[])
-          indexes=[float(r.get('opportunity_index') or 0) for r in rows]
-          assert indexes==sorted(indexes,reverse=True),indexes[:10]
+          assert [r.get('finder_rank') for r in rows]==list(range(1,len(rows)+1))
+          order=[(bool(r.get('actionable')),float(r.get('opportunity_index') or 0),float(r.get('expected_value') or -999)) for r in rows]
+          assert order==sorted(order,reverse=True),order[:10]
           assert all(r.get('recommendation') in {'STRONG BET','BET','LEAN','PASS'} for r in rows)
           print('Sprint 20 Phase 4 verification passed:',report['summary'])
           PY
