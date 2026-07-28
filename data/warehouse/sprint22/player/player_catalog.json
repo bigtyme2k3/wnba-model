@@ -1,0 +1,70 @@
+{
+  "generated_at_utc": "2026-07-28T00:49:43.395463+00:00",
+  "warehouse_version": "sprint22_phase2_v2",
+  "tables": {
+    "player_profile": {
+      "rows": 0,
+      "columns": 5
+    },
+    "player_game_logs": {
+      "rows": 0,
+      "columns": 6
+    },
+    "player_rolling_metrics": {
+      "rows": 0,
+      "columns": 3
+    },
+    "player_availability": {
+      "rows": 3,
+      "columns": 17
+    },
+    "player_matchups": {
+      "rows": 0,
+      "columns": 3
+    }
+  },
+  "sources": {
+    "profile": [],
+    "game_logs": [],
+    "availability": [
+      "injuries_2026-07-05.csv",
+      "injuries_2026-07-06.csv",
+      "injuries_2026-07-07.csv",
+      "injuries_2026-07-08.csv",
+      "injuries_2026-07-09.csv",
+      "injuries_2026-07-11.csv",
+      "injuries_2026-07-12.csv",
+      "injuries_2026-07-13.csv",
+      "injuries_2026-07-14.csv",
+      "injuries_2026-07-15.csv",
+      "injuries_2026-07-16.csv",
+      "injuries_2026-07-17.csv",
+      "injuries_2026-07-18.csv",
+      "injuries_2026-07-19.csv",
+      "injuries_2026-07-20.csv",
+      "injuries_2026-07-21.csv",
+      "injuries_2026-07-22.csv",
+      "injuries_2026-07-23.csv",
+      "injuries_2026-07-24.csv",
+      "injuries_2026-07-25.csv",
+      "injuries_2026-07-26.csv",
+      "injuries_2026-07-27.csv",
+      "injuries_historical.csv",
+      "injuries_today.csv"
+    ]
+  },
+  "stable_player_ids": 1,
+  "identity_policy": "Prefer source player ID; otherwise hash normalized player name. Team is never part of player_id.",
+  "duplicate_game_keys": 0,
+  "profile_linked_game_log_rows": 0,
+  "log_only_player_ids": [],
+  "availability_only_player_ids": [
+    "pl_5e5e60cba7614544"
+  ],
+  "rolling_is_pregame_lagged": true,
+  "status": "WARN",
+  "notes": [
+    "Empty game-log or availability tables are valid until matching raw sources are collected.",
+    "WARN identifies unresolved cross-table identities without discarding their records."
+  ]
+}
