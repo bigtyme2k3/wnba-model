@@ -43,7 +43,7 @@ jobs:
       - name: Install dependencies
         run: pip install pandas requests pyreadr
       - name: Compile backfill code
-        run: python -m py_compile collect_wehoop.py collect_wehoop_compatible.py collect_sprint22_historical_player_only.py validate_sprint22_legacy_player_collection.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_player_warehouse_numeric.py build_sprint22_phase2_2_historical_player_backfill.py qa_sprint22_phase2_2_historical_player_backfill.py
+        run: python -m py_compile collect_wehoop.py collect_wehoop_compatible.py collect_sprint22_historical_player_native_r.py validate_sprint22_legacy_player_collection.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_player_warehouse_numeric.py build_sprint22_phase2_2_historical_player_backfill.py qa_sprint22_phase2_2_historical_player_backfill.py
       - name: Verify native R fallback is available
         run: Rscript --version
       - name: Remove stale requested-season artifacts
@@ -53,8 +53,8 @@ jobs:
             rm -f "data/raw/player_game_logs_${season}.csv"
             rm -f "data/raw/player_profiles_${season}.csv"
           done
-      - name: Collect historical player boxes only
-        run: python collect_sprint22_historical_player_only.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
+      - name: Collect historical player boxes with native R
+        run: python collect_sprint22_historical_player_native_r.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
       - name: Validate requested historical player seasons
         run: python validate_sprint22_legacy_player_collection.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
       - name: Collect current player boxes
