@@ -16,6 +16,20 @@ def run():
     assert manifest['engineered_feature_count']>5; tests+=1
     assert 'actual__abs' not in manifest['engineered_features']; tests+=1
     assert any('model_market_probability_gap' not in r for r in engineered); tests+=1
+
+    # Same-date outcomes must not be visible to another record on that date.
+    leakage_fixture=[
+        {'date':'2026-06-01','history_key':'1','outcome':'WIN','player':'P1','market':'PTS','clv':1.0},
+        {'date':'2026-06-01','history_key':'2','outcome':'LOSS','player':'P1','market':'PTS','clv':-1.0},
+        {'date':'2026-06-02','history_key':'3','outcome':'WIN','player':'P1','market':'PTS','clv':1.0},
+    ]
+    leakage_rows,_=eng.engineer(leakage_fixture)
+    assert 'player_prior_win_rate_5' not in leakage_rows[0]
+    assert 'player_prior_win_rate_5' not in leakage_rows[1]
+    assert leakage_rows[2]['player_prior_samples']==2
+    assert leakage_rows[2]['player_prior_win_rate_5']==0.5
+    tests+=1
+
     with tempfile.TemporaryDirectory() as tmp:
         root=Path(tmp); history=root/'history.jsonl'; mf=root/'manifest.json'; out=root/'out.json'; best=root/'best.json'; markets=root/'markets.json'
         history.write_text('\n'.join(json.dumps(r) for r in engineered)+'\n'); mf.write_text(json.dumps(manifest))
