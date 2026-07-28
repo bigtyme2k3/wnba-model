@@ -17,7 +17,7 @@ FEATURE_MAP = {
     "minutes_avg_l5": "roll5_minutes", "points_avg_l5": "roll5_pts",
     "rebounds_avg_l5": "roll5_reb", "assists_avg_l5": "roll5_ast",
     "three_points_made_avg_l5": "roll5_threes", "pra_avg_l5": "roll5_pra",
-    "rest_days": "rest_days", "minutes_season_avg": "minutes",
+    "days_rest": "rest_days", "minutes_season_avg": "minutes",
 }
 
 

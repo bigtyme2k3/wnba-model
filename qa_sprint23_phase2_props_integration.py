@@ -21,7 +21,7 @@ def run():
         ["roll5_pts", "points_avg_l5"],
         ["roll5_reb", "rebounds_avg_l5"],
         ["roll5_ast", "assists_avg_l5"],
-        ["rest_days"],
+        ["rest_days", "days_rest"],
     ]
     tests = {
         "dataset_status_pass": catalog["status"] == "PASS",
@@ -40,7 +40,6 @@ def run():
     if failed:
         raise SystemExit(1)
     return result
-
 
 if __name__ == "__main__":
     run()
