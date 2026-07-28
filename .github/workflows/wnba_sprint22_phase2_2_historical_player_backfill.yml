@@ -35,15 +35,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Set up R for legacy SportsDataverse files
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+          use-public-rspm: true
       - name: Install dependencies
         run: pip install pandas requests pyreadr
       - name: Compile backfill code
-        run: python -m py_compile collect_wehoop.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_2_historical_player_backfill.py qa_sprint22_phase2_2_historical_player_backfill.py
+        run: python -m py_compile collect_wehoop.py collect_wehoop_compatible.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_2_historical_player_backfill.py qa_sprint22_phase2_2_historical_player_backfill.py
+      - name: Verify native R fallback is available
+        run: Rscript --version
       - name: Collect historical player boxes
-        run: python collect_wehoop.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
+        run: python collect_wehoop_compatible.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
       - name: Collect current player boxes
         if: ${{ inputs.collect_current }}
-        run: python collect_wehoop.py --current
+        run: python collect_wehoop_compatible.py --current
       - name: Normalize player inputs
         run: python normalize_sprint22_phase2_1_player_data.py
       - name: Rebuild player intelligence warehouse
