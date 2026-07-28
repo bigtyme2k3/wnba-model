@@ -39,8 +39,6 @@ jobs:
         run: pip install pandas requests pyreadr
       - name: Compile backfill code
         run: python -m py_compile collect_wehoop.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_2_historical_player_backfill.py qa_sprint22_phase2_2_historical_player_backfill.py
-      - name: Run Phase 2.2 QA
-        run: python qa_sprint22_phase2_2_historical_player_backfill.py
       - name: Collect historical player boxes
         run: python collect_wehoop.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
       - name: Collect current player boxes
@@ -54,6 +52,8 @@ jobs:
         run: |
           minimum=$(( ${{ inputs.end_season }} - ${{ inputs.start_season }} + 1 ))
           python build_sprint22_phase2_2_historical_player_backfill.py --minimum-seasons "$minimum"
+      - name: Run Phase 2.2 QA
+        run: python qa_sprint22_phase2_2_historical_player_backfill.py
       - name: Verify populated backfill
         run: |
           python - <<'PY'
