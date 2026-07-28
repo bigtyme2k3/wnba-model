@@ -1,0 +1,100 @@
+{
+  "generated_at_utc": "2026-07-28T00:00:54.223727+00:00",
+  "target_date": "2026-07-28",
+  "deployment_gate": "HOLD",
+  "deployment_gate_reasons": [
+    "auc_below_0_53",
+    "decile_spread_below_0_08",
+    "unstable_across_folds"
+  ],
+  "best_feature_set": "minimal_ranked",
+  "features": [
+    "clv",
+    "ev_pct",
+    "consensus_score",
+    "confidence"
+  ],
+  "metrics": {
+    "features": [
+      "clv",
+      "ev_pct",
+      "consensus_score",
+      "confidence"
+    ],
+    "folds": [
+      {
+        "fold": 1,
+        "train_records": 684,
+        "validation_records": 228,
+        "features_used": [
+          "clv",
+          "ev_pct",
+          "consensus_score",
+          "confidence"
+        ],
+        "auc": 0.624961,
+        "brier": 0.272984,
+        "log_loss": 0.739769,
+        "ece": 0.178485,
+        "decile_spread": 0.409091
+      },
+      {
+        "fold": 2,
+        "train_records": 912,
+        "validation_records": 228,
+        "features_used": [
+          "clv",
+          "ev_pct",
+          "consensus_score",
+          "confidence"
+        ],
+        "auc": 0.57247,
+        "brier": 0.256721,
+        "log_loss": 0.706613,
+        "ece": 0.152908,
+        "decile_spread": 0.409091
+      },
+      {
+        "fold": 3,
+        "train_records": 1140,
+        "validation_records": 228,
+        "features_used": [
+          "clv",
+          "ev_pct",
+          "consensus_score",
+          "confidence"
+        ],
+        "auc": 0.579327,
+        "brier": 0.246801,
+        "log_loss": 0.686745,
+        "ece": 0.074176,
+        "decile_spread": -0.045455
+      },
+      {
+        "fold": 4,
+        "train_records": 1368,
+        "validation_records": 228,
+        "features_used": [
+          "clv",
+          "ev_pct",
+          "consensus_score",
+          "confidence"
+        ],
+        "auc": 0.522526,
+        "brier": 0.248025,
+        "log_loss": 0.689192,
+        "ece": 0.004206,
+        "decile_spread": 0.409091
+      }
+    ],
+    "fold_count": 4,
+    "validation_records": 912,
+    "auc": 0.489413,
+    "brier": 0.256133,
+    "log_loss": 0.70558,
+    "ece": 0.068439,
+    "decile_spread": 0.065934,
+    "stability_score": 0.487825
+  },
+  "leakage_policy": "Postgame and outcome-derived fields are always excluded."
+}
