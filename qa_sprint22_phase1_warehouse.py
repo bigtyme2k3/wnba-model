@@ -81,7 +81,7 @@ def run():
             assert (out / f"{name}.csv").exists(); tests += 1
         stored = json.loads((out / "warehouse_catalog.json").read_text())
         assert stored["warehouse_version"] == "sprint22_phase1_v2"; tests += 1
-        assert stored["total_input_rows"] == 11 and stored["total_rows"] == 6; tests += 1
+        assert stored["total_input_rows"] == 12 and stored["total_rows"] == 6; tests += 1
         assert all(layer["grain_unique"] for layer in stored["layers"].values()); tests += 1
 
     return {"status": "PASS", "tests": tests}
