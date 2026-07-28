@@ -1,18 +1,18 @@
 {
   "sprint": 11,
   "phase": "autonomous-orchestration",
-  "generated_at_utc": "2026-07-27T17:13:31.950415+00:00",
-  "target_date": "2026-07-27",
+  "generated_at_utc": "2026-07-28T16:54:43.800700+00:00",
+  "target_date": "2026-07-28",
   "status": "READY",
   "readiness": {
     "sprint": 11,
     "phase": "restart-readiness",
-    "generated_at_utc": "2026-07-27T17:13:29.873827+00:00",
-    "target_date": "2026-07-27",
+    "generated_at_utc": "2026-07-28T16:54:41.633397+00:00",
+    "target_date": "2026-07-28",
     "status": "READY",
     "counts": {
-      "today_games": 7,
-      "props": 300,
+      "today_games": 5,
+      "props": 214,
       "sportsbook_markets": 300,
       "player_logs": 4202,
       "calibration_records": 4790
@@ -38,17 +38,17 @@
       "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_readiness_engine.py",
       "returncode": 0,
       "duration_seconds": 0.09,
-      "stdout_tail": "{\n  \"sprint\": 11,\n  \"phase\": \"restart-readiness\",\n  \"generated_at_utc\": \"2026-07-27T17:13:29.873827+00:00\",\n  \"target_date\": \"2026-07-27\",\n  \"status\": \"READY\",\n  \"counts\": {\n    \"today_games\": 7,\n    \"props\": 300,\n    \"sportsbook_markets\": 300,\n    \"player_logs\": 4202,\n    \"calibration_records\": 4790\n  },\n  \"checks\": {\n    \"regular_season_slate\": true,\n    \"current_props\": true,\n    \"sportsbook_markets\": true,\n    \"player_history\": true,\n    \"adaptive_calibration\": true,\n    \"dashboard_writable\": true\n  },\n  \"blockers\": [],\n  \"reason\": \"Pipeline ready for live model execution.\",\n  \"preserve_last_valid_reports\": false\n}\n",
+      "stdout_tail": "{\n  \"sprint\": 11,\n  \"phase\": \"restart-readiness\",\n  \"generated_at_utc\": \"2026-07-28T16:54:41.633397+00:00\",\n  \"target_date\": \"2026-07-28\",\n  \"status\": \"READY\",\n  \"counts\": {\n    \"today_games\": 5,\n    \"props\": 214,\n    \"sportsbook_markets\": 300,\n    \"player_logs\": 4202,\n    \"calibration_records\": 4790\n  },\n  \"checks\": {\n    \"regular_season_slate\": true,\n    \"current_props\": true,\n    \"sportsbook_markets\": true,\n    \"player_history\": true,\n    \"adaptive_calibration\": true,\n    \"dashboard_writable\": true\n  },\n  \"blockers\": [],\n  \"reason\": \"Pipeline ready for live model execution.\",\n  \"preserve_last_valid_reports\": false\n}\n",
       "stderr_tail": ""
     },
     {
       "name": "daily_edge",
       "status": "PASS",
       "required": true,
-      "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_daily_edge_engine.py --date 2026-07-27",
+      "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_daily_edge_engine.py --date 2026-07-28",
       "returncode": 0,
-      "duration_seconds": 0.5,
-      "stdout_tail": "{\n  \"summary\": {\n    \"source_props\": 300,\n    \"source_alt_markets\": 7165,\n    \"candidates_scored\": 7381,\n    \"high_confidence\": 0,\n    \"moderate_confidence\": 104,\n    \"low_confidence\": 7277,\n    \"top_score\": 78.81,\n    \"standard_candidates\": 300,\n    \"alternate_candidates\": 7081\n  },\n  \"qa\": {\n    \"score_distribution\": {\n      \"75-81.99\": 54,\n      \"68-74.99\": 50,\n      \"60-67.99\": 94,\n      \"below-60\": 7183\n    },\n    \"confidence_distribution\": {\n      \"MODERATE\": 104,\n      \"LOW\": 7277\n    },\n    \"market_type_distribution\": {\n      \"standard\": 300,\n      \"alternate\": 7081\n    },\n    \"evidence_coverage_counts\": {\n      \"projection\": 261,\n      \"recent_form\": 264,\n      \"season_history\": 6995,\n      \"clv\": 0,\n      \"roi\": 0,\n      \"market_value\": 7259\n    },\n    \"evidence_coverage_rates\": {\n      \"projection\": 0.0354,\n      \"recent_form\": 0.0358,\n      \"season_history\": 0.9477,\n      \"clv\": 0.0,\n      \"roi\": 0.0,\n      \"market_value\": 0.9835\n    },\n    \"missing_evidence_counts\": {\n      \"season_history\": 386,\n      \"clv\": 7381,\n      \"roi\": 7381,\n      \"projection\": 7120,\n      \"recent_form\": 7117,\n      \"market_value\": 122\n    },\n    \"component_averages\": {\n      \"projection\": 51.06,\n      \"recent_form\": 50.49,\n      \"season_history\": 37.63,\n      \"clv\": 50.0,\n      \"roi\": 50.0,\n      \"market_value\": 62.29,\n      \"sample_strength\": 20.93\n    },\n    \"high_confidence_gate\": \"score >= 82, sample_strength >= 55, and at least four non-neutral evidence components\"\n  }\n}\n",
+      "duration_seconds": 0.74,
+      "stdout_tail": "{\n  \"summary\": {\n    \"source_props\": 214,\n    \"source_alt_markets\": 9024,\n    \"candidates_scored\": 9193,\n    \"high_confidence\": 0,\n    \"moderate_confidence\": 70,\n    \"low_confidence\": 9123,\n    \"top_score\": 78.81,\n    \"standard_candidates\": 214,\n    \"alternate_candidates\": 8979\n  },\n  \"qa\": {\n    \"score_distribution\": {\n      \"75-81.99\": 32,\n      \"68-74.99\": 38,\n      \"60-67.99\": 79,\n      \"below-60\": 9044\n    },\n    \"confidence_distribution\": {\n      \"MODERATE\": 70,\n      \"LOW\": 9123\n    },\n    \"market_type_distribution\": {\n      \"standard\": 214,\n      \"alternate\": 8979\n    },\n    \"evidence_coverage_counts\": {\n      \"projection\": 183,\n      \"recent_form\": 186,\n      \"season_history\": 8881,\n      \"clv\": 0,\n      \"roi\": 0,\n      \"market_value\": 9067\n    },\n    \"evidence_coverage_rates\": {\n      \"projection\": 0.0199,\n      \"recent_form\": 0.0202,\n      \"season_history\": 0.9661,\n      \"clv\": 0.0,\n      \"roi\": 0.0,\n      \"market_value\": 0.9863\n    },\n    \"missing_evidence_counts\": {\n      \"season_history\": 312,\n      \"clv\": 9193,\n      \"roi\": 9193,\n      \"projection\": 9010,\n      \"recent_form\": 9007,\n      \"market_value\": 126\n    },\n    \"component_averages\": {\n      \"projection\": 50.57,\n      \"recent_form\": 50.28,\n      \"season_history\": 37.49,\n      \"clv\": 50.0,\n      \"roi\": 50.0,\n      \"market_value\": 61.46,\n      \"sample_strength\": 20.52\n    },\n    \"high_confidence_gate\": \"score >= 82, sample_strength >= 55, and at least four non-neutral evidence components\"\n  }\n}\n",
       "stderr_tail": ""
     },
     {
@@ -57,7 +57,7 @@
       "required": true,
       "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_adaptive_confidence_engine.py",
       "returncode": 0,
-      "duration_seconds": 0.07,
+      "duration_seconds": 0.08,
       "stdout_tail": "{\n  \"calibration_records\": 4790,\n  \"raw_bins\": 20,\n  \"curve_points\": 20,\n  \"reliable_for_adaptive_use\": true,\n  \"validated_score_min\": 46.5909,\n  \"validated_score_max\": 52.5256,\n  \"validated_score_span\": 5.9347,\n  \"moderate_score_threshold\": 50.4,\n  \"high_score_threshold\": 51.59,\n  \"daily_edges_updated\": 100,\n  \"extrapolated_daily_edges\": 100\n}\n",
       "stderr_tail": ""
     },
@@ -67,7 +67,7 @@
       "required": true,
       "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_ensemble_intelligence_engine.py",
       "returncode": 0,
-      "duration_seconds": 0.04,
+      "duration_seconds": 0.05,
       "stdout_tail": "{\n  \"candidates_loaded\": 100,\n  \"candidates_ranked\": 100,\n  \"a_plus\": 0,\n  \"a\": 0,\n  \"b_plus\": 0,\n  \"high_or_better\": 0,\n  \"extrapolated\": 100,\n  \"top_score\": 69.46,\n  \"adaptive_curve_points\": 20\n}\n",
       "stderr_tail": ""
     },
@@ -75,10 +75,10 @@
       "name": "monte_carlo",
       "status": "PASS",
       "required": true,
-      "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_monte_carlo_scenario_engine.py --date 2026-07-27",
+      "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_monte_carlo_scenario_engine.py --date 2026-07-28",
       "returncode": 0,
-      "duration_seconds": 0.88,
-      "stdout_tail": "{\n  \"source\": \"ensemble\",\n  \"candidates_loaded\": 100,\n  \"candidates_simulated\": 100,\n  \"skipped\": 0,\n  \"simulations_per_candidate\": 10000,\n  \"positive_ev\": 99,\n  \"probability_60_plus\": 83,\n  \"low_risk\": 0,\n  \"top_probability\": 0.7295,\n  \"top_ev_percent\": 72.89\n}\n",
+      "duration_seconds": 1.09,
+      "stdout_tail": "{\n  \"source\": \"ensemble\",\n  \"candidates_loaded\": 100,\n  \"candidates_simulated\": 100,\n  \"skipped\": 0,\n  \"simulations_per_candidate\": 10000,\n  \"positive_ev\": 95,\n  \"probability_60_plus\": 81,\n  \"low_risk\": 0,\n  \"top_probability\": 0.6799,\n  \"top_ev_percent\": 139.32\n}\n",
       "stderr_tail": ""
     },
     {
@@ -98,7 +98,7 @@
       "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python wnba_final_qa.py",
       "returncode": 0,
       "duration_seconds": 0.03,
-      "stdout_tail": "{\n  \"sprint\": 11,\n  \"phase\": \"final-qa\",\n  \"generated_at_utc\": \"2026-07-27T17:13:31.440699+00:00\",\n  \"status\": \"PASS\",\n  \"readiness_status\": \"READY\",\n  \"checks\": {\n    \"readiness_report_present\": true,\n    \"dashboard_exists\": true,\n    \"adaptive_report_present\": true,\n    \"ensemble_output_present\": true,\n    \"simulation_output_present\": true,\n    \"no_duplicate_edges\": true,\n    \"no_duplicate_ensemble\": true,\n    \"no_duplicate_simulations\": true,\n    \"ensemble_not_ahead_of_edges\": true,\n    \"simulations_not_ahead_of_ensemble\": true,\n    \"lineage_matches_ensemble\": true,\n    \"live_edges_available\": true,\n    \"live_ensemble_available\": true,\n    \"live_simulations_available\": true\n  },\n  \"failed_checks\": [],\n  \"counts\": {\n    \"daily_edges\": 100,\n    \"ensemble\": 100,\n    \"simulations\": 100,\n    \"alt_streaks\": 39\n  },\n  \"green_light\": true\n}\n",
+      "stdout_tail": "{\n  \"sprint\": 11,\n  \"phase\": \"final-qa\",\n  \"generated_at_utc\": \"2026-07-28T16:54:43.662122+00:00\",\n  \"status\": \"PASS\",\n  \"readiness_status\": \"READY\",\n  \"checks\": {\n    \"readiness_report_present\": true,\n    \"dashboard_exists\": true,\n    \"adaptive_report_present\": true,\n    \"ensemble_output_present\": true,\n    \"simulation_output_present\": true,\n    \"no_duplicate_edges\": true,\n    \"no_duplicate_ensemble\": true,\n    \"no_duplicate_simulations\": true,\n    \"ensemble_not_ahead_of_edges\": true,\n    \"simulations_not_ahead_of_ensemble\": true,\n    \"lineage_matches_ensemble\": true,\n    \"live_edges_available\": true,\n    \"live_ensemble_available\": true,\n    \"live_simulations_available\": true\n  },\n  \"failed_checks\": [],\n  \"counts\": {\n    \"daily_edges\": 100,\n    \"ensemble\": 100,\n    \"simulations\": 100,\n    \"alt_streaks\": 48\n  },\n  \"green_light\": true\n}\n",
       "stderr_tail": ""
     },
     {
@@ -107,7 +107,7 @@
       "required": false,
       "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python patch_dashboard_v4_pipeline_status.py",
       "returncode": 0,
-      "duration_seconds": 0.5,
+      "duration_seconds": 0.13,
       "stdout_tail": "Forward Validation dashboard embedded\nSprint 13 Production tab embedded\nRemaining Season Intelligence tab embedded\nSprint 11 Pipeline, Sprint 12 Validation, and Sprint 13 Production tabs embedded\n",
       "stderr_tail": ""
     }
