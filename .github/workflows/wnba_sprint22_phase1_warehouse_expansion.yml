@@ -1,0 +1,52 @@
+name: "WNBA Sprint 22 Phase 1 Warehouse Expansion"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint-22-phase-1-warehouse-expansion
+  cancel-in-progress: false
+
+jobs:
+  build-warehouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install warehouse dependencies
+        run: pip install pandas
+      - name: Compile Phase 1 code
+        run: python -m py_compile build_sprint22_phase1_warehouse.py qa_sprint22_phase1_warehouse.py
+      - name: Run Phase 1 QA
+        run: python qa_sprint22_phase1_warehouse.py
+      - name: Build warehouse layers
+        run: python build_sprint22_phase1_warehouse.py
+      - name: Verify warehouse catalog
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('data/warehouse/sprint22')
+          catalog=json.loads((root/'warehouse_catalog.json').read_text())
+          assert set(catalog['layers']) == {'team_season','player_season','game_context','market_snapshot'}
+          for layer in catalog['layers']:
+              assert (root/f'{layer}.csv').exists()
+          assert catalog['status'] in {'PASS','WARN'}
+          print('Sprint 22 Phase 1 verification passed:', {'total_rows':catalog['total_rows'],'status':catalog['status']})
+          PY
+      - name: Commit warehouse artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/warehouse/sprint22/
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 22 Phase 1 warehouse layers"
+          git pull --rebase origin main
+          git push origin HEAD:main
