@@ -44,6 +44,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pdfplumber
       - name: Resolve target date
         run: |
           REQUESTED="${{ github.event.inputs.date }}"
@@ -51,13 +52,13 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Injury target: $TARGET"
       - name: Validate injury pipeline
-        run: python -m py_compile scrape_injuries.py wnba_injury_intelligence.py wnba_player_intelligence.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_portfolio_dashboard.py wnba_master_source_builder.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_injuries.py
+        run: python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_player_intelligence.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_portfolio_dashboard.py wnba_master_source_builder.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_injuries.py
       - name: Refresh official injury reports
-        run: python scrape_injuries.py --date "${{ env.TARGET }}" --out data/raw
+        run: python scrape_official_wnba_injuries.py --date "${{ env.TARGET }}" --out data/raw
       - name: Verify injury source freshness
         run: |
           python - <<'PY'
-          import json, os
+          import json, os, pandas as pd
           from datetime import datetime, timezone
           s=json.load(open('data/raw/injuries_status.json'))
           assert s.get('target_date') == os.environ['TARGET'], s
@@ -66,8 +67,13 @@ jobs:
           assert stamp, s
           age=(datetime.now(timezone.utc)-datetime.fromisoformat(stamp.replace('Z','+00:00'))).total_seconds()
           assert 0 <= age < 1800, {'age_seconds':age, **s}
-          assert int(s.get('teams_checked',0)) >= 15, s
-          assert os.path.exists(f"data/raw/injuries_{os.environ['TARGET']}.csv")
+          assert int(s.get('rows',0)) > 0, s
+          assert s.get('primary_source') in {'official_wnba_pdf','espn_fallback'}, s
+          path=f"data/raw/injuries_{os.environ['TARGET']}.csv"
+          assert os.path.exists(path), path
+          frame=pd.read_csv(path)
+          assert {'player','team','severity','source'}.issubset(frame.columns), frame.columns.tolist()
+          assert frame['player'].astype(str).str.strip().ne('').all()
           print('INJURY FEED FRESH',s)
           PY
       - name: Rebuild player intelligence with current injuries
