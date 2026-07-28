@@ -1,0 +1,46 @@
+name: "WNBA Sprint 23 Phase 2 Props Integration"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint23-phase2-props-integration
+  cancel-in-progress: false
+
+jobs:
+  build-props-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install pandas numpy scikit-learn
+      - name: Compile Phase 2 code
+        run: python -m py_compile build_sprint23_phase2_props_dataset.py train_sprint23_phase2_props_shadow.py qa_sprint23_phase2_props_integration.py
+      - name: Build props model dataset
+        run: python build_sprint23_phase2_props_dataset.py
+      - name: Train shadow props models
+        run: python train_sprint23_phase2_props_shadow.py
+      - name: Run Phase 2 QA
+        run: python qa_sprint23_phase2_props_integration.py
+      - name: Show integration summary
+        run: |
+          cat data/processed/sprint23/props_integration_catalog.json
+          cat models/sprint23/props_shadow_evaluation.json
+      - name: Commit Phase 2 artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/processed/sprint23/player_props_training.csv data/processed/sprint23/props_integration_catalog.json models/sprint23/props_models_shadow.pkl models/sprint23/props_shadow_evaluation.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 23 Phase 2 props integration"
+          git pull --rebase origin main
+          git push origin HEAD:main
