@@ -41,7 +41,8 @@ jobs:
             patch_dashboard_v4_game_filter.py \
             patch_dashboard_v4_player_props_polish.py \
             patch_dashboard_v4_filter_events.py \
-            patch_dashboard_v4_games_markets.py
+            patch_dashboard_v4_games_markets.py \
+            patch_dashboard_v4_sportsbook_board.py
 
       - name: Enrich props with actual player game history
         run: python wnba_v4_prop_context.py
@@ -70,6 +71,9 @@ jobs:
       - name: Build Games and Game Props views
         run: python patch_dashboard_v4_games_markets.py
 
+      - name: Build Sportsbook line-shopping board
+        run: python patch_dashboard_v4_sportsbook_board.py
+
       - name: Verify generated dashboard
         run: |
           python - <<'PY'
@@ -89,6 +93,8 @@ jobs:
               "named Games candidates": "namedCandidates",
               "Game Props market table": "window.marketsV25",
               "period market reservation": "Period markets:",
+              "Sportsbook line-shopping board": "window.wireSportsbookBoard",
+              "Sportsbook best-price columns": "Best over",
           }
 
           failed = []
@@ -111,7 +117,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Complete Sprint 25 Games, Markets and Player Props views" \
+            "Complete Sprint 25 Games, Markets, Sportsbooks and Player Props views" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
             docs/index.html
