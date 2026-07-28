@@ -1,0 +1,71 @@
+{
+  "selected_model": {
+    "features": [
+      "clv",
+      "ev_pct",
+      "consensus_score",
+      "confidence",
+      "final_score",
+      "pred"
+    ],
+    "feature_count": 6,
+    "fold_count": 4,
+    "validation_records": 912,
+    "auc": 0.505876,
+    "brier": 0.255414,
+    "log_loss": 0.704144,
+    "ece": 0.067881,
+    "decile_spread": 0.087912,
+    "stability_score": 0.5202,
+    "folds": [
+      {
+        "fold": 1,
+        "train_records": 684,
+        "validation_records": 228,
+        "auc": 0.625395,
+        "brier": 0.272931,
+        "log_loss": 0.739656,
+        "ece": 0.177942,
+        "decile_spread": 0.318182
+      },
+      {
+        "fold": 2,
+        "train_records": 912,
+        "validation_records": 228,
+        "auc": 0.554618,
+        "brier": 0.256222,
+        "log_loss": 0.705629,
+        "ece": 0.151715,
+        "decile_spread": 0.045455
+      },
+      {
+        "fold": 3,
+        "train_records": 1140,
+        "validation_records": 228,
+        "auc": 0.63667,
+        "brier": 0.245939,
+        "log_loss": 0.685009,
+        "ece": 0.06262,
+        "decile_spread": 0.181818
+      },
+      {
+        "fold": 4,
+        "train_records": 1368,
+        "validation_records": 228,
+        "auc": 0.54071,
+        "brier": 0.246563,
+        "log_loss": 0.686282,
+        "ece": 0.038655,
+        "decile_spread": 0.272727
+      }
+    ],
+    "hyperparameters": {
+      "steps": 350,
+      "rate": 0.08,
+      "l2": 0.02
+    },
+    "model": "baseline_regularized"
+  },
+  "deployment_gate": "HOLD",
+  "production_enabled": false
+}

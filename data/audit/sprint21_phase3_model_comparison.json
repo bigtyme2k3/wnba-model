@@ -1,0 +1,342 @@
+{
+  "generated_at_utc": "2026-07-28T00:18:03.510924+00:00",
+  "target_date": "2026-07-28",
+  "summary": {
+    "history_records": 3547,
+    "settled_records": 1596,
+    "models_tested": 4,
+    "best_model": "baseline_regularized",
+    "best_auc": 0.505876,
+    "best_decile_spread": 0.087912,
+    "best_stability": 0.5202,
+    "deployment_gate": "HOLD",
+    "status": "PASS"
+  },
+  "models": [
+    {
+      "features": [
+        "clv",
+        "ev_pct",
+        "consensus_score",
+        "confidence",
+        "final_score",
+        "pred"
+      ],
+      "feature_count": 6,
+      "fold_count": 4,
+      "validation_records": 912,
+      "auc": 0.505876,
+      "brier": 0.255414,
+      "log_loss": 0.704144,
+      "ece": 0.067881,
+      "decile_spread": 0.087912,
+      "stability_score": 0.5202,
+      "folds": [
+        {
+          "fold": 1,
+          "train_records": 684,
+          "validation_records": 228,
+          "auc": 0.625395,
+          "brier": 0.272931,
+          "log_loss": 0.739656,
+          "ece": 0.177942,
+          "decile_spread": 0.318182
+        },
+        {
+          "fold": 2,
+          "train_records": 912,
+          "validation_records": 228,
+          "auc": 0.554618,
+          "brier": 0.256222,
+          "log_loss": 0.705629,
+          "ece": 0.151715,
+          "decile_spread": 0.045455
+        },
+        {
+          "fold": 3,
+          "train_records": 1140,
+          "validation_records": 228,
+          "auc": 0.63667,
+          "brier": 0.245939,
+          "log_loss": 0.685009,
+          "ece": 0.06262,
+          "decile_spread": 0.181818
+        },
+        {
+          "fold": 4,
+          "train_records": 1368,
+          "validation_records": 228,
+          "auc": 0.54071,
+          "brier": 0.246563,
+          "log_loss": 0.686282,
+          "ece": 0.038655,
+          "decile_spread": 0.272727
+        }
+      ],
+      "hyperparameters": {
+        "steps": 350,
+        "rate": 0.08,
+        "l2": 0.02
+      },
+      "model": "baseline_regularized"
+    },
+    {
+      "features": [
+        "clv",
+        "ev_pct",
+        "consensus_score",
+        "confidence",
+        "final_score",
+        "pred",
+        "american_odds__abs",
+        "american_odds__signed_log",
+        "book_count__abs",
+        "book_count__minus__history_games",
+        "book_count__signed_log",
+        "book_count__x__history_games",
+        "closing_line__abs",
+        "closing_line__signed_log",
+        "clv__abs",
+        "clv__minus__edge_pct",
+        "clv__minus__ev_pct",
+        "clv__signed_log",
+        "clv__x__edge_pct",
+        "clv__x__ev_pct",
+        "confidence__abs",
+        "confidence__signed_log",
+        "consensus_score__abs",
+        "consensus_score__signed_log",
+        "edge__abs",
+        "edge__signed_log",
+        "edge_pct__abs",
+        "edge_pct__signed_log",
+        "ev_pct__abs",
+        "ev_pct__minus__edge_pct"
+      ],
+      "feature_count": 30,
+      "fold_count": 4,
+      "validation_records": 912,
+      "auc": 0.479839,
+      "brier": 0.256936,
+      "log_loss": 0.707197,
+      "ece": 0.092609,
+      "decile_spread": -0.032967,
+      "stability_score": 0.250735,
+      "folds": [
+        {
+          "fold": 1,
+          "train_records": 684,
+          "validation_records": 228,
+          "auc": 0.56321,
+          "brier": 0.269792,
+          "log_loss": 0.733348,
+          "ece": 0.171699,
+          "decile_spread": 0.272727
+        },
+        {
+          "fold": 2,
+          "train_records": 912,
+          "validation_records": 228,
+          "auc": 0.532427,
+          "brier": 0.25688,
+          "log_loss": 0.706927,
+          "ece": 0.154938,
+          "decile_spread": 0.272727
+        },
+        {
+          "fold": 3,
+          "train_records": 1140,
+          "validation_records": 228,
+          "auc": 0.590183,
+          "brier": 0.249857,
+          "log_loss": 0.692755,
+          "ece": 0.098458,
+          "decile_spread": 0.227273
+        },
+        {
+          "fold": 4,
+          "train_records": 1368,
+          "validation_records": 228,
+          "auc": 0.44033,
+          "brier": 0.251216,
+          "log_loss": 0.695755,
+          "ece": 0.031334,
+          "decile_spread": -0.227273
+        }
+      ],
+      "hyperparameters": {
+        "steps": 500,
+        "rate": 0.05,
+        "l2": 0.08
+      },
+      "model": "engineered_extended"
+    },
+    {
+      "features": [
+        "clv",
+        "ev_pct",
+        "consensus_score",
+        "confidence",
+        "final_score",
+        "pred",
+        "american_odds__abs",
+        "american_odds__signed_log",
+        "book_count__abs",
+        "book_count__minus__history_games",
+        "book_count__signed_log",
+        "book_count__x__history_games",
+        "closing_line__abs",
+        "closing_line__signed_log",
+        "clv__abs",
+        "clv__minus__edge_pct"
+      ],
+      "feature_count": 16,
+      "fold_count": 4,
+      "validation_records": 912,
+      "auc": 0.479516,
+      "brier": 0.257152,
+      "log_loss": 0.70768,
+      "ece": 0.073307,
+      "decile_spread": -0.043956,
+      "stability_score": 0.48899,
+      "folds": [
+        {
+          "fold": 1,
+          "train_records": 684,
+          "validation_records": 228,
+          "auc": 0.504261,
+          "brier": 0.273101,
+          "log_loss": 0.740064,
+          "ece": 0.174519,
+          "decile_spread": 0.090909
+        },
+        {
+          "fold": 2,
+          "train_records": 912,
+          "validation_records": 228,
+          "auc": 0.551425,
+          "brier": 0.254107,
+          "log_loss": 0.701451,
+          "ece": 0.144507,
+          "decile_spread": 0.227273
+        },
+        {
+          "fold": 3,
+          "train_records": 1140,
+          "validation_records": 228,
+          "auc": 0.574597,
+          "brier": 0.251974,
+          "log_loss": 0.697132,
+          "ece": 0.080451,
+          "decile_spread": 0.227273
+        },
+        {
+          "fold": 4,
+          "train_records": 1368,
+          "validation_records": 228,
+          "auc": 0.472395,
+          "brier": 0.249424,
+          "log_loss": 0.692073,
+          "ece": 0.029123,
+          "decile_spread": -0.136364
+        }
+      ],
+      "hyperparameters": {
+        "steps": 450,
+        "rate": 0.06,
+        "l2": 0.04
+      },
+      "model": "engineered_compact"
+    },
+    {
+      "features": [
+        "clv",
+        "ev_pct",
+        "consensus_score",
+        "confidence",
+        "final_score",
+        "pred",
+        "american_odds__abs",
+        "american_odds__signed_log",
+        "book_count__abs",
+        "book_count__minus__history_games",
+        "book_count__signed_log",
+        "book_count__x__history_games",
+        "closing_line__abs",
+        "closing_line__signed_log",
+        "clv__abs",
+        "clv__minus__edge_pct",
+        "clv__minus__ev_pct",
+        "clv__signed_log",
+        "clv__x__edge_pct",
+        "clv__x__ev_pct",
+        "confidence__abs",
+        "confidence__signed_log"
+      ],
+      "feature_count": 22,
+      "fold_count": 4,
+      "validation_records": 912,
+      "auc": 0.479283,
+      "brier": 0.256132,
+      "log_loss": 0.705571,
+      "ece": 0.068799,
+      "decile_spread": -0.087912,
+      "stability_score": 0.540555,
+      "folds": [
+        {
+          "fold": 1,
+          "train_records": 684,
+          "validation_records": 228,
+          "auc": 0.516888,
+          "brier": 0.271299,
+          "log_loss": 0.736307,
+          "ece": 0.168421,
+          "decile_spread": 0.181818
+        },
+        {
+          "fold": 2,
+          "train_records": 912,
+          "validation_records": 228,
+          "auc": 0.569767,
+          "brier": 0.253601,
+          "log_loss": 0.700385,
+          "ece": 0.144289,
+          "decile_spread": 0.318182
+        },
+        {
+          "fold": 3,
+          "train_records": 1140,
+          "validation_records": 228,
+          "auc": 0.569867,
+          "brier": 0.251125,
+          "log_loss": 0.695409,
+          "ece": 0.080431,
+          "decile_spread": 0.227273
+        },
+        {
+          "fold": 4,
+          "train_records": 1368,
+          "validation_records": 228,
+          "auc": 0.477978,
+          "brier": 0.248504,
+          "log_loss": 0.690183,
+          "ece": 0.022505,
+          "decile_spread": -0.090909
+        }
+      ],
+      "hyperparameters": {
+        "steps": 500,
+        "rate": 0.04,
+        "l2": 0.15
+      },
+      "model": "engineered_strong_regularization"
+    }
+  ],
+  "deployment_policy": {
+    "minimum_auc": 0.53,
+    "minimum_decile_spread": 0.08,
+    "minimum_stability": 0.5,
+    "minimum_folds": 3,
+    "production_unchanged": true
+  }
+}
