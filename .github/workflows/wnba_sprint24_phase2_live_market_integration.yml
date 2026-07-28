@@ -1,0 +1,120 @@
+name: WNBA Sprint 24 Phase 2 Live Market Integration
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 15,18,21 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint24-phase2-live-market-integration
+  cancel-in-progress: false
+
+jobs:
+  build-live-market-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install pandas numpy requests scikit-learn
+
+      - name: Compile Phase 2 code
+        run: |
+          python -m py_compile \
+            collect_sprint24_phase2_live_lines.py \
+            ingest_sprint24_phase2_live_markets.py \
+            qa_sprint24_phase2_live_markets.py \
+            wnba_market_timeline.py \
+            wnba_line_movement_engine.py \
+            wnba_steam_sharp_engine.py \
+            wnba_clv_intelligence.py \
+            wnba_entry_window_intelligence.py \
+            wnba_automated_trend_discovery.py \
+            wnba_trend_outcome_validation.py \
+            wnba_closing_line_predictor.py \
+            wnba_sportsbook_leader_normalization.py \
+            wnba_opportunity_scanner.py \
+            wnba_active_slate_scanner.py
+
+      - name: Collect current DraftKings and FanDuel lines
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python collect_sprint24_phase2_live_lines.py
+
+      - name: Bridge live lines into V2 warehouse
+        run: python ingest_sprint24_phase2_live_markets.py
+
+      - name: Rebuild active market intelligence
+        run: |
+          python wnba_market_timeline.py
+          python wnba_line_movement_engine.py
+          python wnba_steam_sharp_engine.py
+          python wnba_clv_intelligence.py
+          python wnba_entry_window_intelligence.py
+          python wnba_automated_trend_discovery.py
+          python wnba_trend_outcome_validation.py
+          python wnba_closing_line_predictor.py
+          python wnba_sportsbook_leader_normalization.py
+          python wnba_opportunity_scanner.py
+          python wnba_active_slate_scanner.py
+
+      - name: Refresh shadow opportunities and governance
+        run: |
+          python build_sprint23_phase3_market_opportunities.py
+          python build_sprint24_phase1_shadow_governance.py
+
+      - name: Run Phase 2 QA
+        run: python qa_sprint24_phase2_live_markets.py
+
+      - name: Show live integration summary
+        run: |
+          cat data/raw/sprint24_phase2_live_collection_status.json
+          cat data/warehouse/sprint24_phase2_live_market_catalog.json
+          cat data/dashboard/wnba_live_scanner_summary.json
+          cat data/processed/sprint24/shadow_governance_catalog.json
+
+      - name: Commit live market artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA Live Market Bot'
+          git config user.email 'actions@github.com'
+          rm -rf /tmp/sprint24-phase2
+          mkdir -p /tmp/sprint24-phase2
+          cp -a data/raw /tmp/sprint24-phase2/raw
+          cp -a data/warehouse /tmp/sprint24-phase2/warehouse
+          cp -a data/market /tmp/sprint24-phase2/market
+          cp -a data/forecast /tmp/sprint24-phase2/forecast
+          cp -a data/trends /tmp/sprint24-phase2/trends
+          cp -a data/dashboard /tmp/sprint24-phase2/dashboard
+          cp -a data/processed/sprint23 /tmp/sprint24-phase2/sprint23
+          cp -a data/processed/sprint24 /tmp/sprint24-phase2/sprint24
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p data/raw data/warehouse data/market data/forecast data/trends data/dashboard data/processed
+          cp -af /tmp/sprint24-phase2/raw/. data/raw/
+          cp -af /tmp/sprint24-phase2/warehouse/. data/warehouse/
+          cp -af /tmp/sprint24-phase2/market/. data/market/
+          cp -af /tmp/sprint24-phase2/forecast/. data/forecast/
+          cp -af /tmp/sprint24-phase2/trends/. data/trends/
+          cp -af /tmp/sprint24-phase2/dashboard/. data/dashboard/
+          cp -af /tmp/sprint24-phase2/sprint23/. data/processed/sprint23/
+          cp -af /tmp/sprint24-phase2/sprint24/. data/processed/sprint24/
+          git add data
+          if git diff --cached --quiet; then
+            echo 'No live market changes.'
+            exit 0
+          fi
+          git commit -m 'Refresh Sprint 24 Phase 2 live markets'
+          git push origin HEAD:main
