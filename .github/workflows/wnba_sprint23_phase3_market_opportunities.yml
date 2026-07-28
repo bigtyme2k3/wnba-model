@@ -1,0 +1,51 @@
+name: WNBA Sprint 23 Phase 3 Market Opportunities
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'build_sprint23_phase3_market_opportunities.py'
+      - 'qa_sprint23_phase3_market_opportunities.py'
+      - '.github/workflows/wnba_sprint23_phase3_market_opportunities.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build-market-opportunities:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install pandas numpy scikit-learn
+      - name: Compile Phase 3 code
+        run: python -m py_compile build_sprint23_phase3_market_opportunities.py qa_sprint23_phase3_market_opportunities.py
+      - name: Build shadow market opportunities
+        run: python build_sprint23_phase3_market_opportunities.py
+      - name: Run Phase 3 QA
+        run: python qa_sprint23_phase3_market_opportunities.py
+      - name: Show opportunity summary
+        run: |
+          cat data/processed/sprint23/props_market_opportunity_catalog.json
+          python - <<'PY'
+          import pandas as pd
+          p='data/processed/sprint23/props_market_opportunities_shadow.csv'
+          df=pd.read_csv(p)
+          if len(df):
+              print(df[['player','stat','side','sportsbook_key','line','odds','projection','probability_edge','expected_value_per_dollar']].head(30).to_string(index=False))
+          else:
+              print('No current DraftKings/FanDuel prop rows were available; empty shadow output is valid.')
+          PY
+      - name: Commit Phase 3 artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/processed/sprint23/props_market_opportunities_shadow.csv \
+                  data/processed/sprint23/props_market_unmatched_shadow.csv \
+                  data/processed/sprint23/props_market_opportunity_catalog.json
+          git diff --cached --quiet || git commit -m 'Update Sprint 23 Phase 3 shadow opportunities'
+          git pull --rebase origin main
+          git push origin HEAD:main
