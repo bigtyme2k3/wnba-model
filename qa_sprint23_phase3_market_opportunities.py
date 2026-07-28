@@ -10,6 +10,13 @@ CATALOG = OUT / "props_market_opportunity_catalog.json"
 ALLOWED_BOOKS = {"draftkings", "fanduel"}
 
 
+def json_default(value):
+    """Convert NumPy/pandas scalar values at the JSON boundary."""
+    if hasattr(value, "item"):
+        return value.item()
+    raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
+
+
 def run() -> dict:
     df = pd.read_csv(DATA, low_memory=False)
     catalog = json.loads(CATALOG.read_text())
@@ -35,7 +42,7 @@ def run() -> dict:
     }
     failed = [name for name, passed in tests.items() if not passed]
     result = {"status": "PASS" if not failed else "FAIL", "tests": tests, "failed": failed}
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2, default=json_default))
     if failed:
         raise SystemExit(1)
     return result
