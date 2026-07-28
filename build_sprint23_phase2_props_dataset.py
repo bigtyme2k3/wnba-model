@@ -21,6 +21,17 @@ FEATURE_MAP = {
 }
 
 
+def column_or_default(frame: pd.DataFrame, column: str, default) -> pd.Series:
+    """Return an index-aligned Series even when the source column is absent."""
+    if column in frame.columns:
+        return frame[column]
+    return pd.Series(default, index=frame.index)
+
+
+def numeric_or_default(frame: pd.DataFrame, column: str, default: float) -> pd.Series:
+    return pd.to_numeric(column_or_default(frame, column, default), errors="coerce").fillna(default)
+
+
 def build() -> dict:
     features = pd.read_csv(FEATURE_DIR / "player_game_features.csv", low_memory=False)
     logs = pd.read_csv(WAREHOUSE / "player_game_logs.csv", low_memory=False)
@@ -38,16 +49,16 @@ def build() -> dict:
     for source, target in FEATURE_MAP.items():
         if source in frame.columns:
             frame[target] = pd.to_numeric(frame[source], errors="coerce")
-    frame["usage"] = pd.to_numeric(frame.get("usage_season_avg", 0.24), errors="coerce").fillna(0.24)
-    frame["ts_pct"] = pd.to_numeric(frame.get("true_shooting_pct_season_avg", 0.56), errors="coerce").fillna(0.56)
+    frame["usage"] = numeric_or_default(frame, "usage_season_avg", 0.24)
+    frame["ts_pct"] = numeric_or_default(frame, "true_shooting_pct_season_avg", 0.56)
     frame["opp_drtg_pos"] = 102.0
     frame["avg_pace"] = 83.0
     frame["team_pace"] = 83.0
-    frame["is_home"] = pd.to_numeric(frame.get("is_home", 0), errors="coerce").fillna(0).astype(int)
+    frame["is_home"] = numeric_or_default(frame, "is_home", 0).astype(int)
     frame["game_date"] = pd.to_datetime(frame["game_date"], errors="coerce")
     frame["season_game_num"] = frame.sort_values("game_date").groupby(["player_id", "season"]).cumcount() + 1
     frame["month"] = frame["game_date"].dt.month
-    frame["feature_ready"] = frame.get("feature_ready", False).fillna(False).astype(bool)
+    frame["feature_ready"] = column_or_default(frame, "feature_ready", False).fillna(False).astype(bool)
     frame = frame.sort_values(["game_date", "player_id"]).reset_index(drop=True)
     OUT.mkdir(parents=True, exist_ok=True)
     output = OUT / "player_props_training.csv"
