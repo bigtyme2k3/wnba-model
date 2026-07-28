@@ -43,7 +43,7 @@ jobs:
       - name: Install dependencies
         run: pip install pandas requests pyreadr
       - name: Compile backfill code
-        run: python -m py_compile collect_wehoop.py collect_wehoop_compatible.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_2_historical_player_backfill.py qa_sprint22_phase2_2_historical_player_backfill.py
+        run: python -m py_compile collect_wehoop.py collect_wehoop_compatible.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_player_warehouse_numeric.py build_sprint22_phase2_2_historical_player_backfill.py qa_sprint22_phase2_2_historical_player_backfill.py
       - name: Verify native R fallback is available
         run: Rscript --version
       - name: Collect historical player boxes
@@ -54,7 +54,7 @@ jobs:
       - name: Normalize player inputs
         run: python normalize_sprint22_phase2_1_player_data.py
       - name: Rebuild player intelligence warehouse
-        run: python build_sprint22_phase2_player_warehouse.py
+        run: python build_sprint22_phase2_player_warehouse_numeric.py
       - name: Audit historical backfill
         run: |
           minimum=$(( ${{ inputs.end_season }} - ${{ inputs.start_season }} + 1 ))
