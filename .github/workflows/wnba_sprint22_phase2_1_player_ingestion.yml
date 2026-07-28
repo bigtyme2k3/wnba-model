@@ -1,0 +1,75 @@
+name: "WNBA Sprint 22 Phase 2.1 Player Ingestion"
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_year:
+        description: "First historical season to collect"
+        required: false
+        default: "2024"
+      end_year:
+        description: "Last historical season to collect"
+        required: false
+        default: "2025"
+      collect_current:
+        description: "Collect current ESPN season"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint-22-phase-2-1-player-ingestion
+  cancel-in-progress: false
+
+jobs:
+  ingest-player-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install pandas requests pyreadr
+      - name: Compile code
+        run: python -m py_compile collect_wehoop.py normalize_sprint22_phase2_1_player_data.py qa_sprint22_phase2_1_player_ingestion.py build_sprint22_phase2_player_warehouse.py
+      - name: Run ingestion QA
+        run: python qa_sprint22_phase2_1_player_ingestion.py
+      - name: Collect historical player boxes
+        run: python collect_wehoop.py --start "${{ inputs.start_year }}" --end "${{ inputs.end_year }}"
+      - name: Collect current player boxes
+        if: ${{ inputs.collect_current }}
+        run: python collect_wehoop.py --current
+      - name: Normalize player inputs
+        run: python normalize_sprint22_phase2_1_player_data.py
+      - name: Build Phase 2 warehouse
+        run: python build_sprint22_phase2_player_warehouse.py
+      - name: Verify populated warehouse
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          ingestion=json.loads(Path('data/raw/player_ingestion_catalog.json').read_text())
+          warehouse=json.loads(Path('data/warehouse/sprint22/player/player_catalog.json').read_text())
+          assert ingestion['status']=='PASS'
+          assert ingestion['total_game_logs'] > 0
+          assert warehouse['tables']['player_profile']['rows'] > 0
+          assert warehouse['tables']['player_game_logs']['rows'] > 0
+          assert warehouse['tables']['player_rolling_metrics']['rows'] > 0
+          assert warehouse['duplicate_game_keys'] == 0
+          print({'ingestion': ingestion['total_game_logs'], 'profiles': warehouse['tables']['player_profile']['rows'], 'logs': warehouse['tables']['player_game_logs']['rows']})
+          PY
+      - name: Commit data artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/raw/player_game_logs_*.csv data/raw/player_profiles_*.csv data/raw/player_ingestion_catalog.json data/raw/wehoop_player_box_*.csv data/warehouse/sprint22/player/
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 22 player ingestion and warehouse"
+          git pull --rebase origin main
+          git push origin HEAD:main
