@@ -1,0 +1,47 @@
+name: "WNBA Sprint 23 Phase 1 Player Feature Engine"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "build_sprint23_phase1_player_features.py"
+      - "qa_sprint23_phase1_player_features.py"
+      - "data/warehouse/sprint22/player/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint23-phase1-player-features
+  cancel-in-progress: false
+
+jobs:
+  build-player-features:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install pandas numpy
+      - name: Compile feature code
+        run: python -m py_compile build_sprint23_phase1_player_features.py qa_sprint23_phase1_player_features.py
+      - name: Build verified player features
+        run: python build_sprint23_phase1_player_features.py
+      - name: Run feature QA
+        run: python qa_sprint23_phase1_player_features.py
+      - name: Show feature catalog
+        run: cat data/features/sprint23/player/player_feature_catalog.json
+      - name: Commit feature artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/features/sprint23/player/
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 23 Phase 1 player features"
+          git pull --rebase origin main
+          git push origin HEAD:main
