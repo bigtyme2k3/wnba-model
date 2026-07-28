@@ -1,6 +1,6 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-27T19:00:22.070745Z
+Generated: 2026-07-28T13:14:57.666131Z
 
 ## Slate summary
 
@@ -26,33 +26,33 @@ Best line: +15.5 | line-shop edge: +0 points
 
 ## Game — 2026-07-29T01:30:00Z
 
-### Seattle Storm +7.5 (fanduel)
-Bet quality: **Lean — 73.6/100**
+### Seattle Storm +9.5 (draftkings)
+Bet quality: **Lean — 68.6/100**
 Research level: **low-research-interest** | signal 36.0 | 1 matched angles
-Best line: +8.5 | line-shop edge: +1 points
+Best line: +9.5 | line-shop edge: +0 points
 
 - Seattle Storm|home: 18-4-0 (81.82%, n=22, Wilson floor 61.48%)
 
-### Seattle Storm +8.5 (draftkings)
+### Seattle Storm +9.5 (fanduel)
 Bet quality: **Lean — 68.6/100**
 Research level: **low-research-interest** | signal 36.0 | 1 matched angles
-Best line: +8.5 | line-shop edge: +0 points
+Best line: +9.5 | line-shop edge: +0 points
 
 - Seattle Storm|home: 18-4-0 (81.82%, n=22, Wilson floor 61.48%)
 
 ## Game — 2026-07-29T02:00:00Z
 
 ### Los Angeles Sparks +4.5 (draftkings)
-Bet quality: **Lean — 67.4/100**
+Bet quality: **Lean — 72.4/100**
 Research level: **low-research-interest** | signal 27.59 | 1 matched angles
-Best line: +4.5 | line-shop edge: +0 points
+Best line: +5.5 | line-shop edge: +1 points
 
 - home|underdog|3_to_5_5: 24-8-0 (75.0%, n=32, Wilson floor 57.89%)
 
-### Los Angeles Sparks +4.5 (fanduel)
+### Los Angeles Sparks +5.5 (fanduel)
 Bet quality: **Lean — 67.4/100**
 Research level: **low-research-interest** | signal 27.59 | 1 matched angles
-Best line: +4.5 | line-shop edge: +0 points
+Best line: +5.5 | line-shop edge: +0 points
 
 - home|underdog|3_to_5_5: 24-8-0 (75.0%, n=32, Wilson floor 57.89%)
 
