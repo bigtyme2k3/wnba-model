@@ -1,0 +1,66 @@
+name: "WNBA Sprint 21 Phase 3 Model Rebuild"
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Target date (YYYY-MM-DD); blank uses UTC today"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint-21-phase-3-model-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild-models:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Sprint 21 Phase 3 code
+        run: python -m py_compile engineer_sprint21_phase3_features.py validate_sprint21_phase3_models.py qa_sprint21_phase3_model_rebuild.py
+      - name: Run Sprint 21 Phase 3 QA
+        run: python qa_sprint21_phase3_model_rebuild.py
+      - name: Engineer leakage-safe features
+        env:
+          INPUT_DATE: ${{ inputs.date }}
+        run: |
+          TARGET="${INPUT_DATE:-$(date -u +%F)}"
+          python engineer_sprint21_phase3_features.py --date "$TARGET"
+      - name: Run rolling model rebuild validation
+        env:
+          INPUT_DATE: ${{ inputs.date }}
+        run: |
+          TARGET="${INPUT_DATE:-$(date -u +%F)}"
+          python validate_sprint21_phase3_models.py --date "$TARGET"
+      - name: Verify Phase 3 outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          paths=[Path('data/audit/sprint21_phase3_feature_manifest.json'),Path('data/audit/sprint21_phase3_model_comparison.json'),Path('data/audit/sprint21_phase3_best_model.json'),Path('data/audit/sprint21_phase3_market_models.json')]
+          for path in paths:
+              assert path.exists() and path.stat().st_size>20,path
+              json.loads(path.read_text())
+          summary=json.loads(paths[1].read_text())['summary']
+          assert summary['models_tested']>0
+          assert summary['deployment_gate'] in {'PASS','HOLD'}
+          print('Sprint 21 Phase 3 verification passed:',summary)
+          PY
+      - name: Commit Phase 3 artifacts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/audit/sprint21_phase3_feature_manifest.json data/audit/sprint21_phase3_model_comparison.json data/audit/sprint21_phase3_best_model.json data/audit/sprint21_phase3_market_models.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update Sprint 21 Phase 3 model rebuild artifacts"
+          git pull --rebase origin main
+          git push origin HEAD:main
