@@ -100,6 +100,8 @@ jobs:
 
       - name: Commit actual history and polished dashboard
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
             "Display actual last game stats and working filters in V4 props" \
