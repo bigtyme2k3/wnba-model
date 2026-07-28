@@ -1,0 +1,73 @@
+name: WNBA Sprint 23 Phase 4 Shadow Validation
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 14 * * *"
+    - cron: "15 22 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint23-phase4-shadow-validation
+  cancel-in-progress: false
+
+jobs:
+  track-grade-shadow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pandas numpy scikit-learn
+
+      - name: Compile Phase 4 code
+        run: python -m py_compile build_sprint23_phase3_market_opportunities.py build_sprint23_phase4_shadow_validation.py qa_sprint23_phase4_shadow_validation.py
+
+      - name: Refresh shadow market opportunities
+        run: python build_sprint23_phase3_market_opportunities.py
+
+      - name: Archive and grade shadow opportunities
+        run: python build_sprint23_phase4_shadow_validation.py
+
+      - name: Run Phase 4 QA
+        run: python qa_sprint23_phase4_shadow_validation.py
+
+      - name: Show validation summary
+        run: |
+          cat data/processed/sprint23/validation/shadow_validation_catalog.json
+          python - <<'PY'
+          import pandas as pd
+          from pathlib import Path
+          p = Path('data/processed/sprint23/validation/shadow_validation_summary.csv')
+          try:
+              df = pd.read_csv(p) if p.exists() and p.stat().st_size else pd.DataFrame()
+          except pd.errors.EmptyDataError:
+              df = pd.DataFrame()
+          if df.empty:
+              print('No completed markets yet.')
+          else:
+              print(df.sort_values(['roi_per_dollar','graded_rows'], ascending=[False,False]).head(25).to_string(index=False))
+          PY
+
+      - name: Commit Phase 4 artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/processed/sprint23/validation
+          if git diff --cached --quiet; then
+            echo "No Phase 4 artifact changes."
+            exit 0
+          fi
+          git commit -m "Update Sprint 23 Phase 4 shadow validation"
+          git pull --rebase origin main
+          git push origin HEAD:main
