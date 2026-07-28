@@ -24,6 +24,10 @@ def build_logs_numeric(files):
 
 
 def main() -> None:
+    # Phase 2.1 emits player_profiles_<season>.csv. Include those normalized
+    # profile files so the warehouse identity/linkage gate can pass.
+    if "player_profiles_*.csv" not in warehouse.PROFILE_PATTERNS:
+        warehouse.PROFILE_PATTERNS.insert(0, "player_profiles_*.csv")
     warehouse.build_logs = build_logs_numeric
     warehouse.main()
 
