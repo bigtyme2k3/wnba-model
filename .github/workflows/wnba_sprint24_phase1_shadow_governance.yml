@@ -1,0 +1,77 @@
+name: WNBA Sprint 24 Phase 1 Shadow Governance
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 14 * * *"
+    - cron: "35 22 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint24-phase1-shadow-governance
+  cancel-in-progress: false
+
+jobs:
+  build-shadow-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pandas numpy
+
+      - name: Compile governance code
+        run: python -m py_compile build_sprint24_phase1_shadow_governance.py qa_sprint24_phase1_shadow_governance.py
+
+      - name: Refresh Phase 3 shadow opportunities
+        run: python build_sprint23_phase3_market_opportunities.py
+
+      - name: Build governed research shortlist
+        run: python build_sprint24_phase1_shadow_governance.py
+
+      - name: Run Phase 1 QA
+        run: python qa_sprint24_phase1_shadow_governance.py
+
+      - name: Show governance summary
+        run: |
+          cat data/processed/sprint24/shadow_governance_catalog.json
+          python - <<'PY'
+          import pandas as pd
+          from pathlib import Path
+          p = Path('data/processed/sprint24/shadow_governed_shortlist.csv')
+          try:
+              df = pd.read_csv(p) if p.exists() and p.stat().st_size else pd.DataFrame()
+          except pd.errors.EmptyDataError:
+              df = pd.DataFrame()
+          if df.empty:
+              print('No shadow opportunities passed governance today.')
+          else:
+              cols = [c for c in ['governance_rank','player','stat','side','line','odds','sportsbook_key','projection','expected_value_per_dollar','probability_edge','governance_score'] if c in df.columns]
+              print(df[cols].head(20).to_string(index=False))
+          PY
+
+      - name: Commit Sprint 24 artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/processed/sprint23/props_market_opportunities_shadow.csv \
+                  data/processed/sprint23/props_market_unmatched_shadow.csv \
+                  data/processed/sprint23/props_market_opportunity_catalog.json \
+                  data/processed/sprint24
+          if git diff --cached --quiet; then
+            echo "No Sprint 24 artifact changes."
+            exit 0
+          fi
+          git commit -m "Update Sprint 24 Phase 1 shadow governance"
+          git pull --rebase origin main
+          git push origin HEAD:main
