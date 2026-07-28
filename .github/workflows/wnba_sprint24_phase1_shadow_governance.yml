@@ -28,7 +28,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install pandas numpy
+        run: pip install pandas numpy scikit-learn
 
       - name: Compile governance code
         run: python -m py_compile build_sprint24_phase1_shadow_governance.py qa_sprint24_phase1_shadow_governance.py
