@@ -10,7 +10,6 @@ import pandas as pd
 
 RAW = Path("data/raw")
 OUT = Path("data/warehouse/sprint22/player")
-REPORT = OUT / "historical_backfill_catalog.json"
 
 
 def season_from_name(path: Path) -> int | None:
@@ -77,8 +76,8 @@ def inspect(raw_dir: Path = RAW, out_dir: Path = OUT, minimum_seasons: int = 5) 
         and required_tables.get("player_rolling_metrics", 0) > 0
     ) else "WARN"
     out_dir.mkdir(parents=True, exist_ok=True)
-    REPORT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    report_path = out_dir / "historical_backfill_catalog.json"
+    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print("Sprint 22 Phase 2.2:", report)
     return report
 
