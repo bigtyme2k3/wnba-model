@@ -1,20 +1,30 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-07-28T16:58:49.554035Z
+Generated: 2026-07-28T20:01:02.098666Z
 
-**Status:** STANDBY
-**Slate:** 0 events, 0 fresh markets
+**Status:** READY
+**Slate:** 7 events, 1018 fresh markets
 
-No fresh WNBA markets begin within the active 48-hour horizon.
+## Top Opportunities
+
 
 ## Market Alerts
 
-- No active high-priority alerts.
+- Aneesah Morrow UNDER 8.5 101 — SHARP — score 38.48
+- Napheesa Collier UNDER 6.5 -103 — SHARP — score 38.45
+- Caitlin Clark OVER 2.5 100 — SHARP — score 38.45
+- Erica Wheeler OVER 6.5 102 — SHARP — score 38.42
+- Janelle Salaun OVER 3.5 -103 — SHARP — score 38.42
+- Kelsey Mitchell OVER 2.5 104 — SHARP — score 38.29
+- Pauline Astier OVER 3.5 -108 — SHARP — score 38.29
+- Nneka Ogwumike UNDER 8.5 107 — SHARP — score 38.24
+- Caitlin Clark OVER 8.5 100 — SHARP — score 38.11
+- Jackie Young OVER 17.5 100 — SHARP — score 36.6
 
 ## System Context
 
-- Closing-line predictor: READY (434 model-ready markets)
+- Closing-line predictor: READY (464 model-ready markets)
 - Normalized sportsbook leader: draftkings
-- Qualified CLV trends: 3
+- Qualified CLV trends: 8
 
 _Research intelligence only. Rankings and forecasts are research estimates, not guarantees or instructions to wager._
