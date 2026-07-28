@@ -43,7 +43,8 @@ jobs:
             patch_dashboard_v4_filter_events.py \
             patch_dashboard_v4_games_markets.py \
             patch_dashboard_v4_sportsbook_board.py \
-            patch_dashboard_v4_results_board.py
+            patch_dashboard_v4_results_board.py \
+            patch_dashboard_v4_best_bets_cleanup.py
 
       - name: Enrich props with actual player game history
         run: python wnba_v4_prop_context.py
@@ -78,6 +79,9 @@ jobs:
       - name: Build Results grading board
         run: python patch_dashboard_v4_results_board.py
 
+      - name: Build disciplined Best Bets shortlist
+        run: python patch_dashboard_v4_best_bets_cleanup.py
+
       - name: Verify generated dashboard
         run: |
           python - <<'PY'
@@ -101,6 +105,9 @@ jobs:
               "Sportsbook best-price columns": "Best over",
               "Results grading board": "Results & Grading",
               "Results status renderer": "uniqueMissing",
+              "Best Bets deduplication": "const key=r=>",
+              "Best Bets bounded scoring": "Math.round(clamp(s,0,92))",
+              "Best Bets shortlist": "Best Bets Shortlist",
           }
 
           failed = []
@@ -123,7 +130,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Complete Sprint 25 Games, Markets, Sportsbooks, Results and Player Props views" \
+            "Complete Sprint 25 Games, Markets, Sportsbooks, Results, Best Bets and Player Props views" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
             docs/index.html
