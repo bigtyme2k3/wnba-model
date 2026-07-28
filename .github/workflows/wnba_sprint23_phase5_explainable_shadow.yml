@@ -1,0 +1,69 @@
+name: WNBA Sprint 23 Phase 5 Explainable Shadow Intelligence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 14 * * *"
+    - cron: "35 22 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprint23-phase5-explainable-shadow
+  cancel-in-progress: false
+
+jobs:
+  build-explainable-shadow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pandas numpy scikit-learn
+
+      - name: Compile Phase 5 code
+        run: python -m py_compile build_sprint23_phase3_market_opportunities.py build_sprint23_phase5_explainable_shadow.py qa_sprint23_phase5_explainable_shadow.py patch_dashboard_v4_sprint23_shadow.py
+
+      - name: Refresh shadow opportunities
+        run: python build_sprint23_phase3_market_opportunities.py
+
+      - name: Build explainable shadow feed
+        run: python build_sprint23_phase5_explainable_shadow.py
+
+      - name: Run Phase 5 QA
+        run: python qa_sprint23_phase5_explainable_shadow.py
+
+      - name: Patch dashboard
+        run: python patch_dashboard_v4_sprint23_shadow.py
+
+      - name: Verify dashboard installation
+        run: |
+          grep -q 'id="s23ShadowPanel"' docs/index.html || grep -q 's23ShadowPanel' docs/index.html
+          grep -q 'SHADOW ONLY' docs/index.html
+          cat data/dashboard/sprint23_shadow_intelligence.json | head -80
+
+      - name: Commit Phase 5 artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/processed/sprint23/props_market_opportunities_shadow.csv \
+                  data/processed/sprint23/props_market_unmatched_shadow.csv \
+                  data/processed/sprint23/props_market_opportunity_catalog.json \
+                  data/dashboard/sprint23_shadow_intelligence.json \
+                  docs/index.html
+          if git diff --cached --quiet; then
+            echo "No Phase 5 artifact changes."
+            exit 0
+          fi
+          git commit -m "Update Sprint 23 Phase 5 explainable shadow intelligence"
+          git pull --rebase origin main
+          git push origin HEAD:main
