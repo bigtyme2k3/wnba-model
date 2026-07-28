@@ -28,6 +28,7 @@ from scrape_injuries import (
 BASE = "https://ak-static.cms.nba.com/referee/wnba_injury"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; WNBA-Model/1.0)"}
 ET = ZoneInfo("America/New_York")
+STATUS_VALUES = {"OUT", "DOUBTFUL", "QUESTIONABLE", "PROBABLE"}
 
 
 def candidate_urls(target_date: str) -> list[str]:
@@ -70,57 +71,98 @@ def display_name(value: str) -> str:
     return value
 
 
-def parse_pdf(payload: bytes, target_date: str, source_url: str) -> pd.DataFrame:
-    rows = []
-    current_game_date = target_date
-    current_team = ""
-    current_matchup = ""
-    current_game_time = ""
-    now = datetime.now(timezone.utc).isoformat()
+def make_row(target_date: str, team: str, player: str, status: str, reason: str,
+             matchup: str, game_time: str, now: str) -> dict | None:
+    player = display_name(player)
+    severity = normalize_status(status)
+    if not player or player.upper() == "NOT YET SUBMITTED" or severity not in STATUS_VALUES:
+        return None
+    return {
+        "game_date": target_date,
+        "team": clean(team),
+        "player": player,
+        "player_id": "",
+        "position": "",
+        "status": clean(status) or severity,
+        "severity": severity,
+        "injury_type": clean(reason),
+        "detail": f"{clean(reason)}; matchup={clean(matchup)}; game_time={clean(game_time)}",
+        "return_date": "",
+        "is_out": severity in {"OUT", "DOUBTFUL"},
+        "source": "official_wnba_pdf",
+        "scraped_at": now,
+    }
 
+
+def parse_tables(pdf, target_date: str, now: str) -> list[dict]:
+    rows = []
+    current_team = current_matchup = current_game_time = ""
+    for page in pdf.pages:
+        for table in page.extract_tables() or []:
+            for raw in table:
+                cells = [clean(x) for x in (raw or [])]
+                if len(cells) < 6:
+                    continue
+                joined = " ".join(cells).lower()
+                if "player name" in joined and "current status" in joined:
+                    continue
+                cells += [""] * (7 - len(cells))
+                _, game_time, matchup, team, player, status, reason = cells[:7]
+                current_game_time = game_time or current_game_time
+                current_matchup = matchup or current_matchup
+                current_team = team or current_team
+                item = make_row(target_date, current_team, player, status, reason,
+                                current_matchup, current_game_time, now)
+                if item:
+                    rows.append(item)
+    return rows
+
+
+def parse_words(pdf, target_date: str, now: str) -> list[dict]:
+    """Parse visible PDF rows by x position when table extraction is unavailable."""
+    rows = []
+    current_team = current_matchup = current_game_time = ""
+    # Approximate column starts in PDF points. They are derived from the official layout.
+    boundaries = [0, 82, 145, 220, 380, 535, 655, 10_000]
+    for page in pdf.pages:
+        words = page.extract_words(x_tolerance=2, y_tolerance=2, keep_blank_chars=False) or []
+        lines: list[list[dict]] = []
+        for word in sorted(words, key=lambda w: (round(float(w["top"]), 1), float(w["x0"]))):
+            top = float(word["top"])
+            if not lines or abs(top - float(lines[-1][0]["top"])) > 3.0:
+                lines.append([word])
+            else:
+                lines[-1].append(word)
+        for line in lines:
+            columns = ["" for _ in range(7)]
+            for word in sorted(line, key=lambda w: float(w["x0"])):
+                x = float(word["x0"])
+                idx = next((i for i in range(7) if boundaries[i] <= x < boundaries[i + 1]), 6)
+                columns[idx] = clean(f"{columns[idx]} {word['text']}")
+            game_date, game_time, matchup, team, player, status, reason = columns
+            joined = " ".join(columns).lower()
+            if not joined or "injury report:" in joined or "game date" in joined or "page " in joined:
+                continue
+            current_game_time = game_time or current_game_time
+            current_matchup = matchup or current_matchup
+            current_team = team or current_team
+            item = make_row(target_date, current_team, player, status, reason,
+                            current_matchup, current_game_time, now)
+            if item:
+                rows.append(item)
+    return rows
+
+
+def parse_pdf(payload: bytes, target_date: str, source_url: str) -> pd.DataFrame:
+    now = datetime.now(timezone.utc).isoformat()
     with pdfplumber.open(io.BytesIO(payload)) as pdf:
-        for page in pdf.pages:
-            tables = page.extract_tables() or []
-            for table in tables:
-                for raw in table:
-                    cells = [clean(x) for x in (raw or [])]
-                    if len(cells) < 6:
-                        continue
-                    joined = " ".join(cells).lower()
-                    if "player name" in joined and "current status" in joined:
-                        continue
-                    cells += [""] * (7 - len(cells))
-                    game_date, game_time, matchup, team, player, status, reason = cells[:7]
-                    if game_date:
-                        current_game_date = game_date
-                    if game_time:
-                        current_game_time = game_time
-                    if matchup:
-                        current_matchup = matchup
-                    if team:
-                        current_team = team
-                    if not player or player.upper() == "NOT YET SUBMITTED":
-                        continue
-                    severity = normalize_status(status)
-                    if severity in {"ACTIVE", "UNKNOWN"}:
-                        continue
-                    rows.append({
-                        "game_date": target_date,
-                        "team": current_team,
-                        "player": display_name(player),
-                        "player_id": "",
-                        "position": "",
-                        "status": status or severity,
-                        "severity": severity,
-                        "injury_type": reason,
-                        "detail": f"{reason}; matchup={current_matchup}; game_time={current_game_time}",
-                        "return_date": "",
-                        "is_out": severity in {"OUT", "DOUBTFUL"},
-                        "source": "official_wnba_pdf",
-                        "scraped_at": now,
-                    })
+        rows = parse_tables(pdf, target_date, now)
+        if not rows:
+            rows = parse_words(pdf, target_date, now)
     frame = pd.DataFrame(rows, columns=RAW_COLUMNS) if rows else empty_df()
     if not frame.empty:
+        frame = frame[frame["player"].astype(str).str.len() > 1]
+        frame = frame[frame["team"].astype(str).str.len() > 1]
         frame = frame.drop_duplicates(subset=["player"], keep="last")
     return frame
 
@@ -171,10 +213,7 @@ def main() -> None:
 
     payload, url = download_latest(args.date)
     fallback = False
-    if payload:
-        frame = parse_pdf(payload, args.date, url or "")
-    else:
-        frame = empty_df()
+    frame = parse_pdf(payload, args.date, url or "") if payload else empty_df()
 
     if frame.empty:
         print("Official WNBA PDF unavailable or contained no parsed player rows; using ESPN/manual fallback.")
