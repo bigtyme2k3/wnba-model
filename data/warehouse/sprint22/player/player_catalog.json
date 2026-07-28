@@ -1,31 +1,39 @@
 {
-  "generated_at_utc": "2026-07-28T00:49:43.395463+00:00",
+  "generated_at_utc": "2026-07-28T14:27:52.652018+00:00",
   "warehouse_version": "sprint22_phase2_v2",
   "tables": {
     "player_profile": {
-      "rows": 0,
-      "columns": 5
+      "rows": 735,
+      "columns": 9
     },
     "player_game_logs": {
-      "rows": 0,
-      "columns": 6
+      "rows": 18150,
+      "columns": 34
     },
     "player_rolling_metrics": {
-      "rows": 0,
-      "columns": 3
+      "rows": 18150,
+      "columns": 30
     },
     "player_availability": {
       "rows": 3,
       "columns": 17
     },
     "player_matchups": {
-      "rows": 0,
-      "columns": 3
+      "rows": 322,
+      "columns": 10
     }
   },
   "sources": {
-    "profile": [],
-    "game_logs": [],
+    "profile": [
+      "player_profiles_2024.csv",
+      "player_profiles_2025.csv",
+      "player_profiles_2026.csv"
+    ],
+    "game_logs": [
+      "player_game_logs_2024.csv",
+      "player_game_logs_2025.csv",
+      "player_game_logs_2026.csv"
+    ],
     "availability": [
       "injuries_2026-07-05.csv",
       "injuries_2026-07-06.csv",
@@ -53,10 +61,10 @@
       "injuries_today.csv"
     ]
   },
-  "stable_player_ids": 1,
+  "stable_player_ids": 323,
   "identity_policy": "Prefer source player ID; otherwise hash normalized player name. Team is never part of player_id.",
   "duplicate_game_keys": 0,
-  "profile_linked_game_log_rows": 0,
+  "profile_linked_game_log_rows": 18150,
   "log_only_player_ids": [],
   "availability_only_player_ids": [
     "pl_5e5e60cba7614544"
