@@ -75,6 +75,17 @@ def normalize_dates(frame: pd.DataFrame) -> pd.DataFrame:
             frame["game_date"] = parsed.dt.strftime("%Y-%m-%d")
         if candidate in {"start_time", "commence_time"} and "snapshot_time" not in frame.columns:
             frame["snapshot_time"] = parsed.dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # Historical aggregate files often omit season. Derive it from the normalized
+    # game date so identical observations from yearly and historical files share
+    # the same business identity during deduplication.
+    if "game_date" in frame.columns:
+        date_year = pd.to_datetime(frame["game_date"], errors="coerce").dt.year
+        if "season" not in frame.columns:
+            frame["season"] = date_year
+        else:
+            frame["season"] = pd.to_numeric(frame["season"], errors="coerce").fillna(date_year)
+            frame["season"] = frame["season"].astype("Int64")
     return frame
 
 
@@ -105,11 +116,15 @@ def coalesce_records(frame: pd.DataFrame, keys: List[str]) -> pd.DataFrame:
 
 def dedupe_market(frame: pd.DataFrame, keys: List[str]) -> pd.DataFrame:
     provenance = {"source_file", "source_type", "source_system"}
-    business_columns = [column for column in frame.columns if column not in provenance]
-    subset = keys or business_columns
-    subset = list(dict.fromkeys(subset + [column for column in business_columns if column not in subset]))
     before = len(frame)
-    frame = frame.drop_duplicates(subset=subset, keep="last").reset_index(drop=True)
+    if not keys:
+        business_columns = [column for column in frame.columns if column not in provenance]
+        frame = frame.drop_duplicates(subset=business_columns, keep="last").reset_index(drop=True)
+    else:
+        # Coalesce duplicate observations at the declared market grain. This
+        # preserves fields and multi-file provenance instead of keeping an
+        # arbitrary source row.
+        frame = coalesce_records(frame, keys)
     frame.attrs["duplicates_removed"] = before - len(frame)
     return frame
 
