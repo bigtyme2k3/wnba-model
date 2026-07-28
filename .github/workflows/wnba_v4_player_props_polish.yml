@@ -68,12 +68,35 @@ jobs:
 
       - name: Verify generated dashboard
         run: |
-          # Verify functional code, not a cosmetic CSS comment that later patches may remove.
-          grep -Fq "function actualHistory" docs/index.html
-          grep -Fq "opponent_abbr" docs/index.html
-          grep -Fq "unique props" docs/index.html
-          grep -Fq "function wirePropFilters" docs/index.html
-          grep -Fq "setPropSort" docs/index.html
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("docs/index.html")
+          if not path.exists():
+              raise SystemExit("FAIL: docs/index.html was not generated")
+
+          html = path.read_text(encoding="utf-8")
+          checks = {
+              "actual player history renderer": "function actualHistory",
+              "opponent history labels": "opponent_abbr",
+              "unique prop counter text": "unique props",
+              "filter event wiring": "function wirePropFilters",
+              "sortable column controls": "setPropSort",
+          }
+
+          failed = []
+          for label, marker in checks.items():
+              if marker in html:
+                  print(f"PASS: {label} [{marker}]")
+              else:
+                  print(f"FAIL: {label} missing [{marker}]")
+                  failed.append(label)
+
+          print(f"Dashboard bytes: {len(html):,}")
+          if failed:
+              raise SystemExit("Dashboard verification failed: " + ", ".join(failed))
+          print("PASS: Player Props dashboard verification complete")
+          PY
 
       - name: Commit actual history and polished dashboard
         run: |
