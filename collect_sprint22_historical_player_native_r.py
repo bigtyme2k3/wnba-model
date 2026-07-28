@@ -1,8 +1,8 @@
-"""Collect historical WNBA player boxes with an attribute-free native R export.
+"""Collect historical WNBA player boxes with a recursive native-R export.
 
-Legacy SportsDataverse tibbles can contain row metadata or column classes that make
-ordinary CSV conversion produce empty identity fields. This collector strips every
-column to plain character vectors in R before pandas reads the file.
+Legacy SportsDataverse player tables can contain valid row counts and column names
+while each field is wrapped inside nested data-frame/list/vctrs objects. This
+collector recursively unwraps those fields in R before pandas reads the CSV.
 """
 from __future__ import annotations
 
@@ -26,14 +26,10 @@ obj <- readRDS(input_path)
 
 find_frames <- function(x) {
   frames <- list()
-  walk <- function(value, path = "root") {
+  walk <- function(value) {
     if (is.data.frame(value)) frames[[length(frames) + 1L]] <<- value
     if (is.list(value) && !is.data.frame(value)) {
-      nms <- names(value)
-      for (i in seq_along(value)) {
-        child <- if (!is.null(nms) && nzchar(nms[[i]])) nms[[i]] else as.character(i)
-        walk(value[[i]], paste0(path, "/", child))
-      }
+      for (item in value) walk(item)
     }
   }
   walk(x)
@@ -64,34 +60,72 @@ target <- if (length(positive)) {
 }
 if (!is.finite(target) || target < 1L) stop("Could not determine row count")
 
-flatten_one <- function(value) {
-  if (length(value) == 0L || all(is.na(value))) return(NA_character_)
-  paste(as.character(unlist(value, recursive = TRUE, use.names = FALSE)), collapse = "|")
+flatten_scalar <- function(value) {
+  if (is.null(value) || length(value) == 0L) return(NA_character_)
+  if (is.data.frame(value)) {
+    if (ncol(value) == 0L || nrow(value) == 0L) return(NA_character_)
+    return(flatten_scalar(value[[1]][1]))
+  }
+  if (is.list(value)) {
+    flat <- unlist(value, recursive = TRUE, use.names = FALSE)
+    if (length(flat) == 0L) return(NA_character_)
+    return(paste(as.character(flat), collapse = "|"))
+  }
+  text <- as.character(value)
+  if (length(text) == 0L) NA_character_ else paste(text, collapse = "|")
+}
+
+unwrap_column <- function(column, target, depth = 0L) {
+  if (depth > 12L || is.null(column)) return(NULL)
+
+  # One-column nested data frames are common in the legacy releases.
+  if (is.data.frame(column)) {
+    if (ncol(column) == 1L) return(unwrap_column(column[[1]], target, depth + 1L))
+    if (nrow(column) == target) {
+      return(vapply(seq_len(target), function(i) flatten_scalar(column[i, , drop = FALSE]), character(1)))
+    }
+    return(NULL)
+  }
+
+  # Unwrap a single child when it itself contains the full row-aligned vector.
+  if (is.list(column) && length(column) == 1L && NROW(column[[1]]) == target) {
+    return(unwrap_column(column[[1]], target, depth + 1L))
+  }
+
+  n <- NROW(column)
+  if (n == target) {
+    if (is.list(column)) {
+      return(vapply(seq_len(target), function(i) flatten_scalar(column[[i]]), character(1)))
+    }
+    values <- as.character(unclass(column))
+    if (length(values) == target) return(values)
+    values <- as.character(column)
+    if (length(values) == target) return(values)
+    return(NULL)
+  }
+
+  if (n == 1L) return(rep(flatten_scalar(column), target))
+  if (n == 0L) return(rep(NA_character_, target))
+
+  # Last resort: recursively inspect list children for a row-aligned vector.
+  if (is.list(column)) {
+    for (child in column) {
+      candidate <- unwrap_column(child, target, depth + 1L)
+      if (!is.null(candidate) && length(candidate) == target) return(candidate)
+    }
+  }
+  NULL
 }
 
 clean <- list()
 for (name in names(raw)) {
-  column <- raw[[name]]
-  n <- NROW(column)
-  values <- NULL
-  if (n == target) {
-    if (is.list(column) && !is.data.frame(column)) {
-      values <- vapply(column, flatten_one, character(1))
-    } else {
-      values <- as.character(column)
-    }
-  } else if (n == 1L) {
-    value <- if (is.list(column)) flatten_one(column[[1]]) else as.character(column[[1]])
-    values <- rep(value, target)
-  } else if (n == 0L) {
-    values <- rep(NA_character_, target)
-  }
-  if (!is.null(values)) {
+  values <- unwrap_column(raw[[name]], target)
+  if (!is.null(values) && length(values) == target) {
     attributes(values) <- NULL
     clean[[name]] <- values
   }
 }
-if (length(clean) == 0L) stop("No rectangular columns survived")
+if (length(clean) == 0L) stop("No rectangular columns survived recursive unwrapping")
 rebuilt <- structure(clean, class = "data.frame", row.names = .set_row_names(target))
 write.table(rebuilt, output_path, sep = ",", quote = TRUE, row.names = FALSE,
             col.names = TRUE, na = "", qmethod = "double", fileEncoding = "UTF-8")
@@ -125,8 +159,7 @@ def decode_season(season: int) -> pd.DataFrame:
             raise RuntimeError(f"season {season}: native R export failed: {detail}")
 
         frame = pd.read_csv(csv_path, dtype=str, low_memory=False, keep_default_na=False)
-        frame = recover_canonical_columns(frame, url)
-        return frame
+        return recover_canonical_columns(frame, url)
     finally:
         for path in (rds_path, csv_path):
             if path and os.path.exists(path):
@@ -147,15 +180,18 @@ def collect_season(season: int, out_dir: Path) -> dict:
     player_valid = pd.Series(False, index=frame.index)
     for column in player_fields:
         player_valid |= frame[column].astype(str).str.strip().ne("")
-    frame = frame[game_valid & player_valid].copy()
-    if frame.empty:
+    valid = game_valid & player_valid
+    if not valid.any():
         diagnostics = {
-            "rows_before": int(len(game_valid)),
+            "rows_before": int(len(frame)),
             "game_id_nonempty": int(game_valid.sum()),
             "player_identity_nonempty": int(player_valid.sum()),
+            "game_id_sample": frame["game_id"].head(3).tolist(),
+            "player_sample": {c: frame[c].head(3).tolist() for c in player_fields},
         }
         raise RuntimeError(f"season {season}: no valid player rows; diagnostics={diagnostics}")
 
+    frame = frame[valid].copy()
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"wehoop_player_box_{season}.csv"
     frame.to_csv(path, index=False)
