@@ -1,14 +1,14 @@
-name: "WNBA Sprint 22 Phase 2.2 Historical Player Backfill"
+name: "WNBA Sprint 22 Phase 2.2 Verified Player Backfill"
 
 on:
   workflow_dispatch:
     inputs:
       start_season:
-        description: "First historical season"
+        description: "First verified SportsDataverse season"
         required: true
-        default: "2015"
+        default: "2024"
       end_season:
-        description: "Last Sportsdataverse season"
+        description: "Last verified SportsDataverse season"
         required: true
         default: "2025"
       collect_current:
@@ -21,11 +21,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: sprint-22-phase-2-2-historical-player-backfill
+  group: sprint-22-phase-2-2-verified-player-backfill
   cancel-in-progress: false
 
 jobs:
-  historical-player-backfill:
+  verified-player-backfill:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -35,17 +35,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Set up R for legacy SportsDataverse files
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: "release"
-          use-public-rspm: true
       - name: Install dependencies
         run: pip install pandas requests pyreadr
+      - name: Enforce verified production range
+        run: |
+          test "${{ inputs.start_season }}" -ge 2024 || { echo "Production backfill supports verified seasons 2024+ only. Use the Legacy Player Recovery workflow for 2015-2023."; exit 1; }
       - name: Compile backfill code
-        run: python -m py_compile collect_wehoop.py collect_wehoop_compatible.py collect_sprint22_historical_player_native_r.py validate_sprint22_legacy_player_collection.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_player_warehouse_numeric.py build_sprint22_phase2_2_historical_player_backfill.py qa_sprint22_phase2_2_historical_player_backfill.py
-      - name: Verify native R fallback is available
-        run: Rscript --version
+        run: python -m py_compile collect_wehoop.py collect_wehoop_compatible.py collect_sprint22_historical_player_only.py validate_sprint22_legacy_player_collection.py normalize_sprint22_phase2_1_player_data.py build_sprint22_phase2_player_warehouse.py build_sprint22_phase2_player_warehouse_numeric.py build_sprint22_phase2_2_historical_player_backfill.py build_sprint22_player_coverage_manifest.py qa_sprint22_phase2_2_historical_player_backfill.py
       - name: Remove stale requested-season artifacts
         run: |
           for season in $(seq "${{ inputs.start_season }}" "${{ inputs.end_season }}"); do
@@ -53,9 +49,9 @@ jobs:
             rm -f "data/raw/player_game_logs_${season}.csv"
             rm -f "data/raw/player_profiles_${season}.csv"
           done
-      - name: Collect historical player boxes with native R
-        run: python collect_sprint22_historical_player_native_r.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
-      - name: Validate requested historical player seasons
+      - name: Collect verified historical player boxes
+        run: python collect_sprint22_historical_player_only.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
+      - name: Validate requested verified seasons
         run: python validate_sprint22_legacy_player_collection.py --start "${{ inputs.start_season }}" --end "${{ inputs.end_season }}"
       - name: Collect current player boxes
         if: ${{ inputs.collect_current }}
@@ -64,13 +60,15 @@ jobs:
         run: python normalize_sprint22_phase2_1_player_data.py
       - name: Rebuild player intelligence warehouse
         run: python build_sprint22_phase2_player_warehouse_numeric.py
-      - name: Audit historical backfill
+      - name: Audit verified backfill
         run: |
           minimum=$(( ${{ inputs.end_season }} - ${{ inputs.start_season }} + 1 ))
           python build_sprint22_phase2_2_historical_player_backfill.py --minimum-seasons "$minimum"
+      - name: Build player coverage manifest
+        run: python build_sprint22_player_coverage_manifest.py
       - name: Run Phase 2.2 QA
         run: python qa_sprint22_phase2_2_historical_player_backfill.py
-      - name: Verify populated backfill
+      - name: Verify production warehouse
         run: |
           python - <<'PY'
           import json
@@ -78,25 +76,22 @@ jobs:
           root = Path('data/warehouse/sprint22/player')
           report = json.loads((root/'historical_backfill_catalog.json').read_text())
           catalog = json.loads((root/'player_catalog.json').read_text())
+          coverage = json.loads((root/'player_coverage_manifest.json').read_text())
           assert report['status'] == 'PASS', report
           assert report['duplicate_player_game_keys'] == 0
-          assert report['total_game_logs'] > 0
+          assert coverage['production_status'] == 'PASS', coverage
+          assert all(season >= 2024 for season in coverage['verified_seasons'])
           assert catalog['tables']['player_profile']['rows'] > 0
           assert catalog['tables']['player_game_logs']['rows'] > 0
           assert catalog['tables']['player_rolling_metrics']['rows'] > 0
-          print('Historical player backfill verified:', {
-              'seasons': report['season_count'],
-              'logs': report['total_game_logs'],
-              'players': report['unique_players'],
-              'warehouse': report['warehouse_tables'],
-          })
+          print('Verified player warehouse:', coverage)
           PY
-      - name: Commit backfill artifacts
+      - name: Commit verified backfill artifacts
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add data/raw/wehoop_player_box_*.csv data/raw/player_game_logs_*.csv data/raw/player_profiles_*.csv data/raw/player_ingestion_catalog.json data/warehouse/sprint22/player/
           git diff --cached --quiet && exit 0
-          git commit -m "Update Sprint 22 historical player backfill"
+          git commit -m "Update Sprint 22 verified player backfill"
           git pull --rebase origin main
           git push origin HEAD:main
