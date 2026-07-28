@@ -1,6 +1,6 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-07-28T11:35:48.384218Z
+Generated: 2026-07-28T14:59:08.027222Z
 
 **Status:** STANDBY
 **Slate:** 0 events, 0 fresh markets
@@ -13,7 +13,7 @@ No fresh WNBA markets begin within the active 48-hour horizon.
 
 ## System Context
 
-- Closing-line predictor: READY (418 model-ready markets)
+- Closing-line predictor: READY (434 model-ready markets)
 - Normalized sportsbook leader: draftkings
 - Qualified CLV trends: 3
 
