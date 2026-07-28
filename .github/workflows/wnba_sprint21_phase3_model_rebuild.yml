@@ -46,14 +46,28 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          paths=[Path('data/audit/sprint21_phase3_feature_manifest.json'),Path('data/audit/sprint21_phase3_model_comparison.json'),Path('data/audit/sprint21_phase3_best_model.json'),Path('data/audit/sprint21_phase3_market_models.json')]
-          for path in paths:
-              assert path.exists() and path.stat().st_size>20,path
-              json.loads(path.read_text())
-          summary=json.loads(paths[1].read_text())['summary']
-          assert summary['models_tested']>0
-          assert summary['deployment_gate'] in {'PASS','HOLD'}
-          print('Sprint 21 Phase 3 verification passed:',summary)
+
+          paths = {
+              'manifest': Path('data/audit/sprint21_phase3_feature_manifest.json'),
+              'comparison': Path('data/audit/sprint21_phase3_model_comparison.json'),
+              'best': Path('data/audit/sprint21_phase3_best_model.json'),
+              'markets': Path('data/audit/sprint21_phase3_market_models.json'),
+          }
+          payloads = {}
+          for name, path in paths.items():
+              assert path.exists() and path.stat().st_size > 0, path
+              payloads[name] = json.loads(path.read_text())
+
+          assert isinstance(payloads['manifest'], dict)
+          assert isinstance(payloads['comparison'], dict)
+          assert isinstance(payloads['best'], dict)
+          assert isinstance(payloads['markets'], dict)
+          assert isinstance(payloads['markets'].get('markets', {}), dict)
+
+          summary = payloads['comparison']['summary']
+          assert summary['models_tested'] > 0
+          assert summary['deployment_gate'] in {'PASS', 'HOLD'}
+          print('Sprint 21 Phase 3 verification passed:', summary)
           PY
       - name: Commit Phase 3 artifacts
         run: |
