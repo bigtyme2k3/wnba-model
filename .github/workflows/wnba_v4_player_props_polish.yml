@@ -68,11 +68,12 @@ jobs:
 
       - name: Verify generated dashboard
         run: |
-          grep -q "/\* Final V4 Player Props polish \*/" docs/index.html
-          grep -q "actualHistory" docs/index.html
-          grep -q "opponent_abbr" docs/index.html
-          grep -q "unique props" docs/index.html
-          grep -q "wirePropFilters" docs/index.html
+          # Verify functional code, not a cosmetic CSS comment that later patches may remove.
+          grep -Fq "function actualHistory" docs/index.html
+          grep -Fq "opponent_abbr" docs/index.html
+          grep -Fq "unique props" docs/index.html
+          grep -Fq "function wirePropFilters" docs/index.html
+          grep -Fq "setPropSort" docs/index.html
 
       - name: Commit actual history and polished dashboard
         run: |
