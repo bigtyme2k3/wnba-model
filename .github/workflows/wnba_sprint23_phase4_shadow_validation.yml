@@ -49,9 +49,14 @@ jobs:
           import pandas as pd
           from pathlib import Path
           p = Path('data/processed/sprint23/validation/shadow_validation_summary.csv')
-          if p.exists() and p.stat().st_size:
-              df = pd.read_csv(p)
-              print(df.sort_values(['roi_per_dollar','graded_rows'], ascending=[False,False]).head(25).to_string(index=False) if not df.empty else 'No completed markets yet.')
+          try:
+              df = pd.read_csv(p) if p.exists() and p.stat().st_size else pd.DataFrame()
+          except pd.errors.EmptyDataError:
+              df = pd.DataFrame()
+          if df.empty:
+              print('No completed markets yet.')
+          else:
+              print(df.sort_values(['roi_per_dollar','graded_rows'], ascending=[False,False]).head(25).to_string(index=False))
           PY
 
       - name: Commit Phase 4 artifacts
