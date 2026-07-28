@@ -40,7 +40,8 @@ jobs:
             patch_dashboard_v4_prop_header.py \
             patch_dashboard_v4_game_filter.py \
             patch_dashboard_v4_player_props_polish.py \
-            patch_dashboard_v4_filter_events.py
+            patch_dashboard_v4_filter_events.py \
+            patch_dashboard_v4_games_markets.py
 
       - name: Enrich props with actual player game history
         run: python wnba_v4_prop_context.py
@@ -66,6 +67,9 @@ jobs:
       - name: Wire Player Props filter controls
         run: python patch_dashboard_v4_filter_events.py
 
+      - name: Build Games and Game Props views
+        run: python patch_dashboard_v4_games_markets.py
+
       - name: Verify generated dashboard
         run: |
           python - <<'PY'
@@ -82,6 +86,9 @@ jobs:
               "prop deduplication function": "function propsRaw(){let map=new Map()",
               "filter event wiring": "function wirePropFilters",
               "sortable column controls": "setPropSort",
+              "named Games candidates": "namedCandidates",
+              "Game Props market table": "window.marketsV25",
+              "period market reservation": "Period markets:",
           }
 
           failed = []
@@ -95,16 +102,16 @@ jobs:
           print(f"Dashboard bytes: {len(html):,}")
           if failed:
               raise SystemExit("Dashboard verification failed: " + ", ".join(failed))
-          print("PASS: Player Props dashboard verification complete")
+          print("PASS: Sprint 25 dashboard verification complete")
           PY
 
-      - name: Commit actual history and polished dashboard
+      - name: Commit completed dashboard
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Display actual last game stats and working filters in V4 props" \
+            "Complete Sprint 25 Games, Markets and Player Props views" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
             docs/index.html
