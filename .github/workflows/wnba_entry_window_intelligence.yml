@@ -6,7 +6,7 @@ on:
     - cron: '55 */3 * * *'
 
 concurrency:
-  group: wnba-entry-window-intelligence
+  group: wnba-main-writer
   cancel-in-progress: false
 
 jobs:
@@ -59,7 +59,8 @@ jobs:
         run: |
           git config user.name 'WNBA Entry Window Bot'
           git config user.email 'actions@github.com'
-          git add \
+          bash scripts/atomic_generated_push.sh \
+            'Refresh WNBA entry window intelligence' \
             data/market/market_snapshots.json \
             data/market/market_timeline.json \
             data/market/closing_lines.json \
@@ -84,10 +85,3 @@ jobs:
             data/market/entry_window_history.json \
             data/market/entry_window_recommendations.json \
             data/dashboard/wnba_entry_window_summary.json
-          if git diff --cached --quiet; then
-            echo 'No entry window changes to commit.'
-            exit 0
-          fi
-          git commit -m 'Refresh WNBA entry window intelligence'
-          git pull --rebase origin main
-          git push origin HEAD:main
