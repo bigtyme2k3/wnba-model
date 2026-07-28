@@ -1,12 +1,12 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-28T16:08:36.077908Z
+Generated: 2026-07-28T18:56:10.168201Z
 
 ## Slate summary
 
 - 5 games
 - 12 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 6, 'Watch': 2, 'Pass': 4}
+- Grades: {'Strong Research Play': 0, 'Lean': 6, 'Watch': 1, 'Pass': 5}
 
 ## Game — 2026-07-29T00:00:00Z
 
@@ -58,10 +58,10 @@ Best line: +5.5 | line-shop edge: +0 points
 
 ## Game — 2026-07-29T02:00:00Z
 
-### Portland Fire +11.5 (draftkings)
-Bet quality: **Watch — 54.1/100**
+### Portland Fire +12.5 (draftkings)
+Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +12.5 | line-shop edge: +1 points
+Best line: +12.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
