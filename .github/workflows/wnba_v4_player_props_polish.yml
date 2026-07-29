@@ -57,7 +57,11 @@ jobs:
             patch_dashboard_v4_stabilization.py \
             patch_dashboard_v4_games_kpis.py \
             archive_best_bets.py \
-            grade_best_bets.py
+            grade_best_bets.py \
+            wnba_warehouse_health.py \
+            wnba_dashboard_tab_qa.py \
+            wnba_betting_validation.py \
+            wnba_trend_research.py
 
       - name: Collect Data
         run: python wnba_v4_prop_context.py
@@ -118,6 +122,18 @@ jobs:
 
       - name: Grade Best Bets Performance
         run: python grade_best_bets.py
+
+      - name: Run warehouse health QA
+        run: python wnba_warehouse_health.py --strict
+
+      - name: Run dashboard tab QA
+        run: python wnba_dashboard_tab_qa.py --strict
+
+      - name: Validate betting engine
+        run: python wnba_betting_validation.py
+
+      - name: Run trend and staking research
+        run: python wnba_trend_research.py
 
       - name: QA Validation
         run: |
@@ -191,11 +207,19 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Stabilize Games tab KPI metrics" \
+            "Complete WNBA QA validation and trend research phases" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
+            data/dashboard/wnba_warehouse_health.json \
+            data/dashboard/wnba_dashboard_tab_qa.json \
+            data/dashboard/wnba_betting_validation.json \
+            data/dashboard/wnba_trend_research.json \
             data/history/best_bets_ledger.csv \
             data/history/best_bets_summary.json \
             data/history/best_bets_performance.csv \
             data/history/best_bets_performance_summary.json \
+            docs/WAREHOUSE_HEALTH_REPORT.md \
+            docs/DASHBOARD_TAB_QA_REPORT.md \
+            docs/BETTING_ENGINE_VALIDATION_REPORT.md \
+            docs/TREND_RESEARCH_REPORT.md \
             docs/index.html
