@@ -39,7 +39,12 @@ def audit() -> dict:
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "red" if red else "green",
-        "summary": {"tabs": len(tabs), "passing": len(tabs) - red, "failing": red, "html_bytes": len(html)},
+        "summary": {
+            "tabs": len(tabs),
+            "passing": len(tabs) - red,
+            "failing": red,
+            "html_bytes": len(html),
+        },
         "tabs": tabs,
     }
 
@@ -61,6 +66,23 @@ def write_report(result: dict) -> None:
     OUT_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def print_diagnostics(result: dict) -> None:
+    print("Dashboard tab QA results")
+    print("=" * 72)
+    for row in result["tabs"]:
+        status = "PASS" if row["status"] == "green" else "FAIL"
+        print(f"{status}: {row['tab']}")
+        if row["missing_markers"]:
+            for marker in row["missing_markers"]:
+                print(f"  missing marker: {marker}")
+        else:
+            print("  all required markers present")
+    print("=" * 72)
+    print(json.dumps(result["summary"], indent=2))
+    print(f"JSON report: {OUT_JSON.relative_to(ROOT)}")
+    print(f"Markdown report: {OUT_MD.relative_to(ROOT)}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--strict", action="store_true")
@@ -69,9 +91,10 @@ def main() -> None:
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     write_report(result)
-    print(json.dumps(result["summary"], indent=2))
+    print_diagnostics(result)
     if args.strict and result["status"] == "red":
-        raise SystemExit(1)
+        failed_tabs = ", ".join(row["tab"] for row in result["tabs"] if row["status"] == "red")
+        raise SystemExit(f"Dashboard tab QA failed: {failed_tabs}")
 
 
 if __name__ == "__main__":
