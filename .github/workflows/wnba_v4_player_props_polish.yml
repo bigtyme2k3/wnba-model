@@ -45,7 +45,8 @@ jobs:
             patch_dashboard_v4_sportsbook_board.py \
             patch_dashboard_v4_results_board.py \
             patch_dashboard_v4_best_bets_cleanup.py \
-            patch_dashboard_v4_best_bets_correlation.py
+            patch_dashboard_v4_best_bets_correlation.py \
+            patch_dashboard_v4_best_bets_evidence_fix.py
 
       - name: Enrich props with actual player game history
         run: python wnba_v4_prop_context.py
@@ -86,6 +87,9 @@ jobs:
       - name: Apply correlation and evidence gates
         run: python patch_dashboard_v4_best_bets_correlation.py
 
+      - name: Fix evidence scoring and hard deduplication
+        run: python patch_dashboard_v4_best_bets_evidence_fix.py
+
       - name: Verify generated dashboard
         run: |
           python - <<'PY'
@@ -117,6 +121,11 @@ jobs:
               "matchup exposure cap": "gc>=3",
               "overlap-family reduction": "overlapKey",
               "evidence-gated tiers": "const tierFor=r=>",
+              "raw evidence scoring": "const rawScore=r=>",
+              "missing probability penalty": "else s-=7",
+              "missing recent penalty": "else s-=6",
+              "hard final dedup": "finalKeys.has(k)",
+              "updatable evidence patch": "sprint25-best-bets-evidence-fix-script",
           }
 
           failed = []
@@ -139,7 +148,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Complete Sprint 25 correlation-aware Best Bets card" \
+            "Complete Sprint 25 evidence-scored correlation-aware Best Bets card" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
             docs/index.html
