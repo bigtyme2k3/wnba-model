@@ -56,6 +56,17 @@ jobs:
             patch_dashboard_v4_consistency.py \
             patch_dashboard_v4_stabilization.py \
             patch_dashboard_v4_games_kpis.py \
+            patch_dashboard_v4_market_intelligence.py \
+            wnba_mission_control.py \
+            qa_mission_control.py \
+            patch_dashboard_v4_mission_control.py \
+            patch_dashboard_v4_live_results.py \
+            patch_dashboard_v4_results.py \
+            patch_dashboard_v4_projection_performance.py \
+            patch_dashboard_v4_explainability.py \
+            patch_dashboard_v4_alt_streaks.py \
+            patch_dashboard_v4_alt_ladders.py \
+            patch_dashboard_v4_alt_performance.py \
             archive_best_bets.py \
             grade_best_bets.py \
             wnba_warehouse_health.py \
@@ -116,6 +127,33 @@ jobs:
 
       - name: Apply Games Tab KPI Fix
         run: python patch_dashboard_v4_games_kpis.py
+
+      - name: Build Market Intelligence tab
+        run: python patch_dashboard_v4_market_intelligence.py
+
+      - name: Build Mission Control data and tab
+        run: |
+          TARGET=$(python active_slate_date.py)
+          python wnba_mission_control.py --date "$TARGET" --retry-count 0
+          python qa_mission_control.py
+          python patch_dashboard_v4_mission_control.py
+
+      - name: Build Learning and Results tabs
+        run: |
+          python patch_dashboard_v4_live_results.py
+          python patch_dashboard_v4_results.py
+
+      - name: Build Performance tab
+        run: python patch_dashboard_v4_projection_performance.py
+
+      - name: Build Explainability tab
+        run: python patch_dashboard_v4_explainability.py
+
+      - name: Build Alt Markets tabs
+        run: |
+          python patch_dashboard_v4_alt_streaks.py
+          python patch_dashboard_v4_alt_ladders.py
+          python patch_dashboard_v4_alt_performance.py
 
       - name: Archive Best Bets Ledger
         run: python archive_best_bets.py
@@ -187,6 +225,14 @@ jobs:
               "Games KPI patch": "dashboard-games-kpi-fix-script",
               "Games Today KPI": "Games Today",
               "Active Recommendations KPI": "Active Recommendations",
+              "Market Intelligence tab": "v4-market-intelligence-script",
+              "Mission Control tab": "v4-mission-control-script",
+              "Learning results data": "window.WNBA_RESULTS_DATA",
+              "Performance tab": "v4-projection-performance-script",
+              "Explainability tab": "v4-explainability-script",
+              "Alt streaks tab": "v4-alt-streaks-script",
+              "Alt ladders tab": "v4-alt-ladders-script",
+              "Sportsbook ALT ladders": "Sportsbook ALT Ladders",
           }
           failed = []
           for label, marker in checks.items():
@@ -198,7 +244,7 @@ jobs:
           print(f"Dashboard bytes: {len(html):,}")
           if failed:
               raise SystemExit("Dashboard verification failed: " + ", ".join(failed))
-          print("PASS: Games tab KPI stabilization complete")
+          print("PASS: canonical dashboard build complete")
           PY
 
       - name: Publish Dashboard
@@ -207,9 +253,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Complete WNBA QA validation and trend research phases" \
+            "Restore full canonical WNBA dashboard build" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
+            data/dashboard/wnba_mission_control.json \
             data/dashboard/wnba_warehouse_health.json \
             data/dashboard/wnba_dashboard_tab_qa.json \
             data/dashboard/wnba_betting_validation.json \
