@@ -1,6 +1,6 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-29T13:18:26.760234Z
+Generated: 2026-07-29T15:33:52.772085Z
 
 ## Slate summary
 
@@ -10,10 +10,10 @@ Generated: 2026-07-29T13:18:26.760234Z
 
 ## Game — 2026-07-30T02:00:00Z
 
-### Phoenix Mercury +4.5 (draftkings)
-Bet quality: **Lean — 67.4/100**
+### Phoenix Mercury +3.5 (draftkings)
+Bet quality: **Lean — 72.4/100**
 Research level: **low-research-interest** | signal 27.59 | 1 matched angles
-Best line: +4.5 | line-shop edge: +0 points
+Best line: +4.5 | line-shop edge: +1 points
 
 - home|underdog|3_to_5_5: 24-8-0 (75.0%, n=32, Wilson floor 57.89%)
 
@@ -24,17 +24,17 @@ Best line: +4.5 | line-shop edge: +0 points
 
 - home|underdog|3_to_5_5: 24-8-0 (75.0%, n=32, Wilson floor 57.89%)
 
-### Golden State Valkyries -4.5 (draftkings)
-Bet quality: **Pass — 44.7/100**
+### Golden State Valkyries -4.5 (fanduel)
+Bet quality: **Pass — 49.7/100**
 Research level: **low-research-interest** | signal 0.03 | 1 matched angles
-Best line: -4.5 | line-shop edge: +0 points
+Best line: -3.5 | line-shop edge: +1 points
 
 - Golden State Valkyries|favorite: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
 
-### Golden State Valkyries -4.5 (fanduel)
+### Golden State Valkyries -3.5 (draftkings)
 Bet quality: **Pass — 44.7/100**
 Research level: **low-research-interest** | signal 0.03 | 1 matched angles
-Best line: -4.5 | line-shop edge: +0 points
+Best line: -3.5 | line-shop edge: +0 points
 
 - Golden State Valkyries|favorite: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
 
