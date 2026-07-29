@@ -50,6 +50,7 @@ jobs:
             patch_dashboard_v4_live_slate.py \
             patch_dashboard_v4_consistency.py \
             patch_dashboard_v4_stabilization.py \
+            patch_dashboard_v4_games_kpis.py \
             archive_best_bets.py \
             grade_best_bets.py
 
@@ -103,6 +104,9 @@ jobs:
 
       - name: Apply Dashboard Stabilization Pass 2
         run: python patch_dashboard_v4_stabilization.py
+
+      - name: Apply Games Tab KPI Fix
+        run: python patch_dashboard_v4_games_kpis.py
 
       - name: Archive Best Bets Ledger
         run: python archive_best_bets.py
@@ -159,6 +163,9 @@ jobs:
               "team opponent repair": "Opponent unavailable",
               "projection repair": "projectionFor=r=>",
               "allocated unit reconciliation": "Allocated units",
+              "Games KPI patch": "dashboard-games-kpi-fix-script",
+              "Games Today KPI": "Games Today",
+              "Active Recommendations KPI": "Active Recommendations",
           }
           failed = []
           for label, marker in checks.items():
@@ -170,7 +177,7 @@ jobs:
           print(f"Dashboard bytes: {len(html):,}")
           if failed:
               raise SystemExit("Dashboard verification failed: " + ", ".join(failed))
-          print("PASS: Dashboard stabilization validation complete")
+          print("PASS: Games tab KPI stabilization complete")
           PY
 
       - name: Publish Dashboard
@@ -179,7 +186,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Stabilize dashboard data bindings and Best Bets" \
+            "Stabilize Games tab KPI metrics" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
             data/history/best_bets_ledger.csv \
