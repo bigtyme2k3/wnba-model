@@ -47,12 +47,13 @@ jobs:
             patch_dashboard_v4_best_bets_cleanup.py \
             patch_dashboard_v4_best_bets_correlation.py \
             patch_dashboard_v4_best_bets_evidence_fix.py \
-            patch_dashboard_v4_live_slate.py
+            patch_dashboard_v4_live_slate.py \
+            archive_best_bets.py
 
-      - name: Enrich props with actual player game history
+      - name: Collect Data
         run: python wnba_v4_prop_context.py
 
-      - name: Rebuild V4 dashboard
+      - name: Generate Predictions
         run: python build_dashboard_v4.py
 
       - name: Reapply V4 team context
@@ -82,27 +83,30 @@ jobs:
       - name: Build Results grading board
         run: python patch_dashboard_v4_results_board.py
 
-      - name: Build disciplined Best Bets shortlist
+      - name: Generate Best Bets
         run: python patch_dashboard_v4_best_bets_cleanup.py
 
-      - name: Apply correlation and evidence gates
+      - name: Apply Correlation Filter
         run: python patch_dashboard_v4_best_bets_correlation.py
 
-      - name: Fix evidence scoring and hard deduplication
+      - name: Apply evidence scoring and hard deduplication
         run: python patch_dashboard_v4_best_bets_evidence_fix.py
 
-      - name: Apply live slate intelligence
+      - name: Apply Live Slate Intelligence
         run: python patch_dashboard_v4_live_slate.py
 
-      - name: Verify generated dashboard
+      - name: Archive Best Bets Ledger
+        run: python archive_best_bets.py
+
+      - name: QA Validation
         run: |
+          python archive_best_bets.py --validate-only
           python - <<'PY'
           from pathlib import Path
 
           path = Path("docs/index.html")
           if not path.exists():
               raise SystemExit("FAIL: docs/index.html was not generated")
-
           html = path.read_text(encoding="utf-8")
           checks = {
               "actual player history renderer": "function actualHistory",
@@ -136,7 +140,6 @@ jobs:
               "remaining prop counter": "Remaining props",
               "late slate threshold": "late-slate threshold active",
           }
-
           failed = []
           for label, marker in checks.items():
               if marker in html:
@@ -144,20 +147,21 @@ jobs:
               else:
                   print(f"FAIL: {label} missing [{marker}]")
                   failed.append(label)
-
           print(f"Dashboard bytes: {len(html):,}")
           if failed:
               raise SystemExit("Dashboard verification failed: " + ", ".join(failed))
-          print("PASS: Sprint 25 Phase 8 dashboard verification complete")
+          print("PASS: Sprint 24.1 Best Bets ledger validation complete")
           PY
 
-      - name: Commit completed dashboard
+      - name: Publish Dashboard
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Complete Sprint 25 Phase 8 live slate intelligence" \
+            "Archive Sprint 24.1 Best Bets ledger" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
+            data/history/best_bets_ledger.csv \
+            data/history/best_bets_summary.json \
             docs/index.html
