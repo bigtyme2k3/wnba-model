@@ -46,7 +46,8 @@ jobs:
             patch_dashboard_v4_results_board.py \
             patch_dashboard_v4_best_bets_cleanup.py \
             patch_dashboard_v4_best_bets_correlation.py \
-            patch_dashboard_v4_best_bets_evidence_fix.py
+            patch_dashboard_v4_best_bets_evidence_fix.py \
+            patch_dashboard_v4_live_slate.py
 
       - name: Enrich props with actual player game history
         run: python wnba_v4_prop_context.py
@@ -90,6 +91,9 @@ jobs:
       - name: Fix evidence scoring and hard deduplication
         run: python patch_dashboard_v4_best_bets_evidence_fix.py
 
+      - name: Apply live slate intelligence
+        run: python patch_dashboard_v4_live_slate.py
+
       - name: Verify generated dashboard
         run: |
           python - <<'PY'
@@ -126,6 +130,11 @@ jobs:
               "missing recent penalty": "else s-=6",
               "hard final dedup": "finalKeys.has(k)",
               "updatable evidence patch": "sprint25-best-bets-evidence-fix-script",
+              "live slate intelligence": "sprint25-phase8-live-slate-script",
+              "started-game removal": "isClosed=(r,map,now)",
+              "remaining game counter": "Remaining games",
+              "remaining prop counter": "Remaining props",
+              "late slate threshold": "late-slate threshold active",
           }
 
           failed = []
@@ -139,7 +148,7 @@ jobs:
           print(f"Dashboard bytes: {len(html):,}")
           if failed:
               raise SystemExit("Dashboard verification failed: " + ", ".join(failed))
-          print("PASS: Sprint 25 dashboard verification complete")
+          print("PASS: Sprint 25 Phase 8 dashboard verification complete")
           PY
 
       - name: Commit completed dashboard
@@ -148,7 +157,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Complete Sprint 25 evidence-scored correlation-aware Best Bets card" \
+            "Complete Sprint 25 Phase 8 live slate intelligence" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
             docs/index.html
