@@ -38,7 +38,7 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "SEASON_YEAR=${TARGET:0:4}" >> "$GITHUB_ENV"
       - name: Validate repair pipeline
-        run: python -m py_compile wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py player_points.py wnba_player_props_history_repair.py wnba_sportsbook_consensus.py wnba_master_source_builder.py build_dashboard_v4.py patch_dashboard_v4_player_props_polish.py
+        run: python -m py_compile wnba_player_game_log_warehouse.py wnba_player_game_log_archive.py wnba_player_game_log_backfill.py player_points.py wnba_player_props_history_repair.py wnba_sportsbook_consensus.py wnba_master_source_builder.py
       - name: Refresh canonical player game logs
         run: |
           python collect_wehoop.py --current --out data/raw
@@ -68,36 +68,6 @@ jobs:
               assert col in df.columns,col
           print('PLAYER PROPS HISTORY VERIFIED:',report['summary'])
           PY
-      - name: Rebuild dashboard
-        run: |
-          python build_dashboard_v4.py
-          python patch_dashboard_v4_team_context.py
-          python patch_dashboard_v4_layout_and_slate.py
-          python patch_dashboard_v4_prop_header.py
-          python patch_dashboard_v4_game_filter.py
-          python patch_dashboard_v4_player_props_polish.py
-          python patch_dashboard_v4_qa_health.py
-          python patch_dashboard_v4_game_market_data.py
-          python patch_dashboard_v4_core_interactions.py
-          python patch_dashboard_v4_alt_streaks.py
-          python patch_dashboard_v4_alt_ladders.py
-          python patch_dashboard_v4_alt_performance.py
-          python patch_dashboard_v4_remove_sportsbook_tab.py
-          python patch_dashboard_v4_minutes_projection.py
-          python patch_dashboard_v4_points_projection.py
-          python patch_dashboard_v4_rebounds_assists_projection.py
-          python patch_dashboard_v4_ancillary_projection.py
-          python patch_dashboard_v4_unified_simulation.py
-          python patch_dashboard_v4_top_plays.py
-          python patch_dashboard_v4_parlay_optimizer.py
-          python patch_dashboard_v4_projection_performance.py
-          python patch_dashboard_v4_explainability.py
-          python patch_dashboard_v4_market_intelligence.py
-          python patch_dashboard_v4_model_picks_ledger.py
-          python patch_dashboard_v4_consolidated_navigation.py
-          python wnba_mission_control.py --date "${{ env.TARGET }}" --retry-count 2
-          python patch_dashboard_v4_mission_control.py
-          python patch_dashboard_v4_force_alt_tab.py
       - name: Commit repaired Player Props
         run: |
           git config user.name "WNBA Player History Bot"
@@ -110,5 +80,4 @@ jobs:
             'data/dashboard/wnba_player_props_history_repair.json' \
             'data/dashboard/wnba_sportsbook_consensus.json' \
             'data/master/wnba_master.json' \
-            'data/dashboard/wnba_master.json' \
-            'docs/index.html'
+            'data/dashboard/wnba_master.json'
