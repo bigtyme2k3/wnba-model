@@ -3,77 +3,117 @@
 ## Goal
 Stabilize the WNBA dashboard and reduce workflow overlap without deleting useful model capabilities.
 
+## Phase status
+- Phase 1: Complete — canonical dashboard ownership and publish guard documented.
+- Phase 2: Complete — dashboard build/publish logic removed from injury refresh, history repair, V4 status, and postgame learning workflows.
+- Phase 3: Complete — production responsibilities and primary output ownership documented below.
+
 ## Canonical owners
 
 ### Dashboard HTML build
 - `.github/workflows/wnba_v4_player_props_polish.yml`
-- Sole workflow allowed to publish `docs/index.html` through `scripts/atomic_generated_push.sh`.
+- Sole workflow allowed to generate and publish `docs/index.html`.
 
 ### GitHub Pages deployment
 - `.github/workflows/deploy_wnba_dashboard.yml`
 - Deploys the already-built `docs/` directory.
 - Does not rebuild dashboard content.
 
-## Confirmed competing dashboard builders
-These workflows rebuild or patch `docs/index.html`, but the shared atomic publish guard now prevents them from publishing the HTML unless they are the canonical dashboard workflow.
+### Production QA and model-data build
+- `.github/workflows/wnba_v4_status.yml`
+- Produces current-slate model, master, warehouse, dashboard JSON, QA, mission-control, and status artifacts.
+- Does not build or publish dashboard HTML.
 
-| Workflow | Current role | Recommendation |
+### Results grading and learning
+- `.github/workflows/wnba_postgame_learning_pipeline.yml`
+- Owns final-game detection, grading, Phase 5 learning, backtesting, calibration, and learning-output publication.
+- Does not build or publish dashboard HTML.
+
+### Injury data refresh
+- `.github/workflows/wnba_injury_refresh.yml`
+- Owns injury refresh and injury-sensitive data/model outputs.
+- Does not publish dashboard HTML.
+
+### Historical player-prop repair
+- `.github/workflows/wnba_player_props_history_repair.yml`
+- Manual repair workflow for historical player context.
+- Does not publish dashboard HTML.
+
+## Primary data ownership map
+
+| Output family | Primary owner | Consumers |
 |---|---|---|
-| `wnba_injury_refresh.yml` | Refreshes injury data and rebuilds dashboard | Keep data/model refresh; remove dashboard build section after validation |
-| `wnba_player_props_history_repair.yml` | Repairs historical prop context and rebuilds dashboard | Manual-only repair; remove dashboard build section after validation |
-| `wnba_v4_status.yml` | Full production finalizer and complete dashboard build | Merge model/data build into core pipeline; stop publishing HTML |
-| `wnba_postgame_learning_pipeline.yml` | Grades results, runs learning, rebuilds dashboard every 15 minutes when needed | Keep grading/learning; stop rebuilding dashboard HTML |
-| `wnba_v4_player_props_polish.yml` | Builds and publishes current dashboard | Keep as canonical dashboard builder |
-| `deploy_wnba_dashboard.yml` | Publishes GitHub Pages artifact | Keep as sole deployer |
+| `docs/index.html` | `wnba_v4_player_props_polish.yml` | GitHub Pages deploy |
+| `data/master/wnba_master.json` | `wnba_v4_status.yml` for current slate; postgame pipeline may refresh after grading | Dashboard builder, model layers, QA |
+| `data/dashboard/wnba_master.json` | Master source builder invoked by current-slate/status and postgame workflows | Dashboard builder |
+| `data/dashboard/wnba_live_results_engine.json` | `wnba_postgame_learning_pipeline.yml` | Dashboard builder, grading monitor |
+| `data/dashboard/wnba_live_games.json` | `wnba_postgame_learning_pipeline.yml` | Dashboard builder |
+| `data/dashboard/wnba_phase5_learning.json` | `wnba_postgame_learning_pipeline.yml` | Dashboard builder, QA |
+| `data/warehouse/wnba_phase5_learning.json` | `wnba_postgame_learning_pipeline.yml` | Learning and backtest layers |
+| `data/history/wnba_graded_bets.csv` | `wnba_postgame_learning_pipeline.yml` | Learning, performance analysis |
+| `config/wnba_learned_weights.json` | `wnba_postgame_learning_pipeline.yml` | Model calibration and later builds |
+| `data/dashboard/wnba_mission_control.json` | `wnba_v4_status.yml` | Dashboard builder, health checks |
+| `data/dashboard/wnba_market_intelligence.json` | `wnba_v4_status.yml` | Dashboard builder, decision engine |
+| `data/dashboard/wnba_model_picks_ledger.json` | `wnba_v4_status.yml` with grading updates from postgame pipeline | Dashboard builder, learning |
+| `data/dashboard/wnba_alt_market_warehouse.json` | `wnba_v4_status.yml` and dedicated injury/repair refreshes only when their domain changes | Dashboard builder, recommendation layers |
+| `data/dashboard/wnba_*projection*.json` | `wnba_v4_status.yml` | Dashboard builder, QA, ranking layers |
+| Injury-specific JSON/CSV | `wnba_injury_refresh.yml` | Model build, master source, dashboard builder |
+| Historical repair artifacts | `wnba_player_props_history_repair.yml` | Warehouses, projection inputs |
 
-## Immediate controls already applied
-- `scripts/atomic_generated_push.sh` blocks non-canonical workflows from publishing `docs/index.html`.
-- Other workflows may continue publishing their own JSON, CSV, history, and model artifacts.
-- `deploy_wnba_dashboard.yml` remains a pure deploy workflow.
+## Ownership rules
+1. Only the canonical dashboard workflow may publish `docs/index.html`.
+2. Data workflows publish JSON, CSV, history, warehouse, model, and report artifacts only.
+3. A downstream workflow should consume an owner's output instead of rebuilding dashboard HTML.
+4. Repair and migration workflows remain manual-only unless a production dependency requires scheduling.
+5. No workflow is deleted until its outputs and consumers are documented.
 
-## Workflow classification framework
+## Completed dashboard-writer cleanup
 
-### Keep active
-- Core data collection workflows
-- Core odds and injury refresh workflows
-- Results grading and learning workflows
-- One canonical dashboard build workflow
-- One GitHub Pages deploy workflow
-- One production QA/integrity workflow
+| Workflow | Final responsibility | HTML status |
+|---|---|---|
+| `wnba_injury_refresh.yml` | Injury refresh and injury-sensitive data | Removed |
+| `wnba_player_props_history_repair.yml` | Manual historical repair | Removed |
+| `wnba_v4_status.yml` | Current-slate production data and QA | Removed |
+| `wnba_postgame_learning_pipeline.yml` | Results grading and learning data | Removed |
+| `wnba_v4_player_props_polish.yml` | Canonical dashboard build | Retained |
+| `deploy_wnba_dashboard.yml` | Pages deployment | Deploy only |
 
-### Convert to manual-only
-- Historical repair workflows
-- Migration workflows
-- One-time sprint repair workflows
-- Backfill and reconstruction workflows
+## Production dependency graph
 
-### Merge
-- Overlapping market intelligence workflows
-- Overlapping autonomous pipelines
-- Multiple dashboard QA/status workflows
-- Multiple ALT market refresh workflows
+```text
+Data collection / injuries / historical repair
+                    |
+                    v
+        Current-slate production build
+                    |
+                    v
+           Model data + QA outputs
+                    |
+          +---------+---------+
+          |                   |
+          v                   v
+ Postgame grading       Dashboard builder
+ and learning                 |
+          |                    v
+          +------------> GitHub Pages deploy
+```
 
-### Disable after dependency confirmation
-- Sprint-specific repair workflows whose output is already produced by the core pipeline
-- Workflows that only duplicate another active workflow
-- Workflows that repeatedly rebuild `docs/index.html`
+## Core production architecture
+1. Data foundation and source refresh
+2. Injury refresh
+3. Current-slate model/data build and QA
+4. Results grading and learning
+5. Canonical dashboard build
+6. GitHub Pages deployment
+7. Historical repair and migration workflows as manual-only utilities
 
-## Target production architecture
-1. `WNBA Data Foundation`
-2. `WNBA Model Build`
-3. `WNBA Results and Learning`
-4. `WNBA Dashboard Build`
-5. `Deploy WNBA Dashboard`
-6. `WNBA Production Health`
-
-## Next audit steps
-1. Inventory all workflow triggers and schedules.
-2. Inventory every generated output path per workflow.
-3. Detect duplicate writers for `data/dashboard/*.json` and `data/master/*.json`.
-4. Mark historical and repair workflows as manual-only.
-5. Consolidate the full dashboard build sequence into one script used only by the canonical dashboard workflow.
-6. Remove dashboard rebuild steps from injury, status, history-repair, and postgame workflows.
-7. Reduce active scheduled workflows to approximately 5–8 core workflows.
+## Remaining optimization backlog
+These are later refinements, not blockers for Phase 2 or Phase 3 completion:
+- Merge related dashboard patch scripts into a smaller ordered build module.
+- Reduce duplicate invocation of master-source and ledger scripts where safe.
+- Review every sprint-specific workflow and convert obsolete schedules to manual-only.
+- Add machine-readable ownership metadata for exact JSON paths.
+- Add CI that fails when a non-canonical workflow references `docs/index.html`.
 
 ## Safety rule
 Do not delete workflows until their outputs and downstream dependencies are documented. Disable or convert them to manual-only first.
