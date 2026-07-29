@@ -3,7 +3,12 @@ name: WNBA V4 Player Props Polish
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["WNBA Intelligence Foundation"]
+    workflows:
+      - "WNBA Intelligence Foundation"
+      - "WNBA Injury Refresh"
+      - "WNBA Player Props History Repair"
+      - "WNBA Version 4 Status"
+      - "WNBA Postgame Learning Pipeline"
     types: [completed]
 
 concurrency:
