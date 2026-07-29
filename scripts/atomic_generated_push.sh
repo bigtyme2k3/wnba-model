@@ -5,6 +5,24 @@ MESSAGE=${1:?commit message required}
 shift
 FILES=("$@")
 
+# Only the canonical dashboard builder may publish docs/index.html. Other
+# workflows can continue publishing their generated JSON/CSV outputs without
+# overwriting the live dashboard. Local/manual callers may opt in explicitly.
+CANONICAL_DASHBOARD_WORKFLOW="WNBA V4 Player Props Polish"
+ALLOW_DASHBOARD_WRITE=${ALLOW_DASHBOARD_WRITE:-0}
+CURRENT_WORKFLOW=${GITHUB_WORKFLOW:-local}
+FILTERED_FILES=()
+for supplied in "${FILES[@]}"; do
+  if [ "$supplied" = "docs/index.html" ] \
+     && [ "$ALLOW_DASHBOARD_WRITE" != "1" ] \
+     && [ "$CURRENT_WORKFLOW" != "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
+    echo "Skipping protected dashboard output from non-canonical workflow: $CURRENT_WORKFLOW"
+    continue
+  fi
+  FILTERED_FILES+=("$supplied")
+done
+FILES=("${FILTERED_FILES[@]}")
+
 # Persistent generated histories used by downstream grading and CLV. Add them
 # automatically when present so callers cannot accidentally drop state.
 for persistent in \
@@ -20,8 +38,8 @@ do
 done
 
 if [ ${#FILES[@]} -eq 0 ]; then
-  echo "No generated paths supplied"
-  exit 2
+  echo "No generated paths supplied after publish guard filtering"
+  exit 0
 fi
 
 TMP=$(mktemp -d)
