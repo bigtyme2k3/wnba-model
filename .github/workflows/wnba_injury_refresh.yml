@@ -8,7 +8,7 @@ on:
         required: false
         default: ''
       rebuild_model:
-        description: 'Rebuild projections, Monte Carlo, decisions and dashboard?'
+        description: 'Rebuild projections and decisions?'
         required: false
         default: 'true'
   workflow_run:
@@ -52,7 +52,7 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Injury target: $TARGET"
       - name: Validate injury pipeline
-        run: python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_player_intelligence.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_portfolio_dashboard.py wnba_master_source_builder.py wnba_v4_prop_context.py build_dashboard_v4.py patch_dashboard_v4_injuries.py
+        run: python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_player_intelligence.py player_points.py wnba_matchup_intelligence.py wnba_consensus_engine.py wnba_monte_carlo_engine.py wnba_projection_ai.py wnba_market_engine.py wnba_portfolio_optimizer_v2.py wnba_decision_engine_final.py wnba_risk_allocation.py wnba_portfolio_dashboard.py wnba_master_source_builder.py wnba_v4_prop_context.py
       - name: Refresh official injury reports
         run: python scrape_official_wnba_injuries.py --date "${{ env.TARGET }}" --out data/raw
       - name: Verify injury source freshness
@@ -99,17 +99,6 @@ jobs:
           python wnba_master_source_builder.py --date "${{ env.TARGET }}"
           python wnba_v4_prop_context.py
           python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
-      - name: Rebuild and patch dashboard
-        run: |
-          python build_dashboard_v4.py
-          python patch_dashboard_v4_team_context.py
-          python patch_dashboard_v4_layout_and_slate.py
-          python patch_dashboard_v4_prop_header.py
-          python patch_dashboard_v4_game_filter.py
-          python patch_dashboard_v4_player_props_polish.py
-          python patch_dashboard_v4_phase6_batch1.py
-          python patch_dashboard_v4_results.py
-          python patch_dashboard_v4_injuries.py
       - name: Verify injury guardrails and propagation
         run: |
           python - <<'PY'
@@ -131,7 +120,6 @@ jobs:
                   assert row.get('eligible_for_bet') is False, row
               if row.get('injury_status') in {'QUESTIONABLE','UNKNOWN'}:
                   assert row.get('final_action') != 'BET', row
-          assert 'window.WNBA_INJURY_DATA' in open('docs/index.html',encoding='utf-8').read()
           print('INJURY PIPELINE VERIFIED', report['summary'])
           PY
       - name: Commit injury refresh
@@ -146,5 +134,4 @@ jobs:
             'data/raw/player_points*.csv' \
             'data/warehouse/wnba_*.json' \
             'data/dashboard/wnba_*.json' \
-            'data/master/wnba_master.json' \
-            'docs/index.html'
+            'data/master/wnba_master.json'
