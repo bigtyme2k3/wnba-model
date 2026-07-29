@@ -48,6 +48,7 @@ jobs:
             patch_dashboard_v4_best_bets_correlation.py \
             patch_dashboard_v4_best_bets_evidence_fix.py \
             patch_dashboard_v4_live_slate.py \
+            patch_dashboard_v4_consistency.py \
             archive_best_bets.py \
             grade_best_bets.py
 
@@ -95,6 +96,9 @@ jobs:
 
       - name: Apply Live Slate Intelligence
         run: python patch_dashboard_v4_live_slate.py
+
+      - name: Apply Dashboard Consistency Recovery
+        run: python patch_dashboard_v4_consistency.py
 
       - name: Archive Best Bets Ledger
         run: python archive_best_bets.py
@@ -144,6 +148,9 @@ jobs:
               "remaining game counter": "Remaining games",
               "remaining prop counter": "Remaining props",
               "late slate threshold": "late-slate threshold active",
+              "dashboard consistency recovery": "dashboard-consistency-recovery-script",
+              "active Best Bets KPI": "active ranked plays",
+              "summary mismatch notice": "Raw summary",
           }
           failed = []
           for label, marker in checks.items():
@@ -155,7 +162,7 @@ jobs:
           print(f"Dashboard bytes: {len(html):,}")
           if failed:
               raise SystemExit("Dashboard verification failed: " + ", ".join(failed))
-          print("PASS: Sprint 25 Phase 1 Best Bets performance validation complete")
+          print("PASS: Dashboard regression recovery validation complete")
           PY
 
       - name: Publish Dashboard
@@ -164,7 +171,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           chmod +x scripts/atomic_generated_push.sh
           scripts/atomic_generated_push.sh \
-            "Update Sprint 25 Phase 1 Best Bets performance database" \
+            "Recover dashboard consistency and Sprint 25 performance" \
             data/dashboard/wnba_master.json \
             data/master/wnba_master.json \
             data/history/best_bets_ledger.csv \
