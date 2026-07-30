@@ -1,16 +1,16 @@
 {
-  "generated_at_utc": "2026-07-30T03:25:11.206098+00:00",
-  "target_date": "2026-07-29",
+  "generated_at_utc": "2026-07-30T04:24:07.647753+00:00",
+  "target_date": "2026-07-30",
   "status": "ok",
-  "publication_status": "DEGRADED",
-  "publication_message": "Report published with clear warnings; unavailable optional sections are withheld.",
+  "publication_status": "BLOCKED",
+  "publication_message": "Critical data failed; affected recommendations are withheld.",
   "summary": {
     "components": 11,
-    "green": 10,
-    "yellow": 1,
-    "red": 0,
+    "green": 4,
+    "yellow": 3,
+    "red": 4,
     "retry_required": 1,
-    "release_blockers": 0,
+    "release_blockers": 4,
     "warnings": 1
   },
   "alt_props": {
@@ -24,31 +24,35 @@
     {
       "id": "games",
       "component": "Games",
-      "status": "GREEN",
+      "status": "RED",
       "critical": true,
       "path": "data/dashboard/wnba_master.json",
       "rows": 7,
       "target_date": "2026-07-29",
       "generated_at_utc": "2026-07-30T03:24:02.423857+00:00",
-      "age_minutes": 1.1,
+      "age_minutes": 60.1,
       "retry_count": 0,
-      "action": "NONE",
-      "issues": [],
+      "action": "BLOCK_PUBLISH",
+      "issues": [
+        "Stale slate date 2026-07-29; expected 2026-07-30"
+      ],
       "warnings": []
     },
     {
       "id": "player_props",
       "component": "Player Props",
-      "status": "GREEN",
+      "status": "RED",
       "critical": true,
       "path": "data/dashboard/wnba_master.json",
       "rows": 138,
       "target_date": "2026-07-29",
       "generated_at_utc": "2026-07-30T03:24:02.423857+00:00",
-      "age_minutes": 1.1,
+      "age_minutes": 60.1,
       "retry_count": 0,
-      "action": "NONE",
-      "issues": [],
+      "action": "BLOCK_PUBLISH",
+      "issues": [
+        "Stale slate date 2026-07-29; expected 2026-07-30"
+      ],
       "warnings": []
     },
     {
@@ -60,11 +64,12 @@
       "rows": 0,
       "target_date": "2026-07-29",
       "generated_at_utc": "2026-07-29T23:42:10.584172+00:00",
-      "age_minutes": 223.0,
+      "age_minutes": 282.0,
       "retry_count": 0,
       "action": "RETRY_SOURCE",
       "issues": [
         "Expected at least 1 row; found 0",
+        "Stale slate date 2026-07-29; expected 2026-07-30",
         "Prop source loaded 301 markets but produced 0 alternate lines"
       ],
       "warnings": [
@@ -74,61 +79,69 @@
     {
       "id": "minutes",
       "component": "Minutes Projection",
-      "status": "GREEN",
+      "status": "RED",
       "critical": true,
       "path": "data/dashboard/wnba_minutes_projection_v2.json",
       "rows": 20,
       "target_date": "2026-07-29",
       "generated_at_utc": "2026-07-29T19:28:33.641845+00:00",
-      "age_minutes": 476.6,
+      "age_minutes": 535.6,
       "retry_count": 0,
-      "action": "NONE",
-      "issues": [],
+      "action": "BLOCK_PUBLISH",
+      "issues": [
+        "Stale slate date 2026-07-29; expected 2026-07-30"
+      ],
       "warnings": []
     },
     {
       "id": "unified",
       "component": "Unified Simulation",
-      "status": "GREEN",
+      "status": "RED",
       "critical": true,
       "path": "data/dashboard/wnba_unified_player_simulation_v2.json",
       "rows": 20,
       "target_date": "2026-07-29",
       "generated_at_utc": "2026-07-29T19:28:41.860504+00:00",
-      "age_minutes": 476.5,
+      "age_minutes": 535.4,
       "retry_count": 0,
-      "action": "NONE",
-      "issues": [],
+      "action": "BLOCK_PUBLISH",
+      "issues": [
+        "Stale slate date 2026-07-29; expected 2026-07-30"
+      ],
       "warnings": []
     },
     {
       "id": "top_plays",
       "component": "Top Plays",
-      "status": "GREEN",
+      "status": "YELLOW",
       "critical": false,
       "path": "data/dashboard/wnba_cross_market_top_plays.json",
       "rows": 25,
       "target_date": "2026-07-29",
       "generated_at_utc": "2026-07-29T19:28:42.408288+00:00",
-      "age_minutes": 476.5,
+      "age_minutes": 535.4,
       "retry_count": 0,
-      "action": "NONE",
-      "issues": [],
+      "action": "PUBLISH_DEGRADED",
+      "issues": [
+        "Stale slate date 2026-07-29; expected 2026-07-30"
+      ],
       "warnings": []
     },
     {
       "id": "explainability",
       "component": "Explainability",
-      "status": "GREEN",
+      "status": "YELLOW",
       "critical": false,
       "path": "data/dashboard/wnba_model_explainability.json",
       "rows": 25,
       "target_date": "2026-07-29",
       "generated_at_utc": "2026-07-29T15:37:37.030075+00:00",
-      "age_minutes": 707.6,
+      "age_minutes": 766.5,
       "retry_count": 0,
-      "action": "NONE",
-      "issues": [],
+      "action": "PUBLISH_DEGRADED",
+      "issues": [
+        "Stale slate date 2026-07-29; expected 2026-07-30"
+      ],
       "warnings": []
     },
     {
@@ -139,7 +152,7 @@
       "path": "data/history/wnba_market_observations.jsonl",
       "rows": 500,
       "target_date": null,
-      "generated_at_utc": "2026-07-30T03:25:05.043090+00:00",
+      "generated_at_utc": "2026-07-30T04:24:00.964576+00:00",
       "age_minutes": 0.1,
       "retry_count": 0,
       "action": "NONE",
@@ -154,7 +167,7 @@
       "path": "data/history/wnba_model_picks_ledger.jsonl",
       "rows": 123,
       "target_date": null,
-      "generated_at_utc": "2026-07-30T03:25:05.048090+00:00",
+      "generated_at_utc": "2026-07-30T04:24:00.970576+00:00",
       "age_minutes": 0.1,
       "retry_count": 0,
       "action": "NONE",
@@ -170,7 +183,7 @@
       "rows": 25,
       "target_date": null,
       "generated_at_utc": "2026-07-29T15:37:38.548773+00:00",
-      "age_minutes": 707.5,
+      "age_minutes": 766.5,
       "retry_count": 0,
       "action": "NONE",
       "issues": [],
@@ -184,7 +197,7 @@
       "path": "docs/index.html",
       "rows": 1,
       "target_date": null,
-      "generated_at_utc": "2026-07-30T03:25:11.067110+00:00",
+      "generated_at_utc": "2026-07-30T04:24:07.434576+00:00",
       "age_minutes": 0.0,
       "retry_count": 0,
       "action": "NONE",
@@ -198,13 +211,13 @@
       "attempt": 1,
       "maximum_attempts": 2,
       "command_chain": [
-        "python wnba_alt_streaks.py --date 2026-07-29",
+        "python wnba_alt_streaks.py --date 2026-07-30",
         "python wnba_alt_streaks_correctness.py",
-        "python wnba_alt_streaks_warehouse_upgrade.py --date 2026-07-29",
+        "python wnba_alt_streaks_warehouse_upgrade.py --date 2026-07-30",
         "python wnba_alt_streaks_opponent_context.py",
         "python wnba_alt_streaks_position_context.py",
         "python wnba_alt_streaks_pace_minutes_context.py",
-        "python wnba_alt_streak_confidence.py --date 2026-07-29"
+        "python wnba_alt_streak_confidence.py --date 2026-07-30"
       ]
     }
   ],
