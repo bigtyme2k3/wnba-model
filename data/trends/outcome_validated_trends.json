@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-30T16:59:40.066540Z",
+  "generated_at_utc": "2026-07-30T19:48:00.401534Z",
   "methodology": "One earliest stored observation per market; verified grades; chronological 70/30 holdout.",
   "trends": [
     {
@@ -59,7 +59,7 @@
       }
     },
     {
-      "trend_id": "trend_0003",
+      "trend_id": "trend_0002",
       "dimensions": {
         "market": "h2h",
         "signal": "STEAM"
@@ -115,7 +115,7 @@
       }
     },
     {
-      "trend_id": "trend_0010",
+      "trend_id": "trend_0012",
       "dimensions": {
         "window": "1_TO_3H"
       },
@@ -170,7 +170,7 @@
       }
     },
     {
-      "trend_id": "trend_0012",
+      "trend_id": "trend_0014",
       "dimensions": {
         "market": "spreads",
         "window": "3_TO_6H"
@@ -226,13 +226,13 @@
       }
     },
     {
-      "trend_id": "trend_0002",
+      "trend_id": "trend_0003",
       "dimensions": {
-        "market": "player_assists",
-        "volatility_band": "MEDIUM"
+        "market": "player_threes",
+        "volatility_band": "HIGH"
       },
       "clv_grade": "C",
-      "clv_score": 47.22,
+      "clv_score": 38.74,
       "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
       "status": "INSUFFICIENT",
       "full_sample": {
@@ -284,11 +284,11 @@
     {
       "trend_id": "trend_0004",
       "dimensions": {
-        "market": "player_rebounds",
-        "volatility_band": "HIGH"
+        "market": "player_assists",
+        "volatility_band": "MEDIUM"
       },
       "clv_grade": "C",
-      "clv_score": 39.56,
+      "clv_score": 37.0,
       "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
       "status": "INSUFFICIENT",
       "full_sample": {
@@ -341,10 +341,10 @@
       "trend_id": "trend_0005",
       "dimensions": {
         "market": "player_rebounds",
-        "volatility_band": "MEDIUM"
+        "volatility_band": "HIGH"
       },
-      "clv_grade": "C",
-      "clv_score": 34.47,
+      "clv_grade": "B",
+      "clv_score": 35.24,
       "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
       "status": "INSUFFICIENT",
       "full_sample": {
@@ -396,11 +396,11 @@
     {
       "trend_id": "trend_0006",
       "dimensions": {
-        "market": "player_rebounds",
+        "market": "player_threes",
         "signal": "SHARP"
       },
       "clv_grade": "C",
-      "clv_score": 30.28,
+      "clv_score": 35.15,
       "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
       "status": "INSUFFICIENT",
       "full_sample": {
@@ -452,11 +452,11 @@
     {
       "trend_id": "trend_0007",
       "dimensions": {
-        "market": "player_threes",
-        "signal": "SHARP"
+        "market": "player_assists",
+        "volatility_band": "HIGH"
       },
       "clv_grade": "C",
-      "clv_score": 25.6,
+      "clv_score": 33.69,
       "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
       "status": "INSUFFICIENT",
       "full_sample": {
@@ -508,11 +508,11 @@
     {
       "trend_id": "trend_0008",
       "dimensions": {
-        "market": "player_assists",
-        "signal": "SHARP"
+        "market": "player_rebounds",
+        "volatility_band": "MEDIUM"
       },
       "clv_grade": "C",
-      "clv_score": 24.77,
+      "clv_score": 32.85,
       "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
       "status": "INSUFFICIENT",
       "full_sample": {
@@ -564,11 +564,67 @@
     {
       "trend_id": "trend_0009",
       "dimensions": {
-        "market": "player_points",
-        "volatility_band": "MEDIUM"
+        "market": "player_rebounds",
+        "signal": "SHARP"
       },
       "clv_grade": "C",
-      "clv_score": 24.76,
+      "clv_score": 31.44,
+      "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
+      "status": "INSUFFICIENT",
+      "full_sample": {
+        "records": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "hit_rate": null,
+        "roi_per_bet": null,
+        "profit_units": 0,
+        "hit_rate_95ci": [
+          null,
+          null
+        ]
+      },
+      "development_70pct": {
+        "records": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "hit_rate": null,
+        "roi_per_bet": null,
+        "profit_units": 0,
+        "hit_rate_95ci": [
+          null,
+          null
+        ]
+      },
+      "holdout_30pct": {
+        "records": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "hit_rate": null,
+        "roi_per_bet": null,
+        "profit_units": 0,
+        "hit_rate_95ci": [
+          null,
+          null
+        ]
+      },
+      "criteria": {
+        "minimum_graded_markets": 30,
+        "minimum_holdout_markets": 10,
+        "positive_holdout_roi": true,
+        "holdout_hit_rate_ci_low_above_50pct": true
+      }
+    },
+    {
+      "trend_id": "trend_0010",
+      "dimensions": {
+        "market": "player_assists",
+        "signal": "SHARP"
+      },
+      "clv_grade": "C",
+      "clv_score": 28.02,
       "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
       "status": "INSUFFICIENT",
       "full_sample": {
@@ -624,7 +680,63 @@
         "signal": "SHARP"
       },
       "clv_grade": "C",
-      "clv_score": 22.61,
+      "clv_score": 24.8,
+      "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
+      "status": "INSUFFICIENT",
+      "full_sample": {
+        "records": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "hit_rate": null,
+        "roi_per_bet": null,
+        "profit_units": 0,
+        "hit_rate_95ci": [
+          null,
+          null
+        ]
+      },
+      "development_70pct": {
+        "records": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "hit_rate": null,
+        "roi_per_bet": null,
+        "profit_units": 0,
+        "hit_rate_95ci": [
+          null,
+          null
+        ]
+      },
+      "holdout_30pct": {
+        "records": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "hit_rate": null,
+        "roi_per_bet": null,
+        "profit_units": 0,
+        "hit_rate_95ci": [
+          null,
+          null
+        ]
+      },
+      "criteria": {
+        "minimum_graded_markets": 30,
+        "minimum_holdout_markets": 10,
+        "positive_holdout_roi": true,
+        "holdout_hit_rate_ci_low_above_50pct": true
+      }
+    },
+    {
+      "trend_id": "trend_0013",
+      "dimensions": {
+        "market": "player_points",
+        "volatility_band": "MEDIUM"
+      },
+      "clv_grade": "C",
+      "clv_score": 23.57,
       "validation_basis": "VERIFIED_OUTCOMES_CHRONOLOGICAL_HOLDOUT",
       "status": "INSUFFICIENT",
       "full_sample": {
