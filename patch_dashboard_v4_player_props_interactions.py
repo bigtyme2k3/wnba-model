@@ -7,91 +7,72 @@ SCRIPT_ID = "v4-player-props-interactions-fix"
 
 SCRIPT = r'''<script id="v4-player-props-interactions-fix">
 (function(){
-  const IDS = ['pxSearch','pxStat','pxSide','pxBook','pxGame'];
-  const saved = window.WNBA_PROPS_FILTER_STATE || {pxSearch:'',pxStat:'',pxSide:'',pxBook:'',pxGame:''};
-  window.WNBA_PROPS_FILTER_STATE = saved;
+  const IDS=['pxSearch','pxStat','pxSide','pxBook','pxGame'];
+  const saved=window.WNBA_PROPS_FILTER_STATE||{pxSearch:'',pxStat:'',pxSide:'',pxBook:'',pxGame:''};
+  window.WNBA_PROPS_FILTER_STATE=saved;
 
   function capture(){
-    for(const id of IDS){
-      const el=document.getElementById(id);
-      if(el) saved[id]=el.value||'';
-    }
+    for(const id of IDS){const el=document.getElementById(id);if(el)saved[id]=el.value||'';}
   }
-
   function restore(){
-    for(const id of IDS){
-      const el=document.getElementById(id);
-      if(el && el.value!==saved[id]) el.value=saved[id]||'';
-    }
+    for(const id of IDS){const el=document.getElementById(id);if(el)el.value=saved[id]||'';}
   }
-
-  function rerender(){
-    if(typeof window.props!=='function') return;
-    capture();
+  function paint(){
     const root=document.getElementById('root');
-    if(root) root.innerHTML=window.props();
+    if(!root||typeof window.props!=='function')return;
+    root.innerHTML=String(window.props()||'');
     restore();
-    window.scrollTo({top:0,behavior:'instant'});
   }
-
-  const originalProps = window.props;
-  if(typeof originalProps==='function' && !originalProps.__interactionWrapped){
-    const wrapped=function(){
-      const html=originalProps();
-      setTimeout(restore,0);
-      return html;
-    };
-    wrapped.__interactionWrapped=true;
-    window.props=wrapped;
-  }
+  function apply(){capture();paint();}
 
   document.addEventListener('input',function(event){
     const target=event.target;
-    if(!target || !IDS.includes(target.id)) return;
+    if(!target||!IDS.includes(target.id))return;
     saved[target.id]=target.value||'';
-    rerender();
+    requestAnimationFrame(paint);
   },true);
 
   document.addEventListener('change',function(event){
     const target=event.target;
-    if(!target || !IDS.includes(target.id)) return;
+    if(!target||!IDS.includes(target.id))return;
+    saved[target.id]=target.value||'';
     event.preventDefault();
     event.stopImmediatePropagation();
-    saved[target.id]=target.value||'';
-    rerender();
+    requestAnimationFrame(paint);
   },true);
 
   document.addEventListener('click',function(event){
     const button=event.target.closest('.propsUxChip,.propsUxClear,.propsUxHead button');
-    if(!button) return;
+    if(!button)return;
     event.preventDefault();
     event.stopImmediatePropagation();
     capture();
+
     if(button.classList.contains('propsUxClear')){
-      for(const id of IDS) saved[id]='';
-      if(typeof window.clearPropsUx==='function') window.clearPropsUx();
-      setTimeout(restore,0);
+      for(const id of IDS)saved[id]='';
+      if(window.PLAYER_PROPS_UX_STATE){window.PLAYER_PROPS_UX_STATE.quick='';}
+      if(typeof window.clearPropsUx==='function')window.clearPropsUx();
+      requestAnimationFrame(paint);
       return;
     }
-    if(button.classList.contains('propsUxChip')){
-      const handler=button.getAttribute('onclick')||'';
-      const match=handler.match(/setPropsQuick\(['\"]([^'\"]+)['\"]\)/);
-      if(match && typeof window.setPropsQuick==='function') window.setPropsQuick(match[1]);
-      setTimeout(restore,0);
-      return;
-    }
+
     const handler=button.getAttribute('onclick')||'';
+    if(button.classList.contains('propsUxChip')){
+      const match=handler.match(/setPropsQuick\(['\"]([^'\"]+)['\"]\)/);
+      if(match&&typeof window.setPropsQuick==='function')window.setPropsQuick(match[1]);
+      requestAnimationFrame(paint);
+      return;
+    }
+
     const match=handler.match(/setPropsUxSort\(['\"]([^'\"]+)['\"]\)/);
-    if(match && typeof window.setPropsUxSort==='function') window.setPropsUxSort(match[1]);
-    setTimeout(restore,0);
+    if(match&&typeof window.setPropsUxSort==='function')window.setPropsUxSort(match[1]);
+    requestAnimationFrame(paint);
   },true);
 
-  const observer=new MutationObserver(function(){
-    if(document.getElementById('pxSearch')) restore();
-  });
+  const observer=new MutationObserver(function(){if(document.getElementById('pxSearch'))restore();});
   observer.observe(document.documentElement,{subtree:true,childList:true});
   restore();
-  window.PLAYER_PROPS_INTERACTIONS={version:'1.0',capture,restore,rerender};
+  window.PLAYER_PROPS_INTERACTIONS={version:'2.0',capture,restore,paint,apply};
 })();
 </script>'''
 
@@ -110,7 +91,7 @@ def main() -> None:
         raise FileNotFoundError(DASHBOARD)
     html = DASHBOARD.read_text(encoding='utf-8')
     DASHBOARD.write_text(replace_or_insert(html), encoding='utf-8')
-    print('Player Props filters and quick actions repaired')
+    print('Player Props filters and quick actions repaired v2')
 
 
 if __name__ == '__main__':
