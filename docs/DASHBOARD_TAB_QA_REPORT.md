@@ -1,6 +1,6 @@
 # WNBA Dashboard Tab QA
 
-Generated: `2026-07-30T20:05:31.472483+00:00`
+Generated: `2026-07-30T21:22:58.892141+00:00`
 Overall status: **GREEN**
 
 | Tab | Status | Missing markers |
