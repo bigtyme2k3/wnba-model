@@ -25,7 +25,7 @@ window.render=function(view){
   try{root.innerHTML=String(window.props()||'');window.scrollTo(0,0)}
   catch(error){root.innerHTML=`<div class="section"><div class="routerError"><b>Player Props failed to render.</b><pre>${typeof window.E==='function'?window.E(error?.stack||String(error)):String(error)}</pre></div></div>`}
 };
-window.PLAYER_PROPS_V2_ROUTER={version:'1.0',active:true};
+window.PLAYER_PROPS_V2_ROUTER={version:'1.1',active:true};
 })();</script>'''
 FINAL_BOOT=r'''<script id="v4-final-dashboard-boot-script">(function(){
 function boot(){
@@ -66,9 +66,11 @@ def main():
     apply_player_props_ux()
     from patch_dashboard_v4_player_props_controls import main as apply_player_props_controls
     apply_player_props_controls()
+    from patch_dashboard_v4_player_props_interactions import main as apply_player_props_interactions
+    apply_player_props_interactions()
     html=HTML.read_text(encoding='utf-8')
     html=replace_block(html,'<script id="v4-player-props-v2-router-bridge">','</script>',PROPS_BRIDGE) if 'id="v4-player-props-v2-router-bridge"' in html else html.replace('</body>',PROPS_BRIDGE+'</body>')
     html=replace_block(html,'<script id="v4-final-dashboard-boot-script">','</script>',FINAL_BOOT) if 'id="v4-final-dashboard-boot-script"' in html else html.replace('</body>',FINAL_BOOT+'</body>')
     HTML.write_text(html,encoding='utf-8')
-    print('ALT Performance applied; Player Props V2 is authoritative on the props route')
+    print('ALT Performance applied; Player Props V2 filters and quick actions are active')
 if __name__=='__main__':main()
