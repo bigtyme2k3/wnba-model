@@ -1,12 +1,12 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-07-30T15:54:52.333097Z
+Generated: 2026-07-30T17:07:08.944986Z
 
 ## Slate summary
 
 - 2 games
 - 4 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 3, 'Pass': 1}
+- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 2, 'Pass': 2}
 
 ## Game — 2026-07-31T23:30:00Z
 
@@ -28,10 +28,10 @@ Best line: +3.5 | line-shop edge: +0 points
 
 ## Game — 2026-07-31T23:30:00Z
 
-### Seattle Storm +11.5 (draftkings)
-Bet quality: **Watch — 54.1/100**
+### Seattle Storm +12.5 (draftkings)
+Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +12.5 | line-shop edge: +1 points
+Best line: +12.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
