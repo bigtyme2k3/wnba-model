@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-07-30T16:21:40.797776+00:00`
+Generated: `2026-07-30T17:03:58.494465+00:00`
 Expected target date: `2026-07-30`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 274
-- **Green:** 242
-- **Yellow:** 32
+- **Green:** 249
+- **Yellow:** 25
 - **Red:** 0
 - **Duplicate Names:** 98
 
@@ -41,14 +41,14 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_ancillary_projection_v2.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_ancillary_projection_v2_acceptance.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_autonomous_agent.json` | 2026-07-30 | None |
-| YELLOW | dashboard | `data/dashboard/wnba_autonomous_pipeline.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | dashboard | `data/dashboard/wnba_autonomous_pipeline.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_backtest_engine.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_betting_intelligence.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_betting_ledger_summary.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_betting_validation.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_closing_line_predictor_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_clv_edge_report.json` | 2026-07-30 | None |
-| GREEN | dashboard | `data/dashboard/wnba_clv_summary.json` | 2026-07-30 | None |
+| GREEN | dashboard | `data/dashboard/wnba_clv_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_confidence_calibration.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_consensus_engine.json` | 2026-07-30 | None |
 | YELLOW | dashboard | `data/dashboard/wnba_context_engine.json` | 2026-07-09 | target_date_mismatch:2026-07-09!=2026-07-30 |
@@ -63,7 +63,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_data_warehouse.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_decision_engine_final.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_edge_database.json` | 2026-07-30 | None |
-| YELLOW | dashboard | `data/dashboard/wnba_ensemble_intelligence.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | dashboard | `data/dashboard/wnba_ensemble_intelligence.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_ensemble_learning.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_entry_window_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_feature_importance.json` | 2026-07-30 | None |
@@ -112,7 +112,7 @@ Overall status: **YELLOW**
 | YELLOW | dashboard | `data/dashboard/wnba_model_quality_audit.json` | 2026-07-10 | target_date_mismatch:2026-07-10!=2026-07-30 |
 | GREEN | dashboard | `data/dashboard/wnba_monte_carlo_engine.json` | 2026-07-30 | None |
 | YELLOW | dashboard | `data/dashboard/wnba_monte_carlo_live_test.json` | 2026-07-22 | target_date_mismatch:2026-07-22!=2026-07-30 |
-| YELLOW | dashboard | `data/dashboard/wnba_monte_carlo_scenarios.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | dashboard | `data/dashboard/wnba_monte_carlo_scenarios.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_odds_health.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_odds_history_dashboard.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_odds_history_outcomes.json` | None | None |
@@ -126,7 +126,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_parlay_optimizer_v2_acceptance.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_phase5_backtest.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_phase5_learning.json` | 2026-07-30 | None |
-| YELLOW | dashboard | `data/dashboard/wnba_pipeline_readiness.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | dashboard | `data/dashboard/wnba_pipeline_readiness.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_play_by_play_layer.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_player_game_log_acceptance.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_player_game_logs.json` | 2026-07-30 | None |
@@ -194,7 +194,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_alt_streaks.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_ancillary_projection_v2.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_autonomous_agent.json` | 2026-07-30 | None |
-| YELLOW | warehouse | `data/warehouse/wnba_autonomous_pipeline.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | warehouse | `data/warehouse/wnba_autonomous_pipeline.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_backtest_engine.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_betting_intelligence.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_betting_ledger_summary.json` | 2026-07-30 | None |
@@ -210,7 +210,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_data_lineage.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_decision_engine_final.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_edge_database.json` | 2026-07-30 | None |
-| YELLOW | warehouse | `data/warehouse/wnba_ensemble_intelligence.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | warehouse | `data/warehouse/wnba_ensemble_intelligence.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_ensemble_learning.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_feature_importance.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_final_qa.json` | None | None |
@@ -259,7 +259,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_parlay_optimizer_v2.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_phase5_backtest.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_phase5_learning.json` | 2026-07-30 | None |
-| YELLOW | warehouse | `data/warehouse/wnba_pipeline_readiness.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | warehouse | `data/warehouse/wnba_pipeline_readiness.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_play_by_play_layer.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_player_game_logs.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_player_intelligence.json` | 2026-07-30 | None |
