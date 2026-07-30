@@ -41,17 +41,17 @@ def main():
     html=replace_block(html,'<style id="v4-alt-performance-style">','</style>',CSS) if 'id="v4-alt-performance-style"' in html else html.replace('</head>',CSS+'</head>')
     html=replace_block(html,'<script id="v4-alt-performance-script">','</script>',SCRIPT) if 'id="v4-alt-performance-script"' in html else html.replace('</body>',SCRIPT+'</body>')
     HTML.write_text(html,encoding='utf-8')
-    # Rebuild Games and Game Props after all earlier patches so their renderers exist in final HTML.
     from patch_dashboard_v4_games_markets import main as apply_games
     apply_games()
-    # Install the one authoritative router only after every renderer is present.
     from patch_dashboard_v4_consolidated_navigation import main as apply_router
     apply_router()
-    # Reapply Player Props event wiring after final HTML assembly.
     from patch_dashboard_v4_filter_events import main as apply_filters
     apply_filters()
+    # Install the flagship Player Props renderer after all legacy renderers and the router.
+    from patch_dashboard_v4_player_props_ux import main as apply_player_props_ux
+    apply_player_props_ux()
     html=HTML.read_text(encoding='utf-8')
     html=replace_block(html,'<script id="v4-final-dashboard-boot-script">','</script>',FINAL_BOOT) if 'id="v4-final-dashboard-boot-script"' in html else html.replace('</body>',FINAL_BOOT+'</body>')
     HTML.write_text(html,encoding='utf-8')
-    print('ALT Performance applied; Games renderers rebuilt, router finalized, and final boot installed')
+    print('ALT Performance applied; Games and Player Props UX finalized, router finalized, and final boot installed')
 if __name__=='__main__':main()
