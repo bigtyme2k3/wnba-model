@@ -12,6 +12,21 @@ function cls(v){v=Number(v||0);return v>0?'altPerfGood':v<0?'altPerfBad':'altPer
 function table(title,rows){const body=arr(rows).map(r=>`<tr><td><b>${esc(r.group)}</b></td><td>${esc(r.decisions)}</td><td>${esc(r.wins)}-${esc(r.losses)}-${esc(r.pushes)}</td><td>${pct(r.hit_rate)}</td><td class="${cls(r.profit_loss_units)}">${Number(r.profit_loss_units||0).toFixed(2)}u</td><td class="${cls(r.roi)}">${pct(r.roi)}</td></tr>`).join('');return `<div class="section"><h3 class="mono">${esc(title)}</h3><div class="altPerfTableWrap"><table class="altPerfTable"><thead><tr><th>Group</th><th>Decisions</th><th>Record</th><th>Hit Rate</th><th>P/L</th><th>ROI</th></tr></thead><tbody>${body||'<tr><td colspan="6">No graded results yet.</td></tr>'}</tbody></table></div></div>`}
 window.altPerformance=function(){const p=DATA.alt_performance||{},s=p.summary||{};return `<div class="section"><div class="row"><div><h2 class="mono">ALT Performance</h2><div class="small mono">Frozen pregame snapshots graded against verified player game logs.</div></div></div><div class="altPerfGrid"><div class="altPerfCard"><div class="small">Archived</div><div class="altPerfValue">${esc(val(s.archived_candidates,0))}</div></div><div class="altPerfCard"><div class="small">Graded</div><div class="altPerfValue">${esc(val(s.graded,0))}</div></div><div class="altPerfCard"><div class="small">Record</div><div class="altPerfValue">${esc(val(s.wins,0))}-${esc(val(s.losses,0))}-${esc(val(s.pushes,0))}</div></div><div class="altPerfCard"><div class="small">Hit Rate</div><div class="altPerfValue">${pct(s.hit_rate)}</div></div><div class="altPerfCard"><div class="small">P/L</div><div class="altPerfValue ${cls(s.profit_loss_units)}">${Number(s.profit_loss_units||0).toFixed(2)}u</div></div><div class="altPerfCard"><div class="small">ROI</div><div class="altPerfValue ${cls(s.roi)}">${pct(s.roi)}</div></div><div class="altPerfCard"><div class="small">Recommended Threshold</div><div class="altPerfValue">${esc(val(s.recommended_minimum_score_band))}</div></div><div class="altPerfCard"><div class="small">Calibration</div><div class="altPerfValue">${s.calibration_ready?'Ready':'Collecting'}</div></div></div><div class="altPerfNote mono">Closing line and CLV remain blank until verified closing-market snapshots are available.</div></div>${table('By Grade',p.by_grade)}${table('By Score Band',p.by_score_band)}${table('By Action',p.by_action)}${table('By Stat',p.by_stat)}${table('By Side',p.by_side)}${table('By Sportsbook',p.by_sportsbook)}${table('By Matchup Rank Source',p.by_matchup_rank_source)}`};
 })();</script>'''
+PROPS_BRIDGE=r'''<script id="v4-player-props-v2-router-bridge">(function(){
+const previous=window.render;
+if(typeof previous!=='function')return;
+window.render=function(view){
+  const target=view||'games';
+  if(target!=='props'&&target!=='books')return previous(target);
+  const root=document.getElementById('root');
+  const tabs=document.getElementById('tabs');
+  if(tabs){for(const button of tabs.querySelectorAll('.tab'))button.classList.toggle('a',button.dataset.view==='props')}
+  if(!root||typeof window.props!=='function')return previous('props');
+  try{root.innerHTML=String(window.props()||'');window.scrollTo(0,0)}
+  catch(error){root.innerHTML=`<div class="section"><div class="routerError"><b>Player Props failed to render.</b><pre>${typeof window.E==='function'?window.E(error?.stack||String(error)):String(error)}</pre></div></div>`}
+};
+window.PLAYER_PROPS_V2_ROUTER={version:'1.0',active:true};
+})();</script>'''
 FINAL_BOOT=r'''<script id="v4-final-dashboard-boot-script">(function(){
 function boot(){
   if(typeof window.render!=='function')return;
@@ -52,7 +67,8 @@ def main():
     from patch_dashboard_v4_player_props_controls import main as apply_player_props_controls
     apply_player_props_controls()
     html=HTML.read_text(encoding='utf-8')
+    html=replace_block(html,'<script id="v4-player-props-v2-router-bridge">','</script>',PROPS_BRIDGE) if 'id="v4-player-props-v2-router-bridge"' in html else html.replace('</body>',PROPS_BRIDGE+'</body>')
     html=replace_block(html,'<script id="v4-final-dashboard-boot-script">','</script>',FINAL_BOOT) if 'id="v4-final-dashboard-boot-script"' in html else html.replace('</body>',FINAL_BOOT+'</body>')
     HTML.write_text(html,encoding='utf-8')
-    print('ALT Performance applied; Player Props UX, controls, labels, router, and final boot installed')
+    print('ALT Performance applied; Player Props V2 is authoritative on the props route')
 if __name__=='__main__':main()
