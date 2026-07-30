@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-07-30T15:29:16.404660+00:00`
+Generated: `2026-07-30T15:30:34.071988+00:00`
 Expected target date: `2026-07-30`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 274
-- **Green:** 208
-- **Yellow:** 66
+- **Green:** 210
+- **Yellow:** 64
 - **Red:** 0
 - **Duplicate Names:** 98
 
@@ -19,7 +19,7 @@ Overall status: **YELLOW**
 | YELLOW | dashboard | `data/dashboard/daily_action_report_v2.json` | 2026-07-10 | target_date_mismatch:2026-07-10!=2026-07-30 |
 | YELLOW | dashboard | `data/dashboard/deepseek_portfolio_optimizer.json` | 2026-07-08 | target_date_mismatch:2026-07-08!=2026-07-30 |
 | GREEN | dashboard | `data/dashboard/market_intelligence.json` | 2026-07-30 | None |
-| YELLOW | dashboard | `data/dashboard/market_movement.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | dashboard | `data/dashboard/market_movement.json` | 2026-07-30 | None |
 | YELLOW | dashboard | `data/dashboard/market_timing_intelligence.json` | 2026-07-10 | target_date_mismatch:2026-07-10!=2026-07-30 |
 | YELLOW | dashboard | `data/dashboard/master_feed.json` | 2026-07-09 | target_date_mismatch:2026-07-09!=2026-07-30 |
 | YELLOW | dashboard | `data/dashboard/minutes_usage_intelligence.json` | 2026-07-10 | target_date_mismatch:2026-07-10!=2026-07-30 |
@@ -181,7 +181,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_warehouse_health.json` | None | None |
 | GREEN | master | `data/master/wnba_master.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/market_intelligence.json` | 2026-07-30 | None |
-| YELLOW | warehouse | `data/warehouse/market_movement.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | warehouse | `data/warehouse/market_movement.json` | 2026-07-30 | None |
 | YELLOW | warehouse | `data/warehouse/opportunity_finder.json` | 2026-07-27 | target_date_mismatch:2026-07-27!=2026-07-30 |
 | YELLOW | warehouse | `data/warehouse/professional_dashboard.json` | 2026-07-27 | target_date_mismatch:2026-07-27!=2026-07-30 |
 | GREEN | warehouse | `data/warehouse/sports_skills_provider_status.json` | None | None |
