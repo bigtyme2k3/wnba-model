@@ -12,6 +12,20 @@ function cls(v){v=Number(v||0);return v>0?'altPerfGood':v<0?'altPerfBad':'altPer
 function table(title,rows){const body=arr(rows).map(r=>`<tr><td><b>${esc(r.group)}</b></td><td>${esc(r.decisions)}</td><td>${esc(r.wins)}-${esc(r.losses)}-${esc(r.pushes)}</td><td>${pct(r.hit_rate)}</td><td class="${cls(r.profit_loss_units)}">${Number(r.profit_loss_units||0).toFixed(2)}u</td><td class="${cls(r.roi)}">${pct(r.roi)}</td></tr>`).join('');return `<div class="section"><h3 class="mono">${esc(title)}</h3><div class="altPerfTableWrap"><table class="altPerfTable"><thead><tr><th>Group</th><th>Decisions</th><th>Record</th><th>Hit Rate</th><th>P/L</th><th>ROI</th></tr></thead><tbody>${body||'<tr><td colspan="6">No graded results yet.</td></tr>'}</tbody></table></div></div>`}
 window.altPerformance=function(){const p=DATA.alt_performance||{},s=p.summary||{};return `<div class="section"><div class="row"><div><h2 class="mono">ALT Performance</h2><div class="small mono">Frozen pregame snapshots graded against verified player game logs.</div></div></div><div class="altPerfGrid"><div class="altPerfCard"><div class="small">Archived</div><div class="altPerfValue">${esc(val(s.archived_candidates,0))}</div></div><div class="altPerfCard"><div class="small">Graded</div><div class="altPerfValue">${esc(val(s.graded,0))}</div></div><div class="altPerfCard"><div class="small">Record</div><div class="altPerfValue">${esc(val(s.wins,0))}-${esc(val(s.losses,0))}-${esc(val(s.pushes,0))}</div></div><div class="altPerfCard"><div class="small">Hit Rate</div><div class="altPerfValue">${pct(s.hit_rate)}</div></div><div class="altPerfCard"><div class="small">P/L</div><div class="altPerfValue ${cls(s.profit_loss_units)}">${Number(s.profit_loss_units||0).toFixed(2)}u</div></div><div class="altPerfCard"><div class="small">ROI</div><div class="altPerfValue ${cls(s.roi)}">${pct(s.roi)}</div></div><div class="altPerfCard"><div class="small">Recommended Threshold</div><div class="altPerfValue">${esc(val(s.recommended_minimum_score_band))}</div></div><div class="altPerfCard"><div class="small">Calibration</div><div class="altPerfValue">${s.calibration_ready?'Ready':'Collecting'}</div></div></div><div class="altPerfNote mono">Closing line and CLV remain blank until verified closing-market snapshots are available.</div></div>${table('By Grade',p.by_grade)}${table('By Score Band',p.by_score_band)}${table('By Action',p.by_action)}${table('By Stat',p.by_stat)}${table('By Side',p.by_side)}${table('By Sportsbook',p.by_sportsbook)}${table('By Matchup Rank Source',p.by_matchup_rank_source)}`};
 })();</script>'''
+FINAL_BOOT=r'''<script id="v4-final-dashboard-boot-script">(function(){
+function boot(){
+  if(typeof window.render!=='function')return;
+  window.render('games');
+  setTimeout(function(){
+    const root=document.getElementById('root');
+    const text=(root&&root.textContent)||'';
+    if(text.includes('Games is unavailable')||text.includes('Games failed to render'))window.render('games');
+  },50);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
+else setTimeout(boot,0);
+window.addEventListener('load',boot,{once:true});
+})();</script>'''
 def replace_block(html,start_marker,end_marker,replacement):
     s=html.find(start_marker)
     if s<0:return html
@@ -29,5 +43,8 @@ def main():
     HTML.write_text(html,encoding='utf-8')
     from patch_dashboard_v4_consolidated_navigation import main as apply_router
     apply_router()
-    print('ALT Performance applied; consolidated router finalized dashboard')
+    html=HTML.read_text(encoding='utf-8')
+    html=replace_block(html,'<script id="v4-final-dashboard-boot-script">','</script>',FINAL_BOOT) if 'id="v4-final-dashboard-boot-script"' in html else html.replace('</body>',FINAL_BOOT+'</body>')
+    HTML.write_text(html,encoding='utf-8')
+    print('ALT Performance applied; consolidated router and final boot installed')
 if __name__=='__main__':main()
