@@ -15,6 +15,7 @@ STYLE = r'''<style id="sprint25-games-markets-style">
 
 SCRIPT = r'''<script id="sprint25-games-markets-script">
 (function(){
+  const A=v=>Array.isArray(v)?v:[];
   const GAME_MODEL=__GAME_MODEL__;
   const firstValue=(obj,keys,def='-')=>{for(const k of keys){const v=obj?.[k];if(v!==undefined&&v!==null&&v!=='')return v}return def};
   const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
