@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-07-30T16:02:33.707470+00:00`
+Generated: `2026-07-30T16:21:40.797776+00:00`
 Expected target date: `2026-07-30`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 274
-- **Green:** 240
-- **Yellow:** 34
+- **Green:** 242
+- **Yellow:** 32
 - **Red:** 0
 - **Duplicate Names:** 98
 
@@ -55,7 +55,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_cross_market_top_plays.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_cross_market_top_plays_acceptance.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_daily_ai_report.json` | None | None |
-| YELLOW | dashboard | `data/dashboard/wnba_daily_edges.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | dashboard | `data/dashboard/wnba_daily_edges.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_daily_intelligence_brief.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_daily_retraining.json` | 2026-07-30 | None |
 | GREEN | dashboard | `data/dashboard/wnba_dashboard_tab_qa.json` | None | None |
@@ -205,7 +205,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_consensus_engine.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_cross_market_top_plays.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_daily_ai_report.json` | None | None |
-| YELLOW | warehouse | `data/warehouse/wnba_daily_edges.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | warehouse | `data/warehouse/wnba_daily_edges.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_daily_retraining.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_data_lineage.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_decision_engine_final.json` | 2026-07-30 | None |
