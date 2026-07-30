@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-07-30T04:24:10.957637+00:00`
+Generated: `2026-07-30T07:14:54.172614+00:00`
 Expected target date: `2026-07-29`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 274
-- **Green:** 246
-- **Yellow:** 28
+- **Green:** 244
+- **Yellow:** 30
 - **Red:** 0
 - **Duplicate Names:** 98
 
@@ -144,7 +144,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_projection_performance.json` | 2026-07-29 | None |
 | GREEN | dashboard | `data/dashboard/wnba_projection_performance_acceptance.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_prop_bet_cards.json` | 2026-07-29 | None |
-| GREEN | dashboard | `data/dashboard/wnba_prop_card_performance.json` | 2026-07-29 | None |
+| YELLOW | dashboard | `data/dashboard/wnba_prop_card_performance.json` | 2026-07-30 | target_date_mismatch:2026-07-30!=2026-07-29 |
 | GREEN | dashboard | `data/dashboard/wnba_q1_team_history.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_reasoning_layer.json` | 2026-07-29 | None |
 | GREEN | dashboard | `data/dashboard/wnba_rebounds_assists_projection_v2.json` | 2026-07-29 | None |
@@ -274,7 +274,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_projection_ai.json` | 2026-07-29 | None |
 | GREEN | warehouse | `data/warehouse/wnba_projection_performance.json` | 2026-07-29 | None |
 | GREEN | warehouse | `data/warehouse/wnba_prop_bet_cards.json` | 2026-07-29 | None |
-| GREEN | warehouse | `data/warehouse/wnba_prop_card_performance.json` | 2026-07-29 | None |
+| YELLOW | warehouse | `data/warehouse/wnba_prop_card_performance.json` | 2026-07-30 | target_date_mismatch:2026-07-30!=2026-07-29 |
 | GREEN | warehouse | `data/warehouse/wnba_q1_team_history.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_reasoning_layer.json` | 2026-07-29 | None |
 | GREEN | warehouse | `data/warehouse/wnba_rebounds_assists_projection_v2.json` | 2026-07-29 | None |
