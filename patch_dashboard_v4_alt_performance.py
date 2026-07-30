@@ -47,11 +47,12 @@ def main():
     apply_router()
     from patch_dashboard_v4_filter_events import main as apply_filters
     apply_filters()
-    # Install the flagship Player Props renderer after all legacy renderers and the router.
     from patch_dashboard_v4_player_props_ux import main as apply_player_props_ux
     apply_player_props_ux()
+    from patch_dashboard_v4_player_props_controls import main as apply_player_props_controls
+    apply_player_props_controls()
     html=HTML.read_text(encoding='utf-8')
     html=replace_block(html,'<script id="v4-final-dashboard-boot-script">','</script>',FINAL_BOOT) if 'id="v4-final-dashboard-boot-script"' in html else html.replace('</body>',FINAL_BOOT+'</body>')
     HTML.write_text(html,encoding='utf-8')
-    print('ALT Performance applied; Games and Player Props UX finalized, router finalized, and final boot installed')
+    print('ALT Performance applied; Player Props UX, controls, labels, router, and final boot installed')
 if __name__=='__main__':main()
