@@ -17,13 +17,15 @@ SCRIPT = r'''<script id="sprint25-games-markets-script">
 (function(){
   const A=v=>Array.isArray(v)?v:[];
   const GAME_MODEL=__GAME_MODEL__;
+  const dashboardData=()=>typeof DATA!=='undefined'&&DATA?DATA:(window.DATA||{});
+  const masterData=()=>dashboardData().master||dashboardData();
   const firstValue=(obj,keys,def='-')=>{for(const k of keys){const v=obj?.[k];if(v!==undefined&&v!==null&&v!=='')return v}return def};
   const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
   const signed=v=>{const n=num(v);return n===null?'-':`${n>0?'+':''}${n}`};
   const gameKey=v=>String(v||'').trim().toLowerCase().replace(/\s+/g,' ');
-  const allGames=()=>{const candidates=[window.DATA?.master?.games,window.DATA?.games,window.DATA?.master?.schedule,window.DATA?.schedule];for(const rows of candidates){if(Array.isArray(rows)&&rows.length)return rows}return []};
-  const todayGames=()=>{const direct=[window.DATA?.today_games,window.DATA?.master?.today_games];for(const rows of direct){if(Array.isArray(rows)&&rows.length)return rows}const target=String(window.DATA?.master?.target_date||window.DATA?.target_date||'');return allGames().filter(g=>String(g?.bucket||'').toLowerCase()==='today'||(target&&String(g?.game_date||'')===target&& !String(g?.status||'').toUpperCase().includes('FINAL')))};
-  const recentGames=()=>{const direct=[window.DATA?.yesterday_games,window.DATA?.master?.yesterday_games];for(const rows of direct){if(Array.isArray(rows)&&rows.length)return rows}return allGames().filter(g=>String(g?.bucket||'').toLowerCase()==='yesterday'||String(g?.status||'').toUpperCase().includes('FINAL'))};
+  const allGames=()=>{const root=dashboardData(),master=masterData();const candidates=[master.games,root.games,master.schedule,root.schedule];for(const rows of candidates){if(Array.isArray(rows)&&rows.length)return rows}return []};
+  const todayGames=()=>{const root=dashboardData(),master=masterData(),direct=[root.today_games,master.today_games];for(const rows of direct){if(Array.isArray(rows)&&rows.length)return rows}const target=String(master.target_date||root.target_date||'');return allGames().filter(g=>String(g?.bucket||'').toLowerCase()==='today'||(target&&String(g?.game_date||'')===target&&!String(g?.status||'').toUpperCase().includes('FINAL')))};
+  const recentGames=()=>{const root=dashboardData(),master=masterData(),direct=[root.yesterday_games,master.yesterday_games];for(const rows of direct){if(Array.isArray(rows)&&rows.length)return rows}return allGames().filter(g=>String(g?.bucket||'').toLowerCase()==='yesterday'||String(g?.status||'').toUpperCase().includes('FINAL'))};
   window.WNBA_GAME_SOURCE={allGames,todayGames,recentGames};
   const modelRows=A(GAME_MODEL?.games);
   const modelMap=new Map(modelRows.map(r=>[gameKey(r.game||[r.away_team,r.home_team].filter(Boolean).join(' @ ')),r]));
@@ -98,7 +100,7 @@ def main() -> None:
     else:
         html = html.replace("</body>", script + "</body>", 1)
     DASHBOARD.write_text(html, encoding="utf-8")
-    print("Authoritative Games and Game Props renderers replaced with normalized game sources")
+    print("Games and Game Props read lexical dashboard DATA with normalized game sources")
 
 
 if __name__ == "__main__":
