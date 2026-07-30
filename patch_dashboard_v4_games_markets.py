@@ -3,9 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-
 DASHBOARD = Path("docs/index.html")
 GAME_MODEL = Path("data/dashboard/wnba_game_market_model.json")
+MASTER = Path("data/dashboard/wnba_master.json")
 STYLE_MARKER = "sprint25-games-markets-style"
 SCRIPT_MARKER = "sprint25-games-markets-script"
 
@@ -17,16 +17,18 @@ SCRIPT = r'''<script id="sprint25-games-markets-script">
 (function(){
   const A=v=>Array.isArray(v)?v:[];
   const GAME_MODEL=__GAME_MODEL__;
+  const EMBEDDED_TODAY=__TODAY_GAMES__;
+  const EMBEDDED_RECENT=__RECENT_GAMES__;
   const dashboardData=()=>typeof DATA!=='undefined'&&DATA?DATA:(window.DATA||{});
   const masterData=()=>dashboardData().master||dashboardData();
   const firstValue=(obj,keys,def='-')=>{for(const k of keys){const v=obj?.[k];if(v!==undefined&&v!==null&&v!=='')return v}return def};
   const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
   const signed=v=>{const n=num(v);return n===null?'-':`${n>0?'+':''}${n}`};
   const gameKey=v=>String(v||'').trim().toLowerCase().replace(/\s+/g,' ');
-  const allGames=()=>{const root=dashboardData(),master=masterData();const candidates=[master.games,root.games,master.schedule,root.schedule];for(const rows of candidates){if(Array.isArray(rows)&&rows.length)return rows}return []};
-  const todayGames=()=>{const root=dashboardData(),master=masterData(),direct=[root.today_games,master.today_games];for(const rows of direct){if(Array.isArray(rows)&&rows.length)return rows}const target=String(master.target_date||root.target_date||'');return allGames().filter(g=>String(g?.bucket||'').toLowerCase()==='today'||(target&&String(g?.game_date||'')===target&&!String(g?.status||'').toUpperCase().includes('FINAL')))};
-  const recentGames=()=>{const root=dashboardData(),master=masterData(),direct=[root.yesterday_games,master.yesterday_games];for(const rows of direct){if(Array.isArray(rows)&&rows.length)return rows}return allGames().filter(g=>String(g?.bucket||'').toLowerCase()==='yesterday'||String(g?.status||'').toUpperCase().includes('FINAL'))};
-  window.WNBA_GAME_SOURCE={allGames,todayGames,recentGames};
+  const allGames=()=>{const root=dashboardData(),master=masterData();const candidates=[master.games,root.games,master.schedule,root.schedule];for(const rows of candidates){if(Array.isArray(rows)&&rows.length)return rows}return [...A(EMBEDDED_TODAY),...A(EMBEDDED_RECENT)]};
+  const todayGames=()=>{if(A(EMBEDDED_TODAY).length)return A(EMBEDDED_TODAY);const root=dashboardData(),master=masterData(),direct=[root.today_games,master.today_games];for(const rows of direct){if(Array.isArray(rows)&&rows.length)return rows}const target=String(master.target_date||root.target_date||'');return allGames().filter(g=>String(g?.bucket||'').toLowerCase()==='today'||(target&&String(g?.game_date||'')===target&&!String(g?.status||'').toUpperCase().includes('FINAL')))};
+  const recentGames=()=>{if(A(EMBEDDED_RECENT).length)return A(EMBEDDED_RECENT);const root=dashboardData(),master=masterData(),direct=[root.yesterday_games,master.yesterday_games];for(const rows of direct){if(Array.isArray(rows)&&rows.length)return rows}return allGames().filter(g=>String(g?.bucket||'').toLowerCase()==='yesterday'||String(g?.status||'').toUpperCase().includes('FINAL'))};
+  window.WNBA_GAME_SOURCE={allGames,todayGames,recentGames,embeddedToday:A(EMBEDDED_TODAY).length,embeddedRecent:A(EMBEDDED_RECENT).length};
   const modelRows=A(GAME_MODEL?.games);
   const modelMap=new Map(modelRows.map(r=>[gameKey(r.game||[r.away_team,r.home_team].filter(Boolean).join(' @ ')),r]));
   const modelFor=g=>modelMap.get(gameKey(window.game(g)))||{};
@@ -66,14 +68,26 @@ SCRIPT = r'''<script id="sprint25-games-markets-script">
 </script>'''
 
 
-def load_game_model() -> dict:
+def load_json(path: Path) -> dict:
     try:
-        if GAME_MODEL.exists():
-            payload = json.loads(GAME_MODEL.read_text(encoding="utf-8"))
-            return payload if isinstance(payload, dict) else {}
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        return payload if isinstance(payload, dict) else {}
     except Exception as exc:
-        print(f"[warn] unable to load game model: {exc}")
-    return {}
+        print(f"[warn] unable to load {path}: {exc}")
+        return {}
+
+
+def load_game_model() -> dict:
+    return load_json(GAME_MODEL) if GAME_MODEL.exists() else {}
+
+
+def load_game_rows() -> tuple[list[dict], list[dict]]:
+    master = load_json(MASTER) if MASTER.exists() else {}
+    games = master.get("games", []) if isinstance(master, dict) else []
+    today = [g for g in games if isinstance(g, dict) and str(g.get("bucket", "")).lower() == "today"]
+    recent = [g for g in games if isinstance(g, dict) and (str(g.get("bucket", "")).lower() == "yesterday" or "FINAL" in str(g.get("status", "")).upper())]
+    print(f"Embedded game rows: today={len(today)} recent={len(recent)}")
+    return today, recent
 
 
 def replace_block(html: str, start: str, end: str, replacement: str) -> str:
@@ -90,7 +104,12 @@ def main() -> None:
     if not DASHBOARD.exists():
         raise FileNotFoundError(DASHBOARD)
     html = DASHBOARD.read_text(encoding="utf-8")
-    script = SCRIPT.replace("__GAME_MODEL__", json.dumps(load_game_model(), separators=(",", ":"), ensure_ascii=False))
+    today, recent = load_game_rows()
+    script = (
+        SCRIPT.replace("__GAME_MODEL__", json.dumps(load_game_model(), separators=(",", ":"), ensure_ascii=False))
+        .replace("__TODAY_GAMES__", json.dumps(today, separators=(",", ":"), ensure_ascii=False))
+        .replace("__RECENT_GAMES__", json.dumps(recent, separators=(",", ":"), ensure_ascii=False))
+    )
     if f'id="{STYLE_MARKER}"' in html:
         html = replace_block(html, f'<style id="{STYLE_MARKER}">', "</style>", STYLE)
     else:
@@ -100,7 +119,7 @@ def main() -> None:
     else:
         html = html.replace("</body>", script + "</body>", 1)
     DASHBOARD.write_text(html, encoding="utf-8")
-    print("Games and Game Props read lexical dashboard DATA with normalized game sources")
+    print("Games and Game Props embedded authoritative game rows")
 
 
 if __name__ == "__main__":
