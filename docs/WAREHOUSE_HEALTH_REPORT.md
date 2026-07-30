@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-07-30T17:03:58.494465+00:00`
+Generated: `2026-07-30T17:30:32.984947+00:00`
 Expected target date: `2026-07-30`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 274
-- **Green:** 249
-- **Yellow:** 25
+- **Green:** 250
+- **Yellow:** 24
 - **Red:** 0
 - **Duplicate Names:** 98
 
@@ -243,7 +243,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_model_picks_ledger.json` | 2026-07-30 | None |
 | YELLOW | warehouse | `data/warehouse/wnba_model_quality_audit.json` | 2026-07-10 | target_date_mismatch:2026-07-10!=2026-07-30 |
 | GREEN | warehouse | `data/warehouse/wnba_monte_carlo_engine.json` | 2026-07-30 | None |
-| YELLOW | warehouse | `data/warehouse/wnba_monte_carlo_scenarios.json` | 2026-07-29 | target_date_mismatch:2026-07-29!=2026-07-30 |
+| GREEN | warehouse | `data/warehouse/wnba_monte_carlo_scenarios.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_odds_health.json` | 2026-07-30 | None |
 | GREEN | warehouse | `data/warehouse/wnba_odds_history_backfill_plan.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_odds_history_dashboard.json` | None | None |
