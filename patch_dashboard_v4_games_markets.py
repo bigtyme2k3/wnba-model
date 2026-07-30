@@ -23,9 +23,9 @@ SCRIPT = r'''<script id="sprint25-games-markets-script">
   const gameKey=v=>String(v||'').trim().toLowerCase().replace(/\s+/g,' ');
   const modelRows=A(GAME_MODEL?.games);
   const modelMap=new Map(modelRows.map(r=>[gameKey(r.game||[r.away_team,r.home_team].filter(Boolean).join(' @ ')),r]));
-  const modelFor=g=>modelMap.get(gameKey(game(g)))||{};
+  const modelFor=g=>modelMap.get(gameKey(window.game(g)))||{};
   const mergedGame=g=>Object.assign({},g,modelFor(g));
-  const gamePropsFor=g=>propsRaw().filter(p=>gameKey(p.game)===gameKey(game(g)));
+  const gamePropsFor=g=>(typeof window.propsRaw==='function'?window.propsRaw():[]).filter(p=>gameKey(p.game)===gameKey(window.game(g)));
   const candidateScore=p=>Number(p.governed_score??p.calibrated_score??p.final_score??p.confidence??0);
   const namedCandidates=(g,limit=4)=>gamePropsFor(g).filter(p=>p.player&&p.stat).sort((a,b)=>candidateScore(b)-candidateScore(a)).slice(0,limit);
   const modelSpread=g=>firstValue(mergedGame(g),['projected_margin','model_spread','projected_spread','predicted_spread','spread_projection','projection_spread']);
@@ -40,37 +40,21 @@ SCRIPT = r'''<script id="sprint25-games-markets-script">
   const totalLean=g=>{const r=modelFor(g);if(r.total_recommendation)return r.total_recommendation==='PASS'?'PASS':`${r.total_recommendation} ${bookTotal(g)}`;const e=totalEdge(g);if(e===null)return 'Model pending';if(Math.abs(e)<1)return 'PASS';return e>0?'OVER lean':'UNDER lean'};
   const probability=(g,field)=>{const n=num(modelFor(g)?.[field]);return n===null?'-':`${(n*100).toFixed(1)}%`};
   const scoreProjection=g=>{const r=modelFor(g);const a=num(r.projected_away_score),h=num(r.projected_home_score);return a===null||h===null?'-':`${a.toFixed(1)} - ${h.toFixed(1)}`};
-  const marketBox=(title,pick,meta='')=>`<div class="marketBox"><div class="marketTitle mono">${E(title)}</div><div class="marketPick mono">${E(pick)}</div><div class="marketMeta mono">${E(meta)}</div></div>`;
-  const candidateCard=p=>{const side=S(p.signal||p.side,'WATCH'),line=S(p.line||p.consensus_line),proj=S(p.projection||p.pred),score=S(p.governed_score||p.calibrated_score||p.final_score||p.confidence);return `<div class="candidate"><div class="candidateName">${E(p.player)}</div><div class="candidatePick mono">${E(side)} ${E(p.stat)} ${E(line)}</div><div class="marketMeta mono">Proj ${E(proj)} · Score ${E(score)} · ${E(p.book||p.best_book||p.best_over_book||'Book TBD')}</div></div>`};
+  const marketBox=(title,pick,meta='')=>`<div class="marketBox"><div class="marketTitle mono">${window.E(title)}</div><div class="marketPick mono">${window.E(pick)}</div><div class="marketMeta mono">${window.E(meta)}</div></div>`;
+  const candidateCard=p=>{const side=window.S(p.signal||p.side,'WATCH'),line=window.S(p.line||p.consensus_line),proj=window.S(p.projection||p.pred),score=window.S(p.governed_score||p.calibrated_score||p.final_score||p.confidence);return `<div class="candidate"><div class="candidateName">${window.E(p.player)}</div><div class="candidatePick mono">${window.E(side)} ${window.E(p.stat)} ${window.E(line)}</div><div class="marketMeta mono">Proj ${window.E(proj)} · Score ${window.E(score)} · ${window.E(p.book||p.best_book||p.best_over_book||'Book TBD')}</div></div>`};
 
   window.gamesV25=function(){
-    const today=A(DATA.today_games), yesterday=A(DATA.yesterday_games);
-    const todayHtml=today.map(g=>{const c=namedCandidates(g);return `<div class="gameCard"><div class="row"><div><b class="mono">${E(game(g))}</b><div class="small mono">${E(S(g.start_time,'Time TBD'))} · ${E(S(g.status,'Pregame'))}</div></div><div class="score mono">${E(score(g))}</div></div><div class="gameSummaryLine"><span class="chip mono">Home book spread ${E(bookSpread(g))}</span><span class="chip mono">Home model margin ${E(modelSpread(g))}</span><span class="chip mono">Book total ${E(bookTotal(g))}</span><span class="chip mono">Model total ${E(modelTotal(g))}</span><span class="chip mono">Projected score ${E(scoreProjection(g))}</span></div><div class="marketGrid">${marketBox('Spread prediction',spreadLean(g),`Edge ${signed(spreadEdge(g))} · Win ${probability(g,'spread_probability')}`)}${marketBox('Total prediction',totalLean(g),`Edge ${signed(totalEdge(g))} · Win ${probability(g,'total_probability')}`)}${marketBox('Moneyline',String(moneyline(g)),'Current market price')}</div><div class="candidateList">${c.map(candidateCard).join('')||'<div class="empty mono">No named player candidates for this matchup.</div>'}</div></div>`}).join('')||'<div class="empty mono">No games.</div>';
-    const resultHtml=yesterday.map(g=>`<div class="gameCard"><div class="row"><div><b class="mono">${E(game(g))}</b><div class="small mono">Final</div></div><div class="score mono">${E(score(g))}</div></div></div>`).join('')||'<div class="empty mono">No completed results.</div>';
-    return kpis()+`<div class="grid2"><div class="section"><h2 class="mono">Tonight</h2><div class="small mono">Matchup hub with sportsbook lines, model projections and named player candidates.</div>${todayHtml}</div><div class="section"><h2 class="mono">Recent Results</h2>${resultHtml}</div></div>`;
+    const today=A(window.DATA?.today_games), yesterday=A(window.DATA?.yesterday_games);
+    const todayHtml=today.map(g=>{const c=namedCandidates(g);return `<div class="gameCard"><div class="row"><div><b class="mono">${window.E(window.game(g))}</b><div class="small mono">${window.E(window.S(g.start_time,'Time TBD'))} · ${window.E(window.S(g.status,'Pregame'))}</div></div><div class="score mono">${window.E(window.score(g))}</div></div><div class="gameSummaryLine"><span class="chip mono">Home book spread ${window.E(bookSpread(g))}</span><span class="chip mono">Home model margin ${window.E(modelSpread(g))}</span><span class="chip mono">Book total ${window.E(bookTotal(g))}</span><span class="chip mono">Model total ${window.E(modelTotal(g))}</span><span class="chip mono">Projected score ${window.E(scoreProjection(g))}</span></div><div class="marketGrid">${marketBox('Spread prediction',spreadLean(g),`Edge ${signed(spreadEdge(g))} · Win ${probability(g,'spread_probability')}`)}${marketBox('Total prediction',totalLean(g),`Edge ${signed(totalEdge(g))} · Win ${probability(g,'total_probability')}`)}${marketBox('Moneyline',String(moneyline(g)),'Current market price')}</div><div class="candidateList">${c.map(candidateCard).join('')||'<div class="empty mono">No named player candidates for this matchup.</div>'}</div></div>`}).join('')||'<div class="empty mono">No games.</div>';
+    const resultHtml=yesterday.map(g=>`<div class="gameCard"><div class="row"><div><b class="mono">${window.E(window.game(g))}</b><div class="small mono">Final</div></div><div class="score mono">${window.E(window.score(g))}</div></div></div>`).join('')||'<div class="empty mono">No completed results.</div>';
+    const top=typeof window.kpis==='function'?window.kpis():'';
+    return top+`<div class="grid2"><div class="section"><h2 class="mono">Tonight</h2><div class="small mono">Matchup hub with sportsbook lines, model projections and named player candidates.</div>${todayHtml}</div><div class="section"><h2 class="mono">Recent Results</h2>${resultHtml}</div></div>`;
   };
 
   window.marketsV25=function(){
-    const rows=A(DATA.today_games);
-    return `<div class="section"><h2 class="mono">Game Markets</h2><div class="small mono">The book spread and model margin are shown from the home-team perspective. Pick lines are converted to the selected team.</div><div class="marketTable"><table><thead><tr><th>Game</th><th>Home book spread</th><th>Home model margin</th><th>Spread pick</th><th>Spread edge</th><th>Book total</th><th>Model total</th><th>Total pick</th><th>Total edge</th><th>Projected score</th></tr></thead><tbody>${rows.map(g=>`<tr><td><b>${E(game(g))}</b><div class="small mono">${E(S(g.start_time,'Time TBD'))}</div></td><td>${E(bookSpread(g))}</td><td>${E(modelSpread(g))}</td><td>${E(spreadLean(g))}</td><td class="${spreadEdge(g)!==null&&Math.abs(spreadEdge(g))>=1?'sideGood':'sideMuted'}">${E(signed(spreadEdge(g)))}</td><td>${E(bookTotal(g))}</td><td>${E(modelTotal(g))}</td><td>${E(totalLean(g))}</td><td class="${totalEdge(g)!==null&&Math.abs(totalEdge(g))>=1?'sideGood':'sideMuted'}">${E(signed(totalEdge(g)))}</td><td>${E(scoreProjection(g))}</td></tr>`).join('')||'<tr><td colspan="10" class="empty mono">No active game markets.</td></tr>'}</tbody></table></div><div class="periodSoon mono"><b>Period markets:</b> 1Q spread, 1Q total, 1H spread, 1H total and team totals are structurally reserved here. They remain unavailable until a verified source supplies those rows.</div></div>`;
+    const rows=A(window.DATA?.today_games);
+    return `<div class="section"><h2 class="mono">Game Markets</h2><div class="small mono">The book spread and model margin are shown from the home-team perspective. Pick lines are converted to the selected team.</div><div class="marketTable"><table><thead><tr><th>Game</th><th>Home book spread</th><th>Home model margin</th><th>Spread pick</th><th>Spread edge</th><th>Book total</th><th>Model total</th><th>Total pick</th><th>Total edge</th><th>Projected score</th></tr></thead><tbody>${rows.map(g=>`<tr><td><b>${window.E(window.game(g))}</b><div class="small mono">${window.E(window.S(g.start_time,'Time TBD'))}</div></td><td>${window.E(bookSpread(g))}</td><td>${window.E(modelSpread(g))}</td><td>${window.E(spreadLean(g))}</td><td class="${spreadEdge(g)!==null&&Math.abs(spreadEdge(g))>=1?'sideGood':'sideMuted'}">${window.E(signed(spreadEdge(g)))}</td><td>${window.E(bookTotal(g))}</td><td>${window.E(modelTotal(g))}</td><td>${window.E(totalLean(g))}</td><td class="${totalEdge(g)!==null&&Math.abs(totalEdge(g))>=1?'sideGood':'sideMuted'}">${window.E(signed(totalEdge(g)))}</td><td>${window.E(scoreProjection(g))}</td></tr>`).join('')||'<tr><td colspan="10" class="empty mono">No active game markets.</td></tr>'}</tbody></table></div><div class="periodSoon mono"><b>Period markets:</b> 1Q spread, 1Q total, 1H spread, 1H total and team totals are structurally reserved here. They remain unavailable until a verified source supplies those rows.</div></div>`;
   };
-
-  try{games=window.gamesV25}catch(e){}
-  if(Array.isArray(tabs)){
-    const existing=tabs.findIndex(x=>x[0]==='markets'||x[0]==='gameprops');
-    if(existing>=0)tabs[existing]=['markets','Game Props'];
-    else tabs.splice(1,0,['markets','Game Props']);
-  }
-  render=function(t='games'){
-    q('tabs').innerHTML=tabs.map(x=>`<button class="tab ${x[0]===t?'a':''}" onclick="render('${x[0]}')">${x[1]}</button>`).join('');
-    q('sub').textContent=`Slate ${S(DATA.master?.target_date,'-')} · Updated ${fmt(DATA.generated_at_utc)}`;
-    q('badge').textContent=`V4 · ${S(summary().sportsbook_markets,0)} odds markets`;
-    const views={games:window.gamesV25,markets:window.marketsV25,props,books,best,portfolio,ai,results,health};
-    q('root').innerHTML=(views[t]||window.gamesV25)();
-    if(t==='props')drawProps();
-    scrollTo(0,0);
-  };
-  render('games');
 })();
 </script>'''
 
@@ -85,17 +69,31 @@ def load_game_model() -> dict:
     return {}
 
 
+def replace_block(html: str, start: str, end: str, replacement: str) -> str:
+    i = html.find(start)
+    if i < 0:
+        return html
+    j = html.find(end, i)
+    if j < 0:
+        return html
+    return html[:i] + replacement.strip() + html[j + len(end):]
+
+
 def main() -> None:
     if not DASHBOARD.exists():
         raise FileNotFoundError(DASHBOARD)
     html = DASHBOARD.read_text(encoding="utf-8")
-    if STYLE_MARKER not in html:
+    script = SCRIPT.replace("__GAME_MODEL__", json.dumps(load_game_model(), separators=(",", ":"), ensure_ascii=False))
+    if f'id="{STYLE_MARKER}"' in html:
+        html = replace_block(html, f'<style id="{STYLE_MARKER}">', "</style>", STYLE)
+    else:
         html = html.replace("</head>", STYLE + "</head>", 1)
-    if SCRIPT_MARKER not in html:
-        script = SCRIPT.replace("__GAME_MODEL__", json.dumps(load_game_model(), separators=(",", ":"), ensure_ascii=False))
+    if f'id="{SCRIPT_MARKER}"' in html:
+        html = replace_block(html, f'<script id="{SCRIPT_MARKER}">', "</script>", script)
+    else:
         html = html.replace("</body>", script + "</body>", 1)
     DASHBOARD.write_text(html, encoding="utf-8")
-    print("Sprint 25 Games and Markets dashboard patch applied with corrected spread display")
+    print("Authoritative Games and Game Props renderers replaced without legacy router overrides")
 
 
 if __name__ == "__main__":
