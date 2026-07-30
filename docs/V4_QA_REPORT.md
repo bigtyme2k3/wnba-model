@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-07-29T15:37:38.422250+00:00`
+Generated: `2026-07-30T15:39:08.189144+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -9,7 +9,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 159 checked, 0 invalid, 0 expected empty, 4 unexpected empty
+- Dashboard JSON: 163 checked, 0 invalid, 0 expected empty, 4 unexpected empty
 - Workflows: 106 checked, 0 high risk
 - Forward validation: green
 
@@ -93,7 +93,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/wnba_full_game_simulation.yml` | 1 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_game_market_repair.yml` | 12 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_historical_prediction_reconstruction.yml` | 7 | 0 | 0.0 | False | low |
-| `.github/workflows/wnba_injury_refresh.yml` | 12 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_injury_refresh.yml` | 11 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_intelligence_foundation.yml` | 15 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_legacy_player_schema_inspector.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_line_movement.yml` | 6 | 0 | 0.0 | False | low |
@@ -119,7 +119,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/wnba_opportunity_scanner.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_player_prop_grading_bridge.yml` | 8 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_player_prop_intelligence.yml` | 7 | 0 | 0.0 | False | low |
-| `.github/workflows/wnba_player_props_history_repair.yml` | 9 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_player_props_history_repair.yml` | 8 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_postbuild_integrity.yml` | 10 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_postgame_learning_pipeline.yml` | 13 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_production_readiness.yml` | 7 | 0 | 0.0 | False | low |
@@ -159,8 +159,8 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/wnba_steam_sharp.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_trend_outcome_validation.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v4_player_props_audit.yml` | 4 | 0 | 0.0 | False | low |
-| `.github/workflows/wnba_v4_player_props_polish.yml` | 20 | 0 | 0.0 | False | low |
-| `.github/workflows/wnba_v4_status.yml` | 19 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_v4_player_props_polish.yml` | 34 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_v4_status.yml` | 18 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_validation_dashboard.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_validation_performance_analytics.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_warehouse_migration.yml` | 9 | 0 | 0.0 | False | low |
