@@ -1,25 +1,25 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-07-29T22:29:01.014816Z
+Generated: 2026-07-30T03:41:43.701733Z
 
 **Status:** READY
-**Slate:** 5 events, 722 fresh markets
+**Slate:** 3 events, 166 fresh markets
 
 ## Top Opportunities
 
 
 ## Market Alerts
 
-- nan Phoenix Mercury 143 — SHARP — score 48.36
-- Breanna Stewart UNDER 7.5 102 — SHARP — score 40.26
-- Marina Mabrey OVER 3.5 102 — SHARP — score 40.11
-- Jonquel Jones UNDER 8.5 101 — SHARP — score 40.11
-- Napheesa Collier OVER 2.5 101 — SHARP — score 39.48
-- Marina Mabrey UNDER 3.5 -102 — SHARP — score 39.42
-- Sabrina Ionescu OVER 5.5 104 — SHARP — score 39.19
-- Leïla Lacan OVER 4.5 -104 — SHARP — score 39.11
-- Jessica Shepard UNDER 11.5 -126 — SHARP — score 38.89
-- Gabby Williams UNDER 2.5 -112 — SHARP — score 38.85
+- Breanna Stewart UNDER 7.5 102 — SHARP — score 31.4
+- Marina Mabrey OVER 3.5 102 — SHARP — score 31.29
+- Jonquel Jones UNDER 8.5 101 — SHARP — score 31.29
+- Napheesa Collier OVER 2.5 101 — SHARP — score 30.79
+- Marina Mabrey UNDER 3.5 -102 — SHARP — score 30.75
+- Sabrina Ionescu OVER 5.5 104 — SHARP — score 30.57
+- Leïla Lacan OVER 4.5 -104 — SHARP — score 30.51
+- Chelsea Gray UNDER 6.5 100 — SHARP — score 29.25
+- Chelsea Gray UNDER 21.5 100 — SHARP — score 28.55
+- Sydney Taylor OVER 2.5 -102 — SHARP — score 28.32
 
 ## System Context
 
