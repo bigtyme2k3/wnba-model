@@ -18,23 +18,25 @@ function stripGamesFilters(){
   const root=document.getElementById('root');
   if(!root)return;
   const labels=['All Games','Model Bets','Leans','Passes','Large Edges','Player Props'];
-  const nodes=[...root.querySelectorAll('button,a,div,section,nav')];
-  for(const node of nodes){
+
+  /* Never inspect or hide broad containers such as #root or .section. */
+  for(const node of root.querySelectorAll('button,a')){
     const text=(node.textContent||'').replace(/\s+/g,' ').trim();
-    const exact=labels.includes(text);
-    const containsAll=labels.every(label=>text.includes(label));
-    if(exact||containsAll){
-      const parent=containsAll?node:(node.parentElement||node);
-      parent.style.display='none';
-    }
+    if(labels.includes(text))node.style.display='none';
   }
-  for(const node of root.querySelectorAll('[class*="filter"],[id*="filter"]')){
+
+  /* Hide only a compact wrapper whose direct buttons are the Games quick filters. */
+  for(const wrapper of root.querySelectorAll('nav,[role="toolbar"],.gamesFilterBar,.gamesUxFilters,.gamesQuickFilters,#gamesFilterBar')){
+    const directLabels=[...wrapper.querySelectorAll(':scope > button,:scope > a')]
+      .map(node=>(node.textContent||'').replace(/\s+/g,' ').trim());
+    if(directLabels.filter(text=>labels.includes(text)).length>=2)wrapper.style.display='none';
+  }
+
+  for(const node of root.querySelectorAll('.gameFilterMeta,[data-games-filter-meta]'))node.style.display='none';
+  for(const node of root.querySelectorAll('small,span,div')){
+    if(node===root||node.contains(root))continue;
     const text=(node.textContent||'').replace(/\s+/g,' ').trim();
-    if(labels.some(label=>text.includes(label)))node.style.display='none';
-  }
-  for(const node of root.querySelectorAll('*')){
-    const text=(node.textContent||'').trim();
-    if(/^Showing \d+ of \d+ game cards$/i.test(text)||text.includes("Tap a matchup's player candidates to expand"))node.style.display='none';
+    if(/^Showing \d+ of \d+ game cards$/i.test(text)||text==="Tap a matchup's player candidates to expand")node.style.display='none';
   }
 }
 const previous=window.render;
@@ -48,7 +50,7 @@ if(typeof previous==='function'){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(stripGamesFilters,0));
 else setTimeout(stripGamesFilters,0);
 window.addEventListener('load',()=>setTimeout(stripGamesFilters,0),{once:true});
-window.WNBA_GAMES_SIMPLIFIED={version:'1.0',filters:false};
+window.WNBA_GAMES_SIMPLIFIED={version:'1.1',filters:false};
 })();</script>'''
 
 def replace_block(html: str, start: str, end: str, replacement: str) -> str:
@@ -74,7 +76,7 @@ def main() -> None:
     else:
         html = html.replace('</body>', SCRIPT + '</body>')
     DASHBOARD.write_text(html, encoding="utf-8")
-    print("Games tab simplified: quick filters removed")
+    print("Games tab simplified safely: quick filters removed without hiding content")
 
 
 if __name__ == "__main__":
