@@ -10,6 +10,9 @@ import tempfile
 import wnba_mission_control as engine
 
 MISSION_CONTROL = Path("data/dashboard/wnba_mission_control.json")
+GAME_MODEL = Path("data/dashboard/wnba_game_market_model.json")
+ALT_WAREHOUSE = Path("data/dashboard/wnba_alt_market_warehouse.json")
+MATCHUP = Path("data/dashboard/wnba_matchup_intelligence.json")
 
 
 def _load(path: Path) -> dict:
@@ -25,17 +28,35 @@ def _run(command: list[str]) -> None:
     subprocess.run(command, check=True)
 
 
-def refresh_stale_model_outputs() -> bool:
-    """Rebuild the active-slate projection chain when critical outputs are stale.
-
-    The dashboard workflow normally consumes outputs created by WNBA Version 4
-    Status. A manual dashboard run can occur after the master slate advances but
-    before those dependent model files refresh. In that bounded case, regenerate
-    the established Projection Engine v2 chain and its direct downstream views,
-    then rebuild Mission Control before acceptance checks continue.
-    """
+def _target() -> str:
     payload = _load(MISSION_CONTROL)
     target = str(payload.get("target_date") or "").strip()
+    if target:
+        return target
+    result = subprocess.run(
+        [sys.executable, "active_slate_date.py"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip()
+
+
+def _is_stale(path: Path, target: str) -> bool:
+    payload = _load(path)
+    return not payload or str(payload.get("target_date") or "") != target
+
+
+def refresh_stale_model_outputs() -> bool:
+    """Refresh every active-slate model dependency used by the live dashboard.
+
+    Manual dashboard runs can occur after the master slate advances but before
+    Version 4 Status finishes the full model chain. This recovery keeps the
+    canonical dashboard honest by rebuilding stale critical projections first,
+    then the game model, ALT warehouse metadata, master payload, and Games views.
+    """
+    payload = _load(MISSION_CONTROL)
+    target = _target()
     checks = {str(row.get("id")): row for row in payload.get("checks", []) if isinstance(row, dict)}
     stale_ids = {
         check_id
@@ -43,35 +64,62 @@ def refresh_stale_model_outputs() -> bool:
         if checks.get(check_id, {}).get("status") in {"RED", "YELLOW"}
         and any("Stale slate date" in str(issue) for issue in checks.get(check_id, {}).get("issues", []))
     }
-    if not target or not ({"minutes", "unified"} & stale_ids):
-        return False
 
     python = sys.executable
-    commands = [
-        [python, "wnba_minutes_projection_v2.py", "--date", target],
-        [python, "wnba_points_projection_v2.py", "--date", target],
-        [python, "wnba_rebounds_assists_projection_v2.py", "--date", target],
-        [python, "wnba_ancillary_projection_v2.py", "--date", target],
-        [python, "wnba_unified_player_simulation_v2.py", "--date", target],
-        [python, "qa_minutes_projection_v2.py"],
-        [python, "qa_points_projection_v2.py"],
-        [python, "qa_rebounds_assists_projection_v2.py"],
-        [python, "qa_ancillary_projection_v2.py"],
-        [python, "qa_unified_player_simulation_v2.py"],
-        [python, "wnba_cross_market_top_plays.py", "--date", target],
-        [python, "qa_cross_market_top_plays.py"],
-        [python, "wnba_model_explainability.py", "--date", target],
-        [python, "qa_model_explainability.py"],
-    ]
-    for command in commands:
-        _run(command)
+    changed = False
+
+    if {"minutes", "unified"} & stale_ids:
+        commands = [
+            [python, "wnba_minutes_projection_v2.py", "--date", target],
+            [python, "wnba_points_projection_v2.py", "--date", target],
+            [python, "wnba_rebounds_assists_projection_v2.py", "--date", target],
+            [python, "wnba_ancillary_projection_v2.py", "--date", target],
+            [python, "wnba_unified_player_simulation_v2.py", "--date", target],
+            [python, "qa_minutes_projection_v2.py"],
+            [python, "qa_points_projection_v2.py"],
+            [python, "qa_rebounds_assists_projection_v2.py"],
+            [python, "qa_ancillary_projection_v2.py"],
+            [python, "qa_unified_player_simulation_v2.py"],
+            [python, "wnba_cross_market_top_plays.py", "--date", target],
+            [python, "qa_cross_market_top_plays.py"],
+            [python, "wnba_model_explainability.py", "--date", target],
+            [python, "qa_model_explainability.py"],
+        ]
+        for command in commands:
+            _run(command)
+        changed = True
+
+    game_payload = _load(GAME_MODEL)
+    game_rows = game_payload.get("games", []) if isinstance(game_payload.get("games"), list) else []
+    game_unavailable = not game_rows or not any(bool(row.get("model_available")) for row in game_rows if isinstance(row, dict))
+    game_stale = _is_stale(GAME_MODEL, target) or _is_stale(MATCHUP, target)
+
+    if game_stale or game_unavailable:
+        for command in [
+            [python, "wnba_matchup_intelligence.py", "--date", target],
+            [python, "wnba_projection_ai.py", "--date", target],
+            [python, "wnba_game_market_model.py", "--date", target],
+            [python, "wnba_decision_engine_final.py", "--date", target],
+            [python, "wnba_portfolio_optimizer_v2.py", "--date", target],
+            [python, "wnba_risk_allocation.py", "--date", target],
+        ]:
+            _run(command)
+        changed = True
+
+    if _is_stale(ALT_WAREHOUSE, target):
+        _run([python, "wnba_alt_market_warehouse.py", "--date", target])
+        changed = True
+
+    if changed:
+        _run([python, "wnba_master_source_builder.py", "--date", target])
+        _run([python, "patch_dashboard_v4_games_markets.py"])
 
     rebuilt = engine.build(target, retry_count=0)
     remaining_red = [row["component"] for row in rebuilt.get("checks", []) if row.get("status") == "RED"]
     if remaining_red:
         raise RuntimeError("Critical outputs remain blocked after recovery: " + ", ".join(remaining_red))
-    print("MISSION CONTROL RECOVERY COMPLETE:", target)
-    return True
+    print("MISSION CONTROL RECOVERY COMPLETE:", target, "changed=", changed)
+    return changed
 
 
 def test_count_helpers():
