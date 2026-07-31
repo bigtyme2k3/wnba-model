@@ -6,7 +6,7 @@ on:
     - cron: '55 */3 * * *'
 
 concurrency:
-  group: wnba-clv-intelligence
+  group: wnba-main-writer
   cancel-in-progress: false
 
 jobs:
@@ -45,11 +45,12 @@ jobs:
       - name: Show CLV summary
         run: cat data/dashboard/wnba_clv_summary.json
 
-      - name: Commit all regenerated Sprint 15 artifacts
+      - name: Publish regenerated Sprint 15 artifacts atomically
         run: |
           git config user.name 'WNBA CLV Intelligence Bot'
           git config user.email 'actions@github.com'
-          git add \
+          bash scripts/atomic_generated_push.sh \
+            'Refresh WNBA CLV intelligence' \
             data/market/market_snapshots.json \
             data/market/market_timeline.json \
             data/market/closing_lines.json \
@@ -71,10 +72,3 @@ jobs:
             data/dashboard/wnba_line_movement_summary.json \
             data/dashboard/wnba_steam_sharp_summary.json \
             data/dashboard/wnba_clv_summary.json
-          if git diff --cached --quiet; then
-            echo 'No CLV intelligence changes to commit.'
-            exit 0
-          fi
-          git commit -m 'Refresh WNBA CLV intelligence'
-          git pull --rebase origin main
-          git push origin HEAD:main
