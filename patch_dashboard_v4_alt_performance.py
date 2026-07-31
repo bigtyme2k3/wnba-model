@@ -58,6 +58,8 @@ def main():
     HTML.write_text(html,encoding='utf-8')
     from patch_dashboard_v4_games_markets import main as apply_games
     apply_games()
+    from patch_dashboard_v4_games_ux import main as apply_games_ux
+    apply_games_ux()
     from patch_dashboard_v4_consolidated_navigation import main as apply_router
     apply_router()
     from patch_dashboard_v4_filter_events import main as apply_filters
@@ -74,5 +76,5 @@ def main():
     html=replace_block(html,'<script id="v4-player-props-v2-router-bridge">','</script>',PROPS_BRIDGE) if 'id="v4-player-props-v2-router-bridge"' in html else html.replace('</body>',PROPS_BRIDGE+'</body>')
     html=replace_block(html,'<script id="v4-final-dashboard-boot-script">','</script>',FINAL_BOOT) if 'id="v4-final-dashboard-boot-script"' in html else html.replace('</body>',FINAL_BOOT+'</body>')
     HTML.write_text(html,encoding='utf-8')
-    print('ALT Performance applied; Player Props V2 uses data-aware quick filters')
+    print('ALT Performance applied; Games and Player Props tablet UX active')
 if __name__=='__main__':main()
