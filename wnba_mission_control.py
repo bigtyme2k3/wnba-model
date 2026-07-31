@@ -18,7 +18,7 @@ OUTS=[Path('data/warehouse/wnba_mission_control.json'),Path('data/dashboard/wnba
 CHECKS=[
  {'id':'games','name':'Games','path':'data/dashboard/wnba_master.json','keys':['games'],'minimum':1,'critical':True},
  {'id':'player_props','name':'Player Props','path':'data/dashboard/wnba_master.json','keys':['props'],'minimum':1,'critical':True},
- {'id':'alt_props','name':'ALT Player Props','path':'data/dashboard/wnba_alt_streaks.json','keys':['summary.alternate_rows'],'minimum':1,'critical':False,'retry':True},
+ {'id':'alt_props','name':'ALT Player Props','path':'data/dashboard/wnba_alt_market_warehouse.json','keys':['summary.markets'],'minimum':1,'critical':False,'retry':True},
  {'id':'minutes','name':'Minutes Projection','path':'data/dashboard/wnba_minutes_projection_v2.json','keys':['projections'],'minimum':1,'critical':True},
  {'id':'unified','name':'Unified Simulation','path':'data/dashboard/wnba_unified_player_simulation_v2.json','keys':['players'],'minimum':1,'critical':True},
  {'id':'top_plays','name':'Top Plays','path':'data/dashboard/wnba_cross_market_top_plays.json','keys':['top_plays'],'minimum':1,'critical':False},
@@ -86,10 +86,11 @@ def evaluate(check:dict[str,Any],target:str,retry_count:int)->dict[str,Any]:
     if age is not None and age>1440:warnings.append(f'Output is {age/60:.1f} hours old')
     if check['id']=='alt_props' and exists:
         payload=load(path,{});summary=payload.get('summary',{})
-        source_props=count_value(summary.get('source_props'));standard=count_value(summary.get('standard_rows'));alternate=count_value(summary.get('alternate_rows'))
-        if source_props>0 and alternate==0:
-            issues.append(f'Prop source loaded {source_props} markets but produced 0 alternate lines')
-            warnings.append(f'Standard streak rows remain available: {standard}')
+        raw_rows=count_value(summary.get('raw_rows'));markets=count_value(summary.get('markets'));players=count_value(summary.get('players'))
+        if raw_rows>0 and markets==0:
+            issues.append(f'ALT source loaded {raw_rows} rows but produced 0 valid markets')
+        if markets>0 and players==0:
+            warnings.append(f'ALT markets loaded ({markets}) but player grouping is empty')
     if check['id']=='qa' and exists:
         payload=load(path,{});blockers=count_value((payload.get('summary') or {}).get('release_blockers'))
         overall=(payload.get('qa') or {}).get('overall_status')
@@ -104,7 +105,7 @@ def build(target:str,retry_count:int=0)->dict[str,Any]:
     publication='BLOCKED' if critical else 'DEGRADED' if degraded else 'READY'
     alt=next(c for c in checks if c['id']=='alt_props')
     message='All required pipelines are healthy.' if publication=='READY' else 'Critical data failed; affected recommendations are withheld.' if publication=='BLOCKED' else 'Report published with clear warnings; unavailable optional sections are withheld.'
-    payload={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'ok','publication_status':publication,'publication_message':message,'summary':{'components':len(checks),'green':sum(c['status']=='GREEN' for c in checks),'yellow':sum(c['status']=='YELLOW' for c in checks),'red':sum(c['status']=='RED' for c in checks),'retry_required':len(retry),'release_blockers':len(critical),'warnings':sum(len(c['warnings']) for c in checks)},'alt_props':{'available':alt['status']=='GREEN','status':alt['status'],'retry_count':alt['retry_count'],'action':alt['action'],'message':'Alternate player props loaded.' if alt['status']=='GREEN' else 'Alternate player props are unavailable. Standard props remain visible; ALT recommendations are withheld.'},'checks':checks,'retry_plan':[{'component':c['component'],'attempt':retry_count+1,'maximum_attempts':2,'command_chain':['python wnba_alt_streaks.py --date '+target,'python wnba_alt_streaks_correctness.py','python wnba_alt_streaks_warehouse_upgrade.py --date '+target,'python wnba_alt_streaks_opponent_context.py','python wnba_alt_streaks_position_context.py','python wnba_alt_streaks_pace_minutes_context.py','python wnba_alt_streak_confidence.py --date '+target]} for c in retry],'policy':{'critical_failures_block_publication':True,'optional_failures_publish_degraded':True,'maximum_automatic_retries':2,'silent_empty_sections_allowed':False,'affected_recommendations_withheld':True}}
+    payload={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'ok','publication_status':publication,'publication_message':message,'summary':{'components':len(checks),'green':sum(c['status']=='GREEN' for c in checks),'yellow':sum(c['status']=='YELLOW' for c in checks),'red':sum(c['status']=='RED' for c in checks),'retry_required':len(retry),'release_blockers':len(critical),'warnings':sum(len(c['warnings']) for c in checks)},'alt_props':{'available':alt['status']=='GREEN','status':alt['status'],'retry_count':alt['retry_count'],'action':alt['action'],'message':'Alternate player props loaded.' if alt['status']=='GREEN' else 'Alternate player props are unavailable. Standard props remain visible; ALT recommendations are withheld.'},'checks':checks,'retry_plan':[{'component':c['component'],'attempt':retry_count+1,'maximum_attempts':2,'command_chain':['python wnba_alt_market_warehouse.py --date '+target,'python wnba_mission_control.py --date '+target+' --retry-count '+str(retry_count+1)]} for c in retry],'policy':{'critical_failures_block_publication':True,'optional_failures_publish_degraded':True,'maximum_automatic_retries':2,'silent_empty_sections_allowed':False,'affected_recommendations_withheld':True}}
     for path in OUTS:dump(path,payload)
     print('Mission Control:',payload['publication_status'],payload['summary'])
     return payload
