@@ -1,6 +1,6 @@
 # WNBA Trend Research Report
 
-Generated: `2026-07-31T19:51:58.430793+00:00`
+Generated: `2026-07-31T20:21:58.813592+00:00`
 Resolved bets: **2084**
 
 ## Losing-Streak Profile
