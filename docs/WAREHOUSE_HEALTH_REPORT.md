@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-07-31T19:42:52.323994+00:00`
+Generated: `2026-07-31T19:51:58.133561+00:00`
 Expected target date: `2026-07-31`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 274
-- **Green:** 250
-- **Yellow:** 24
+- **Green:** 251
+- **Yellow:** 23
 - **Red:** 0
 - **Duplicate Names:** 98
 
@@ -34,7 +34,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_ai_coach.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_clv.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_market_warehouse.json` | 2026-07-31 | None |
-| YELLOW | dashboard | `data/dashboard/wnba_alt_market_watch_due.json` | 2026-07-30 | target_date_mismatch:2026-07-30!=2026-07-31 |
+| GREEN | dashboard | `data/dashboard/wnba_alt_market_watch_due.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_performance.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_performance_acceptance.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_streaks.json` | 2026-07-31 | None |
