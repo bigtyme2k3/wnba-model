@@ -25,9 +25,29 @@ FILES=("${FILTERED_FILES[@]}")
 
 # Persistent generated histories used by downstream grading and CLV. Add them
 # automatically when present so callers cannot accidentally drop state.
-for persistent in \
+PERSISTENT_OUTPUTS=(
   data/history/wnba_alt_market_snapshots.jsonl
-do
+)
+
+# A manual canonical dashboard run may advance the active slate before the
+# scheduled Version 4 Status workflow has published its dependent model files.
+# Mission Control performs a bounded self-heal in that case. Persist those
+# refreshed outputs with the dashboard so the next run does not fall back to
+# stale projection state.
+if [ "$CURRENT_WORKFLOW" = "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
+  PERSISTENT_OUTPUTS+=(
+    data/dashboard/wnba_minutes_projection_v2.json
+    data/dashboard/wnba_points_projection_v2.json
+    data/dashboard/wnba_rebounds_assists_projection_v2.json
+    data/dashboard/wnba_ancillary_projection_v2.json
+    data/dashboard/wnba_unified_player_simulation_v2.json
+    data/dashboard/wnba_cross_market_top_plays.json
+    data/dashboard/wnba_model_explainability.json
+    data/dashboard/wnba_mission_control_acceptance.json
+  )
+fi
+
+for persistent in "${PERSISTENT_OUTPUTS[@]}"; do
   if [ -e "$persistent" ]; then
     found=false
     for supplied in "${FILES[@]}"; do
