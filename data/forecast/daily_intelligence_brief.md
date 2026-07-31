@@ -1,25 +1,25 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-07-30T22:36:17.737472Z
+Generated: 2026-07-31T04:00:48.571174Z
 
 **Status:** READY
-**Slate:** 6 events, 1064 fresh markets
+**Slate:** 3 events, 211 fresh markets
 
 ## Top Opportunities
 
 
 ## Market Alerts
 
-- nan Seattle Storm 495 — SHARP — score 48.36
-- nan Chicago Sky -219 — SHARP — score 43.27
-- nan Minnesota Lynx -770 — SHARP — score 43.27
-- Dominique Malonga UNDER 7.5 107 — SHARP — score 40.74
-- Jordin Canada UNDER 3.5 -103 — SHARP — score 40.63
-- Rhyne Howard UNDER 3.5 100 — SHARP — score 40.46
-- Flau'jae Johnson UNDER 4.5 -114 — SHARP — score 39.74
-- Natisha Hiedeman UNDER 2.5 -114 — SHARP — score 39.31
-- Leïla Lacan OVER 4.5 -102 — SHARP — score 38.5
-- Chelsea Gray UNDER 6.5 -111 — SHARP — score 38.4
+- nan Seattle Storm 495 — SHARP — score 37.32
+- Dominique Malonga UNDER 7.5 107 — SHARP — score 31.44
+- Jordin Canada UNDER 3.5 -103 — SHARP — score 31.35
+- Rhyne Howard UNDER 3.5 100 — SHARP — score 31.22
+- Flau'jae Johnson UNDER 4.5 -114 — SHARP — score 30.67
+- Natisha Hiedeman UNDER 2.5 -114 — SHARP — score 30.33
+- Angel Reese UNDER 2.5 -178 — SHARP — score 29.61
+- nan Atlanta Dream -720 — SHARP — score 29.13
+- Natisha Hiedeman OVER 2.5 -119 — SHARP — score 28.83
+- Angel Reese OVER 2.5 130 — SHARP — score 28.28
 
 ## System Context
 
