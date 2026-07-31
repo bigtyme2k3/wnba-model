@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: sprint23-phase5-explainable-shadow
+  group: wnba-main-writer
   cancel-in-progress: false
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
       - name: Run Phase 5 QA
         run: python qa_sprint23_phase5_explainable_shadow.py
 
-      - name: Patch dashboard
+      - name: Patch dashboard locally
         run: python patch_dashboard_v4_sprint23_shadow.py
 
       - name: Verify dashboard installation
@@ -51,19 +51,13 @@ jobs:
           grep -q 'SHADOW ONLY' docs/index.html
           cat data/dashboard/sprint23_shadow_intelligence.json | head -80
 
-      - name: Commit Phase 5 artifacts
+      - name: Publish Phase 5 artifacts atomically
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/processed/sprint23/props_market_opportunities_shadow.csv \
-                  data/processed/sprint23/props_market_unmatched_shadow.csv \
-                  data/processed/sprint23/props_market_opportunity_catalog.json \
-                  data/dashboard/sprint23_shadow_intelligence.json \
-                  docs/index.html
-          if git diff --cached --quiet; then
-            echo "No Phase 5 artifact changes."
-            exit 0
-          fi
-          git commit -m "Update Sprint 23 Phase 5 explainable shadow intelligence"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          bash scripts/atomic_generated_push.sh \
+            "Update Sprint 23 Phase 5 explainable shadow intelligence" \
+            data/processed/sprint23/props_market_opportunities_shadow.csv \
+            data/processed/sprint23/props_market_unmatched_shadow.csv \
+            data/processed/sprint23/props_market_opportunity_catalog.json \
+            data/dashboard/sprint23_shadow_intelligence.json
