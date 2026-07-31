@@ -31,9 +31,9 @@ PERSISTENT_OUTPUTS=(
 
 # A manual canonical dashboard run may advance the active slate before the
 # scheduled Version 4 Status workflow has published its dependent model files.
-# Mission Control performs a bounded self-heal in that case. Persist those
-# refreshed outputs with the dashboard so the next run does not fall back to
-# stale projection state.
+# Mission Control performs a bounded self-heal in that case. Persist every
+# refreshed dependency with the dashboard so the next run cannot fall back to
+# stale projection, game-model, or ALT state.
 if [ "$CURRENT_WORKFLOW" = "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
   PERSISTENT_OUTPUTS+=(
     data/dashboard/wnba_minutes_projection_v2.json
@@ -43,6 +43,13 @@ if [ "$CURRENT_WORKFLOW" = "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
     data/dashboard/wnba_unified_player_simulation_v2.json
     data/dashboard/wnba_cross_market_top_plays.json
     data/dashboard/wnba_model_explainability.json
+    data/dashboard/wnba_matchup_intelligence.json
+    data/dashboard/wnba_projection_ai.json
+    data/dashboard/wnba_game_market_model.json
+    data/dashboard/wnba_decision_engine_final.json
+    data/dashboard/wnba_portfolio_optimizer_v2.json
+    data/dashboard/wnba_risk_allocation.json
+    data/dashboard/wnba_alt_market_warehouse.json
     data/dashboard/wnba_mission_control_acceptance.json
   )
 fi
