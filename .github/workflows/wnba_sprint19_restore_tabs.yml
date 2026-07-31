@@ -1,0 +1,63 @@
+name: WNBA Sprint 19 Restore Tabs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - patch_dashboard_v4_portfolio_ai.py
+      - .github/workflows/wnba_sprint19_restore_tabs.yml
+  workflow_run:
+    workflows:
+      - WNBA Autonomous Pipeline (Sprint 11)
+      - WNBA Daily Edge Engine (Sprint 6)
+      - WNBA Ensemble Intelligence (Sprint 9)
+      - WNBA ALT Market Watch
+      - WNBA Pregame Projections and Simulation
+    types: [completed]
+
+concurrency:
+  group: wnba-sprint19-restore-tabs
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  restore-tabs:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Sync latest main
+        run: git pull --ff-only origin main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Restore Portfolio and AI Center
+        run: python patch_dashboard_v4_portfolio_ai.py
+      - name: Verify renderers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          required=('v4-portfolio-ai-style','v4-portfolio-ai-script','window.portfolio=function','window.ai=function')
+          for marker in required:
+              assert marker in html, f'missing {marker}'
+          print('Portfolio and AI Center compatibility renderers verified')
+          PY
+      - name: Commit restored dashboard
+        run: |
+          if git diff --quiet -- docs/index.html; then
+            echo 'Dashboard already contains Sprint 19 renderers.'
+            exit 0
+          fi
+          git config user.name 'WNBA Sprint 19 Bot'
+          git config user.email 'actions@github.com'
+          git add docs/index.html
+          git commit -m 'Restore Portfolio and AI Center tabs'
+          git pull --rebase origin main
+          git push origin HEAD:main
