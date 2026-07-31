@@ -129,6 +129,7 @@ def test_count_helpers():
 
 
 def test_alt_zero_is_detected():
+    """Canonical ALT warehouse with raw source rows but zero valid markets is yellow."""
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "alt.json"
         path.write_text(
@@ -136,7 +137,7 @@ def test_alt_zero_is_detected():
                 {
                     "generated_at_utc": "2099-01-01T00:00:00+00:00",
                     "target_date": "2026-07-13",
-                    "summary": {"source_props": 214, "standard_rows": 61, "alternate_rows": 0},
+                    "summary": {"raw_rows": 214, "markets": 0, "players": 0},
                 }
             ),
             encoding="utf-8",
@@ -145,15 +146,15 @@ def test_alt_zero_is_detected():
             "id": "alt_props",
             "name": "ALT Player Props",
             "path": str(path),
-            "keys": ["summary.alternate_rows"],
+            "keys": ["summary.markets"],
             "minimum": 1,
             "critical": False,
             "retry": True,
         }
         row = engine.evaluate(check, "2026-07-13", 0)
-        assert row["status"] == "YELLOW"
-        assert row["action"] == "RETRY_SOURCE"
-        assert any("0 alternate lines" in issue for issue in row["issues"])
+        assert row["status"] == "YELLOW", row
+        assert row["action"] == "RETRY_SOURCE", row
+        assert any("0 valid markets" in issue for issue in row["issues"]), row
 
 
 def test_critical_missing_blocks():
@@ -166,28 +167,35 @@ def test_critical_missing_blocks():
         "critical": True,
     }
     row = engine.evaluate(check, "2026-07-13", 0)
-    assert row["status"] == "RED"
-    assert row["action"] == "BLOCK_PUBLISH"
+    assert row["status"] == "RED", row
+    assert row["action"] == "BLOCK_PUBLISH", row
 
 
 def test_retry_cap():
+    """After two attempts an empty optional ALT source publishes degraded."""
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "alt.json"
         path.write_text(
-            json.dumps({"target_date": "2026-07-13", "summary": {"source_props": 100, "alternate_rows": 0}}),
+            json.dumps(
+                {
+                    "target_date": "2026-07-13",
+                    "summary": {"raw_rows": 100, "markets": 0, "players": 0},
+                }
+            ),
             encoding="utf-8",
         )
         check = {
             "id": "alt_props",
             "name": "ALT Player Props",
             "path": str(path),
-            "keys": ["summary.alternate_rows"],
+            "keys": ["summary.markets"],
             "minimum": 1,
             "critical": False,
             "retry": True,
         }
         row = engine.evaluate(check, "2026-07-13", 2)
-        assert row["action"] == "PUBLISH_DEGRADED"
+        assert row["status"] == "YELLOW", row
+        assert row["action"] == "PUBLISH_DEGRADED", row
 
 
 def main():
@@ -216,6 +224,8 @@ def main():
         json.dump(report, handle, indent=2)
     print(report["summary"])
     if failed:
+        for row in failed:
+            print("FAILED:", row["test"], row["detail"])
         raise SystemExit(1)
 
 
