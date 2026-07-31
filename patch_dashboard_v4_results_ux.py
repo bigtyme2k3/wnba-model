@@ -18,6 +18,7 @@ STYLE = r'''<style id="v4-results-ux-style">
 
 SCRIPT = r'''<script id="v4-results-ux-script">(function(){
 const DATASET=__DATASET__,A=v=>Array.isArray(v)?v:[],E2=v=>typeof window.E==='function'?window.E(v):String(v??''),N=v=>{const n=Number(v);return Number.isFinite(n)?n:0},money=v=>`${N(v)<0?'-':''}$${Math.abs(N(v)).toFixed(2)}`,pct=v=>`${(N(v)*(Math.abs(N(v))<=1?100:1)).toFixed(1)}%`;
+window.WNBA_RESULTS_DATA=DATASET;
 const state={view:'overview'};
 const rows=()=>A(DATASET.rows),graded=()=>rows().filter(r=>['WIN','LOSS','PUSH'].includes(String(r.outcome||'').toUpperCase())),pending=()=>rows().filter(r=>String(r.outcome||'').toUpperCase()==='PENDING');
 const summary=()=>{const g=graded(),w=g.filter(r=>r.outcome==='WIN').length,l=g.filter(r=>r.outcome==='LOSS').length,p=g.filter(r=>r.outcome==='PUSH').length,profit=g.reduce((s,r)=>s+N(r.profit_units??r.profit_loss),0),stake=g.reduce((s,r)=>s+N(r.stake_units??r.stake),0),dec=w+l;return{w,l,p,graded:g.length,pending:pending().length,winRate:dec?w/dec:0,profit,roi:stake?profit/stake:0,stake}};
@@ -77,7 +78,7 @@ def main() -> None:
     else:
         html = html.replace('</body>', script + '</body>', 1)
     HTML.write_text(html, encoding="utf-8")
-    print(f"Results UX applied with {len(payload['rows'])} historical rows")
+    print(f"Results UX applied with {len(payload['rows'])} historical rows; Learning compatibility marker restored")
 
 
 if __name__ == "__main__":
