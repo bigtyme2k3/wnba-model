@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-07-31T16:08:41.700595+00:00`
+Generated: `2026-07-31T16:13:03.720499+00:00`
 Expected target date: `2026-07-31`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 274
-- **Green:** 238
-- **Yellow:** 36
+- **Green:** 240
+- **Yellow:** 34
 - **Red:** 0
 - **Duplicate Names:** 98
 
@@ -79,7 +79,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_historical_prediction_reconstruction.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_historical_summary.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_hyperparameter_optimizer.json` | 2026-07-31 | None |
-| YELLOW | dashboard | `data/dashboard/wnba_injury_intelligence.json` | 2026-07-30 | target_date_mismatch:2026-07-30!=2026-07-31 |
+| GREEN | dashboard | `data/dashboard/wnba_injury_intelligence.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_line_movement_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_live_games.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_live_odds_layer.json` | 2026-07-31 | None |
@@ -227,7 +227,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_historical_summary.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_hyperparameter_optimizer.json` | 2026-07-31 | None |
 | YELLOW | warehouse | `data/warehouse/wnba_injuries.json` |  | empty_payload |
-| YELLOW | warehouse | `data/warehouse/wnba_injury_intelligence.json` | 2026-07-30 | target_date_mismatch:2026-07-30!=2026-07-31 |
+| GREEN | warehouse | `data/warehouse/wnba_injury_intelligence.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_live_odds_layer.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_live_results_engine.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_live_slate_status.json` | None | None |
