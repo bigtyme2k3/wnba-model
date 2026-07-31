@@ -68,9 +68,11 @@ def main():
     apply_player_props_controls()
     from patch_dashboard_v4_player_props_interactions import main as apply_player_props_interactions
     apply_player_props_interactions()
+    from patch_dashboard_v4_player_props_quick_semantics import main as apply_quick_semantics
+    apply_quick_semantics()
     html=HTML.read_text(encoding='utf-8')
     html=replace_block(html,'<script id="v4-player-props-v2-router-bridge">','</script>',PROPS_BRIDGE) if 'id="v4-player-props-v2-router-bridge"' in html else html.replace('</body>',PROPS_BRIDGE+'</body>')
     html=replace_block(html,'<script id="v4-final-dashboard-boot-script">','</script>',FINAL_BOOT) if 'id="v4-final-dashboard-boot-script"' in html else html.replace('</body>',FINAL_BOOT+'</body>')
     HTML.write_text(html,encoding='utf-8')
-    print('ALT Performance applied; Player Props V2 filters and quick actions are active')
+    print('ALT Performance applied; Player Props V2 uses data-aware quick filters')
 if __name__=='__main__':main()
