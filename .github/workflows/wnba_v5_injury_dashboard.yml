@@ -1,0 +1,58 @@
+name: WNBA V5 Injury Dashboard
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'patch_dashboard_v5_injury_intelligence.py'
+      - 'data/dashboard/wnba_injury_intelligence.json'
+  workflow_run:
+    workflows: ["WNBA Injury Refresh", "WNBA V4 Player Props Polish", "Deploy WNBA Dashboard"]
+    types: [completed]
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  injury-dashboard:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Configure Git publisher identity
+        run: |
+          git config user.name "WNBA Injury Dashboard Bot"
+          git config user.email "actions@github.com"
+      - name: Build injury intelligence dashboard
+        run: |
+          python -m py_compile patch_dashboard_v5_injury_intelligence.py
+          python patch_dashboard_v5_injury_intelligence.py
+      - name: Verify injury renderer
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          h=Path('docs/index.html').read_text(encoding='utf-8')
+          for marker in ['v5-injury-intelligence-data','v5-injury-intelligence-script',"['injuries','Injuries']","view==='injuries'"]:
+              assert marker in h, marker
+          assert 'window.injuryIntelligence' in h
+          print('INJURY DASHBOARD VERIFIED')
+          PY
+      - name: Publish dashboard
+        run: |
+          bash scripts/atomic_generated_push.sh \
+            "Publish V5 injury intelligence dashboard" \
+            'docs/index.html'
