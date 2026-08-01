@@ -1,0 +1,35 @@
+name: WNBA Saturday Logs and Results Refresh
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/saturday_refresh_2026_08_01.txt
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  dispatch-refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch postgame grading for Friday slate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run wnba_postgame_learning_pipeline.yml \
+            --repo bigtyme2k3/wnba-model \
+            -f date=2026-07-31 \
+            -f force_grade=true \
+            -f closing_snapshot=false
+          echo "Dispatched Friday logs, results, grading, and learning refresh."
+
+      - name: Dispatch today's canonical dashboard refresh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run wnba_v4_player_props_polish.yml \
+            --repo bigtyme2k3/wnba-model
+          echo "Dispatched Saturday slate and dashboard refresh."
