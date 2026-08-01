@@ -28,6 +28,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Configure Git publisher identity
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
       - name: Compile reconciliation
         run: python -m py_compile reconcile_wnba_alt_archive.py
 
