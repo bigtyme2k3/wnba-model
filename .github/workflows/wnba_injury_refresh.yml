@@ -11,6 +11,12 @@ on:
         description: 'Rebuild projections and decisions?'
         required: false
         default: 'true'
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wnba_injury_refresh.yml
+      - scrape_official_wnba_injuries.py
+      - wnba_injury_intelligence.py
   workflow_run:
     workflows: ["WNBA Intelligence Foundation"]
     types: [completed]
