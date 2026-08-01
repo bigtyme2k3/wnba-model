@@ -1,0 +1,65 @@
+name: WNBA V5 Sprint 22 Sportsbook Intelligence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - build_wnba_v5_sportsbook_intelligence.py
+      - .github/workflows/wnba_v5_sprint22_sportsbook_intelligence.yml
+  schedule:
+    - cron: '20 12 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  build-sportsbook-intelligence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure Git publisher identity
+        run: |
+          git config user.name 'WNBA V5 Sportsbook Intelligence Bot'
+          git config user.email 'actions@github.com'
+
+      - name: Compile Sprint 22 engine
+        run: python -m py_compile build_wnba_v5_sportsbook_intelligence.py
+
+      - name: Build sportsbook intelligence
+        run: python build_wnba_v5_sportsbook_intelligence.py
+
+      - name: Verify no-fabrication and coverage safeguards
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/warehouse/wnba_v5_sportsbook_intelligence.json').read_text())
+          s=p['summary']
+          assert s['book_attributed_records'] + s['unknown_book_records'] == s['graded_records'], s
+          assert p['policy']['unknown_book_inference'] is False
+          assert p['policy']['verified_graded_outcomes_only'] is True
+          for row in p['by_sportsbook'] + p['by_sportsbook_market']:
+              if row['reliable']:
+                  assert row['decisions'] >= s['minimum_reliable_sample']
+          print(json.dumps(s,indent=2))
+          PY
+
+      - name: Publish Sprint 22 artifacts
+        run: |
+          bash scripts/atomic_generated_push.sh \
+            'Publish V5 Sprint 22 sportsbook intelligence' \
+            data/warehouse/wnba_v5_sportsbook_intelligence.json \
+            data/dashboard/wnba_v5_sportsbook_intelligence.json
