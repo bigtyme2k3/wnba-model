@@ -1,0 +1,58 @@
+name: WNBA V5 Sprint 21 Model Intelligence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 11 * * *'
+  push:
+    branches: [main]
+    paths:
+      - build_wnba_v5_model_intelligence.py
+      - data/history/wnba_alt_streak_history.jsonl
+      - .github/workflows/wnba_v5_sprint21_model_intelligence.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  build-model-intelligence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Configure Git publisher identity
+        run: |
+          git config user.name 'WNBA V5 Intelligence Bot'
+          git config user.email 'actions@github.com'
+      - name: Compile Sprint 21 engine
+        run: python -m py_compile build_wnba_v5_model_intelligence.py
+      - name: Build model intelligence
+        run: python build_wnba_v5_model_intelligence.py
+      - name: Verify Sprint 21 output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/warehouse/wnba_v5_model_intelligence.json').read_text())
+          assert p['sprint']==21
+          assert p['policy']['verified_final_outcomes_only'] is True
+          assert p['summary']['graded'] >= 800, p['summary']
+          assert isinstance(p['diagnostics']['stat'], list)
+          assert p['health']['status'] in {'HEALTHY','MONITOR','COLLECTING'}
+          print(json.dumps(p['summary'],indent=2))
+          PY
+      - name: Publish Sprint 21 artifacts
+        run: |
+          bash scripts/atomic_generated_push.sh \
+            'Publish V5 Sprint 21 model intelligence' \
+            data/warehouse/wnba_v5_model_intelligence.json \
+            data/dashboard/wnba_v5_model_intelligence.json
