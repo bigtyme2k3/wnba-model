@@ -1,0 +1,56 @@
+name: WNBA V5 Sprint 23 Player Profiles
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - build_wnba_v5_player_profiles.py
+      - .github/workflows/wnba_v5_sprint23_player_profiles.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  build-player-profiles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Configure Git publisher identity
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Compile Sprint 23 engine
+        run: python -m py_compile build_wnba_v5_player_profiles.py
+      - name: Build player profiles
+        run: python build_wnba_v5_player_profiles.py
+      - name: Verify Sprint 23 outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/warehouse/wnba_v5_player_profiles.json').read_text())
+          s=p['summary']
+          assert p['policy']['verified_outcomes_only'] is True
+          assert s['verified_graded_records'] > 0
+          assert s['players'] == len(p['profiles'])
+          for profile in p['profiles']:
+              assert 'overall' in profile and 'by_market' in profile
+          print(json.dumps(s,indent=2))
+          PY
+      - name: Publish Sprint 23 artifacts
+        run: |
+          bash scripts/atomic_generated_push.sh \
+            'Publish V5 Sprint 23 player profiles' \
+            data/warehouse/wnba_v5_player_profiles.json \
+            data/dashboard/wnba_v5_player_profiles.json
