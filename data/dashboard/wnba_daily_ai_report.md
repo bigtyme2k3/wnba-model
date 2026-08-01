@@ -1,12 +1,21 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-08-01T15:06:51.564347Z
+Generated: 2026-08-01T16:33:15.367491Z
 
 ## Slate summary
 
-- 2 games
-- 6 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 1, 'Pass': 5}
+- 3 games
+- 7 team/book signals
+- Grades: {'Strong Research Play': 0, 'Lean': 1, 'Watch': 1, 'Pass': 5}
+
+## Game — 2026-08-01T17:00:00Z
+
+### Chicago Sky +5.5 (draftkings)
+Bet quality: **Lean — 67.4/100**
+Research level: **low-research-interest** | signal 27.59 | 1 matched angles
+Best line: +5.5 | line-shop edge: +0 points
+
+- home|underdog|3_to_5_5: 24-8-0 (75.0%, n=32, Wilson floor 57.89%)
 
 ## Game — 2026-08-02T23:00:00Z
 
