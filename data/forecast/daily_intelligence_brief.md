@@ -1,18 +1,15 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-08-01T04:00:51.709799Z
+Generated: 2026-08-01T08:40:37.047366Z
 
-**Status:** READY
-**Slate:** 2 events, 86 fresh markets
+**Status:** STANDBY
+**Slate:** 0 events, 0 fresh markets
 
-## Top Opportunities
-
+No fresh WNBA markets begin within the active 48-hour horizon.
 
 ## Market Alerts
 
-- Kamilla Cardoso UNDER 7.5 107 — SHARP — score 28.75
-- Kamilla Cardoso UNDER 7.5 104 — SHARP — score 27.59
-- Natasha Cloud UNDER 4.5 106 — SHARP — score 27.55
+- No active high-priority alerts.
 
 ## System Context
 
