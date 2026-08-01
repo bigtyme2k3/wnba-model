@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-08-01T16:27:45.076887+00:00`
+Generated: `2026-08-01T16:34:56.811224+00:00`
 Expected target date: `2026-08-01`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 290
-- **Green:** 257
-- **Yellow:** 33
+- **Green:** 258
+- **Yellow:** 32
 - **Red:** 0
 - **Duplicate Names:** 106
 
@@ -223,7 +223,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_data_lineage.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_decision_engine_final.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_edge_database.json` | 2026-08-01 | None |
-| YELLOW | warehouse | `data/warehouse/wnba_ensemble_intelligence.json` | 2026-07-31 | target_date_mismatch:2026-07-31!=2026-08-01 |
+| GREEN | warehouse | `data/warehouse/wnba_ensemble_intelligence.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_ensemble_learning.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_feature_importance.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_final_qa.json` | None | None |
