@@ -1,6 +1,6 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-08-01T21:59:35.816278+00:00`
+Generated: `2026-08-01T23:12:25.659085+00:00`
 Expected target date: `2026-08-01`
 Overall status: **YELLOW**
 
@@ -53,7 +53,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_betting_validation.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_closing_line_predictor_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_clv_edge_report.json` | 2026-08-01 | None |
-| GREEN | dashboard | `data/dashboard/wnba_clv_summary.json` | 2026-08-01 | None |
+| GREEN | dashboard | `data/dashboard/wnba_clv_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_confidence_calibration.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_consensus_engine.json` | 2026-08-01 | None |
 | YELLOW | dashboard | `data/dashboard/wnba_context_engine.json` | 2026-07-09 | target_date_mismatch:2026-07-09!=2026-08-01 |
