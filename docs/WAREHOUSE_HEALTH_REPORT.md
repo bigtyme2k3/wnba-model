@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-08-01T14:54:18.358359+00:00`
+Generated: `2026-08-01T15:18:15.422955+00:00`
 Expected target date: `2026-08-01`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 290
-- **Green:** 245
-- **Yellow:** 45
+- **Green:** 249
+- **Yellow:** 41
 - **Red:** 0
 - **Duplicate Names:** 106
 
@@ -84,7 +84,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_historical_prediction_reconstruction.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_historical_summary.json` | 2026-08-01 | None |
 | GREEN | dashboard | `data/dashboard/wnba_hyperparameter_optimizer.json` | 2026-08-01 | None |
-| YELLOW | dashboard | `data/dashboard/wnba_injury_intelligence.json` | 2026-07-31 | target_date_mismatch:2026-07-31!=2026-08-01 |
+| GREEN | dashboard | `data/dashboard/wnba_injury_intelligence.json` | 2026-08-01 | None |
 | GREEN | dashboard | `data/dashboard/wnba_line_movement_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_live_games.json` | 2026-08-01 | None |
 | GREEN | dashboard | `data/dashboard/wnba_live_odds_layer.json` | 2026-08-01 | None |
@@ -164,7 +164,7 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_sportsbook_consensus.json` | 2026-08-01 | None |
 | GREEN | dashboard | `data/dashboard/wnba_sportsbook_leader_normalized_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_sportsbook_leader_summary.json` | None | None |
-| YELLOW | dashboard | `data/dashboard/wnba_standings.json` | 2026-07-31 | target_date_mismatch:2026-07-31!=2026-08-01 |
+| GREEN | dashboard | `data/dashboard/wnba_standings.json` | 2026-08-01 | None |
 | GREEN | dashboard | `data/dashboard/wnba_stats_quality.json` | 2026-08-01 | None |
 | GREEN | dashboard | `data/dashboard/wnba_steam_sharp_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_trend_discovery_summary.json` | None | None |
@@ -240,7 +240,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_historical_summary.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_hyperparameter_optimizer.json` | 2026-08-01 | None |
 | YELLOW | warehouse | `data/warehouse/wnba_injuries.json` |  | empty_payload |
-| YELLOW | warehouse | `data/warehouse/wnba_injury_intelligence.json` | 2026-07-31 | target_date_mismatch:2026-07-31!=2026-08-01 |
+| GREEN | warehouse | `data/warehouse/wnba_injury_intelligence.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_live_odds_layer.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_live_results_engine.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_live_slate_status.json` | None | None |
@@ -298,7 +298,7 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_source_quality.json` | 2026-08-01 | None |
 | YELLOW | warehouse | `data/warehouse/wnba_source_shopping.json` | 2026-07-31 | target_date_mismatch:2026-07-31!=2026-08-01 |
 | GREEN | warehouse | `data/warehouse/wnba_sportsbook_consensus.json` | 2026-08-01 | None |
-| YELLOW | warehouse | `data/warehouse/wnba_standings.json` |  | empty_payload |
+| GREEN | warehouse | `data/warehouse/wnba_standings.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_stats_quality.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_unified_player_simulation_v2.json` | 2026-08-01 | None |
 | GREEN | warehouse | `data/warehouse/wnba_v5_model_intelligence.json` | None | None |
