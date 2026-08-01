@@ -1,0 +1,64 @@
+name: WNBA Sprint 20 Step 4 Schedule Mapping
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - repair_wnba_alt_schedule_mapping.py
+      - .github/workflows/wnba_sprint20_step4_schedule_mapping.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  repair-schedule-mapping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Configure Git publisher identity
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Compile Step 4 repair
+        run: python -m py_compile repair_wnba_alt_schedule_mapping.py wnba_alt_performance_tracker.py reconcile_wnba_alt_archive.py
+      - name: Repair schedule and game identity mappings
+        run: python repair_wnba_alt_schedule_mapping.py
+      - name: Rebuild ALT performance analytics
+        run: python wnba_alt_performance_tracker.py --analyze
+      - name: Rebuild reconciliation report
+        run: python reconcile_wnba_alt_archive.py
+      - name: Verify Step 4 outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          repair=json.loads(Path('data/warehouse/wnba_alt_schedule_mapping_repair.json').read_text())
+          recon=json.loads(Path('data/warehouse/wnba_alt_archive_reconciliation.json').read_text())
+          assert recon['summary']['fully_accounted'], recon['summary']
+          assert recon['summary']['total_accounted_for']==recon['summary']['total_archived'], recon['summary']
+          print('Repair:', json.dumps(repair['summary'], indent=2))
+          print('Reconciliation:', json.dumps(recon['summary'], indent=2))
+          PY
+      - name: Publish Step 4 artifacts
+        run: |
+          bash scripts/atomic_generated_push.sh \
+            'Publish Sprint 20 Step 4 schedule mapping repair' \
+            data/history/wnba_alt_streak_history.jsonl \
+            data/warehouse/wnba_alt_schedule_mapping_repair.json \
+            data/dashboard/wnba_alt_schedule_mapping_repair.json \
+            data/warehouse/wnba_alt_performance.json \
+            data/dashboard/wnba_alt_performance.json \
+            data/warehouse/wnba_alt_archive_reconciliation.json \
+            data/dashboard/wnba_alt_archive_reconciliation.json \
+            data/warehouse/wnba_alt_archive_reconciliation.csv
