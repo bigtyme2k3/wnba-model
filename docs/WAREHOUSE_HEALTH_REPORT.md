@@ -1,16 +1,16 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-08-01T01:56:40.874221+00:00`
+Generated: `2026-08-01T03:50:45.614708+00:00`
 Expected target date: `2026-07-31`
 Overall status: **YELLOW**
 
 ## Summary
 
-- **Files:** 278
-- **Green:** 251
+- **Files:** 290
+- **Green:** 263
 - **Yellow:** 27
 - **Red:** 0
-- **Duplicate Names:** 100
+- **Duplicate Names:** 106
 
 ## Dataset Status
 
@@ -34,11 +34,14 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_ai_coach.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_archive_reconciliation.json` | None | None |
 | YELLOW | dashboard | `data/dashboard/wnba_alt_clv.json` | 2026-08-01 | target_date_mismatch:2026-08-01!=2026-07-31 |
+| GREEN | dashboard | `data/dashboard/wnba_alt_exception_packet.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_game_mapping_repair.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_market_warehouse.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_market_watch_due.json` | 2026-07-31 | None |
+| GREEN | dashboard | `data/dashboard/wnba_alt_matchup_mapping_repair.json` | None | None |
 | YELLOW | dashboard | `data/dashboard/wnba_alt_performance.json` | 2026-08-01 | target_date_mismatch:2026-08-01!=2026-07-31 |
 | GREEN | dashboard | `data/dashboard/wnba_alt_performance_acceptance.json` | None | None |
+| GREEN | dashboard | `data/dashboard/wnba_alt_schedule_mapping_repair.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_streaks.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_ancillary_projection_v2.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_ancillary_projection_v2_acceptance.json` | None | None |
@@ -177,6 +180,9 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_v4_player_props_audit.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_v4_qa.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_v4_status.json` | None | None |
+| GREEN | dashboard | `data/dashboard/wnba_v5_model_intelligence.json` | None | None |
+| GREEN | dashboard | `data/dashboard/wnba_v5_player_profiles.json` | None | None |
+| GREEN | dashboard | `data/dashboard/wnba_v5_sportsbook_intelligence.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_validation_dashboard.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_validation_dashboard_summary.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_vote_layer_v2.json` | 2026-07-31 | None |
@@ -192,9 +198,12 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_ai_coach.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_archive_reconciliation.json` | None | None |
 | YELLOW | warehouse | `data/warehouse/wnba_alt_clv.json` | 2026-08-01 | target_date_mismatch:2026-08-01!=2026-07-31 |
+| GREEN | warehouse | `data/warehouse/wnba_alt_exception_packet.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_game_mapping_repair.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_market_warehouse.json` | 2026-07-31 | None |
+| GREEN | warehouse | `data/warehouse/wnba_alt_matchup_mapping_repair.json` | None | None |
 | YELLOW | warehouse | `data/warehouse/wnba_alt_performance.json` | 2026-08-01 | target_date_mismatch:2026-08-01!=2026-07-31 |
+| GREEN | warehouse | `data/warehouse/wnba_alt_schedule_mapping_repair.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_streaks.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_ancillary_projection_v2.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_autonomous_agent.json` | 2026-07-31 | None |
@@ -292,6 +301,9 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_standings.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_stats_quality.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_unified_player_simulation_v2.json` | 2026-07-31 | None |
+| GREEN | warehouse | `data/warehouse/wnba_v5_model_intelligence.json` | None | None |
+| GREEN | warehouse | `data/warehouse/wnba_v5_player_profiles.json` | None | None |
+| GREEN | warehouse | `data/warehouse/wnba_v5_sportsbook_intelligence.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_vote_layer_v2.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_warehouse_migration_report.json` | None | None |
 
@@ -305,9 +317,12 @@ Overall status: **YELLOW**
 - `wnba_ai_coach.json`: data/dashboard/wnba_ai_coach.json, data/warehouse/wnba_ai_coach.json
 - `wnba_alt_archive_reconciliation.json`: data/dashboard/wnba_alt_archive_reconciliation.json, data/warehouse/wnba_alt_archive_reconciliation.json
 - `wnba_alt_clv.json`: data/dashboard/wnba_alt_clv.json, data/warehouse/wnba_alt_clv.json
+- `wnba_alt_exception_packet.json`: data/dashboard/wnba_alt_exception_packet.json, data/warehouse/wnba_alt_exception_packet.json
 - `wnba_alt_game_mapping_repair.json`: data/dashboard/wnba_alt_game_mapping_repair.json, data/warehouse/wnba_alt_game_mapping_repair.json
 - `wnba_alt_market_warehouse.json`: data/dashboard/wnba_alt_market_warehouse.json, data/warehouse/wnba_alt_market_warehouse.json
+- `wnba_alt_matchup_mapping_repair.json`: data/dashboard/wnba_alt_matchup_mapping_repair.json, data/warehouse/wnba_alt_matchup_mapping_repair.json
 - `wnba_alt_performance.json`: data/dashboard/wnba_alt_performance.json, data/warehouse/wnba_alt_performance.json
+- `wnba_alt_schedule_mapping_repair.json`: data/dashboard/wnba_alt_schedule_mapping_repair.json, data/warehouse/wnba_alt_schedule_mapping_repair.json
 - `wnba_alt_streaks.json`: data/dashboard/wnba_alt_streaks.json, data/warehouse/wnba_alt_streaks.json
 - `wnba_ancillary_projection_v2.json`: data/dashboard/wnba_ancillary_projection_v2.json, data/warehouse/wnba_ancillary_projection_v2.json
 - `wnba_autonomous_agent.json`: data/dashboard/wnba_autonomous_agent.json, data/warehouse/wnba_autonomous_agent.json
@@ -396,4 +411,7 @@ Overall status: **YELLOW**
 - `wnba_standings.json`: data/dashboard/wnba_standings.json, data/warehouse/wnba_standings.json
 - `wnba_stats_quality.json`: data/dashboard/wnba_stats_quality.json, data/warehouse/wnba_stats_quality.json
 - `wnba_unified_player_simulation_v2.json`: data/dashboard/wnba_unified_player_simulation_v2.json, data/warehouse/wnba_unified_player_simulation_v2.json
+- `wnba_v5_model_intelligence.json`: data/dashboard/wnba_v5_model_intelligence.json, data/warehouse/wnba_v5_model_intelligence.json
+- `wnba_v5_player_profiles.json`: data/dashboard/wnba_v5_player_profiles.json, data/warehouse/wnba_v5_player_profiles.json
+- `wnba_v5_sportsbook_intelligence.json`: data/dashboard/wnba_v5_sportsbook_intelligence.json, data/warehouse/wnba_v5_sportsbook_intelligence.json
 - `wnba_vote_layer_v2.json`: data/dashboard/wnba_vote_layer_v2.json, data/warehouse/wnba_vote_layer_v2.json
