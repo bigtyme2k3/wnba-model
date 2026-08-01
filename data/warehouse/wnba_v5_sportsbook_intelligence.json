@@ -1,0 +1,40 @@
+{
+  "generated_at_utc": "2026-08-01T03:37:45.647980+00:00",
+  "status": "limited_by_attribution",
+  "summary": {
+    "graded_records": 814,
+    "book_attributed_records": 0,
+    "unknown_book_records": 814,
+    "book_attribution_coverage": 0.0,
+    "books_detected": 0,
+    "certified_clv_records": 546,
+    "direct_fd_dk_comparison_available": false,
+    "minimum_reliable_sample": 20
+  },
+  "by_sportsbook": [],
+  "by_sportsbook_market": [],
+  "recommendations": [
+    {
+      "type": "data_quality",
+      "message": "FanDuel vs DraftKings performance comparison is blocked until both books have verified attribution and sufficient samples.",
+      "evidence": {
+        "minimum_decisions_per_book": 20
+      }
+    },
+    {
+      "type": "coverage",
+      "message": "Sportsbook attribution coverage is below 80%; preserve Unknown instead of inferring a book.",
+      "evidence": {
+        "coverage": 0.0,
+        "unknown_records": 814
+      }
+    }
+  ],
+  "policy": {
+    "verified_graded_outcomes_only": true,
+    "unknown_book_inference": false,
+    "minimum_sample": 20,
+    "clv_policy": "Only certified finite CLV values are summarized. Missing values remain null.",
+    "interpretation": "Observed associations are diagnostic and not causal claims."
+  }
+}
