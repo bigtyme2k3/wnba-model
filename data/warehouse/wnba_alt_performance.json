@@ -13,7 +13,12 @@
     "profit_loss_units": 263.3269,
     "roi": 0.3131,
     "recommended_minimum_score_band": "75-79.9",
-    "calibration_ready": true
+    "calibration_ready": true,
+    "certified_clv": 611,
+    "positive_clv": 187,
+    "positive_clv_rate": 0.3061,
+    "average_line_clv": 0.0638,
+    "average_price_clv": -0.00068
   },
   "by_grade": [
     {
@@ -11921,5 +11926,185 @@
     "minimum_threshold_sample": 20,
     "recalibration_minimum_decisions": 100,
     "closing_line_policy": "blank until verified closing market snapshot exists"
+  },
+  "clv": {
+    "summary": {
+      "candidates": 912,
+      "certified": 611,
+      "positive": 187,
+      "positive_rate": 0.3061,
+      "average_line_clv": 0.0638,
+      "average_price_clv": -0.00068
+    },
+    "by_grade": [
+      {
+        "group": "C",
+        "candidates": 504,
+        "certified": 329,
+        "positive": 97,
+        "positive_rate": 0.2948,
+        "average_line_clv": 0.0669,
+        "average_price_clv": -0.00218
+      },
+      {
+        "group": "D",
+        "candidates": 234,
+        "certified": 160,
+        "positive": 46,
+        "positive_rate": 0.2875,
+        "average_line_clv": 0.0063,
+        "average_price_clv": 0.004706
+      },
+      {
+        "group": "C+",
+        "candidates": 137,
+        "certified": 98,
+        "positive": 40,
+        "positive_rate": 0.4082,
+        "average_line_clv": 0.1531,
+        "average_price_clv": -0.002759
+      },
+      {
+        "group": "B",
+        "candidates": 36,
+        "certified": 24,
+        "positive": 4,
+        "positive_rate": 0.1667,
+        "average_line_clv": 0.0417,
+        "average_price_clv": -0.006918
+      },
+      {
+        "group": "B+",
+        "candidates": 1,
+        "certified": 0,
+        "positive": 0,
+        "positive_rate": null,
+        "average_line_clv": null,
+        "average_price_clv": null
+      }
+    ],
+    "by_score_band": [
+      {
+        "group": "Unknown",
+        "candidates": 912,
+        "certified": 611,
+        "positive": 187,
+        "positive_rate": 0.3061,
+        "average_line_clv": 0.0638,
+        "average_price_clv": -0.00068
+      }
+    ],
+    "by_stat": [
+      {
+        "group": "REB",
+        "candidates": 168,
+        "certified": 116,
+        "positive": 27,
+        "positive_rate": 0.2328,
+        "average_line_clv": 0.0259,
+        "average_price_clv": 0.008226
+      },
+      {
+        "group": "PTS",
+        "candidates": 124,
+        "certified": 83,
+        "positive": 34,
+        "positive_rate": 0.4096,
+        "average_line_clv": 0.012,
+        "average_price_clv": 0.015265
+      },
+      {
+        "group": "PRA",
+        "candidates": 119,
+        "certified": 80,
+        "positive": 28,
+        "positive_rate": 0.35,
+        "average_line_clv": 0.2,
+        "average_price_clv": -0.007721
+      },
+      {
+        "group": "PR",
+        "candidates": 117,
+        "certified": 79,
+        "positive": 27,
+        "positive_rate": 0.3418,
+        "average_line_clv": 0.0759,
+        "average_price_clv": -0.002717
+      },
+      {
+        "group": "3PM",
+        "candidates": 104,
+        "certified": 74,
+        "positive": 29,
+        "positive_rate": 0.3919,
+        "average_line_clv": 0.0405,
+        "average_price_clv": -0.00851
+      },
+      {
+        "group": "AST",
+        "candidates": 110,
+        "certified": 71,
+        "positive": 12,
+        "positive_rate": 0.169,
+        "average_line_clv": 0.0141,
+        "average_price_clv": -0.002986
+      },
+      {
+        "group": "PA",
+        "candidates": 88,
+        "certified": 57,
+        "positive": 18,
+        "positive_rate": 0.3158,
+        "average_line_clv": 0.0877,
+        "average_price_clv": -0.002701
+      },
+      {
+        "group": "RA",
+        "candidates": 82,
+        "certified": 51,
+        "positive": 12,
+        "positive_rate": 0.2353,
+        "average_line_clv": 0.0784,
+        "average_price_clv": -0.016617
+      }
+    ],
+    "by_side": [
+      {
+        "group": "UNDER",
+        "candidates": 674,
+        "certified": 464,
+        "positive": 163,
+        "positive_rate": 0.3513,
+        "average_line_clv": 0.0776,
+        "average_price_clv": -0.002152
+      },
+      {
+        "group": "OVER",
+        "candidates": 238,
+        "certified": 147,
+        "positive": 24,
+        "positive_rate": 0.1633,
+        "average_line_clv": 0.0204,
+        "average_price_clv": 0.004053
+      }
+    ],
+    "by_sportsbook": [
+      {
+        "group": "Unknown",
+        "candidates": 912,
+        "certified": 611,
+        "positive": 187,
+        "positive_rate": 0.3061,
+        "average_line_clv": 0.0638,
+        "average_price_clv": -0.00068
+      }
+    ],
+    "policy": {
+      "certification": "latest captured market at or before verified game start",
+      "post_start_lines": "excluded",
+      "missing_start_time": "uncertified",
+      "positive_line_clv": "frozen line was better for the selected side",
+      "positive_price_clv": "closing implied probability was higher than at snapshot"
+    }
   }
 }
