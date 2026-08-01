@@ -1,6 +1,6 @@
 # WNBA Betting Engine Validation
 
-Generated: `2026-08-01T17:39:05.846783+00:00`
+Generated: `2026-08-01T18:47:27.426113+00:00`
 Status: **YELLOW**
 
 ## Core Metrics
