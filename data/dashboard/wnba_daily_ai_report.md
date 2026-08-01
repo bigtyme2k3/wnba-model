@@ -1,12 +1,12 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-08-01T12:36:25.307658Z
+Generated: 2026-08-01T14:47:42.800470Z
 
 ## Slate summary
 
 - 2 games
 - 6 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 2, 'Pass': 4}
+- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 1, 'Pass': 5}
 
 ## Game — 2026-08-02T23:00:00Z
 
@@ -27,27 +27,27 @@ Best line: +11.5 | line-shop edge: +0 points
 ## Game — 2026-08-03T00:30:00Z
 
 ### Toronto Tempo +11.5 (draftkings)
-Bet quality: **Watch — 54.1/100**
+Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +12.5 | line-shop edge: +1 points
+Best line: +11.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
-### Golden State Valkyries -12.5 (fanduel)
-Bet quality: **Pass — 49.7/100**
-Research level: **low-research-interest** | signal 0.03 | 1 matched angles
-Best line: -11.5 | line-shop edge: +1 points
-
-- Golden State Valkyries|favorite: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
-
-### Toronto Tempo +12.5 (fanduel)
+### Toronto Tempo +11.5 (fanduel)
 Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +12.5 | line-shop edge: +0 points
+Best line: +11.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
 ### Golden State Valkyries -11.5 (draftkings)
+Bet quality: **Pass — 44.7/100**
+Research level: **low-research-interest** | signal 0.03 | 1 matched angles
+Best line: -11.5 | line-shop edge: +0 points
+
+- Golden State Valkyries|favorite: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
+
+### Golden State Valkyries -11.5 (fanduel)
 Bet quality: **Pass — 44.7/100**
 Research level: **low-research-interest** | signal 0.03 | 1 matched angles
 Best line: -11.5 | line-shop edge: +0 points
