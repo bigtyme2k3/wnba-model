@@ -1,25 +1,25 @@
 # WNBA Trend Research Report
 
-Generated: `2026-08-01T17:16:28.083493+00:00`
-Resolved bets: **2276**
+Generated: `2026-08-01T17:39:05.931523+00:00`
+Resolved bets: **2281**
 
 ## Losing-Streak Profile
 
-`{"average_completed_loss_streak": 2.393, "longest_losing_streak": 16, "loss_streak_count": 494, "streak_distribution": {"1": 231, "10": 2, "11": 3, "12": 3, "13": 2, "15": 2, "16": 1, "2": 113, "3": 68, "4": 28, "5": 20, "6": 8, "7": 7, "8": 3, "9": 3}}`
+`{"average_completed_loss_streak": 2.396, "longest_losing_streak": 16, "loss_streak_count": 495, "streak_distribution": {"1": 231, "10": 2, "11": 3, "12": 3, "13": 2, "15": 2, "16": 1, "2": 113, "3": 69, "4": 27, "5": 21, "6": 8, "7": 7, "8": 3, "9": 3}}`
 
 ## Staking Risk Illustration
 
-`{"base_unit": 1.0, "cap_steps": 4, "capped_progressive_max_drawdown_units": 1451.9072, "capped_progressive_max_stake_units": 8.0, "capped_progressive_net_units": -1282.7906, "flat_net_units": -157.6593, "resolved_bets": 2276, "warning": "Progressive staking increases exposure after losses and can amplify drawdowns. Results are descriptive, not a recommendation."}`
+`{"base_unit": 1.0, "cap_steps": 4, "capped_progressive_max_drawdown_units": 1462.7621, "capped_progressive_max_stake_units": 8.0, "capped_progressive_net_units": -1293.6455, "flat_net_units": -161.1412, "resolved_bets": 2281, "warning": "Progressive staking increases exposure after losses and can amplify drawdowns. Results are descriptive, not a recommendation."}`
 
 ## Trends by Market
 
 | Segment | Samples | Win rate | ROI |
 |---|---:|---:|---:|
-| PTS | 552 | 0.433 | None |
+| PTS | 553 | 0.4322 | None |
 | PR | 443 | 0.456 | None |
-| PRA | 413 | 0.4697 | None |
-| PA | 365 | 0.4274 | None |
-| 3PM | 233 | 0.6266 | None |
+| PRA | 415 | 0.4675 | None |
+| PA | 366 | 0.4262 | None |
+| 3PM | 234 | 0.6282 | None |
 | REB | 114 | 0.5789 | None |
 | AST | 85 | 0.5765 | None |
 | RA | 71 | 0.5915 | None |
@@ -28,8 +28,8 @@ Resolved bets: **2276**
 
 | Segment | Samples | Win rate | ROI |
 |---|---:|---:|---:|
-| FanDuel | 1067 | 0.4611 | None |
-| DraftKings | 931 | 0.4823 | None |
+| FanDuel | 1070 | 0.4598 | None |
+| DraftKings | 933 | 0.4823 | None |
 | UNKNOWN | 246 | 0.5488 | None |
 | BetOnline.ag | 18 | 0.5556 | None |
 | BetRivers | 8 | 0.625 | None |
@@ -38,13 +38,13 @@ Resolved bets: **2276**
 
 | Segment | Samples | Win rate | ROI |
 |---|---:|---:|---:|
-| UNKNOWN | 2276 | 0.4807 | None |
+| UNKNOWN | 2281 | 0.4801 | None |
 
 ## Trends by Side
 
 | Segment | Samples | Win rate | ROI |
 |---|---:|---:|---:|
-| UNDER | 1924 | 0.4792 | None |
+| UNDER | 1929 | 0.4785 | None |
 | OVER | 352 | 0.4886 | None |
 
 ## Warnings
