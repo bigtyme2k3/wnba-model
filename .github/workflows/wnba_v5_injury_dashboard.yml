@@ -7,8 +7,14 @@ on:
     paths:
       - 'patch_dashboard_v5_injury_intelligence.py'
       - 'data/dashboard/wnba_injury_intelligence.json'
+      - '.github/workflows/wnba_v5_injury_dashboard.yml'
   workflow_run:
-    workflows: ["WNBA Injury Refresh", "WNBA V4 Player Props Polish", "Deploy WNBA Dashboard"]
+    workflows:
+      - "WNBA Injury Refresh"
+      - "WNBA V4 Player Props Polish"
+      - "WNBA Sprint 19 Restore Tabs"
+      - "WNBA Postgame Learning Pipeline"
+      - "Deploy WNBA Dashboard"
     types: [completed]
 
 concurrency:
