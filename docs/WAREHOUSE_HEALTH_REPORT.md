@@ -1,6 +1,6 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-08-01T16:34:56.811224+00:00`
+Generated: `2026-08-01T17:16:27.786356+00:00`
 Expected target date: `2026-08-01`
 Overall status: **YELLOW**
 
