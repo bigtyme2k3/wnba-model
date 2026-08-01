@@ -1,15 +1,15 @@
 # WNBA Betting Engine Validation
 
-Generated: `2026-08-01T03:50:45.794945+00:00`
+Generated: `2026-08-01T03:54:41.753729+00:00`
 Status: **YELLOW**
 
 ## Core Metrics
 
-- **Graded:** 2084
-- **Wins:** 1003
-- **Losses:** 1081
+- **Graded:** 2174
+- **Wins:** 1061
+- **Losses:** 1113
 - **Pushes:** 0
-- **Win Rate:** 0.4813
+- **Win Rate:** 0.488
 - **Stake:** 0.0
 - **Profit:** 0.0
 - **Roi:** None
@@ -18,20 +18,20 @@ Status: **YELLOW**
 
 ## Calibration
 
-`{"actual_rate": 0.4728, "brier_score": 0.3541, "predicted_rate": 0.7621}`
+`{"actual_rate": 0.4802, "brier_score": 0.3503, "predicted_rate": 0.7662}`
 
 ## By Market
 
 | Market | Graded | Win rate |
 |---|---:|---:|
-| 3PM | 209 | 0.6172 |
-| AST | 83 | 0.5783 |
-| PA | 331 | 0.4199 |
-| PR | 404 | 0.4579 |
-| PRA | 377 | 0.4721 |
-| PTS | 502 | 0.4363 |
-| RA | 66 | 0.6061 |
-| REB | 112 | 0.5804 |
+| 3PM | 219 | 0.6301 |
+| AST | 84 | 0.5833 |
+| PA | 347 | 0.4352 |
+| PR | 421 | 0.4584 |
+| PRA | 397 | 0.4786 |
+| PTS | 523 | 0.4436 |
+| RA | 69 | 0.6087 |
+| REB | 114 | 0.5789 |
 
 ## By Sportsbook
 
@@ -40,8 +40,8 @@ Status: **YELLOW**
 | BetOnline.ag | 18 | 0.5556 |
 | BetRivers | 8 | 0.625 |
 | Caesars | 6 | 0.5 |
-| DraftKings | 829 | 0.4813 |
-| FanDuel | 974 | 0.462 |
+| DraftKings | 879 | 0.4949 |
+| FanDuel | 1014 | 0.4655 |
 | UNKNOWN | 249 | 0.5462 |
 
 ## Warnings

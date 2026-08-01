@@ -1,14 +1,14 @@
 # WNBA Warehouse Health Report
 
-Generated: `2026-08-01T03:50:45.614708+00:00`
+Generated: `2026-08-01T03:54:41.561077+00:00`
 Expected target date: `2026-07-31`
 Overall status: **YELLOW**
 
 ## Summary
 
 - **Files:** 290
-- **Green:** 263
-- **Yellow:** 27
+- **Green:** 267
+- **Yellow:** 23
 - **Red:** 0
 - **Duplicate Names:** 106
 
@@ -33,13 +33,13 @@ Overall status: **YELLOW**
 | GREEN | dashboard | `data/dashboard/wnba_adaptive_confidence.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_ai_coach.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_archive_reconciliation.json` | None | None |
-| YELLOW | dashboard | `data/dashboard/wnba_alt_clv.json` | 2026-08-01 | target_date_mismatch:2026-08-01!=2026-07-31 |
+| GREEN | dashboard | `data/dashboard/wnba_alt_clv.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_exception_packet.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_game_mapping_repair.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_market_warehouse.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_market_watch_due.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_matchup_mapping_repair.json` | None | None |
-| YELLOW | dashboard | `data/dashboard/wnba_alt_performance.json` | 2026-08-01 | target_date_mismatch:2026-08-01!=2026-07-31 |
+| GREEN | dashboard | `data/dashboard/wnba_alt_performance.json` | 2026-07-31 | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_performance_acceptance.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_schedule_mapping_repair.json` | None | None |
 | GREEN | dashboard | `data/dashboard/wnba_alt_streaks.json` | 2026-07-31 | None |
@@ -197,12 +197,12 @@ Overall status: **YELLOW**
 | GREEN | warehouse | `data/warehouse/wnba_adaptive_confidence.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_ai_coach.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_archive_reconciliation.json` | None | None |
-| YELLOW | warehouse | `data/warehouse/wnba_alt_clv.json` | 2026-08-01 | target_date_mismatch:2026-08-01!=2026-07-31 |
+| GREEN | warehouse | `data/warehouse/wnba_alt_clv.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_exception_packet.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_game_mapping_repair.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_market_warehouse.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_matchup_mapping_repair.json` | None | None |
-| YELLOW | warehouse | `data/warehouse/wnba_alt_performance.json` | 2026-08-01 | target_date_mismatch:2026-08-01!=2026-07-31 |
+| GREEN | warehouse | `data/warehouse/wnba_alt_performance.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_schedule_mapping_repair.json` | None | None |
 | GREEN | warehouse | `data/warehouse/wnba_alt_streaks.json` | 2026-07-31 | None |
 | GREEN | warehouse | `data/warehouse/wnba_ancillary_projection_v2.json` | 2026-07-31 | None |
