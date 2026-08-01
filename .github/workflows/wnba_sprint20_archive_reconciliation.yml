@@ -1,0 +1,55 @@
+name: WNBA Sprint 20 Archive Reconciliation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - reconcile_wnba_alt_archive.py
+      - .github/workflows/wnba_sprint20_archive_reconciliation.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  reconcile-alt-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile reconciliation
+        run: python -m py_compile reconcile_wnba_alt_archive.py
+
+      - name: Build reconciliation report
+        run: python reconcile_wnba_alt_archive.py
+
+      - name: Verify complete accounting
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('data/warehouse/wnba_alt_archive_reconciliation.json').read_text())
+          summary=report['summary']
+          assert summary['fully_accounted'], summary
+          assert summary['total_accounted_for']==summary['total_archived'], summary
+          print(json.dumps(summary, indent=2))
+          PY
+
+      - name: Publish reconciliation artifacts
+        run: |
+          bash scripts/atomic_generated_push.sh \
+            'Publish Sprint 20 ALT archive reconciliation' \
+            data/warehouse/wnba_alt_archive_reconciliation.json \
+            data/dashboard/wnba_alt_archive_reconciliation.json \
+            data/warehouse/wnba_alt_archive_reconciliation.csv
