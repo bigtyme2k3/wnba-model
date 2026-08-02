@@ -6,6 +6,9 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'data/dashboard/wnba_injury_intelligence.json'
+      - 'patch_dashboard_v5_injury_intelligence.py'
+      - 'patch_dashboard_v4_consolidated_navigation.py'
       - '.github/workflows/deploy_wnba_dashboard.yml'
 
 permissions:
@@ -27,10 +30,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify dashboard files
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build required injury intelligence into deployment artifact
         run: |
           test -f docs/index.html
-          echo "Dashboard entry point found."
+          test -f patch_dashboard_v5_injury_intelligence.py
+          test -f data/dashboard/wnba_injury_intelligence.json
+          python -m py_compile patch_dashboard_v5_injury_intelligence.py
+          python patch_dashboard_v5_injury_intelligence.py
+
+      - name: Verify complete dashboard artifact
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          h = Path('docs/index.html').read_text(encoding='utf-8')
+          required = [
+              'v5-injury-intelligence-data',
+              'v5-injury-intelligence-script',
+              "['injuries','Injuries']",
+              "view==='injuries'",
+              'window.injuryIntelligence',
+          ]
+          missing = [marker for marker in required if marker not in h]
+          if missing:
+              raise SystemExit(f'Deployment blocked; missing injury markers: {missing}')
+          print('Dashboard deployment artifact includes Injury Intelligence.')
+          PY
+          echo "Dashboard entry point verified."
           find docs -maxdepth 2 -type f | sort | head -100
 
       - name: Configure GitHub Pages
