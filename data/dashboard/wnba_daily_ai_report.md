@@ -1,26 +1,26 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-08-02T15:08:34.339434Z
+Generated: 2026-08-02T16:33:18.816498Z
 
 ## Slate summary
 
 - 3 games
 - 8 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 1, 'Pass': 7}
+- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 2, 'Pass': 6}
 
 ## Game — 2026-08-02T23:00:00Z
 
-### Connecticut Sun +10.5 (draftkings)
-Bet quality: **Pass — 49.1/100**
+### Connecticut Sun +10.5 (fanduel)
+Bet quality: **Watch — 54.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
+Best line: +11.5 | line-shop edge: +1 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
-### Connecticut Sun +10.5 (fanduel)
+### Connecticut Sun +11.5 (draftkings)
 Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
+Best line: +11.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
