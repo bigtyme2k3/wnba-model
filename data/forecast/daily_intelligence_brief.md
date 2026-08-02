@@ -1,6 +1,6 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-08-02T08:44:30.075095Z
+Generated: 2026-08-02T10:59:16.079872Z
 
 **Status:** STANDBY
 **Slate:** 0 events, 0 fresh markets
