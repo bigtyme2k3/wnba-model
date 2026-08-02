@@ -1,0 +1,74 @@
+name: WNBA Pregame Eligibility Guard
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["WNBA Injury Refresh", "WNBA Injury Rotation Guard", "WNBA Live Results Engine"]
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - wnba_pregame_eligibility_guard.py
+      - .github/workflows/wnba_pregame_eligibility_guard.yml
+  schedule:
+    - cron: '*/15 * * * *'
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  lock-started-games:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate pregame guard
+        run: python -m py_compile wnba_pregame_eligibility_guard.py patch_dashboard_v5_injury_intelligence.py
+      - name: Lock live and final games
+        run: python wnba_pregame_eligibility_guard.py
+      - name: Verify locked games cannot remain actionable
+        run: |
+          python - <<'PY'
+          import json
+          master=json.load(open('data/dashboard/wnba_master.json'))
+          guard=master.get('pregame_guard',{})
+          locked=set(guard.get('locked_teams',[]))
+          for row in master.get('props',[]):
+              team=row.get('team') or row.get('team_name')
+              if team in locked:
+                  assert row.get('pregame_eligible') is False, row
+                  assert row.get('eligible_for_bet') is False, row
+                  assert row.get('final_action') == 'PASS', row
+          injury=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
+          for row in injury.get('adjustments',[]):
+              if row.get('team') in locked:
+                  assert row.get('headline_eligible') is False, row
+          print('PREGAME GUARD VERIFIED',guard)
+          PY
+      - name: Rebuild injury dashboard with game-state locks
+        run: |
+          python patch_dashboard_v5_injury_intelligence.py
+          grep -q 'v5-injury-intelligence-data' docs/index.html
+      - name: Publish pregame lock outputs
+        run: |
+          git config user.name "WNBA Pregame Guard Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Lock started WNBA games from pregame recommendations" \
+            'data/dashboard/wnba_*.json' \
+            'data/warehouse/wnba_*.json' \
+            'data/master/wnba_master.json' \
+            'docs/index.html'
