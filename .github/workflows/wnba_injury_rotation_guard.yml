@@ -1,0 +1,59 @@
+name: WNBA Injury Rotation Guard
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["WNBA Injury Refresh"]
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - wnba_injury_rotation_guard.py
+      - .github/workflows/wnba_injury_rotation_guard.yml
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  guard-beneficiaries:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate rotation guard
+        run: python -m py_compile wnba_injury_rotation_guard.py
+      - name: Apply rotation and market guardrails
+        run: python wnba_injury_rotation_guard.py
+      - name: Verify speculative players are excluded from headlines
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
+          for row in p.get('adjustments',[]):
+              if row.get('beneficiary_tier')=='SPECULATIVE':
+                  assert row.get('severity')=='SPECULATIVE', row
+                  assert row.get('headline_eligible') is False, row
+                  assert float(row.get('minutes_delta') or 0)<=2.5, row
+          print('ROTATION GUARD VERIFIED',p.get('summary',{}))
+          PY
+      - name: Publish guarded injury intelligence
+        run: |
+          git config user.name "WNBA Rotation Guard Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Guard WNBA injury beneficiaries" \
+            'data/dashboard/wnba_injury_intelligence.json' \
+            'data/warehouse/wnba_injury_intelligence.json'
