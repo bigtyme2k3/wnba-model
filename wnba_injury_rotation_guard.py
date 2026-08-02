@@ -45,27 +45,30 @@ def guard(report:dict)->dict:
         delta=float(item.get('minutes_delta') or 0)
         market_available=norm(item.get('player')) in markets
         rotation_player=base>=12
-        # Missing market data is not proof a player is inactive, but it makes a large
-        # redistribution speculative. Cap it and keep it out of headline rankings.
-        max_delta=5.0 if market_available else 2.5
+        verified=bool(market_available and rotation_player)
+        # A player without a market can still play, but a large projected boost is
+        # speculative. Cap it and remove it from headline winner rankings.
+        max_delta=5.0 if verified else 2.5
         if not rotation_player:max_delta=min(max_delta,1.5)
         if delta>max_delta:
             item['minutes_delta_pre_guard']=round(delta,1)
             item['minutes_delta']=round(max_delta,1)
             item['projected_minutes']=round(base+max_delta,1)
             usage_delta=float(item.get('usage_delta') or 0)
-            item['usage_delta']=round(min(usage_delta,2.0 if market_available else 0.75),2)
+            item['usage_delta']=round(min(usage_delta,2.0 if verified else 0.75),2)
             item['projection_factor']=round((item['projected_minutes']/max(base,1))*(1+item['usage_delta']/100),4)
         item['market_available']=market_available
         item['rotation_verified']=rotation_player
-        item['beneficiary_tier']='VERIFIED' if market_available and rotation_player else 'SPECULATIVE'
-        item['headline_eligible']=bool(market_available and rotation_player)
-        item['detail']=(item.get('detail') or 'Minutes redistributed') + ('' if item['headline_eligible'] else '; speculative until rotation or market is confirmed')
+        item['beneficiary_tier']='VERIFIED' if verified else 'SPECULATIVE'
+        item['headline_eligible']=verified
+        if not verified:
+            item['severity']='SPECULATIVE'
+            item['detail']=(item.get('detail') or 'Minutes redistributed')+'; no verified prop market or rotation confirmation'
         adjusted.append(item)
     report['adjustments']=adjusted
     report.setdefault('summary',{})['verified_beneficiaries']=sum(1 for x in adjusted if x.get('headline_eligible'))
-    report['summary']['speculative_beneficiaries']=sum(1 for x in adjusted if str(x.get('severity','')).upper()=='BENEFICIARY' and not x.get('headline_eligible'))
-    report['summary']['beneficiary_guard']='market availability + 12 minute rotation baseline; speculative boosts capped'
+    report['summary']['speculative_beneficiaries']=sum(1 for x in adjusted if str(x.get('severity','')).upper()=='SPECULATIVE')
+    report['summary']['beneficiary_guard']='verified prop market + 12 minute rotation baseline; speculative boosts capped and excluded from headlines'
     return report
 
 
