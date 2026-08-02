@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - wnba_injury_rotation_guard.py
+      - wnba_injury_intelligence.py
       - patch_dashboard_v5_injury_intelligence.py
       - .github/workflows/wnba_injury_rotation_guard.yml
 
@@ -35,42 +36,61 @@ jobs:
         with:
           python-version: '3.11'
       - name: Validate rotation guard
-        run: python -m py_compile wnba_injury_rotation_guard.py patch_dashboard_v5_injury_intelligence.py
-      - name: Apply rotation and market guardrails
+        run: python -m py_compile wnba_injury_intelligence.py wnba_injury_rotation_guard.py patch_dashboard_v5_injury_intelligence.py
+      - name: Resolve current injury target
+        run: |
+          TARGET=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_injury_intelligence.json')
+          d=json.load(p.open())
+          print(d['target_date'])
+          PY
+          )
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Rotation guard target: $TARGET"
+      - name: Rebuild clean base injury allocations
+        run: python wnba_injury_intelligence.py --date "${{ env.TARGET }}"
+      - name: Apply role-weighted rotation and market guardrails
         run: python wnba_injury_rotation_guard.py
-      - name: Verify speculative players are excluded from headlines
+      - name: Verify weighted allocation and speculative exclusions
         run: |
           python - <<'PY'
           import json
           p=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
+          weighted=0
           for row in p.get('adjustments',[]):
               if row.get('beneficiary_tier')=='SPECULATIVE':
                   assert row.get('severity')=='SPECULATIVE', row
                   assert row.get('headline_eligible') is False, row
                   assert float(row.get('minutes_delta') or 0)<=2.5, row
+              if row.get('redistribution_method')=='role_weighted_v2':
+                  weighted += 1
+          assert weighted > 0, 'No role-weighted beneficiary rows generated'
           assert not any(
               str(r.get('player','')).lower()=='kiki rice' and r.get('headline_eligible')
               for r in p.get('adjustments',[])
           ), 'Kiki Rice must not be headline eligible without a current prop market'
-          print('ROTATION GUARD VERIFIED',p.get('summary',{}))
+          print('ROLE-WEIGHTED ROTATION GUARD VERIFIED',p.get('summary',{}))
           PY
       - name: Rebuild dashboard with guarded injury data
         run: |
           python patch_dashboard_v5_injury_intelligence.py
           grep -q 'v5-injury-intelligence-data' docs/index.html
+          grep -q 'role_weighted_v2' docs/index.html
           python - <<'PY'
           from pathlib import Path
           h=Path('docs/index.html').read_text(encoding='utf-8')
           assert '"player":"Kiki Rice"' in h
           assert '"severity":"SPECULATIVE"' in h
-          print('Guarded injury payload embedded in dashboard artifact')
+          print('Role-weighted guarded injury payload embedded in dashboard artifact')
           PY
       - name: Publish guarded injury intelligence
         run: |
           git config user.name "WNBA Rotation Guard Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Guard WNBA injury beneficiaries" \
+            "Publish role-weighted WNBA injury allocations" \
             'data/dashboard/wnba_injury_intelligence.json' \
             'data/warehouse/wnba_injury_intelligence.json' \
             'docs/index.html'
