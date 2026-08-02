@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - wnba_injury_rotation_guard.py
+      - patch_dashboard_v5_injury_intelligence.py
       - .github/workflows/wnba_injury_rotation_guard.yml
 
 concurrency:
@@ -34,7 +35,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Validate rotation guard
-        run: python -m py_compile wnba_injury_rotation_guard.py
+        run: python -m py_compile wnba_injury_rotation_guard.py patch_dashboard_v5_injury_intelligence.py
       - name: Apply rotation and market guardrails
         run: python wnba_injury_rotation_guard.py
       - name: Verify speculative players are excluded from headlines
@@ -47,7 +48,22 @@ jobs:
                   assert row.get('severity')=='SPECULATIVE', row
                   assert row.get('headline_eligible') is False, row
                   assert float(row.get('minutes_delta') or 0)<=2.5, row
+          assert not any(
+              str(r.get('player','')).lower()=='kiki rice' and r.get('headline_eligible')
+              for r in p.get('adjustments',[])
+          ), 'Kiki Rice must not be headline eligible without a current prop market'
           print('ROTATION GUARD VERIFIED',p.get('summary',{}))
+          PY
+      - name: Rebuild dashboard with guarded injury data
+        run: |
+          python patch_dashboard_v5_injury_intelligence.py
+          grep -q 'v5-injury-intelligence-data' docs/index.html
+          python - <<'PY'
+          from pathlib import Path
+          h=Path('docs/index.html').read_text(encoding='utf-8')
+          assert '"player":"Kiki Rice"' in h
+          assert '"severity":"SPECULATIVE"' in h
+          print('Guarded injury payload embedded in dashboard artifact')
           PY
       - name: Publish guarded injury intelligence
         run: |
@@ -56,4 +72,5 @@ jobs:
           bash scripts/atomic_generated_push.sh \
             "Guard WNBA injury beneficiaries" \
             'data/dashboard/wnba_injury_intelligence.json' \
-            'data/warehouse/wnba_injury_intelligence.json'
+            'data/warehouse/wnba_injury_intelligence.json' \
+            'docs/index.html'
