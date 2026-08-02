@@ -1,0 +1,57 @@
+name: WNBA Fix Canonical Injury Navigation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'patch_canonical_injury_navigation.py'
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  repair-navigation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Configure Git publisher identity
+        run: |
+          git config user.name "WNBA Navigation Bot"
+          git config user.email "actions@github.com"
+      - name: Patch canonical router and current dashboard
+        run: |
+          python -m py_compile patch_canonical_injury_navigation.py
+          python patch_canonical_injury_navigation.py
+          python patch_dashboard_v5_injury_intelligence.py
+      - name: Verify permanent injury navigation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          source=Path('patch_dashboard_v4_consolidated_navigation.py').read_text(encoding='utf-8')
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          markers=["['injuries','Injuries']", "view==='injuries'", 'window.injuryIntelligence']
+          for marker in markers:
+              assert marker in source or marker == 'window.injuryIntelligence', marker
+              assert marker in html, marker
+          print('CANONICAL INJURY NAVIGATION VERIFIED')
+          PY
+      - name: Publish permanent fix
+        run: |
+          bash scripts/atomic_generated_push.sh \
+            "Make Injuries tab canonical and persistent" \
+            'patch_dashboard_v4_consolidated_navigation.py' \
+            'docs/index.html'
