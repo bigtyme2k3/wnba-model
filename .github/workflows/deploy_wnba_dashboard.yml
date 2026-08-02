@@ -8,6 +8,7 @@ on:
       - 'docs/**'
       - 'data/dashboard/wnba_injury_intelligence.json'
       - 'patch_dashboard_v5_injury_intelligence.py'
+      - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_consolidated_navigation.py'
       - '.github/workflows/deploy_wnba_dashboard.yml'
 
@@ -39,9 +40,13 @@ jobs:
         run: |
           test -f docs/index.html
           test -f patch_dashboard_v5_injury_intelligence.py
+          test -f patch_dashboard_v5_player_prop_injury_context.py
           test -f data/dashboard/wnba_injury_intelligence.json
-          python -m py_compile patch_dashboard_v5_injury_intelligence.py
+          python -m py_compile \
+            patch_dashboard_v5_injury_intelligence.py \
+            patch_dashboard_v5_player_prop_injury_context.py
           python patch_dashboard_v5_injury_intelligence.py
+          python patch_dashboard_v5_player_prop_injury_context.py
 
       - name: Verify complete dashboard artifact
         run: |
@@ -54,11 +59,15 @@ jobs:
               "['injuries','Injuries']",
               "view==='injuries'",
               'window.injuryIntelligence',
+              'v5-player-prop-injury-style',
+              'v5-player-prop-injury-script',
+              'window.WNBA_PLAYER_PROP_INJURY_CONTEXT',
+              'Injury-adjusted',
           ]
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing injury markers: {missing}')
-          print('Dashboard deployment artifact includes Injury Intelligence.')
+          print('Dashboard artifact includes Injury Intelligence and Player Props injury context.')
           PY
           echo "Dashboard entry point verified."
           find docs -maxdepth 2 -type f | sort | head -100
