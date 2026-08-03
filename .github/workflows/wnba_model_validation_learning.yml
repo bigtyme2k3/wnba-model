@@ -10,9 +10,11 @@ on:
   push:
     branches: [main]
     paths:
+      - 'wnba_alt_performance_tracker.py'
       - 'wnba_game_performance.py'
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
+      - 'patch_dashboard_alt_grading_status.py'
       - '.github/workflows/wnba_model_validation_learning.yml'
   schedule:
     - cron: '15 3,4,5 * * *'
@@ -47,27 +49,32 @@ jobs:
       - name: Resolve grading dates
         run: |
           TARGET=$(python active_slate_date.py --date "${{ github.event.inputs.date }}")
-          PREVIOUS=$(python - <<PY
+          python - <<PY >> "$GITHUB_ENV"
           from datetime import date,timedelta
-          print((date.fromisoformat('$TARGET')-timedelta(days=1)).isoformat())
+          target=date.fromisoformat('$TARGET')
+          print(f'TARGET={target}')
+          for i in range(1,4):
+              print(f'GRADE_DATE_{i}={target-timedelta(days=i)}')
           PY
-          )
-          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "PREVIOUS=$PREVIOUS" >> "$GITHUB_ENV"
       - name: Validate analytics code
-        run: python -m py_compile wnba_alt_performance_tracker.py wnba_game_predictions_ledger.py wnba_game_performance.py wnba_terminal_ui.py patch_terminal_ui.py
+        run: python -m py_compile wnba_alt_performance_tracker.py wnba_game_predictions_ledger.py wnba_game_performance.py wnba_terminal_ui.py patch_terminal_ui.py patch_dashboard_alt_grading_status.py
       - name: Refresh official finals and player logs
         run: |
           python collect_wehoop.py --current --out data/raw
-          python wnba_play_by_play_layer.py --date "$PREVIOUS" || true
-          python wnba_player_game_log_warehouse.py --date "$PREVIOUS" || true
+          for DAY in "$GRADE_DATE_1" "$GRADE_DATE_2" "$GRADE_DATE_3"; do
+            python wnba_play_by_play_layer.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+          done
           python wnba_player_game_log_archive.py merge || true
           python wnba_player_game_log_backfill.py --season "${TARGET:0:4}" || true
-      - name: Grade prior completed slate
+      - name: Grade rolling completed slates
         run: |
-          python wnba_alt_performance_tracker.py --date "$PREVIOUS" --grade
+          for DAY in "$GRADE_DATE_3" "$GRADE_DATE_2" "$GRADE_DATE_1"; do
+            echo "Grading ALT and game predictions for $DAY"
+            python wnba_alt_performance_tracker.py --date "$DAY" --grade
+            python wnba_game_predictions_ledger.py grade --date "$DAY" || true
+          done
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
-          python wnba_game_predictions_ledger.py grade --date "$PREVIOUS"
           python wnba_game_predictions_ledger.py report --date "$TARGET"
           python wnba_game_performance.py
       - name: Archive today's game card
@@ -77,6 +84,7 @@ jobs:
           python wnba_master_source_builder.py --date "$TARGET" || true
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
+          python patch_dashboard_alt_grading_status.py
       - name: Verify grading outputs
         run: |
           python - <<'PY'
@@ -85,7 +93,9 @@ jobs:
           games=json.load(open('data/dashboard/wnba_game_performance.json'))
           ledger=json.load(open('data/dashboard/wnba_game_predictions_ledger.json'))
           terminal=json.load(open('data/dashboard/terminal_ui.json'))
-          assert alt.get('summary',{}).get('graded',0)>0, alt
+          summary=alt.get('summary',{})
+          assert summary.get('graded',0)>0, alt
+          assert summary.get('pending',0)>=0, summary
           assert games.get('summary',{}).get('graded_games',0)>=0, games
           assert 'spread' in games and 'total' in games, games
           assert ledger.get('status')=='ok', ledger
@@ -93,14 +103,16 @@ jobs:
           assert terminal.get('game_performance'), terminal.keys()
           html=open('docs/index.html',encoding='utf-8').read()
           assert 'Game Performance' in html and 'ALT Performance' in html
-          print('MODEL VALIDATION VERIFIED',alt['summary'],games['summary'])
+          assert 'WNBA_ALT_GRADING_STATUS_START' in html
+          assert 'ALT Grading Checkpoint' in html
+          print('MODEL VALIDATION VERIFIED',summary,games['summary'])
           PY
       - name: Publish grading and performance outputs
         run: |
           git config user.name "WNBA Validation Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Refresh WNBA ALT and game performance - $TARGET" \
+            "Refresh rolling WNBA ALT and game performance - $TARGET" \
             'data/history/wnba_alt_streak_history.jsonl' \
             'data/history/wnba_game_predictions.jsonl' \
             'data/dashboard/wnba_alt_performance.json' \
