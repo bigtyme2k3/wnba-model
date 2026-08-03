@@ -32,7 +32,7 @@ def build_block() -> str:
     release = f"QA-{short}"
     return f'''{START}
 <style id="wnba-build-beacon-style">
-#wnba-build-beacon{{position:fixed;right:18px;top:196px;z-index:9998;width:min(310px,calc(100vw - 36px));padding:12px 14px;border:1px solid rgba(52,211,153,.65);border-radius:16px;background:linear-gradient(135deg,rgba(6,20,31,.97),rgba(8,35,49,.97));box-shadow:0 14px 38px rgba(0,0,0,.38);color:#e5e7eb;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;display:none}}
+#wnba-build-beacon{{position:fixed;right:18px;top:196px;z-index:9998;width:min(310px,calc(100vw - 36px));padding:12px 14px;border:1px solid rgba(52,211,153,.65);border-radius:16px;background:linear-gradient(135deg,rgba(6,20,31,.97),rgba(8,35,49,.97));box-shadow:0 14px 38px rgba(0,0,0,.38);color:#e5e7eb;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;display:block}}
 #wnba-build-beacon .bb-top{{display:flex;align-items:center;justify-content:space-between;gap:10px}}
 #wnba-build-beacon .bb-title{{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#a7f3d0;font-weight:900}}
 #wnba-build-beacon .bb-chip{{padding:4px 8px;border-radius:999px;background:#064e3b;color:#6ee7b7;font-size:11px;font-weight:900}}
@@ -52,18 +52,18 @@ def build_block() -> str:
   const beacon=document.getElementById('wnba-build-beacon');
   if(!beacon)return;
   const norm=s=>(s||'').trim().toLowerCase();
-  function gamesIsActive(){{
-    const candidates=[...document.querySelectorAll('button,[role="tab"],a')].filter(el=>norm(el.textContent)==='games');
-    if(!candidates.length)return false;
-    return candidates.some(el=>{{
-      const cls=String(el.className||'').toLowerCase();
-      return el.getAttribute('aria-selected')==='true'||el.getAttribute('aria-current')==='page'||cls.includes('active')||cls.includes('selected');
-    }});
+  const tabLabels=new Set(['games','game props','player props','alt streaks','alt performance','daily edges','ensemble','simulation','best bets','portfolio','ai center','results','performance','explainability','market intelligence','injuries','mission control','v4 health']);
+  function setForLabel(label){{
+    beacon.style.display=norm(label)==='games'?'block':'none';
   }}
-  function sync(){{beacon.style.display=gamesIsActive()?'block':'none';}}
-  document.addEventListener('click',()=>setTimeout(sync,40),true);
-  new MutationObserver(sync).observe(document.body,{{subtree:true,attributes:true,attributeFilter:['class','aria-selected','aria-current']}});
-  sync(); setTimeout(sync,600);
+  document.addEventListener('click',event=>{{
+    const tab=event.target.closest('button,[role="tab"],a');
+    if(!tab)return;
+    const label=norm(tab.textContent);
+    if(tabLabels.has(label)) setTimeout(()=>setForLabel(label),40);
+  }},true);
+  // Games is the dashboard's default landing view, so show immediately.
+  beacon.style.display='block';
 }})();
 </script>
 {END}'''
