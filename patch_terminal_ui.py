@@ -59,6 +59,8 @@ def script(data: dict[str, Any]) -> str:
   <h2>WNBA Intelligence Terminal</h2>
   <div class="term-label">Final Decisions · Portfolio · Monte Carlo · Market · Results · Calibration · Source Health</div>
   <div class="term-grid" id="terminalMetrics"></div>
+  <div id="terminalGamePerformanceSection"><div class="term-section-title">Game Performance</div><div class="term-grid" id="terminalGamePerformanceMetrics"></div><div class="term-list" id="terminalGamePerformanceRows"></div></div>
+  <div id="terminalAltPerformanceSection"><div class="term-section-title">ALT Performance</div><div class="term-grid" id="terminalAltPerformanceMetrics"></div></div>
   <div id="terminalFinalSection"><div class="term-section-title">Final Decisions</div><div class="term-list" id="terminalFinal"></div></div>
   <div id="terminalCardSection"><div class="term-section-title">Top Betting Card</div><div class="term-list" id="terminalCard"></div></div>
   <div id="terminalLearningSection"><div class="term-section-title">Phase 5 Learning</div><div class="term-grid" id="terminalLearningMetrics"></div><div class="term-list" id="terminalCalibration"></div></div>
@@ -72,6 +74,7 @@ def script(data: dict[str, Any]) -> str:
   const safe=(v,d='—')=>v===undefined||v===null||v===''?d:v;
   const num=v=>Number.isFinite(Number(v))?Number(v):0;
   const pct=v=>v===undefined||v===null?'—':(Number(v)*100).toFixed(1)+'%';
+  const rec=r=>`${{num(r?.win)}}-${{num(r?.loss)}}-${{num(r?.push)}}`;
   const summary=data.terminal_summary||{{}};
   const decision=data.decision_final||{{}};
   const portfolio=data.portfolio_v2||{{}};
@@ -79,6 +82,8 @@ def script(data: dict[str, Any]) -> str:
   const mc=data.monte_carlo||{{}};
   const market=data.market_engine||{{}};
   const phase5=data.phase5||{{}};
+  const gamePerf=data.game_performance||{{}};
+  const altPerf=data.alt_performance||{{}};
   const finalRows=decision.top_decisions||data.consensus?.top_consensus||[];
   const card=portfolio.recommended_card||decision.portfolio_card||[];
   const sourceTotal=num(summary.source_total||health.summary?.sources);
@@ -93,6 +98,38 @@ def script(data: dict[str, Any]) -> str:
     ['SOURCE OK',sourceTotal?`${{num(summary.source_ok)}}/${{sourceTotal}}`:num(summary.source_ok)]
   ];
   document.getElementById('terminalMetrics').innerHTML=metrics.map(x=>`<div class="term-card"><div class="term-label">${{x[0]}}</div><div class="term-value">${{x[1]}}</div></div>`).join('');
+
+  const gameSummary=gamePerf.summary||{{}};
+  if(Object.keys(gamePerf).length){{
+    const gameMetrics=[
+      ['GRADED GAMES',num(gameSummary.graded_games)],
+      ['SPREAD RECORD',rec(gameSummary.spread_record)],
+      ['TOTAL RECORD',rec(gameSummary.total_record)],
+      ['AVG MARGIN ERROR',safe(gameSummary.avg_margin_error)],
+      ['AVG TOTAL ERROR',safe(gameSummary.avg_total_error)],
+      ['PENDING TODAY',num(gameSummary.pending_today)],
+      ['ALL PREDICTIONS',num(gameSummary.all_predictions)],
+      ['TODAY PREDICTIONS',num(gameSummary.today_predictions)]
+    ];
+    document.getElementById('terminalGamePerformanceMetrics').innerHTML=gameMetrics.map(x=>`<div class="term-card"><div class="term-label">${{x[0]}}</div><div class="term-value">${{x[1]}}</div></div>`).join('');
+    const rows=gamePerf.recent_graded||[];
+    document.getElementById('terminalGamePerformanceRows').innerHTML=rows.length?rows.slice(0,12).map(r=>`<div class="term-row"><span class="term-score">${{safe(r.actual_total)}}</span><b>${{safe(r.game)}}</b><br><span class="term-label">Projected ${{safe(r.projected_away_score)}}-${{safe(r.projected_home_score)}} · Actual ${{safe(r.actual_away_score)}}-${{safe(r.actual_home_score)}} · Total ${{safe(r.total_recommendation)}} ${{safe(r.market_total)}} → ${{safe(r.total_result)}} · Spread → ${{safe(r.spread_result)}}</span></div>`).join(''):'<div class="term-row term-empty">No graded game predictions are available yet.</div>';
+  }}else{{document.getElementById('terminalGamePerformanceSection').classList.add('term-hidden')}}
+
+  const altSummary=altPerf.summary||{{}};
+  if(Object.keys(altPerf).length){{
+    const altMetrics=[
+      ['ARCHIVED',num(altSummary.archived_candidates)],
+      ['GRADED',num(altSummary.graded)],
+      ['PENDING',num(altSummary.pending)],
+      ['RECORD',`${{num(altSummary.wins)}}-${{num(altSummary.losses)}}-${{num(altSummary.pushes)}}`],
+      ['HIT RATE',pct(altSummary.hit_rate)],
+      ['P/L',safe(altSummary.profit_loss_units,0)+'u'],
+      ['ROI',pct(altSummary.roi)],
+      ['THRESHOLD',safe(altSummary.recommended_minimum_score_band)]
+    ];
+    document.getElementById('terminalAltPerformanceMetrics').innerHTML=altMetrics.map(x=>`<div class="term-card"><div class="term-label">${{x[0]}}</div><div class="term-value">${{x[1]}}</div></div>`).join('');
+  }}else{{document.getElementById('terminalAltPerformanceSection').classList.add('term-hidden')}}
 
   const finalEl=document.getElementById('terminalFinal');
   if(finalRows.length){{
