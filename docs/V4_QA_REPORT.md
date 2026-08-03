@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-08-02T14:54:34.296906+00:00`
+Generated: `2026-08-03T16:11:56.012977+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -9,8 +9,8 @@ Operating context: `READY` — Pipeline ready for live model execution.
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 171 checked, 0 invalid, 0 expected empty, 8 unexpected empty
-- Workflows: 118 checked, 0 high risk
+- Dashboard JSON: 173 checked, 0 invalid, 0 expected empty, 7 unexpected empty
+- Workflows: 121 checked, 0 high risk
 - Forward validation: green
 
 ## Module QA
@@ -49,12 +49,11 @@ Operating context: `READY` — Pipeline ready for live model execution.
 
 ## Warnings
 
+- Unexpected empty JSON: data/dashboard/wnba_alt_clv.json
 - Unexpected empty JSON: data/dashboard/wnba_alt_game_mapping_repair.json
 - Unexpected empty JSON: data/dashboard/wnba_alt_matchup_mapping_repair.json
 - Unexpected empty JSON: data/dashboard/wnba_alt_schedule_mapping_repair.json
 - Unexpected empty JSON: data/dashboard/wnba_clv_summary.json
-- Unexpected empty JSON: data/dashboard/wnba_live_games.json
-- Unexpected empty JSON: data/dashboard/wnba_live_results_engine.json
 - Unexpected empty JSON: data/dashboard/wnba_portfolio_dashboard.json
 - Unexpected empty JSON: data/dashboard/wnba_portfolio_optimizer_v2.json
 
@@ -99,6 +98,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/wnba_game_market_repair.yml` | 12 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_historical_prediction_reconstruction.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_injury_refresh.yml` | 11 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_injury_rotation_guard.yml` | 8 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_intelligence_foundation.yml` | 15 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_legacy_player_schema_inspector.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_line_movement.yml` | 6 | 0 | 0.0 | False | low |
@@ -127,6 +127,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/wnba_player_props_history_repair.yml` | 8 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_postbuild_integrity.yml` | 10 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_postgame_learning_pipeline.yml` | 13 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_pregame_eligibility_guard.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_production_readiness.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_prop_card_calibration.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_remaining_season_intelligence.yml` | 5 | 0 | 0.0 | False | low |
@@ -174,6 +175,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/wnba_v4_player_props_polish.yml` | 34 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v4_status.yml` | 18 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v5_injury_dashboard.yml` | 5 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_v5_phase1_live_state_sync.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v5_sprint21_model_intelligence.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v5_sprint22_sportsbook_intelligence.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_v5_sprint23_player_profiles.yml` | 5 | 0 | 0.0 | False | low |

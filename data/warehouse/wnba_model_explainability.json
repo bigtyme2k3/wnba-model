@@ -1,33 +1,33 @@
 {
-  "generated_at_utc": "2026-08-02T14:54:32.799804+00:00",
-  "target_date": "2026-08-02",
+  "generated_at_utc": "2026-08-03T16:11:54.979794+00:00",
+  "target_date": "2026-08-03",
   "status": "ok",
   "summary": {
     "plays_explained": 25,
     "with_player_context": 25,
-    "total_unavailable_inputs": 40
+    "total_unavailable_inputs": 37
   },
   "explanations": [
     {
       "rank": 1,
-      "player": "Aliyah Boston",
-      "game": "Fever vs None",
+      "player": "Courtney Vandersloot",
+      "game": "Sky vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "REB",
-      "side": "UNDER",
-      "line": 8.5,
-      "odds": -112.0,
+      "stat": "PR",
+      "side": "OVER",
+      "line": 11.5,
+      "odds": -108.0,
       "sportsbook": "FanDuel",
       "decision": "BET",
-      "top_play_score": 88.5,
-      "projection": 5.37,
-      "confidence": 86.2,
+      "top_play_score": 85.3,
+      "projection": 16.4,
+      "confidence": 75.3,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 53.7%",
+          "detail": "Model EV 44.2%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -35,23 +35,23 @@
           "feature": "Hit probability",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 81.2%",
+          "detail": "Simulated hit probability 74.9%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
-          "feature": "Model confidence",
-          "contribution": 1.77,
+          "feature": "Minutes projection",
+          "contribution": 3,
           "direction": "positive",
-          "detail": "Confidence 86.2/100",
-          "source": "cross_market_top_plays",
+          "detail": "Projected 25.6 min vs L5 20.2",
+          "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Projection versus line",
-          "contribution": 1.56,
+          "contribution": 2.45,
           "direction": "positive",
-          "detail": "Projection 5.37 vs line 8.50",
+          "detail": "Projection 16.40 vs line 11.50",
           "source": "unified_player_simulation_v2",
           "available": true
         },
@@ -64,11 +64,11 @@
           "available": true
         },
         {
-          "feature": "ALT streak form",
-          "contribution": -1.41,
-          "direction": "negative",
-          "detail": "Streak score 55.9; L10 50%",
-          "source": "alt_streaks",
+          "feature": "Model confidence",
+          "contribution": 0.86,
+          "direction": "positive",
+          "detail": "Confidence 75.3/100",
+          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -76,14 +76,6 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.13,
-          "direction": "negative",
-          "detail": "Projected 17.8 min vs L5 18.0",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -107,9 +99,9 @@
           "feature": "Opponent matchup",
           "contribution": 0.0,
           "direction": "neutral",
-          "detail": "Matchup adjustment +0.0%",
+          "detail": "Qualified matchup adjustment unavailable",
           "source": "unified_player_simulation_v2",
-          "available": true
+          "available": false
         },
         {
           "feature": "Volatility penalty",
@@ -125,7 +117,7 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 53.7%",
+          "detail": "Model EV 44.2%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -133,23 +125,23 @@
           "feature": "Hit probability",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 81.2%",
+          "detail": "Simulated hit probability 74.9%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
-          "feature": "Model confidence",
-          "contribution": 1.77,
+          "feature": "Minutes projection",
+          "contribution": 3,
           "direction": "positive",
-          "detail": "Confidence 86.2/100",
-          "source": "cross_market_top_plays",
+          "detail": "Projected 25.6 min vs L5 20.2",
+          "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Projection versus line",
-          "contribution": 1.56,
+          "contribution": 2.45,
           "direction": "positive",
-          "detail": "Projection 5.37 vs line 8.50",
+          "detail": "Projection 16.40 vs line 11.50",
           "source": "unified_player_simulation_v2",
           "available": true
         },
@@ -162,50 +154,34 @@
           "available": true
         }
       ],
-      "biggest_risks": [
-        {
-          "feature": "ALT streak form",
-          "contribution": -1.41,
-          "direction": "negative",
-          "detail": "Streak score 55.9; L10 50%",
-          "source": "alt_streaks",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.13,
-          "direction": "negative",
-          "detail": "Projected 17.8 min vs L5 18.0",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
+      "biggest_risks": [],
       "unavailable_inputs": [
-        "Blowout risk"
+        "Blowout risk",
+        "Opponent matchup"
       ],
-      "summary": "Driven by expected value, hit probability, model confidence. Main risks: alt streak form, minutes projection. 1 context fields unavailable.",
+      "summary": "Driven by expected value, hit probability, minutes projection. 2 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
       "rank": 2,
-      "player": "Aliyah Boston",
-      "game": "Fever vs None",
+      "player": "Courtney Vandersloot",
+      "game": "Sky vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "PR",
-      "side": "UNDER",
-      "line": 25.0,
-      "odds": -115.0,
-      "sportsbook": "DraftKings",
+      "stat": "PRA",
+      "side": "OVER",
+      "line": 16.5,
+      "odds": -104.0,
+      "sportsbook": "FanDuel",
       "decision": "WATCH",
-      "top_play_score": 88.5,
-      "projection": 16.54,
-      "confidence": 86.2,
+      "top_play_score": 85.0,
+      "projection": 22.8,
+      "confidence": 75.3,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 48.6%",
+          "detail": "Model EV 45.4%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -213,24 +189,24 @@
           "feature": "Hit probability",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 79.5%",
+          "detail": "Simulated hit probability 74.1%",
           "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Projected 25.6 min vs L5 20.2",
+          "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Projection versus line",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Projection 16.54 vs line 25.00",
+          "detail": "Projection 22.80 vs line 16.50",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.77,
-          "direction": "positive",
-          "detail": "Confidence 86.2/100",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -242,11 +218,11 @@
           "available": true
         },
         {
-          "feature": "ALT streak form",
-          "contribution": -1.41,
-          "direction": "negative",
-          "detail": "Streak score 55.9; L10 50%",
-          "source": "alt_streaks",
+          "feature": "Model confidence",
+          "contribution": 0.86,
+          "direction": "positive",
+          "detail": "Confidence 75.3/100",
+          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -254,14 +230,6 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.13,
-          "direction": "negative",
-          "detail": "Projected 17.8 min vs L5 18.0",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -303,7 +271,7 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 48.6%",
+          "detail": "Model EV 45.4%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -311,24 +279,24 @@
           "feature": "Hit probability",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 79.5%",
+          "detail": "Simulated hit probability 74.1%",
           "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Projected 25.6 min vs L5 20.2",
+          "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Projection versus line",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Projection 16.54 vs line 25.00",
+          "detail": "Projection 22.80 vs line 16.50",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.77,
-          "direction": "positive",
-          "detail": "Confidence 86.2/100",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -340,51 +308,34 @@
           "available": true
         }
       ],
-      "biggest_risks": [
-        {
-          "feature": "ALT streak form",
-          "contribution": -1.41,
-          "direction": "negative",
-          "detail": "Streak score 55.9; L10 50%",
-          "source": "alt_streaks",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.13,
-          "direction": "negative",
-          "detail": "Projected 17.8 min vs L5 18.0",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
+      "biggest_risks": [],
       "unavailable_inputs": [
         "Blowout risk",
         "Opponent matchup"
       ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: alt streak form, minutes projection. 2 context fields unavailable.",
+      "summary": "Driven by expected value, hit probability, minutes projection. 2 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
       "rank": 3,
-      "player": "Aliyah Boston",
-      "game": "Fever vs None",
+      "player": "Courtney Vandersloot",
+      "game": "Sky vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "PRA",
-      "side": "UNDER",
-      "line": 28.0,
-      "odds": -117.0,
-      "sportsbook": "DraftKings",
+      "stat": "PA",
+      "side": "OVER",
+      "line": 13.5,
+      "odds": -106.0,
+      "sportsbook": "FanDuel",
       "decision": "WATCH",
-      "top_play_score": 88.4,
-      "projection": 18.82,
-      "confidence": 86.2,
+      "top_play_score": 84.4,
+      "projection": 19.2,
+      "confidence": 75.3,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 46.4%",
+          "detail": "Model EV 41.1%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -392,24 +343,24 @@
           "feature": "Hit probability",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 78.9%",
+          "detail": "Simulated hit probability 72.6%",
           "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Projected 25.6 min vs L5 20.2",
+          "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Projection versus line",
-          "contribution": 3,
+          "contribution": 2.85,
           "direction": "positive",
-          "detail": "Projection 18.82 vs line 28.00",
+          "detail": "Projection 19.20 vs line 13.50",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.77,
-          "direction": "positive",
-          "detail": "Confidence 86.2/100",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -421,11 +372,11 @@
           "available": true
         },
         {
-          "feature": "ALT streak form",
-          "contribution": -1.41,
-          "direction": "negative",
-          "detail": "Streak score 55.9; L10 50%",
-          "source": "alt_streaks",
+          "feature": "Model confidence",
+          "contribution": 0.86,
+          "direction": "positive",
+          "detail": "Confidence 75.3/100",
+          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -433,14 +384,6 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.13,
-          "direction": "negative",
-          "detail": "Projected 17.8 min vs L5 18.0",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -482,7 +425,7 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 46.4%",
+          "detail": "Model EV 41.1%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -490,24 +433,24 @@
           "feature": "Hit probability",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 78.9%",
+          "detail": "Simulated hit probability 72.6%",
           "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Projected 25.6 min vs L5 20.2",
+          "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Projection versus line",
-          "contribution": 3,
+          "contribution": 2.85,
           "direction": "positive",
-          "detail": "Projection 18.82 vs line 28.00",
+          "detail": "Projection 19.20 vs line 13.50",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.77,
-          "direction": "positive",
-          "detail": "Confidence 86.2/100",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -519,51 +462,34 @@
           "available": true
         }
       ],
-      "biggest_risks": [
-        {
-          "feature": "ALT streak form",
-          "contribution": -1.41,
-          "direction": "negative",
-          "detail": "Streak score 55.9; L10 50%",
-          "source": "alt_streaks",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.13,
-          "direction": "negative",
-          "detail": "Projected 17.8 min vs L5 18.0",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
+      "biggest_risks": [],
       "unavailable_inputs": [
         "Blowout risk",
         "Opponent matchup"
       ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: alt streak form, minutes projection. 2 context fields unavailable.",
+      "summary": "Driven by expected value, hit probability, minutes projection. 2 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
       "rank": 4,
-      "player": "Aliyah Boston",
-      "game": "Fever vs None",
+      "player": "Rebecca Allen",
+      "game": "Liberty vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "PTS",
+      "stat": "PR",
       "side": "UNDER",
-      "line": 16.0,
-      "odds": -108.0,
+      "line": 9.5,
+      "odds": -118.0,
       "sportsbook": "DraftKings",
-      "decision": "WATCH",
-      "top_play_score": 87.3,
-      "projection": 11.17,
-      "confidence": 86.2,
+      "decision": "LEAN",
+      "top_play_score": 82.1,
+      "projection": 6.81,
+      "confidence": 79.9,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 44.4%",
+          "detail": "Model EV 29.8%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -571,24 +497,8 @@
           "feature": "Hit probability",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 75.0%",
+          "detail": "Simulated hit probability 70.2%",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.42,
-          "direction": "positive",
-          "detail": "Projection 11.17 vs line 16.00",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.77,
-          "direction": "positive",
-          "detail": "Confidence 86.2/100",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -600,10 +510,26 @@
           "available": true
         },
         {
+          "feature": "Projection versus line",
+          "contribution": 1.35,
+          "direction": "positive",
+          "detail": "Projection 6.81 vs line 9.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.24,
+          "direction": "positive",
+          "detail": "Confidence 79.9/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
           "feature": "ALT streak form",
-          "contribution": -1.41,
+          "contribution": -0.57,
           "direction": "negative",
-          "detail": "Streak score 55.9; L10 50%",
+          "detail": "Streak score 64.3; L10 80%",
           "source": "alt_streaks",
           "available": true
         },
@@ -617,9 +543,180 @@
         },
         {
           "feature": "Minutes projection",
-          "contribution": -0.13,
+          "contribution": 0.13,
+          "direction": "positive",
+          "detail": "Projected 25.6 min vs L5 25.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Qualified matchup adjustment unavailable",
+          "source": "unified_player_simulation_v2",
+          "available": false
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 29.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Simulated hit probability 70.2%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 1.35,
+          "direction": "positive",
+          "detail": "Projection 6.81 vs line 9.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.24,
+          "direction": "positive",
+          "detail": "Confidence 79.9/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_risks": [
+        {
+          "feature": "ALT streak form",
+          "contribution": -0.57,
           "direction": "negative",
-          "detail": "Projected 17.8 min vs L5 18.0",
+          "detail": "Streak score 64.3; L10 80%",
+          "source": "alt_streaks",
+          "available": true
+        }
+      ],
+      "unavailable_inputs": [
+        "Blowout risk",
+        "Opponent matchup"
+      ],
+      "summary": "Driven by expected value, hit probability, data quality. Main risks: alt streak form. 2 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 5,
+      "player": "Rebecca Allen",
+      "game": "Liberty vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "PTS",
+      "side": "UNDER",
+      "line": 6.5,
+      "odds": -123.0,
+      "sportsbook": "DraftKings",
+      "decision": "WATCH",
+      "top_play_score": 81.8,
+      "projection": 4.61,
+      "confidence": 79.9,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 28.5%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Simulated hit probability 70.9%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.24,
+          "direction": "positive",
+          "detail": "Confidence 79.9/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.94,
+          "direction": "positive",
+          "detail": "Projection 4.61 vs line 6.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "ALT streak form",
+          "contribution": -0.57,
+          "direction": "negative",
+          "detail": "Streak score 64.3; L10 80%",
+          "source": "alt_streaks",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 0.13,
+          "direction": "positive",
+          "detail": "Projected 25.6 min vs L5 25.4",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -661,7 +758,7 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 44.4%",
+          "detail": "Model EV 28.5%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -669,24 +766,8 @@
           "feature": "Hit probability",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 75.0%",
+          "detail": "Simulated hit probability 70.9%",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.42,
-          "direction": "positive",
-          "detail": "Projection 11.17 vs line 16.00",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.77,
-          "direction": "positive",
-          "detail": "Confidence 86.2/100",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -695,355 +776,55 @@
           "direction": "positive",
           "detail": "Data quality: complete",
           "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.24,
+          "direction": "positive",
+          "detail": "Confidence 79.9/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.94,
+          "direction": "positive",
+          "detail": "Projection 4.61 vs line 6.50",
+          "source": "unified_player_simulation_v2",
           "available": true
         }
       ],
       "biggest_risks": [
         {
           "feature": "ALT streak form",
-          "contribution": -1.41,
+          "contribution": -0.57,
           "direction": "negative",
-          "detail": "Streak score 55.9; L10 50%",
+          "detail": "Streak score 64.3; L10 80%",
           "source": "alt_streaks",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.13,
-          "direction": "negative",
-          "detail": "Projected 17.8 min vs L5 18.0",
-          "source": "minutes_projection_v2",
           "available": true
         }
       ],
       "unavailable_inputs": [
         "Blowout risk"
       ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: alt streak form, minutes projection. 1 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 5,
-      "player": "Natasha Howard",
-      "game": "Lynx vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PR",
-      "side": "OVER",
-      "line": 18.5,
-      "odds": -107.0,
-      "sportsbook": "DraftKings",
-      "decision": "BET",
-      "top_play_score": 87.3,
-      "projection": 24.28,
-      "confidence": 88.4,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 43.1%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 74.0%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projected 30.7 min vs L5 25.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.89,
-          "direction": "positive",
-          "detail": "Projection 24.28 vs line 18.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.95,
-          "direction": "positive",
-          "detail": "Confidence 88.4/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 43.1%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 74.0%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projected 30.7 min vs L5 25.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.89,
-          "direction": "positive",
-          "detail": "Projection 24.28 vs line 18.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.95,
-          "direction": "positive",
-          "detail": "Confidence 88.4/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, minutes projection. 2 context fields unavailable.",
+      "summary": "Driven by expected value, hit probability, data quality. Main risks: alt streak form. 1 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
       "rank": 6,
-      "player": "Natasha Howard",
-      "game": "Lynx vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PRA",
-      "side": "OVER",
-      "line": 21.0,
-      "odds": -108.0,
-      "sportsbook": "FanDuel",
-      "decision": "WATCH",
-      "top_play_score": 87.0,
-      "projection": 27.48,
-      "confidence": 88.4,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 41.0%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 73.2%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projected 30.7 min vs L5 25.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projection 27.48 vs line 21.00",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.95,
-          "direction": "positive",
-          "detail": "Confidence 88.4/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 41.0%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 73.2%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projected 30.7 min vs L5 25.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projection 27.48 vs line 21.00",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.95,
-          "direction": "positive",
-          "detail": "Confidence 88.4/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, minutes projection. 2 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 7,
-      "player": "Cameron Brink",
-      "game": "Sparks vs None",
+      "player": "Courtney Vandersloot",
+      "game": "Sky vs None",
       "market_type": "PLAYER_PROP",
       "stat": "PTS",
-      "side": "UNDER",
-      "line": 11.5,
+      "side": "OVER",
+      "line": 8.5,
       "odds": -113.0,
-      "sportsbook": "DraftKings",
-      "decision": "BET",
-      "top_play_score": 84.0,
-      "projection": 8.59,
-      "confidence": 88.7,
+      "sportsbook": "FanDuel",
+      "decision": "WATCH",
+      "top_play_score": 81.6,
+      "projection": 12.8,
+      "confidence": 75.3,
       "features": [
         {
           "feature": "Expected value",
@@ -1062,11 +843,19 @@
           "available": true
         },
         {
-          "feature": "Model confidence",
-          "contribution": 1.98,
+          "feature": "Minutes projection",
+          "contribution": 3,
           "direction": "positive",
-          "detail": "Confidence 88.7/100",
-          "source": "cross_market_top_plays",
+          "detail": "Projected 25.6 min vs L5 20.2",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 2.15,
+          "direction": "positive",
+          "detail": "Projection 12.80 vs line 8.50",
+          "source": "unified_player_simulation_v2",
           "available": true
         },
         {
@@ -1078,35 +867,11 @@
           "available": true
         },
         {
-          "feature": "Projection versus line",
-          "contribution": 1.46,
+          "feature": "Model confidence",
+          "contribution": 0.86,
           "direction": "positive",
-          "detail": "Projection 8.59 vs line 11.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "ALT streak form",
-          "contribution": 0.41,
-          "direction": "positive",
-          "detail": "Streak score 74.1; L10 90%",
-          "source": "alt_streaks",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 4",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.33,
-          "direction": "negative",
-          "detail": "Projected 18.1 min vs L5 18.6",
-          "source": "minutes_projection_v2",
+          "detail": "Confidence 75.3/100",
+          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -1114,6 +879,14 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -1160,10 +933,81 @@
           "available": true
         },
         {
-          "feature": "Model confidence",
-          "contribution": 1.98,
+          "feature": "Minutes projection",
+          "contribution": 3,
           "direction": "positive",
-          "detail": "Confidence 88.7/100",
+          "detail": "Projected 25.6 min vs L5 20.2",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 2.15,
+          "direction": "positive",
+          "detail": "Projection 12.80 vs line 8.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_risks": [],
+      "unavailable_inputs": [
+        "Blowout risk"
+      ],
+      "summary": "Driven by expected value, hit probability, minutes projection. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 7,
+      "player": "Kahleah Copper",
+      "game": "Mercury vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "3PM",
+      "side": "UNDER",
+      "line": 2.5,
+      "odds": -180.0,
+      "sportsbook": "DraftKings",
+      "decision": "LEAN",
+      "top_play_score": 80.4,
+      "projection": 1.6,
+      "confidence": 87.8,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 17.5%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Simulated hit probability 75.5%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.13,
+          "direction": "positive",
+          "detail": "Projected 32.6 min vs L5 29.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Confidence 87.8/100",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -1177,236 +1021,301 @@
         },
         {
           "feature": "Projection versus line",
-          "contribution": 1.46,
+          "contribution": 0.45,
           "direction": "positive",
-          "detail": "Projection 8.59 vs line 11.50",
+          "detail": "Projection 1.60 vs line 2.50",
           "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Matchup adjustment +0.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 17.5%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Simulated hit probability 75.5%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.13,
+          "direction": "positive",
+          "detail": "Projected 32.6 min vs L5 29.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Confidence 87.8/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_risks": [],
+      "unavailable_inputs": [
+        "Blowout risk"
+      ],
+      "summary": "Driven by expected value, hit probability, minutes projection. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 8,
+      "player": "Rebecca Allen",
+      "game": "Liberty vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "REB",
+      "side": "UNDER",
+      "line": 2.5,
+      "odds": 115.0,
+      "sportsbook": "DraftKings",
+      "decision": "WATCH",
+      "top_play_score": 80.1,
+      "projection": 2.2,
+      "confidence": 79.9,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 39.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 2.4,
+          "direction": "positive",
+          "detail": "Simulated hit probability 65.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.24,
+          "direction": "positive",
+          "detail": "Confidence 79.9/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "ALT streak form",
+          "contribution": -0.57,
+          "direction": "negative",
+          "detail": "Streak score 64.3; L10 80%",
+          "source": "alt_streaks",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.15,
+          "direction": "positive",
+          "detail": "Projection 2.20 vs line 2.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 0.13,
+          "direction": "positive",
+          "detail": "Projected 25.6 min vs L5 25.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Matchup adjustment +0.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 39.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 2.4,
+          "direction": "positive",
+          "detail": "Simulated hit probability 65.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.24,
+          "direction": "positive",
+          "detail": "Confidence 79.9/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
           "available": true
         }
       ],
       "biggest_risks": [
         {
-          "feature": "Minutes projection",
-          "contribution": -0.33,
+          "feature": "ALT streak form",
+          "contribution": -0.57,
           "direction": "negative",
-          "detail": "Projected 18.1 min vs L5 18.6",
-          "source": "minutes_projection_v2",
+          "detail": "Streak score 64.3; L10 80%",
+          "source": "alt_streaks",
           "available": true
         }
       ],
       "unavailable_inputs": [
         "Blowout risk"
       ],
-      "summary": "Driven by expected value, hit probability, model confidence. Main risks: minutes projection. 1 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 8,
-      "player": "Isabelle Harrison",
-      "game": "Tempo vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PR",
-      "side": "OVER",
-      "line": 17.5,
-      "odds": -118.0,
-      "sportsbook": "FanDuel",
-      "decision": "LEAN",
-      "top_play_score": 82.0,
-      "projection": 23.97,
-      "confidence": 82.2,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 28.8%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 69.7%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projected 28.5 min vs L5 20.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projection 23.97 vs line 17.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.43,
-          "direction": "positive",
-          "detail": "Confidence 82.2/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 12",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 28.8%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 69.7%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projected 28.5 min vs L5 20.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projection 23.97 vs line 17.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, minutes projection. 2 context fields unavailable.",
+      "summary": "Driven by expected value, hit probability, data quality. Main risks: alt streak form. 1 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
       "rank": 9,
-      "player": "Natasha Howard",
-      "game": "Lynx vs None",
+      "player": "Rebecca Allen",
+      "game": "Liberty vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "PTS",
-      "side": "OVER",
-      "line": 12.0,
-      "odds": 100.0,
-      "sportsbook": "FanDuel",
+      "stat": "3PM",
+      "side": "UNDER",
+      "line": 1.5,
+      "odds": -166.0,
+      "sportsbook": "DraftKings",
       "decision": "WATCH",
-      "top_play_score": 81.0,
-      "projection": 16.14,
-      "confidence": 88.4,
+      "top_play_score": 78.4,
+      "projection": 1.03,
+      "confidence": 79.9,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 32.2%",
+          "detail": "Model EV 17.8%",
           "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projected 30.7 min vs L5 25.2",
-          "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 2.58,
+          "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 66.1%",
+          "detail": "Simulated hit probability 73.5%",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.07,
-          "direction": "positive",
-          "detail": "Projection 16.14 vs line 12.00",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.95,
-          "direction": "positive",
-          "detail": "Confidence 88.4/100",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -1418,11 +1327,19 @@
           "available": true
         },
         {
-          "feature": "Rest",
-          "contribution": 0.4,
+          "feature": "Model confidence",
+          "contribution": 1.24,
           "direction": "positive",
-          "detail": "Rest days: 2",
-          "source": "minutes_projection_v2",
+          "detail": "Confidence 79.9/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "ALT streak form",
+          "contribution": -0.57,
+          "direction": "negative",
+          "detail": "Streak score 64.3; L10 80%",
+          "source": "alt_streaks",
           "available": true
         },
         {
@@ -1430,6 +1347,30 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.23,
+          "direction": "positive",
+          "detail": "Projection 1.03 vs line 1.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 0.13,
+          "direction": "positive",
+          "detail": "Projected 25.6 min vs L5 25.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -1463,7 +1404,79 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 32.2%",
+          "detail": "Model EV 17.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Simulated hit probability 73.5%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.24,
+          "direction": "positive",
+          "detail": "Confidence 79.9/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        }
+      ],
+      "biggest_risks": [
+        {
+          "feature": "ALT streak form",
+          "contribution": -0.57,
+          "direction": "negative",
+          "detail": "Streak score 64.3; L10 80%",
+          "source": "alt_streaks",
+          "available": true
+        }
+      ],
+      "unavailable_inputs": [
+        "Blowout risk"
+      ],
+      "summary": "Driven by expected value, hit probability, data quality. Main risks: alt streak form. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 10,
+      "player": "Jackie Young",
+      "game": "Aces vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "PTS",
+      "side": "UNDER",
+      "line": 19.5,
+      "odds": -107.0,
+      "sportsbook": "DraftKings",
+      "decision": "LEAN",
+      "top_play_score": 78.0,
+      "projection": 17.05,
+      "confidence": 87.7,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 22.3%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -1471,31 +1484,121 @@
           "feature": "Minutes projection",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Projected 30.7 min vs L5 25.2",
+          "detail": "Projected 32.1 min vs L5 27.6",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 2.58,
+          "contribution": 2.12,
           "direction": "positive",
-          "detail": "Simulated hit probability 66.1%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.07,
-          "direction": "positive",
-          "detail": "Projection 16.14 vs line 12.00",
+          "detail": "Simulated hit probability 63.2%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Model confidence",
-          "contribution": 1.95,
+          "contribution": 1.89,
           "direction": "positive",
-          "detail": "Confidence 88.4/100",
+          "detail": "Confidence 87.7/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 1.22,
+          "direction": "positive",
+          "detail": "Projection 17.05 vs line 19.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Matchup adjustment +0.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 22.3%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Projected 32.1 min vs L5 27.6",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 2.12,
+          "direction": "positive",
+          "detail": "Simulated hit probability 63.2%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.89,
+          "direction": "positive",
+          "detail": "Confidence 87.7/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
           "source": "cross_market_top_plays",
           "available": true
         }
@@ -1508,204 +1611,57 @@
       "explanation_version": "1.0"
     },
     {
-      "rank": 10,
-      "player": "Marina Mabrey",
-      "game": "Tempo vs None",
+      "rank": 11,
+      "player": "Jonquel Jones",
+      "game": "Liberty vs None",
       "market_type": "PLAYER_PROP",
       "stat": "PRA",
-      "side": "UNDER",
-      "line": 26.5,
-      "odds": -116.0,
+      "side": "OVER",
+      "line": 25.5,
+      "odds": -121.0,
       "sportsbook": "DraftKings",
       "decision": "LEAN",
-      "top_play_score": 80.3,
-      "projection": 19.23,
-      "confidence": 71.3,
+      "top_play_score": 77.4,
+      "projection": 30.58,
+      "confidence": 88.2,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 44.6%",
+          "detail": "Model EV 18.9%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Hit probability",
+          "feature": "Minutes projection",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 77.6%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
+          "detail": "Projected 33.1 min vs L5 26.0",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Projection versus line",
-          "contribution": 3,
+          "contribution": 2.54,
           "direction": "positive",
-          "detail": "Projection 19.23 vs line 26.50",
+          "detail": "Projection 30.58 vs line 25.50",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 44.6%",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 3,
+          "contribution": 2.42,
           "direction": "positive",
-          "detail": "Simulated hit probability 77.6%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projection 19.23 vs line 26.50",
+          "detail": "Simulated hit probability 65.1%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Model confidence",
-          "contribution": 0.52,
+          "contribution": 1.93,
           "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 2 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 11,
-      "player": "Caitlin Clark",
-      "game": "Fever vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "RA",
-      "side": "UNDER",
-      "line": 12.5,
-      "odds": -102.0,
-      "sportsbook": "FanDuel",
-      "decision": "LEAN",
-      "top_play_score": 80.3,
-      "projection": 11.27,
-      "confidence": 86.9,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 27.7%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 2.32,
-          "direction": "positive",
-          "detail": "Simulated hit probability 64.5%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.83,
-          "direction": "positive",
-          "detail": "Confidence 86.9/100",
+          "detail": "Confidence 88.2/100",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -1718,19 +1674,11 @@
           "available": true
         },
         {
-          "feature": "Minutes projection",
-          "contribution": -0.73,
+          "feature": "ALT streak form",
+          "contribution": -1.42,
           "direction": "negative",
-          "detail": "Projected 27.1 min vs L5 28.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 0.62,
-          "direction": "positive",
-          "detail": "Projection 11.27 vs line 12.50",
-          "source": "unified_player_simulation_v2",
+          "detail": "Streak score 55.8; L10 50%",
+          "source": "alt_streaks",
           "available": true
         },
         {
@@ -1779,23 +1727,112 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 27.7%",
+          "detail": "Model EV 18.9%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Hit probability",
-          "contribution": 2.32,
+          "feature": "Minutes projection",
+          "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 64.5%",
+          "detail": "Projected 33.1 min vs L5 26.0",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 2.54,
+          "direction": "positive",
+          "detail": "Projection 30.58 vs line 25.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 2.42,
+          "direction": "positive",
+          "detail": "Simulated hit probability 65.1%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Model confidence",
-          "contribution": 1.83,
+          "contribution": 1.93,
           "direction": "positive",
-          "detail": "Confidence 86.9/100",
+          "detail": "Confidence 88.2/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_risks": [
+        {
+          "feature": "ALT streak form",
+          "contribution": -1.42,
+          "direction": "negative",
+          "detail": "Streak score 55.8; L10 50%",
+          "source": "alt_streaks",
+          "available": true
+        }
+      ],
+      "unavailable_inputs": [
+        "Blowout risk",
+        "Opponent matchup"
+      ],
+      "summary": "Driven by expected value, minutes projection, projection versus line. Main risks: alt streak form. 2 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 12,
+      "player": "Jonquel Jones",
+      "game": "Liberty vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "PR",
+      "side": "OVER",
+      "line": 22.5,
+      "odds": -120.0,
+      "sportsbook": "DraftKings",
+      "decision": "WATCH",
+      "top_play_score": 77.2,
+      "projection": 27.04,
+      "confidence": 88.2,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 18.6%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Projected 33.1 min vs L5 26.0",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 2.36,
+          "direction": "positive",
+          "detail": "Simulated hit probability 64.7%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 2.27,
+          "direction": "positive",
+          "detail": "Projection 27.04 vs line 22.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.93,
+          "direction": "positive",
+          "detail": "Confidence 88.2/100",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -1808,21 +1845,103 @@
           "available": true
         },
         {
-          "feature": "Projection versus line",
-          "contribution": 0.62,
+          "feature": "ALT streak form",
+          "contribution": -1.42,
+          "direction": "negative",
+          "detail": "Streak score 55.8; L10 50%",
+          "source": "alt_streaks",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
           "direction": "positive",
-          "detail": "Projection 11.27 vs line 12.50",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Qualified matchup adjustment unavailable",
           "source": "unified_player_simulation_v2",
+          "available": false
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 18.6%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Projected 33.1 min vs L5 26.0",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 2.36,
+          "direction": "positive",
+          "detail": "Simulated hit probability 64.7%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 2.27,
+          "direction": "positive",
+          "detail": "Projection 27.04 vs line 22.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.93,
+          "direction": "positive",
+          "detail": "Confidence 88.2/100",
+          "source": "cross_market_top_plays",
           "available": true
         }
       ],
       "biggest_risks": [
         {
-          "feature": "Minutes projection",
-          "contribution": -0.73,
+          "feature": "ALT streak form",
+          "contribution": -1.42,
           "direction": "negative",
-          "detail": "Projected 27.1 min vs L5 28.2",
-          "source": "minutes_projection_v2",
+          "detail": "Streak score 55.8; L10 50%",
+          "source": "alt_streaks",
           "available": true
         }
       ],
@@ -1830,53 +1949,37 @@
         "Blowout risk",
         "Opponent matchup"
       ],
-      "summary": "Driven by expected value, hit probability, model confidence. Main risks: minutes projection. 2 context fields unavailable.",
+      "summary": "Driven by expected value, minutes projection, hit probability. Main risks: alt streak form. 2 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
-      "rank": 12,
-      "player": "Kayla McBride",
-      "game": "Lynx vs None",
+      "rank": 13,
+      "player": "Marine Johannes",
+      "game": "Liberty vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "PRA",
-      "side": "OVER",
-      "line": 21.5,
-      "odds": -118.0,
+      "stat": "PTS",
+      "side": "UNDER",
+      "line": 7.5,
+      "odds": -130.0,
       "sportsbook": "DraftKings",
-      "decision": "WATCH",
-      "top_play_score": 80.0,
-      "projection": 25.95,
+      "decision": "LEAN",
+      "top_play_score": 76.8,
+      "projection": 5.97,
       "confidence": 88.5,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 23.7%",
+          "detail": "Model EV 16.6%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 2.71,
+          "contribution": 2.55,
           "direction": "positive",
-          "detail": "Simulated hit probability 67.0%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": 2.27,
-          "direction": "positive",
-          "detail": "Projected 35.2 min vs L5 31.8",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.22,
-          "direction": "positive",
-          "detail": "Projection 25.95 vs line 21.50",
+          "detail": "Simulated hit probability 65.9%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
@@ -1897,6 +2000,167 @@
           "available": true
         },
         {
+          "feature": "Projection versus line",
+          "contribution": 0.77,
+          "direction": "positive",
+          "detail": "Projection 5.97 vs line 7.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 0.13,
+          "direction": "positive",
+          "detail": "Projected 15.8 min vs L5 15.6",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Matchup adjustment +0.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 16.6%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 2.55,
+          "direction": "positive",
+          "detail": "Simulated hit probability 65.9%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.96,
+          "direction": "positive",
+          "detail": "Confidence 88.5/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.77,
+          "direction": "positive",
+          "detail": "Projection 5.97 vs line 7.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        }
+      ],
+      "biggest_risks": [],
+      "unavailable_inputs": [
+        "Blowout risk"
+      ],
+      "summary": "Driven by expected value, hit probability, model confidence. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 14,
+      "player": "Flau'jae Johnson",
+      "game": "Storm vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "3PM",
+      "side": "UNDER",
+      "line": 1.5,
+      "odds": -168.0,
+      "sportsbook": "FanDuel",
+      "decision": "LEAN",
+      "top_play_score": 76.8,
+      "projection": 1.11,
+      "confidence": 88.5,
+      "features": [
+        {
+          "feature": "Hit probability",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Simulated hit probability 70.6%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Expected value",
+          "contribution": 2.53,
+          "direction": "positive",
+          "detail": "Model EV 12.6%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.96,
+          "direction": "positive",
+          "detail": "Confidence 88.5/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 1.07,
+          "direction": "positive",
+          "detail": "Projected 29.4 min vs L5 27.8",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
           "feature": "Rest",
           "contribution": 0.4,
           "direction": "positive",
@@ -1909,6 +2173,184 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "ALT streak form",
+          "contribution": -0.28,
+          "direction": "negative",
+          "detail": "Streak score 67.2; L10 80%",
+          "source": "alt_streaks",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.19,
+          "direction": "positive",
+          "detail": "Projection 1.11 vs line 1.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Matchup adjustment +0.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Hit probability",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Simulated hit probability 70.6%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Expected value",
+          "contribution": 2.53,
+          "direction": "positive",
+          "detail": "Model EV 12.6%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.96,
+          "direction": "positive",
+          "detail": "Confidence 88.5/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 1.07,
+          "direction": "positive",
+          "detail": "Projected 29.4 min vs L5 27.8",
+          "source": "minutes_projection_v2",
+          "available": true
+        }
+      ],
+      "biggest_risks": [
+        {
+          "feature": "ALT streak form",
+          "contribution": -0.28,
+          "direction": "negative",
+          "detail": "Streak score 67.2; L10 80%",
+          "source": "alt_streaks",
+          "available": true
+        }
+      ],
+      "unavailable_inputs": [
+        "Blowout risk"
+      ],
+      "summary": "Driven by hit probability, expected value, model confidence. Main risks: alt streak form. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 15,
+      "player": "Kahleah Copper",
+      "game": "Mercury vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "PA",
+      "side": "UNDER",
+      "line": 24.5,
+      "odds": -120.0,
+      "sportsbook": "DraftKings",
+      "decision": "WATCH",
+      "top_play_score": 76.7,
+      "projection": 22.03,
+      "confidence": 87.8,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 18.0%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 2.3,
+          "direction": "positive",
+          "detail": "Simulated hit probability 64.4%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.13,
+          "direction": "positive",
+          "detail": "Projected 32.6 min vs L5 29.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Confidence 87.8/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 1.23,
+          "direction": "positive",
+          "detail": "Projection 22.03 vs line 24.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -1942,39 +2384,39 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 23.7%",
+          "detail": "Model EV 18.0%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 2.71,
+          "contribution": 2.3,
           "direction": "positive",
-          "detail": "Simulated hit probability 67.0%",
+          "detail": "Simulated hit probability 64.4%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Minutes projection",
-          "contribution": 2.27,
+          "contribution": 2.13,
           "direction": "positive",
-          "detail": "Projected 35.2 min vs L5 31.8",
+          "detail": "Projected 32.6 min vs L5 29.4",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
-          "feature": "Projection versus line",
-          "contribution": 2.22,
+          "feature": "Model confidence",
+          "contribution": 1.9,
           "direction": "positive",
-          "detail": "Projection 25.95 vs line 21.50",
-          "source": "unified_player_simulation_v2",
+          "detail": "Confidence 87.8/100",
+          "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Model confidence",
-          "contribution": 1.96,
+          "feature": "Data quality",
+          "contribution": 1.5,
           "direction": "positive",
-          "detail": "Confidence 88.5/100",
+          "detail": "Data quality: complete",
           "source": "cross_market_top_plays",
           "available": true
         }
@@ -1988,25 +2430,25 @@
       "explanation_version": "1.0"
     },
     {
-      "rank": 13,
-      "player": "Isabelle Harrison",
-      "game": "Tempo vs None",
+      "rank": 16,
+      "player": "Jackie Young",
+      "game": "Aces vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "PTS",
-      "side": "OVER",
-      "line": 11.5,
-      "odds": -110.0,
-      "sportsbook": "FanDuel",
+      "stat": "PA",
+      "side": "UNDER",
+      "line": 26.5,
+      "odds": -113.0,
+      "sportsbook": "DraftKings",
       "decision": "WATCH",
-      "top_play_score": 79.7,
-      "projection": 16.25,
-      "confidence": 82.2,
+      "top_play_score": 75.9,
+      "projection": 23.71,
+      "confidence": 87.7,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 26.4%",
+          "detail": "Model EV 17.6%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -2014,24 +2456,24 @@
           "feature": "Minutes projection",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Projected 28.5 min vs L5 20.2",
+          "detail": "Projected 32.1 min vs L5 27.6",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 2.59,
+          "contribution": 1.99,
           "direction": "positive",
-          "detail": "Simulated hit probability 66.2%",
+          "detail": "Simulated hit probability 62.4%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
-          "feature": "Projection versus line",
-          "contribution": 2.38,
+          "feature": "Model confidence",
+          "contribution": 1.89,
           "direction": "positive",
-          "detail": "Projection 16.25 vs line 11.50",
-          "source": "unified_player_simulation_v2",
+          "detail": "Confidence 87.7/100",
+          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -2043,19 +2485,11 @@
           "available": true
         },
         {
-          "feature": "Model confidence",
-          "contribution": 1.43,
+          "feature": "Projection versus line",
+          "contribution": 1.39,
           "direction": "positive",
-          "detail": "Confidence 82.2/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 12",
-          "source": "minutes_projection_v2",
+          "detail": "Projection 23.71 vs line 26.50",
+          "source": "unified_player_simulation_v2",
           "available": true
         },
         {
@@ -2063,6 +2497,14 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -2078,9 +2520,9 @@
           "feature": "Opponent matchup",
           "contribution": 0.0,
           "direction": "neutral",
-          "detail": "Matchup adjustment +0.0%",
+          "detail": "Qualified matchup adjustment unavailable",
           "source": "unified_player_simulation_v2",
-          "available": true
+          "available": false
         },
         {
           "feature": "Volatility penalty",
@@ -2096,7 +2538,7 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 26.4%",
+          "detail": "Model EV 17.6%",
           "source": "cross_market_top_plays",
           "available": true
         },
@@ -2104,24 +2546,24 @@
           "feature": "Minutes projection",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Projected 28.5 min vs L5 20.2",
+          "detail": "Projected 32.1 min vs L5 27.6",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 2.59,
+          "contribution": 1.99,
           "direction": "positive",
-          "detail": "Simulated hit probability 66.2%",
+          "detail": "Simulated hit probability 62.4%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
-          "feature": "Projection versus line",
-          "contribution": 2.38,
+          "feature": "Model confidence",
+          "contribution": 1.89,
           "direction": "positive",
-          "detail": "Projection 16.25 vs line 11.50",
-          "source": "unified_player_simulation_v2",
+          "detail": "Confidence 87.7/100",
+          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -2135,568 +2577,73 @@
       ],
       "biggest_risks": [],
       "unavailable_inputs": [
-        "Blowout risk"
-      ],
-      "summary": "Driven by expected value, minutes projection, hit probability. 1 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 14,
-      "player": "Marina Mabrey",
-      "game": "Tempo vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PR",
-      "side": "UNDER",
-      "line": 22.5,
-      "odds": -110.0,
-      "sportsbook": "FanDuel",
-      "decision": "WATCH",
-      "top_play_score": 79.5,
-      "projection": 16.79,
-      "confidence": 71.3,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 44.1%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.5%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.86,
-          "direction": "positive",
-          "detail": "Projection 16.79 vs line 22.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 44.1%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.5%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.86,
-          "direction": "positive",
-          "detail": "Projection 16.79 vs line 22.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
         "Blowout risk",
         "Opponent matchup"
       ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 2 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 15,
-      "player": "Marina Mabrey",
-      "game": "Tempo vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PA",
-      "side": "UNDER",
-      "line": 23.0,
-      "odds": -104.0,
-      "sportsbook": "FanDuel",
-      "decision": "WATCH",
-      "top_play_score": 79.4,
-      "projection": 16.78,
-      "confidence": 71.3,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 47.7%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.3%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projection 16.78 vs line 23.00",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 47.7%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.3%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Projection 16.78 vs line 23.00",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 2 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 16,
-      "player": "Gabby Williams",
-      "game": "TEAM COOP vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PTS",
-      "side": "UNDER",
-      "line": 14.5,
-      "odds": -109.0,
-      "sportsbook": "DraftKings",
-      "decision": "WATCH",
-      "top_play_score": 79.4,
-      "projection": 10.44,
-      "confidence": 71.3,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 44.2%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.2%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 18.4 min vs L5 24.4",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.03,
-          "direction": "positive",
-          "detail": "Projection 10.44 vs line 14.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 7",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Matchup adjustment +0.0%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 44.2%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.2%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.03,
-          "direction": "positive",
-          "detail": "Projection 10.44 vs line 14.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 18.4 min vs L5 24.4",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
-        "Blowout risk"
-      ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 1 context fields unavailable.",
+      "summary": "Driven by expected value, minutes projection, hit probability. 2 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
       "rank": 17,
-      "player": "Gabby Williams",
-      "game": "TEAM COOP vs None",
+      "player": "Chelsea Gray",
+      "game": "Aces vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "PR",
-      "side": "UNDER",
-      "line": 17.5,
-      "odds": -111.0,
-      "sportsbook": "DraftKings",
+      "stat": "RA",
+      "side": "OVER",
+      "line": 9.5,
+      "odds": -104.0,
+      "sportsbook": "FanDuel",
       "decision": "WATCH",
-      "top_play_score": 79.4,
-      "projection": 12.84,
-      "confidence": 71.3,
+      "top_play_score": 75.7,
+      "projection": 11.24,
+      "confidence": 88.6,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 43.0%",
+          "detail": "Model EV 18.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.97,
+          "direction": "positive",
+          "detail": "Confidence 88.6/100",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 3,
+          "contribution": 1.69,
           "direction": "positive",
-          "detail": "Simulated hit probability 75.2%",
+          "detail": "Simulated hit probability 60.6%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
           "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 18.4 min vs L5 24.4",
+          "contribution": 1.0,
+          "direction": "positive",
+          "detail": "Projected 35.1 min vs L5 33.6",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Projection versus line",
-          "contribution": 2.33,
+          "contribution": 0.87,
           "direction": "positive",
-          "detail": "Projection 12.84 vs line 17.50",
+          "detail": "Projection 11.24 vs line 9.50",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 7",
-          "source": "minutes_projection_v2",
           "available": true
         },
         {
@@ -2704,6 +2651,14 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -2737,129 +2692,120 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 43.0%",
+          "detail": "Model EV 18.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.97,
+          "direction": "positive",
+          "detail": "Confidence 88.6/100",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 3,
+          "contribution": 1.69,
           "direction": "positive",
-          "detail": "Simulated hit probability 75.2%",
+          "detail": "Simulated hit probability 60.6%",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.33,
-          "direction": "positive",
-          "detail": "Projection 12.84 vs line 17.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Data quality",
-          "contribution": 0.4,
+          "contribution": 1.5,
           "direction": "positive",
-          "detail": "Data quality: partial",
+          "detail": "Data quality: complete",
           "source": "cross_market_top_plays",
           "available": true
-        }
-      ],
-      "biggest_risks": [
+        },
         {
           "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 18.4 min vs L5 24.4",
+          "contribution": 1.0,
+          "direction": "positive",
+          "detail": "Projected 35.1 min vs L5 33.6",
           "source": "minutes_projection_v2",
           "available": true
         }
       ],
+      "biggest_risks": [],
       "unavailable_inputs": [
         "Blowout risk",
         "Opponent matchup"
       ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 2 context fields unavailable.",
+      "summary": "Driven by expected value, model confidence, hit probability. 2 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
       "rank": 18,
-      "player": "Marina Mabrey",
-      "game": "Tempo vs None",
+      "player": "Jonquel Jones",
+      "game": "Liberty vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "PTS",
-      "side": "UNDER",
-      "line": 19.5,
-      "odds": -120.0,
-      "sportsbook": "FanDuel",
+      "stat": "PA",
+      "side": "OVER",
+      "line": 16.5,
+      "odds": -116.0,
+      "sportsbook": "DraftKings",
       "decision": "WATCH",
-      "top_play_score": 79.4,
-      "projection": 14.34,
-      "confidence": 71.3,
+      "top_play_score": 75.6,
+      "projection": 20.21,
+      "confidence": 88.2,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 38.6%",
+          "detail": "Model EV 16.7%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Hit probability",
+          "feature": "Minutes projection",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 75.6%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
+          "detail": "Projected 33.1 min vs L5 26.0",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
-          "feature": "Projection versus line",
-          "contribution": 2.58,
+          "feature": "Hit probability",
+          "contribution": 2.02,
           "direction": "positive",
-          "detail": "Projection 14.34 vs line 19.50",
+          "detail": "Simulated hit probability 62.6%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Model confidence",
-          "contribution": 0.52,
+          "contribution": 1.93,
           "direction": "positive",
-          "detail": "Confidence 71.3/100",
+          "detail": "Confidence 88.2/100",
           "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 1.86,
+          "direction": "positive",
+          "detail": "Projection 20.21 vs line 16.50",
+          "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Data quality",
-          "contribution": 0.4,
+          "contribution": 1.5,
           "direction": "positive",
-          "detail": "Data quality: partial",
+          "detail": "Data quality: complete",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 2",
-          "source": "minutes_projection_v2",
+          "feature": "ALT streak form",
+          "contribution": -1.42,
+          "direction": "negative",
+          "detail": "Streak score 55.8; L10 50%",
+          "source": "alt_streaks",
           "available": true
         },
         {
@@ -2867,6 +2813,14 @@
           "contribution": 0.3,
           "direction": "positive",
           "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
           "source": "minutes_projection_v2",
           "available": true
         },
@@ -2882,9 +2836,9 @@
           "feature": "Opponent matchup",
           "contribution": 0.0,
           "direction": "neutral",
-          "detail": "Matchup adjustment +0.0%",
+          "detail": "Qualified matchup adjustment unavailable",
           "source": "unified_player_simulation_v2",
-          "available": true
+          "available": false
         },
         {
           "feature": "Volatility penalty",
@@ -2900,934 +2854,121 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 38.6%",
+          "detail": "Model EV 16.7%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Hit probability",
+          "feature": "Minutes projection",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Simulated hit probability 75.6%",
-          "source": "unified_player_simulation_v2",
+          "detail": "Projected 33.1 min vs L5 26.0",
+          "source": "minutes_projection_v2",
           "available": true
         },
         {
-          "feature": "Projection versus line",
-          "contribution": 2.58,
+          "feature": "Hit probability",
+          "contribution": 2.02,
           "direction": "positive",
-          "detail": "Projection 14.34 vs line 19.50",
+          "detail": "Simulated hit probability 62.6%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Model confidence",
-          "contribution": 0.52,
+          "contribution": 1.93,
           "direction": "positive",
-          "detail": "Confidence 71.3/100",
+          "detail": "Confidence 88.2/100",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Data quality",
-          "contribution": 0.4,
+          "feature": "Projection versus line",
+          "contribution": 1.86,
           "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
+          "detail": "Projection 20.21 vs line 16.50",
+          "source": "unified_player_simulation_v2",
           "available": true
         }
       ],
       "biggest_risks": [
         {
-          "feature": "Minutes projection",
-          "contribution": -3,
+          "feature": "ALT streak form",
+          "contribution": -1.42,
           "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
-          "source": "minutes_projection_v2",
+          "detail": "Streak score 55.8; L10 50%",
+          "source": "alt_streaks",
           "available": true
         }
       ],
       "unavailable_inputs": [
-        "Blowout risk"
+        "Blowout risk",
+        "Opponent matchup"
       ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 1 context fields unavailable.",
+      "summary": "Driven by expected value, minutes projection, hit probability. Main risks: alt streak form. 2 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
       "rank": 19,
-      "player": "Caitlin Clark",
-      "game": "Fever vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PRA",
-      "side": "UNDER",
-      "line": 34.5,
-      "odds": -108.0,
-      "sportsbook": "FanDuel",
-      "decision": "WATCH",
-      "top_play_score": 79.4,
-      "projection": 31.38,
-      "confidence": 86.9,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 24.9%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 2.37,
-          "direction": "positive",
-          "detail": "Simulated hit probability 64.8%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.83,
-          "direction": "positive",
-          "detail": "Confidence 86.9/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 1.56,
-          "direction": "positive",
-          "detail": "Projection 31.38 vs line 34.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.73,
-          "direction": "negative",
-          "detail": "Projected 27.1 min vs L5 28.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Rest days: 1",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 24.9%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 2.37,
-          "direction": "positive",
-          "detail": "Simulated hit probability 64.8%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.83,
-          "direction": "positive",
-          "detail": "Confidence 86.9/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 1.56,
-          "direction": "positive",
-          "detail": "Projection 31.38 vs line 34.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.73,
-          "direction": "negative",
-          "detail": "Projected 27.1 min vs L5 28.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, model confidence. Main risks: minutes projection. 2 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 20,
-      "player": "Gabby Williams",
-      "game": "TEAM COOP vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PA",
-      "side": "UNDER",
-      "line": 16.5,
-      "odds": -102.0,
-      "sportsbook": "FanDuel",
-      "decision": "WATCH",
-      "top_play_score": 79.3,
-      "projection": 12.11,
-      "confidence": 71.3,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 48.8%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.1%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 18.4 min vs L5 24.4",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.2,
-          "direction": "positive",
-          "detail": "Projection 12.11 vs line 16.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 7",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 48.8%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.1%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.2,
-          "direction": "positive",
-          "detail": "Projection 12.11 vs line 16.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 18.4 min vs L5 24.4",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 2 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 21,
-      "player": "Caitlin Clark",
-      "game": "Fever vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PA",
-      "side": "UNDER",
-      "line": 30.5,
-      "odds": -112.0,
-      "sportsbook": "FanDuel",
-      "decision": "WATCH",
-      "top_play_score": 79.3,
-      "projection": 27.51,
-      "confidence": 86.9,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 24.0%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 2.48,
-          "direction": "positive",
-          "detail": "Simulated hit probability 65.5%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.83,
-          "direction": "positive",
-          "detail": "Confidence 86.9/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 1.49,
-          "direction": "positive",
-          "detail": "Projection 27.51 vs line 30.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.73,
-          "direction": "negative",
-          "detail": "Projected 27.1 min vs L5 28.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Rest days: 1",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 24.0%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 2.48,
-          "direction": "positive",
-          "detail": "Simulated hit probability 65.5%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.83,
-          "direction": "positive",
-          "detail": "Confidence 86.9/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 1.49,
-          "direction": "positive",
-          "detail": "Projection 27.51 vs line 30.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.73,
-          "direction": "negative",
-          "detail": "Projected 27.1 min vs L5 28.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, model confidence. Main risks: minutes projection. 2 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 22,
-      "player": "Gabby Williams",
-      "game": "TEAM COOP vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "PRA",
-      "side": "UNDER",
-      "line": 19.5,
-      "odds": -102.0,
-      "sportsbook": "FanDuel",
-      "decision": "WATCH",
-      "top_play_score": 79.2,
-      "projection": 14.51,
-      "confidence": 71.3,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 48.5%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.0%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 18.4 min vs L5 24.4",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.5,
-          "direction": "positive",
-          "detail": "Projection 14.51 vs line 19.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 7",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Qualified matchup adjustment unavailable",
-          "source": "unified_player_simulation_v2",
-          "available": false
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 48.5%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Simulated hit probability 75.0%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 2.5,
-          "direction": "positive",
-          "detail": "Projection 14.51 vs line 19.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 0.52,
-          "direction": "positive",
-          "detail": "Confidence 71.3/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Data quality: partial",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 18.4 min vs L5 24.4",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
-        "Blowout risk",
-        "Opponent matchup"
-      ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 2 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 23,
-      "player": "Caitlin Clark",
-      "game": "Fever vs None",
+      "player": "Allisha Gray",
+      "game": "Dream vs None",
       "market_type": "PLAYER_PROP",
       "stat": "AST",
       "side": "UNDER",
-      "line": 8.5,
-      "odds": -118.0,
-      "sportsbook": "FanDuel",
-      "decision": "WATCH",
-      "top_play_score": 79.2,
-      "projection": 7.4,
-      "confidence": 86.9,
-      "features": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 22.8%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 2.63,
-          "direction": "positive",
-          "detail": "Simulated hit probability 66.4%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.83,
-          "direction": "positive",
-          "detail": "Confidence 86.9/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.73,
-          "direction": "negative",
-          "detail": "Projected 27.1 min vs L5 28.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 0.55,
-          "direction": "positive",
-          "detail": "Projection 7.40 vs line 8.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Availability",
-          "contribution": 0.3,
-          "direction": "positive",
-          "detail": "Availability status: ACTIVE",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Rest days: 1",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Blowout risk",
-          "contribution": 0,
-          "direction": "neutral",
-          "detail": "Blowout probability unavailable",
-          "source": "minutes_projection_v2",
-          "available": false
-        },
-        {
-          "feature": "Opponent matchup",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Matchup adjustment +0.0%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Volatility penalty",
-          "contribution": 0.0,
-          "direction": "neutral",
-          "detail": "Ranking volatility penalty 0.0",
-          "source": "cross_market_top_plays",
-          "available": true
-        }
-      ],
-      "biggest_positives": [
-        {
-          "feature": "Expected value",
-          "contribution": 3,
-          "direction": "positive",
-          "detail": "Model EV 22.8%",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Hit probability",
-          "contribution": 2.63,
-          "direction": "positive",
-          "detail": "Simulated hit probability 66.4%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.83,
-          "direction": "positive",
-          "detail": "Confidence 86.9/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Data quality",
-          "contribution": 1.5,
-          "direction": "positive",
-          "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 0.55,
-          "direction": "positive",
-          "detail": "Projection 7.40 vs line 8.50",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        }
-      ],
-      "biggest_risks": [
-        {
-          "feature": "Minutes projection",
-          "contribution": -0.73,
-          "direction": "negative",
-          "detail": "Projected 27.1 min vs L5 28.2",
-          "source": "minutes_projection_v2",
-          "available": true
-        }
-      ],
-      "unavailable_inputs": [
-        "Blowout risk"
-      ],
-      "summary": "Driven by expected value, hit probability, model confidence. Main risks: minutes projection. 1 context fields unavailable.",
-      "explanation_version": "1.0"
-    },
-    {
-      "rank": 24,
-      "player": "Marina Mabrey",
-      "game": "Tempo vs None",
-      "market_type": "PLAYER_PROP",
-      "stat": "AST",
-      "side": "UNDER",
-      "line": 3.5,
-      "odds": -120.0,
+      "line": 2.5,
+      "odds": -125.0,
       "sportsbook": "DraftKings",
       "decision": "WATCH",
-      "top_play_score": 79.1,
-      "projection": 2.44,
-      "confidence": 71.3,
+      "top_play_score": 75.6,
+      "projection": 2.21,
+      "confidence": 88.5,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 37.2%",
+          "detail": "Model EV 15.3%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 3,
+          "contribution": 2.25,
           "direction": "positive",
-          "detail": "Simulated hit probability 74.9%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Minutes projection",
-          "contribution": -3,
-          "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
-          "source": "minutes_projection_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 0.53,
-          "direction": "positive",
-          "detail": "Projection 2.44 vs line 3.50",
+          "detail": "Simulated hit probability 64.0%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Model confidence",
-          "contribution": 0.52,
+          "contribution": 1.96,
           "direction": "positive",
-          "detail": "Confidence 71.3/100",
+          "detail": "Confidence 88.5/100",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Data quality",
-          "contribution": 0.4,
+          "feature": "Minutes projection",
+          "contribution": 1.73,
           "direction": "positive",
-          "detail": "Data quality: partial",
+          "detail": "Projected 32.8 min vs L5 30.2",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
           "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "ALT streak form",
+          "contribution": -0.9,
+          "direction": "negative",
+          "detail": "Streak score 61.0; L10 60%",
+          "source": "alt_streaks",
           "available": true
         },
         {
@@ -3847,6 +2988,14 @@
           "available": true
         },
         {
+          "feature": "Projection versus line",
+          "contribution": 0.15,
+          "direction": "positive",
+          "detail": "Projection 2.21 vs line 2.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
           "feature": "Blowout risk",
           "contribution": 0,
           "direction": "neutral",
@@ -3876,95 +3025,103 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 37.2%",
+          "detail": "Model EV 15.3%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 3,
+          "contribution": 2.25,
           "direction": "positive",
-          "detail": "Simulated hit probability 74.9%",
-          "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Projection versus line",
-          "contribution": 0.53,
-          "direction": "positive",
-          "detail": "Projection 2.44 vs line 3.50",
+          "detail": "Simulated hit probability 64.0%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
         {
           "feature": "Model confidence",
-          "contribution": 0.52,
+          "contribution": 1.96,
           "direction": "positive",
-          "detail": "Confidence 71.3/100",
+          "detail": "Confidence 88.5/100",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
-          "feature": "Data quality",
-          "contribution": 0.4,
+          "feature": "Minutes projection",
+          "contribution": 1.73,
           "direction": "positive",
-          "detail": "Data quality: partial",
+          "detail": "Projected 32.8 min vs L5 30.2",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
           "source": "cross_market_top_plays",
           "available": true
         }
       ],
       "biggest_risks": [
         {
-          "feature": "Minutes projection",
-          "contribution": -3,
+          "feature": "ALT streak form",
+          "contribution": -0.9,
           "direction": "negative",
-          "detail": "Projected 20.2 min vs L5 28.6",
-          "source": "minutes_projection_v2",
+          "detail": "Streak score 61.0; L10 60%",
+          "source": "alt_streaks",
           "available": true
         }
       ],
       "unavailable_inputs": [
         "Blowout risk"
       ],
-      "summary": "Driven by expected value, hit probability, projection versus line. Main risks: minutes projection. 1 context fields unavailable.",
+      "summary": "Driven by expected value, hit probability, model confidence. Main risks: alt streak form. 1 context fields unavailable.",
       "explanation_version": "1.0"
     },
     {
-      "rank": 25,
-      "player": "Isabelle Harrison",
-      "game": "Tempo vs None",
+      "rank": 20,
+      "player": "Sabrina Ionescu",
+      "game": "Liberty vs None",
       "market_type": "PLAYER_PROP",
-      "stat": "REB",
-      "side": "OVER",
-      "line": 5.5,
-      "odds": -123.0,
-      "sportsbook": "DraftKings",
+      "stat": "PA",
+      "side": "UNDER",
+      "line": 25.5,
+      "odds": -106.0,
+      "sportsbook": "FanDuel",
       "decision": "WATCH",
-      "top_play_score": 78.8,
-      "projection": 7.72,
-      "confidence": 82.2,
+      "top_play_score": 75.5,
+      "projection": 23.52,
+      "confidence": 88.2,
       "features": [
         {
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 22.7%",
+          "detail": "Model EV 18.2%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.93,
+          "direction": "positive",
+          "detail": "Confidence 88.2/100",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Minutes projection",
-          "contribution": 3,
+          "contribution": 1.8,
           "direction": "positive",
-          "detail": "Projected 28.5 min vs L5 20.2",
+          "detail": "Projected 36.9 min vs L5 34.2",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 2.83,
+          "contribution": 1.73,
           "direction": "positive",
-          "detail": "Simulated hit probability 67.7%",
+          "detail": "Simulated hit probability 60.8%",
           "source": "unified_player_simulation_v2",
           "available": true
         },
@@ -3977,27 +3134,11 @@
           "available": true
         },
         {
-          "feature": "Model confidence",
-          "contribution": 1.43,
-          "direction": "positive",
-          "detail": "Confidence 82.2/100",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
           "feature": "Projection versus line",
-          "contribution": 1.11,
+          "contribution": 0.99,
           "direction": "positive",
-          "detail": "Projection 7.72 vs line 5.50",
+          "detail": "Projection 23.52 vs line 25.50",
           "source": "unified_player_simulation_v2",
-          "available": true
-        },
-        {
-          "feature": "Rest",
-          "contribution": 0.4,
-          "direction": "positive",
-          "detail": "Rest days: 12",
-          "source": "minutes_projection_v2",
           "available": true
         },
         {
@@ -4009,6 +3150,168 @@
           "available": true
         },
         {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Qualified matchup adjustment unavailable",
+          "source": "unified_player_simulation_v2",
+          "available": false
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 18.2%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.93,
+          "direction": "positive",
+          "detail": "Confidence 88.2/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 1.8,
+          "direction": "positive",
+          "detail": "Projected 36.9 min vs L5 34.2",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 1.73,
+          "direction": "positive",
+          "detail": "Simulated hit probability 60.8%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_risks": [],
+      "unavailable_inputs": [
+        "Blowout risk",
+        "Opponent matchup"
+      ],
+      "summary": "Driven by expected value, model confidence, minutes projection. 2 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 21,
+      "player": "A'ja Wilson",
+      "game": "Aces vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "AST",
+      "side": "UNDER",
+      "line": 3.5,
+      "odds": -114.0,
+      "sportsbook": "DraftKings",
+      "decision": "WATCH",
+      "top_play_score": 75.5,
+      "projection": 3.11,
+      "confidence": 88.0,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 16.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.07,
+          "direction": "positive",
+          "detail": "Projected 32.9 min vs L5 29.8",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 1.96,
+          "direction": "positive",
+          "detail": "Simulated hit probability 62.2%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.92,
+          "direction": "positive",
+          "detail": "Confidence 88.0/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.2,
+          "direction": "positive",
+          "detail": "Projection 3.11 vs line 3.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
           "feature": "Blowout risk",
           "contribution": 0,
           "direction": "neutral",
@@ -4038,24 +3341,32 @@
           "feature": "Expected value",
           "contribution": 3,
           "direction": "positive",
-          "detail": "Model EV 22.7%",
+          "detail": "Model EV 16.8%",
           "source": "cross_market_top_plays",
           "available": true
         },
         {
           "feature": "Minutes projection",
-          "contribution": 3,
+          "contribution": 2.07,
           "direction": "positive",
-          "detail": "Projected 28.5 min vs L5 20.2",
+          "detail": "Projected 32.9 min vs L5 29.8",
           "source": "minutes_projection_v2",
           "available": true
         },
         {
           "feature": "Hit probability",
-          "contribution": 2.83,
+          "contribution": 1.96,
           "direction": "positive",
-          "detail": "Simulated hit probability 67.7%",
+          "detail": "Simulated hit probability 62.2%",
           "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.92,
+          "direction": "positive",
+          "detail": "Confidence 88.0/100",
+          "source": "cross_market_top_plays",
           "available": true
         },
         {
@@ -4063,14 +3374,6 @@
           "contribution": 1.5,
           "direction": "positive",
           "detail": "Data quality: complete",
-          "source": "cross_market_top_plays",
-          "available": true
-        },
-        {
-          "feature": "Model confidence",
-          "contribution": 1.43,
-          "direction": "positive",
-          "detail": "Confidence 82.2/100",
           "source": "cross_market_top_plays",
           "available": true
         }
@@ -4080,6 +3383,628 @@
         "Blowout risk"
       ],
       "summary": "Driven by expected value, minutes projection, hit probability. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 22,
+      "player": "A'ja Wilson",
+      "game": "Aces vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "3PM",
+      "side": "UNDER",
+      "line": 0.5,
+      "odds": 141.0,
+      "sportsbook": "DraftKings",
+      "decision": "WATCH",
+      "top_play_score": 75.4,
+      "projection": 0.98,
+      "confidence": 88.0,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 31.0%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.07,
+          "direction": "positive",
+          "detail": "Projected 32.9 min vs L5 29.8",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.92,
+          "direction": "positive",
+          "detail": "Confidence 88.0/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 0.69,
+          "direction": "positive",
+          "detail": "Simulated hit probability 54.3%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": -0.24,
+          "direction": "negative",
+          "detail": "Projection 0.98 vs line 0.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Matchup adjustment +0.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 31.0%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.07,
+          "direction": "positive",
+          "detail": "Projected 32.9 min vs L5 29.8",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.92,
+          "direction": "positive",
+          "detail": "Confidence 88.0/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 0.69,
+          "direction": "positive",
+          "detail": "Simulated hit probability 54.3%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        }
+      ],
+      "biggest_risks": [
+        {
+          "feature": "Projection versus line",
+          "contribution": -0.24,
+          "direction": "negative",
+          "detail": "Projection 0.98 vs line 0.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        }
+      ],
+      "unavailable_inputs": [
+        "Blowout risk"
+      ],
+      "summary": "Driven by expected value, minutes projection, model confidence. Main risks: projection versus line. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 23,
+      "player": "Jewell Loyd",
+      "game": "Aces vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "PTS",
+      "side": "UNDER",
+      "line": 8.5,
+      "odds": -114.0,
+      "sportsbook": "DraftKings",
+      "decision": "WATCH",
+      "top_play_score": 75.2,
+      "projection": 7.77,
+      "confidence": 88.5,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 16.1%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.96,
+          "direction": "positive",
+          "detail": "Confidence 88.5/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Simulated hit probability 61.9%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 0.87,
+          "direction": "positive",
+          "detail": "Projected 27.1 min vs L5 25.8",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.37,
+          "direction": "positive",
+          "detail": "Projection 7.77 vs line 8.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Matchup adjustment +0.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 16.1%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.96,
+          "direction": "positive",
+          "detail": "Confidence 88.5/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Simulated hit probability 61.9%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 0.87,
+          "direction": "positive",
+          "detail": "Projected 27.1 min vs L5 25.8",
+          "source": "minutes_projection_v2",
+          "available": true
+        }
+      ],
+      "biggest_risks": [],
+      "unavailable_inputs": [
+        "Blowout risk"
+      ],
+      "summary": "Driven by expected value, model confidence, hit probability. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 24,
+      "player": "Kahleah Copper",
+      "game": "Mercury vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "PTS",
+      "side": "UNDER",
+      "line": 21.5,
+      "odds": -104.0,
+      "sportsbook": "FanDuel",
+      "decision": "WATCH",
+      "top_play_score": 75.0,
+      "projection": 20.11,
+      "confidence": 87.8,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 17.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.13,
+          "direction": "positive",
+          "detail": "Projected 32.6 min vs L5 29.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Confidence 87.8/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 1.61,
+          "direction": "positive",
+          "detail": "Simulated hit probability 60.1%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 0.7,
+          "direction": "positive",
+          "detail": "Projection 20.11 vs line 21.50",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Matchup adjustment +0.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 17.8%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.13,
+          "direction": "positive",
+          "detail": "Projected 32.6 min vs L5 29.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Confidence 87.8/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 1.61,
+          "direction": "positive",
+          "detail": "Simulated hit probability 60.1%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_risks": [],
+      "unavailable_inputs": [
+        "Blowout risk"
+      ],
+      "summary": "Driven by expected value, minutes projection, model confidence. 1 context fields unavailable.",
+      "explanation_version": "1.0"
+    },
+    {
+      "rank": 25,
+      "player": "Kahleah Copper",
+      "game": "Mercury vs None",
+      "market_type": "PLAYER_PROP",
+      "stat": "PRA",
+      "side": "UNDER",
+      "line": 28.0,
+      "odds": -104.0,
+      "sportsbook": "FanDuel",
+      "decision": "WATCH",
+      "top_play_score": 74.9,
+      "projection": 25.93,
+      "confidence": 87.8,
+      "features": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 17.7%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.13,
+          "direction": "positive",
+          "detail": "Projected 32.6 min vs L5 29.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Confidence 87.8/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 1.6,
+          "direction": "positive",
+          "detail": "Simulated hit probability 60.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Projection versus line",
+          "contribution": 1.04,
+          "direction": "positive",
+          "detail": "Projection 25.93 vs line 28.00",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Availability",
+          "contribution": 0.3,
+          "direction": "positive",
+          "detail": "Availability status: ACTIVE",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Rest",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Rest days: 1",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Blowout risk",
+          "contribution": 0,
+          "direction": "neutral",
+          "detail": "Blowout probability unavailable",
+          "source": "minutes_projection_v2",
+          "available": false
+        },
+        {
+          "feature": "Opponent matchup",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Qualified matchup adjustment unavailable",
+          "source": "unified_player_simulation_v2",
+          "available": false
+        },
+        {
+          "feature": "Volatility penalty",
+          "contribution": 0.0,
+          "direction": "neutral",
+          "detail": "Ranking volatility penalty 0.0",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_positives": [
+        {
+          "feature": "Expected value",
+          "contribution": 3,
+          "direction": "positive",
+          "detail": "Model EV 17.7%",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Minutes projection",
+          "contribution": 2.13,
+          "direction": "positive",
+          "detail": "Projected 32.6 min vs L5 29.4",
+          "source": "minutes_projection_v2",
+          "available": true
+        },
+        {
+          "feature": "Model confidence",
+          "contribution": 1.9,
+          "direction": "positive",
+          "detail": "Confidence 87.8/100",
+          "source": "cross_market_top_plays",
+          "available": true
+        },
+        {
+          "feature": "Hit probability",
+          "contribution": 1.6,
+          "direction": "positive",
+          "detail": "Simulated hit probability 60.0%",
+          "source": "unified_player_simulation_v2",
+          "available": true
+        },
+        {
+          "feature": "Data quality",
+          "contribution": 1.5,
+          "direction": "positive",
+          "detail": "Data quality: complete",
+          "source": "cross_market_top_plays",
+          "available": true
+        }
+      ],
+      "biggest_risks": [],
+      "unavailable_inputs": [
+        "Blowout risk",
+        "Opponent matchup"
+      ],
+      "summary": "Driven by expected value, minutes projection, model confidence. 2 context fields unavailable.",
       "explanation_version": "1.0"
     }
   ],
