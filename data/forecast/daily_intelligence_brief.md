@@ -1,25 +1,20 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-08-02T22:28:41.963836Z
+Generated: 2026-08-03T04:07:09.702910Z
 
 **Status:** READY
-**Slate:** 5 events, 529 fresh markets
+**Slate:** 3 events, 183 fresh markets
 
 ## Top Opportunities
 
 
 ## Market Alerts
 
-- nan Connecticut Sun 390 — LATE_MONEY — score 48.29
-- nan Golden State Valkyries -950 — SHARP — score 48.29
-- nan Golden State Valkyries -1000 — SHARP — score 48.29
-- nan Phoenix Mercury -108 — SHARP — score 48.29
-- Allisha Gray OVER 3.5 -102 — SHARP — score 41.16
-- Brittney Griner OVER 5.5 -102 — SHARP — score 39.52
-- Arike Ogunbowale OVER 2.5 -140 — SHARP — score 39.47
-- Paige Bueckers OVER 1.5 -119 — SHARP — score 38.74
-- nan Toronto Tempo 625 — SHARP — score 38.22
-- Jessica Shepard OVER 11.5 -141 — LATE_MONEY — score 38.08
+- nan Phoenix Mercury -108 — SHARP — score 36.78
+- Allisha Gray OVER 3.5 -102 — SHARP — score 31.34
+- Sydney Taylor OVER 2.5 -108 — SHARP — score 28.71
+- Allisha Gray OVER 2.5 100 — SHARP — score 28.12
+- Kahleah Copper UNDER 3.5 105 — SHARP — score 27.15
 
 ## System Context
 
