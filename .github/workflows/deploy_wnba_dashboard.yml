@@ -6,7 +6,9 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
-      - 'data/dashboard/wnba_injury_intelligence.json'
+      - 'data/dashboard/**'
+      - 'wnba_terminal_ui.py'
+      - 'patch_terminal_ui.py'
       - 'patch_dashboard_v5_injury_intelligence.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_consolidated_navigation.py'
@@ -36,17 +38,40 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Build required injury intelligence into deployment artifact
+      - name: Resolve dashboard date
+        run: |
+          TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Dashboard target date: $TARGET"
+
+      - name: Compile complete dashboard build chain
         run: |
           test -f docs/index.html
-          test -f patch_dashboard_v5_injury_intelligence.py
-          test -f patch_dashboard_v5_player_prop_injury_context.py
-          test -f data/dashboard/wnba_injury_intelligence.json
           python -m py_compile \
+            wnba_terminal_ui.py \
+            patch_terminal_ui.py \
             patch_dashboard_v5_injury_intelligence.py \
             patch_dashboard_v5_player_prop_injury_context.py
-          python patch_dashboard_v5_injury_intelligence.py
-          python patch_dashboard_v5_player_prop_injury_context.py
+
+      - name: Build complete dashboard artifact
+        run: |
+          # Rebuild the shared dashboard data bundle first so performance,
+          # grading, game validation and all other current data remain present.
+          python wnba_terminal_ui.py --date "$TARGET"
+          python patch_terminal_ui.py
+
+          # Apply feature-specific patches after the shared dashboard bundle.
+          # These patchers are idempotent and must not replace the terminal UI.
+          if [ -f data/dashboard/wnba_injury_intelligence.json ]; then
+            python patch_dashboard_v5_injury_intelligence.py
+            python patch_dashboard_v5_player_prop_injury_context.py
+          else
+            echo "Injury payload unavailable; preserving the committed dashboard artifact."
+          fi
+
+          # Re-apply the shared terminal patch last. This guarantees manual
+          # deployment cannot remove newer ALT/Game Performance report cards.
+          python patch_terminal_ui.py
 
       - name: Verify complete dashboard artifact
         run: |
@@ -54,22 +79,29 @@ jobs:
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           required = [
-              'v5-injury-intelligence-data',
-              'v5-injury-intelligence-script',
-              "['injuries','Injuries']",
-              "view==='injuries'",
-              'window.injuryIntelligence',
-              'v5-player-prop-injury-style',
-              'v5-player-prop-injury-script',
-              'window.WNBA_PLAYER_PROP_INJURY_CONTEXT',
-              'Injury-adjusted',
+              'WNBA_TERMINAL_UI_PATCH_START',
+              'WNBA Intelligence Terminal',
+              'ALT Performance',
+              'Game Performance',
           ]
+          injury_payload = Path('data/dashboard/wnba_injury_intelligence.json')
+          if injury_payload.exists():
+              required.extend([
+                  'v5-injury-intelligence-data',
+                  'v5-injury-intelligence-script',
+                  "['injuries','Injuries']",
+                  "view==='injuries'",
+                  'window.injuryIntelligence',
+                  'v5-player-prop-injury-style',
+                  'v5-player-prop-injury-script',
+                  'window.WNBA_PLAYER_PROP_INJURY_CONTEXT',
+                  'Injury-adjusted',
+              ])
           missing = [marker for marker in required if marker not in h]
           if missing:
-              raise SystemExit(f'Deployment blocked; missing injury markers: {missing}')
-          print('Dashboard artifact includes Injury Intelligence and Player Props injury context.')
+              raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
+          print('Complete dashboard artifact verified.')
           PY
-          echo "Dashboard entry point verified."
           find docs -maxdepth 2 -type f | sort | head -100
 
       - name: Configure GitHub Pages
