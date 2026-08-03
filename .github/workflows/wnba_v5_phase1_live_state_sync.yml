@@ -1,0 +1,105 @@
+name: WNBA V5 Phase 1 Live State Sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_run:
+    workflows:
+      - WNBA Live Results Engine
+      - WNBA Injury Refresh
+      - WNBA Pregame Eligibility Guard
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - wnba_v5_live_state_sync.py
+      - .github/workflows/wnba_v5_phase1_live_state_sync.yml
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  phase1-live-state-sync:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate phase 1 engine
+        run: python -m py_compile wnba_v5_live_state_sync.py
+
+      - name: Build authoritative game state
+        run: python wnba_v5_live_state_sync.py
+
+      - name: Phase 1 QA gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          state=json.load(open('data/dashboard/wnba_game_state.json'))
+          master=json.load(open('data/dashboard/wnba_master.json'))
+          assert state.get('source_of_truth')=='wnba_v5_live_state_sync', state
+          assert isinstance(state.get('games'),list), state
+          locked=set(state.get('summary',{}).get('locked_teams',[]))
+
+          for game in master.get('games',[]) or master.get('today_games',[]) or []:
+              status=game.get('game_state')
+              assert status in {'PREGAME','LIVE','FINAL'}, game
+              assert game.get('pregame_eligible') == (status=='PREGAME'), game
+
+          for key in ('props','best_bets','top_plays','recommendations','portfolio'):
+              for row in master.get(key,[]) or []:
+                  team=row.get('team') or row.get('team_name')
+                  if team in locked:
+                      assert row.get('pregame_eligible') is False, row
+                      assert row.get('eligible_for_bet') is False, row
+                      assert row.get('final_action')=='PASS', row
+
+          injury_path=Path('data/dashboard/wnba_injury_intelligence.json')
+          if injury_path.exists():
+              injury=json.load(injury_path.open())
+              for row in injury.get('adjustments',[]) or []:
+                  if row.get('team') in locked:
+                      assert row.get('headline_eligible') is False, row
+
+          phase=json.load(open('data/dashboard/wnba_v5_phase_status.json'))
+          phase['qa_gate']='PASSED'
+          json.dump(phase,open('data/dashboard/wnba_v5_phase_status.json','w'),indent=2)
+          print('PHASE 1 QA PASSED',state.get('summary'))
+          PY
+
+      - name: Rebuild dashboard integrations
+        run: |
+          python patch_dashboard_v5_injury_intelligence.py || true
+
+      - name: Publish phase 1 outputs
+        run: |
+          git config user.name 'WNBA V5 Phase Bot'
+          git config user.email 'actions@github.com'
+          bash scripts/atomic_generated_push.sh \
+            'Complete WNBA V5 phase 1 live state synchronization' \
+            'data/dashboard/wnba_game_state.json' \
+            'data/warehouse/wnba_game_state.json' \
+            'data/dashboard/wnba_v5_phase_status.json' \
+            'data/dashboard/wnba_*.json' \
+            'data/warehouse/wnba_*.json' \
+            'data/master/wnba_master.json' \
+            'docs/index.html'
