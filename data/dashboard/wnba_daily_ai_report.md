@@ -1,12 +1,12 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-08-03T17:27:58.278052Z
+Generated: 2026-08-03T19:10:49.479869Z
 
 ## Slate summary
 
-- 1 games
-- 4 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 0, 'Pass': 4}
+- 2 games
+- 6 team/book signals
+- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 0, 'Pass': 6}
 
 ## Game — 2026-08-05T02:00:00Z
 
@@ -37,6 +37,22 @@ Research level: **low-research-interest** | signal 0.03 | 1 matched angles
 Best line: -13.5 | line-shop edge: +0 points
 
 - Golden State Valkyries|favorite: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
+
+## Game — 2026-08-05T23:30:00Z
+
+### Washington Mystics +2.5 (draftkings)
+Bet quality: **Pass — 44.7/100**
+Research level: **low-research-interest** | signal 0.03 | 1 matched angles
+Best line: +2.5 | line-shop edge: +0 points
+
+- Washington Mystics|underdog: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
+
+### Washington Mystics +2.5 (fanduel)
+Bet quality: **Pass — 44.7/100**
+Research level: **low-research-interest** | signal 0.03 | 1 matched angles
+Best line: +2.5 | line-shop edge: +0 points
+
+- Washington Mystics|underdog: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
 
 ## Guardrails
 
