@@ -1,67 +1,42 @@
 # WNBA Daily AI Research Report
 
-Generated: 2026-08-02T18:36:07.062365Z
+Generated: 2026-08-03T14:00:36.028975Z
 
 ## Slate summary
 
-- 3 games
-- 7 team/book signals
-- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 0, 'Pass': 7}
+- 1 games
+- 4 team/book signals
+- Grades: {'Strong Research Play': 0, 'Lean': 0, 'Watch': 0, 'Pass': 4}
 
-## Game — 2026-08-02T23:00:00Z
+## Game — 2026-08-05T02:00:00Z
 
-### Connecticut Sun +10.5 (draftkings)
+### Toronto Tempo +13.5 (draftkings)
 Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
+Best line: +13.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
-### Connecticut Sun +10.5 (fanduel)
+### Toronto Tempo +13.5 (fanduel)
 Bet quality: **Pass — 49.1/100**
 Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +10.5 | line-shop edge: +0 points
+Best line: +13.5 | line-shop edge: +0 points
 
 - away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
-## Game — 2026-08-03T00:30:00Z
-
-### Toronto Tempo +12.5 (draftkings)
-Bet quality: **Pass — 49.1/100**
-Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +12.5 | line-shop edge: +0 points
-
-- away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
-
-### Toronto Tempo +12.5 (fanduel)
-Bet quality: **Pass — 49.1/100**
-Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +12.5 | line-shop edge: +0 points
-
-- away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
-
-### Golden State Valkyries -12.5 (draftkings)
+### Golden State Valkyries -13.5 (draftkings)
 Bet quality: **Pass — 44.7/100**
 Research level: **low-research-interest** | signal 0.03 | 1 matched angles
-Best line: -12.5 | line-shop edge: +0 points
+Best line: -13.5 | line-shop edge: +0 points
 
 - Golden State Valkyries|favorite: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
 
-### Golden State Valkyries -12.5 (fanduel)
+### Golden State Valkyries -13.5 (fanduel)
 Bet quality: **Pass — 44.7/100**
 Research level: **low-research-interest** | signal 0.03 | 1 matched angles
-Best line: -12.5 | line-shop edge: +0 points
+Best line: -13.5 | line-shop edge: +0 points
 
 - Golden State Valkyries|favorite: 18-8-0 (69.23%, n=26, Wilson floor 50.01%)
-
-## Game — 2026-08-03T23:00:00Z
-
-### Seattle Storm +9.5 (fanduel)
-Bet quality: **Pass — 49.1/100**
-Research level: **low-research-interest** | signal 7.15 | 1 matched angles
-Best line: +9.5 | line-shop edge: +0 points
-
-- away|underdog|9_plus: 34-18-0 (65.38%, n=52, Wilson floor 51.8%)
 
 ## Guardrails
 
