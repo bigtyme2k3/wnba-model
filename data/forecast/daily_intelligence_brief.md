@@ -1,20 +1,15 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-08-03T04:07:09.702910Z
+Generated: 2026-08-03T10:13:49.296524Z
 
-**Status:** READY
-**Slate:** 3 events, 183 fresh markets
+**Status:** STANDBY
+**Slate:** 0 events, 0 fresh markets
 
-## Top Opportunities
-
+No fresh WNBA markets begin within the active 48-hour horizon.
 
 ## Market Alerts
 
-- nan Phoenix Mercury -108 — SHARP — score 36.78
-- Allisha Gray OVER 3.5 -102 — SHARP — score 31.34
-- Sydney Taylor OVER 2.5 -108 — SHARP — score 28.71
-- Allisha Gray OVER 2.5 100 — SHARP — score 28.12
-- Kahleah Copper UNDER 3.5 105 — SHARP — score 27.15
+- No active high-priority alerts.
 
 ## System Context
 
