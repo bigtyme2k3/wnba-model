@@ -10,6 +10,7 @@ on:
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
       - 'patch_dashboard_build_verification.py'
+      - 'patch_dashboard_alt_grading_status.py'
       - 'patch_dashboard_v5_injury_intelligence.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_consolidated_navigation.py'
@@ -54,6 +55,7 @@ jobs:
             wnba_terminal_ui.py \
             patch_terminal_ui.py \
             patch_dashboard_build_verification.py \
+            patch_dashboard_alt_grading_status.py \
             patch_dashboard_v5_injury_intelligence.py \
             patch_dashboard_v5_player_prop_injury_context.py
 
@@ -69,9 +71,8 @@ jobs:
             echo "Injury payload unavailable; preserving the committed dashboard artifact."
           fi
 
-          # Shared content is restored after feature patchers, then the QA
-          # beacon is applied last so every deployed artifact identifies itself.
           python patch_terminal_ui.py
+          python patch_dashboard_alt_grading_status.py
           python patch_dashboard_build_verification.py
 
       - name: Verify complete dashboard artifact
@@ -84,6 +85,9 @@ jobs:
               'WNBA Intelligence Terminal',
               'ALT Performance',
               'Game Performance',
+              'WNBA_ALT_GRADING_STATUS_START',
+              'ALT Grading Checkpoint',
+              'Screenshot-verifiable grading freshness',
               'WNBA_BUILD_BEACON_START',
               'Games QA Beacon',
               'screenshot-verifiable deployment marker',
@@ -104,7 +108,7 @@ jobs:
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
-          print('Complete dashboard artifact and Games QA beacon verified.')
+          print('Complete dashboard, ALT grading checkpoint and Games QA beacon verified.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
