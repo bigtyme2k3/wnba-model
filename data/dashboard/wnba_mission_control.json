@@ -1,24 +1,24 @@
 {
-  "generated_at_utc": "2026-08-03T13:24:31.123295+00:00",
+  "generated_at_utc": "2026-08-03T15:55:23.365773+00:00",
   "target_date": "2026-08-03",
   "status": "ok",
-  "publication_status": "BLOCKED",
-  "publication_message": "Critical data failed; affected recommendations are withheld.",
+  "publication_status": "DEGRADED",
+  "publication_message": "Report published with clear warnings; unavailable optional sections are withheld.",
   "summary": {
     "components": 11,
-    "green": 6,
-    "yellow": 3,
-    "red": 2,
-    "retry_required": 1,
-    "release_blockers": 2,
-    "warnings": 0
+    "green": 9,
+    "yellow": 2,
+    "red": 0,
+    "retry_required": 0,
+    "release_blockers": 0,
+    "warnings": 2
   },
   "alt_props": {
-    "available": false,
-    "status": "YELLOW",
+    "available": true,
+    "status": "GREEN",
     "retry_count": 0,
-    "action": "RETRY_SOURCE",
-    "message": "Alternate player props are unavailable. Standard props remain visible; ALT recommendations are withheld."
+    "action": "NONE",
+    "message": "Alternate player props loaded."
   },
   "checks": [
     {
@@ -29,7 +29,7 @@
       "path": "data/dashboard/wnba_master.json",
       "rows": 7,
       "target_date": "2026-08-03",
-      "generated_at_utc": "2026-08-03T13:24:30.302056+00:00",
+      "generated_at_utc": "2026-08-03T15:55:22.699950+00:00",
       "age_minutes": 0.0,
       "retry_count": 0,
       "action": "NONE",
@@ -42,9 +42,9 @@
       "status": "GREEN",
       "critical": true,
       "path": "data/dashboard/wnba_master.json",
-      "rows": 102,
+      "rows": 223,
       "target_date": "2026-08-03",
-      "generated_at_utc": "2026-08-03T13:24:30.302056+00:00",
+      "generated_at_utc": "2026-08-03T15:55:22.699950+00:00",
       "age_minutes": 0.0,
       "retry_count": 0,
       "action": "NONE",
@@ -54,69 +54,61 @@
     {
       "id": "alt_props",
       "component": "ALT Player Props",
-      "status": "YELLOW",
+      "status": "GREEN",
       "critical": false,
       "path": "data/dashboard/wnba_alt_market_warehouse.json",
-      "rows": 5069,
-      "target_date": "2026-08-02",
-      "generated_at_utc": "2026-08-02T23:41:22.794600+00:00",
-      "age_minutes": 823.1,
+      "rows": 5333,
+      "target_date": "2026-08-03",
+      "generated_at_utc": "2026-08-03T15:55:20.573007+00:00",
+      "age_minutes": 0.0,
       "retry_count": 0,
-      "action": "RETRY_SOURCE",
-      "issues": [
-        "Stale slate date 2026-08-02; expected 2026-08-03"
-      ],
+      "action": "NONE",
+      "issues": [],
       "warnings": []
     },
     {
       "id": "minutes",
       "component": "Minutes Projection",
-      "status": "RED",
+      "status": "GREEN",
       "critical": true,
       "path": "data/dashboard/wnba_minutes_projection_v2.json",
-      "rows": 38,
-      "target_date": "2026-08-02",
-      "generated_at_utc": "2026-08-02T19:22:24.631733+00:00",
-      "age_minutes": 1082.1,
+      "rows": 19,
+      "target_date": "2026-08-03",
+      "generated_at_utc": "2026-08-03T14:48:47.325854+00:00",
+      "age_minutes": 66.6,
       "retry_count": 0,
-      "action": "BLOCK_PUBLISH",
-      "issues": [
-        "Stale slate date 2026-08-02; expected 2026-08-03"
-      ],
+      "action": "NONE",
+      "issues": [],
       "warnings": []
     },
     {
       "id": "unified",
       "component": "Unified Simulation",
-      "status": "RED",
+      "status": "GREEN",
       "critical": true,
       "path": "data/dashboard/wnba_unified_player_simulation_v2.json",
-      "rows": 38,
-      "target_date": "2026-08-02",
-      "generated_at_utc": "2026-08-02T19:22:39.157610+00:00",
-      "age_minutes": 1081.9,
+      "rows": 19,
+      "target_date": "2026-08-03",
+      "generated_at_utc": "2026-08-03T14:48:54.983633+00:00",
+      "age_minutes": 66.5,
       "retry_count": 0,
-      "action": "BLOCK_PUBLISH",
-      "issues": [
-        "Stale slate date 2026-08-02; expected 2026-08-03"
-      ],
+      "action": "NONE",
+      "issues": [],
       "warnings": []
     },
     {
       "id": "top_plays",
       "component": "Top Plays",
-      "status": "YELLOW",
+      "status": "GREEN",
       "critical": false,
       "path": "data/dashboard/wnba_cross_market_top_plays.json",
       "rows": 25,
-      "target_date": "2026-08-02",
-      "generated_at_utc": "2026-08-02T19:22:39.741138+00:00",
-      "age_minutes": 1081.9,
+      "target_date": "2026-08-03",
+      "generated_at_utc": "2026-08-03T14:48:55.545071+00:00",
+      "age_minutes": 66.5,
       "retry_count": 0,
-      "action": "PUBLISH_DEGRADED",
-      "issues": [
-        "Stale slate date 2026-08-02; expected 2026-08-03"
-      ],
+      "action": "NONE",
+      "issues": [],
       "warnings": []
     },
     {
@@ -128,13 +120,15 @@
       "rows": 25,
       "target_date": "2026-08-02",
       "generated_at_utc": "2026-08-02T14:54:32.799804+00:00",
-      "age_minutes": 1350.0,
+      "age_minutes": 1500.8,
       "retry_count": 0,
       "action": "PUBLISH_DEGRADED",
       "issues": [
         "Stale slate date 2026-08-02; expected 2026-08-03"
       ],
-      "warnings": []
+      "warnings": [
+        "Output is 25.0 hours old"
+      ]
     },
     {
       "id": "clv_snapshot",
@@ -144,8 +138,8 @@
       "path": "data/history/wnba_market_observations.jsonl",
       "rows": 600,
       "target_date": null,
-      "generated_at_utc": "2026-08-03T13:21:50.688486+00:00",
-      "age_minutes": 2.7,
+      "generated_at_utc": "2026-08-03T15:55:15.332734+00:00",
+      "age_minutes": 0.1,
       "retry_count": 0,
       "action": "NONE",
       "issues": [],
@@ -159,7 +153,7 @@
       "path": "data/history/wnba_model_picks_ledger.jsonl",
       "rows": 148,
       "target_date": null,
-      "generated_at_utc": "2026-08-03T13:24:27.577374+00:00",
+      "generated_at_utc": "2026-08-03T15:55:15.338733+00:00",
       "age_minutes": 0.1,
       "retry_count": 0,
       "action": "NONE",
@@ -169,17 +163,19 @@
     {
       "id": "qa",
       "component": "V4 QA",
-      "status": "GREEN",
+      "status": "YELLOW",
       "critical": true,
       "path": "data/dashboard/wnba_v4_status.json",
       "rows": 25,
       "target_date": null,
       "generated_at_utc": "2026-08-02T14:54:34.427584+00:00",
-      "age_minutes": 1349.9,
+      "age_minutes": 1500.8,
       "retry_count": 0,
       "action": "NONE",
       "issues": [],
-      "warnings": []
+      "warnings": [
+        "Output is 25.0 hours old"
+      ]
     },
     {
       "id": "dashboard",
@@ -189,25 +185,15 @@
       "path": "docs/index.html",
       "rows": 1,
       "target_date": null,
-      "generated_at_utc": "2026-08-03T13:21:51.513499+00:00",
-      "age_minutes": 2.7,
+      "generated_at_utc": "2026-08-03T15:55:22.752427+00:00",
+      "age_minutes": 0.0,
       "retry_count": 0,
       "action": "NONE",
       "issues": [],
       "warnings": []
     }
   ],
-  "retry_plan": [
-    {
-      "component": "ALT Player Props",
-      "attempt": 1,
-      "maximum_attempts": 2,
-      "command_chain": [
-        "python wnba_alt_market_warehouse.py --date 2026-08-03",
-        "python wnba_mission_control.py --date 2026-08-03 --retry-count 1"
-      ]
-    }
-  ],
+  "retry_plan": [],
   "policy": {
     "critical_failures_block_publication": true,
     "optional_failures_publish_degraded": true,
