@@ -1,19 +1,29 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-08-03T15:27:02.937561Z
+Generated: 2026-08-03T17:26:14.185482Z
 
-**Status:** STANDBY
-**Slate:** 0 events, 0 fresh markets
+**Status:** READY
+**Slate:** 4 events, 515 fresh markets
 
-No fresh WNBA markets begin within the active 48-hour horizon.
+## Top Opportunities
+
 
 ## Market Alerts
 
-- No active high-priority alerts.
+- nan Seattle Storm 245 — SHARP — score 48.75
+- nan Seattle Storm 260 — SHARP — score 48.75
+- nan Phoenix Mercury -125 — SHARP — score 48.75
+- Allisha Gray UNDER 1.5 101 — SHARP — score 40.58
+- Sabrina Ionescu UNDER 2.5 -105 — SHARP — score 40.54
+- Jonquel Jones UNDER 1.5 104 — SHARP — score 40.1
+- Sydney Taylor OVER 2.5 -109 — SHARP — score 39.54
+- Sabrina Ionescu UNDER 2.5 -114 — SHARP — score 39.25
+- Sydney Taylor OVER 2.5 -122 — SHARP — score 39.1
+- Sabrina Ionescu OVER 4.5 101 — SHARP — score 38.95
 
 ## System Context
 
-- Closing-line predictor: READY (1825 model-ready markets)
+- Closing-line predictor: READY (1929 model-ready markets)
 - Normalized sportsbook leader: draftkings
 - Qualified CLV trends: 11
 
