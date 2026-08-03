@@ -52,7 +52,32 @@ def build_block() -> str:
 <div class="ags-card"><div class="ags-label">QA state</div><div class="ags-value">{status}</div><div class="ags-note">Screenshot-verifiable grading freshness</div></div>
 </div></section>
 <script id="wnba-alt-grading-status-script">
-(function(){{const p=document.getElementById('wnba-alt-grading-status');if(!p)return;const n=s=>(s||'').trim().toLowerCase();function sync(){{const tabs=[...document.querySelectorAll('button,[role="tab"],a')];const a=tabs.find(el=>n(el.textContent)==='alt performance'&&(el.getAttribute('aria-selected')==='true'||String(el.className||'').toLowerCase().includes('active')||String(el.className||'').toLowerCase().includes('selected')));p.style.display=a?'block':'none';if(a){{const h=[...document.querySelectorAll('h1,h2,h3')].find(el=>n(el.textContent)==='alt performance');const host=h&&h.closest('section,main,div');if(host&&p.parentElement!==host)host.insertBefore(p,host.children[1]||null);}}}}document.addEventListener('click',()=>setTimeout(sync,60),true);new MutationObserver(sync).observe(document.body,{{subtree:true,attributes:true,attributeFilter:['class','aria-selected']}});sync();setTimeout(sync,700);}})();
+(function(){{
+  const panel=document.getElementById('wnba-alt-grading-status');
+  if(!panel)return;
+  const norm=s=>(s||'').trim().toLowerCase();
+  let selected='';
+  const visible=el=>!!(el&&el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
+  function altHeading(){{return [...document.querySelectorAll('h1,h2,h3')].find(el=>norm(el.textContent)==='alt performance'&&visible(el));}}
+  function place(){{
+    const heading=altHeading();
+    if(!heading)return false;
+    const host=heading.closest('section,main,article')||heading.parentElement;
+    if(host&&panel.parentElement!==host)host.insertBefore(panel,heading.nextElementSibling||null);
+    return true;
+  }}
+  function sync(){{
+    const headingVisible=place();
+    panel.style.display=(selected==='alt performance'||(!selected&&headingVisible))?'block':'none';
+  }}
+  document.addEventListener('click',event=>{{
+    const tab=event.target.closest('button,[role="tab"],a');
+    if(tab){{const label=norm(tab.textContent);if(label)selected=label;}}
+    setTimeout(sync,50);
+  }},true);
+  new MutationObserver(sync).observe(document.body,{{subtree:true,childList:true,attributes:true,attributeFilter:['class','style','hidden','aria-selected']}});
+  sync();setTimeout(sync,400);setTimeout(sync,1000);
+}})();
 </script>
 {END}'''
 
