@@ -63,6 +63,9 @@ def build(target: str):
         "portfolio": first_existing("data/dashboard/deepseek_portfolio_optimizer.json"),
         "market_timing": first_existing("data/dashboard/market_timing_intelligence.json"),
         "projection_accuracy": first_existing("data/dashboard/projection_accuracy.json"),
+        "alt_performance": first_existing("data/dashboard/wnba_alt_performance.json", "data/warehouse/wnba_alt_performance.json"),
+        "game_performance": first_existing("data/dashboard/wnba_game_performance.json", "data/warehouse/wnba_game_performance.json"),
+        "game_predictions": first_existing("data/dashboard/wnba_game_predictions_ledger.json", "data/warehouse/wnba_game_predictions_ledger.json"),
     }
 
     decision = bundle["decision_final"]
@@ -77,6 +80,8 @@ def build(target: str):
     coach = bundle["ai_coach"]
     projection = bundle["projection_ai"]
     phase5 = bundle["phase5"]
+    alt = bundle["alt_performance"]
+    game_perf = bundle["game_performance"]
 
     top = (decision.get("top_decisions") or consensus.get("top_consensus") or [])[:20]
     sim_summary = monte_carlo.get("summary") or {}
@@ -91,6 +96,8 @@ def build(target: str):
     projection_summary = projection.get("summary") or {}
     phase5_perf = phase5.get("performance") or {}
     phase5_ready = phase5.get("learning_readiness") or {}
+    alt_summary = alt.get("summary") or {}
+    game_summary = game_perf.get("summary") or {}
 
     bundle["terminal_summary"] = {
         "top_cards": top[:5],
@@ -128,6 +135,16 @@ def build(target: str):
         "books_detected": book_summary.get("books_detected", []),
         "ai_projection_rows": projection_summary.get("rows", 0),
         "coach_notes": coach_summary.get("notes", 0),
+        "alt_archived": alt_summary.get("archived_candidates", 0),
+        "alt_graded": alt_summary.get("graded", 0),
+        "alt_pending": alt_summary.get("pending", 0),
+        "alt_hit_rate": alt_summary.get("hit_rate"),
+        "alt_roi": alt_summary.get("roi"),
+        "game_graded": game_summary.get("graded_games", 0),
+        "game_spread_record": game_summary.get("spread_record", {}),
+        "game_total_record": game_summary.get("total_record", {}),
+        "game_avg_margin_error": game_summary.get("avg_margin_error"),
+        "game_avg_total_error": game_summary.get("avg_total_error"),
     }
 
     bundle = clean_json(bundle)
