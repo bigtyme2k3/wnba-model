@@ -1,12 +1,11 @@
 # WNBA Daily Intelligence Brief
 
-Generated: 2026-08-04T03:48:36.531319Z
+Generated: 2026-08-04T09:21:32.382096Z
 
-**Status:** READY
-**Slate:** 1 events, 22 fresh markets
+**Status:** STANDBY
+**Slate:** 0 events, 0 fresh markets
 
-## Top Opportunities
-
+No fresh WNBA markets begin within the active 48-hour horizon.
 
 ## Market Alerts
 
