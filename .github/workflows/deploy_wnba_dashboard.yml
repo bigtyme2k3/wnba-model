@@ -16,6 +16,7 @@ on:
       - 'patch_dashboard_game_performance.py'
       - 'patch_dashboard_v5_injury_intelligence.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
+      - 'patch_dashboard_v4_remaining_season.py'
       - 'patch_dashboard_v4_consolidated_navigation.py'
       - '.github/workflows/deploy_wnba_dashboard.yml'
 
@@ -63,7 +64,8 @@ jobs:
             patch_dashboard_alt_recovery_progress.py \
             patch_dashboard_game_performance.py \
             patch_dashboard_v5_injury_intelligence.py \
-            patch_dashboard_v5_player_prop_injury_context.py
+            patch_dashboard_v5_player_prop_injury_context.py \
+            patch_dashboard_v4_remaining_season.py
 
       - name: Build complete dashboard artifact
         run: |
@@ -75,6 +77,12 @@ jobs:
             python patch_dashboard_v5_player_prop_injury_context.py
           else
             echo "Injury payload unavailable; preserving the committed dashboard artifact."
+          fi
+
+          if [ -f data/dashboard/wnba_remaining_season_intelligence.json ]; then
+            python patch_dashboard_v4_remaining_season.py
+          else
+            echo "Remaining-season payload unavailable; preserving the committed dashboard artifact."
           fi
 
           python patch_terminal_ui.py
@@ -112,6 +120,14 @@ jobs:
           ]
           if Path('data/dashboard/wnba_alt_recovery_progress.json').exists():
               required.extend(['WNBA_ALT_RECOVERY_PROGRESS_START','ALT Auto-Fix Progress','Jobs queued','Still missing'])
+          if Path('data/dashboard/wnba_remaining_season_intelligence.json').exists():
+              required.extend([
+                  'v4-remaining-season-data',
+                  'v4-remaining-season-script',
+                  'Remaining Season Intelligence',
+                  "['remaining','Remaining Season']",
+                  "view==='remaining'",
+              ])
           injury_payload = Path('data/dashboard/wnba_injury_intelligence.json')
           if injury_payload.exists():
               required.extend([
@@ -128,7 +144,7 @@ jobs:
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
-          print('Complete dashboard, game results, ALT recovery progress and QA beacons verified.')
+          print('Complete dashboard, game results, Remaining Season, ALT recovery progress and QA beacons verified.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
