@@ -56,7 +56,7 @@ def build(payload: dict) -> str:
 .gp-grid em.win{{color:#20d89b}} .gp-grid em.loss{{color:#ff667d}} .gp-grid em.pass{{color:#f4bf4f}}
 @media(max-width:900px){{.gp-summary{{grid-template-columns:repeat(2,1fr)}}.gp-cards{{grid-template-columns:1fr}}.gp-grid{{grid-template-columns:repeat(2,1fr)}}}}
 </style>
-<section id="game-performance-view" aria-label="Game Performance">
+<section id="game-performance-view" data-view="game-performance" aria-label="Game Performance">
   <h2>Game Performance</h2>
   <p>Frozen pregame spreads, totals and projected scores graded against final results.</p>
   <div class="gp-summary">
@@ -69,18 +69,44 @@ def build(payload: dict) -> str:
   </div>
   <div class="gp-cards">{''.join(cards) or '<div class="gp-card">No graded game cards yet.</div>'}</div>
 </section>
-<script>
+<script id="game-performance-nav-script">
 (function(){{
  const view=document.getElementById('game-performance-view');
- const tabs=[...document.querySelectorAll('button,a,[role="tab"]')];
- const anchor=tabs.find(x=>x.textContent.trim()==='Performance') || tabs.find(x=>x.textContent.trim()==='Results');
- if(!anchor||!view)return;
- let btn=[...tabs].find(x=>x.textContent.trim()==='Game Performance');
- if(!btn){{btn=anchor.cloneNode(true);btn.textContent='Game Performance';anchor.parentNode.insertBefore(btn,anchor);}}
- function show(){{document.querySelectorAll('main>section,.view,[data-view]').forEach(x=>{{if(x!==view)x.style.display='none';}});view.style.display='block';view.classList.add('active');window.scrollTo(0,0);}}
- btn.addEventListener('click',e=>{{e.preventDefault();show();}});
- document.querySelectorAll('button,a,[role="tab"]').forEach(x=>{{if(x!==btn)x.addEventListener('click',()=>{{view.style.display='none';view.classList.remove('active');}});}});
- document.body.appendChild(view);
+ if(!view)return;
+ function allTabs(){{return [...document.querySelectorAll('button,a,[role="tab"]')];}}
+ function navHost(){{
+   const games=allTabs().find(x=>x.textContent.trim()==='Games');
+   return games?.parentElement || document.querySelector('nav') || document.querySelector('[role="tablist"]');
+ }}
+ function ensureButton(){{
+   let btn=document.querySelector('[data-wv4-tab="game-performance"]');
+   if(btn)return btn;
+   const games=allTabs().find(x=>x.textContent.trim()==='Games');
+   const template=games || allTabs().find(x=>x.textContent.trim()==='Game Props') || allTabs()[0];
+   const host=navHost();
+   if(!template||!host)return null;
+   btn=template.cloneNode(true);
+   btn.textContent='Game Performance';
+   btn.setAttribute('data-wv4-tab','game-performance');
+   btn.setAttribute('aria-label','Game Performance results');
+   btn.removeAttribute('id');
+   if(games && games.nextSibling)host.insertBefore(btn,games.nextSibling); else host.appendChild(btn);
+   btn.addEventListener('click',e=>{{e.preventDefault();show();}});
+   return btn;
+ }}
+ function show(){{
+   document.querySelectorAll('main>section,.view,[data-view]').forEach(x=>{{if(x!==view)x.style.display='none';}});
+   view.style.display='block';view.classList.add('active');window.scrollTo(0,0);
+ }}
+ function wireOtherTabs(){{
+   allTabs().forEach(x=>{{if(x.getAttribute('data-wv4-tab')!=='game-performance'&&!x.dataset.gpBound){{x.dataset.gpBound='1';x.addEventListener('click',()=>{{view.style.display='none';view.classList.remove('active');}});}}}});
+ }}
+ function install(){{ensureButton();wireOtherTabs();}}
+ install();
+ document.addEventListener('DOMContentLoaded',install,{{once:true}});
+ const observer=new MutationObserver(()=>install());
+ observer.observe(document.body,{{childList:true,subtree:true}});
+ setTimeout(()=>observer.disconnect(),15000);
 }})();
 </script>
 {END}'''
@@ -95,7 +121,7 @@ def main() -> None:
         html = html.split(START)[0] + html.split(END, 1)[1]
     html = html.replace("</body>", build(payload) + "\n</body>")
     HTML.write_text(html, encoding="utf-8")
-    print("Game Performance dashboard injected")
+    print("Game Performance dashboard and persistent navigation injected")
 
 
 if __name__ == "__main__":
