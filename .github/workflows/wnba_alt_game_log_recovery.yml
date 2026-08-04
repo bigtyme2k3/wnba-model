@@ -2,6 +2,11 @@ name: WNBA ALT Game Log Recovery
 
 on:
   workflow_dispatch:
+    inputs:
+      recovery_date:
+        description: 'Single completed date to recover (YYYY-MM-DD); defaults to yesterday ET'
+        required: false
+        type: string
   push:
     branches: [main]
     paths:
@@ -44,6 +49,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Resolve one completed recovery date
+        run: |
+          REQUESTED="${{ github.event.inputs.recovery_date }}"
+          if [ -z "$REQUESTED" ]; then
+            REQUESTED=$(python - <<'PY'
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          print((datetime.now(ZoneInfo('America/New_York')).date() - timedelta(days=1)).isoformat())
+          PY
+          )
+          fi
+          python - <<PY
+          from datetime import date
+          value='$REQUESTED'
+          date.fromisoformat(value)
+          print('ALT recovery target:', value)
+          PY
+          echo "RECOVERY_REQUEST_DATE=$REQUESTED" >> "$GITHUB_ENV"
+
       - name: Compile recovery tools
         run: |
           python -m py_compile \
@@ -56,9 +80,9 @@ jobs:
 
       - name: Build targeted recovery plan
         run: |
-          python wnba_alt_game_log_recovery.py
+          python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE"
           cp data/dashboard/wnba_alt_game_log_recovery.json /tmp/alt_recovery_before.json
-          DATES=$(python wnba_alt_game_log_recovery.py --print-dates)
+          DATES=$(python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE" --print-dates)
           echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
           echo "Target dates: ${DATES:-none}"
 
@@ -93,44 +117,46 @@ jobs:
         if: env.RECOVERY_DATES != ''
         run: |
           python - <<'PY'
-          import json,re,unicodedata
+          import json,re,unicodedata,os
           def norm(v):
               s=unicodedata.normalize('NFKD',str(v or '')).encode('ascii','ignore').decode().lower()
               return ' '.join(re.sub(r'[^a-z0-9]+',' ',s).split())
           def day(r): return str(r.get('game_date') or r.get('date') or r.get('event_date') or '')[:10]
+          target=os.environ['RECOVERY_REQUEST_DATE']
           warehouse=json.load(open('data/warehouse/wnba_player_game_logs.json'))
           diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           records=[r for r in warehouse.get('records',[]) if isinstance(r,dict)]
-          inspector=[r for r in diagnostics.get('inspector',[]) if isinstance(r,dict)]
+          inspector=[r for r in diagnostics.get('inspector',[]) if isinstance(r,dict) and str(r.get('date') or '')[:10] == target]
           index={(norm(r.get('player') or r.get('player_name')),day(r)) for r in records}
           matches=sum((norm(r.get('player')),str(r.get('date') or '')[:10]) in index for r in inspector)
-          print({'canonical_records':len(records),'pending_rows':len(inspector),'player_date_matches':matches})
+          print({'target_date':target,'canonical_records':len(records),'target_pending_rows':len(inspector),'player_date_matches':matches})
           if not records: raise SystemExit('Canonical warehouse is empty before ALT grading')
           PY
 
-      - name: Regrade only affected dates
+      - name: Regrade only affected date
         if: env.RECOVERY_DATES != ''
         run: |
-          for DAY in $RECOVERY_DATES; do
-            python wnba_alt_performance_tracker.py --date "$DAY" --grade
-          done
+          python wnba_alt_performance_tracker.py --date "$RECOVERY_REQUEST_DATE" --grade
           TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
-          python wnba_alt_game_log_recovery.py
+          python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE"
 
       - name: Verify recovery accounting
         run: |
           python - <<'PY'
-          import json
+          import json,os
           recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
           diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           alt=json.load(open('data/dashboard/wnba_alt_performance.json'))
+          target=os.environ['RECOVERY_REQUEST_DATE']
           pending=int((alt.get('summary') or {}).get('pending') or 0)
           diagnosed=int((diagnostics.get('summary') or {}).get('pending_rows') or 0)
           assert pending == diagnosed, (pending, diagnosed)
+          assert recovery.get('requested_date') == target, recovery
           assert recovery.get('status') in {'ready','nothing_to_recover'}, recovery
-          print({'pending':pending,'recovery_status':recovery.get('status')})
+          remaining=sum(1 for r in diagnostics.get('inspector',[]) if str(r.get('date') or '')[:10] == target)
+          print({'target_date':target,'target_remaining':remaining,'global_pending':pending,'recovery_status':recovery.get('status')})
           PY
 
       - name: Publish recovery data only
@@ -138,7 +164,7 @@ jobs:
           git config user.name "WNBA Recovery Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Recover pending WNBA ALT game logs" \
+            "Recover WNBA ALT game logs for $RECOVERY_REQUEST_DATE" \
             'data/raw/wnba_boxscores_*.json' \
             'data/history/wnba_alt_streak_history.jsonl' \
             'data/history/wnba_player_game_logs_before_build.json' \
