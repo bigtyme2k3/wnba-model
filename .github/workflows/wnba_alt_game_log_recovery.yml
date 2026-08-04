@@ -9,6 +9,9 @@ on:
       - 'wnba_espn_boxscore_fallback.py'
       - 'wnba_alt_pending_diagnostics.py'
       - 'patch_dashboard_alt_recovery_progress.py'
+      - 'wnba_player_game_log_archive.py'
+      - 'wnba_player_game_log_warehouse.py'
+      - 'wnba_alt_performance_tracker.py'
       - '.github/workflows/wnba_alt_game_log_recovery.yml'
 
 permissions:
@@ -95,11 +98,14 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          import re
+          import unicodedata
           from collections import Counter
           from pathlib import Path
 
           def norm(value):
-              return " ".join(str(value or "").strip().lower().replace("’", "'").split())
+              text=unicodedata.normalize('NFKD',str(value or '')).encode('ascii','ignore').decode('ascii').lower()
+              return ' '.join(re.sub(r"[^a-z0-9]+",' ',text).split())
 
           warehouse_path=Path('data/warehouse/wnba_player_game_logs.json')
           diagnostics_path=Path('data/dashboard/wnba_alt_pending_diagnostics.json')
