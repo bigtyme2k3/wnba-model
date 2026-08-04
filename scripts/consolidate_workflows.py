@@ -16,6 +16,7 @@ REPORT = ROOT / "docs" / "WORKFLOW_CONSOLIDATION_AUDIT.md"
 CANONICAL_DOC_OWNER = "deploy_wnba_dashboard.yml"
 KEEP = {
     CANONICAL_DOC_OWNER,
+    "wnba_workflow_consolidation.yml",
     "wnba_consolidated_hourly_intelligence.yml",
     "wnba_daily_slate_rollover.yml",
     "wnba_live_result_grader.yml",
