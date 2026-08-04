@@ -106,6 +106,9 @@ jobs:
               'ALT Performance',
               'Game Performance',
               'WNBA_GAME_PERFORMANCE_START',
+              'game-performance-nav-script',
+              'data-wv4-tab="game-performance"',
+              'Game Performance results',
               'Frozen pregame spreads, totals and projected scores',
               'Spread record',
               'Total record',
@@ -145,7 +148,7 @@ jobs:
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
-          print('Complete dashboard, game results, Remaining Season, ALT recovery progress and QA beacons verified.')
+          print('Complete dashboard, visible Game Performance results, Remaining Season, ALT recovery progress and QA beacons verified.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
