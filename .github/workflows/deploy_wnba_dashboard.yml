@@ -11,6 +11,7 @@ on:
       - 'patch_terminal_ui.py'
       - 'patch_dashboard_build_verification.py'
       - 'patch_dashboard_alt_grading_status.py'
+      - 'wnba_alt_pending_diagnostics.py'
       - 'patch_dashboard_v5_injury_intelligence.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_consolidated_navigation.py'
@@ -56,6 +57,7 @@ jobs:
             patch_terminal_ui.py \
             patch_dashboard_build_verification.py \
             patch_dashboard_alt_grading_status.py \
+            wnba_alt_pending_diagnostics.py \
             patch_dashboard_v5_injury_intelligence.py \
             patch_dashboard_v5_player_prop_injury_context.py
 
@@ -73,6 +75,7 @@ jobs:
 
           python patch_terminal_ui.py
           python patch_dashboard_alt_grading_status.py
+          python wnba_alt_pending_diagnostics.py
           python patch_dashboard_build_verification.py
 
       - name: Verify complete dashboard artifact
@@ -88,6 +91,9 @@ jobs:
               'WNBA_ALT_GRADING_STATUS_START',
               'ALT Grading Checkpoint',
               'Screenshot-verifiable grading freshness',
+              'WNBA_ALT_PENDING_DIAGNOSTICS_START',
+              'Pending ALT Diagnostics',
+              'Pending rows',
               'WNBA_BUILD_BEACON_START',
               'Games QA Beacon',
               'screenshot-verifiable deployment marker',
@@ -108,7 +114,7 @@ jobs:
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
-          print('Complete dashboard, ALT grading checkpoint and Games QA beacon verified.')
+          print('Complete dashboard, ALT diagnostics and QA beacons verified.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
