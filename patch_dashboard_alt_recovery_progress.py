@@ -32,22 +32,43 @@ def build(before_path: Path | None = None) -> dict:
     if before_path and before_path.exists():
         initial = load(before_path)
         previous_queued = int((initial.get("before") or {}).get("pending") or initial.get("targets", {}).get("records") or previous_queued)
-    current = int((diagnostics.get("summary") or {}).get("pending_rows") or 0)
-    recovered = max(0, previous_queued - current)
-    dates = recovery.get("targets", {}).get("dates") or []
-    by_date = {x.get("date"): int(x.get("records") or 0) for x in recovery.get("targets", {}).get("by_date") or []}
+
+    inspector = [x for x in diagnostics.get("inspector", []) if isinstance(x, dict)]
+    if not inspector:
+        for group in diagnostics.get("groups", []):
+            if isinstance(group, dict):
+                inspector.extend(x for x in group.get("records", []) if isinstance(x, dict))
+
+    current = int((diagnostics.get("summary") or {}).get("pending_rows") or len(inspector) or 0)
+    # A recovery queue can never be smaller than the current unresolved population.
+    # This prevents stale pre-run snapshots from reporting impossible values such as
+    # 74 queued / 110 still missing after new archive rows are added.
+    queued = max(previous_queued, current)
+    recovered = max(0, queued - current)
+
+    configured_dates = [str(x) for x in recovery.get("targets", {}).get("dates") or []]
+    current_dates = sorted({str(r.get("date") or "")[:10] for r in inspector if r.get("date")})
+    dates = sorted(set(configured_dates) | set(current_dates))
+    by_date = {str(x.get("date")): int(x.get("records") or 0) for x in recovery.get("targets", {}).get("by_date") or []}
+    current_by_date: dict[str, int] = {}
+    for row in inspector:
+        day = str(row.get("date") or "")[:10]
+        if day:
+            current_by_date[day] = current_by_date.get(day, 0) + 1
+
     timeline = []
-    for date in dates:
-        remaining = sum(1 for r in diagnostics.get("inspector", []) if str(r.get("date")) == str(date))
-        targeted = by_date.get(date, remaining)
+    for day in dates:
+        remaining = current_by_date.get(day, 0)
+        targeted = max(by_date.get(day, 0), remaining)
         state = "complete" if remaining == 0 else ("partial" if remaining < targeted else "waiting")
-        timeline.append({"date": date, "targeted": targeted, "remaining": remaining, "recovered": max(0, targeted-remaining), "state": state})
-    pct = round((recovered / previous_queued * 100), 1) if previous_queued else 100.0
+        timeline.append({"date": day, "targeted": targeted, "remaining": remaining, "recovered": max(0, targeted-remaining), "state": state})
+    pct = round((recovered / queued * 100), 1) if queued else 100.0
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "complete" if current == 0 else ("progress" if recovered else "waiting"),
-        "summary": {"queued": previous_queued, "recovered": recovered, "still_missing": current, "progress_pct": pct},
+        "summary": {"queued": queued, "recovered": recovered, "still_missing": current, "progress_pct": pct},
         "timeline": timeline,
+        "queue_reconciled_to_current_diagnostics": True,
     }
 
 
