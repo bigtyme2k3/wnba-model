@@ -1,6 +1,6 @@
 # WNBA V4 QA Report
 
-Generated: `2026-08-03T16:11:56.012977+00:00`
+Generated: `2026-08-04T16:03:27.512618+00:00`
 
 **Overall:** YELLOW — 100.0/100
 
@@ -9,8 +9,8 @@ Operating context: `READY` — Pipeline ready for live model execution.
 ## Summary
 
 - Modules: 25 green, 0 yellow, 0 red
-- Dashboard JSON: 173 checked, 0 invalid, 0 expected empty, 7 unexpected empty
-- Workflows: 121 checked, 0 high risk
+- Dashboard JSON: 177 checked, 0 invalid, 0 expected empty, 6 unexpected empty
+- Workflows: 124 checked, 0 high risk
 - Forward validation: green
 
 ## Module QA
@@ -54,7 +54,6 @@ Operating context: `READY` — Pipeline ready for live model execution.
 - Unexpected empty JSON: data/dashboard/wnba_alt_matchup_mapping_repair.json
 - Unexpected empty JSON: data/dashboard/wnba_alt_schedule_mapping_repair.json
 - Unexpected empty JSON: data/dashboard/wnba_clv_summary.json
-- Unexpected empty JSON: data/dashboard/wnba_portfolio_dashboard.json
 - Unexpected empty JSON: data/dashboard/wnba_portfolio_optimizer_v2.json
 
 ## Workflow risk
@@ -65,7 +64,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/daily_action_report_v2_extension.yml` | 9 | 0 | 0.0 | False | low |
 | `.github/workflows/deepseek_master_prediction_extension.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/deepseek_portfolio_optimizer_extension.yml` | 5 | 0 | 0.0 | False | low |
-| `.github/workflows/deploy_wnba_dashboard.yml` | 7 | 0 | 0.0 | False | low |
+| `.github/workflows/deploy_wnba_dashboard.yml` | 9 | 0 | 0.0 | False | low |
 | `.github/workflows/market_timing_extension.yml` | 9 | 0 | 0.0 | False | low |
 | `.github/workflows/minutes_usage_extension.yml` | 9 | 0 | 0.0 | False | low |
 | `.github/workflows/results_review_center_extension.yml` | 9 | 1 | 0.111 | False | low |
@@ -73,6 +72,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/v4_qa.yml` | 8 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_active_slate_scanner.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_adaptive_confidence.yml` | 6 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_alt_game_log_recovery.yml` | 12 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_alt_market_watch.yml` | 13 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_alt_tab_repair.yml` | 1 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_automated_trend_discovery.yml` | 6 | 0 | 0.0 | False | low |
@@ -88,6 +88,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/wnba_daily_ai_report.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_daily_edge_engine.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_daily_intelligence_brief.yml` | 6 | 0 | 0.0 | False | low |
+| `.github/workflows/wnba_daily_slate_rollover.yml` | 9 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_data_warehouse.yml` | 5 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_ensemble_intelligence.yml` | 6 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_entry_window_intelligence.yml` | 9 | 0 | 0.0 | False | low |
@@ -114,6 +115,7 @@ Operating context: `READY` — Pipeline ready for live model execution.
 | `.github/workflows/wnba_model_explainability.yml` | 1 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_model_picks_ledger.yml` | 1 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_model_quality_guardrails.yml` | 10 | 2 | 0.2 | False | low |
+| `.github/workflows/wnba_model_validation_learning.yml` | 10 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_monte_carlo_live_test.yml` | 9 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_monte_carlo_scenarios.yml` | 7 | 0 | 0.0 | False | low |
 | `.github/workflows/wnba_multi_source_fetch.yml` | 11 | 0 | 0.0 | False | low |
