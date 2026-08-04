@@ -12,6 +12,7 @@ on:
       - 'patch_dashboard_build_verification.py'
       - 'patch_dashboard_alt_grading_status.py'
       - 'wnba_alt_pending_diagnostics.py'
+      - 'patch_dashboard_alt_recovery_progress.py'
       - 'patch_dashboard_v5_injury_intelligence.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_consolidated_navigation.py'
@@ -58,6 +59,7 @@ jobs:
             patch_dashboard_build_verification.py \
             patch_dashboard_alt_grading_status.py \
             wnba_alt_pending_diagnostics.py \
+            patch_dashboard_alt_recovery_progress.py \
             patch_dashboard_v5_injury_intelligence.py \
             patch_dashboard_v5_player_prop_injury_context.py
 
@@ -76,6 +78,9 @@ jobs:
           python patch_terminal_ui.py
           python patch_dashboard_alt_grading_status.py
           python wnba_alt_pending_diagnostics.py
+          if [ -f data/dashboard/wnba_alt_recovery_progress.json ]; then
+            python patch_dashboard_alt_recovery_progress.py
+          fi
           python patch_dashboard_build_verification.py
 
       - name: Verify complete dashboard artifact
@@ -98,6 +103,8 @@ jobs:
               'Games QA Beacon',
               'screenshot-verifiable deployment marker',
           ]
+          if Path('data/dashboard/wnba_alt_recovery_progress.json').exists():
+              required.extend(['WNBA_ALT_RECOVERY_PROGRESS_START','ALT Auto-Fix Progress','Jobs queued','Still missing'])
           injury_payload = Path('data/dashboard/wnba_injury_intelligence.json')
           if injury_payload.exists():
               required.extend([
@@ -114,7 +121,7 @@ jobs:
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
-          print('Complete dashboard, ALT diagnostics and QA beacons verified.')
+          print('Complete dashboard, ALT recovery progress and QA beacons verified.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
