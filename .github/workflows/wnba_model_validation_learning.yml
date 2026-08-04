@@ -101,6 +101,8 @@ jobs:
           assert summary.get('pending',0)>=0, summary
           assert diag.get('status')=='ok', diag
           assert diag.get('summary',{}).get('pending_rows',-1)>=0, diag
+          assert isinstance(diag.get('inspector'),list), diag.keys()
+          assert len(diag.get('inspector',[]))==diag.get('summary',{}).get('pending_rows'), diag['summary']
           assert games.get('summary',{}).get('graded_games',0)>=0, games
           assert 'spread' in games and 'total' in games, games
           assert ledger.get('status')=='ok', ledger
@@ -112,6 +114,9 @@ jobs:
           assert 'ALT Grading Checkpoint' in html
           assert 'WNBA_ALT_PENDING_DIAGNOSTICS_START' in html
           assert 'Pending ALT Diagnostics' in html
+          assert 'Pending Inspector' in html
+          assert 'Expected game ID' in html
+          assert 'Auto-fix' in html
           print('MODEL VALIDATION VERIFIED',summary,diag['summary'],games['summary'])
           PY
       - name: Publish grading and performance outputs
