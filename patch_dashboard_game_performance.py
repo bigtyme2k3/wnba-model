@@ -73,10 +73,45 @@ def build(payload: dict) -> str:
 (function(){{
  const view=document.getElementById('game-performance-view');
  if(!view)return;
+ const hiddenNodes=new Set();
  function allTabs(){{return [...document.querySelectorAll('button,a,[role="tab"]')];}}
  function navHost(){{
    const games=allTabs().find(x=>x.textContent.trim()==='Games');
    return games?.parentElement || document.querySelector('nav') || document.querySelector('[role="tablist"]');
+ }}
+ function restoreDashboard(){{
+   hiddenNodes.forEach(node=>{{
+     if(!node.isConnected)return;
+     node.style.display=node.dataset.gpPreviousDisplay||'';
+     delete node.dataset.gpPreviousDisplay;
+   }});
+   hiddenNodes.clear();
+   view.style.display='none';
+   view.classList.remove('active');
+   const btn=document.querySelector('[data-wv4-tab="game-performance"]');
+   if(btn){{btn.classList.remove('active');btn.setAttribute('aria-selected','false');}}
+ }}
+ function contentPanels(){{
+   const selectors='main > section, main > .view, section.view, section[data-view], main > div[data-view]';
+   return [...document.querySelectorAll(selectors)].filter(node=>
+     node!==view && !node.closest('nav,[role="tablist"]') && !node.matches('button,a,[role="tab"]')
+   );
+ }}
+ function show(){{
+   restoreDashboard();
+   contentPanels().forEach(node=>{{
+     const visible=getComputedStyle(node).display!=='none';
+     if(!visible)return;
+     node.dataset.gpPreviousDisplay=node.style.display||'';
+     hiddenNodes.add(node);
+     node.style.display='none';
+   }});
+   allTabs().forEach(tab=>{{tab.classList.remove('active');tab.setAttribute('aria-selected','false');}});
+   const btn=document.querySelector('[data-wv4-tab="game-performance"]');
+   if(btn){{btn.classList.add('active');btn.setAttribute('aria-selected','true');}}
+   view.style.display='block';
+   view.classList.add('active');
+   window.scrollTo(0,0);
  }}
  function ensureButton(){{
    let btn=document.querySelector('[data-wv4-tab="game-performance"]');
@@ -87,19 +122,26 @@ def build(payload: dict) -> str:
    if(!template||!host)return null;
    btn=template.cloneNode(true);
    btn.textContent='Game Performance';
+   [...btn.attributes].forEach(attr=>{{if(attr.name.startsWith('data-'))btn.removeAttribute(attr.name);}});
    btn.setAttribute('data-wv4-tab','game-performance');
    btn.setAttribute('aria-label','Game Performance results');
+   btn.setAttribute('aria-selected','false');
    btn.removeAttribute('id');
+   btn.removeAttribute('onclick');
+   btn.removeAttribute('data-view');
+   btn.removeAttribute('data-tab');
+   btn.removeAttribute('data-target');
+   if(btn.tagName==='A')btn.setAttribute('href','#game-performance');
    if(games && games.nextSibling)host.insertBefore(btn,games.nextSibling); else host.appendChild(btn);
-   btn.addEventListener('click',e=>{{e.preventDefault();show();}});
+   btn.addEventListener('click',e=>{{e.preventDefault();e.stopPropagation();show();}});
    return btn;
  }}
- function show(){{
-   document.querySelectorAll('main>section,.view,[data-view]').forEach(x=>{{if(x!==view)x.style.display='none';}});
-   view.style.display='block';view.classList.add('active');window.scrollTo(0,0);
- }}
  function wireOtherTabs(){{
-   allTabs().forEach(x=>{{if(x.getAttribute('data-wv4-tab')!=='game-performance'&&!x.dataset.gpBound){{x.dataset.gpBound='1';x.addEventListener('click',()=>{{view.style.display='none';view.classList.remove('active');}});}}}});
+   allTabs().forEach(tab=>{{
+     if(tab.getAttribute('data-wv4-tab')==='game-performance'||tab.dataset.gpBound)return;
+     tab.dataset.gpBound='1';
+     tab.addEventListener('click',()=>restoreDashboard(),{{capture:true}});
+   }});
  }}
  function install(){{ensureButton();wireOtherTabs();}}
  install();
@@ -121,7 +163,7 @@ def main() -> None:
         html = html.split(START)[0] + html.split(END, 1)[1]
     html = html.replace("</body>", build(payload) + "\n</body>")
     HTML.write_text(html, encoding="utf-8")
-    print("Game Performance dashboard and persistent navigation injected")
+    print("Game Performance dashboard and navigation-safe routing injected")
 
 
 if __name__ == "__main__":
