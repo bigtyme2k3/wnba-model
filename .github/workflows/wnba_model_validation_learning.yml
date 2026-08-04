@@ -11,6 +11,7 @@ on:
     branches: [main]
     paths:
       - 'wnba_alt_performance_tracker.py'
+      - 'wnba_alt_pending_diagnostics.py'
       - 'wnba_game_performance.py'
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
@@ -57,7 +58,7 @@ jobs:
               print(f'GRADE_DATE_{i}={target-timedelta(days=i)}')
           PY
       - name: Validate analytics code
-        run: python -m py_compile wnba_alt_performance_tracker.py wnba_game_predictions_ledger.py wnba_game_performance.py wnba_terminal_ui.py patch_terminal_ui.py patch_dashboard_alt_grading_status.py
+        run: python -m py_compile wnba_alt_performance_tracker.py wnba_alt_pending_diagnostics.py wnba_game_predictions_ledger.py wnba_game_performance.py wnba_terminal_ui.py patch_terminal_ui.py patch_dashboard_alt_grading_status.py
       - name: Refresh official finals and player logs
         run: |
           python collect_wehoop.py --current --out data/raw
@@ -85,17 +86,21 @@ jobs:
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
           python patch_dashboard_alt_grading_status.py
+          python wnba_alt_pending_diagnostics.py
       - name: Verify grading outputs
         run: |
           python - <<'PY'
           import json
           alt=json.load(open('data/dashboard/wnba_alt_performance.json'))
+          diag=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           games=json.load(open('data/dashboard/wnba_game_performance.json'))
           ledger=json.load(open('data/dashboard/wnba_game_predictions_ledger.json'))
           terminal=json.load(open('data/dashboard/terminal_ui.json'))
           summary=alt.get('summary',{})
           assert summary.get('graded',0)>0, alt
           assert summary.get('pending',0)>=0, summary
+          assert diag.get('status')=='ok', diag
+          assert diag.get('summary',{}).get('pending_rows',-1)>=0, diag
           assert games.get('summary',{}).get('graded_games',0)>=0, games
           assert 'spread' in games and 'total' in games, games
           assert ledger.get('status')=='ok', ledger
@@ -105,7 +110,9 @@ jobs:
           assert 'Game Performance' in html and 'ALT Performance' in html
           assert 'WNBA_ALT_GRADING_STATUS_START' in html
           assert 'ALT Grading Checkpoint' in html
-          print('MODEL VALIDATION VERIFIED',summary,games['summary'])
+          assert 'WNBA_ALT_PENDING_DIAGNOSTICS_START' in html
+          assert 'Pending ALT Diagnostics' in html
+          print('MODEL VALIDATION VERIFIED',summary,diag['summary'],games['summary'])
           PY
       - name: Publish grading and performance outputs
         run: |
@@ -117,6 +124,8 @@ jobs:
             'data/history/wnba_game_predictions.jsonl' \
             'data/dashboard/wnba_alt_performance.json' \
             'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_pending_diagnostics.json' \
+            'data/warehouse/wnba_alt_pending_diagnostics.json' \
             'data/dashboard/wnba_game_predictions_ledger.json' \
             'data/warehouse/wnba_game_predictions_ledger.json' \
             'data/dashboard/wnba_game_performance.json' \
