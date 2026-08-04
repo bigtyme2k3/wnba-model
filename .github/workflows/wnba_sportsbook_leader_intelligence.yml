@@ -6,7 +6,7 @@ on:
     - cron: '50 */3 * * *'
 
 concurrency:
-  group: wnba-sportsbook-leader-intelligence
+  group: wnba-generated-intelligence-writer
   cancel-in-progress: false
 
 jobs:
@@ -52,15 +52,18 @@ jobs:
       - name: Show sportsbook leader summary
         run: cat data/dashboard/wnba_sportsbook_leader_summary.json
 
-      - name: Commit regenerated intelligence
+      - name: Publish regenerated intelligence atomically
         run: |
           git config user.name 'WNBA Sportsbook Leader Bot'
           git config user.email 'actions@github.com'
-          git add data/market data/forecast data/dashboard
-          if git diff --cached --quiet; then
-            echo 'No sportsbook leader changes to commit.'
-            exit 0
-          fi
-          git commit -m 'Refresh WNBA sportsbook leader intelligence'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          bash scripts/atomic_generated_push.sh \
+            'Refresh WNBA sportsbook leader intelligence' \
+            'data/market/*.json' \
+            'data/forecast/*.json' \
+            'data/forecast/*.md' \
+            'data/dashboard/wnba_market_timeline_summary.json' \
+            'data/dashboard/wnba_line_movement_summary.json' \
+            'data/dashboard/wnba_steam_sharp_summary.json' \
+            'data/dashboard/wnba_clv_intelligence.json' \
+            'data/dashboard/wnba_closing_line_predictor.json' \
+            'data/dashboard/wnba_sportsbook_leader_summary.json'
