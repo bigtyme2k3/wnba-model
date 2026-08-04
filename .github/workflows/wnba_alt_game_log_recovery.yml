@@ -94,7 +94,6 @@ jobs:
         run: |
           python - <<'PY'
           import json,re,unicodedata
-          from pathlib import Path
           def norm(v):
               s=unicodedata.normalize('NFKD',str(v or '')).encode('ascii','ignore').decode().lower()
               return ' '.join(re.sub(r'[^a-z0-9]+',' ',s).split())
@@ -119,13 +118,6 @@ jobs:
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
           python wnba_alt_game_log_recovery.py
-
-      - name: Build recovery progress data
-        run: |
-          if [ -f patch_dashboard_alt_recovery_progress.py ]; then
-            python patch_dashboard_alt_recovery_progress.py --before /tmp/alt_recovery_before.json --data-only 2>/dev/null || \
-            python wnba_alt_game_log_recovery.py
-          fi
 
       - name: Verify recovery accounting
         run: |
@@ -157,6 +149,4 @@ jobs:
             'data/dashboard/wnba_alt_pending_diagnostics.json' \
             'data/warehouse/wnba_alt_pending_diagnostics.json' \
             'data/dashboard/wnba_alt_game_log_recovery.json' \
-            'data/warehouse/wnba_alt_game_log_recovery.json' \
-            'data/dashboard/wnba_alt_recovery_progress.json' \
-            'data/warehouse/wnba_alt_recovery_progress.json'
+            'data/warehouse/wnba_alt_game_log_recovery.json'
