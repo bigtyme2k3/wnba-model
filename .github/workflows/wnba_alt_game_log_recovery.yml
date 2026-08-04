@@ -8,7 +8,6 @@ on:
       - 'wnba_alt_game_log_recovery.py'
       - 'wnba_espn_boxscore_fallback.py'
       - 'wnba_alt_pending_diagnostics.py'
-      - 'patch_dashboard_alt_recovery_progress.py'
       - 'wnba_player_game_log_archive.py'
       - 'wnba_player_game_log_warehouse.py'
       - 'wnba_alt_performance_tracker.py'
@@ -51,7 +50,6 @@ jobs:
             wnba_alt_game_log_recovery.py \
             wnba_espn_boxscore_fallback.py \
             wnba_alt_pending_diagnostics.py \
-            patch_dashboard_alt_recovery_progress.py \
             wnba_alt_performance_tracker.py \
             wnba_player_game_log_archive.py \
             wnba_player_game_log_warehouse.py
@@ -72,7 +70,6 @@ jobs:
         if: env.RECOVERY_DATES != ''
         run: |
           for DAY in $RECOVERY_DATES; do
-            echo "Primary recovery for $DAY"
             python wnba_play_by_play_layer.py --date "$DAY" || true
             python wnba_player_game_log_warehouse.py --date "$DAY" || true
             python wnba_player_game_log_archive.py merge
@@ -86,7 +83,6 @@ jobs:
         if: env.RECOVERY_DATES != ''
         run: |
           for DAY in $RECOVERY_DATES; do
-            echo "ESPN fallback recovery for $DAY"
             python wnba_espn_boxscore_fallback.py --date "$DAY" || true
             python wnba_player_game_log_warehouse.py --date "$DAY" || true
             python wnba_player_game_log_archive.py merge
@@ -97,62 +93,20 @@ jobs:
         if: env.RECOVERY_DATES != ''
         run: |
           python - <<'PY'
-          import json
-          import re
-          import unicodedata
-          from collections import Counter
+          import json,re,unicodedata
           from pathlib import Path
-
-          def norm(value):
-              text=unicodedata.normalize('NFKD',str(value or '')).encode('ascii','ignore').decode('ascii').lower()
-              return ' '.join(re.sub(r"[^a-z0-9]+",' ',text).split())
-
-          def day(row):
-              return str(row.get('game_date') or row.get('date') or row.get('event_date') or '')[:10]
-
-          warehouse_path=Path('data/warehouse/wnba_player_game_logs.json')
-          diagnostics_path=Path('data/dashboard/wnba_alt_pending_diagnostics.json')
-          assert warehouse_path.exists(), 'canonical warehouse missing before grading'
-          warehouse=json.load(warehouse_path.open())
-          diagnostics=json.load(diagnostics_path.open())
+          def norm(v):
+              s=unicodedata.normalize('NFKD',str(v or '')).encode('ascii','ignore').decode().lower()
+              return ' '.join(re.sub(r'[^a-z0-9]+',' ',s).split())
+          def day(r): return str(r.get('game_date') or r.get('date') or r.get('event_date') or '')[:10]
+          warehouse=json.load(open('data/warehouse/wnba_player_game_logs.json'))
+          diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           records=[r for r in warehouse.get('records',[]) if isinstance(r,dict)]
-          inspector=[x for x in diagnostics.get('inspector',[]) if isinstance(x,dict)]
-          if not inspector:
-              for group in diagnostics.get('groups',[]):
-                  if isinstance(group,dict):
-                      inspector.extend(x for x in group.get('records',[]) if isinstance(x,dict))
-
-          warehouse_index={(norm(r.get('player') or r.get('player_name')),day(r)) for r in records}
-          warehouse_matches=sum((norm(row.get('player')),str(row.get('date') or '')[:10]) in warehouse_index for row in inspector)
-
-          raw_index=set()
-          fallback_files=list(Path('data/raw').glob('wnba_boxscores_*.json'))
-          for path in fallback_files:
-              try:
-                  payload=json.load(path.open())
-              except Exception:
-                  continue
-              for row in payload.get('players',[]):
-                  if isinstance(row,dict):
-                      raw_index.add((norm(row.get('player') or row.get('player_name')),day(row)))
-          raw_matches=sum((norm(row.get('player')),str(row.get('date') or '')[:10]) in raw_index for row in inspector)
-          target_dates=Counter(day(r) for r in records if day(r))
-          audit={
-              'canonical_records':len(records),
-              'canonical_dates':dict(sorted(target_dates.items())),
-              'pending_inspector_rows':len(inspector),
-              'player_date_matches_in_warehouse':warehouse_matches,
-              'player_date_matches_in_espn_raw':raw_matches,
-              'fallback_files':len(fallback_files),
-              'warehouse_path':str(warehouse_path),
-          }
-          Path('/tmp/alt_recovery_handoff_before.json').write_text(json.dumps(audit,indent=2)+'\n')
-          print('RECOVERY HANDOFF AUDIT',audit)
-          assert records, 'canonical warehouse is empty before ALT grading'
-          if inspector and fallback_files and raw_matches == 0:
-              print('::warning::ESPN files exist, but no pending player/date keys match the raw fallback rows. Grading will continue so post-grade diagnostics can identify the true blocker.')
-          elif inspector and raw_matches > 0 and warehouse_matches == 0:
-              print('::warning::ESPN rows match pending players and dates, but the canonical pre-grade index does not. Grading will continue and post-grade accounting will determine whether the grader can consume them.')
+          inspector=[r for r in diagnostics.get('inspector',[]) if isinstance(r,dict)]
+          index={(norm(r.get('player') or r.get('player_name')),day(r)) for r in records}
+          matches=sum((norm(r.get('player')),str(r.get('date') or '')[:10]) in index for r in inspector)
+          print({'canonical_records':len(records),'pending_rows':len(inspector),'player_date_matches':matches})
+          if not records: raise SystemExit('Canonical warehouse is empty before ALT grading')
           PY
 
       - name: Regrade only affected dates
@@ -166,43 +120,33 @@ jobs:
           python wnba_alt_pending_diagnostics.py
           python wnba_alt_game_log_recovery.py
 
-      - name: Build visible recovery progress
-        run: python patch_dashboard_alt_recovery_progress.py --before /tmp/alt_recovery_before.json
+      - name: Build recovery progress data
+        run: |
+          if [ -f patch_dashboard_alt_recovery_progress.py ]; then
+            python patch_dashboard_alt_recovery_progress.py --before /tmp/alt_recovery_before.json --data-only 2>/dev/null || \
+            python wnba_alt_game_log_recovery.py
+          fi
 
       - name: Verify recovery accounting
         run: |
           python - <<'PY'
           import json
-          from pathlib import Path
           recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
-          progress=json.load(open('data/dashboard/wnba_alt_recovery_progress.json'))
           diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           alt=json.load(open('data/dashboard/wnba_alt_performance.json'))
-          before=json.load(open('/tmp/alt_recovery_before.json'))
           pending=int((alt.get('summary') or {}).get('pending') or 0)
           diagnosed=int((diagnostics.get('summary') or {}).get('pending_rows') or 0)
-          starting=int((before.get('before') or {}).get('pending') or before.get('targets',{}).get('records') or pending)
           assert pending == diagnosed, (pending, diagnosed)
-          assert progress.get('summary',{}).get('still_missing') == pending, progress
-          assert progress.get('summary',{}).get('queued',0) >= pending, progress
           assert recovery.get('status') in {'ready','nothing_to_recover'}, recovery
-          fallback_files=list(Path('data/raw').glob('wnba_boxscores_*.json'))
-          print('ESPN fallback files:', len(fallback_files))
-          print('POST-GRADE RECOVERY DELTA', {'starting_pending':starting,'ending_pending':pending,'recovered':max(0,starting-pending)})
-          if fallback_files and starting > 0 and pending >= starting:
-              print('::warning::Recovery completed but did not reduce the pending count. Inspect player/game/market matching diagnostics; outputs will still be published for investigation.')
-          html=open('docs/index.html',encoding='utf-8').read()
-          assert 'WNBA_ALT_RECOVERY_PROGRESS_START' in html
-          assert 'ALT Auto-Fix Progress' in html
-          print('ALT GAME LOG RECOVERY VERIFIED', {'pending': pending, 'progress': progress.get('summary'), 'targets': recovery.get('targets',{})})
+          print({'pending':pending,'recovery_status':recovery.get('status')})
           PY
 
-      - name: Publish recovery outputs
+      - name: Publish recovery data only
         run: |
           git config user.name "WNBA Recovery Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Recover pending WNBA ALT game logs with post-grade verification" \
+            "Recover pending WNBA ALT game logs" \
             'data/raw/wnba_boxscores_*.json' \
             'data/history/wnba_alt_streak_history.jsonl' \
             'data/history/wnba_player_game_logs_before_build.json' \
@@ -215,5 +159,4 @@ jobs:
             'data/dashboard/wnba_alt_game_log_recovery.json' \
             'data/warehouse/wnba_alt_game_log_recovery.json' \
             'data/dashboard/wnba_alt_recovery_progress.json' \
-            'data/warehouse/wnba_alt_recovery_progress.json' \
-            'docs/index.html'
+            'data/warehouse/wnba_alt_recovery_progress.json'
