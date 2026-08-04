@@ -1,0 +1,80 @@
+name: WNBA Consolidated Hourly Intelligence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-generated-intelligence-writer
+  cancel-in-progress: false
+
+jobs:
+  refresh-hourly-intelligence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile consolidated modules
+        run: |
+          python -m py_compile \
+            wnba_market_timeline.py \
+            wnba_line_movement_engine.py \
+            wnba_steam_sharp_engine.py \
+            wnba_clv_intelligence.py \
+            wnba_entry_window_intelligence.py \
+            wnba_automated_trend_discovery.py \
+            wnba_trend_outcome_validation.py \
+            wnba_closing_line_predictor.py \
+            wnba_sportsbook_leader_normalization.py \
+            wnba_opportunity_scanner.py \
+            wnba_active_slate_scanner.py
+      - name: Refresh shared prerequisites once
+        run: |
+          python wnba_market_timeline.py
+          python wnba_line_movement_engine.py
+          python wnba_steam_sharp_engine.py
+          python wnba_clv_intelligence.py
+          python wnba_entry_window_intelligence.py
+          python wnba_automated_trend_discovery.py
+          python wnba_trend_outcome_validation.py
+          python wnba_sportsbook_leader_normalization.py
+      - name: Build closing-line intelligence
+        run: python wnba_closing_line_predictor.py
+      - name: Build opportunity intelligence
+        run: python wnba_opportunity_scanner.py
+      - name: Build active-slate intelligence
+        run: python wnba_active_slate_scanner.py
+      - name: Run available QA checks
+        run: |
+          test ! -f qa_closing_line_predictor.py || python qa_closing_line_predictor.py
+          test ! -f qa_opportunity_scanner.py || python qa_opportunity_scanner.py
+          test ! -f qa_active_slate_scanner.py || python qa_active_slate_scanner.py
+      - name: Publish namespaced intelligence atomically
+        run: |
+          git config user.name 'WNBA Consolidated Intelligence Bot'
+          git config user.email 'actions@github.com'
+          if [ -x scripts/atomic_generated_push.sh ]; then
+            scripts/atomic_generated_push.sh \
+              'Refresh consolidated hourly WNBA intelligence' \
+              data/market data/forecast data/trends data/dashboard
+          else
+            git add data/market data/forecast data/trends data/dashboard
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'Refresh consolidated hourly WNBA intelligence'
+            for attempt in 1 2 3 4 5; do
+              git fetch origin main
+              git rebase origin/main && git push origin HEAD:main && exit 0
+              git rebase --abort || true
+              sleep $((attempt * 5))
+            done
+            exit 1
+          fi
