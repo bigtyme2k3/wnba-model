@@ -39,7 +39,11 @@ def build_payload() -> dict:
     players = sorted({str(r.get("player")) for r in targeted if r.get("player")})
     by_date = Counter(str(r.get("date") or "unknown") for r in targeted)
     summary = alt.get("summary") or {}
-    payload = {
+    commands = [f"python wnba_play_by_play_layer.py --date {d}" for d in dates]
+    commands += [f"python wnba_player_game_log_warehouse.py --date {d}" for d in dates]
+    commands.append("python wnba_player_game_log_archive.py merge")
+    commands += [f"python wnba_alt_performance_tracker.py --date {d} --grade" for d in dates]
+    return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "ready" if dates else "nothing_to_recover",
         "before": {
@@ -54,16 +58,8 @@ def build_payload() -> dict:
             "players": players,
             "by_date": [{"date": d, "records": by_date[d]} for d in dates],
         },
-        "recovery_commands": [
-            f"python wnba_play_by_play_layer.py --date {d}" for d in dates
-        ] + [
-            f"python wnba_player_game_log_warehouse.py --date {d}" for d in dates
-        ] + [
-            "python wnba_player_game_log_archive.py merge",
-            f"python wnba_alt_performance_tracker.py --date {d} --grade" for d in dates
-        ],
+        "recovery_commands": commands,
     }
-    return payload
 
 
 def write(payload: dict) -> None:
@@ -80,10 +76,7 @@ def main() -> None:
     args = parser.parse_args()
     payload = build_payload()
     write(payload)
-    if args.print_dates:
-        print(" ".join(payload["targets"]["dates"]))
-    else:
-        print(json.dumps(payload, indent=2))
+    print(" ".join(payload["targets"]["dates"]) if args.print_dates else json.dumps(payload, indent=2))
 
 
 if __name__ == "__main__":
