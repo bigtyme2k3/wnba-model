@@ -3,7 +3,6 @@ name: WNBA Daily Slate Rollover
 on:
   workflow_dispatch:
   schedule:
-    # 6:45 AM Eastern during daylight time. A second 11:45 UTC run covers standard time.
     - cron: '45 10 * * *'
     - cron: '45 11 * * *'
 
@@ -68,7 +67,7 @@ jobs:
           run_if_present wnba_unified_simulation.py --date "$TARGET"
           run_if_present wnba_best_bets.py --date "$TARGET"
 
-      - name: Grade completed games and rebuild game performance
+      - name: Grade completed games and rebuild performance data
         run: |
           YESTERDAY=$(date -d yesterday +%F)
           if [ -f wnba_game_performance_tracker.py ]; then
@@ -79,46 +78,28 @@ jobs:
             python wnba_alt_performance_tracker.py --date "$YESTERDAY" --grade || true
             python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           fi
+          [ -f wnba_alt_pending_diagnostics.py ] && python wnba_alt_pending_diagnostics.py || true
 
-      - name: Build today's dashboard
-        run: |
-          python wnba_terminal_ui.py --date "$TARGET"
-          python patch_terminal_ui.py
-          [ -f patch_dashboard_v5_injury_intelligence.py ] && python patch_dashboard_v5_injury_intelligence.py || true
-          [ -f patch_dashboard_v5_player_prop_injury_context.py ] && python patch_dashboard_v5_player_prop_injury_context.py || true
-          python patch_terminal_ui.py
-          python patch_dashboard_alt_grading_status.py
-          python wnba_alt_pending_diagnostics.py
-          [ -f data/dashboard/wnba_alt_recovery_progress.json ] && python patch_dashboard_alt_recovery_progress.py || true
-          python patch_dashboard_game_performance.py
-          python patch_dashboard_build_verification.py
-
-      - name: Block stale prior-day dashboard
+      - name: Verify current slate data
         run: |
           python - <<'PY'
-          import json
+          import json, os
           from pathlib import Path
-          from datetime import datetime
-          target = Path('/tmp/target').read_text().strip() if Path('/tmp/target').exists() else None
-          target = target or datetime.now().strftime('%Y-%m-%d')
-          h = Path('docs/index.html').read_text(encoding='utf-8')
-          if target not in h:
-              raise SystemExit(f'Dashboard rollover blocked: target date {target} is not present in docs/index.html')
-          if 'WNBA_GAME_PERFORMANCE_START' not in h:
-              raise SystemExit('Dashboard rollover blocked: Game Performance panel missing')
-          print('Morning slate rollover verified for', target)
+          target=os.environ['TARGET']
+          candidates=[Path('data/dashboard/wnba_current_slate.json'),Path('data/dashboard/wnba_daily_report.json'),Path('data/dashboard/wnba_games.json')]
+          existing=[p for p in candidates if p.exists()]
+          if not existing:
+              raise SystemExit('No current-slate dashboard data file was generated')
+          print({'target':target,'generated_files':[str(p) for p in existing]})
           PY
-        env:
-          TARGET: ${{ env.TARGET }}
 
-      - name: Publish morning slate
+      - name: Publish morning slate data only
         run: |
           git config user.name 'WNBA Morning Rollover Bot'
           git config user.email 'actions@github.com'
           bash scripts/atomic_generated_push.sh \
-            "Roll WNBA dashboard to ${TARGET} slate" \
+            "Roll WNBA data to ${TARGET} slate" \
             'data/dashboard' \
             'data/warehouse' \
             'data/market' \
-            'data/forecast' \
-            'docs/index.html'
+            'data/forecast'
