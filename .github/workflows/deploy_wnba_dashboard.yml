@@ -17,6 +17,8 @@ on:
       - 'patch_dashboard_v5_injury_intelligence.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_remaining_season.py'
+      - 'patch_dashboard_v4_alt_streaks_display.py'
+      - 'patch_dashboard_v4_alt_ladders.py'
       - 'patch_dashboard_v4_consolidated_navigation.py'
       - '.github/workflows/deploy_wnba_dashboard.yml'
 
@@ -65,7 +67,9 @@ jobs:
             patch_dashboard_game_performance.py \
             patch_dashboard_v5_injury_intelligence.py \
             patch_dashboard_v5_player_prop_injury_context.py \
-            patch_dashboard_v4_remaining_season.py
+            patch_dashboard_v4_remaining_season.py \
+            patch_dashboard_v4_alt_streaks_display.py \
+            patch_dashboard_v4_alt_ladders.py
 
       - name: Build complete dashboard artifact
         run: |
@@ -73,6 +77,12 @@ jobs:
           # this step so a later base patch cannot erase an inserted tab/route.
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
+
+          # Build the verified current-slate ALT board first, then prepend the
+          # sportsbook ladder view. The ladder patch intentionally wraps the
+          # existing ALT renderer, so this order is required.
+          python patch_dashboard_v4_alt_streaks_display.py
+          python patch_dashboard_v4_alt_ladders.py
 
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then
             python patch_dashboard_v5_injury_intelligence.py
@@ -104,6 +114,14 @@ jobs:
               'WNBA_TERMINAL_UI_PATCH_START',
               'WNBA Intelligence Terminal',
               'ALT Performance',
+              'ALT Streak Board',
+              'Sportsbook ALT Ladders',
+              'v4-alt-streaks-display-data',
+              'v4-alt-streaks-display-script',
+              'v4-alt-ladders-data',
+              'v4-alt-ladders-script',
+              'off-slate',
+              'active game',
               'Game Performance',
               'WNBA_GAME_PERFORMANCE_START',
               'game-performance-nav-script',
@@ -148,7 +166,7 @@ jobs:
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
-          print('Complete dashboard, visible Game Performance results, Remaining Season, ALT recovery progress and QA beacons verified.')
+          print('Complete dashboard, current-slate ALT Streaks, visible Game Performance results, Remaining Season, ALT recovery progress and QA beacons verified.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
