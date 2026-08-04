@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'wnba_alt_game_log_recovery.py'
+      - 'wnba_espn_boxscore_fallback.py'
       - 'wnba_alt_pending_diagnostics.py'
       - 'patch_dashboard_alt_recovery_progress.py'
       - '.github/workflows/wnba_alt_game_log_recovery.yml'
@@ -42,7 +43,13 @@ jobs:
           pip install -r requirements.txt
 
       - name: Compile recovery tools
-        run: python -m py_compile wnba_alt_game_log_recovery.py wnba_alt_pending_diagnostics.py patch_dashboard_alt_recovery_progress.py wnba_alt_performance_tracker.py
+        run: |
+          python -m py_compile \
+            wnba_alt_game_log_recovery.py \
+            wnba_espn_boxscore_fallback.py \
+            wnba_alt_pending_diagnostics.py \
+            patch_dashboard_alt_recovery_progress.py \
+            wnba_alt_performance_tracker.py
 
       - name: Build targeted recovery plan
         run: |
@@ -52,16 +59,26 @@ jobs:
           echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
           echo "Target dates: ${DATES:-none}"
 
-      - name: Recover affected completed games
+      - name: Recover primary verified game logs
         if: env.RECOVERY_DATES != ''
         run: |
           for DAY in $RECOVERY_DATES; do
-            echo "Recovering verified logs for $DAY"
+            echo "Primary recovery for $DAY"
             python wnba_play_by_play_layer.py --date "$DAY" || true
             python wnba_player_game_log_warehouse.py --date "$DAY" || true
           done
           python wnba_player_game_log_archive.py merge || true
           python wnba_player_game_log_backfill.py --season 2026 || true
+
+      - name: Recover secondary ESPN box scores
+        if: env.RECOVERY_DATES != ''
+        run: |
+          for DAY in $RECOVERY_DATES; do
+            echo "ESPN fallback recovery for $DAY"
+            python wnba_espn_boxscore_fallback.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+          done
+          python wnba_player_game_log_archive.py merge || true
 
       - name: Regrade only affected dates
         if: env.RECOVERY_DATES != ''
@@ -81,6 +98,7 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          from pathlib import Path
           recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
           progress=json.load(open('data/dashboard/wnba_alt_recovery_progress.json'))
           diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
@@ -91,6 +109,8 @@ jobs:
           assert progress.get('summary',{}).get('still_missing') == pending, progress
           assert progress.get('summary',{}).get('queued',0) >= pending, progress
           assert recovery.get('status') in {'ready','nothing_to_recover'}, recovery
+          fallback_files=list(Path('data/raw').glob('wnba_boxscores_*.json'))
+          print('ESPN fallback files:', len(fallback_files))
           html=open('docs/index.html',encoding='utf-8').read()
           assert 'WNBA_ALT_RECOVERY_PROGRESS_START' in html
           assert 'ALT Auto-Fix Progress' in html
@@ -102,8 +122,11 @@ jobs:
           git config user.name "WNBA Recovery Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Recover pending WNBA ALT game logs" \
+            "Recover pending WNBA ALT game logs with ESPN fallback" \
+            'data/raw/wnba_boxscores_*.json' \
             'data/history/wnba_alt_streak_history.jsonl' \
+            'data/dashboard/wnba_player_game_logs.json' \
+            'data/warehouse/wnba_player_game_logs.json' \
             'data/dashboard/wnba_alt_performance.json' \
             'data/warehouse/wnba_alt_performance.json' \
             'data/dashboard/wnba_alt_pending_diagnostics.json' \
