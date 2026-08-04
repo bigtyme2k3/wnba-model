@@ -78,12 +78,6 @@ jobs:
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
 
-          # Build the verified current-slate ALT board first, then prepend the
-          # sportsbook ladder view. The ladder patch intentionally wraps the
-          # existing ALT renderer, so this order is required.
-          python patch_dashboard_v4_alt_streaks_display.py
-          python patch_dashboard_v4_alt_ladders.py
-
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then
             python patch_dashboard_v5_injury_intelligence.py
             python patch_dashboard_v5_player_prop_injury_context.py
@@ -105,6 +99,29 @@ jobs:
           python patch_dashboard_game_performance.py
           python patch_dashboard_build_verification.py
 
+          # Finalize ALT after every other dashboard patch. Remove prior ALT
+          # renderer blocks first so the canonical current-slate renderer is
+          # appended after any legacy renderer that could otherwise override it.
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          path = Path('docs/index.html')
+          html = path.read_text(encoding='utf-8')
+          for element_id in (
+              'v4-alt-streaks-display-script',
+              'v4-alt-ladders-script',
+          ):
+              html = re.sub(
+                  rf'<script id="{re.escape(element_id)}">.*?</script>',
+                  '',
+                  html,
+                  flags=re.S,
+              )
+          path.write_text(html, encoding='utf-8')
+          PY
+          python patch_dashboard_v4_alt_streaks_display.py
+          python patch_dashboard_v4_alt_ladders.py
+
       - name: Verify complete dashboard artifact
         run: |
           python - <<'PY'
@@ -120,7 +137,8 @@ jobs:
               'v4-alt-streaks-display-script',
               'v4-alt-ladders-data',
               'v4-alt-ladders-script',
-              'off-slate',
+              'No active-slate streaks match this filter.',
+              'off-slate row',
               'active game',
               'Game Performance',
               'WNBA_GAME_PERFORMANCE_START',
@@ -166,7 +184,11 @@ jobs:
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
-          print('Complete dashboard, current-slate ALT Streaks, visible Game Performance results, Remaining Season, ALT recovery progress and QA beacons verified.')
+          if h.count('id="v4-alt-streaks-display-script"') != 1:
+              raise SystemExit('Deployment blocked; ALT streak renderer is duplicated or missing.')
+          if h.count('id="v4-alt-ladders-script"') != 1:
+              raise SystemExit('Deployment blocked; ALT ladder renderer is duplicated or missing.')
+          print('Complete dashboard, final current-slate ALT renderer, visible Game Performance results, Remaining Season, ALT recovery progress and QA beacons verified.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
