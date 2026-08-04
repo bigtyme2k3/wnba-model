@@ -54,6 +54,7 @@ jobs:
           run_if_present wnba_odds_ingestion.py --date "$TARGET"
           run_if_present wnba_player_props_ingestion.py --date "$TARGET"
           run_if_present wnba_injury_refresh.py --date "$TARGET"
+          run_if_present wnba_remaining_season_intelligence.py
 
       - name: Rebuild current slate intelligence
         run: |
@@ -90,7 +91,8 @@ jobs:
           existing=[p for p in candidates if p.exists()]
           if not existing:
               raise SystemExit('No current-slate dashboard data file was generated')
-          print({'target':target,'generated_files':[str(p) for p in existing]})
+          remaining=Path('data/dashboard/wnba_remaining_season_intelligence.json')
+          print({'target':target,'generated_files':[str(p) for p in existing], 'remaining_season': remaining.exists()})
           PY
 
       - name: Publish morning slate data only
