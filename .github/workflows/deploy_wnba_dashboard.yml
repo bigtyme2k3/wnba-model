@@ -69,6 +69,8 @@ jobs:
 
       - name: Build complete dashboard artifact
         run: |
+          # Build the base dashboard exactly once. All feature patches run after
+          # this step so a later base patch cannot erase an inserted tab/route.
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
 
@@ -85,7 +87,6 @@ jobs:
             echo "Remaining-season payload unavailable; preserving the committed dashboard artifact."
           fi
 
-          python patch_terminal_ui.py
           python patch_dashboard_alt_grading_status.py
           python wnba_alt_pending_diagnostics.py
           if [ -f data/dashboard/wnba_alt_recovery_progress.json ]; then
