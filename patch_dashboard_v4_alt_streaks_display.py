@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 HTML = Path("docs/index.html")
@@ -14,16 +15,28 @@ CSS = r'''<style id="v4-alt-streaks-display-style">
 SCRIPT = r'''<script id="v4-alt-streaks-display-script">
 (function(){
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const norm=v=>String(v??'').trim().toLowerCase().replace(/[’]/g,"'").replace(/\s+/g,' ');
+ const norm=v=>String(v??'').trim().toLowerCase().replace(/[’]/g,"'").replace(/\s+(?:at|@)\s+/g,' @ ').replace(/\s+/g,' ');
  const pct=v=>v==null?'—':(Number(v)*100).toFixed(0)+'%';
  const odds=v=>{const n=Number(v);return Number.isFinite(n)?(n>0?'+'+n:String(n)):'—'};
  let mode='alternate';
  function rowGame(r){return r.game||r.matchup||r.game_name||`${r.away_team||r.away||''} @ ${r.home_team||r.home||''}`}
+ function lineType(r){
+  const raw=String(r.line_type||r.market_line_type||r.threshold_type||'').trim().toLowerCase();
+  if(['alternate','alt','alternate_line','alt_line'].includes(raw))return 'alternate';
+  if(['standard','main','standard_line','main_line'].includes(raw))return 'standard';
+  if(r.is_alternate===true||r.alternate===true)return 'alternate';
+  const alt=Number(r.alt_line??r.threshold),std=Number(r.standard_line??r.main_line);
+  if(Number.isFinite(alt)&&Number.isFinite(std))return Math.abs(alt-std)>1e-9?'alternate':'standard';
+  // This board is sourced from ALT-market rows. When upstream omitted the
+  // classification, treat the sportsbook threshold as alternate rather than
+  // hiding a valid current-slate streak from the default ALT-only view.
+  return 'alternate';
+ }
  function card(r){const vals=(r.recent_values||[]).slice(0,10).join(', ');return `<div class="altStreakCard"><div class="altStreakTop"><div><div class="altStreakLine">${esc(r.side)} ${esc(r.stat)} ${esc(r.alt_line)}</div><div class="altStreakBook">${esc(r.best_book||'Unknown book')} · ${odds(r.best_odds)}</div></div><b>${esc(r.streak)} straight</b></div><div class="altStreakMeta"><div class="altStreakMetric">L10<b>${esc(r.last10_hits??r.l10_hits??'—')}/${esc(r.last10_games??r.l10_games??'—')} · ${pct(r.last10_pct??r.l10_pct)}</b></div><div class="altStreakMetric">Season<b>${esc(r.season_hits??'—')}/${esc(r.season_games??'—')} · ${pct(r.season_pct)}</b></div><div class="altStreakMetric">Average<b>${esc(r.average??'—')}</b></div></div><div class="altStreakValues">Recent: ${esc(vals||'Unavailable')}</div></div>`}
  function render(){
   const p=(window.DATA&&DATA.alt_streaks)||{},all=Array.isArray(p.rows)?p.rows:[],active=new Set((DATA.active_alt_games||[]).map(norm).filter(Boolean));
   const slateRows=active.size?all.filter(r=>active.has(norm(rowGame(r)))):[];
-  const filtered=slateRows.filter(r=>mode==='all'||r.line_type===mode);const groups={};filtered.forEach(r=>{(groups[r.player]||(groups[r.player]=[])).push(r)});
+  const filtered=slateRows.filter(r=>mode==='all'||lineType(r)===mode);const groups={};filtered.forEach(r=>{(groups[r.player]||(groups[r.player]=[])).push(r)});
   const players=Object.entries(groups).sort((a,b)=>Math.max(...b[1].map(x=>x.streak||0))-Math.max(...a[1].map(x=>x.streak||0)));
   const note=active.size?`${active.size} active game${active.size===1?'':'s'} · ${all.length-slateRows.length} off-slate row${all.length-slateRows.length===1?'':'s'} excluded · canonical slate ${esc(DATA.active_alt_target_date||'')}`:'No canonical active slate found; historical streak rows are hidden.';
   return `<div class="section"><h2 class="mono">ALT Streak Board</h2><div class="small mono">Exact sportsbook thresholds with verified current streaks. Books and lines stay separate.</div><div class="altStreakSlate mono">${note}</div><div class="altStreakSummary"><span>${esc(slateRows.length)} active rows</span><span>${esc(new Set(slateRows.map(r=>r.player)).size)} active players</span><span>Minimum streak ${esc((p.summary||{}).minimum_streak||3)}</span></div><div class="altStreakControls"><button class="${mode==='alternate'?'a':''}" onclick="window.setAltStreakMode('alternate')">ALT only</button><button class="${mode==='standard'?'a':''}" onclick="window.setAltStreakMode('standard')">Standard</button><button class="${mode==='all'?'a':''}" onclick="window.setAltStreakMode('all')">All</button></div><div class="altStreakWrap">${players.map(([player,items])=>`<details class="altStreakPlayer"><summary>${esc(player)} <span class="small mono">${esc(rowGame(items[0]))} · ${items.length} lines · best ${Math.max(...items.map(x=>x.streak||0))} straight</span></summary><div class="altStreakGrid">${items.map(card).join('')}</div></details>`).join('')||'<div class="altStreakEmpty mono">No active-slate streaks match this filter.</div>'}</div></div>`}
@@ -43,6 +56,12 @@ def replace_block(html: str, start: str, end: str, replacement: str) -> str:
     return html[:i] + replacement.strip() + html[j + len(end):]
 
 
+def game_key(value: str) -> str:
+    key = value.strip().lower().replace("’", "'")
+    key = re.sub(r"\s+(?:at|@)\s+", " @ ", key)
+    return re.sub(r"\s+", " ", key)
+
+
 def main() -> None:
     if not HTML.exists():
         raise SystemExit("docs/index.html missing")
@@ -56,12 +75,15 @@ def main() -> None:
         master = {}
     target = str(master.get("target_date") or "")
     active_games = []
+    seen_games: set[str] = set()
     for game in master.get("games", []):
         if not isinstance(game, dict):
             continue
         if game.get("bucket") == "today" or (target and str(game.get("game_date") or "") == target):
             name = str(game.get("game") or "").strip()
-            if name and name not in active_games:
+            key = game_key(name)
+            if name and key and key not in seen_games:
+                seen_games.add(key)
                 active_games.append(name)
     html = HTML.read_text(encoding="utf-8")
     embedded = {"alt_streaks": payload, "active_alt_games": active_games, "active_alt_target_date": target}
