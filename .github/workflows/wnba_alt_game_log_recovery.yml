@@ -1,0 +1,102 @@
+name: WNBA ALT Game Log Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_game_log_recovery.py'
+      - 'wnba_alt_pending_diagnostics.py'
+      - '.github/workflows/wnba_alt_game_log_recovery.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  recover-alt-game-logs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compile recovery tools
+        run: python -m py_compile wnba_alt_game_log_recovery.py wnba_alt_pending_diagnostics.py wnba_alt_performance_tracker.py
+
+      - name: Build targeted recovery plan
+        run: |
+          python wnba_alt_game_log_recovery.py
+          DATES=$(python wnba_alt_game_log_recovery.py --print-dates)
+          echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
+          echo "Target dates: ${DATES:-none}"
+
+      - name: Recover affected completed games
+        if: env.RECOVERY_DATES != ''
+        run: |
+          for DAY in $RECOVERY_DATES; do
+            echo "Recovering verified logs for $DAY"
+            python wnba_play_by_play_layer.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+          done
+          python wnba_player_game_log_archive.py merge || true
+          python wnba_player_game_log_backfill.py --season 2026 || true
+
+      - name: Regrade only affected dates
+        if: env.RECOVERY_DATES != ''
+        run: |
+          for DAY in $RECOVERY_DATES; do
+            python wnba_alt_performance_tracker.py --date "$DAY" --grade
+          done
+          TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_game_log_recovery.py
+
+      - name: Verify recovery accounting
+        run: |
+          python - <<'PY'
+          import json
+          recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
+          alt=json.load(open('data/dashboard/wnba_alt_performance.json'))
+          pending=int((alt.get('summary') or {}).get('pending') or 0)
+          diagnosed=int((diagnostics.get('summary') or {}).get('pending_rows') or 0)
+          assert pending == diagnosed, (pending, diagnosed)
+          assert recovery.get('status') in {'ready','nothing_to_recover'}, recovery
+          print('ALT GAME LOG RECOVERY VERIFIED', {'pending': pending, 'targets': recovery.get('targets',{})})
+          PY
+
+      - name: Publish recovery outputs
+        run: |
+          git config user.name "WNBA Recovery Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Recover pending WNBA ALT game logs" \
+            'data/history/wnba_alt_streak_history.jsonl' \
+            'data/dashboard/wnba_alt_performance.json' \
+            'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_pending_diagnostics.json' \
+            'data/warehouse/wnba_alt_pending_diagnostics.json' \
+            'data/dashboard/wnba_alt_game_log_recovery.json' \
+            'data/warehouse/wnba_alt_game_log_recovery.json' \
+            'docs/index.html'
