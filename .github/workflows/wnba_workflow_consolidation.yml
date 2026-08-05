@@ -16,7 +16,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: wnba-workflow-consolidation
+  group: wnba-main-writer
   cancel-in-progress: false
 
 jobs:
@@ -27,13 +27,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install audit dependency
         run: python -m pip install --disable-pip-version-check pyyaml
+
       - name: Phase 1 inventory and Phases 2-4 apply
         run: python scripts/consolidate_workflows.py --apply
+
       - name: Phase 5 verify final workflow state
         run: |
           python - <<'PY'
@@ -59,6 +68,7 @@ jobs:
           assert any(p.name=='wnba_consolidated_hourly_intelligence.yml' for p in active)
           print({'active_workflows':len(active),'archived_workflows':len(archive),'docs_owner':'deploy_wnba_dashboard.yml','sub_hour_schedules':0})
           PY
+
       - name: Publish consolidation result
         run: |
           git config user.name 'WNBA Workflow Consolidation Bot'
@@ -69,10 +79,8 @@ jobs:
             exit 0
           fi
           git commit -m 'Consolidate and archive WNBA GitHub Actions workflows'
-          for attempt in 1 2 3 4 5; do
-            git fetch origin main
-            if git rebase origin/main && git push origin HEAD:main; then exit 0; fi
-            git rebase --abort || true
-            sleep $((attempt * 5))
-          done
-          exit 1
+          bash scripts/atomic_generated_push.sh \
+            'Consolidate and archive WNBA GitHub Actions workflows' \
+            '.github/workflows' \
+            '.github/workflows-archive' \
+            'docs/WORKFLOW_CONSOLIDATION_AUDIT.md'
