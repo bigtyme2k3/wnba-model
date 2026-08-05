@@ -2,6 +2,9 @@ name: WNBA Daily Slate Rollover
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'data/dashboard_refresh_request.txt'
   schedule:
     - cron: '45 10 * * *'
     - cron: '45 11 * * *'
