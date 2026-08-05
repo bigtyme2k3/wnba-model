@@ -125,6 +125,75 @@ jobs:
         if: env.RECOVERY_DATES != ''
         run: python wnba_alt_date_alias_recovery.py --date "$RECOVERY_REQUEST_DATE"
 
+      - name: Diagnose pending player identity around target date
+        if: env.RECOVERY_DATES != ''
+        run: |
+          python - <<'PY'
+          import json, os, re, unicodedata
+          from datetime import date, timedelta
+
+          def norm(value):
+              text = unicodedata.normalize('NFKD', str(value or '')).encode('ascii', 'ignore').decode().lower()
+              return ' '.join(re.sub(r'[^a-z0-9]+', ' ', text).split())
+
+          def record_day(row):
+              return str(row.get('game_date') or row.get('date') or row.get('event_date') or '')[:10]
+
+          target = os.environ['RECOVERY_REQUEST_DATE']
+          target_date = date.fromisoformat(target)
+          nearby = {(target_date + timedelta(days=offset)).isoformat() for offset in (-2, -1, 0, 1, 2)}
+          warehouse = json.load(open('data/warehouse/wnba_player_game_logs.json'))
+          diagnostics = json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
+          records = [row for row in warehouse.get('records', []) if isinstance(row, dict)]
+          inspector = [row for row in diagnostics.get('inspector', []) if isinstance(row, dict) and str(row.get('date') or '')[:10] == target]
+
+          print('TARGET_PENDING_ROWS')
+          for row in inspector:
+              print({
+                  'player': row.get('player'),
+                  'normalized_player': norm(row.get('player')),
+                  'date': row.get('date'),
+                  'game': row.get('game'),
+                  'market': row.get('market'),
+                  'expected_game_id': row.get('expected_game_id'),
+              })
+
+          pending_names = {norm(row.get('player')) for row in inspector if norm(row.get('player'))}
+          exact_or_near = []
+          fuzzy = []
+          for row in records:
+              player = row.get('player') or row.get('player_name') or row.get('athlete_name')
+              player_norm = norm(player)
+              day = record_day(row)
+              if day not in nearby:
+                  continue
+              summary = {
+                  'player': player,
+                  'normalized_player': player_norm,
+                  'game_date': day,
+                  'team': row.get('team') or row.get('team_name') or row.get('team_abbreviation'),
+                  'opponent': row.get('opponent') or row.get('opponent_name') or row.get('opponent_abbreviation'),
+                  'game': row.get('game') or row.get('matchup'),
+                  'game_id': row.get('game_id') or row.get('event_id') or row.get('espn_event_id'),
+                  'source': row.get('source') or row.get('actual_source'),
+                  'date_alias_for_alt_grading': row.get('date_alias_for_alt_grading'),
+              }
+              if player_norm in pending_names:
+                  exact_or_near.append(summary)
+              elif any(name and (name in player_norm or player_norm in name) for name in pending_names):
+                  fuzzy.append(summary)
+
+          print('EXACT_NORMALIZED_PLAYER_RECORDS_WITHIN_2_DAYS', len(exact_or_near))
+          for row in exact_or_near:
+              print(row)
+          print('FUZZY_PLAYER_RECORDS_WITHIN_2_DAYS', len(fuzzy))
+          for row in fuzzy[:50]:
+              print(row)
+
+          if inspector and not exact_or_near and not fuzzy:
+              print('DIAGNOSTIC: no warehouse record within two days shares the pending player identity')
+          PY
+
       - name: Audit recovered warehouse handoff
         if: env.RECOVERY_DATES != ''
         run: |
