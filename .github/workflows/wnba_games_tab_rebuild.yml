@@ -1,0 +1,75 @@
+name: WNBA V4 Player Props Polish
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/dashboard/wnba_master.json'
+      - 'data/dashboard_refresh_request.txt'
+      - 'patch_dashboard_v4_games_markets.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-games-tab-builder
+  cancel-in-progress: false
+
+jobs:
+  rebuild-games-tab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify canonical August slate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('data/dashboard/wnba_master.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          target = str(data.get('target_date') or '')
+          today = [g for g in data.get('games', []) if str(g.get('bucket','')).lower() == 'today']
+          if not target:
+              raise SystemExit('Master target_date is missing')
+          if not today:
+              raise SystemExit('Master contains no current-slate games')
+          print({'target_date': target, 'today_games': len(today), 'matchups': [g.get('game') for g in today]})
+          PY
+
+      - name: Rebuild Games tab from canonical master
+        run: python patch_dashboard_v4_games_markets.py
+
+      - name: Verify stale Toronto card is absent
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path('docs/index.html').read_text(encoding='utf-8')
+          if 'Phoenix Mercury @ Atlanta Dream' not in html:
+              raise SystemExit('Current August 5 slate was not embedded into Games tab')
+          marker = 'const EMBEDDED_TODAY='
+          start = html.find(marker)
+          if start < 0:
+              raise SystemExit('Games embedded-slate marker missing')
+          sample = html[start:start+12000]
+          if 'Toronto Tempo @ Golden State Valkyries' in sample:
+              raise SystemExit('Stale Toronto game remains in embedded current slate')
+          print('Games tab current-slate verification passed')
+          PY
+
+      - name: Publish rebuilt dashboard
+        env:
+          ALLOW_DASHBOARD_WRITE: '1'
+        run: |
+          git config user.name 'WNBA Games Tab Bot'
+          git config user.email 'actions@github.com'
+          bash scripts/atomic_generated_push.sh \
+            'Rebuild Games tab from canonical current slate' \
+            docs/index.html
