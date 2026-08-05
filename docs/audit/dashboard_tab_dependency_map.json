@@ -1,0 +1,593 @@
+{
+  "build_chain": [
+    "build_dashboard_v4.py",
+    "patch_dashboard_v4_games_markets.py",
+    "patch_dashboard_v4_consistency.py",
+    "patch_dashboard_v4_live_slate.py",
+    "patch_dashboard_v4_portfolio_ai.py",
+    "patch_dashboard_navigation_v2.py"
+  ],
+  "files": [
+    {
+      "file": "build_dashboard_v4.py",
+      "exists": true,
+      "json_references": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "functions": [
+        "abbr",
+        "activeRecommendations",
+        "activeUnits",
+        "ai",
+        "best",
+        "books",
+        "drawProps",
+        "fmt",
+        "game",
+        "games",
+        "gamesList",
+        "health",
+        "hist",
+        "hit",
+        "isHit",
+        "kpis",
+        "oppFor",
+        "portfolio",
+        "propRow",
+        "props",
+        "propsRaw",
+        "q",
+        "render",
+        "results",
+        "score",
+        "setGame",
+        "summary",
+        "teamFor"
+      ],
+      "risk_flags": [
+        "team_guess_from_player_name",
+        "synthetic_history_generator",
+        "silent_json_fallback"
+      ]
+    },
+    {
+      "file": "patch_dashboard_v4_games_markets.py",
+      "exists": true,
+      "json_references": [
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_master.json"
+      ],
+      "functions": [
+        "E",
+        "S",
+        "dashboardActiveBestBets",
+        "game",
+        "gamesV25",
+        "marketsV25",
+        "propsRaw"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder"
+      ]
+    },
+    {
+      "file": "patch_dashboard_v4_consistency.py",
+      "exists": true,
+      "json_references": [],
+      "functions": [
+        "kpis",
+        "render"
+      ],
+      "risk_flags": []
+    },
+    {
+      "file": "patch_dashboard_v4_live_slate.py",
+      "exists": true,
+      "json_references": [],
+      "functions": [
+        "best"
+      ],
+      "risk_flags": []
+    },
+    {
+      "file": "patch_dashboard_v4_portfolio_ai.py",
+      "exists": true,
+      "json_references": [],
+      "functions": [
+        "E",
+        "activeRecommendations",
+        "ai",
+        "card",
+        "empty",
+        "portfolio",
+        "rowsFrom",
+        "table",
+        "textItems"
+      ],
+      "risk_flags": []
+    },
+    {
+      "file": "patch_dashboard_navigation_v2.py",
+      "exists": true,
+      "json_references": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json"
+      ],
+      "functions": [
+        "abbrTeam",
+        "ai",
+        "best",
+        "bestData",
+        "books",
+        "cards",
+        "clearPropFilters",
+        "filterProps",
+        "fmtDate",
+        "game",
+        "games",
+        "health",
+        "histVals",
+        "hitInfo",
+        "live",
+        "matchups",
+        "normGameName",
+        "oppsForGame",
+        "playerLogo",
+        "playerTeam",
+        "portfolio",
+        "propData",
+        "propRow",
+        "props",
+        "render",
+        "results",
+        "score",
+        "setGame",
+        "statBase",
+        "uniq"
+      ],
+      "risk_flags": [
+        "synthetic_history_generator"
+      ]
+    }
+  ],
+  "tabs": [
+    {
+      "tab": "Games",
+      "renderers": [
+        "build_dashboard_v4.py",
+        "patch_dashboard_navigation_v2.py",
+        "patch_dashboard_v4_consistency.py",
+        "patch_dashboard_v4_games_markets.py",
+        "patch_dashboard_v4_live_slate.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder",
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "Game Performance",
+      "renderers": [
+        "patch_dashboard_v4_portfolio_ai.py"
+      ],
+      "json_sources": [],
+      "risk_flags": [],
+      "status": "mapped"
+    },
+    {
+      "tab": "Game Props",
+      "renderers": [
+        "build_dashboard_v4.py",
+        "patch_dashboard_navigation_v2.py",
+        "patch_dashboard_v4_consistency.py",
+        "patch_dashboard_v4_games_markets.py",
+        "patch_dashboard_v4_live_slate.py",
+        "patch_dashboard_v4_portfolio_ai.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder",
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "Player Props",
+      "renderers": [
+        "build_dashboard_v4.py",
+        "patch_dashboard_navigation_v2.py",
+        "patch_dashboard_v4_consistency.py",
+        "patch_dashboard_v4_games_markets.py",
+        "patch_dashboard_v4_live_slate.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder",
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "ALT Streaks",
+      "renderers": [
+        "build_dashboard_v4.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "ALT Performance",
+      "renderers": [],
+      "json_sources": [],
+      "risk_flags": [],
+      "status": "unmapped"
+    },
+    {
+      "tab": "Daily Edges",
+      "renderers": [
+        "patch_dashboard_v4_games_markets.py",
+        "patch_dashboard_v4_portfolio_ai.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_master.json"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "Ensemble",
+      "renderers": [],
+      "json_sources": [],
+      "risk_flags": [],
+      "status": "unmapped"
+    },
+    {
+      "tab": "Simulation",
+      "renderers": [
+        "build_dashboard_v4.py",
+        "patch_dashboard_navigation_v2.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "Best Bets",
+      "renderers": [
+        "build_dashboard_v4.py",
+        "patch_dashboard_navigation_v2.py",
+        "patch_dashboard_v4_consistency.py",
+        "patch_dashboard_v4_games_markets.py",
+        "patch_dashboard_v4_live_slate.py",
+        "patch_dashboard_v4_portfolio_ai.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder",
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "Portfolio",
+      "renderers": [
+        "build_dashboard_v4.py",
+        "patch_dashboard_navigation_v2.py",
+        "patch_dashboard_v4_games_markets.py",
+        "patch_dashboard_v4_portfolio_ai.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder",
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "AI Center",
+      "renderers": [
+        "build_dashboard_v4.py",
+        "patch_dashboard_navigation_v2.py",
+        "patch_dashboard_v4_consistency.py",
+        "patch_dashboard_v4_games_markets.py",
+        "patch_dashboard_v4_live_slate.py",
+        "patch_dashboard_v4_portfolio_ai.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder",
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "Results",
+      "renderers": [
+        "build_dashboard_v4.py",
+        "patch_dashboard_navigation_v2.py",
+        "patch_dashboard_v4_games_markets.py",
+        "patch_dashboard_v4_portfolio_ai.py"
+      ],
+      "json_sources": [
+        "data/dashboard/wnba_ai_coach.json",
+        "data/dashboard/wnba_autonomous_agent.json",
+        "data/dashboard/wnba_consensus_engine.json",
+        "data/dashboard/wnba_cross_market_top_plays.json",
+        "data/dashboard/wnba_decision_engine_final.json",
+        "data/dashboard/wnba_game_market_model.json",
+        "data/dashboard/wnba_market_engine.json",
+        "data/dashboard/wnba_master.json",
+        "data/dashboard/wnba_matchup_intelligence.json",
+        "data/dashboard/wnba_monte_carlo_engine.json",
+        "data/dashboard/wnba_odds_health.json",
+        "data/dashboard/wnba_portfolio_dashboard.json",
+        "data/dashboard/wnba_projection_ai.json",
+        "data/dashboard/wnba_results_grading.json",
+        "data/dashboard/wnba_risk_allocation.json",
+        "data/dashboard/wnba_self_learning.json",
+        "data/dashboard/wnba_source_health.json",
+        "data/dashboard/wnba_sportsbook_consensus.json",
+        "data/dashboard/wnba_stats_quality.json",
+        "data/dashboard/wnba_unified_player_simulation_v2.json",
+        "data/dashboard/wnba_v4_status.json"
+      ],
+      "risk_flags": [
+        "missing_model_placeholder",
+        "silent_json_fallback",
+        "synthetic_history_generator",
+        "team_guess_from_player_name"
+      ],
+      "status": "mapped"
+    },
+    {
+      "tab": "Performance",
+      "renderers": [
+        "patch_dashboard_v4_portfolio_ai.py"
+      ],
+      "json_sources": [],
+      "risk_flags": [],
+      "status": "mapped"
+    }
+  ],
+  "all_json_references": [
+    "data/dashboard/wnba_ai_coach.json",
+    "data/dashboard/wnba_autonomous_agent.json",
+    "data/dashboard/wnba_consensus_engine.json",
+    "data/dashboard/wnba_cross_market_top_plays.json",
+    "data/dashboard/wnba_decision_engine_final.json",
+    "data/dashboard/wnba_game_market_model.json",
+    "data/dashboard/wnba_market_engine.json",
+    "data/dashboard/wnba_master.json",
+    "data/dashboard/wnba_matchup_intelligence.json",
+    "data/dashboard/wnba_monte_carlo_engine.json",
+    "data/dashboard/wnba_odds_health.json",
+    "data/dashboard/wnba_portfolio_dashboard.json",
+    "data/dashboard/wnba_projection_ai.json",
+    "data/dashboard/wnba_results_grading.json",
+    "data/dashboard/wnba_risk_allocation.json",
+    "data/dashboard/wnba_self_learning.json",
+    "data/dashboard/wnba_source_health.json",
+    "data/dashboard/wnba_sportsbook_consensus.json",
+    "data/dashboard/wnba_stats_quality.json",
+    "data/dashboard/wnba_unified_player_simulation_v2.json",
+    "data/dashboard/wnba_v4_status.json"
+  ]
+}
