@@ -1,0 +1,53 @@
+name: WNBA Dashboard Dependency Audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/dashboard_dependency_audit_request.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-repository-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build dashboard tab dependency map
+        run: python scripts/audit_dashboard_tab_dependencies.py
+      - name: Validate dependency map
+        run: |
+          test -s docs/audit/DASHBOARD_TAB_DEPENDENCY_MAP.md
+          test -s docs/audit/dashboard_tab_dependency_map.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('docs/audit/dashboard_tab_dependency_map.json').read_text())
+          assert len(p.get('tabs',[])) == 14, 'Expected 14 dashboard tabs'
+          assert p.get('build_chain'), 'Missing build chain'
+          unmapped=[t['tab'] for t in p['tabs'] if t.get('status')!='mapped']
+          print({'unmapped':unmapped,'files':len(p.get('files',[]))})
+          PY
+      - name: Publish dependency audit
+        run: |
+          git config user.name 'WNBA Dashboard Audit Bot'
+          git config user.email 'actions@github.com'
+          git add docs/audit/DASHBOARD_TAB_DEPENDENCY_MAP.md docs/audit/dashboard_tab_dependency_map.json
+          if git diff --cached --quiet; then
+            echo 'No dependency audit changes'
+            exit 0
+          fi
+          git commit -m 'Map dashboard tab dependencies'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
