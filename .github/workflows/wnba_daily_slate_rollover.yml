@@ -118,7 +118,7 @@ jobs:
 
           target = os.environ['TARGET']
           mapping = {
-              'games': ['wnba_current_slate.json','wnba_daily_report.json','wnba_games.json'],
+              'games': ['wnba_master.json','wnba_current_slate.json','wnba_daily_report.json','wnba_games.json'],
               'game_props': ['wnba_game_props.json','wnba_game_prop_intelligence.json'],
               'player_props': ['wnba_player_props.json','wnba_player_prop_intelligence.json'],
               'alt_streaks': ['wnba_alt_streaks.json','wnba_alt_market_watch.json'],
@@ -164,7 +164,12 @@ jobs:
           import json, os
           from pathlib import Path
           target=os.environ['TARGET']
-          candidates=[Path('data/dashboard/wnba_current_slate.json'),Path('data/dashboard/wnba_daily_report.json'),Path('data/dashboard/wnba_games.json')]
+          candidates=[
+              Path('data/dashboard/wnba_master.json'),
+              Path('data/dashboard/wnba_current_slate.json'),
+              Path('data/dashboard/wnba_daily_report.json'),
+              Path('data/dashboard/wnba_games.json'),
+          ]
           existing=[p for p in candidates if p.exists()]
           if not existing:
               raise SystemExit('No current-slate dashboard data file was generated')
