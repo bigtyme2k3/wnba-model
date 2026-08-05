@@ -73,12 +73,6 @@ jobs:
         run: |
           git config user.name 'WNBA Workflow Consolidation Bot'
           git config user.email 'actions@github.com'
-          git add .github/workflows .github/workflows-archive docs/WORKFLOW_CONSOLIDATION_AUDIT.md
-          if git diff --cached --quiet; then
-            echo 'No consolidation changes to publish.'
-            exit 0
-          fi
-          git commit -m 'Consolidate and archive WNBA GitHub Actions workflows'
           bash scripts/atomic_generated_push.sh \
             'Consolidate and archive WNBA GitHub Actions workflows' \
             '.github/workflows' \
