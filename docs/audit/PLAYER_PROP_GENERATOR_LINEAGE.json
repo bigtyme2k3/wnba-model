@@ -1,0 +1,171 @@
+{
+  "generated_at_utc": "2026-08-05T23:46:39.701559+00:00",
+  "target_date": "2026-08-05",
+  "games": [
+    "Dallas Wings @ Washington Mystics",
+    "Los Angeles Sparks @ Chicago Sky",
+    "Phoenix Mercury @ Atlanta Dream",
+    "Seattle Storm @ New York Liberty"
+  ],
+  "teams": [
+    "Atlanta Dream",
+    "Chicago Sky",
+    "Dallas Wings",
+    "Los Angeles Sparks",
+    "New York Liberty",
+    "Phoenix Mercury",
+    "Seattle Storm",
+    "Washington Mystics"
+  ],
+  "candidate_generators": [
+    {
+      "path": "wnba_player_props_ingestion.py",
+      "exists": false,
+      "mentions_odds_api": false,
+      "writes_master": false,
+      "writes_player_props": false,
+      "reads_player_props": false
+    },
+    {
+      "path": "scrape_odds_props.py",
+      "exists": true,
+      "mentions_odds_api": true,
+      "writes_master": false,
+      "writes_player_props": false,
+      "reads_player_props": true
+    },
+    {
+      "path": "wnba_player_prop_intelligence.py",
+      "exists": true,
+      "mentions_odds_api": false,
+      "writes_master": false,
+      "writes_player_props": false,
+      "reads_player_props": true
+    },
+    {
+      "path": "wnba_master_source_builder.py",
+      "exists": true,
+      "mentions_odds_api": false,
+      "writes_master": true,
+      "writes_player_props": false,
+      "reads_player_props": true
+    },
+    {
+      "path": "wnba_current_slate.py",
+      "exists": true,
+      "mentions_odds_api": true,
+      "writes_master": true,
+      "writes_player_props": false,
+      "reads_player_props": false
+    },
+    {
+      "path": "build_dashboard_v4.py",
+      "exists": true,
+      "mentions_odds_api": false,
+      "writes_master": true,
+      "writes_player_props": false,
+      "reads_player_props": true
+    },
+    {
+      "path": "patch_dashboard_navigation_v2.py",
+      "exists": true,
+      "mentions_odds_api": false,
+      "writes_master": true,
+      "writes_player_props": false,
+      "reads_player_props": true
+    }
+  ],
+  "outputs": [
+    {
+      "path": "data/dashboard/wnba_master.json",
+      "exists": true,
+      "target_date": "2026-08-05",
+      "row_count": 60,
+      "current_slate_rows": 0,
+      "off_slate_rows": 60,
+      "missing_team_rows": 60,
+      "sample_off_slate": [
+        {
+          "player": "Veronica Burton",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Gabby Williams",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Nyara Sabally",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Laura Juskaite",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Janelle Salaun",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Marina Mabrey",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Gabby Williams",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Janelle Salaun",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Kayla Thornton",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        },
+        {
+          "player": "Laura Juskaite",
+          "game": "Toronto Tempo @ Golden State Valkyries",
+          "team": ""
+        }
+      ]
+    },
+    {
+      "path": "data/dashboard/wnba_player_props.json",
+      "exists": false,
+      "target_date": null,
+      "row_count": 0,
+      "current_slate_rows": 0,
+      "off_slate_rows": 0,
+      "missing_team_rows": 0,
+      "sample_off_slate": []
+    },
+    {
+      "path": "data/dashboard/wnba_player_prop_intelligence.json",
+      "exists": true,
+      "target_date": null,
+      "row_count": 0,
+      "current_slate_rows": 0,
+      "off_slate_rows": 0,
+      "missing_team_rows": 0,
+      "sample_off_slate": []
+    },
+    {
+      "path": "data/dashboard/wnba_player_props_current_slate.json",
+      "exists": true,
+      "target_date": "2026-08-05",
+      "row_count": 0,
+      "current_slate_rows": 0,
+      "off_slate_rows": 0,
+      "missing_team_rows": 0,
+      "sample_off_slate": []
+    }
+  ]
+}
