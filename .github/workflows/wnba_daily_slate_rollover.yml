@@ -22,6 +22,7 @@ jobs:
     timeout-minutes: 60
     env:
       TZ: America/New_York
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -112,6 +113,11 @@ jobs:
             echo 'Missing authoritative current-slate refresher.' >&2
             exit 1
           fi
+          if [ -z "${ODDS_API_KEY:-}" ]; then
+            echo 'ODDS_API_KEY secret is unavailable; ESPN must succeed.'
+          else
+            echo 'The Odds API fallback is available.'
+          fi
           python wnba_current_slate.py --date "$TARGET"
           python - <<'PY'
           import json, os
@@ -121,7 +127,13 @@ jobs:
           actual = str(data.get('target_date') or '')
           if actual != target:
               raise SystemExit(f'Final current-slate reassertion failed: expected {target}, found {actual or "missing"}')
-          print({'final_master_target': actual, 'today_games': data.get('summary', {}).get('today_games')})
+          refresh = data.get('current_slate_refresh') or {}
+          print({
+              'final_master_target': actual,
+              'today_games': data.get('summary', {}).get('today_games'),
+              'source': refresh.get('source'),
+              'fallback_errors': refresh.get('fallback_errors'),
+          })
           PY
 
       - name: Build dashboard tab freshness manifest
