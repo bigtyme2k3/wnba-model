@@ -1,34 +1,20 @@
 {
-  "generated_at_utc": "2026-08-04T23:42:58.086320+00:00",
+  "generated_at_utc": "2026-08-05T00:55:06.020061+00:00",
   "requested_date": "2026-08-03",
-  "status": "ready",
+  "status": "nothing_to_recover",
   "before": {
     "archived": 1017,
-    "graded": 907,
-    "pending": 110
+    "graded": 909,
+    "pending": 108
   },
   "targets": {
-    "records": 2,
-    "dates": [
-      "2026-08-03"
-    ],
-    "games": [
-      "2026-08-03|toronto-tempo-@-golden-state-valkyries"
-    ],
-    "players": [
-      "Veronica Burton"
-    ],
-    "by_date": [
-      {
-        "date": "2026-08-03",
-        "records": 2
-      }
-    ]
+    "records": 0,
+    "dates": [],
+    "games": [],
+    "players": [],
+    "by_date": []
   },
   "recovery_commands": [
-    "python wnba_play_by_play_layer.py --date 2026-08-03",
-    "python wnba_player_game_log_warehouse.py --date 2026-08-03",
-    "python wnba_player_game_log_archive.py merge",
-    "python wnba_alt_performance_tracker.py --date 2026-08-03 --grade"
+    "python wnba_player_game_log_archive.py merge"
   ]
 }
