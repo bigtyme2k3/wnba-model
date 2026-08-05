@@ -1,0 +1,75 @@
+name: WNBA Player Props Truth Repair
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/player_props_truth_repair_request.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    env:
+      TZ: America/New_York
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Rebuild dashboard base and patches
+        run: |
+          [ ! -f build_dashboard_v4.py ] || python build_dashboard_v4.py
+          [ ! -f patch_dashboard_v4_games_markets.py ] || python patch_dashboard_v4_games_markets.py
+          [ ! -f patch_dashboard_v4_consistency.py ] || python patch_dashboard_v4_consistency.py
+          [ ! -f patch_dashboard_v4_live_slate.py ] || python patch_dashboard_v4_live_slate.py
+          [ ! -f patch_dashboard_v4_portfolio_ai.py ] || python patch_dashboard_v4_portfolio_ai.py
+          [ ! -f patch_dashboard_navigation_v2.py ] || python patch_dashboard_navigation_v2.py
+          python patch_dashboard_v4_player_props_truth.py
+      - name: Validate current-slate Player Props
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_player_props_current_slate.json').read_text())
+          html=Path('docs/index.html').read_text()
+          assert p.get('target_date')=='2026-08-05', p.get('target_date')
+          assert 'v4-player-props-truth' in html
+          assert 'Toronto Tempo @ Golden State Valkyries' not in json.dumps(p.get('rows',[]))
+          for row in p.get('rows',[]):
+              assert row.get('game') in p['current_games']
+              assert row.get('team') in p['current_teams']
+          print({'source':p['source_count'],'active':p['active_count'],'excluded':p['excluded_count']})
+          PY
+      - name: Publish truthful Player Props repair
+        run: |
+          git config user.name 'WNBA Player Props Repair Bot'
+          git config user.email 'actions@github.com'
+          git add patch_dashboard_v4_player_props_truth.py \
+                  data/dashboard/wnba_player_props_current_slate.json \
+                  docs/index.html
+          if git diff --cached --quiet; then
+            echo 'No Player Props repair changes'
+            exit 0
+          fi
+          git commit -m 'Repair Player Props with current-slate verified data'
+          git stash push -u -m player-props-untracked || true
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main && git push origin HEAD:main && exit 0
+            git rebase --abort || true
+            sleep $((attempt*3))
+          done
+          exit 1
