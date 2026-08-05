@@ -161,39 +161,86 @@ jobs:
           print(json.dumps(payload, indent=2))
           PY
 
-      - name: Verify current slate and required tab data
+      - name: Verify generated current slate and required tab data
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
-          target=os.environ['TARGET']
-          candidates=[
-              Path('data/dashboard/wnba_master.json'),
-              Path('data/dashboard/wnba_current_slate.json'),
-              Path('data/dashboard/wnba_daily_report.json'),
-              Path('data/dashboard/wnba_games.json'),
-          ]
-          existing=[p for p in candidates if p.exists()]
-          if not existing:
-              raise SystemExit('No current-slate dashboard data file was generated')
-          manifest=Path('data/dashboard/wnba_tab_freshness.json')
+
+          target = os.environ['TARGET']
+          master = Path('data/dashboard/wnba_master.json')
+          if not master.exists():
+              raise SystemExit('Canonical current-slate file was not generated: data/dashboard/wnba_master.json')
+
+          data = json.loads(master.read_text(encoding='utf-8'))
+          actual = str(data.get('target_date') or '')
+          if actual != target:
+              raise SystemExit(f'Canonical current-slate target mismatch: expected {target}, found {actual or "missing"}')
+
+          manifest = Path('data/dashboard/wnba_tab_freshness.json')
           if not manifest.exists():
               raise SystemExit('Dashboard tab freshness manifest was not generated')
-          payload=json.loads(manifest.read_text())
-          critical=['games','daily_edges','ensemble','simulation','best_bets','results','performance','remaining_season']
-          missing=[name for name in critical if payload['tabs'].get(name,{}).get('status')=='missing']
-          print({'target':target,'generated_files':[str(p) for p in existing],'critical_missing':missing})
+          payload = json.loads(manifest.read_text(encoding='utf-8'))
+          if str(payload.get('target_date') or '') != target:
+              raise SystemExit('Freshness manifest target date does not match rollover target')
+
+          critical = ['games','daily_edges','ensemble','simulation','best_bets','results','performance','remaining_season']
+          missing = [name for name in critical if payload['tabs'].get(name,{}).get('status') == 'missing']
+          print({
+              'target': target,
+              'master_target_date': actual,
+              'today_games': data.get('summary',{}).get('today_games'),
+              'critical_missing': missing,
+          })
           if missing:
               print('WARNING: critical tabs missing data:', ', '.join(missing))
           PY
 
-      - name: Publish refreshed tab data only
+          if git diff --quiet -- data/dashboard data/wnba data/warehouse data/market data/forecast; then
+            echo 'Rollover generated no publishable data changes; refusing false-success completion.' >&2
+            exit 1
+          fi
+
+          echo 'Generated publishable changes:'
+          git status --short -- data/dashboard data/wnba data/warehouse data/market data/forecast
+
+      - name: Publish refreshed tab and slate data
         run: |
           git config user.name 'WNBA Morning Rollover Bot'
           git config user.email 'actions@github.com'
           bash scripts/atomic_generated_push.sh \
             "Refresh all WNBA dashboard tabs for ${TARGET}" \
             'data/dashboard' \
+            'data/wnba' \
             'data/warehouse' \
             'data/market' \
             'data/forecast'
+
+      - name: Verify published main commit and deployment trigger
+        run: |
+          git fetch origin main
+          PUBLISHED_SHA=$(git rev-parse origin/main)
+          echo "PUBLISHED_SHA=$PUBLISHED_SHA" >> "$GITHUB_ENV"
+          echo "Published main commit: $PUBLISHED_SHA"
+
+          git show "origin/main:data/dashboard/wnba_master.json" > /tmp/published_wnba_master.json
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          target = os.environ['TARGET']
+          data = json.loads(Path('/tmp/published_wnba_master.json').read_text(encoding='utf-8'))
+          actual = str(data.get('target_date') or '')
+          if actual != target:
+              raise SystemExit(f'Published main is stale: expected target_date {target}, found {actual or "missing"}')
+          print({'published_target_date': actual, 'today_games': data.get('summary',{}).get('today_games')})
+          PY
+
+          CHANGED=$(git diff-tree --no-commit-id --name-only -r "$PUBLISHED_SHA")
+          echo "$CHANGED"
+          if ! grep -q '^data/dashboard/' <<< "$CHANGED"; then
+            echo 'Published commit did not contain dashboard data, so Deploy WNBA Dashboard would not trigger.' >&2
+            exit 1
+          fi
+
+          echo 'Dashboard data is committed to main. The existing Deploy WNBA Dashboard push trigger will now run.'
