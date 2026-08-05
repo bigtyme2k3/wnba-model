@@ -92,9 +92,19 @@ jobs:
             exit 0
           fi
           git commit -m "Repair Game Props and Best Bets outputs for ${TARGET}"
+
+          # Dashboard builders can touch additional generated files. Stash those
+          # uncommitted changes before rebasing; the runner is ephemeral, so they
+          # do not need to be restored after the verified commit is pushed.
+          if ! git diff --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+            git stash push --include-untracked -m 'repair-workflow-unpublished-generated-files'
+          fi
+
           for attempt in 1 2 3 4; do
             git fetch origin main
-            git rebase origin/main && git push origin HEAD:main && exit 0
+            if git rebase origin/main; then
+              git push origin HEAD:main && exit 0
+            fi
             git rebase --abort || true
             sleep $((attempt * 3))
           done
