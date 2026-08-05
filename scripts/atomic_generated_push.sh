@@ -23,17 +23,10 @@ for supplied in "${FILES[@]}"; do
 done
 FILES=("${FILTERED_FILES[@]}")
 
-# Persistent generated histories used by downstream grading and CLV. Add them
-# automatically when present so callers cannot accidentally drop state.
 PERSISTENT_OUTPUTS=(
   data/history/wnba_alt_market_snapshots.jsonl
 )
 
-# A manual canonical dashboard run may advance the active slate before the
-# scheduled Version 4 Status workflow has published its dependent model files.
-# Mission Control performs a bounded self-heal in that case. Persist every
-# refreshed dependency with the dashboard so the next run cannot fall back to
-# stale projection, game-model, or ALT state.
 if [ "$CURRENT_WORKFLOW" = "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
   PERSISTENT_OUTPUTS+=(
     data/dashboard/wnba_minutes_projection_v2.json
@@ -72,17 +65,35 @@ fi
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 
-# Resolve optional globs before resetting the repository. Several pipelines pass
-# dated output patterns that legitimately have no match on quiet/no-game runs.
-# Git rejects unmatched pathspecs, so only concrete files are carried forward.
+# Resolve files, globs, and directory trees before resetting the repository.
+# Directory arguments are expanded recursively; the previous implementation
+# skipped directories because it only accepted regular files, which caused
+# generated dashboard changes to disappear during the reset to origin/main.
 EXPANDED_FILES=()
+copy_file() {
+  local file=$1
+  [ -f "$file" ] || return 0
+  EXPANDED_FILES+=("$file")
+  mkdir -p "$TMP/$(dirname "$file")"
+  cp -p "$file" "$TMP/$file"
+}
+
 for path in "${FILES[@]}"; do
-  if compgen -G "$path" > /dev/null; then
-    while IFS= read -r file; do
-      [ -f "$file" ] || continue
-      EXPANDED_FILES+=("$file")
-      mkdir -p "$TMP/$(dirname "$file")"
-      cp -p "$file" "$TMP/$file"
+  if [ -d "$path" ]; then
+    while IFS= read -r -d '' file; do
+      copy_file "$file"
+    done < <(find "$path" -type f -print0)
+  elif [ -f "$path" ]; then
+    copy_file "$path"
+  elif compgen -G "$path" > /dev/null; then
+    while IFS= read -r match; do
+      if [ -d "$match" ]; then
+        while IFS= read -r -d '' file; do
+          copy_file "$file"
+        done < <(find "$match" -type f -print0)
+      else
+        copy_file "$match"
+      fi
     done < <(compgen -G "$path")
   else
     echo "Optional generated path had no matches: $path"
@@ -94,7 +105,6 @@ if [ ${#EXPANDED_FILES[@]} -eq 0 ]; then
   exit 0
 fi
 
-# De-duplicate concrete paths while preserving order.
 UNIQUE_FILES=()
 declare -A SEEN=()
 for file in "${EXPANDED_FILES[@]}"; do
