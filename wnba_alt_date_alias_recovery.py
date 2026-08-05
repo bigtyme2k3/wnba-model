@@ -2,9 +2,11 @@
 
 Some archived ALT candidates use the dashboard slate date while the verified
 box score is stored under the local completed-game date. This script creates a
-clearly marked canonical alias only when the pending player has exactly one
-verified record within +/- 1 day and the matchup is compatible when team data
-is available. Original verified records are never modified or removed.
+clearly marked canonical alias only when the pending player has a verified
+record within +/- 1 day and the matchup is compatible when team data is
+available. Duplicate source rows for the same player/date are collapsed to the
+richest record because a WNBA player cannot play two league games on one date.
+Original verified records are never modified or removed.
 """
 from __future__ import annotations
 
@@ -63,6 +65,21 @@ def compatible(pending: dict[str, Any], record: dict[str, Any]) -> bool:
     return len(expected & actual) >= 1
 
 
+def quality(row: dict[str, Any]) -> tuple[int, int, int]:
+    """Prefer identified, matchup-complete, statistically populated records."""
+    identity = int(bool(row.get("game_id") or row.get("event_id") or row.get("espn_event_id")))
+    matchup = int(bool(row.get("opponent") or row.get("opponent_name"))) + int(bool(row.get("game") or row.get("matchup")))
+    stats = sum(
+        value not in (None, "")
+        for key, value in row.items()
+        if key.lower() in {
+            "pts", "points", "reb", "rebounds", "ast", "assists", "stl", "steals",
+            "blk", "blocks", "tov", "turnovers", "fg3m", "three_pointers_made", "minutes",
+        }
+    )
+    return identity, matchup, stats
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", required=True)
@@ -98,32 +115,33 @@ def main() -> None:
             and record_date(row) in candidate_dates
             and compatible(item, row)
         ]
-        # Deduplicate equivalent source records before deciding uniqueness.
-        unique: dict[tuple[str, str, str], dict[str, Any]] = {}
+
+        # Multiple warehouse rows can describe the same player/game from
+        # different providers. Collapse by source date and select the richest
+        # representation. A player cannot play two WNBA games on one date.
+        by_date: dict[str, list[dict[str, Any]]] = {}
         for row in candidates:
-            key = (
-                record_date(row),
-                norm(row.get("team") or row.get("team_name")),
-                norm(row.get("opponent") or row.get("opponent_name")),
-            )
-            unique.setdefault(key, row)
-        candidates = list(unique.values())
-        if len(candidates) != 1:
+            by_date.setdefault(record_date(row), []).append(row)
+        collapsed = [max(rows, key=quality) for rows in by_date.values()]
+
+        if len(collapsed) != 1:
             unresolved.append({
                 "player": item.get("player"),
                 "target_date": args.date,
-                "candidate_dates": sorted({record_date(row) for row in candidates}),
-                "candidate_count": len(candidates),
+                "candidate_dates": sorted(by_date),
+                "raw_candidate_count": len(candidates),
+                "collapsed_candidate_count": len(collapsed),
             })
             continue
 
-        source = candidates[0]
+        source = collapsed[0]
         alias = copy.deepcopy(source)
         alias["source_game_date"] = record_date(source)
         alias["game_date"] = args.date
         alias["date"] = args.date
         alias["date_alias_for_alt_grading"] = True
         alias["date_alias_reason"] = "dashboard slate date differs from verified completed-game date by one day"
+        alias["date_alias_duplicate_sources_collapsed"] = len(by_date.get(record_date(source), []))
         aliases.append(alias)
         existing.add((player, args.date))
 
