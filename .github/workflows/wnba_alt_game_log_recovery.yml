@@ -11,6 +11,7 @@ on:
     branches: [main]
     paths:
       - 'wnba_alt_game_log_recovery.py'
+      - 'wnba_alt_recovery_handoff.py'
       - 'wnba_espn_boxscore_fallback.py'
       - 'wnba_alt_pending_diagnostics.py'
       - 'wnba_player_game_log_archive.py'
@@ -72,6 +73,7 @@ jobs:
         run: |
           python -m py_compile \
             wnba_alt_game_log_recovery.py \
+            wnba_alt_recovery_handoff.py \
             wnba_espn_boxscore_fallback.py \
             wnba_alt_pending_diagnostics.py \
             wnba_alt_performance_tracker.py \
@@ -113,6 +115,10 @@ jobs:
             python wnba_player_game_log_archive.py snapshot
           done
 
+      - name: Normalize recovered warehouse handoff
+        if: env.RECOVERY_DATES != ''
+        run: python wnba_alt_recovery_handoff.py
+
       - name: Audit recovered warehouse handoff
         if: env.RECOVERY_DATES != ''
         run: |
@@ -131,6 +137,7 @@ jobs:
           matches=sum((norm(r.get('player')),str(r.get('date') or '')[:10]) in index for r in inspector)
           print({'target_date':target,'canonical_records':len(records),'target_pending_rows':len(inspector),'player_date_matches':matches})
           if not records: raise SystemExit('Canonical warehouse is empty before ALT grading')
+          if inspector and matches == 0: raise SystemExit('Recovered logs exist but no pending player/date rows reached the canonical warehouse')
           PY
 
       - name: Regrade only affected date
