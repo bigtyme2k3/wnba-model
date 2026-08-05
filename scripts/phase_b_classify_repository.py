@@ -25,14 +25,17 @@ LEGACY_HINTS = (
 
 
 def normalize_row(row: dict[str, str | None]) -> dict[str, str]:
-    """Normalize Phase A CSV headers and values without assuming exact casing."""
+    """Normalize the actual Phase A CSV schema and compatible aliases."""
     aliases = {
+        'file': 'path',
         'filepath': 'path',
         'file_path': 'path',
         'filename': 'path',
         'class': 'classification',
         'category': 'classification',
+        'active_workflow_owners': 'workflow_references',
         'workflow_refs': 'workflow_references',
+        'python_owners': 'python_references',
         'python_refs': 'python_references',
         'duplicate': 'duplicate_of',
     }
@@ -55,35 +58,26 @@ def classify(row: dict[str, str]) -> tuple[str, str, str]:
 
     if not path:
         return 'MALFORMED_RECORD', 'REVIEW_OWNER', 'Audit row has no usable path after schema normalization.'
-
     if path.startswith(PROTECTED_PREFIXES):
         return 'PROTECTED', 'KEEP', 'Historical, canonical, warehouse, or audit evidence; never auto-delete.'
-
     if initial == 'KEEP' or referenced:
         return 'CORE', 'KEEP', 'Referenced by an active workflow/import or already classified as production infrastructure.'
-
     if initial == 'DOC':
         return 'DOCUMENTATION', 'KEEP', 'Documentation retained unless later identified as superseded.'
-
     if initial == 'ARCHIVE' or '/workflows-archive/' in path:
         return 'LEGACY_REFERENCE', 'ARCHIVE', 'Already separated from production; retain as historical reference for now.'
-
     if initial == 'GENERATED':
         return 'GENERATED_OUTPUT', 'POLICY', 'Generated artifact; keep current outputs and define explicit history/retention policy.'
-
     if initial == 'REVIEW_DUPLICATE' or duplicate_of:
         return 'EXACT_DUPLICATE', 'DELETE_CANDIDATE', f'Byte-identical duplicate of {duplicate_of or "another tracked file"}; safe only after path ownership check.'
 
     low = path.lower()
     if any(token in low for token in TRASH_HINTS):
         return 'LIKELY_TRASH', 'DELETE_CANDIDATE', 'Unreferenced file with temporary/backup/deprecated naming.'
-
     if any(token in low for token in LEGACY_HINTS):
         return 'SUPERSEDED_OR_EXPERIMENTAL', 'ARCHIVE_CANDIDATE', 'Unreferenced versioned, sprint, phase, patch, repair, or archive-style implementation.'
-
     if path.endswith(('.py', '.yml', '.yaml', '.json', '.csv', '.jsonl')):
         return 'UNOWNED', 'REVIEW_OWNER', reason or 'No active workflow/import ownership found.'
-
     return 'UNCLASSIFIED', 'REVIEW_OWNER', reason or 'Manual ownership review required.'
 
 
@@ -112,6 +106,13 @@ def main() -> None:
         counts[bucket] += 1
         actions[action] += 1
 
+    if not output:
+        raise SystemExit('Phase A inventory contained no file records')
+    if counts.get('MALFORMED_RECORD', 0) == len(output):
+        raise SystemExit('All Phase A rows were malformed after schema normalization')
+    if actions.get('KEEP', 0) == 0:
+        raise SystemExit('No keep set produced')
+
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(
         json.dumps({'summary': {'buckets': dict(counts), 'actions': dict(actions)}, 'files': output}, indent=2),
@@ -122,8 +123,6 @@ def main() -> None:
     all_fields = {key for record in output for key in record.keys()}
     fields = [key for key in preferred if key in all_fields]
     fields += sorted(all_fields - set(fields))
-    if not fields:
-        fields = ['path', 'phase_b_bucket', 'recommended_action', 'phase_b_rationale']
 
     with OUT_CSV.open('w', newline='', encoding='utf-8') as fh:
         writer = csv.DictWriter(fh, fieldnames=fields, extrasaction='ignore')
@@ -135,15 +134,11 @@ def main() -> None:
     owner_review = [r for r in output if r.get('recommended_action') == 'REVIEW_OWNER']
 
     lines = [
-        '# Phase B Classification Complete',
-        '',
-        'Phase B is a non-destructive classification pass over the Phase A inventory.',
-        '',
+        '# Phase B Classification Complete', '',
+        'Phase B is a non-destructive classification pass over the Phase A inventory.', '',
         f'- **Input rows:** {len(raw_rows)}',
-        f'- **Classified rows:** {len(output)}',
-        '',
-        '## Classification totals',
-        '',
+        f'- **Classified rows:** {len(output)}', '',
+        '## Classification totals', '',
     ]
     for key, value in sorted(counts.items()):
         lines.append(f'- **{key}:** {value}')
@@ -151,17 +146,13 @@ def main() -> None:
     for key, value in sorted(actions.items()):
         lines.append(f'- **{key}:** {value}')
     lines += [
-        '',
-        '## Safety rules',
-        '',
+        '', '## Safety rules', '',
         '- No files were deleted or moved in Phase B.',
         '- `data/history/`, `data/warehouse/`, `data/master/`, and prior audit evidence are protected.',
         '- Exact duplicates remain candidates until ownership and path expectations are confirmed.',
         '- Generated files require a retention policy rather than blanket deletion.',
         '- Malformed audit records are retained in the report instead of crashing the classifier.',
-        '',
-        '## Highest-priority delete candidates',
-        '',
+        '', '## Highest-priority delete candidates', '',
     ]
     for record in delete_candidates[:50]:
         lines.append(f"- `{record.get('path') or '[missing path]'}` — {record.get('phase_b_rationale', '')}")
@@ -171,12 +162,8 @@ def main() -> None:
     lines += ['', '## Ownership review queue', '']
     for record in owner_review[:75]:
         lines.append(f"- `{record.get('path') or '[missing path]'}` — {record.get('phase_b_rationale', '')}")
-    lines += [
-        '',
-        '## Phase C entry criteria',
-        '',
-        'Phase C may begin after reviewing the delete and archive queues and approving controlled cleanup batches.',
-    ]
+    lines += ['', '## Phase C entry criteria', '',
+              'Phase C may begin after reviewing the delete and archive queues and approving controlled cleanup batches.']
     OUT_MD.write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
     print(json.dumps({'buckets': dict(counts), 'actions': dict(actions)}, indent=2))
