@@ -1,0 +1,88 @@
+name: WNBA Live State Sync
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data/dashboard/wnba_master.json'
+      - 'data/master/wnba_master.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  synchronize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Synchronize authoritative game state
+        run: |
+          python wnba_v5_live_state_sync.py
+
+      - name: Verify state matches active master slate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          master = json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8'))
+          state = json.loads(Path('data/dashboard/wnba_game_state.json').read_text(encoding='utf-8'))
+          target = str(master.get('target_date') or '')
+          today = [g for g in master.get('games', []) if str(g.get('game_date') or '') == target]
+          state_matchups = {str(g.get('matchup') or '') for g in state.get('games', [])}
+          missing = [str(g.get('game') or g.get('matchup') or '') for g in today if str(g.get('game') or g.get('matchup') or '') not in state_matchups]
+          if not target:
+              raise SystemExit('Master target_date is missing')
+          if not today:
+              raise SystemExit(f'Master contains no games for target date {target}')
+          if missing:
+              raise SystemExit(f'Live-state file is missing active slate games: {missing}')
+          print({'target_date': target, 'today_games': len(today), 'state_games': len(state.get('games', []))})
+          PY
+
+      - name: Publish synchronized state
+        run: |
+          git config user.name 'WNBA Live State Bot'
+          git config user.email 'actions@github.com'
+          git add \
+            data/dashboard/wnba_game_state.json \
+            data/warehouse/wnba_game_state.json \
+            data/dashboard/wnba_master.json \
+            data/master/wnba_master.json \
+            data/dashboard/wnba_decision_engine_final.json \
+            data/warehouse/wnba_decision_engine_final.json \
+            data/dashboard/wnba_portfolio_optimizer_v2.json \
+            data/warehouse/wnba_portfolio_optimizer_v2.json \
+            data/dashboard/wnba_risk_allocation.json \
+            data/warehouse/wnba_risk_allocation.json \
+            data/dashboard/wnba_portfolio_dashboard.json \
+            data/warehouse/wnba_portfolio_dashboard.json \
+            data/dashboard/wnba_injury_intelligence.json \
+            data/warehouse/wnba_injury_intelligence.json \
+            data/dashboard/wnba_v5_phase_status.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'Live-state artifacts already match the current master slate.'
+            exit 0
+          fi
+          git commit -m 'Synchronize dashboard game state with current slate'
+          git pull --rebase origin main
+          git push origin HEAD:main
