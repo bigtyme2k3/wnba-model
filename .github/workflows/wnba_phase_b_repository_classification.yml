@@ -1,0 +1,65 @@
+name: WNBA Phase B Repository Classification
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/phase_b_classification_request.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-repository-audit
+  cancel-in-progress: false
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Phase B classification
+        run: python scripts/phase_b_classify_repository.py
+
+      - name: Validate Phase B outputs
+        run: |
+          test -s docs/audit/PHASE_B_CLASSIFICATION_COMPLETE.md
+          test -s docs/audit/phase_b_classification.csv
+          test -s docs/audit/phase_b_classification.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('docs/audit/phase_b_classification.json').read_text())
+          assert p.get('files'), 'No files classified'
+          actions = p.get('summary', {}).get('actions', {})
+          assert actions.get('KEEP', 0) > 0, 'No keep set produced'
+          assert actions.get('REVIEW_OWNER', 0) + actions.get('ARCHIVE_CANDIDATE', 0) + actions.get('DELETE_CANDIDATE', 0) > 0, 'No cleanup queue produced'
+          print(actions)
+          PY
+
+      - name: Publish Phase B reports
+        run: |
+          git config user.name 'WNBA Repository Classification Bot'
+          git config user.email 'actions@github.com'
+          git add docs/audit/PHASE_B_CLASSIFICATION_COMPLETE.md \
+                  docs/audit/phase_b_classification.csv \
+                  docs/audit/phase_b_classification.json
+          if git diff --cached --quiet; then
+            echo 'No Phase B report changes'
+            exit 0
+          fi
+          git commit -m 'Complete Phase B repository classification'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main && git push origin HEAD:main && exit 0
+            git rebase --abort || true
+            sleep $((attempt * 3))
+          done
+          exit 1
