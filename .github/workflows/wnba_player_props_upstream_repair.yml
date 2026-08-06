@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'data/player_props_upstream_repair_request.txt'
+      - 'data/player_props_canonical_renderer_request_*.txt'
 
 permissions:
   contents: write
@@ -37,7 +38,7 @@ jobs:
         run: echo "TARGET=$(TZ=America/New_York date +%F)" >> "$GITHUB_ENV"
       - name: Ingest current-slate player props
         run: python wnba_player_props_ingestion.py --date "$TARGET"
-      - name: Rebuild dashboard and apply truth renderer
+      - name: Rebuild dashboard and install canonical Player Props renderer
         run: |
           [ ! -f build_dashboard_v4.py ] || python build_dashboard_v4.py
           [ ! -f patch_dashboard_v4_games_markets.py ] || python patch_dashboard_v4_games_markets.py
@@ -46,7 +47,7 @@ jobs:
           [ ! -f patch_dashboard_v4_portfolio_ai.py ] || python patch_dashboard_v4_portfolio_ai.py
           [ ! -f patch_dashboard_navigation_v2.py ] || python patch_dashboard_navigation_v2.py
           python patch_dashboard_v4_player_props_truth.py
-      - name: Validate current-slate prop rows
+      - name: Validate canonical current-slate prop renderer
         run: |
           python - <<'PY'
           import json, os
@@ -56,13 +57,15 @@ jobs:
           truth=json.loads(Path('data/dashboard/wnba_player_props_current_slate.json').read_text())
           assert ing.get('target_date')==target
           assert truth.get('target_date')==target
-          assert truth.get('source')=='data/dashboard/wnba_player_props.json'
+          assert truth.get('source_file')=='data/dashboard/wnba_player_props.json'
           assert truth.get('active_count',0)>0, 'No current-slate player props were ingested'
           for row in truth['rows']:
               assert row.get('game') in truth['current_games']
               assert row.get('team') in truth['current_teams']
           html=Path('docs/index.html').read_text()
-          assert 'v4-player-props-truth' in html
+          assert 'v4-player-props-canonical-source' in html
+          assert 'function propData(){return Array.isArray(CANONICAL_PLAYER_PROPS.rows)' in html
+          assert "function playerTeam(r){return String(r.team||r.player_team" in html
           assert 'Toronto Tempo @ Golden State Valkyries' not in json.dumps(truth['rows'])
           print({'target':target,'events':ing.get('event_count'),'ingested':ing.get('row_count'),'active':truth.get('active_count'),'excluded':truth.get('excluded_count')})
           PY
@@ -78,7 +81,7 @@ jobs:
             echo 'No player-prop changes to publish'
             exit 0
           fi
-          git commit -m "Repair current-slate player props from Odds API for ${TARGET}"
+          git commit -m "Consolidate Player Props onto canonical Odds API source for ${TARGET}"
           git stash push -u -m player-props-upstream-untracked || true
           for attempt in 1 2 3 4; do
             git fetch origin main
