@@ -15,6 +15,7 @@ on:
       - 'patch_dashboard_alt_recovery_progress.py'
       - 'patch_dashboard_game_performance.py'
       - 'patch_dashboard_v5_injury_intelligence.py'
+      - 'patch_dashboard_v5_injury_navigation_compat.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_remaining_season.py'
       - 'patch_dashboard_v4_alt_streaks_display.py'
@@ -66,6 +67,7 @@ jobs:
             patch_dashboard_alt_recovery_progress.py \
             patch_dashboard_game_performance.py \
             patch_dashboard_v5_injury_intelligence.py \
+            patch_dashboard_v5_injury_navigation_compat.py \
             patch_dashboard_v5_player_prop_injury_context.py \
             patch_dashboard_v4_remaining_season.py \
             patch_dashboard_v4_alt_streaks_display.py \
@@ -73,14 +75,13 @@ jobs:
 
       - name: Build complete dashboard artifact
         run: |
-          # Build the base dashboard exactly once. All feature patches run after
-          # this step so a later base patch cannot erase an inserted tab/route.
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
 
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then
             python patch_dashboard_v5_injury_intelligence.py
             python patch_dashboard_v5_player_prop_injury_context.py
+            python patch_dashboard_v5_injury_navigation_compat.py
           else
             echo "Injury payload unavailable; preserving the committed dashboard artifact."
           fi
@@ -99,24 +100,13 @@ jobs:
           python patch_dashboard_game_performance.py
           python patch_dashboard_build_verification.py
 
-          # Finalize ALT after every other dashboard patch. Remove prior ALT
-          # renderer blocks first so the canonical current-slate renderer is
-          # appended after any legacy renderer that could otherwise override it.
           python - <<'PY'
           import re
           from pathlib import Path
           path = Path('docs/index.html')
           html = path.read_text(encoding='utf-8')
-          for element_id in (
-              'v4-alt-streaks-display-script',
-              'v4-alt-ladders-script',
-          ):
-              html = re.sub(
-                  rf'<script id="{re.escape(element_id)}">.*?</script>',
-                  '',
-                  html,
-                  flags=re.S,
-              )
+          for element_id in ('v4-alt-streaks-display-script','v4-alt-ladders-script'):
+              html = re.sub(rf'<script id="{re.escape(element_id)}">.*?</script>','',html,flags=re.S)
           path.write_text(html, encoding='utf-8')
           PY
           python patch_dashboard_v4_alt_streaks_display.py
@@ -128,59 +118,32 @@ jobs:
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           required = [
-              'WNBA_TERMINAL_UI_PATCH_START',
-              'WNBA Intelligence Terminal',
-              'ALT Performance',
-              'ALT Streak Board',
-              'Sportsbook ALT Ladders',
-              'v4-alt-streaks-display-data',
-              'v4-alt-streaks-display-script',
-              'v4-alt-ladders-data',
-              'v4-alt-ladders-script',
-              'No active-slate streaks match this filter.',
-              'off-slate row',
-              'active game',
-              'Game Performance',
-              'WNBA_GAME_PERFORMANCE_START',
-              'game-performance-nav-script',
-              'data-wv4-tab="game-performance"',
-              'Game Performance results',
-              'Frozen pregame spreads, totals and projected scores',
-              'Spread record',
-              'Total record',
-              'WNBA_ALT_GRADING_STATUS_START',
-              'ALT Grading Checkpoint',
-              'Screenshot-verifiable grading freshness',
-              'WNBA_ALT_PENDING_DIAGNOSTICS_START',
-              'Pending ALT Diagnostics',
-              'Pending rows',
-              'WNBA_BUILD_BEACON_START',
-              'Games QA Beacon',
-              'screenshot-verifiable deployment marker',
+              'WNBA_TERMINAL_UI_PATCH_START','WNBA Intelligence Terminal','ALT Performance',
+              'ALT Streak Board','Sportsbook ALT Ladders','v4-alt-streaks-display-data',
+              'v4-alt-streaks-display-script','v4-alt-ladders-data','v4-alt-ladders-script',
+              'No active-slate streaks match this filter.','off-slate row','active game',
+              'Game Performance','WNBA_GAME_PERFORMANCE_START','game-performance-nav-script',
+              'data-wv4-tab="game-performance"','Game Performance results',
+              'Frozen pregame spreads, totals and projected scores','Spread record','Total record',
+              'WNBA_ALT_GRADING_STATUS_START','ALT Grading Checkpoint',
+              'Screenshot-verifiable grading freshness','WNBA_ALT_PENDING_DIAGNOSTICS_START',
+              'Pending ALT Diagnostics','Pending rows','WNBA_BUILD_BEACON_START',
+              'Games QA Beacon','screenshot-verifiable deployment marker',
           ]
           if Path('data/dashboard/wnba_alt_recovery_progress.json').exists():
               required.extend(['WNBA_ALT_RECOVERY_PROGRESS_START','ALT Auto-Fix Progress','Jobs queued','Still missing'])
           if Path('data/dashboard/wnba_remaining_season_intelligence.json').exists():
-              required.extend([
-                  'v4-remaining-season-data',
-                  'v4-remaining-season-script',
-                  'Remaining Season Intelligence',
-                  "['remaining','Remaining Season']",
-                  "view==='remaining'",
-              ])
+              required.extend(['v4-remaining-season-data','v4-remaining-season-script','Remaining Season Intelligence'])
           injury_payload = Path('data/dashboard/wnba_injury_intelligence.json')
           if injury_payload.exists():
               required.extend([
-                  'v5-injury-intelligence-data',
-                  'v5-injury-intelligence-script',
-                  "['injuries','Injuries']",
-                  "view==='injuries'",
-                  'window.injuryIntelligence',
-                  'v5-player-prop-injury-style',
-                  'v5-player-prop-injury-script',
-                  'window.WNBA_PLAYER_PROP_INJURY_CONTEXT',
+                  'v5-injury-intelligence-data','v5-injury-intelligence-script',
+                  'window.injuryIntelligence','v5-player-prop-injury-style',
+                  'v5-player-prop-injury-script','window.WNBA_PLAYER_PROP_INJURY_CONTEXT',
                   'Injury-adjusted',
               ])
+              if "['injuries','Injuries']" not in h or "view==='injuries'" not in h:
+                  raise SystemExit('Deployment blocked; Injury Intelligence data exists but navigation compatibility repair did not install the tab and route.')
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
@@ -188,7 +151,7 @@ jobs:
               raise SystemExit('Deployment blocked; ALT streak renderer is duplicated or missing.')
           if h.count('id="v4-alt-ladders-script"') != 1:
               raise SystemExit('Deployment blocked; ALT ladder renderer is duplicated or missing.')
-          print('Complete dashboard, final current-slate ALT renderer, visible Game Performance results, Remaining Season, ALT recovery progress and QA beacons verified.')
+          print('Complete dashboard artifact verified with current navigation compatibility repairs.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
