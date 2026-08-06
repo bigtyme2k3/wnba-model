@@ -5,6 +5,7 @@ from pathlib import Path
 
 DASHBOARD = Path('docs/index.html')
 MASTER = Path('data/dashboard/wnba_master.json')
+INGESTED = Path('data/dashboard/wnba_player_props.json')
 MARKER = 'v4-player-props-truth'
 
 
@@ -20,9 +21,16 @@ def explicit_team(row: dict) -> str:
     return ''
 
 
+def load_json(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding='utf-8'))
+    except Exception:
+        return default
+
+
 def main() -> None:
     html = DASHBOARD.read_text(encoding='utf-8')
-    master = json.loads(MASTER.read_text(encoding='utf-8'))
+    master = load_json(MASTER, {})
     games = [g for g in master.get('games', []) if isinstance(g, dict) and str(g.get('bucket', '')).lower() == 'today']
     current_games = {str(g.get('game') or '').strip() for g in games if g.get('game')}
     current_teams = {
@@ -32,7 +40,15 @@ def main() -> None:
         if team
     }
 
-    source_rows = [r for r in master.get('props', []) if isinstance(r, dict)]
+    ingested = load_json(INGESTED, {})
+    target = str(master.get('target_date') or '')
+    if str(ingested.get('target_date') or '') == target and isinstance(ingested.get('rows'), list):
+        source_rows = [r for r in ingested['rows'] if isinstance(r, dict)]
+        source_name = str(INGESTED)
+    else:
+        source_rows = [r for r in master.get('props', []) if isinstance(r, dict)]
+        source_name = str(MASTER) + ':props'
+
     clean_rows = []
     excluded = []
     for row in source_rows:
@@ -53,7 +69,8 @@ def main() -> None:
         clean_rows.append(copied)
 
     payload = {
-        'target_date': master.get('target_date'),
+        'target_date': target,
+        'source': source_name,
         'current_games': sorted(current_games),
         'current_teams': sorted(current_teams),
         'rows': clean_rows,
@@ -74,9 +91,7 @@ def main() -> None:
  window.oppFor=(r,t)=>String(r.game||r.matchup||'').split(' @ ').find(x=>x&&x!==t)||'';
  const realHistory=(r,n)=>{{
    const candidates=[r.recent_values,r.last_10_values,r.last10,r.game_log_values,r.history];
-   for(const c of candidates){{
-     if(Array.isArray(c)) return c.map(Number).filter(Number.isFinite).slice(0,n);
-   }}
+   for(const c of candidates){{if(Array.isArray(c)) return c.map(Number).filter(Number.isFinite).slice(0,n);}}
    return [];
  }};
  window.hist=realHistory;
@@ -86,7 +101,6 @@ def main() -> None:
    const h=vals.filter(v=>side==='UNDER'?v<Number(line):v>Number(line)).length;
    return {{h,p:Math.round(h/vals.length*100)}};
  }};
- const oldPropRow=window.propRow;
  window.propRow=function(r){{
    const team=window.teamFor(r), matchup=String(r.game||r.matchup||''), parts=matchup.split(' @ ');
    if(!team||!TRUTH.current_teams.includes(team)||!TRUTH.current_games.includes(matchup)) return '';
@@ -110,7 +124,7 @@ def main() -> None:
     else:
         html = html.replace('</body>', script + '</body>')
     DASHBOARD.write_text(html, encoding='utf-8')
-    print(json.dumps({'target_date': payload['target_date'], 'source': len(source_rows), 'active': len(clean_rows), 'excluded': len(excluded)}, indent=2))
+    print(json.dumps({'target_date': target, 'source_file': source_name, 'source': len(source_rows), 'active': len(clean_rows), 'excluded': len(excluded)}, indent=2))
 
 
 if __name__ == '__main__':
