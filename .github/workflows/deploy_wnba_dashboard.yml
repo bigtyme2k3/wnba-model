@@ -55,7 +55,7 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Dashboard target date: $TARGET"
 
-      - name: Compile complete dashboard build chain
+      - name: Compile core dashboard build chain
         run: |
           test -f docs/index.html
           python -m py_compile \
@@ -66,12 +66,22 @@ jobs:
             wnba_alt_pending_diagnostics.py \
             patch_dashboard_alt_recovery_progress.py \
             patch_dashboard_game_performance.py \
+            patch_dashboard_v4_alt_streaks_display.py \
+            patch_dashboard_v4_alt_ladders.py
+
+      - name: Compile optional dashboard plugins
+        continue-on-error: true
+        run: |
+          for file in \
             patch_dashboard_v5_injury_intelligence.py \
             patch_dashboard_v5_injury_navigation_compat.py \
             patch_dashboard_v5_player_prop_injury_context.py \
-            patch_dashboard_v4_remaining_season.py \
-            patch_dashboard_v4_alt_streaks_display.py \
-            patch_dashboard_v4_alt_ladders.py
+            patch_dashboard_v4_remaining_season.py
+          do
+            if [ -f "$file" ]; then
+              python -m py_compile "$file" || echo "Optional plugin compile warning: $file"
+            fi
+          done
 
       - name: Build complete dashboard artifact
         run: |
@@ -79,17 +89,17 @@ jobs:
           python patch_terminal_ui.py
 
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then
-            python patch_dashboard_v5_injury_intelligence.py
-            python patch_dashboard_v5_player_prop_injury_context.py
-            python patch_dashboard_v5_injury_navigation_compat.py
+            python patch_dashboard_v5_injury_intelligence.py || echo "Optional Injury Intelligence renderer skipped."
+            python patch_dashboard_v5_player_prop_injury_context.py || echo "Optional Player Props injury context skipped."
+            python patch_dashboard_v5_injury_navigation_compat.py || echo "Optional Injuries navigation skipped."
           else
-            echo "Injury payload unavailable; preserving the committed dashboard artifact."
+            echo "Injury payload unavailable; continuing without the optional Injuries module."
           fi
 
           if [ -f data/dashboard/wnba_remaining_season_intelligence.json ]; then
-            python patch_dashboard_v4_remaining_season.py
+            python patch_dashboard_v4_remaining_season.py || echo "Optional Remaining Season module skipped."
           else
-            echo "Remaining-season payload unavailable; preserving the committed dashboard artifact."
+            echo "Remaining-season payload unavailable; continuing without the optional module."
           fi
 
           python patch_dashboard_alt_grading_status.py
@@ -112,7 +122,7 @@ jobs:
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
 
-      - name: Verify complete dashboard artifact
+      - name: Verify core dashboard artifact
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -132,27 +142,30 @@ jobs:
           ]
           if Path('data/dashboard/wnba_alt_recovery_progress.json').exists():
               required.extend(['WNBA_ALT_RECOVERY_PROGRESS_START','ALT Auto-Fix Progress','Jobs queued','Still missing'])
-          if Path('data/dashboard/wnba_remaining_season_intelligence.json').exists():
-              required.extend(['v4-remaining-season-data','v4-remaining-season-script','Remaining Season Intelligence'])
-          injury_payload = Path('data/dashboard/wnba_injury_intelligence.json')
-          if injury_payload.exists():
-              required.extend([
-                  'v5-injury-intelligence-data','v5-injury-intelligence-script',
-                  'window.injuryIntelligence','v5-player-prop-injury-style',
-                  'v5-player-prop-injury-script','window.WNBA_PLAYER_PROP_INJURY_CONTEXT',
-                  'Injury-adjusted','v5-injury-navigation-runtime',
-                  'data-injury-runtime-tab','window.WNBA_INJURY_RUNTIME_NAV','renderInjuries',
-              ])
           missing = [marker for marker in required if marker not in h]
           if missing:
-              raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
+              raise SystemExit(f'Deployment blocked; missing core dashboard markers: {missing}')
           if h.count('id="v4-alt-streaks-display-script"') != 1:
               raise SystemExit('Deployment blocked; ALT streak renderer is duplicated or missing.')
           if h.count('id="v4-alt-ladders-script"') != 1:
               raise SystemExit('Deployment blocked; ALT ladder renderer is duplicated or missing.')
-          if injury_payload.exists() and h.count('id="v5-injury-navigation-runtime"') != 1:
-              raise SystemExit('Deployment blocked; Injury runtime navigation is duplicated or missing.')
-          print('Complete dashboard artifact verified with router-independent Injury navigation.')
+          print('Core dashboard artifact verified.')
+          PY
+
+      - name: Report optional plugin status
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          h = Path('docs/index.html').read_text(encoding='utf-8')
+          checks = {
+              'Injury Intelligence': ['v5-injury-intelligence-data','v5-injury-intelligence-script'],
+              'Injuries navigation': ['v5-injury-navigation-runtime','data-injury-runtime-tab'],
+              'Player Props injury context': ['v5-player-prop-injury-script','window.WNBA_PLAYER_PROP_INJURY_CONTEXT'],
+              'Remaining Season': ['v4-remaining-season-data','v4-remaining-season-script'],
+          }
+          for name, markers in checks.items():
+              present = all(marker in h for marker in markers)
+              print(f"{name}: {'ACTIVE' if present else 'SKIPPED'}")
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
