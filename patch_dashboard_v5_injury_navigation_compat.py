@@ -4,79 +4,63 @@ import re
 from pathlib import Path
 
 HTML = Path('docs/index.html')
+MARKER = 'v5-injury-navigation-runtime'
 
-
-def inject_navigation(html: str) -> tuple[str, bool]:
-    if re.search(r"['\"]injuries['\"]\s*,\s*['\"]Injuries['\"]", html):
-        return html, True
-
-    anchors = [
-        r"(\[\s*['\"]ai-center['\"]\s*,\s*['\"]AI Center['\"]\s*\])",
-        r"(\[\s*['\"]ai['\"]\s*,\s*['\"]AI Center['\"]\s*\])",
-        r"(\[\s*['\"]best['\"]\s*,\s*['\"]Best Bets['\"]\s*\])",
-        r"(\[\s*['\"]health['\"]\s*,\s*['\"]Data Health['\"]\s*\])",
-        r"(\[\s*['\"]results['\"]\s*,\s*['\"]Results['\"]\s*\])",
-    ]
-    for pattern in anchors:
-        updated, count = re.subn(pattern, "['injuries','Injuries']," + r"\1", html, count=1)
-        if count:
-            return updated, True
-
-    # Generic compact tabs-array fallback.
-    match = re.search(r"const\s+tabs\s*=\s*\[(.*?)\];", html, flags=re.S)
-    if match:
-        block = match.group(0)
-        insertion = "['injuries','Injuries'],"
-        updated = block.replace('[', '[' + insertion, 1)
-        return html.replace(block, updated, 1), True
-    return html, False
-
-
-def inject_route(html: str) -> tuple[str, bool]:
-    if re.search(r"view\s*===?\s*['\"]injuries['\"]", html):
-        return html, True
-
-    route = "else if(view==='injuries')html=invoke('Injury Intelligence',[window.injuryIntelligence]);"
-    anchors = [
-        r"(else\s+if\s*\(\s*view\s*===?\s*['\"]ai-center['\"])",
-        r"(else\s+if\s*\(\s*view\s*===?\s*['\"]ai['\"])",
-        r"(else\s+if\s*\(\s*view\s*===?\s*['\"]best['\"])",
-        r"(else\s+if\s*\(\s*view\s*===?\s*['\"]health['\"])",
-        r"(else\s+if\s*\(\s*view\s*===?\s*['\"]results['\"])",
-    ]
-    for pattern in anchors:
-        updated, count = re.subn(pattern, route + r"\1", html, count=1)
-        if count:
-            return updated, True
-
-    # Support renderers that assign root.innerHTML directly.
-    direct = "else if(view==='injuries')root.innerHTML=(typeof window.injuryIntelligence==='function'?window.injuryIntelligence():'');"
-    anchors = [
-        r"(else\s+if\s*\(\s*view\s*===?\s*['\"]results['\"])",
-        r"(else\s+if\s*\(\s*view\s*===?\s*['\"]portfolio['\"])",
-        r"(else\s+if\s*\(\s*view\s*===?\s*['\"]health['\"])",
-    ]
-    for pattern in anchors:
-        updated, count = re.subn(pattern, direct + r"\1", html, count=1)
-        if count:
-            return updated, True
-    return html, False
+RUNTIME = r'''<script id="v5-injury-navigation-runtime">
+(function(){
+  function renderInjuries(){
+    const root=document.getElementById('root')||document.querySelector('[data-dashboard-root]')||document.querySelector('main');
+    if(!root||typeof window.injuryIntelligence!=='function') return false;
+    root.innerHTML=window.injuryIntelligence();
+    document.querySelectorAll('[data-injury-runtime-tab],.tab.active,.nav-tab.active').forEach(el=>el.classList.remove('active'));
+    const btn=document.querySelector('[data-injury-runtime-tab]');
+    if(btn) btn.classList.add('active');
+    try{history.replaceState(null,'','#injuries')}catch(_e){}
+    return true;
+  }
+  function install(){
+    if(document.querySelector('[data-injury-runtime-tab]')) return true;
+    const candidates=[...document.querySelectorAll('nav,.tabs,.tabbar,.nav-tabs,[role="tablist"],header div')]
+      .filter(el=>el.querySelector('button,a,[role="tab"]'));
+    const nav=candidates.find(el=>/Games|Player Props|Best Bets|Results|AI Center/.test(el.textContent||''));
+    if(!nav) return false;
+    const sample=nav.querySelector('button,a,[role="tab"]');
+    const btn=document.createElement(sample&&sample.tagName==='A'?'a':'button');
+    if(sample) btn.className=sample.className;
+    btn.textContent='Injuries';
+    btn.setAttribute('data-injury-runtime-tab','1');
+    btn.setAttribute('type','button');
+    btn.addEventListener('click',function(ev){ev.preventDefault();renderInjuries();});
+    nav.appendChild(btn);
+    if(location.hash==='#injuries') setTimeout(renderInjuries,0);
+    return true;
+  }
+  window.WNBA_INJURY_RUNTIME_NAV={install:install,render:renderInjuries};
+  if(!install()){
+    const obs=new MutationObserver(function(){if(install())obs.disconnect();});
+    obs.observe(document.documentElement,{childList:true,subtree:true});
+    setTimeout(function(){obs.disconnect();install();},5000);
+  }
+})();
+</script>'''
 
 
 def main() -> None:
     if not HTML.exists():
         raise SystemExit('docs/index.html missing')
     html = HTML.read_text(encoding='utf-8')
-    html, nav_ok = inject_navigation(html)
-    html, route_ok = inject_route(html)
-    HTML.write_text(html, encoding='utf-8')
-
-    # Injury data and player-prop context remain useful even if a future
-    # navigation redesign prevents exposing the dedicated tab.
-    if nav_ok and route_ok:
-        print('Injury Intelligence navigation and route repaired')
+    html = re.sub(rf'<script id="{MARKER}">.*?</script>', '', html, flags=re.S)
+    if '</body>' in html:
+        html = html.replace('</body>', RUNTIME + '</body>', 1)
     else:
-        print(f'Injury Intelligence compatibility warning: nav={nav_ok} route={route_ok}')
+        html += RUNTIME
+    HTML.write_text(html, encoding='utf-8')
+    check = HTML.read_text(encoding='utf-8')
+    required = [MARKER, 'data-injury-runtime-tab', 'window.WNBA_INJURY_RUNTIME_NAV', 'renderInjuries']
+    missing = [x for x in required if x not in check]
+    if missing:
+        raise SystemExit('Injury runtime navigation verification failed: ' + ', '.join(missing))
+    print('Router-independent Injury Intelligence runtime navigation installed')
 
 
 if __name__ == '__main__':
