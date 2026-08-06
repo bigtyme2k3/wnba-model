@@ -140,10 +140,9 @@ jobs:
                   'v5-injury-intelligence-data','v5-injury-intelligence-script',
                   'window.injuryIntelligence','v5-player-prop-injury-style',
                   'v5-player-prop-injury-script','window.WNBA_PLAYER_PROP_INJURY_CONTEXT',
-                  'Injury-adjusted',
+                  'Injury-adjusted','v5-injury-navigation-runtime',
+                  'data-injury-runtime-tab','window.WNBA_INJURY_RUNTIME_NAV','renderInjuries',
               ])
-              if "['injuries','Injuries']" not in h or "view==='injuries'" not in h:
-                  raise SystemExit('Deployment blocked; Injury Intelligence data exists but navigation compatibility repair did not install the tab and route.')
           missing = [marker for marker in required if marker not in h]
           if missing:
               raise SystemExit(f'Deployment blocked; missing dashboard markers: {missing}')
@@ -151,7 +150,9 @@ jobs:
               raise SystemExit('Deployment blocked; ALT streak renderer is duplicated or missing.')
           if h.count('id="v4-alt-ladders-script"') != 1:
               raise SystemExit('Deployment blocked; ALT ladder renderer is duplicated or missing.')
-          print('Complete dashboard artifact verified with current navigation compatibility repairs.')
+          if injury_payload.exists() and h.count('id="v5-injury-navigation-runtime"') != 1:
+              raise SystemExit('Deployment blocked; Injury runtime navigation is duplicated or missing.')
+          print('Complete dashboard artifact verified with router-independent Injury navigation.')
           PY
           find docs -maxdepth 2 -type f | sort | head -100
 
