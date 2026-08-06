@@ -47,7 +47,6 @@ jobs:
           [ ! -f patch_dashboard_v4_portfolio_ai.py ] || python patch_dashboard_v4_portfolio_ai.py
           [ ! -f patch_dashboard_navigation_v2.py ] || python patch_dashboard_navigation_v2.py
           python patch_dashboard_v4_player_props_truth.py
-          python patch_dashboard_v4_player_props_canonical_runtime.py
       - name: Validate canonical current-slate prop renderer
         run: |
           python - <<'PY'
@@ -64,12 +63,11 @@ jobs:
               assert row.get('game') in truth['current_games']
               assert row.get('team') in truth['current_teams']
           html=Path('docs/index.html').read_text()
-          assert 'v4-player-props-canonical-runtime' in html
-          assert 'window.WNBA_CANONICAL_PLAYER_PROPS' in html
-          assert 'function propData(){return A(window.WNBA_CANONICAL_PLAYER_PROPS||[])}' in html
-          assert "function playerTeam(r){return String(r.team||r.player_team" in html
-          assert 'function playerTeam(r){let g=' not in html
-          assert 'function histVals(r,n=5){let base=' not in html
+          assert 'v4-player-props-canonical-source' in html
+          assert 'window.CANONICAL_PLAYER_PROPS=' in html
+          assert 'window.propData=function()' in html
+          assert 'window.playerTeam=function(r)' in html
+          assert 'window.histVals=function(r,n=5)' in html
           assert 'Toronto Tempo @ Golden State Valkyries' not in json.dumps(truth['rows'])
           print({'target':target,'events':ing.get('event_count'),'ingested':ing.get('row_count'),'active':truth.get('active_count'),'excluded':truth.get('excluded_count')})
           PY
