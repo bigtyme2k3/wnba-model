@@ -14,6 +14,7 @@ on:
     paths:
       - 'data/daily_canonical_build_request.txt'
       - 'scripts/build_daily_canonical_slate.py'
+      - 'wnba_player_props_ingestion.py'
       - 'wnba_sprint2_prediction_engine.py'
       - '.github/workflows/wnba_daily_canonical_build.yml'
 
@@ -74,7 +75,13 @@ jobs:
           for row in props.get('rows') or []:
             assert row.get('target_date')==target
             assert row.get('team')
+            assert row.get('team') in {row.get('away_team'), row.get('home_team')}
             assert not games or row.get('game') in games
+
+          # Unresolved sportsbook rows are quarantined rather than allowed into
+          # the canonical model/dashboard feed. Their count stays observable.
+          unresolved=props.get('unresolved_rows') or []
+          assert all(not row.get('team') for row in unresolved)
 
           ratings=json.loads(Path('data/dashboard/wnba_team_ratings.json').read_text())
           predictions=json.loads(Path('data/dashboard/wnba_sprint2_predictions.json').read_text())
@@ -89,7 +96,7 @@ jobs:
             assert projection.get('home_score') is not None
             assert 0 <= float(projection.get('home_win_probability')) <= 1
             assert 35 <= float(game.get('confidence')) <= 88
-          print({'target':target,'games':d['game_count'],'props':d['player_prop_rows'],'rated_teams':len(ratings.get('teams') or []),'predictions':len(predictions.get('games') or [])})
+          print({'target':target,'games':d['game_count'],'props':d['player_prop_rows'],'unresolved_props':len(unresolved),'rated_teams':len(ratings.get('teams') or []),'predictions':len(predictions.get('games') or [])})
           PY
       - name: Publish canonical daily sources
         run: |
