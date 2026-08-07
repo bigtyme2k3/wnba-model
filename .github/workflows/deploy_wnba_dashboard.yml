@@ -9,6 +9,7 @@ on:
       - 'data/dashboard/**'
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
+      - 'patch_dashboard_canonical_runtime.py'
       - 'patch_dashboard_build_verification.py'
       - 'patch_dashboard_alt_grading_status.py'
       - 'wnba_alt_pending_diagnostics.py'
@@ -61,6 +62,7 @@ jobs:
           python -m py_compile \
             wnba_terminal_ui.py \
             patch_terminal_ui.py \
+            patch_dashboard_canonical_runtime.py \
             patch_dashboard_build_verification.py \
             patch_dashboard_alt_grading_status.py \
             wnba_alt_pending_diagnostics.py \
@@ -122,9 +124,14 @@ jobs:
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
 
+          # Install canonical daily data last so no legacy renderer can overwrite
+          # the current slate date, Games rows, or Player Props rows.
+          python patch_dashboard_canonical_runtime.py
+
       - name: Verify core dashboard artifact
         run: |
           python - <<'PY'
+          import json, os
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           required = [
@@ -139,6 +146,7 @@ jobs:
               'Screenshot-verifiable grading freshness','WNBA_ALT_PENDING_DIAGNOSTICS_START',
               'Pending ALT Diagnostics','Pending rows','WNBA_BUILD_BEACON_START',
               'Games QA Beacon','screenshot-verifiable deployment marker',
+              'canonical-daily-runtime-v1','canonical-daily-runtime-script','WNBA_CANONICAL_DAILY',
           ]
           if Path('data/dashboard/wnba_alt_recovery_progress.json').exists():
               required.extend(['WNBA_ALT_RECOVERY_PROGRESS_START','ALT Auto-Fix Progress','Jobs queued','Still missing'])
@@ -149,7 +157,20 @@ jobs:
               raise SystemExit('Deployment blocked; ALT streak renderer is duplicated or missing.')
           if h.count('id="v4-alt-ladders-script"') != 1:
               raise SystemExit('Deployment blocked; ALT ladder renderer is duplicated or missing.')
-          print('Core dashboard artifact verified.')
+          if h.count('id="canonical-daily-runtime-script"') != 1:
+              raise SystemExit('Deployment blocked; canonical runtime is duplicated or missing.')
+
+          target=os.environ['TARGET']
+          manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
+          props=json.loads(Path('data/dashboard/wnba_player_props.json').read_text())
+          assert manifest.get('status')=='PASS', manifest.get('failures')
+          assert manifest.get('target_date')==target
+          assert props.get('target_date')==target
+          if f'"target_date": "{target}"' not in h:
+              raise SystemExit('Deployment blocked; canonical target date is not embedded in HTML.')
+          if 'NaN' in h or 'null%' in h:
+              print('Legacy placeholders remain in source HTML but canonical runtime will replace visible values with em dashes.')
+          print({'status':'PASS','target':target,'games':manifest.get('game_count'),'props':manifest.get('player_prop_rows')})
           PY
 
       - name: Report optional plugin status
