@@ -9,6 +9,9 @@ on:
       - 'data/dashboard/**'
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
+      - 'scrape_odds_props.py'
+      - 'wnba_alt_market_warehouse.py'
+      - 'wnba_alt_streaks.py'
       - 'patch_dashboard_canonical_runtime.py'
       - 'patch_dashboard_games_focus.py'
       - 'patch_dashboard_v4_ui_freeze.py'
@@ -56,6 +59,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install ALT pipeline dependencies
+        run: python -m pip install --disable-pip-version-check pandas requests
+
       - name: Resolve dashboard date
         run: |
           TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
@@ -68,6 +74,9 @@ jobs:
           python -m py_compile \
             wnba_terminal_ui.py \
             patch_terminal_ui.py \
+            scrape_odds_props.py \
+            wnba_alt_market_warehouse.py \
+            wnba_alt_streaks.py \
             patch_dashboard_canonical_runtime.py \
             patch_dashboard_games_focus.py \
             patch_dashboard_v4_ui_freeze.py \
@@ -98,15 +107,53 @@ jobs:
             fi
           done
 
+      - name: Rebuild current ALT market and streak sources
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          set -e
+          if [ -n "${ODDS_API_KEY:-}" ]; then
+            echo "Refreshing exact ALT markets from The Odds API for $TARGET"
+            python scrape_odds_props.py --date "$TARGET" --out data/raw
+          else
+            echo "ODDS_API_KEY is unavailable in this job; current raw ALT input must already exist."
+          fi
+
+          python wnba_alt_market_warehouse.py --date "$TARGET"
+          python wnba_alt_streaks.py --date "$TARGET"
+
+          python - <<'PY'
+          import csv, json, os
+          from pathlib import Path
+          target=os.environ['TARGET']
+          warehouse=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
+          streaks=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
+          if warehouse.get('target_date') != target:
+              raise SystemExit(f"ALT warehouse stale: {warehouse.get('target_date')} != {target}")
+          if streaks.get('target_date') != target:
+              raise SystemExit(f"ALT streak source stale: {streaks.get('target_date')} != {target}")
+          markets=int((warehouse.get('summary') or {}).get('markets') or 0)
+          alternate=int((streaks.get('summary') or {}).get('alternate_rows') or 0)
+          print({'status':'PASS','target':target,'alt_markets':markets,'active_alt_streak_rows':alternate})
+          PY
+
       - name: Score and freeze ALT props for performance tracking
         run: |
-          if [ -f data/dashboard/wnba_alt_streaks.json ]; then
-            python wnba_alt_streak_confidence.py --date "$TARGET"
-            python wnba_alt_performance_tracker.py --date "$TARGET" --grade
-            python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot --analyze
-          else
-            echo "No ALT streak source found; skipping scored ALT snapshot."
-          fi
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          target=os.environ['TARGET']
+          p=Path('data/dashboard/wnba_alt_streaks.json')
+          if not p.exists():
+              raise SystemExit('ALT streak source missing after rebuild')
+          d=json.loads(p.read_text())
+          if d.get('target_date') != target:
+              raise SystemExit(f"Refusing to score stale ALT source {d.get('target_date')} for {target}")
+          print({'target':target,'rows':len(d.get('rows') or []),'alternate_rows':(d.get('summary') or {}).get('alternate_rows',0)})
+          PY
+          python wnba_alt_streak_confidence.py --date "$TARGET"
+          python wnba_alt_performance_tracker.py --date "$TARGET" --grade
+          python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot --analyze
 
       - name: Build complete dashboard artifact
         run: |
@@ -151,7 +198,6 @@ jobs:
           python patch_dashboard_sprint2_phase2.py
 
           # UI Freeze is the FINAL and only navigation/router owner.
-          # Run through the safe wrapper so JavaScript regex escapes are inserted verbatim.
           python patch_dashboard_v4_ui_freeze_safe.py
 
           # ALT Props table, then scored-performance eligibility overlay.
@@ -172,7 +218,7 @@ jobs:
               "['remaining','Remaining Season']", "['health','Data Health']",
               'canonicalAltProps', "view==='alt-props'", 'html=canonicalAltProps()',
               'alt-props-table-script','WNBA_ALT_PROPS_TABLE','ALT Streaks',
-              'alt-props-score-overlay-script','WNBA_ALT_PROP_SCORES','performance_eligible_only',
+              'alt-props-score-overlay-script','WNBA_ALT_PROP_SCORES','performance_eligible_only','unscored_rows_visible',
               'game-performance-route-script','fullGamePerformance','WNBA_GAMES_FOCUS_CLEANUP',
               'sprint2-phase2-script','WNBA_SPRINT2_PHASE2','gamesV25','Prediction Intelligence',
           ]
@@ -229,9 +275,11 @@ jobs:
           target=os.environ['TARGET']
           manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
           phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
+          alt=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
           assert manifest.get('status')=='PASS', manifest.get('failures')
           assert manifest.get('target_date')==target
           assert phase2.get('status')=='PASS' and phase2.get('target_date')==target
+          assert alt.get('target_date')==target, {'alt_target':alt.get('target_date'),'target':target}
           canonical=set(manifest.get('games') or [])
           enriched={g.get('game') for g in phase2.get('games') or []}
           assert enriched==canonical, {'canonical':sorted(canonical),'phase2':sorted(enriched)}
@@ -239,7 +287,7 @@ jobs:
               p=g.get('projection') or {}
               assert p.get('away_score') is not None and p.get('home_score') is not None
               assert g.get('confidence') is not None and g.get('model_grade')
-          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'alt_props_route':'streak-table-scored','games':len(enriched)})
+          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'alt_props_route':'streak-table-scored','alt_target':alt.get('target_date'),'games':len(enriched)})
           PY
 
       - name: Configure GitHub Pages
