@@ -156,10 +156,12 @@ jobs:
               if h.count(f'id="{marker}"') != 1:
                   raise SystemExit(f'{marker} duplicated or missing')
 
-          if h.count('id="root"') != 1:
-              raise SystemExit(f'Routed #root duplicated or missing: {h.count("id=\"root\"")}')
-          if h.count('id="tabs"') != 1:
-              raise SystemExit(f'Navigation #tabs duplicated or missing: {h.count("id=\"tabs\"")}')
+          root_count = h.count('id="root"')
+          tabs_count = h.count('id="tabs"')
+          if root_count != 1:
+              raise SystemExit(f'Routed #root duplicated or missing: {root_count}')
+          if tabs_count != 1:
+              raise SystemExit(f'Navigation #tabs duplicated or missing: {tabs_count}')
 
           # Canonical runtime is data-only. Reintroducing DOM panel replacement
           # can destroy #root and make tab buttons highlight without rendering.
