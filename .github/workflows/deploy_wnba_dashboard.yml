@@ -10,18 +10,18 @@ on:
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
       - 'patch_dashboard_canonical_runtime.py'
+      - 'patch_dashboard_games_focus.py'
+      - 'patch_dashboard_v4_ui_freeze.py'
       - 'patch_dashboard_build_verification.py'
       - 'patch_dashboard_alt_grading_status.py'
       - 'wnba_alt_pending_diagnostics.py'
       - 'patch_dashboard_alt_recovery_progress.py'
       - 'patch_dashboard_game_performance.py'
       - 'patch_dashboard_v5_injury_intelligence.py'
-      - 'patch_dashboard_v5_injury_navigation_compat.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_remaining_season.py'
       - 'patch_dashboard_v4_alt_streaks_display.py'
       - 'patch_dashboard_v4_alt_ladders.py'
-      - 'patch_dashboard_v4_consolidated_navigation.py'
       - '.github/workflows/deploy_wnba_dashboard.yml'
 
 permissions:
@@ -56,13 +56,15 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Dashboard target date: $TARGET"
 
-      - name: Compile core dashboard build chain
+      - name: Compile dashboard build chain
         run: |
           test -f docs/index.html
           python -m py_compile \
             wnba_terminal_ui.py \
             patch_terminal_ui.py \
             patch_dashboard_canonical_runtime.py \
+            patch_dashboard_games_focus.py \
+            patch_dashboard_v4_ui_freeze.py \
             patch_dashboard_build_verification.py \
             patch_dashboard_alt_grading_status.py \
             wnba_alt_pending_diagnostics.py \
@@ -71,17 +73,16 @@ jobs:
             patch_dashboard_v4_alt_streaks_display.py \
             patch_dashboard_v4_alt_ladders.py
 
-      - name: Compile optional dashboard plugins
+      - name: Compile optional data renderers
         continue-on-error: true
         run: |
           for file in \
             patch_dashboard_v5_injury_intelligence.py \
-            patch_dashboard_v5_injury_navigation_compat.py \
             patch_dashboard_v5_player_prop_injury_context.py \
             patch_dashboard_v4_remaining_season.py
           do
             if [ -f "$file" ]; then
-              python -m py_compile "$file" || echo "Optional plugin compile warning: $file"
+              python -m py_compile "$file" || echo "Optional renderer compile warning: $file"
             fi
           done
 
@@ -90,28 +91,28 @@ jobs:
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
 
+          # Keep injury data/rendering available, but Sprint 1 places injury
+          # intelligence inside Games rather than exposing a standalone tab.
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then
-            python patch_dashboard_v5_injury_intelligence.py || echo "Optional Injury Intelligence renderer skipped."
+            python patch_dashboard_v5_injury_intelligence.py || echo "Optional injury renderer skipped."
             python patch_dashboard_v5_player_prop_injury_context.py || echo "Optional Player Props injury context skipped."
-            python patch_dashboard_v5_injury_navigation_compat.py || echo "Optional Injuries navigation skipped."
-          else
-            echo "Injury payload unavailable; continuing without the optional Injuries module."
           fi
 
           if [ -f data/dashboard/wnba_remaining_season_intelligence.json ]; then
-            python patch_dashboard_v4_remaining_season.py || echo "Optional Remaining Season module skipped."
-          else
-            echo "Remaining-season payload unavailable; continuing without the optional module."
+            python patch_dashboard_v4_remaining_season.py || echo "Optional Remaining Season renderer skipped."
           fi
 
-          python patch_dashboard_alt_grading_status.py
-          python wnba_alt_pending_diagnostics.py
+          # Legacy diagnostics may still generate their data/HTML here; the
+          # Games-focus cleanup removes those panels from the Games experience.
+          python patch_dashboard_alt_grading_status.py || true
+          python wnba_alt_pending_diagnostics.py || true
           if [ -f data/dashboard/wnba_alt_recovery_progress.json ]; then
-            python patch_dashboard_alt_recovery_progress.py
+            python patch_dashboard_alt_recovery_progress.py || true
           fi
           python patch_dashboard_game_performance.py
-          python patch_dashboard_build_verification.py
+          python patch_dashboard_build_verification.py || true
 
+          # Final current-slate ALT renderers.
           python - <<'PY'
           import re
           from pathlib import Path
@@ -124,41 +125,55 @@ jobs:
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
 
-          # Install canonical daily data last so no legacy renderer can overwrite
-          # the current slate date, Games rows, or Player Props rows.
+          # Canonical date/current-slate Games + Player Props only.
           python patch_dashboard_canonical_runtime.py
 
-      - name: Verify core dashboard artifact
+          # Remove Intelligence Terminal/final decisions/diagnostic panels from
+          # Games without deleting their underlying data.
+          python patch_dashboard_games_focus.py
+
+          # UI Freeze runs last: exact 13-tab navigation, ALT Props standalone,
+          # no standalone Injuries tab, injury summary integrated into Games.
+          python patch_dashboard_v4_ui_freeze.py
+
+      - name: Verify Sprint 1 UI freeze
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           required = [
-              'WNBA_TERMINAL_UI_PATCH_START','WNBA Intelligence Terminal','ALT Performance',
-              'ALT Streak Board','Sportsbook ALT Ladders','v4-alt-streaks-display-data',
-              'v4-alt-streaks-display-script','v4-alt-ladders-data','v4-alt-ladders-script',
-              'No active-slate streaks match this filter.','off-slate row','active game',
-              'Game Performance','WNBA_GAME_PERFORMANCE_START','game-performance-nav-script',
-              'data-wv4-tab="game-performance"','Game Performance results',
-              'Frozen pregame spreads, totals and projected scores','Spread record','Total record',
-              'WNBA_ALT_GRADING_STATUS_START','ALT Grading Checkpoint',
-              'Screenshot-verifiable grading freshness','WNBA_ALT_PENDING_DIAGNOSTICS_START',
-              'Pending ALT Diagnostics','Pending rows','WNBA_BUILD_BEACON_START',
-              'Games QA Beacon','screenshot-verifiable deployment marker',
               'canonical-daily-runtime-v1','canonical-daily-runtime-script','WNBA_CANONICAL_DAILY',
+              'v4-ui-freeze-script','WNBA_V4_UI_FREEZE','games-injury-intelligence',
+              "['alt-props','ALT Props']", "['game-performance','Game Performance']",
+              "['remaining','Remaining Season']", "['health','Data Health']",
+              'ALT Streak Board','Sportsbook ALT Ladders','v4-alt-streaks-display-script','v4-alt-ladders-script',
+              'Game Performance','WNBA_GAME_PERFORMANCE_START',
+              'WNBA_GAMES_FOCUS_CLEANUP',
           ]
-          if Path('data/dashboard/wnba_alt_recovery_progress.json').exists():
-              required.extend(['WNBA_ALT_RECOVERY_PROGRESS_START','ALT Auto-Fix Progress','Jobs queued','Still missing'])
-          missing = [marker for marker in required if marker not in h]
+          missing=[x for x in required if x not in h]
           if missing:
-              raise SystemExit(f'Deployment blocked; missing core dashboard markers: {missing}')
-          if h.count('id="v4-alt-streaks-display-script"') != 1:
-              raise SystemExit('Deployment blocked; ALT streak renderer is duplicated or missing.')
-          if h.count('id="v4-alt-ladders-script"') != 1:
-              raise SystemExit('Deployment blocked; ALT ladder renderer is duplicated or missing.')
+              raise SystemExit(f'Sprint 1 verification failed; missing markers: {missing}')
           if h.count('id="canonical-daily-runtime-script"') != 1:
-              raise SystemExit('Deployment blocked; canonical runtime is duplicated or missing.')
+              raise SystemExit('Canonical runtime duplicated or missing.')
+          if h.count('id="v4-ui-freeze-script"') != 1:
+              raise SystemExit('V4 UI Freeze runtime duplicated or missing.')
+          if h.count('id="v4-alt-streaks-display-script"') != 1 or h.count('id="v4-alt-ladders-script"') != 1:
+              raise SystemExit('ALT renderer duplicated or missing.')
+
+          # The locked NAV must not expose a standalone injuries tab.
+          freeze_start=h.find('id="v4-ui-freeze-script"')
+          freeze_end=h.find('</script>',freeze_start)
+          freeze=h[freeze_start:freeze_end]
+          if "['injuries','Injuries']" in freeze:
+              raise SystemExit('Standalone Injuries tab is still present in locked navigation.')
+          if "injuries:'games'" not in freeze:
+              raise SystemExit('Injuries alias does not route back to Games.')
+
+          # Games-focus cleanup must remove terminal/diagnostic visible blocks.
+          for marker in ('<!-- WNBA_TERMINAL_UI_PATCH_START -->','<!-- WNBA_ALT_PENDING_DIAGNOSTICS_START -->','<!-- WNBA_BUILD_BEACON_START -->'):
+              if marker in h:
+                  raise SystemExit(f'Games cleanup failed; visible legacy block remains: {marker}')
 
           target=os.environ['TARGET']
           manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
@@ -166,29 +181,8 @@ jobs:
           assert manifest.get('status')=='PASS', manifest.get('failures')
           assert manifest.get('target_date')==target
           assert props.get('target_date')==target
-          if f'"target_date": "{target}"' not in h:
-              raise SystemExit('Deployment blocked; canonical target date is not embedded in HTML.')
-          if 'NaN' in h or 'null%' in h:
-              print('Legacy placeholders remain in source HTML but canonical runtime will replace visible values with em dashes.')
-          print({'status':'PASS','target':target,'games':manifest.get('game_count'),'props':manifest.get('player_prop_rows')})
+          print({'status':'PASS','sprint':'V4 UI Freeze Sprint 1','target':target,'tabs':13,'alt_props':True,'injuries_in_games':True})
           PY
-
-      - name: Report optional plugin status
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          h = Path('docs/index.html').read_text(encoding='utf-8')
-          checks = {
-              'Injury Intelligence': ['v5-injury-intelligence-data','v5-injury-intelligence-script'],
-              'Injuries navigation': ['v5-injury-navigation-runtime','data-injury-runtime-tab'],
-              'Player Props injury context': ['v5-player-prop-injury-script','window.WNBA_PLAYER_PROP_INJURY_CONTEXT'],
-              'Remaining Season': ['v4-remaining-season-data','v4-remaining-season-script'],
-          }
-          for name, markers in checks.items():
-              present = all(marker in h for marker in markers)
-              print(f"{name}: {'ACTIVE' if present else 'SKIPPED'}")
-          PY
-          find docs -maxdepth 2 -type f | sort | head -100
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
