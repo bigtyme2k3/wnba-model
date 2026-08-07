@@ -14,6 +14,9 @@ on:
       - 'patch_dashboard_v4_ui_freeze.py'
       - 'patch_dashboard_v4_ui_freeze_safe.py'
       - 'patch_dashboard_alt_props_table.py'
+      - 'patch_dashboard_alt_props_scores.py'
+      - 'wnba_alt_streak_confidence.py'
+      - 'wnba_alt_performance_tracker.py'
       - 'patch_dashboard_sprint2_phase2.py'
       - 'patch_dashboard_build_verification.py'
       - 'patch_dashboard_alt_grading_status.py'
@@ -70,6 +73,9 @@ jobs:
             patch_dashboard_v4_ui_freeze.py \
             patch_dashboard_v4_ui_freeze_safe.py \
             patch_dashboard_alt_props_table.py \
+            patch_dashboard_alt_props_scores.py \
+            wnba_alt_streak_confidence.py \
+            wnba_alt_performance_tracker.py \
             patch_dashboard_sprint2_phase2.py \
             patch_dashboard_build_verification.py \
             patch_dashboard_alt_grading_status.py \
@@ -91,6 +97,16 @@ jobs:
               python -m py_compile "$file" || echo "Optional renderer compile warning: $file"
             fi
           done
+
+      - name: Score and freeze ALT props for performance tracking
+        run: |
+          if [ -f data/dashboard/wnba_alt_streaks.json ]; then
+            python wnba_alt_streak_confidence.py --date "$TARGET"
+            python wnba_alt_performance_tracker.py --date "$TARGET" --grade
+            python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot --analyze
+          else
+            echo "No ALT streak source found; skipping scored ALT snapshot."
+          fi
 
       - name: Build complete dashboard artifact
         run: |
@@ -138,8 +154,9 @@ jobs:
           # Run through the safe wrapper so JavaScript regex escapes are inserted verbatim.
           python patch_dashboard_v4_ui_freeze_safe.py
 
-          # Presentation-only ALT Props enhancement wraps the final router.
+          # ALT Props table, then scored-performance eligibility overlay.
           python patch_dashboard_alt_props_table.py
+          python patch_dashboard_alt_props_scores.py
 
       - name: Verify single-owner Sprint 2 dashboard
         run: |
@@ -155,13 +172,14 @@ jobs:
               "['remaining','Remaining Season']", "['health','Data Health']",
               'canonicalAltProps', "view==='alt-props'", 'html=canonicalAltProps()',
               'alt-props-table-script','WNBA_ALT_PROPS_TABLE','ALT Streaks',
+              'alt-props-score-overlay-script','WNBA_ALT_PROP_SCORES','performance_eligible_only',
               'game-performance-route-script','fullGamePerformance','WNBA_GAMES_FOCUS_CLEANUP',
               'sprint2-phase2-script','WNBA_SPRINT2_PHASE2','gamesV25','Prediction Intelligence',
           ]
           missing=[x for x in required if x not in h]
           if missing:
               raise SystemExit(f'Sprint 2 verification failed; missing markers: {missing}')
-          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','alt-props-table-script','sprint2-phase2-script','game-performance-route-script'):
+          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','alt-props-table-script','alt-props-score-overlay-script','sprint2-phase2-script','game-performance-route-script'):
               if h.count(f'id="{marker}"') != 1:
                   raise SystemExit(f'{marker} duplicated or missing')
 
@@ -221,7 +239,7 @@ jobs:
               p=g.get('projection') or {}
               assert p.get('away_score') is not None and p.get('home_score') is not None
               assert g.get('confidence') is not None and g.get('model_grade')
-          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'alt_props_route':'streak-table','games':len(enriched)})
+          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'alt_props_route':'streak-table-scored','games':len(enriched)})
           PY
 
       - name: Configure GitHub Pages
