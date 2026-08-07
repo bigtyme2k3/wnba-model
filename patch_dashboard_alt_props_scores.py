@@ -51,7 +51,7 @@ function applyScores(){
     const th=document.createElement('th');th.dataset.altScoreHead='1';th.innerHTML='<div class="altSortBtn" style="cursor:default">Score</div>';
     head.insertBefore(th,head.firstElementChild);
   }
-  let eligible=0,hidden=0;
+  let eligible=0,unscored=0;
   for(const tr of table.querySelectorAll('tbody tr')){
     const td=[...tr.children];
     if(!td.length)continue;
@@ -70,10 +70,11 @@ function applyScores(){
       cell.innerHTML='<div class="altScoreNum">'+score+'</div><div class="altScoreMeta '+scoreClass(action)+'">'+grade+' · '+action+'</div>';
       tr.dataset.performanceEligible='1';
     }else{
-      // ALT Performance can only learn from frozen scored candidates. Hide rows that cannot be archived truthfully.
+      // A missing model score must never remove a valid current sportsbook market.
+      // Keep the market visible and mark it ineligible for performance snapshotting.
       cell.innerHTML='<span class="altUnscored">UNSCORED</span>';
       tr.dataset.performanceEligible='0';
-      tr.style.display='none';hidden++;
+      unscored++;
     }
     tr.insertBefore(cell,tr.firstElementChild);tr.dataset.altScoreApplied='1';
   }
@@ -81,7 +82,7 @@ function applyScores(){
   if(summary){
     let badge=summary.querySelector('[data-score-eligible]');
     if(!badge){badge=document.createElement('span');badge.dataset.scoreEligible='1';summary.appendChild(badge)}
-    badge.innerHTML='<b>'+eligible+'</b> scored / performance eligible'+(hidden?' · '+hidden+' unscored hidden':'');
+    badge.innerHTML='<b>'+eligible+'</b> scored / performance eligible'+(unscored?' · '+unscored+' unscored visible':'');
   }
 }
 function later(){setTimeout(applyScores,0);setTimeout(applyScores,60)}
@@ -91,7 +92,7 @@ for(const name of ['altPropsSetFilter','altPropsSort']){
   const fn=window[name];
   if(typeof fn==='function')window[name]=function(){const out=fn.apply(this,arguments);later();return out};
 }
-window.WNBA_ALT_PROP_SCORES={version:'1.0',source:'wnba_alt_streaks',performance_eligible_only:true,scored_rows:(SCORE_DATA.rows||[]).length};
+window.WNBA_ALT_PROP_SCORES={version:'1.1',source:'wnba_alt_streaks',performance_eligible_only:true,unscored_rows_visible:true,scored_rows:(SCORE_DATA.rows||[]).length};
 later();
 })();</script>'''.replace('__DATA__',data)
 
@@ -112,6 +113,6 @@ def main() -> None:
     html=replace_or_insert(html,'style',STYLE_ID,STYLE)
     html=replace_or_insert(html,'script',SCRIPT_ID,build_script(payload))
     HTML.write_text(html,encoding='utf-8')
-    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'performance_eligible_only':True})
+    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'performance_eligible_only':True,'unscored_rows_visible':True})
 
 if __name__=='__main__':main()
