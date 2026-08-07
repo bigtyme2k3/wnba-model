@@ -47,47 +47,33 @@ def main() -> None:
         'prop_count': len(rows),
     }, ensure_ascii=False).replace('</', '<\\/')
 
+    # IMPORTANT: this runtime owns canonical DATA only. It must never replace
+    # #root or any routed tab content. The V4 UI freeze is the single router,
+    # and dedicated renderers own Games / Player Props / other views.
     block = f'''\n<!-- {MARKER} -->
-<style id="canonical-daily-runtime-style">
-.canon-panel{{border:1px solid #26334f;border-radius:18px;background:#0b1220;padding:16px;color:#e5e7eb}}
-.canon-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
-.canon-card{{border:1px solid #26334f;border-radius:14px;padding:13px;background:#0b1020}}
-.canon-table{{width:100%;border-collapse:collapse}}.canon-table th,.canon-table td{{padding:11px;border-bottom:1px solid #26334f;text-align:left}}
-.canon-muted{{color:#94a3b8;font-size:12px}}.canon-good{{color:#34d399}}@media(max-width:800px){{.canon-grid{{grid-template-columns:1fr}}}}
-</style>
 <script id="canonical-daily-runtime-script">
 (function(){{
- const C={payload}; window.WNBA_CANONICAL_DAILY=C;
- const esc=v=>String(v??'—').replace(/[&<>"']/g,m=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[m]));
- const exact=t=>[...document.querySelectorAll('h1,h2,h3,h4,div,span,p')].find(e=>e.children.length===0&&e.textContent.trim()===t);
+ const C={payload};
+ window.WNBA_CANONICAL_DAILY=C;
+ window.WNBA_CANONICAL_PROPS=function(){{
+   const esc=v=>String(v??'—').replace(/[&<>"']/g,m=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[m]));
+   return `<div class="section"><h2 class="mono">Player Props</h2><div class="small mono">Canonical Odds API rows · ${{C.prop_count}} props · ${{esc(C.target_date)}}</div><div style="overflow:auto;margin-top:12px"><table><thead><tr><th>Player</th><th>Game</th><th>Stat</th><th>Line</th><th>Best Over</th><th>Best Under</th></tr></thead><tbody>${{C.props.slice(0,500).map(r=>`<tr><td><b>${{esc(r.player)}}</b><div class="small mono">${{esc(r.team)}}</div></td><td>${{esc(r.game)}}</td><td>${{esc(r.stat)}}</td><td>${{esc(r.line)}}</td><td>${{esc(r.best_over_book)}} ${{esc(r.best_over_price)}}</td><td>${{esc(r.best_under_book)}} ${{esc(r.best_under_price)}}</td></tr>`).join('')}}</tbody></table></div></div>`;
+ }};
  function updateDate(){{
    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
    let n; while(n=walker.nextNode()){{
-     if(/Slate\s+\d{{4}}-\d{{2}}-\d{{2}}/.test(n.nodeValue)) n.nodeValue=n.nodeValue.replace(/Slate\s+\d{{4}}-\d{{2}}-\d{{2}}/,'Slate '+C.target_date);
+     if(/Slate\s+\d{{4}}-\d{{2}}-\d{{2}}/.test(n.nodeValue))
+       n.nodeValue=n.nodeValue.replace(/Slate\s+\d{{4}}-\d{{2}}-\d{{2}}/,'Slate '+C.target_date);
    }}
  }}
- function gamesHtml(){{return `<div class="canon-panel" data-canonical-panel="games"><h2>Today's Games</h2><div class="canon-muted">Canonical slate ${{esc(C.target_date)}} · ${{C.game_count}} games</div><div class="canon-grid" style="margin-top:12px">${{C.games.map(g=>`<div class="canon-card"><b>${{esc(g.game)}}</b><div class="canon-muted">${{esc(g.start_time)}} · ${{esc(g.status)}}</div><div style="margin-top:8px">Spread ${{esc(g.spread)}} · Total ${{esc(g.total)}}</div></div>`).join('')||'<div class="canon-card">No games scheduled.</div>'}}</div></div>`}}
- function propsHtml(){{return `<div class="canon-panel" data-canonical-panel="props"><h2>Player Props</h2><div class="canon-muted">Canonical Odds API rows · ${{C.prop_count}} props · ${{esc(C.target_date)}}</div><div style="overflow:auto;margin-top:12px"><table class="canon-table"><thead><tr><th>Player</th><th>Game</th><th>Stat</th><th>Line</th><th>Best Over</th><th>Best Under</th><th>History</th></tr></thead><tbody>${{C.props.slice(0,500).map(r=>`<tr><td><b>${{esc(r.player)}}</b><div class="canon-muted">${{esc(r.team)}}</div></td><td>${{esc(r.game)}}</td><td class="canon-good">${{esc(r.stat)}}</td><td>${{esc(r.line)}}</td><td>${{esc(r.best_over_book)}} ${{esc(r.best_over_price)}}</td><td>${{esc(r.best_under_book)}} ${{esc(r.best_under_price)}}</td><td>—</td></tr>`).join('')}}</tbody></table></div></div>`}}
- function replacePanel(title,html,requiredWords,key){{
-   if(document.querySelector(`[data-canonical-panel="${{key}}"]`)) return true;
-   const h=exact(title); if(!h) return false; let p=h;
-   for(let i=0;i<7&&p;i++,p=p.parentElement){{
-     const txt=p.textContent||'';
-     if(requiredWords.every(w=>txt.includes(w))){{
-       const wrapper=document.createElement('div'); wrapper.innerHTML=html;
-       p.replaceWith(wrapper.firstElementChild); return true;
-     }}
-   }}
-   return false;
+ function sanitize(){{
+   document.querySelectorAll('*').forEach(e=>{{
+     if(e.children.length===0&&/\b(?:NaN|null%)\b/.test(e.textContent||'')) e.textContent='—';
+   }});
  }}
- function apply(){{
-   updateDate();
-   replacePanel("Today's Games",gamesHtml(),['Yesterday Results'],'games');
-   replacePanel('Player Props',propsHtml(),['All Games','Showing'],'props');
-   document.querySelectorAll('*').forEach(e=>{{if(e.children.length===0&&/\b(?:NaN|null%)\b/.test(e.textContent||''))e.textContent='—'}});
- }}
- apply(); setTimeout(apply,500); setTimeout(apply,1800);
- new MutationObserver(()=>{{clearTimeout(window.__canonTimer);window.__canonTimer=setTimeout(apply,120)}}).observe(document.body,{{childList:true,subtree:true}});
+ updateDate(); sanitize();
+ setTimeout(()=>{{updateDate();sanitize()}},500);
+ setTimeout(()=>{{updateDate();sanitize()}},1800);
 }})();
 </script>
 <!-- {END_MARKER} -->\n'''
@@ -100,21 +86,12 @@ def main() -> None:
         count=1,
         flags=re.S,
     )
-    html = re.sub(
-        rf'\n?<!-- {re.escape(MARKER)} -->\s*<style id="canonical-daily-runtime-style">.*?</style>\s*<script id="canonical-daily-runtime-script">.*?</script>\s*',
-        '\n',
-        html,
-        count=1,
-        flags=re.S,
-    )
-    if '</body>' in html:
-        html = html.replace('</body>', block + '\n</body>', 1)
-    else:
+    if '</body>' not in html:
         raise SystemExit('Dashboard shell invalid: closing body tag missing before canonical patch')
-
+    html = html.replace('</body>', block + '\n</body>', 1)
     HTML.write_text(html, encoding='utf-8')
     apply_games_focus_cleanup()
-    print({'target_date': target, 'games': len(games), 'props': len(rows), 'marker': MARKER, 'shell_preserved': True, 'games_focus': True})
+    print({'target_date': target, 'games': len(games), 'props': len(rows), 'marker': MARKER, 'shell_preserved': True, 'router_safe': True})
 
 
 if __name__ == '__main__':
