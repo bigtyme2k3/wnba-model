@@ -12,6 +12,7 @@ on:
       - 'patch_dashboard_canonical_runtime.py'
       - 'patch_dashboard_games_focus.py'
       - 'patch_dashboard_v4_ui_freeze.py'
+      - 'patch_dashboard_v4_ui_freeze_safe.py'
       - 'patch_dashboard_sprint2_phase2.py'
       - 'patch_dashboard_build_verification.py'
       - 'patch_dashboard_alt_grading_status.py'
@@ -66,6 +67,7 @@ jobs:
             patch_dashboard_canonical_runtime.py \
             patch_dashboard_games_focus.py \
             patch_dashboard_v4_ui_freeze.py \
+            patch_dashboard_v4_ui_freeze_safe.py \
             patch_dashboard_sprint2_phase2.py \
             patch_dashboard_build_verification.py \
             patch_dashboard_alt_grading_status.py \
@@ -131,7 +133,8 @@ jobs:
           python patch_dashboard_sprint2_phase2.py
 
           # UI Freeze is the FINAL and only navigation/router owner.
-          python patch_dashboard_v4_ui_freeze.py
+          # Run through the safe wrapper so JavaScript regex escapes are inserted verbatim.
+          python patch_dashboard_v4_ui_freeze_safe.py
 
       - name: Verify single-owner Sprint 2 dashboard
         run: |
