@@ -123,15 +123,14 @@ jobs:
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
 
-          # Canonical runtime now owns data only; it must never replace routed DOM.
+          # Canonical runtime owns data only; it must never replace routed DOM.
           python patch_dashboard_canonical_runtime.py
           python patch_dashboard_games_focus.py
 
           # Dedicated view renderers register before the final router.
           python patch_dashboard_sprint2_phase2.py
 
-          # UI Freeze is the FINAL and only navigation/router owner. It also
-          # creates #root at runtime when the legacy shell omits a mount node.
+          # UI Freeze is the FINAL and only navigation/router owner.
           python patch_dashboard_v4_ui_freeze.py
 
       - name: Verify single-owner Sprint 2 dashboard
@@ -146,7 +145,7 @@ jobs:
               'v4-ui-freeze-script','WNBA_V4_UI_FREEZE','games-injury-intelligence','ensureRoot','data-v4-router-root',
               "['alt-props','ALT Props']", "['game-performance','Game Performance']",
               "['remaining','Remaining Season']", "['health','Data Health']",
-              'ALT Streak Board','Sportsbook ALT Ladders','v4-alt-streaks-display-script','v4-alt-ladders-script',
+              'canonicalAltProps', "view==='alt-props'", 'html=canonicalAltProps()',
               'game-performance-route-script','fullGamePerformance','WNBA_GAMES_FOCUS_CLEANUP',
               'sprint2-phase2-script','WNBA_SPRINT2_PHASE2','gamesV25','Prediction Intelligence',
           ]
@@ -164,8 +163,6 @@ jobs:
           if tabs_count != 1:
               raise SystemExit(f'Navigation #tabs duplicated or missing: {tabs_count}')
 
-          # Canonical runtime is data-only. Reintroducing DOM panel replacement
-          # can destroy the routed mount and make tabs highlight without rendering.
           cstart=h.find('id="canonical-daily-runtime-script"'); cend=h.find('</script>',cstart); canonical_runtime=h[cstart:cend]
           if 'replacePanel(' in canonical_runtime or 'replaceWith(' in canonical_runtime:
               raise SystemExit('Canonical runtime is attempting to replace routed dashboard DOM.')
@@ -186,6 +183,8 @@ jobs:
               raise SystemExit('Final router is not replacing routed content on tab changes.')
           if root_count == 0 and "root=document.createElement('div')" not in freeze:
               raise SystemExit('Shell has no static #root and final router does not create one dynamically.')
+          if 'function canonicalAltProps()' not in freeze or "view==='alt-props'" not in freeze or 'html=canonicalAltProps()' not in freeze:
+              raise SystemExit('ALT Props is not wired to its dedicated canonical renderer.')
 
           nav=re.search(r'const NAV=\[(.*?)\];',freeze,re.S)
           if not nav:
@@ -213,7 +212,7 @@ jobs:
               p=g.get('projection') or {}
               assert p.get('away_score') is not None and p.get('home_score') is not None
               assert g.get('confidence') is not None and g.get('model_grade')
-          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'games':len(enriched)})
+          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'alt_props_route':'canonical','games':len(enriched)})
           PY
 
       - name: Configure GitHub Pages
