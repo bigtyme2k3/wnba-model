@@ -108,8 +108,6 @@ jobs:
             python patch_dashboard_alt_recovery_progress.py || true
           fi
 
-          # Register one renderer per analytical tab. Game Performance no longer
-          # creates its own nav button or persistent body section.
           python patch_dashboard_game_performance.py
           python patch_dashboard_build_verification.py || true
 
@@ -125,14 +123,14 @@ jobs:
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
 
+          # Canonical runtime now owns data only; it must never replace #root.
           python patch_dashboard_canonical_runtime.py
           python patch_dashboard_games_focus.py
 
-          # Sprint 2 defines the canonical Games renderer first.
+          # Dedicated view renderers register before the final router.
           python patch_dashboard_sprint2_phase2.py
 
-          # UI Freeze is the FINAL router/owner of navigation. It selects
-          # gamesV25 for Games and fullGamePerformance for Game Performance.
+          # UI Freeze is the FINAL and only navigation/router owner.
           python patch_dashboard_v4_ui_freeze.py
 
       - name: Verify single-owner Sprint 2 dashboard
@@ -142,7 +140,8 @@ jobs:
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           required = [
-              'canonical-daily-runtime-v1','canonical-daily-runtime-script','WNBA_CANONICAL_DAILY',
+              'id="root"','id="tabs"',
+              'canonical-daily-runtime-v1','canonical-daily-runtime-script','WNBA_CANONICAL_DAILY','WNBA_CANONICAL_PROPS',
               'v4-ui-freeze-script','WNBA_V4_UI_FREEZE','games-injury-intelligence',
               "['alt-props','ALT Props']", "['game-performance','Game Performance']",
               "['remaining','Remaining Season']", "['health','Data Health']",
@@ -157,8 +156,17 @@ jobs:
               if h.count(f'id="{marker}"') != 1:
                   raise SystemExit(f'{marker} duplicated or missing')
 
-          # Old Game Performance injector must be gone: it caused duplicate nav
-          # and persistent historical content beneath Games.
+          if h.count('id="root"') != 1:
+              raise SystemExit(f'Routed #root duplicated or missing: {h.count("id=\"root\"")}')
+          if h.count('id="tabs"') != 1:
+              raise SystemExit(f'Navigation #tabs duplicated or missing: {h.count("id=\"tabs\"")}')
+
+          # Canonical runtime is data-only. Reintroducing DOM panel replacement
+          # can destroy #root and make tab buttons highlight without rendering.
+          cstart=h.find('id="canonical-daily-runtime-script"'); cend=h.find('</script>',cstart); canonical_runtime=h[cstart:cend]
+          if 'replacePanel(' in canonical_runtime or 'replaceWith(' in canonical_runtime:
+              raise SystemExit('Canonical runtime is attempting to replace routed dashboard DOM.')
+
           if 'WNBA_GAME_PERFORMANCE_START' in h or 'data-wv4-tab="game-performance"' in h:
               raise SystemExit('Legacy Game Performance injector/nav is still present.')
 
@@ -171,6 +179,8 @@ jobs:
               raise SystemExit('Games route does not prefer Sprint 2 gamesV25 renderer.')
           if "window.fullGamePerformance" not in freeze:
               raise SystemExit('Game Performance route does not use fullGamePerformance.')
+          if "root.innerHTML=html" not in freeze:
+              raise SystemExit('Final router is not replacing #root content on tab changes.')
 
           nav=re.search(r'const NAV=\[(.*?)\];',freeze,re.S)
           if not nav:
@@ -198,7 +208,7 @@ jobs:
               p=g.get('projection') or {}
               assert p.get('away_score') is not None and p.get('home_score') is not None
               assert g.get('confidence') is not None and g.get('model_grade')
-          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'games':len(enriched)})
+          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'root_preserved':True,'games':len(enriched)})
           PY
 
       - name: Configure GitHub Pages
