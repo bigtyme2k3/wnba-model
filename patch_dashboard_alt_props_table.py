@@ -62,7 +62,9 @@ def main() -> None:
     html = replace_element(html, 'style', STYLE_ID, STYLE)
     html = replace_element(html, 'script', SCRIPT_ID, SCRIPT)
     HTML.write_text(html, encoding='utf-8')
-    print({'status':'PASS','alt_props_ui':'streak-table','filters':['stat','odds-tier'],'sorting':['player','team','stat','line','streak','l10','season','avg','opp','odds','books'],'canonical_only':True})
+    from patch_dashboard_alt_props_performance_panel import main as apply_alt_performance_panel
+    apply_alt_performance_panel()
+    print({'status':'PASS','alt_props_ui':'streak-table','filters':['stat','odds-tier'],'sorting':['player','team','stat','line','streak','l10','season','avg','opp','odds','books'],'performance_panel':'below-table','canonical_only':True})
 
 
 if __name__ == '__main__':
