@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import unicodedata
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -40,6 +42,15 @@ def event_date(value: str) -> str:
     return dt.astimezone(ET).date().isoformat()
 
 
+def player_key(value: str) -> str:
+    """Normalize sportsbook/player-source naming without guessing identity."""
+    text = unicodedata.normalize("NFKD", str(value or ""))
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    text = text.casefold().replace("’", "'")
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return " ".join(text.split())
+
+
 def roster_map() -> dict[str, str]:
     out: dict[str, str] = {}
     master = load_json(DASH / "wnba_master.json", {})
@@ -47,7 +58,7 @@ def roster_map() -> dict[str, str]:
         name = str(row.get("player") or row.get("name") or "").strip()
         team = str(row.get("team") or "").strip()
         if name and team:
-            out[name.casefold()] = team
+            out[player_key(name)] = team
     live = load_json(RAW / "wnba_players_live.json", {})
     if isinstance(live, dict):
         for key, row in live.items():
@@ -56,8 +67,16 @@ def roster_map() -> dict[str, str]:
             name = str(row.get("player") or key or "").strip()
             team = str(row.get("team") or "").strip()
             if name and team:
-                out[name.casefold()] = team
+                out[player_key(name)] = team
     return out
+
+
+def resolve_team(player: str, away: str, home: str, teams_by_player: dict[str, str]) -> tuple[str, str]:
+    """Resolve only from owned roster data and require membership in this event."""
+    team = str(teams_by_player.get(player_key(player)) or "").strip()
+    if team in {away, home}:
+        return team, "roster"
+    return "", "unresolved"
 
 
 def main() -> None:
@@ -113,7 +132,8 @@ def main() -> None:
                     price = outcome.get("price")
                     if not player or side not in {"OVER", "UNDER"} or line is None:
                         continue
-                    key = (event_id, player.casefold(), stat, float(line))
+                    team, team_source = resolve_team(player, away, home, teams_by_player)
+                    key = (event_id, player_key(player), stat, float(line))
                     row = grouped.setdefault(key, {
                         "target_date": target,
                         "event_id": event_id,
@@ -122,14 +142,20 @@ def main() -> None:
                         "away_team": away,
                         "home_team": home,
                         "player": player,
-                        "team": teams_by_player.get(player.casefold(), ""),
+                        "team": team,
+                        "team_source": team_source,
                         "stat": stat,
                         "line": float(line),
                         "books": [],
                     })
+                    # A later bookmaker can encounter the same row; keep a verified team if found.
+                    if not row.get("team") and team:
+                        row["team"] = team
+                        row["team_source"] = team_source
                     row["books"].append({"book": book_name, "side": side, "price": price})
 
-    rows = []
+    verified_rows = []
+    unresolved_rows = []
     for row in grouped.values():
         overs = [x for x in row["books"] if x["side"] == "OVER" and isinstance(x.get("price"), (int, float))]
         unders = [x for x in row["books"] if x["side"] == "UNDER" and isinstance(x.get("price"), (int, float))]
@@ -142,19 +168,33 @@ def main() -> None:
             "best_under_price": best_under.get("price"),
             "book_count": len({x["book"] for x in row["books"]}),
         })
-        rows.append(row)
+        if row.get("team") in {row.get("away_team"), row.get("home_team")}:
+            verified_rows.append(row)
+        else:
+            unresolved_rows.append(row)
 
+    sort_key = lambda r: (r["game"], r["player"], r["stat"], r["line"])
     output = {
         "generated_at_utc": datetime.utcnow().isoformat() + "Z",
         "target_date": target,
         "source": "the_odds_api_event_markets",
         "event_count": len(events),
-        "row_count": len(rows),
-        "rows": sorted(rows, key=lambda r: (r["game"], r["player"], r["stat"], r["line"])),
+        "raw_row_count": len(grouped),
+        "row_count": len(verified_rows),
+        "unresolved_row_count": len(unresolved_rows),
+        "rows": sorted(verified_rows, key=sort_key),
+        "unresolved_rows": sorted(unresolved_rows, key=sort_key),
     }
     (DASH / "wnba_player_props.json").write_text(json.dumps(output, indent=2), encoding="utf-8")
     (RAW / f"wnba_player_props_{target}.json").write_text(json.dumps(raw_events, indent=2), encoding="utf-8")
-    print(json.dumps({"target_date": target, "events": len(events), "rows": len(rows), "missing_team": sum(not r["team"] for r in rows)}, indent=2))
+    print(json.dumps({
+        "target_date": target,
+        "events": len(events),
+        "raw_rows": len(grouped),
+        "verified_rows": len(verified_rows),
+        "unresolved_rows": len(unresolved_rows),
+        "unresolved_players": sorted({r["player"] for r in unresolved_rows}),
+    }, indent=2))
 
 
 if __name__ == "__main__":
