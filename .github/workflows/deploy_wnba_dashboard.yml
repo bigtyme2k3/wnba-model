@@ -13,6 +13,7 @@ on:
       - 'patch_dashboard_games_focus.py'
       - 'patch_dashboard_v4_ui_freeze.py'
       - 'patch_dashboard_v4_ui_freeze_safe.py'
+      - 'patch_dashboard_alt_props_table.py'
       - 'patch_dashboard_sprint2_phase2.py'
       - 'patch_dashboard_build_verification.py'
       - 'patch_dashboard_alt_grading_status.py'
@@ -68,6 +69,7 @@ jobs:
             patch_dashboard_games_focus.py \
             patch_dashboard_v4_ui_freeze.py \
             patch_dashboard_v4_ui_freeze_safe.py \
+            patch_dashboard_alt_props_table.py \
             patch_dashboard_sprint2_phase2.py \
             patch_dashboard_build_verification.py \
             patch_dashboard_alt_grading_status.py \
@@ -136,6 +138,9 @@ jobs:
           # Run through the safe wrapper so JavaScript regex escapes are inserted verbatim.
           python patch_dashboard_v4_ui_freeze_safe.py
 
+          # Presentation-only ALT Props enhancement wraps the final router.
+          python patch_dashboard_alt_props_table.py
+
       - name: Verify single-owner Sprint 2 dashboard
         run: |
           python - <<'PY'
@@ -149,13 +154,14 @@ jobs:
               "['alt-props','ALT Props']", "['game-performance','Game Performance']",
               "['remaining','Remaining Season']", "['health','Data Health']",
               'canonicalAltProps', "view==='alt-props'", 'html=canonicalAltProps()',
+              'alt-props-table-script','WNBA_ALT_PROPS_TABLE','ALT Streaks',
               'game-performance-route-script','fullGamePerformance','WNBA_GAMES_FOCUS_CLEANUP',
               'sprint2-phase2-script','WNBA_SPRINT2_PHASE2','gamesV25','Prediction Intelligence',
           ]
           missing=[x for x in required if x not in h]
           if missing:
               raise SystemExit(f'Sprint 2 verification failed; missing markers: {missing}')
-          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','sprint2-phase2-script','game-performance-route-script'):
+          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','alt-props-table-script','sprint2-phase2-script','game-performance-route-script'):
               if h.count(f'id="{marker}"') != 1:
                   raise SystemExit(f'{marker} duplicated or missing')
 
@@ -215,7 +221,7 @@ jobs:
               p=g.get('projection') or {}
               assert p.get('away_score') is not None and p.get('home_score') is not None
               assert g.get('confidence') is not None and g.get('model_grade')
-          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'alt_props_route':'canonical','games':len(enriched)})
+          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'alt_props_route':'streak-table','games':len(enriched)})
           PY
 
       - name: Configure GitHub Pages
