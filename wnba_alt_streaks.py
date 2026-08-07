@@ -1,8 +1,12 @@
-"""Build an auditable WNBA alternate-line streak board.
+"""Build the canonical WNBA ALT prop scoring source.
 
-Exact sportsbook alternate ladders are read from the ALT market warehouse.
-Standard props remain available from the daily prop feed. Sportsbook lines are
-never averaged or inferred.
+Exact sportsbook alternate markets come from wnba_alt_market_warehouse.json.
+Every current exact ALT market with at least three verified history games is
+kept, even when its current hit streak is shorter than three.  `streak` always
+means a real consecutive hit streak; it never means ladder depth.
+
+Standard props are retained only as a compatibility source for existing
+consumers and are explicitly labeled line_type=standard.
 """
 from __future__ import annotations
 
@@ -17,6 +21,8 @@ from pathlib import Path
 from typing import Any
 
 ALT_WAREHOUSE = Path("data/dashboard/wnba_alt_market_warehouse.json")
+MIN_HISTORY = 3
+ACTIVE_STREAK_MIN = 3
 
 
 def load(path: str | Path, default: Any) -> Any:
@@ -141,11 +147,18 @@ def consecutive(values: list[float], line: float, side: str) -> int:
     return count
 
 
-def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def hit_window(values: list[float], line: float, side: str, size: int) -> tuple[int, int, float | None]:
+    sample = values[:size]
+    hits = sum(hit(v, line, side) for v in sample)
+    return hits, len(sample), round(hits / len(sample), 4) if sample else None
+
+
+def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any], int]:
     payload = load(ALT_WAREHOUSE, {})
     summary = payload.get("summary", {}) if isinstance(payload, dict) else {}
     markets = list_rows(payload, "rows")
     output: list[dict[str, Any]] = []
+    omitted_history = 0
     for market in markets:
         if str(market.get("target_date") or target) != target:
             continue
@@ -156,12 +169,15 @@ def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
         recent_games = market.get("recent_games") if isinstance(market.get("recent_games"), list) else []
         values = [num(g.get("value")) for g in recent_games if isinstance(g, dict)]
         values = [v for v in values if v is not None]
-        if not player or not stat or line is None or len(values) < 3:
+        if not player or not stat or line is None:
             continue
+        if len(values) < MIN_HISTORY:
+            omitted_history += 1
+            continue
+
         streak = consecutive(values, line, side)
-        if streak < 3:
-            continue
-        recent_hits = sum(hit(v, line, side) for v in values)
+        l5_hits, l5_games, l5_pct = hit_window(values, line, side, 5)
+        l10_hits, l10_games, l10_pct = hit_window(values, line, side, 10)
         season = market.get("season") if isinstance(market.get("season"), dict) else {}
         output.append(clean({
             "player": player,
@@ -173,9 +189,16 @@ def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
             "alt_line": line,
             "line_type": "alternate",
             "streak": streak,
-            "last10_hits": recent_hits,
-            "last10_games": len(values),
-            "last10_pct": round(recent_hits / len(values), 4),
+            "active_streak": streak >= ACTIVE_STREAK_MIN,
+            "l5_hits": l5_hits,
+            "l5_games": l5_games,
+            "l5_pct": l5_pct,
+            "l10_hits": l10_hits,
+            "l10_games": l10_games,
+            "l10_pct": l10_pct,
+            "last10_hits": l10_hits,
+            "last10_games": l10_games,
+            "last10_pct": l10_pct,
             "season_hits": season.get("hits"),
             "season_games": season.get("games"),
             "season_pct": season.get("rate"),
@@ -189,7 +212,7 @@ def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
             "market_id": market.get("market_id"),
             "market_key": market.get("market_key"),
         }))
-    return output, summary
+    return output, summary, omitted_history
 
 
 def standard_rows(target: str) -> tuple[list[dict[str, Any]], int, int, int]:
@@ -209,24 +232,27 @@ def standard_rows(target: str) -> tuple[list[dict[str, Any]], int, int, int]:
         if not player or not stat or line is None:
             continue
         values, opponents = history_from_prop(prop, stat)
-        if len(values) < 3:
+        if len(values) < MIN_HISTORY:
             omitted_no_history += 1
             continue
         streak = consecutive(values, line, side)
-        if streak < 3:
+        if streak < ACTIVE_STREAK_MIN:
             omitted_no_streak += 1
             continue
         intel = intel_map.get(player.lower(), {})
         season = intel.get("season", {}) if isinstance(intel.get("season"), dict) else {}
         season_games = int(num(season.get("gp")) or len(values))
-        recent_hits = sum(hit(v, line, side) for v in values)
+        l5_hits, l5_games, l5_pct = hit_window(values, line, side, 5)
+        l10_hits, l10_games, l10_pct = hit_window(values, line, side, 10)
         season_rate = num(prop.get("last10_hit"))
         season_hits = round(season_rate * season_games) if season_rate is not None and season_games else None
         rows_out.append(clean({
             "player": player, "team": prop.get("team") or intel.get("team"), "game": prop.get("game"),
             "opponent": prop.get("opp") or prop.get("opponent"), "stat": stat, "side": side,
-            "alt_line": line, "line_type": "standard", "streak": streak,
-            "last10_hits": recent_hits, "last10_games": len(values), "last10_pct": round(recent_hits / len(values), 4),
+            "alt_line": line, "line_type": "standard", "streak": streak, "active_streak": True,
+            "l5_hits": l5_hits, "l5_games": l5_games, "l5_pct": l5_pct,
+            "l10_hits": l10_hits, "l10_games": l10_games, "l10_pct": l10_pct,
+            "last10_hits": l10_hits, "last10_games": l10_games, "last10_pct": l10_pct,
             "season_hits": season_hits, "season_games": season_games,
             "season_pct": round(season_hits / season_games, 4) if season_hits is not None and season_games else None,
             "average": round(sum(values) / len(values), 2), "recent_values": values,
@@ -238,37 +264,53 @@ def standard_rows(target: str) -> tuple[list[dict[str, Any]], int, int, int]:
 
 
 def build(target: str) -> dict[str, Any]:
-    alt_rows, alt_summary = exact_alt_rows(target)
+    alt_rows, alt_summary, alt_omitted_history = exact_alt_rows(target)
     std_rows, source_rows, omitted_no_history, omitted_no_streak = standard_rows(target)
     rows_out = alt_rows + std_rows
     unique: dict[tuple[str, str, str, float, str, str], dict[str, Any]] = {}
     for row in rows_out:
-        key = (str(row.get("player")), str(row.get("stat")), str(row.get("side")), float(row.get("alt_line")), str(row.get("best_book") or ""), str(row.get("line_type")))
+        key = (
+            str(row.get("player")), str(row.get("stat")), str(row.get("side")),
+            float(row.get("alt_line")), str(row.get("best_book") or ""), str(row.get("line_type")),
+        )
         unique[key] = row
     rows_out = list(unique.values())
-    rows_out.sort(key=lambda r: (r.get("streak", 0), r.get("last10_pct", 0), r.get("season_pct") or 0), reverse=True)
+    rows_out.sort(key=lambda r: (r.get("streak", 0), r.get("l10_pct", 0) or 0, r.get("season_pct") or 0), reverse=True)
+
     alt_count = sum(r.get("line_type") == "alternate" for r in rows_out)
+    active_alt_count = sum(r.get("line_type") == "alternate" and r.get("active_streak") for r in rows_out)
     warehouse_markets = int(num(alt_summary.get("markets")) or 0)
     status = "ok"
     qa_warning = None
     if warehouse_markets > 0 and alt_count == 0:
         status = "degraded"
-        qa_warning = "ALT warehouse contains markets but no active alternate streak rows met the minimum streak/history rules."
+        qa_warning = "ALT warehouse contains markets but no exact alternate rows have the minimum verified history sample."
+
     report = {
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target,
-        "status": status, "source": "exact_alt_warehouse+daily_standard_props",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "target_date": target,
+        "status": status,
+        "source": "exact_alt_warehouse+daily_standard_props",
         "summary": {
-            "source_rows": source_rows, "alt_warehouse_markets": warehouse_markets,
-            "rows": len(rows_out), "players": len({r["player"] for r in rows_out}),
-            "alternate_rows": alt_count, "standard_rows": sum(r.get("line_type") == "standard" for r in rows_out),
+            "source_rows": source_rows,
+            "alt_warehouse_markets": warehouse_markets,
+            "rows": len(rows_out),
+            "players": len({r["player"] for r in rows_out}),
+            "alternate_rows": alt_count,
+            "active_alternate_streak_rows": active_alt_count,
+            "standard_rows": sum(r.get("line_type") == "standard" for r in rows_out),
             "alternate_players": len({r["player"] for r in rows_out if r.get("line_type") == "alternate"}),
             "alternate_books": sorted({r.get("best_book") for r in rows_out if r.get("line_type") == "alternate" and r.get("best_book")}),
             "alternate_stats": sorted({r.get("stat") for r in rows_out if r.get("line_type") == "alternate" and r.get("stat")}),
-            "omitted_without_real_history": omitted_no_history, "omitted_without_active_streak": omitted_no_streak,
-            "minimum_streak": 3, "qa_warning": qa_warning,
+            "alternate_omitted_without_real_history": alt_omitted_history,
+            "omitted_without_real_history": omitted_no_history,
+            "omitted_without_active_streak": omitted_no_streak,
+            "minimum_history": MIN_HISTORY,
+            "active_streak_minimum": ACTIVE_STREAK_MIN,
+            "qa_warning": qa_warning,
         },
         "rows": rows_out,
-        "data_policy": "Exact sportsbook alternate thresholds plus real recent-game history; no synthetic lines, odds, or streaks.",
+        "data_policy": "All exact sportsbook ALT thresholds with >=3 verified history games are scored; active_streak is a separate >=3 consecutive-hit flag. No synthetic lines, odds, or streaks.",
     }
     os.makedirs("data/warehouse", exist_ok=True)
     os.makedirs("data/dashboard", exist_ok=True)
@@ -282,7 +324,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=str(date.today()))
     args = parser.parse_args()
-    print("Alt Streaks:", build(args.date)["summary"])
+    print("Alt scoring source:", build(args.date)["summary"])
 
 
 if __name__ == "__main__":
