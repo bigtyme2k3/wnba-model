@@ -12,6 +12,7 @@ on:
       - 'patch_dashboard_canonical_runtime.py'
       - 'patch_dashboard_games_focus.py'
       - 'patch_dashboard_v4_ui_freeze.py'
+      - 'patch_dashboard_sprint2_phase2.py'
       - 'patch_dashboard_build_verification.py'
       - 'patch_dashboard_alt_grading_status.py'
       - 'wnba_alt_pending_diagnostics.py'
@@ -65,6 +66,7 @@ jobs:
             patch_dashboard_canonical_runtime.py \
             patch_dashboard_games_focus.py \
             patch_dashboard_v4_ui_freeze.py \
+            patch_dashboard_sprint2_phase2.py \
             patch_dashboard_build_verification.py \
             patch_dashboard_alt_grading_status.py \
             wnba_alt_pending_diagnostics.py \
@@ -91,8 +93,6 @@ jobs:
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
 
-          # Keep injury data/rendering available, but Sprint 1 places injury
-          # intelligence inside Games rather than exposing a standalone tab.
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then
             python patch_dashboard_v5_injury_intelligence.py || echo "Optional injury renderer skipped."
             python patch_dashboard_v5_player_prop_injury_context.py || echo "Optional Player Props injury context skipped."
@@ -102,8 +102,6 @@ jobs:
             python patch_dashboard_v4_remaining_season.py || echo "Optional Remaining Season renderer skipped."
           fi
 
-          # Legacy diagnostics may still generate their data/HTML here; the
-          # Games-focus cleanup removes those panels from the Games experience.
           python patch_dashboard_alt_grading_status.py || true
           python wnba_alt_pending_diagnostics.py || true
           if [ -f data/dashboard/wnba_alt_recovery_progress.json ]; then
@@ -112,7 +110,6 @@ jobs:
           python patch_dashboard_game_performance.py
           python patch_dashboard_build_verification.py || true
 
-          # Final current-slate ALT renderers.
           python - <<'PY'
           import re
           from pathlib import Path
@@ -125,18 +122,15 @@ jobs:
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
 
-          # Canonical date/current-slate Games + Player Props only.
           python patch_dashboard_canonical_runtime.py
-
-          # Remove Intelligence Terminal/final decisions/diagnostic panels from
-          # Games without deleting their underlying data.
           python patch_dashboard_games_focus.py
-
-          # UI Freeze runs last: exact 13-tab navigation, ALT Props standalone,
-          # no standalone Injuries tab, injury summary integrated into Games.
           python patch_dashboard_v4_ui_freeze.py
 
-      - name: Verify Sprint 1 UI freeze
+          # Sprint 2 Phase 2 runs after the UI freeze and supplies gamesV25,
+          # which the locked Games route already prefers without altering NAV.
+          python patch_dashboard_sprint2_phase2.py
+
+      - name: Verify Sprint 2 Phase 2 dashboard
         run: |
           python - <<'PY'
           import json, os
@@ -148,40 +142,28 @@ jobs:
               "['alt-props','ALT Props']", "['game-performance','Game Performance']",
               "['remaining','Remaining Season']", "['health','Data Health']",
               'ALT Streak Board','Sportsbook ALT Ladders','v4-alt-streaks-display-script','v4-alt-ladders-script',
-              'Game Performance','WNBA_GAME_PERFORMANCE_START',
-              'WNBA_GAMES_FOCUS_CLEANUP',
+              'Game Performance','WNBA_GAME_PERFORMANCE_START','WNBA_GAMES_FOCUS_CLEANUP',
+              'sprint2-phase2-script','WNBA_SPRINT2_PHASE2','gamesV25','Prediction Intelligence',
           ]
           missing=[x for x in required if x not in h]
           if missing:
-              raise SystemExit(f'Sprint 1 verification failed; missing markers: {missing}')
-          if h.count('id="canonical-daily-runtime-script"') != 1:
-              raise SystemExit('Canonical runtime duplicated or missing.')
-          if h.count('id="v4-ui-freeze-script"') != 1:
-              raise SystemExit('V4 UI Freeze runtime duplicated or missing.')
-          if h.count('id="v4-alt-streaks-display-script"') != 1 or h.count('id="v4-alt-ladders-script"') != 1:
-              raise SystemExit('ALT renderer duplicated or missing.')
-
-          # The locked NAV must not expose a standalone injuries tab.
-          freeze_start=h.find('id="v4-ui-freeze-script"')
-          freeze_end=h.find('</script>',freeze_start)
-          freeze=h[freeze_start:freeze_end]
-          if "['injuries','Injuries']" in freeze:
-              raise SystemExit('Standalone Injuries tab is still present in locked navigation.')
-          if "injuries:'games'" not in freeze:
-              raise SystemExit('Injuries alias does not route back to Games.')
-
-          # Games-focus cleanup must remove terminal/diagnostic visible blocks.
+              raise SystemExit(f'Sprint 2 Phase 2 verification failed; missing markers: {missing}')
+          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','sprint2-phase2-script'):
+              if h.count(f'id="{marker}"') != 1:
+                  raise SystemExit(f'{marker} duplicated or missing')
+          freeze_start=h.find('id="v4-ui-freeze-script"'); freeze_end=h.find('</script>',freeze_start); freeze=h[freeze_start:freeze_end]
+          if "['injuries','Injuries']" in freeze: raise SystemExit('Standalone Injuries tab is still present.')
+          if "injuries:'games'" not in freeze: raise SystemExit('Injuries alias does not route to Games.')
           for marker in ('<!-- WNBA_TERMINAL_UI_PATCH_START -->','<!-- WNBA_ALT_PENDING_DIAGNOSTICS_START -->','<!-- WNBA_BUILD_BEACON_START -->'):
-              if marker in h:
-                  raise SystemExit(f'Games cleanup failed; visible legacy block remains: {marker}')
-
+              if marker in h: raise SystemExit(f'Games cleanup failed; legacy block remains: {marker}')
           target=os.environ['TARGET']
           manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
-          props=json.loads(Path('data/dashboard/wnba_player_props.json').read_text())
+          phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
           assert manifest.get('status')=='PASS', manifest.get('failures')
           assert manifest.get('target_date')==target
-          assert props.get('target_date')==target
-          print({'status':'PASS','sprint':'V4 UI Freeze Sprint 1','target':target,'tabs':13,'alt_props':True,'injuries_in_games':True})
+          assert phase2.get('status')=='PASS' and phase2.get('target_date')==target
+          assert {g.get('game') for g in phase2.get('games') or []} == set(manifest.get('games') or [])
+          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'games':len(phase2.get('games') or [])})
           PY
 
       - name: Configure GitHub Pages
