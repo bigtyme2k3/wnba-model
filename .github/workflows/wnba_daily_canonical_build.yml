@@ -14,6 +14,7 @@ on:
     paths:
       - 'data/daily_canonical_build_request.txt'
       - 'scripts/build_daily_canonical_slate.py'
+      - 'wnba_sprint2_prediction_engine.py'
       - '.github/workflows/wnba_daily_canonical_build.yml'
 
 permissions:
@@ -55,7 +56,9 @@ jobs:
           echo "Canonical target date: $TARGET"
       - name: Build canonical slate and player props
         run: python scripts/build_daily_canonical_slate.py --date "$TARGET"
-      - name: Validate manifest and stale-row guardrails
+      - name: Build Sprint 2 team ratings and game projections
+        run: python wnba_sprint2_prediction_engine.py --date "$TARGET"
+      - name: Validate manifest, prediction outputs, and stale-row guardrails
         run: |
           python - <<'PY'
           import json, os
@@ -72,7 +75,21 @@ jobs:
             assert row.get('target_date')==target
             assert row.get('team')
             assert not games or row.get('game') in games
-          print({'target':target,'games':d['game_count'],'props':d['player_prop_rows']})
+
+          ratings=json.loads(Path('data/dashboard/wnba_team_ratings.json').read_text())
+          predictions=json.loads(Path('data/dashboard/wnba_sprint2_predictions.json').read_text())
+          assert ratings.get('target_date')==target
+          assert predictions.get('target_date')==target
+          assert predictions.get('status')=='PASS'
+          predicted_games={g.get('game') for g in predictions.get('games') or []}
+          assert predicted_games==games, {'canonical':sorted(games),'predicted':sorted(predicted_games)}
+          for game in predictions.get('games') or []:
+            projection=game.get('projection') or {}
+            assert projection.get('away_score') is not None
+            assert projection.get('home_score') is not None
+            assert 0 <= float(projection.get('home_win_probability')) <= 1
+            assert 35 <= float(game.get('confidence')) <= 88
+          print({'target':target,'games':d['game_count'],'props':d['player_prop_rows'],'rated_teams':len(ratings.get('teams') or []),'predictions':len(predictions.get('games') or [])})
           PY
       - name: Publish canonical daily sources
         run: |
@@ -82,12 +99,14 @@ jobs:
                   data/dashboard/wnba_master.json \
                   data/dashboard/wnba_player_props.json \
                   data/dashboard/wnba_daily_canonical_manifest.json \
+                  data/dashboard/wnba_team_ratings.json \
+                  data/dashboard/wnba_sprint2_predictions.json \
                   data/raw/wnba_player_props_${TARGET}.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo 'No canonical daily source changes to publish'
             exit 0
           fi
-          git commit -m "Refresh canonical WNBA sources for ${TARGET}"
+          git commit -m "Refresh canonical WNBA sources and Sprint 2 predictions for ${TARGET}"
           for attempt in 1 2 3 4; do
             git fetch origin main
             git rebase origin/main && git push origin HEAD:main && exit 0
