@@ -19,8 +19,7 @@ def load_scores() -> dict:
     except Exception:
         payload={}
     rows=[r for r in payload.get('rows',[]) if isinstance(r,dict)]
-    # Only rows with a real frozen model score are eligible for ALT Performance.
-    rows=[r for r in rows if r.get('streak_score') is not None]
+    rows=[r for r in rows if r.get('streak_score') is not None and r.get('line_type') == 'alternate']
     return {'target_date': payload.get('target_date'), 'rows': rows}
 
 
@@ -35,14 +34,37 @@ const SCORE_DATA=__DATA__;
 const norm=v=>String(v??'').trim().toLowerCase().replace(/\s+/g,' ');
 function sideFromCell(text){const t=String(text||'').trim().toUpperCase();return t.startsWith('U')?'UNDER':t.startsWith('O')?'OVER':''}
 function lineFromCell(text){const m=String(text||'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):null}
-function key(player,team,stat,side,line){return [norm(player),norm(team),String(stat||'').trim().toUpperCase(),String(side||'').toUpperCase(),Number(line)].join('|')}
-const INDEX=new Map();
+function fullKey(player,team,stat,side,line){return [norm(player),norm(team),String(stat||'').trim().toUpperCase(),String(side||'').toUpperCase(),Number(line)].join('|')}
+function looseKey(player,stat,side,line){return [norm(player),String(stat||'').trim().toUpperCase(),String(side||'').toUpperCase(),Number(line)].join('|')}
+const INDEX=new Map(), LOOSE=new Map(), AMBIGUOUS=new Set();
 for(const r of (SCORE_DATA.rows||[])){
-  const k=key(r.player,r.team,r.stat,r.side,r.alt_line);
-  const prior=INDEX.get(k);
-  if(!prior || Number(r.streak_score||0)>Number(prior.streak_score||0)) INDEX.set(k,r);
+  const fk=fullKey(r.player,r.team,r.stat,r.side,r.alt_line);
+  const prior=INDEX.get(fk);
+  if(!prior || Number(r.streak_score||0)>Number(prior.streak_score||0)) INDEX.set(fk,r);
+  const lk=looseKey(r.player,r.stat,r.side,r.alt_line);
+  if(LOOSE.has(lk)){
+    const old=LOOSE.get(lk);
+    if(norm(old.game)!==norm(r.game)) AMBIGUOUS.add(lk);
+    if(Number(r.streak_score||0)>Number(old.streak_score||0)) LOOSE.set(lk,r);
+  }else LOOSE.set(lk,r);
+}
+function findScore(player,team,stat,side,line){
+  const exact=INDEX.get(fullKey(player,team,stat,side,line));
+  if(exact)return exact;
+  const lk=looseKey(player,stat,side,line);
+  return AMBIGUOUS.has(lk)?null:LOOSE.get(lk);
 }
 function scoreClass(action){action=String(action||'').toUpperCase();return action==='BET'?'altScoreBet':action==='LEAN'?'altScoreLean':action==='WATCH'?'altScoreWatch':'altScorePass'}
+function pct(v){const n=Number(v);return Number.isFinite(n)?(n*100).toFixed((n*100)%1?1:0)+'%':'—'}
+function val(v){const n=Number(v);return Number.isFinite(n)?String(Number(n.toFixed(1))):'—'}
+function applyMetrics(td,scored){
+  if(!scored)return;
+  if(td[4]) td[4].innerHTML='<span class="altRank">'+val(scored.streak)+'</span><div class="altBook">streak</div>';
+  if(td[5]) td[5].textContent=pct(scored.l10_pct);
+  if(td[6]) td[6].textContent=pct(scored.season_pct);
+  if(td[7]) td[7].textContent=val(scored.average);
+  if(td[8]) td[8].textContent=val(scored.opponent_rank);
+}
 function applyScores(){
   const table=document.querySelector('.altTable');
   if(!table)return;
@@ -54,14 +76,14 @@ function applyScores(){
   let eligible=0,unscored=0;
   for(const tr of table.querySelectorAll('tbody tr')){
     const td=[...tr.children];
-    if(!td.length)continue;
-    if(tr.dataset.altScoreApplied==='1')continue;
+    if(!td.length || tr.dataset.altScoreApplied==='1')continue;
     const player=(td[0]?.querySelector('.altPlayer')?.textContent||td[0]?.textContent||'').replace(/^\s*▸\s*/,'').trim();
     const team=(td[1]?.textContent||'').trim();
     const stat=(td[2]?.textContent||'').trim();
     const lineText=(td[3]?.textContent||'').trim();
     const side=sideFromCell(lineText), line=lineFromCell(lineText);
-    const scored=INDEX.get(key(player,team,stat,side,line));
+    const scored=findScore(player,team,stat,side,line);
+    applyMetrics(td,scored);
     const cell=document.createElement('td');cell.className='altScoreCell';
     if(scored){
       eligible++;
@@ -70,8 +92,6 @@ function applyScores(){
       cell.innerHTML='<div class="altScoreNum">'+score+'</div><div class="altScoreMeta '+scoreClass(action)+'">'+grade+' · '+action+'</div>';
       tr.dataset.performanceEligible='1';
     }else{
-      // A missing model score must never remove a valid current sportsbook market.
-      // Keep the market visible and mark it ineligible for performance snapshotting.
       cell.innerHTML='<span class="altUnscored">UNSCORED</span>';
       tr.dataset.performanceEligible='0';
       unscored++;
@@ -82,7 +102,7 @@ function applyScores(){
   if(summary){
     let badge=summary.querySelector('[data-score-eligible]');
     if(!badge){badge=document.createElement('span');badge.dataset.scoreEligible='1';summary.appendChild(badge)}
-    badge.innerHTML='<b>'+eligible+'</b> scored / performance eligible'+(unscored?' · '+unscored+' unscored visible':'');
+    badge.innerHTML='<b>'+eligible+'</b> scored / performance eligible'+(unscored?' · '+unscored+' unmatched current rows':'');
   }
 }
 function later(){setTimeout(applyScores,0);setTimeout(applyScores,60)}
@@ -92,7 +112,7 @@ for(const name of ['altPropsSetFilter','altPropsSort']){
   const fn=window[name];
   if(typeof fn==='function')window[name]=function(){const out=fn.apply(this,arguments);later();return out};
 }
-window.WNBA_ALT_PROP_SCORES={version:'1.1',source:'wnba_alt_streaks',performance_eligible_only:true,unscored_rows_visible:true,scored_rows:(SCORE_DATA.rows||[]).length};
+window.WNBA_ALT_PROP_SCORES={version:'1.2',source:'wnba_alt_streaks',alternate_only:true,performance_eligible_only:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length};
 later();
 })();</script>'''.replace('__DATA__',data)
 
@@ -113,6 +133,6 @@ def main() -> None:
     html=replace_or_insert(html,'style',STYLE_ID,STYLE)
     html=replace_or_insert(html,'script',SCRIPT_ID,build_script(payload))
     HTML.write_text(html,encoding='utf-8')
-    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'performance_eligible_only':True,'unscored_rows_visible':True})
+    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'performance_eligible_only':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True})
 
 if __name__=='__main__':main()
