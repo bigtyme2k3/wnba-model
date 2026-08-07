@@ -4,6 +4,8 @@ import json
 import re
 from pathlib import Path
 
+from patch_dashboard_games_focus import main as apply_games_focus_cleanup
+
 HTML = Path('docs/index.html')
 DASH = Path('data/dashboard')
 MARKER = 'canonical-daily-runtime-v1'
@@ -111,7 +113,8 @@ def main() -> None:
         raise SystemExit('Dashboard shell invalid: closing body tag missing before canonical patch')
 
     HTML.write_text(html, encoding='utf-8')
-    print({'target_date': target, 'games': len(games), 'props': len(rows), 'marker': MARKER, 'shell_preserved': True})
+    apply_games_focus_cleanup()
+    print({'target_date': target, 'games': len(games), 'props': len(rows), 'marker': MARKER, 'shell_preserved': True, 'games_focus': True})
 
 
 if __name__ == '__main__':
