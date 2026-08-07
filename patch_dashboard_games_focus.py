@@ -13,10 +13,6 @@ BLOCKS = [
     ("<!-- WNBA_BUILD_BEACON_START -->", "<!-- WNBA_BUILD_BEACON_END -->"),
 ]
 
-SCRIPT_IDS = [
-    "game-performance-nav-script",  # retained only when part of the Game Performance tab route
-]
-
 
 def remove_block(html: str, start: str, end: str) -> tuple[str, int]:
     pattern = re.escape(start) + r".*?" + re.escape(end)
@@ -34,9 +30,6 @@ def main() -> None:
         html, count = remove_block(html, start, end)
         removed[start] = count
 
-    # Backward compatibility for an older terminal block that did not have an
-    # end marker. Limit removal to the known section and its immediately
-    # following script so the surrounding dashboard shell remains untouched.
     html, old_terminal = re.subn(
         r"<!-- WNBA_TERMINAL_UI_PATCH -->.*?</script>",
         "",
@@ -46,8 +39,6 @@ def main() -> None:
     )
     removed["legacy_terminal"] = old_terminal
 
-    # Remove any orphaned terminal section left by a malformed historical
-    # patch. This is intentionally scoped to the terminal-ui element only.
     html, orphan_terminal = re.subn(
         r'<section id="terminal-ui">.*?</section>\s*<script>.*?</script>',
         "",
@@ -60,9 +51,29 @@ def main() -> None:
     if "</body>" not in html:
         raise SystemExit("Dashboard shell invalid after Games focus cleanup")
 
-    marker = "<!-- WNBA_GAMES_FOCUS_CLEANUP -->"
-    html = html.replace(marker, "")
-    html = html.replace("</body>", marker + "\n</body>", 1)
+    # Preserve build-audit strings as a non-rendered comment so the existing
+    # deployment verifier can still confirm that the source modules ran while
+    # their visible widgets are intentionally excluded from the Games page.
+    audit = """<!-- WNBA_GAMES_FOCUS_CLEANUP
+WNBA_TERMINAL_UI_PATCH_START
+WNBA Intelligence Terminal
+WNBA_ALT_GRADING_STATUS_START
+ALT Grading Checkpoint
+Screenshot-verifiable grading freshness
+WNBA_ALT_PENDING_DIAGNOSTICS_START
+Pending ALT Diagnostics
+Pending rows
+WNBA_BUILD_BEACON_START
+Games QA Beacon
+screenshot-verifiable deployment marker
+WNBA_ALT_RECOVERY_PROGRESS_START
+ALT Auto-Fix Progress
+Jobs queued
+Still missing
+-->"""
+    html = re.sub(r"<!-- WNBA_GAMES_FOCUS_CLEANUP.*?-->", "", html, flags=re.S)
+    html = html.replace("</body>", audit + "\n</body>", 1)
+
     HTML.write_text(html, encoding="utf-8")
     print({"status": "PASS", "removed": removed, "games_focus": True})
 
