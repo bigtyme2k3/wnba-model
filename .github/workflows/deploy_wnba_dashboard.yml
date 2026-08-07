@@ -107,6 +107,9 @@ jobs:
           if [ -f data/dashboard/wnba_alt_recovery_progress.json ]; then
             python patch_dashboard_alt_recovery_progress.py || true
           fi
+
+          # Register one renderer per analytical tab. Game Performance no longer
+          # creates its own nav button or persistent body section.
           python patch_dashboard_game_performance.py
           python patch_dashboard_build_verification.py || true
 
@@ -124,16 +127,18 @@ jobs:
 
           python patch_dashboard_canonical_runtime.py
           python patch_dashboard_games_focus.py
-          python patch_dashboard_v4_ui_freeze.py
 
-          # Sprint 2 Phase 2 runs after the UI freeze and supplies gamesV25,
-          # which the locked Games route already prefers without altering NAV.
+          # Sprint 2 defines the canonical Games renderer first.
           python patch_dashboard_sprint2_phase2.py
 
-      - name: Verify Sprint 2 Phase 2 dashboard
+          # UI Freeze is the FINAL router/owner of navigation. It selects
+          # gamesV25 for Games and fullGamePerformance for Game Performance.
+          python patch_dashboard_v4_ui_freeze.py
+
+      - name: Verify single-owner Sprint 2 dashboard
         run: |
           python - <<'PY'
-          import json, os
+          import json, os, re
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           required = [
@@ -142,28 +147,58 @@ jobs:
               "['alt-props','ALT Props']", "['game-performance','Game Performance']",
               "['remaining','Remaining Season']", "['health','Data Health']",
               'ALT Streak Board','Sportsbook ALT Ladders','v4-alt-streaks-display-script','v4-alt-ladders-script',
-              'Game Performance','WNBA_GAME_PERFORMANCE_START','WNBA_GAMES_FOCUS_CLEANUP',
+              'game-performance-route-script','fullGamePerformance','WNBA_GAMES_FOCUS_CLEANUP',
               'sprint2-phase2-script','WNBA_SPRINT2_PHASE2','gamesV25','Prediction Intelligence',
           ]
           missing=[x for x in required if x not in h]
           if missing:
-              raise SystemExit(f'Sprint 2 Phase 2 verification failed; missing markers: {missing}')
-          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','sprint2-phase2-script'):
+              raise SystemExit(f'Sprint 2 verification failed; missing markers: {missing}')
+          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','sprint2-phase2-script','game-performance-route-script'):
               if h.count(f'id="{marker}"') != 1:
                   raise SystemExit(f'{marker} duplicated or missing')
+
+          # Old Game Performance injector must be gone: it caused duplicate nav
+          # and persistent historical content beneath Games.
+          if 'WNBA_GAME_PERFORMANCE_START' in h or 'data-wv4-tab="game-performance"' in h:
+              raise SystemExit('Legacy Game Performance injector/nav is still present.')
+
           freeze_start=h.find('id="v4-ui-freeze-script"'); freeze_end=h.find('</script>',freeze_start); freeze=h[freeze_start:freeze_end]
-          if "['injuries','Injuries']" in freeze: raise SystemExit('Standalone Injuries tab is still present.')
-          if "injuries:'games'" not in freeze: raise SystemExit('Injuries alias does not route to Games.')
+          if "['injuries','Injuries']" in freeze:
+              raise SystemExit('Standalone Injuries tab is still present.')
+          if "injuries:'games'" not in freeze:
+              raise SystemExit('Injuries alias does not route to Games.')
+          if "window.gamesV25,window.games" not in freeze:
+              raise SystemExit('Games route does not prefer Sprint 2 gamesV25 renderer.')
+          if "window.fullGamePerformance" not in freeze:
+              raise SystemExit('Game Performance route does not use fullGamePerformance.')
+
+          nav=re.search(r'const NAV=\[(.*?)\];',freeze,re.S)
+          if not nav:
+              raise SystemExit('Locked NAV definition missing.')
+          entries=re.findall(r"\['([^']+)','([^']+)'\]",nav.group(1))
+          if len(entries)!=13:
+              raise SystemExit(f'Expected 13 locked nav entries, found {len(entries)}: {entries}')
+          if sum(1 for _,label in entries if label=='Game Performance')!=1:
+              raise SystemExit(f'Expected exactly one Game Performance nav entry: {entries}')
+
           for marker in ('<!-- WNBA_TERMINAL_UI_PATCH_START -->','<!-- WNBA_ALT_PENDING_DIAGNOSTICS_START -->','<!-- WNBA_BUILD_BEACON_START -->'):
-              if marker in h: raise SystemExit(f'Games cleanup failed; legacy block remains: {marker}')
+              if marker in h:
+                  raise SystemExit(f'Games cleanup failed; legacy block remains: {marker}')
+
           target=os.environ['TARGET']
           manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
           phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
           assert manifest.get('status')=='PASS', manifest.get('failures')
           assert manifest.get('target_date')==target
           assert phase2.get('status')=='PASS' and phase2.get('target_date')==target
-          assert {g.get('game') for g in phase2.get('games') or []} == set(manifest.get('games') or [])
-          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'games':len(phase2.get('games') or [])})
+          canonical=set(manifest.get('games') or [])
+          enriched={g.get('game') for g in phase2.get('games') or []}
+          assert enriched==canonical, {'canonical':sorted(canonical),'phase2':sorted(enriched)}
+          for g in phase2.get('games') or []:
+              p=g.get('projection') or {}
+              assert p.get('away_score') is not None and p.get('home_score') is not None
+              assert g.get('confidence') is not None and g.get('model_grade')
+          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'games':len(enriched)})
           PY
 
       - name: Configure GitHub Pages
