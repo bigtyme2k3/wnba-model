@@ -1,0 +1,137 @@
+name: WNBA ALT Archive Backfill
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba_alt_archive_backfill.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  backfill-alt-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compile ALT recovery stack
+        run: |
+          python -m py_compile \
+            wnba_alt_game_log_recovery.py \
+            wnba_alt_recovery_handoff.py \
+            wnba_alt_date_alias_recovery.py \
+            wnba_espn_boxscore_fallback.py \
+            wnba_alt_pending_diagnostics.py \
+            wnba_alt_performance_tracker.py \
+            wnba_player_game_log_archive.py \
+            wnba_player_game_log_warehouse.py
+
+      - name: Build full pending archive recovery plan
+        run: |
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_game_log_recovery.py
+          DATES=$(python wnba_alt_game_log_recovery.py --print-dates)
+          echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
+          echo "Pending dates: ${DATES:-none}"
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          print('Archive recovery plan:', {
+              'records': p.get('targets',{}).get('records',0),
+              'dates': len(p.get('targets',{}).get('dates',[])),
+              'before': p.get('before',{}),
+          })
+          PY
+
+      - name: Snapshot current cumulative player game logs
+        if: env.RECOVERY_DATES != ''
+        run: python wnba_player_game_log_archive.py snapshot
+
+      - name: Recover every pending archive date
+        if: env.RECOVERY_DATES != ''
+        run: |
+          for DAY in $RECOVERY_DATES; do
+            echo "===== Recovering $DAY ====="
+            python wnba_play_by_play_layer.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+            python wnba_espn_boxscore_fallback.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+            python wnba_player_game_log_archive.py merge
+            python wnba_player_game_log_archive.py snapshot
+            python wnba_alt_date_alias_recovery.py --date "$DAY" || true
+          done
+
+      - name: Run season game-log backfill once
+        if: env.RECOVERY_DATES != ''
+        run: |
+          python wnba_player_game_log_backfill.py --season 2026 || true
+          python wnba_player_game_log_archive.py merge
+          python wnba_player_game_log_archive.py snapshot
+          python wnba_alt_recovery_handoff.py
+
+      - name: Regrade entire frozen ALT archive
+        run: |
+          python wnba_alt_performance_tracker.py --grade
+          TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_game_log_recovery.py
+
+      - name: Verify archive accounting improved
+        run: |
+          python - <<'PY'
+          import json
+          perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
+          diag=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
+          recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          s=perf.get('summary') or {}
+          archived=int(s.get('archived_candidates') or 0)
+          graded=int(s.get('graded') or 0)
+          pending=int(s.get('pending') or 0)
+          diagnosed=int((diag.get('summary') or {}).get('pending_rows') or 0)
+          assert archived == graded + pending, (archived,graded,pending)
+          assert pending == diagnosed, (pending,diagnosed)
+          print({'archived':archived,'graded':graded,'pending':pending,'remaining_recovery_dates':len((recovery.get('targets') or {}).get('dates') or [])})
+          PY
+
+      - name: Publish recovered archive and performance data
+        run: |
+          git config user.name "WNBA Archive Backfill Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Backfill and regrade WNBA ALT archive" \
+            'data/raw/wnba_boxscores_*.json' \
+            'data/history/wnba_alt_streak_history.jsonl' \
+            'data/history/wnba_player_game_logs_before_build.json' \
+            'data/dashboard/wnba_player_game_logs.json' \
+            'data/warehouse/wnba_player_game_logs.json' \
+            'data/dashboard/wnba_alt_performance.json' \
+            'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_pending_diagnostics.json' \
+            'data/warehouse/wnba_alt_pending_diagnostics.json' \
+            'data/dashboard/wnba_alt_game_log_recovery.json' \
+            'data/warehouse/wnba_alt_game_log_recovery.json'
