@@ -1,0 +1,87 @@
+name: WNBA ALT Phase 10B Local Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_phase10b_local_recovery.py'
+      - '.github/workflows/wnba-alt-phase10b-local-recovery.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-phase10b-local-recovery
+  cancel-in-progress: false
+
+jobs:
+  phase10b-local-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile local recovery stack
+        run: python -m py_compile wnba_alt_phase10b_local_recovery.py wnba_alt_phase10_apply_overrides.py wnba_alt_archive_finalize.py wnba_alt_performance_tracker.py
+      - name: Recover from repository-local historical sources
+        run: python wnba_alt_phase10b_local_recovery.py
+      - name: Apply local authoritative resolutions
+        run: python wnba_alt_phase10_apply_overrides.py
+      - name: Rebuild canonical ALT certification
+        run: python wnba_alt_archive_finalize.py
+      - name: Validate Phase 10B recovery impact
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          rep=json.loads(Path('data/dashboard/wnba_alt_phase10b_local_recovery.json').read_text())
+          cert=json.loads(Path('data/dashboard/wnba_alt_archive_certification.json').read_text())
+          unresolved=list(csv.DictReader(Path('data/dashboard/wnba_alt_archive_unresolved_v3.csv').open()))
+          assert cert['certified_rows']+cert['unresolved_rows']==1017
+          assert len(unresolved)==cert['unresolved_rows']
+          if rep['input_unresolved'] and rep['raw_boxscore_files']==0:
+              raise SystemExit('RECOVERY_SOURCE_UNAVAILABLE')
+          print({
+            'local_raw_boxscore_files':rep['raw_boxscore_files'],
+            'local_raw_odds_files':rep['raw_odds_files'],
+            'resolved_local':rep['resolved'],
+            'warehouse_appended':rep['warehouse_appended'],
+            'certified_rows':cert['certified_rows'],
+            'unresolved_rows':cert['unresolved_rows'],
+            'coverage_pct':cert['canonical_coverage_pct'],
+            'status':cert['status'],
+            'outcome_discrepancies':cert['legacy_vs_canonical_outcome_discrepancies'],
+            'duplicate_certified_wager_keys':cert['duplicate_certified_wager_keys'],
+          })
+          PY
+      - name: Publish Phase 10B outputs
+        run: |
+          git config user.name 'WNBA ALT Phase 10B Recovery Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/warehouse/wnba_player_game_logs.json \
+            data/warehouse/wnba_alt_phase10_official_resolutions.json \
+            data/dashboard/wnba_alt_phase10b_local_recovery.json \
+            data/dashboard/wnba_alt_phase10b_local_recovery.csv \
+            data/warehouse/wnba_alt_phase10b_local_recovery.json \
+            data/dashboard/wnba_alt_game_identity_audit.json \
+            data/history/wnba_alt_streak_history_v3.jsonl \
+            data/dashboard/wnba_alt_archive_certification.json \
+            data/warehouse/wnba_alt_archive_certification.json \
+            data/dashboard/wnba_alt_archive_unresolved_v3.csv \
+            data/warehouse/wnba_alt_archive_manifest.json
+          if git diff --cached --quiet; then
+            echo 'Phase 10B outputs already current'
+            exit 0
+          fi
+          git commit -m 'Recover ALT archive from repository-local historical sources'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((attempt * 2))
+          done
+          exit 1
