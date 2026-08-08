@@ -1,0 +1,69 @@
+name: WNBA ALT Game Identity Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_game_identity_audit.py'
+      - '.github/workflows/wnba_alt_game_identity_audit.yml'
+      - 'data/history/wnba_alt_streak_history.jsonl'
+      - 'data/warehouse/wnba_player_game_logs.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  audit-alt-game-identities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile Phase 3 audit
+        run: python -m py_compile wnba_alt_game_identity_audit.py
+
+      - name: Audit canonical ALT game identities
+        run: python wnba_alt_game_identity_audit.py
+
+      - name: Verify audit is non-destructive
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_alt_game_identity_audit.json')
+          d=json.load(p.open())
+          print({
+            'rows': d.get('rows'),
+            'exact_rows': d.get('exact_rows'),
+            'non_exact_rows': d.get('non_exact_rows'),
+            'classification_counts': d.get('classification_counts'),
+          })
+          assert d.get('policy','').startswith('diagnostic only')
+          assert int(d.get('rows') or 0) > 0
+          PY
+
+      - name: Publish Phase 3 audit
+        run: |
+          git config user.name "WNBA ALT Identity Audit Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Publish Phase 3 ALT canonical game identity audit" \
+            'data/dashboard/wnba_alt_game_identity_audit.json' \
+            'data/dashboard/wnba_alt_game_identity_audit.csv' \
+            'data/warehouse/wnba_alt_game_identity_audit.json'
