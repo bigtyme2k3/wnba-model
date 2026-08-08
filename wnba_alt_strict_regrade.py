@@ -8,9 +8,11 @@ Verified manual overrides and Phase 1 official-event recoveries are preserved.
 Important: frozen ALT rows often have ``team`` unset and ``opponent`` containing
 the full ``Away @ Home`` label. Therefore the canonical matchup is parsed from
 ``game`` first. ``team`` + ``opponent`` is only a fallback when both are actual
-team names. The script builds the proposed regrade in memory and refuses to
-replace the archive when strict matching would catastrophically reduce the
-number of final grades.
+team names. Warehouse matchup labels may use either full franchise names or
+mascot-only labels (for example ``Fever @ Aces``), so both forms normalize to
+the same canonical franchise identity. The script builds the proposed regrade
+in memory and refuses to replace the archive when strict matching would
+catastrophically reduce the number of final grades.
 """
 from __future__ import annotations
 
@@ -32,6 +34,7 @@ TRUSTED_SOURCES = {"manual_verified_override", "espn_schedule_event_phase1"}
 FINAL = {"WIN", "LOSS", "PUSH", "VOID"}
 
 TEAM_ALIASES = {
+    # Full/city shorthand.
     "la sparks": "los angeles sparks",
     "los angeles": "los angeles sparks",
     "ny liberty": "new york liberty",
@@ -51,6 +54,23 @@ TEAM_ALIASES = {
     "indiana": "indiana fever",
     "portland": "portland fire",
     "toronto": "toronto tempo",
+
+    # Mascot-only labels emitted by portions of the historical warehouse.
+    "sparks": "los angeles sparks",
+    "liberty": "new york liberty",
+    "valkyries": "golden state valkyries",
+    "aces": "las vegas aces",
+    "mystics": "washington mystics",
+    "sun": "connecticut sun",
+    "mercury": "phoenix mercury",
+    "dream": "atlanta dream",
+    "wings": "dallas wings",
+    "storm": "seattle storm",
+    "sky": "chicago sky",
+    "lynx": "minnesota lynx",
+    "fever": "indiana fever",
+    "fire": "portland fire",
+    "tempo": "toronto tempo",
 }
 
 
@@ -258,9 +278,6 @@ def main() -> None:
     final = sum(str(r.get("outcome") or "").upper() in FINAL for r in history)
     stats.update({"proposed_final": final, "proposed_pending": pending})
 
-    # The previous strict implementation exposed 583 pending rows because it parsed
-    # the archive schema incorrectly. Never allow a schema/matcher regression to
-    # destroy a mostly graded archive. A large drop must be diagnosed first.
     minimum_safe_final = int(baseline_final * 0.90)
     safe_to_apply = final >= minimum_safe_final
     report = {
@@ -270,7 +287,7 @@ def main() -> None:
         "minimum_safe_final": minimum_safe_final,
         "stats": stats,
         "mismatch_samples": mismatch_samples,
-        "identity_rule": "player + snapshot_date + canonical Away@Home team pair; unique player/date only when archive matchup is absent",
+        "identity_rule": "player + snapshot_date + canonical Away@Home team pair; mascot/city/full-name labels normalize to franchise identity; unique player/date only when archive matchup is absent",
         "odds_snapshot_policy": "raw odds schedule/game IDs are never accepted as completed-game truth",
     }
     emit_report(report)
