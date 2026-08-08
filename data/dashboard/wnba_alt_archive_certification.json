@@ -1,30 +1,28 @@
 {
-  "generated_at_utc": "2026-08-08T18:15:25.709078+00:00",
+  "generated_at_utc": "2026-08-08T18:58:13.616057+00:00",
   "identity_schema": "alt-game-v3",
   "status": "PARTIAL_CERTIFIED",
   "legacy_rows": 1017,
   "canonical_rows": 1017,
-  "certified_rows": 937,
-  "unresolved_rows": 80,
-  "canonical_coverage_pct": 92.13,
+  "certified_rows": 970,
+  "unresolved_rows": 47,
+  "canonical_coverage_pct": 95.38,
   "legacy_final_rows": 985,
-  "canonical_final_rows": 937,
+  "canonical_final_rows": 970,
   "legacy_vs_canonical_outcome_discrepancies": 0,
-  "duplicate_certified_wager_keys": 6,
+  "duplicate_certified_wager_keys": 0,
   "resolution_counts": {
-    "certified:EXACT_MATCH": 898,
+    "certified:EXACT_MATCH": 931,
     "certified:HOME_AWAY_ORIENTATION_DIFFERENCE": 11,
     "certified:DATE_SHIFT_UNIQUE_MATCHUP": 28,
-    "unresolved:STAT_UNAVAILABLE": 10,
+    "unresolved:STAT_UNAVAILABLE": 5,
     "unresolved:NO_COMPLETED_GAME_ON_ARCHIVE_DATE": 32,
-    "unresolved:REPEATED_MATCHUP_DATE_AMBIGUOUS": 12,
-    "unresolved:WAREHOUSE_RECORD_CARDINALITY_FAILURE": 26
+    "unresolved:REPEATED_MATCHUP_DATE_AMBIGUOUS": 10
   },
   "unresolved_classification_counts": {
-    "STAT_UNAVAILABLE": 10,
+    "STAT_UNAVAILABLE": 5,
     "NO_COMPLETED_GAME_ON_ARCHIVE_DATE": 32,
-    "REPEATED_MATCHUP_DATE_AMBIGUOUS": 12,
-    "WAREHOUSE_RECORD_CARDINALITY_FAILURE": 26
+    "REPEATED_MATCHUP_DATE_AMBIGUOUS": 10
   },
   "safety_policy": "legacy archive unchanged; only unique completed-game mappings are certified; repeated/uncertain matchups never guessed",
   "production_ready": false,
@@ -110,12 +108,21 @@
       "legacy_outcome": "WIN",
       "canonical_outcome": "LOSS",
       "game_id": "401857066"
+    },
+    {
+      "archive_index": 1006,
+      "player": "Laura Juskaite",
+      "date": "2026-08-04",
+      "game": "Toronto Tempo @ Golden State Valkyries",
+      "legacy_outcome": "LOSS",
+      "canonical_outcome": "WIN",
+      "game_id": "401857110"
     }
   ],
   "legacy_duplicate_market_excess": 262,
   "price_variant_observation_excess": 261,
-  "duplicate_key_semantics": "game+player+stat+line+side+price+book+source; price variants are not duplicate wagers",
-  "legacy_outcome_errors_confirmed_by_local_raw": 9,
+  "duplicate_key_semantics": "exact semantic duplicates are preserved but marked REDUNDANT_EXACT_DUPLICATE; price variants remain PRIMARY observations",
+  "legacy_outcome_errors_confirmed_by_local_raw": 10,
   "phase11_discrepancy_validation": [
     {
       "archive_index": 103,
@@ -206,7 +213,19 @@
       "canonical_actual": 7.0,
       "raw_confirms_canonical": true,
       "raw_source": "data/raw/boxscores_2026-07-14.csv"
+    },
+    {
+      "archive_index": 1006,
+      "player": "Laura Juskaite",
+      "game_id": "401857110",
+      "stat": "REB",
+      "raw_actual": 4.0,
+      "canonical_actual": 4.0,
+      "raw_confirms_canonical": true,
+      "raw_source": "data/raw/boxscores_2026-08-02.csv"
     }
   ],
-  "phase11_raw_boxscore_files_scanned": 27
+  "phase11_raw_boxscore_files_scanned": 27,
+  "redundant_exact_observations": 6,
+  "primary_certified_observations": 964
 }
