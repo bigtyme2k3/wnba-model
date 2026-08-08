@@ -1,0 +1,99 @@
+name: WNBA V5 M06 Market Movement Intelligence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba-v5-m06-market-movement.yml'
+      - 'wnba_v5_market_movement_intelligence.py'
+      - 'data/dashboard/wnba_v5_m05_predictions.csv'
+      - 'data/dashboard/wnba_v5_m05_report.json'
+      - 'data/history/wnba_line_snapshots.jsonl'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-m06-market-movement
+  cancel-in-progress: false
+
+jobs:
+  build-v5-m06:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile V5 M06 engine
+        run: python -m py_compile wnba_v5_market_movement_intelligence.py
+
+      - name: Build market movement intelligence
+        run: python wnba_v5_market_movement_intelligence.py
+
+      - name: Verify V5 M06
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_v5_m06_report.json')
+          assert p.exists(), 'missing M06 report'
+          r=json.loads(p.read_text())
+          assert r['status']=='READY'
+          assert r['prediction_rows'] > 0
+          assert r['snapshot_rows_total'] >= 0
+          assert r['explicit_close_rows'] <= r['matched_prediction_rows']
+          print({
+            'version':r['version'], 'module':r['module'], 'status':r['status'],
+            'prediction_rows':r['prediction_rows'],
+            'snapshot_rows_total':r['snapshot_rows_total'],
+            'matched_prediction_rows':r['matched_prediction_rows'],
+            'snapshot_match_coverage_pct':r['snapshot_match_coverage_pct'],
+            'explicit_close_rows':r['explicit_close_rows'],
+            'explicit_clv_coverage_pct':r['explicit_clv_coverage_pct'],
+            'inferred_latest_rows':r['inferred_latest_rows'],
+            'movement_class_counts':r['movement_class_counts'],
+            'steam_alerts':r['steam_alerts'],
+            'reverse_moves_vs_knn':r['reverse_moves_vs_knn'],
+            'top_first_movers':r['top_first_movers'],
+            'next_module':r['next_module']
+          })
+          PY
+
+      - name: Publish V5 M06 safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 M06 Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_v5_market_movement.csv \
+                  data/dashboard/wnba_v5_clv_features.csv \
+                  data/dashboard/wnba_v5_steam_alerts.json \
+                  data/dashboard/wnba_v5_market_state.json \
+                  data/dashboard/wnba_v5_book_behavior.json \
+                  data/dashboard/wnba_v5_m06_report.json
+          if git diff --cached --quiet; then
+            echo 'No M06 output changes.'
+            exit 0
+          fi
+          git commit -m 'Build WNBA V5 M06 market movement outputs'
+          if git push origin HEAD:main; then exit 0; fi
+          mkdir -p /tmp/v5m06/data/dashboard
+          cp data/dashboard/wnba_v5_market_movement.csv /tmp/v5m06/data/dashboard/
+          cp data/dashboard/wnba_v5_clv_features.csv /tmp/v5m06/data/dashboard/
+          cp data/dashboard/wnba_v5_steam_alerts.json /tmp/v5m06/data/dashboard/
+          cp data/dashboard/wnba_v5_market_state.json /tmp/v5m06/data/dashboard/
+          cp data/dashboard/wnba_v5_book_behavior.json /tmp/v5m06/data/dashboard/
+          cp data/dashboard/wnba_v5_m06_report.json /tmp/v5m06/data/dashboard/
+          git fetch origin main
+          git reset --hard origin/main
+          cp -r /tmp/v5m06/data/dashboard/* data/dashboard/
+          git add data/dashboard/wnba_v5_*
+          git commit -m 'Build WNBA V5 M06 market movement outputs'
+          git push origin HEAD:main
