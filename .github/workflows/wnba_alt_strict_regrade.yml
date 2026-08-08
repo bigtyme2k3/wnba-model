@@ -1,0 +1,100 @@
+name: WNBA ALT Strict Completed-Game Regrade
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba_alt_strict_regrade.yml'
+      - 'wnba_alt_strict_regrade.py'
+      - 'wnba_alt_performance_tracker.py'
+      - 'data/warehouse/wnba_player_game_logs.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  strict-regrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile strict grader
+        run: |
+          python -m py_compile \
+            wnba_alt_strict_regrade.py \
+            wnba_alt_performance_tracker.py \
+            wnba_alt_pending_diagnostics.py \
+            wnba_alt_schedule_audit.py \
+            wnba_alt_phase2_diagnostics.py
+
+      - name: Strictly regrade against completed player-games
+        run: |
+          python wnba_alt_strict_regrade.py
+          TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_schedule_audit.py
+          python wnba_alt_phase2_diagnostics.py
+
+      - name: Verify strict game anchoring
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          history=[]
+          for line in open('data/history/wnba_alt_streak_history.jsonl'):
+              try: history.append(json.loads(line))
+              except Exception: pass
+          bad=[]
+          for r in history:
+              if r.get('actual_source') == 'player_game_log_warehouse_strict_match':
+                  if str(r.get('actual_game_date') or '')[:10] != str(r.get('date') or '')[:10]:
+                      bad.append(r.get('candidate_id'))
+          perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
+          phase2=json.load(open('data/dashboard/wnba_alt_phase2_diagnostics.json'))
+          s=perf.get('summary') or {}
+          sources=Counter(str(r.get('actual_source') or 'pending') for r in history)
+          print({
+              'archived':s.get('archived_candidates'),
+              'graded':s.get('graded'),
+              'pending':s.get('pending'),
+              'actual_sources':dict(sources),
+              'strict_date_mismatches':len(bad),
+              'phase2_failure_reasons':phase2.get('failure_reason_counts') or {},
+          })
+          assert not bad, bad[:10]
+          PY
+
+      - name: Publish strict regrade outputs
+        run: |
+          git config user.name "WNBA Strict Regrade Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Strictly anchor ALT grading to completed official player-games" \
+            'data/history/wnba_alt_streak_history.jsonl' \
+            'data/dashboard/wnba_alt_performance.json' \
+            'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_pending_diagnostics.json' \
+            'data/warehouse/wnba_alt_pending_diagnostics.json' \
+            'data/dashboard/wnba_alt_schedule_audit.json' \
+            'data/warehouse/wnba_alt_schedule_audit.json' \
+            'data/dashboard/wnba_alt_phase2_diagnostics.json' \
+            'data/dashboard/wnba_alt_phase2_diagnostics.csv' \
+            'data/warehouse/wnba_alt_phase2_diagnostics.json'
