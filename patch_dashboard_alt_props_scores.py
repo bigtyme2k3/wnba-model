@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 HTML = Path('docs/index.html')
@@ -175,4 +177,20 @@ def main() -> None:
     HTML.write_text(html,encoding='utf-8')
     print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'performance_eligible_only':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True,'dom_sorting':True,'sortable_score':True,'stable_eligibility_count':True})
 
-if __name__=='__main__':main()
+
+def refresh_performance_panel() -> None:
+    """Embed the latest ALT performance JSON into the same dashboard artifact.
+
+    This keeps the visible ALT Performance panel synchronized with the archive
+    that was just graded by the deployment pipeline instead of preserving a
+    stale payload already embedded in docs/index.html.
+    """
+    panel = Path('patch_dashboard_alt_props_performance_panel.py')
+    if not panel.exists():
+        raise SystemExit('ALT performance panel renderer missing')
+    subprocess.run([sys.executable, str(panel)], check=True)
+
+
+if __name__=='__main__':
+    main()
+    refresh_performance_panel()
