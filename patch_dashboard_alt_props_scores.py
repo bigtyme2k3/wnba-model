@@ -32,6 +32,8 @@ def build_script(payload: dict) -> str:
     return r'''<script id="alt-props-score-overlay-script">(function(){
 const SCORE_DATA=__DATA__;
 const norm=v=>String(v??'').trim().toLowerCase().replace(/\s+/g,' ');
+let domSortKey=null,domSortDir='asc';
+const COL_KEYS=['score','player','team','stat','line','streak','l10','season','avg','opp','odds','books'];
 function sideFromCell(text){const t=String(text||'').trim().toUpperCase();return t.startsWith('U')?'UNDER':t.startsWith('O')?'OVER':''}
 function lineFromCell(text){const m=String(text||'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):null}
 function fullKey(player,team,stat,side,line){return [norm(player),norm(team),String(stat||'').trim().toUpperCase(),String(side||'').toUpperCase(),Number(line)].join('|')}
@@ -65,16 +67,54 @@ function applyMetrics(td,scored){
   if(td[7]) td[7].textContent=val(scored.average);
   if(td[8]) td[8].textContent=val(scored.opponent_rank);
 }
+function numericText(text){const m=String(text||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):null}
+function cellValue(tr,key){
+  const td=[...tr.children],i=COL_KEYS.indexOf(key),cell=td[i];
+  if(!cell)return null;
+  if(['score','line','streak','l10','season','avg','opp','odds'].includes(key)) return numericText(cell.textContent);
+  return String(cell.textContent||'').trim().toLowerCase();
+}
+function updateSortHeaders(key,dir){
+  const table=document.querySelector('.altTable');if(!table)return;
+  const ths=[...table.querySelectorAll('thead th')];
+  ths.forEach((th,i)=>{
+    const k=COL_KEYS[i],btn=th.querySelector('.altSortBtn');if(!btn)return;
+    btn.classList.toggle('active',k===key);
+    let arrow=btn.querySelector('.altSortArrow');
+    if(!arrow){arrow=document.createElement('span');arrow.className='altSortArrow';btn.appendChild(arrow)}
+    arrow.textContent=k===key?(dir==='asc'?'▲':'▼'):'↕';
+  });
+  const summary=document.querySelector('.altSortSummary');
+  if(summary){const label=key?key.replace(/^./,c=>c.toUpperCase()):'Original';summary.textContent=key?'Sorted: '+label+' '+(dir==='asc'?'▲':'▼')+' · click active header again to reverse · third click resets':'Sorted: Original · click a header to sort'}
+}
+function sortDom(key){
+  const table=document.querySelector('.altTable'),tbody=table?.querySelector('tbody');if(!tbody)return;
+  if(domSortKey!==key){domSortKey=key;domSortDir='asc'}else if(domSortDir==='asc'){domSortDir='desc'}else{domSortKey=null;domSortDir='asc'}
+  const rows=[...tbody.querySelectorAll('tr')];
+  rows.forEach((tr,i)=>{if(tr.dataset.altOriginalOrder===undefined)tr.dataset.altOriginalOrder=String(i)});
+  if(!domSortKey){rows.sort((a,b)=>Number(a.dataset.altOriginalOrder)-Number(b.dataset.altOriginalOrder))}
+  else rows.sort((a,b)=>{
+    const av=cellValue(a,domSortKey),bv=cellValue(b,domSortKey);
+    const am=av===null||av===undefined||av==='',bm=bv===null||bv===undefined||bv==='';
+    if(am&&bm)return Number(a.dataset.altOriginalOrder)-Number(b.dataset.altOriginalOrder);
+    if(am)return 1;if(bm)return -1;
+    let c=(typeof av==='number'&&typeof bv==='number')?av-bv:String(av).localeCompare(String(bv));
+    if(c===0)c=Number(a.dataset.altOriginalOrder)-Number(b.dataset.altOriginalOrder);
+    return domSortDir==='asc'?c:-c;
+  });
+  rows.forEach(tr=>tbody.appendChild(tr));updateSortHeaders(domSortKey,domSortDir);
+}
 function applyScores(){
   const table=document.querySelector('.altTable');
   if(!table)return;
   const head=table.querySelector('thead tr');
   if(head && !head.querySelector('[data-alt-score-head]')){
-    const th=document.createElement('th');th.dataset.altScoreHead='1';th.innerHTML='<div class="altSortBtn" style="cursor:default">Score</div>';
+    const th=document.createElement('th');th.dataset.altScoreHead='1';th.innerHTML='<button class="altSortBtn" onclick="window.altPropsSort(\'score\')" title="Sort Score ascending/descending">Score<span class="altSortArrow">↕</span></button>';
     head.insertBefore(th,head.firstElementChild);
   }
-  let eligible=0,unscored=0;
+  let eligible=0,unscored=0,rowNo=0;
   for(const tr of table.querySelectorAll('tbody tr')){
+    if(tr.dataset.altOriginalOrder===undefined)tr.dataset.altOriginalOrder=String(rowNo);rowNo++;
     const td=[...tr.children];
     if(!td.length || tr.dataset.altScoreApplied==='1')continue;
     const player=(td[0]?.querySelector('.altPlayer')?.textContent||td[0]?.textContent||'').replace(/^\s*▸\s*/,'').trim();
@@ -108,11 +148,10 @@ function applyScores(){
 function later(){setTimeout(applyScores,0);setTimeout(applyScores,60)}
 const oldRender=window.render;
 if(typeof oldRender==='function')window.render=function(view){const out=oldRender(view);if(view==='alt-props')later();return out};
-for(const name of ['altPropsSetFilter','altPropsSort']){
-  const fn=window[name];
-  if(typeof fn==='function')window[name]=function(){const out=fn.apply(this,arguments);later();return out};
-}
-window.WNBA_ALT_PROP_SCORES={version:'1.2',source:'wnba_alt_streaks',alternate_only:true,performance_eligible_only:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length};
+const oldFilter=window.altPropsSetFilter;
+if(typeof oldFilter==='function')window.altPropsSetFilter=function(){const out=oldFilter.apply(this,arguments);domSortKey=null;domSortDir='asc';later();return out};
+window.altPropsSort=function(key){later();setTimeout(()=>sortDom(key),70)};
+window.WNBA_ALT_PROP_SCORES={version:'1.3',source:'wnba_alt_streaks',alternate_only:true,performance_eligible_only:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length,dom_sorting:true,sortable_score:true,sortable_true_metrics:true};
 later();
 })();</script>'''.replace('__DATA__',data)
 
@@ -133,6 +172,6 @@ def main() -> None:
     html=replace_or_insert(html,'style',STYLE_ID,STYLE)
     html=replace_or_insert(html,'script',SCRIPT_ID,build_script(payload))
     HTML.write_text(html,encoding='utf-8')
-    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'performance_eligible_only':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True})
+    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'performance_eligible_only':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True,'dom_sorting':True,'sortable_score':True})
 
 if __name__=='__main__':main()
