@@ -1,18 +1,14 @@
 """Strictly regrade ALT history against completed canonical player-games.
 
-This repair removes the legacy grader behavior that selected the first player
-record found for a snapshot date. A wager may only grade from the player-game
-warehouse when the archived matchup and completed warehouse matchup agree.
-Verified manual overrides and Phase 1 official-event recoveries are preserved.
+A wager grades only from a completed player-game whose canonical matchup agrees
+with the archived matchup. Same-date exact matches are preferred. When a frozen
+snapshot date drifted from the actual game date, a cross-date recovery is allowed
+ONLY when that player's completed warehouse contains exactly one occurrence of
+that matchup in the season. Repeated matchups remain unresolved rather than guessed.
 
-Important: frozen ALT rows often have ``team`` unset and ``opponent`` containing
-the full ``Away @ Home`` label. Therefore the canonical matchup is parsed from
-``game`` first. ``team`` + ``opponent`` is only a fallback when both are actual
-team names. Warehouse matchup labels may use either full franchise names or
-mascot-only labels (for example ``Fever @ Aces``), so both forms normalize to
-the same canonical franchise identity. The script builds the proposed regrade
-in memory and refuses to replace the archive when strict matching would
-catastrophically reduce the number of final grades.
+Verified manual overrides and Phase 1 official-event recoveries are preserved.
+The proposed regrade is built in memory and protected by a destructive-write
+safety floor.
 """
 from __future__ import annotations
 
@@ -34,42 +30,21 @@ TRUSTED_SOURCES = {"manual_verified_override", "espn_schedule_event_phase1"}
 FINAL = {"WIN", "LOSS", "PUSH", "VOID"}
 
 TEAM_ALIASES = {
-    # Full/city shorthand.
-    "la sparks": "los angeles sparks",
-    "los angeles": "los angeles sparks",
-    "ny liberty": "new york liberty",
-    "new york": "new york liberty",
-    "gs valkyries": "golden state valkyries",
-    "golden state": "golden state valkyries",
-    "lv aces": "las vegas aces",
-    "las vegas": "las vegas aces",
-    "washington": "washington mystics",
-    "connecticut": "connecticut sun",
-    "phoenix": "phoenix mercury",
-    "atlanta": "atlanta dream",
-    "dallas": "dallas wings",
-    "seattle": "seattle storm",
-    "chicago": "chicago sky",
-    "minnesota": "minnesota lynx",
-    "indiana": "indiana fever",
-    "portland": "portland fire",
-    "toronto": "toronto tempo",
-
-    # Mascot-only labels emitted by portions of the historical warehouse.
-    "sparks": "los angeles sparks",
-    "liberty": "new york liberty",
-    "valkyries": "golden state valkyries",
-    "aces": "las vegas aces",
-    "mystics": "washington mystics",
-    "sun": "connecticut sun",
-    "mercury": "phoenix mercury",
-    "dream": "atlanta dream",
-    "wings": "dallas wings",
-    "storm": "seattle storm",
-    "sky": "chicago sky",
-    "lynx": "minnesota lynx",
-    "fever": "indiana fever",
-    "fire": "portland fire",
+    "la sparks": "los angeles sparks", "los angeles": "los angeles sparks",
+    "ny liberty": "new york liberty", "new york": "new york liberty",
+    "gs valkyries": "golden state valkyries", "golden state": "golden state valkyries",
+    "lv aces": "las vegas aces", "las vegas": "las vegas aces",
+    "washington": "washington mystics", "connecticut": "connecticut sun",
+    "phoenix": "phoenix mercury", "atlanta": "atlanta dream",
+    "dallas": "dallas wings", "seattle": "seattle storm",
+    "chicago": "chicago sky", "minnesota": "minnesota lynx",
+    "indiana": "indiana fever", "portland": "portland fire", "toronto": "toronto tempo",
+    "sparks": "los angeles sparks", "liberty": "new york liberty",
+    "valkyries": "golden state valkyries", "aces": "las vegas aces",
+    "mystics": "washington mystics", "sun": "connecticut sun",
+    "mercury": "phoenix mercury", "dream": "atlanta dream",
+    "wings": "dallas wings", "storm": "seattle storm", "sky": "chicago sky",
+    "lynx": "minnesota lynx", "fever": "indiana fever", "fire": "portland fire",
     "tempo": "toronto tempo",
 }
 
@@ -122,17 +97,12 @@ def game_pair(value: Any) -> frozenset[str]:
 
 
 def team_pair(row: dict[str, Any]) -> frozenset[str]:
-    # Canonical source first. ALT rows can have team=None and opponent=<full game>,
-    # or a stale/mixed opponent field, so never let those override a valid game.
     pair = game_pair(row.get("game"))
     if pair:
         return pair
-
-    # Some warehouse variants expose a matchup label under opponent.
     pair = game_pair(row.get("opponent"))
     if pair:
         return pair
-
     team = team_norm(row.get("team"))
     opponent = team_norm(row.get("opponent"))
     if team and opponent and "@" not in str(row.get("opponent") or ""):
@@ -151,11 +121,8 @@ def reset_warehouse_grade(row: dict[str, Any]) -> None:
     row["graded_at_utc"] = None
     row["actual_source"] = None
     row["grading_reason"] = None
-    row.pop("actual_record_id", None)
-    row.pop("actual_game_id", None)
-    row.pop("actual_game_date", None)
-    row.pop("candidate_completed_games", None)
-    row.pop("candidate_record_ids", None)
+    for key in ("actual_record_id", "actual_game_id", "actual_game_date", "candidate_completed_games", "candidate_record_ids"):
+        row.pop(key, None)
 
 
 def emit_report(report: dict[str, Any]) -> None:
@@ -170,29 +137,25 @@ def main() -> None:
     history = copy.deepcopy(original)
     logs = load(LOGS, {"records": []})
     records = [r for r in logs.get("records", []) if isinstance(r, dict)]
-
     baseline_final = sum(str(r.get("outcome") or "").upper() in FINAL for r in original)
 
     by_player_date: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    by_player: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for record in records:
         player = norm(record.get("player"))
         game_date = str(record.get("game_date") or "")[:10]
+        if player:
+            by_player[player].append(record)
         if player and game_date:
             by_player_date[(player, game_date)].append(record)
 
     now = datetime.now(timezone.utc).isoformat()
     stats = {
-        "rows": len(history),
-        "baseline_final": baseline_final,
-        "trusted_preserved": 0,
-        "strictly_graded": 0,
-        "no_player_game": 0,
-        "archive_matchup_missing": 0,
-        "warehouse_matchup_missing": 0,
-        "matchup_mismatch": 0,
-        "multiple_exact_matches": 0,
-        "unique_player_date_fallback": 0,
-        "stat_unavailable": 0,
+        "rows": len(history), "baseline_final": baseline_final, "trusted_preserved": 0,
+        "strictly_graded": 0, "same_date_exact": 0, "unique_matchup_date_shift": 0,
+        "no_player_game": 0, "archive_matchup_missing": 0, "warehouse_matchup_missing": 0,
+        "matchup_mismatch": 0, "repeated_matchup_date_ambiguous": 0,
+        "multiple_exact_matches": 0, "unique_player_date_fallback": 0, "stat_unavailable": 0,
     }
     mismatch_samples: list[dict[str, Any]] = []
 
@@ -205,52 +168,69 @@ def main() -> None:
         reset_warehouse_grade(row)
         player = norm(row.get("player"))
         snapshot_date = str(row.get("date") or "")[:10]
-        candidates = by_player_date.get((player, snapshot_date), [])
-        if not candidates:
-            row["grading_reason"] = "no completed player-game on snapshot date"
-            stats["no_player_game"] += 1
-            continue
-
         wanted_pair = team_pair(row)
-        candidate_pairs = [(r, team_pair(r)) for r in candidates]
+        same_date = by_player_date.get((player, snapshot_date), [])
+        all_player = by_player.get(player, [])
+        exact: list[dict[str, Any]] = []
+        match_mode = ""
 
         if wanted_pair:
-            exact = [r for r, pair in candidate_pairs if pair and pair == wanted_pair]
-            if not exact:
-                missing_pairs = sum(not pair for _, pair in candidate_pairs)
-                if missing_pairs == len(candidate_pairs):
-                    stats["warehouse_matchup_missing"] += 1
-                    row["grading_reason"] = "warehouse player-game has no canonical matchup label"
-                else:
-                    stats["matchup_mismatch"] += 1
-                    row["grading_reason"] = "completed player-game exists but matchup does not match archived wager"
-                row["candidate_completed_games"] = [str(r.get("game") or "") for r in candidates]
-                if len(mismatch_samples) < 25:
-                    mismatch_samples.append({
-                        "date": snapshot_date,
-                        "player": row.get("player"),
-                        "archive_game": row.get("game"),
-                        "archive_team": row.get("team"),
-                        "archive_opponent": row.get("opponent"),
-                        "wanted_pair": sorted(wanted_pair),
-                        "candidate_games": [str(r.get("game") or "") for r in candidates],
-                        "candidate_pairs": [sorted(pair) for _, pair in candidate_pairs],
-                    })
+            same_exact = [r for r in same_date if team_pair(r) == wanted_pair]
+            if len(same_exact) == 1:
+                exact = same_exact
+                match_mode = "same_date_exact"
+                stats["same_date_exact"] += 1
+            elif len(same_exact) > 1:
+                row["grading_reason"] = "multiple completed player-games match archived wager on snapshot date"
+                row["candidate_record_ids"] = [record_identity(r) for r in same_exact]
+                stats["multiple_exact_matches"] += 1
                 continue
+            else:
+                season_exact = [r for r in all_player if team_pair(r) == wanted_pair]
+                unique_games: dict[str, dict[str, Any]] = {}
+                for r in season_exact:
+                    identity = str(r.get("game_id") or r.get("event_id") or f"{str(r.get('game_date') or '')[:10]}|{r.get('game')}")
+                    unique_games[identity] = r
+                season_exact = list(unique_games.values())
+                if len(season_exact) == 1:
+                    exact = season_exact
+                    match_mode = "unique_matchup_date_shift"
+                    stats["unique_matchup_date_shift"] += 1
+                elif len(season_exact) > 1:
+                    row["grading_reason"] = "repeated matchup across season; archive date cannot be shifted safely"
+                    row["candidate_completed_games"] = [f"{str(r.get('game_date') or '')[:10]} {r.get('game')}" for r in season_exact]
+                    row["candidate_record_ids"] = [record_identity(r) for r in season_exact]
+                    stats["repeated_matchup_date_ambiguous"] += 1
+                    continue
+                else:
+                    if not same_date:
+                        stats["no_player_game"] += 1
+                        row["grading_reason"] = "no completed player-game on snapshot date or elsewhere for archived matchup"
+                    else:
+                        stats["matchup_mismatch"] += 1
+                        row["grading_reason"] = "completed player-game exists on snapshot date but no completed archived matchup found"
+                        row["candidate_completed_games"] = [str(r.get("game") or "") for r in same_date]
+                    if len(mismatch_samples) < 25:
+                        mismatch_samples.append({
+                            "date": snapshot_date, "player": row.get("player"), "archive_game": row.get("game"),
+                            "wanted_pair": sorted(wanted_pair),
+                            "same_date_candidates": [str(r.get("game") or "") for r in same_date],
+                            "season_player_games": [f"{str(r.get('game_date') or '')[:10]} {r.get('game')}" for r in all_player[:30]],
+                        })
+                    continue
         else:
             stats["archive_matchup_missing"] += 1
-            if len(candidates) == 1:
-                exact = candidates
+            if len(same_date) == 1:
+                exact = same_date
+                match_mode = "unique_player_date_fallback"
                 stats["unique_player_date_fallback"] += 1
             else:
-                row["grading_reason"] = "archive matchup missing and player has multiple games on snapshot date"
-                row["candidate_record_ids"] = [record_identity(r) for r in candidates]
+                row["grading_reason"] = "archive matchup missing and player does not have exactly one completed game on snapshot date"
+                row["candidate_record_ids"] = [record_identity(r) for r in same_date]
                 continue
 
         if len(exact) != 1:
-            row["grading_reason"] = "multiple completed player-games match archived wager"
-            row["candidate_record_ids"] = [record_identity(r) for r in exact]
-            stats["multiple_exact_matches"] += 1
+            row["grading_reason"] = "strict matching did not resolve exactly one completed player-game"
             continue
 
         record = exact[0]
@@ -270,6 +250,7 @@ def main() -> None:
         row["actual_record_id"] = record_identity(record)
         row["actual_game_id"] = record.get("game_id") or record.get("event_id")
         row["actual_game_date"] = str(record.get("game_date") or "")[:10]
+        row["grading_match_mode"] = match_mode
         row["grading_reason"] = None if result != "PENDING" else "could not derive final outcome"
         if result != "PENDING":
             stats["strictly_graded"] += 1
@@ -287,7 +268,8 @@ def main() -> None:
         "minimum_safe_final": minimum_safe_final,
         "stats": stats,
         "mismatch_samples": mismatch_samples,
-        "identity_rule": "player + snapshot_date + canonical Away@Home team pair; mascot/city/full-name labels normalize to franchise identity; unique player/date only when archive matchup is absent",
+        "identity_rule": "player + canonical matchup; prefer snapshot-date exact, otherwise allow only a single unique completed occurrence of that matchup across the player's season",
+        "repeated_matchup_policy": "never guess among repeated completed matchups; leave pending for explicit game-id/date resolution",
         "odds_snapshot_policy": "raw odds schedule/game IDs are never accepted as completed-game truth",
     }
     emit_report(report)
