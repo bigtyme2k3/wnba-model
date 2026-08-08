@@ -16,6 +16,8 @@ import argparse
 import json
 import math
 import statistics
+import subprocess
+import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -161,7 +163,6 @@ def market_component(row: dict[str, Any]) -> tuple[float, list[str], float | Non
 
 
 def risk_component(row: dict[str, Any], profile: dict[str, Any]) -> tuple[float, list[str]]:
-    # Higher is safer. Unknown fields are neutral, not assumed healthy.
     score = 70.0
     reasons: list[str] = []
     stability = float(profile.get("stability_score") or 50.0)
@@ -263,5 +264,6 @@ def main() -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=str(date.today()))
-    parser.parse_args()
+    args = parser.parse_args()
+    subprocess.run([sys.executable, "wnba_alt_canonical_fallback.py", "--date", args.date], check=True)
     main()
