@@ -1,10 +1,12 @@
 """Resolve safe pending ALT archive rows directly from completed official schedule games.
 
 Phase 1 only handles schedule-audit rows classified as ``exact_date`` or
-``unique_schedule_alias``. It uses the completed ESPN event selected by the
-schedule audit, reads that event's box score, derives the frozen ALT stat actual,
-and grades the existing archive row. Frozen pregame fields (date, line, side,
-score, odds) are never changed.
+``unique_schedule_alias``. It first uses the completed ESPN event selected by the
+schedule audit. If the archived matchup is stale and that event does not contain
+the player, it searches every completed WNBA event on the same official date and
+accepts a fallback only when exactly one event contains that player.
+
+Frozen pregame fields (date, line, side, score, odds) are never changed.
 """
 from __future__ import annotations
 
@@ -21,6 +23,7 @@ AUDIT = Path("data/dashboard/wnba_alt_schedule_audit.json")
 REPORT = Path("data/dashboard/wnba_alt_phase1_schedule_recovery.json")
 WAREHOUSE_REPORT = Path("data/warehouse/wnba_alt_phase1_schedule_recovery.json")
 SUMMARY = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/summary"
+SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard"
 FINAL = {"WIN", "LOSS", "PUSH", "VOID"}
 SAFE = {"exact_date", "unique_schedule_alias"}
 
@@ -75,11 +78,27 @@ def row_key(row: dict[str, Any]) -> str:
     ])
 
 
-def fetch_summary(event_id: str) -> dict[str, Any]:
-    url = f"{SUMMARY}?{urllib.parse.urlencode({'event': event_id})}"
-    req = urllib.request.Request(url, headers={"User-Agent": "wnba-model/5.0 (+github-actions)"})
+def fetch_json(url: str, params: dict[str, str]) -> dict[str, Any]:
+    request_url = f"{url}?{urllib.parse.urlencode(params)}"
+    req = urllib.request.Request(request_url, headers={"User-Agent": "wnba-model/5.0 (+github-actions)"})
     with urllib.request.urlopen(req, timeout=30) as response:
         return json.load(response)
+
+
+def fetch_summary(event_id: str) -> dict[str, Any]:
+    return fetch_json(SUMMARY, {"event": event_id})
+
+
+def completed_event_ids(game_date: str) -> list[str]:
+    payload = fetch_json(SCOREBOARD, {"dates": game_date.replace("-", ""), "limit": "100"})
+    out: list[str] = []
+    for event in payload.get("events") or []:
+        status = ((event.get("status") or {}).get("type") or {})
+        completed = bool(status.get("completed")) or str(status.get("state") or "").lower() == "post"
+        event_id = str(event.get("id") or "")
+        if completed and event_id:
+            out.append(event_id)
+    return out
 
 
 def made(value: Any) -> float | None:
@@ -162,6 +181,30 @@ def completed_candidate(audit_row: dict[str, Any]) -> dict[str, Any] | None:
     return None
 
 
+def unique_player_event(
+    game_date: str,
+    player: str,
+    summary_cache: dict[str, dict[str, Any]],
+    scoreboard_cache: dict[str, list[str]],
+) -> tuple[str | None, dict[str, float] | None, list[str]]:
+    if game_date not in scoreboard_cache:
+        scoreboard_cache[game_date] = completed_event_ids(game_date)
+    matches: list[tuple[str, dict[str, float]]] = []
+    checked: list[str] = []
+    for event_id in scoreboard_cache[game_date]:
+        checked.append(event_id)
+        payload = summary_cache.get(event_id)
+        if payload is None:
+            payload = fetch_summary(event_id)
+            summary_cache[event_id] = payload
+        stats = player_stats(payload, player)
+        if stats is not None:
+            matches.append((event_id, stats))
+    if len(matches) == 1:
+        return matches[0][0], matches[0][1], checked
+    return None, None, checked
+
+
 def main() -> None:
     history = read_jsonl(ARCHIVE)
     audit = load(AUDIT, {"rows": []})
@@ -170,7 +213,8 @@ def main() -> None:
         if isinstance(r, dict) and str(r.get("classification") or "") in SAFE
     }
     pending = [r for r in history if str(r.get("outcome") or "PENDING").upper() not in FINAL]
-    cache: dict[str, dict[str, Any]] = {}
+    summary_cache: dict[str, dict[str, Any]] = {}
+    scoreboard_cache: dict[str, list[str]] = {}
     recovered: list[dict[str, Any]] = []
     unresolved: list[dict[str, Any]] = []
     now = datetime.now(timezone.utc).isoformat()
@@ -185,16 +229,52 @@ def main() -> None:
             unresolved.append({"row_key": key, "reason": "safe schedule row has no unique completed event"})
             continue
         event_id = str(game["event_id"])
+        actual_game_date = str(game.get("date") or "")[:10]
+        resolution = "schedule_selected_event"
         try:
-            payload = cache.setdefault(event_id, fetch_summary(event_id))
+            payload = summary_cache.get(event_id)
+            if payload is None:
+                payload = fetch_summary(event_id)
+                summary_cache[event_id] = payload
         except Exception as exc:
             unresolved.append({"row_key": key, "event_id": event_id, "reason": f"summary fetch failed: {exc}"})
             continue
         stats = player_stats(payload, str(row.get("player") or ""))
+
+        # A stale archive matchup can point to the right official date but the wrong
+        # event. Recover only when that player appears in exactly one completed WNBA
+        # event on the official date.
+        checked_events: list[str] = [event_id]
+        if stats is None and actual_game_date:
+            try:
+                fallback_event, fallback_stats, checked_events = unique_player_event(
+                    actual_game_date,
+                    str(row.get("player") or ""),
+                    summary_cache,
+                    scoreboard_cache,
+                )
+            except Exception as exc:
+                unresolved.append({
+                    "row_key": key,
+                    "event_id": event_id,
+                    "reason": f"player-event fallback failed: {exc}",
+                })
+                continue
+            if fallback_event and fallback_stats is not None:
+                event_id = fallback_event
+                stats = fallback_stats
+                resolution = "unique_player_event_on_official_date"
+
         stat = str(row.get("stat") or "").upper()
         actual = stats.get(stat) if stats else None
         if actual is None:
-            unresolved.append({"row_key": key, "event_id": event_id, "reason": f"player/stat unavailable: {stat}"})
+            unresolved.append({
+                "row_key": key,
+                "event_id": event_id,
+                "reason": f"player/stat unavailable: {stat}",
+                "official_game_date": actual_game_date,
+                "events_checked": checked_events,
+            })
             continue
         line = row.get("alt_line") if row.get("alt_line") is not None else row.get("line")
         result = outcome(row.get("side"), actual, line)
@@ -207,8 +287,9 @@ def main() -> None:
         row["graded_at_utc"] = now
         row["actual_source"] = "espn_schedule_event_phase1"
         row["actual_event_id"] = event_id
-        row["actual_game_date"] = str(game.get("date") or "")[:10]
+        row["actual_game_date"] = actual_game_date
         row["schedule_recovery_classification"] = audit_row.get("classification")
+        row["schedule_recovery_resolution"] = resolution
         row["grading_reason"] = None
         recovered.append({
             "row_key": key,
@@ -217,9 +298,10 @@ def main() -> None:
             "actual": actual,
             "outcome": result,
             "archive_date": str(row.get("date") or "")[:10],
-            "actual_game_date": row["actual_game_date"],
+            "actual_game_date": actual_game_date,
             "event_id": event_id,
             "classification": audit_row.get("classification"),
+            "resolution": resolution,
         })
 
     if recovered:
@@ -235,6 +317,10 @@ def main() -> None:
             name: sum(1 for r in recovered if r.get("classification") == name)
             for name in sorted(SAFE)
         },
+        "by_resolution": {
+            name: sum(1 for r in recovered if r.get("resolution") == name)
+            for name in sorted({str(r.get("resolution")) for r in recovered})
+        },
         "recovered_rows": recovered,
         "unresolved_safe_rows": unresolved,
     }
@@ -242,7 +328,7 @@ def main() -> None:
     for path in (REPORT, WAREHOUSE_REPORT):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
-    print(json.dumps({k: report[k] for k in ("safe_audit_rows", "pending_before", "recovered", "pending_after_direct_recovery", "by_classification")}, indent=2))
+    print(json.dumps({k: report[k] for k in ("safe_audit_rows", "pending_before", "recovered", "pending_after_direct_recovery", "by_classification", "by_resolution")}, indent=2))
 
 
 if __name__ == "__main__":
