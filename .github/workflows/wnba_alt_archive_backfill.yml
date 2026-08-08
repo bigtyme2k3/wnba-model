@@ -9,6 +9,7 @@ on:
       - 'wnba_alt_date_alias_recovery.py'
       - 'wnba_alt_schedule_audit.py'
       - 'wnba_alt_phase1_schedule_recovery.py'
+      - 'wnba_alt_phase2_diagnostics.py'
       - 'wnba_alt_game_log_recovery.py'
       - 'wnba_alt_pending_diagnostics.py'
       - 'wnba_alt_performance_tracker.py'
@@ -54,6 +55,7 @@ jobs:
             wnba_alt_date_alias_recovery.py \
             wnba_alt_schedule_audit.py \
             wnba_alt_phase1_schedule_recovery.py \
+            wnba_alt_phase2_diagnostics.py \
             wnba_espn_boxscore_fallback.py \
             wnba_alt_pending_diagnostics.py \
             wnba_alt_performance_tracker.py \
@@ -135,6 +137,18 @@ jobs:
           python wnba_alt_game_log_recovery.py
           python wnba_alt_manual_recovery.py --report
 
+      - name: Phase 2 diagnose every unresolved ALT row
+        run: |
+          python wnba_alt_phase2_diagnostics.py
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_alt_phase2_diagnostics.json'))
+          print('Phase 2 diagnostics:', {
+              'pending_rows': p.get('pending_rows',0),
+              'failure_reason_counts': p.get('failure_reason_counts',{}),
+          })
+          PY
+
       - name: Verify archive accounting improved
         run: |
           python - <<'PY'
@@ -145,15 +159,18 @@ jobs:
           manual=json.load(open('data/dashboard/wnba_alt_pending_manual_recovery.json'))
           schedule=json.load(open('data/dashboard/wnba_alt_schedule_audit.json'))
           phase1=json.load(open('data/dashboard/wnba_alt_phase1_schedule_recovery.json'))
+          phase2=json.load(open('data/dashboard/wnba_alt_phase2_diagnostics.json'))
           s=perf.get('summary') or {}
           archived=int(s.get('archived_candidates') or 0)
           graded=int(s.get('graded') or 0)
           pending=int(s.get('pending') or 0)
           diagnosed=int((diag.get('summary') or {}).get('pending_rows') or 0)
           manual_pending=int(manual.get('pending_rows') or 0)
+          phase2_pending=int(phase2.get('pending_rows') or 0)
           assert archived == graded + pending, (archived,graded,pending)
           assert pending == diagnosed, (pending,diagnosed)
           assert pending == manual_pending, (pending,manual_pending)
+          assert pending == phase2_pending, (pending,phase2_pending)
           assert pending == int(schedule.get('pending_rows') or 0), (pending,schedule.get('pending_rows'))
           print({
               'archived':archived,
@@ -165,6 +182,7 @@ jobs:
               'phase1_by_classification':phase1.get('by_classification',{}),
               'phase1_unresolved_safe_rows':len(phase1.get('unresolved_safe_rows') or []),
               'schedule_classifications':schedule.get('classification_counts',{}),
+              'phase2_failure_reasons':phase2.get('failure_reason_counts',{}),
           })
           PY
 
@@ -187,6 +205,9 @@ jobs:
             'data/warehouse/wnba_alt_schedule_audit.json' \
             'data/dashboard/wnba_alt_phase1_schedule_recovery.json' \
             'data/warehouse/wnba_alt_phase1_schedule_recovery.json' \
+            'data/dashboard/wnba_alt_phase2_diagnostics.json' \
+            'data/dashboard/wnba_alt_phase2_diagnostics.csv' \
+            'data/warehouse/wnba_alt_phase2_diagnostics.json' \
             'data/dashboard/wnba_alt_game_log_recovery.json' \
             'data/warehouse/wnba_alt_game_log_recovery.json' \
             'data/dashboard/wnba_alt_pending_manual_recovery.csv' \
