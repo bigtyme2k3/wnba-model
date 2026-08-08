@@ -1,0 +1,72 @@
+name: WNBA V5 Historical Feature Store
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_historical_feature_engine.py'
+      - 'config/v5_modules.json'
+      - 'data/history/wnba_alt_streak_history_v3.jsonl'
+      - 'data/dashboard/wnba_alt_archive_health.json'
+      - '.github/workflows/wnba-v5-historical-features.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-historical-features
+  cancel-in-progress: false
+
+jobs:
+  build-v5-feature-store:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile V5 feature engine
+        run: python -m py_compile wnba_v5_historical_feature_engine.py
+      - name: Build leakage-safe historical features
+        run: python wnba_v5_historical_feature_engine.py
+      - name: Verify V5 feature store
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('data/dashboard/wnba_v5_status.json').read_text())
+          f=json.loads(Path('data/warehouse/wnba_v5_historical_features.json').read_text())
+          assert s['archive_health']=='HEALTHY_LOCKED'
+          assert f['archive_health_status']=='HEALTHY_LOCKED'
+          assert f['feature_rows'] > 0
+          assert f['feature_rows'] == len(f['records'])
+          assert all(r['certification']=='PRIMARY_CERTIFIED' for r in f['records'])
+          print(s)
+          PY
+      - name: Publish V5 feature store safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 Feature Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/warehouse/wnba_v5_historical_features.json data/dashboard/wnba_v5_historical_features.csv data/dashboard/wnba_v5_status.json
+          if git diff --cached --quiet; then
+            echo 'V5 feature store already current'
+            exit 0
+          fi
+          git commit -m 'Build WNBA V5 certified historical feature store'
+          if git push origin HEAD:main; then exit 0; fi
+          tmp=$(mktemp -d)
+          cp data/warehouse/wnba_v5_historical_features.json "$tmp/"
+          cp data/dashboard/wnba_v5_historical_features.csv "$tmp/"
+          cp data/dashboard/wnba_v5_status.json "$tmp/"
+          git fetch origin main
+          git reset --hard origin/main
+          cp "$tmp/wnba_v5_historical_features.json" data/warehouse/
+          cp "$tmp/wnba_v5_historical_features.csv" data/dashboard/
+          cp "$tmp/wnba_v5_status.json" data/dashboard/
+          git add data/warehouse/wnba_v5_historical_features.json data/dashboard/wnba_v5_historical_features.csv data/dashboard/wnba_v5_status.json
+          git commit -m 'Build WNBA V5 certified historical feature store'
+          git push origin HEAD:main
