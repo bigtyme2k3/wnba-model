@@ -5,11 +5,15 @@ because WNBA teams can play the same opponent on consecutive or near-consecutive
 dates. This module queries ESPN's historical scoreboard for a +/-7 day window around
 each pending archive date and classifies each pending matchup as:
 
-- exact_date: official schedule contains the same home/away matchup on archive date
-- unique_schedule_alias: exactly one same-orientation matchup exists in the window
-- repeated_matchup_ambiguous: multiple same-orientation meetings exist in the window
-- home_away_mismatch: only reversed-orientation meetings exist
+- exact_date: official schedule contains a completed same home/away matchup on archive date
+- unique_schedule_alias: exactly one completed same-orientation matchup exists in the window
+- repeated_matchup_ambiguous: multiple completed same-orientation meetings exist in the window
+- home_away_mismatch: only completed reversed-orientation meetings exist
+- no_completed_matchup: schedule events exist, but none completed
 - schedule_not_found: no matching official schedule event was found
+
+Postponed/cancelled/non-completed events are retained in the audit for diagnostics, but
+never count as grading candidates and never make a completed matchup ambiguous.
 
 No archive records are modified here. The generated audit is consumed by
 wnba_alt_date_alias_recovery.py as a guardrail.
@@ -146,8 +150,8 @@ def classify(row: dict[str, Any], schedule: list[dict[str, Any]], window: int) -
         return {**base, "classification": "schedule_not_found", "candidate_games": []}
 
     away_key, home_key = matchup
-    candidates = []
-    reversed_candidates = []
+    all_candidates = []
+    all_reversed_candidates = []
     for game in schedule:
         try:
             gdate = date.fromisoformat(str(game.get("date") or "")[:10])
@@ -156,9 +160,16 @@ def classify(row: dict[str, Any], schedule: list[dict[str, Any]], window: int) -
         if abs((gdate - target).days) > window:
             continue
         if game.get("away_key") == away_key and game.get("home_key") == home_key:
-            candidates.append(game)
+            all_candidates.append(game)
         elif game.get("away_key") == home_key and game.get("home_key") == away_key:
-            reversed_candidates.append(game)
+            all_reversed_candidates.append(game)
+
+    # Only completed games are valid grading candidates. Postponed/cancelled/scheduled
+    # events remain visible below as excluded diagnostics but do not create ambiguity.
+    candidates = [g for g in all_candidates if bool(g.get("completed"))]
+    reversed_candidates = [g for g in all_reversed_candidates if bool(g.get("completed"))]
+    excluded_nonfinal_candidates = [g for g in all_candidates if not bool(g.get("completed"))]
+    excluded_nonfinal_reversed = [g for g in all_reversed_candidates if not bool(g.get("completed"))]
 
     exact = [g for g in candidates if g.get("date") == target_str]
     if exact:
@@ -173,6 +184,9 @@ def classify(row: dict[str, Any], schedule: list[dict[str, Any]], window: int) -
     elif reversed_candidates:
         classification = "home_away_mismatch"
         suggested_date = None
+    elif all_candidates or all_reversed_candidates:
+        classification = "no_completed_matchup"
+        suggested_date = None
     else:
         classification = "schedule_not_found"
         suggested_date = None
@@ -183,8 +197,12 @@ def classify(row: dict[str, Any], schedule: list[dict[str, Any]], window: int) -
         "suggested_date": suggested_date,
         "candidate_dates": sorted({str(g.get("date")) for g in candidates}),
         "candidate_games": candidates,
+        "excluded_nonfinal_candidate_dates": sorted({str(g.get("date")) for g in excluded_nonfinal_candidates}),
+        "excluded_nonfinal_candidate_games": excluded_nonfinal_candidates,
         "reversed_candidate_dates": sorted({str(g.get("date")) for g in reversed_candidates}),
         "reversed_candidate_games": reversed_candidates,
+        "excluded_nonfinal_reversed_dates": sorted({str(g.get("date")) for g in excluded_nonfinal_reversed}),
+        "excluded_nonfinal_reversed_games": excluded_nonfinal_reversed,
     }
 
 
