@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/wnba_alt_archive_backfill.yml'
       - 'wnba_alt_date_alias_recovery.py'
+      - 'wnba_alt_schedule_audit.py'
       - 'wnba_alt_game_log_recovery.py'
       - 'wnba_alt_pending_diagnostics.py'
       - 'wnba_alt_performance_tracker.py'
@@ -50,6 +51,7 @@ jobs:
             wnba_alt_game_log_recovery.py \
             wnba_alt_recovery_handoff.py \
             wnba_alt_date_alias_recovery.py \
+            wnba_alt_schedule_audit.py \
             wnba_espn_boxscore_fallback.py \
             wnba_alt_pending_diagnostics.py \
             wnba_alt_performance_tracker.py \
@@ -60,6 +62,7 @@ jobs:
       - name: Build full pending archive recovery plan
         run: |
           python wnba_alt_pending_diagnostics.py
+          python wnba_alt_schedule_audit.py
           python wnba_alt_game_log_recovery.py
           DATES=$(python wnba_alt_game_log_recovery.py --print-dates)
           echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
@@ -67,10 +70,13 @@ jobs:
           python - <<'PY'
           import json
           p=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          s=json.load(open('data/dashboard/wnba_alt_schedule_audit.json'))
           print('Archive recovery plan:', {
               'records': p.get('targets',{}).get('records',0),
               'dates': len(p.get('targets',{}).get('dates',[])),
               'before': p.get('before',{}),
+              'schedule_classifications': s.get('classification_counts',{}),
+              'schedule_fetch_errors': len(s.get('fetch_errors') or []),
           })
           PY
 
@@ -100,7 +106,7 @@ jobs:
           python wnba_player_game_log_archive.py snapshot
           python wnba_alt_recovery_handoff.py
 
-      - name: Re-run conservative date aliases with complete season logs
+      - name: Re-run schedule-guarded date aliases with complete season logs
         if: env.RECOVERY_DATES != ''
         run: |
           for DAY in $RECOVERY_DATES; do
@@ -119,6 +125,7 @@ jobs:
           TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
+          python wnba_alt_schedule_audit.py
           python wnba_alt_game_log_recovery.py
           python wnba_alt_manual_recovery.py --report
 
@@ -130,6 +137,7 @@ jobs:
           diag=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
           manual=json.load(open('data/dashboard/wnba_alt_pending_manual_recovery.json'))
+          schedule=json.load(open('data/dashboard/wnba_alt_schedule_audit.json'))
           s=perf.get('summary') or {}
           archived=int(s.get('archived_candidates') or 0)
           graded=int(s.get('graded') or 0)
@@ -139,7 +147,15 @@ jobs:
           assert archived == graded + pending, (archived,graded,pending)
           assert pending == diagnosed, (pending,diagnosed)
           assert pending == manual_pending, (pending,manual_pending)
-          print({'archived':archived,'graded':graded,'pending':pending,'remaining_recovery_dates':len((recovery.get('targets') or {}).get('dates') or []),'manual_report_rows':manual_pending})
+          assert pending == int(schedule.get('pending_rows') or 0), (pending,schedule.get('pending_rows'))
+          print({
+              'archived':archived,
+              'graded':graded,
+              'pending':pending,
+              'remaining_recovery_dates':len((recovery.get('targets') or {}).get('dates') or []),
+              'manual_report_rows':manual_pending,
+              'schedule_classifications':schedule.get('classification_counts',{}),
+          })
           PY
 
       - name: Publish recovered archive and performance data
@@ -157,6 +173,8 @@ jobs:
             'data/warehouse/wnba_alt_performance.json' \
             'data/dashboard/wnba_alt_pending_diagnostics.json' \
             'data/warehouse/wnba_alt_pending_diagnostics.json' \
+            'data/dashboard/wnba_alt_schedule_audit.json' \
+            'data/warehouse/wnba_alt_schedule_audit.json' \
             'data/dashboard/wnba_alt_game_log_recovery.json' \
             'data/warehouse/wnba_alt_game_log_recovery.json' \
             'data/dashboard/wnba_alt_pending_manual_recovery.csv' \
