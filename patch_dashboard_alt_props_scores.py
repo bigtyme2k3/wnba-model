@@ -112,7 +112,7 @@ function applyScores(){
     const th=document.createElement('th');th.dataset.altScoreHead='1';th.innerHTML='<button class="altSortBtn" onclick="window.altPropsSort(\'score\')" title="Sort Score ascending/descending">Score<span class="altSortArrow">↕</span></button>';
     head.insertBefore(th,head.firstElementChild);
   }
-  let eligible=0,unscored=0,rowNo=0;
+  let rowNo=0;
   for(const tr of table.querySelectorAll('tbody tr')){
     if(tr.dataset.altOriginalOrder===undefined)tr.dataset.altOriginalOrder=String(rowNo);rowNo++;
     const td=[...tr.children];
@@ -126,7 +126,6 @@ function applyScores(){
     applyMetrics(td,scored);
     const cell=document.createElement('td');cell.className='altScoreCell';
     if(scored){
-      eligible++;
       const score=Number(scored.streak_score).toFixed(1);
       const grade=scored.streak_grade||'—', action=scored.streak_action||'—';
       cell.innerHTML='<div class="altScoreNum">'+score+'</div><div class="altScoreMeta '+scoreClass(action)+'">'+grade+' · '+action+'</div>';
@@ -134,10 +133,12 @@ function applyScores(){
     }else{
       cell.innerHTML='<span class="altUnscored">UNSCORED</span>';
       tr.dataset.performanceEligible='0';
-      unscored++;
     }
     tr.insertBefore(cell,tr.firstElementChild);tr.dataset.altScoreApplied='1';
   }
+  const allRows=[...table.querySelectorAll('tbody tr')];
+  const eligible=allRows.filter(tr=>tr.dataset.performanceEligible==='1').length;
+  const unscored=allRows.filter(tr=>tr.dataset.performanceEligible==='0').length;
   const summary=document.querySelector('.altSummary');
   if(summary){
     let badge=summary.querySelector('[data-score-eligible]');
@@ -151,7 +152,7 @@ if(typeof oldRender==='function')window.render=function(view){const out=oldRende
 const oldFilter=window.altPropsSetFilter;
 if(typeof oldFilter==='function')window.altPropsSetFilter=function(){const out=oldFilter.apply(this,arguments);domSortKey=null;domSortDir='asc';later();return out};
 window.altPropsSort=function(key){later();setTimeout(()=>sortDom(key),70)};
-window.WNBA_ALT_PROP_SCORES={version:'1.3',source:'wnba_alt_streaks',alternate_only:true,performance_eligible_only:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length,dom_sorting:true,sortable_score:true,sortable_true_metrics:true};
+window.WNBA_ALT_PROP_SCORES={version:'1.4',source:'wnba_alt_streaks',alternate_only:true,performance_eligible_only:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length,dom_sorting:true,sortable_score:true,sortable_true_metrics:true,stable_eligibility_count:true};
 later();
 })();</script>'''.replace('__DATA__',data)
 
@@ -172,6 +173,6 @@ def main() -> None:
     html=replace_or_insert(html,'style',STYLE_ID,STYLE)
     html=replace_or_insert(html,'script',SCRIPT_ID,build_script(payload))
     HTML.write_text(html,encoding='utf-8')
-    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'performance_eligible_only':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True,'dom_sorting':True,'sortable_score':True})
+    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'performance_eligible_only':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True,'dom_sorting':True,'sortable_score':True,'stable_eligibility_count':True})
 
 if __name__=='__main__':main()
