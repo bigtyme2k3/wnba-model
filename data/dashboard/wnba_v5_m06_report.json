@@ -1,0 +1,30 @@
+{
+  "version": "V5",
+  "module": "V5-M06",
+  "stage": "MARKET_MOVEMENT_INTELLIGENCE",
+  "status": "READY",
+  "prediction_rows": 83,
+  "snapshot_rows_total": 11836,
+  "matched_prediction_rows": 78,
+  "snapshot_match_coverage_pct": 93.98,
+  "explicit_close_rows": 0,
+  "explicit_clv_coverage_pct": 0.0,
+  "inferred_latest_rows": 78,
+  "movement_class_counts": {
+    "STABLE": 78,
+    "NO_SNAPSHOT_MATCH": 5
+  },
+  "steam_alerts": 0,
+  "reverse_moves_vs_knn": 0,
+  "research_only": true,
+  "production_note": "Only EXPLICIT_CLOSE rows may count toward the M05 CLV promotion gate.",
+  "next_module": "V5-M07 Context + Player Similarity Intelligence",
+  "book_behavior": {},
+  "top_first_movers": [],
+  "methodology": {
+    "explicit_close": "stage close/closing only",
+    "inferred_latest": "latest snapshot, never promoted as true close",
+    "steam": "multi-book + >=1.0 directional line move within <=180 minutes",
+    "reverse_move": "material market move against KNN implied direction"
+  }
+}
