@@ -34,6 +34,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Compile strict grader
         run: |
@@ -69,6 +75,7 @@ jobs:
                       bad.append(r.get('candidate_id'))
           perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
           phase2=json.load(open('data/dashboard/wnba_alt_phase2_diagnostics.json'))
+          strict=json.load(open('data/dashboard/wnba_alt_strict_regrade.json'))
           s=perf.get('summary') or {}
           sources=Counter(str(r.get('actual_source') or 'pending') for r in history)
           print({
@@ -77,8 +84,10 @@ jobs:
               'pending':s.get('pending'),
               'actual_sources':dict(sources),
               'strict_date_mismatches':len(bad),
+              'strict_match_stats':strict.get('stats') or {},
               'phase2_failure_reasons':phase2.get('failure_reason_counts') or {},
           })
+          assert strict.get('safe_to_apply') is True, strict
           assert not bad, bad[:10]
           PY
 
@@ -97,4 +106,6 @@ jobs:
             'data/warehouse/wnba_alt_schedule_audit.json' \
             'data/dashboard/wnba_alt_phase2_diagnostics.json' \
             'data/dashboard/wnba_alt_phase2_diagnostics.csv' \
-            'data/warehouse/wnba_alt_phase2_diagnostics.json'
+            'data/warehouse/wnba_alt_phase2_diagnostics.json' \
+            'data/dashboard/wnba_alt_strict_regrade.json' \
+            'data/warehouse/wnba_alt_strict_regrade.json'
