@@ -1,0 +1,80 @@
+name: WNBA ALT Phase 13 Archive Guard
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 7 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'data/history/wnba_alt_streak_history_v3.jsonl'
+      - 'data/dashboard/wnba_alt_archive_certification.json'
+      - 'data/dashboard/wnba_alt_archive_unresolved_v3.csv'
+      - 'data/dashboard/wnba_alt_phase12_final.json'
+      - 'wnba_alt_phase13_guard.py'
+      - '.github/workflows/wnba-alt-phase13-archive-guard.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-phase13-archive-guard
+  cancel-in-progress: false
+
+jobs:
+  phase13-archive-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile Phase 13 guard
+        run: python -m py_compile wnba_alt_phase13_guard.py
+      - name: Enforce canonical archive quality floor
+        run: python wnba_alt_phase13_guard.py
+      - name: Verify Phase 13 health payload
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_alt_archive_health.json').read_text())
+          assert p['status']=='HEALTHY_LOCKED'
+          assert p['canonical_rows']==1017
+          assert p['certified_rows']>=970
+          assert p['coverage_pct']>=95.38
+          assert p['unresolved_rows']<=47
+          assert p['blocking_outcome_discrepancies']==0
+          print(p)
+          PY
+      - name: Publish Phase 13 health and baseline safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA ALT Phase 13 Guard Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          mkdir -p /tmp/phase13/data/dashboard /tmp/phase13/data/warehouse
+          cp data/dashboard/wnba_alt_archive_health.json /tmp/phase13/data/dashboard/
+          cp data/warehouse/wnba_alt_phase13_baseline.json /tmp/phase13/data/warehouse/
+          git add data/dashboard/wnba_alt_archive_health.json data/warehouse/wnba_alt_phase13_baseline.json
+          if git diff --cached --quiet; then
+            echo 'Phase 13 guard outputs already current'
+            exit 0
+          fi
+          git commit -m 'Update WNBA ALT Phase 13 archive health'
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          echo 'main advanced during Phase 13 publish; restoring generated guard outputs on latest main'
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/phase13/data/dashboard/wnba_alt_archive_health.json data/dashboard/
+          cp /tmp/phase13/data/warehouse/wnba_alt_phase13_baseline.json data/warehouse/
+          git add data/dashboard/wnba_alt_archive_health.json data/warehouse/wnba_alt_phase13_baseline.json
+          if git diff --cached --quiet; then
+            echo 'Latest main already contains equivalent Phase 13 outputs'
+            exit 0
+          fi
+          git commit -m 'Update WNBA ALT Phase 13 archive health'
+          git push origin HEAD:main
