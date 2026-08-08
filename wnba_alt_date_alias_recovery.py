@@ -5,11 +5,12 @@ verified completed-game date. Recovery is deliberately conservative and now
 consults an official-schedule audit before creating aliases:
 
 1. Never alias a row when the official schedule says the archive date is exact.
-2. If the schedule identifies exactly one same-orientation matchup in +/-7 days,
+2. If the schedule identifies exactly one completed same-orientation matchup in +/-7 days,
    only that official date may be used as the alias source.
-3. If teams met more than once in the window, or only a reversed home/away game
-   exists, leave the row unresolved for manual review.
-4. If schedule data is unavailable, retain the older conservative record-based
+3. If teams met more than once in completed games in the window, or only a reversed
+   home/away game exists, leave the row unresolved for manual review.
+4. If schedule events exist but none completed, never fall back to proximity matching.
+5. If schedule data is unavailable, retain the older conservative record-based
    logic: adjacent-date match first, then unique exact-matchup within +/-7 days.
 
 Original verified records are never modified or removed.
@@ -132,7 +133,7 @@ def choose_source(
         classification = str(schedule_guard.get("classification") or "")
         if classification == "exact_date":
             return None, "official_schedule_exact_date", {}
-        if classification in {"repeated_matchup_ambiguous", "home_away_mismatch"}:
+        if classification in {"repeated_matchup_ambiguous", "home_away_mismatch", "no_completed_matchup"}:
             return None, classification, {
                 str(day): [] for day in (schedule_guard.get("candidate_dates") or schedule_guard.get("reversed_candidate_dates") or [])
             }
@@ -238,7 +239,7 @@ def main() -> None:
         alias["date"] = args.date
         alias["date_alias_for_alt_grading"] = True
         alias["date_alias_reason"] = {
-            "official_unique_schedule_alias": "official schedule identifies one unique same-orientation matchup within seven days",
+            "official_unique_schedule_alias": "official schedule identifies one unique completed same-orientation matchup within seven days",
             "adjacent_date": "dashboard slate date differs from verified completed-game date; adjacent-date recovery",
             "exact_matchup_wide_date": "dashboard slate date differs from verified completed-game date; unique exact-matchup recovery within seven days",
         }.get(method, method)
