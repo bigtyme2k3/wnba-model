@@ -1,0 +1,83 @@
+name: WNBA ALT Phase 8 Cardinality Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_phase8_cardinality_audit.py'
+      - '.github/workflows/wnba-alt-phase8-cardinality-audit.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-phase8-cardinality-audit
+  cancel-in-progress: false
+
+jobs:
+  audit-alt-cardinality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          test ! -f requirements.txt || pip install -r requirements.txt
+
+      - name: Compile Phase 8 audit
+        run: |
+          python -m py_compile \
+            wnba_alt_phase8_cardinality_audit.py \
+            wnba_alt_performance_tracker.py
+
+      - name: Phase 8 audit warehouse cardinality failures
+        run: python wnba_alt_phase8_cardinality_audit.py
+
+      - name: Verify Phase 8 accounting
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('data/dashboard/wnba_alt_phase8_cardinality_audit.json').read_text())
+          cert=json.loads(Path('data/dashboard/wnba_alt_archive_certification.json').read_text())
+          expected=int(cert.get('unresolved_classification_counts',{}).get('WAREHOUSE_RECORD_CARDINALITY_FAILURE',0))
+          assert report['cardinality_failure_rows']==expected, (report['cardinality_failure_rows'],expected)
+          assert report['safe_to_collapse_rows']+report['unsafe_rows']==expected
+          print({
+            'cardinality_failures':report['cardinality_failure_rows'],
+            'classification_counts':report['classification_counts'],
+            'safe_to_collapse':report['safe_to_collapse_rows'],
+            'unsafe':report['unsafe_rows'],
+            'july14_discrepancies':report['july14_outcome_discrepancy_count'],
+          })
+          PY
+
+      - name: Publish Phase 8 forensic outputs
+        run: |
+          git config user.name 'WNBA ALT Phase 8 Audit Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/dashboard/wnba_alt_phase8_cardinality_audit.json \
+            data/dashboard/wnba_alt_phase8_cardinality_audit.csv \
+            data/warehouse/wnba_alt_phase8_cardinality_audit.json
+          if git diff --cached --quiet; then
+            echo 'Phase 8 outputs already current'
+            exit 0
+          fi
+          git commit -m 'Publish WNBA ALT Phase 8 cardinality audit'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((attempt * 2))
+          done
+          exit 1
