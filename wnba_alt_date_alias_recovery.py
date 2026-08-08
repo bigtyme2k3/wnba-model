@@ -1,16 +1,18 @@
 """Bridge verified player logs across archive/slate date drift.
 
 Archived ALT candidates can carry a dashboard slate date that differs from the
-verified completed-game date. Recovery is deliberately conservative:
+verified completed-game date. Recovery is deliberately conservative and now
+consults an official-schedule audit before creating aliases:
 
-1. Prefer the historical +/-1-day alias behavior.
-2. If that fails, search up to +/-7 days ONLY when the verified record matches
-   both teams in the archived matchup (two or more matchup tokens).
-3. Create an alias only when that exact-matchup search collapses to one source
-   game date for the player.
+1. Never alias a row when the official schedule says the archive date is exact.
+2. If the schedule identifies exactly one same-orientation matchup in +/-7 days,
+   only that official date may be used as the alias source.
+3. If teams met more than once in the window, or only a reversed home/away game
+   exists, leave the row unresolved for manual review.
+4. If schedule data is unavailable, retain the older conservative record-based
+   logic: adjacent-date match first, then unique exact-matchup within +/-7 days.
 
-This handles known historical slate drift without guessing from a single team
-match. Original verified records are never modified or removed.
+Original verified records are never modified or removed.
 """
 from __future__ import annotations
 
@@ -26,6 +28,7 @@ from typing import Any
 WAREHOUSE = Path("data/warehouse/wnba_player_game_logs.json")
 DASHBOARD = Path("data/dashboard/wnba_player_game_logs.json")
 DIAGNOSTICS = Path("data/dashboard/wnba_alt_pending_diagnostics.json")
+SCHEDULE_AUDIT = Path("data/dashboard/wnba_alt_schedule_audit.json")
 
 
 def load(path: Path, default: Any) -> Any:
@@ -46,8 +49,6 @@ def record_date(row: dict[str, Any]) -> str:
 
 def matchup_tokens(value: Any) -> set[str]:
     text = norm(value).replace(" at ", " ").replace(" vs ", " ")
-    # Remove generic city-name fragments that can create false positives while
-    # preserving mascot/team tokens such as Liberty, Wings, Storm and Sky.
     stop = {"new", "york", "los", "angeles", "golden", "state"}
     return {token for token in text.split() if len(token) >= 3 and token not in stop}
 
@@ -72,20 +73,14 @@ def compatible(pending: dict[str, Any], record: dict[str, Any]) -> bool:
 
 
 def exact_matchup_compatible(pending: dict[str, Any], record: dict[str, Any]) -> bool:
-    """Require evidence for both teams before allowing a wide date alias."""
     expected = matchup_tokens(pending.get("game"))
     actual = record_matchup_tokens(record)
     if len(expected) < 2 or len(actual) < 2:
         return False
-    overlap = expected & actual
-    # Provider rows often use short names (Liberty @ Wings) while archive rows
-    # use full names (New York Liberty @ Dallas Wings). Two shared team tokens
-    # is the minimum safe evidence for a wider date-drift recovery.
-    return len(overlap) >= 2
+    return len(expected & actual) >= 2
 
 
 def quality(row: dict[str, Any]) -> tuple[int, int, int]:
-    """Prefer identified, matchup-complete, statistically populated records."""
     identity = int(bool(row.get("game_id") or row.get("event_id") or row.get("espn_event_id")))
     matchup = int(bool(row.get("opponent") or row.get("opponent_name"))) + int(bool(row.get("game") or row.get("matchup")))
     stats = sum(
@@ -106,13 +101,55 @@ def collapse_by_date(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any
     return by_date
 
 
+def row_key(row: dict[str, Any]) -> str:
+    line = row.get("line") if row.get("line") is not None else row.get("alt_line")
+    return "|".join([
+        str(row.get("date") or "")[:10],
+        norm(row.get("player")),
+        norm(row.get("stat")),
+        norm(row.get("side")),
+        str(line if line is not None else ""),
+    ])
+
+
+def schedule_guard_map() -> dict[str, dict[str, Any]]:
+    payload = load(SCHEDULE_AUDIT, {"rows": []})
+    return {
+        str(row.get("row_key")): row
+        for row in payload.get("rows", [])
+        if isinstance(row, dict) and row.get("row_key")
+    }
+
+
 def choose_source(
     item: dict[str, Any],
     player: str,
     target: date,
     records: list[dict[str, Any]],
+    schedule_guard: dict[str, Any] | None,
 ) -> tuple[dict[str, Any] | None, str, dict[str, list[dict[str, Any]]]]:
-    # Pass 1: preserve the original conservative +/-1-day behavior.
+    if schedule_guard:
+        classification = str(schedule_guard.get("classification") or "")
+        if classification == "exact_date":
+            return None, "official_schedule_exact_date", {}
+        if classification in {"repeated_matchup_ambiguous", "home_away_mismatch"}:
+            return None, classification, {
+                str(day): [] for day in (schedule_guard.get("candidate_dates") or schedule_guard.get("reversed_candidate_dates") or [])
+            }
+        if classification == "unique_schedule_alias":
+            suggested = str(schedule_guard.get("suggested_date") or "")[:10]
+            exact = [
+                row for row in records
+                if norm(row.get("player") or row.get("player_name")) == player
+                and record_date(row) == suggested
+                and exact_matchup_compatible(item, row)
+            ]
+            by_date = collapse_by_date(exact)
+            if suggested and suggested in by_date:
+                return max(by_date[suggested], key=quality), "official_unique_schedule_alias", by_date
+            return None, "official_alias_log_missing", by_date
+
+    # Schedule unavailable/not found: preserve conservative legacy fallback.
     near_dates = {
         (target - timedelta(days=1)).isoformat(),
         (target + timedelta(days=1)).isoformat(),
@@ -128,8 +165,6 @@ def choose_source(
     if len(near_collapsed) == 1:
         return near_collapsed[0], "adjacent_date", near_by_date
 
-    # Pass 2: known archive corruption can be several days off. Search a wider
-    # window, but ONLY accept an exact two-team matchup and a unique source date.
     wide_dates = {
         (target + timedelta(days=delta)).isoformat()
         for delta in range(-7, 8)
@@ -158,6 +193,7 @@ def main() -> None:
 
     warehouse = load(WAREHOUSE, {"records": []})
     diagnostics = load(DIAGNOSTICS, {"inspector": []})
+    guards = schedule_guard_map()
     records = [row for row in warehouse.get("records", []) if isinstance(row, dict)]
     pending = [
         row for row in diagnostics.get("inspector", [])
@@ -170,21 +206,29 @@ def main() -> None:
     }
     aliases: list[dict[str, Any]] = []
     unresolved: list[dict[str, Any]] = []
-    methods: dict[str, int] = {"adjacent_date": 0, "exact_matchup_wide_date": 0}
+    methods: dict[str, int] = {
+        "official_unique_schedule_alias": 0,
+        "adjacent_date": 0,
+        "exact_matchup_wide_date": 0,
+    }
 
     for item in pending:
         player = norm(item.get("player"))
         if not player or (player, args.date) in existing:
             continue
 
-        source, method, candidates_by_date = choose_source(item, player, target, records)
+        guard = guards.get(row_key(item))
+        source, method, candidates_by_date = choose_source(item, player, target, records, guard)
         if source is None:
             unresolved.append({
                 "player": item.get("player"),
                 "target_date": args.date,
                 "game": item.get("game"),
+                "schedule_classification": guard.get("classification") if guard else None,
+                "suggested_date": guard.get("suggested_date") if guard else None,
                 "candidate_dates": sorted(candidates_by_date),
                 "collapsed_candidate_count": len(candidates_by_date),
+                "resolution": method,
             })
             continue
 
@@ -193,12 +237,16 @@ def main() -> None:
         alias["game_date"] = args.date
         alias["date"] = args.date
         alias["date_alias_for_alt_grading"] = True
-        alias["date_alias_reason"] = (
-            "dashboard slate date differs from verified completed-game date; "
-            + ("adjacent-date recovery" if method == "adjacent_date" else "unique exact-matchup recovery within seven days")
-        )
+        alias["date_alias_reason"] = {
+            "official_unique_schedule_alias": "official schedule identifies one unique same-orientation matchup within seven days",
+            "adjacent_date": "dashboard slate date differs from verified completed-game date; adjacent-date recovery",
+            "exact_matchup_wide_date": "dashboard slate date differs from verified completed-game date; unique exact-matchup recovery within seven days",
+        }.get(method, method)
         alias["date_alias_method"] = method
         alias["date_alias_duplicate_sources_collapsed"] = len(candidates_by_date.get(record_date(source), []))
+        if guard:
+            alias["official_schedule_guard"] = guard.get("classification")
+            alias["official_schedule_suggested_date"] = guard.get("suggested_date")
         aliases.append(alias)
         methods[method] = methods.get(method, 0) + 1
         existing.add((player, args.date))
@@ -217,6 +265,7 @@ def main() -> None:
     print({
         "target_date": args.date,
         "pending_rows": len(pending),
+        "schedule_guards": sum(1 for item in pending if row_key(item) in guards),
         "aliases_added": len(aliases),
         "methods": methods,
         "unresolved": unresolved,
