@@ -1,0 +1,34 @@
+{
+  "version": "V5",
+  "module": "V5-M02",
+  "stage": "PROBABILITY_LEARNER",
+  "status": "READY",
+  "feature_rows_total": 964,
+  "training_eligible_rows": 123,
+  "walk_forward_predictions": 83,
+  "minimum_train_rows": 40,
+  "feature_names": [
+    "market_implied_probability",
+    "line_minus_prior_mean",
+    "rolling3_actual_mean",
+    "rolling5_actual_mean",
+    "rolling5_actual_std",
+    "rolling5_trend_slope",
+    "historical_hit_rate_at_current_line",
+    "historical_hit_rate_l5_at_current_line",
+    "prior_games"
+  ],
+  "metrics": {
+    "v5_brier": 0.235496,
+    "market_brier": 0.24013,
+    "brier_improvement_vs_market": 0.004634,
+    "v5_log_loss": 0.665524,
+    "market_log_loss": 0.672695,
+    "v5_ece_5bin": 0.083006,
+    "market_ece_5bin": 0.077283,
+    "walk_forward_hit_rate_at_0_5": 0.614458
+  },
+  "champion_decision": "V5",
+  "promotion_rule": "Do not replace production V4 decisions yet; proceed to V5-M03 calibration/validation.",
+  "next_module": "V5-M03 Calibration + Probability Bands"
+}

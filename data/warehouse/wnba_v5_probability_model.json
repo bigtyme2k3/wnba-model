@@ -1,0 +1,67 @@
+{
+  "schema": "v5-probability-model-v1",
+  "training_rows": 123,
+  "features": [
+    "market_implied_probability",
+    "line_minus_prior_mean",
+    "rolling3_actual_mean",
+    "rolling5_actual_mean",
+    "rolling5_actual_std",
+    "rolling5_trend_slope",
+    "historical_hit_rate_at_current_line",
+    "historical_hit_rate_l5_at_current_line",
+    "prior_games"
+  ],
+  "model": {
+    "weights": [
+      0.5276580363869513,
+      0.3231397926994118,
+      0.17651201684281695,
+      0.27143637450989266,
+      0.2900192559287508,
+      0.04055282000486803,
+      0.26747820312676046,
+      0.23965093275581975,
+      0.20839580048361692,
+      -0.20912165136592775
+    ],
+    "mean": [
+      0.5567603286639902,
+      2.0684281842818426,
+      11.699186991869919,
+      11.841327913279132,
+      2.8769372185190543,
+      -1.1203252032520326,
+      0.8506775067750677,
+      0.8528455284552845,
+      3.5447154471544717
+    ],
+    "std": [
+      0.05777979130626164,
+      4.697739088428122,
+      8.378836702554196,
+      8.381793069318832,
+      2.1141788274012954,
+      3.153600583810563,
+      0.21527485397770169,
+      0.21407884765426333,
+      0.8190022932984083
+    ]
+  },
+  "hyperparameters": {
+    "l2": 0.08,
+    "learning_rate": 0.08,
+    "epochs": 500
+  },
+  "metrics": {
+    "v5_brier": 0.235496,
+    "market_brier": 0.24013,
+    "brier_improvement_vs_market": 0.004634,
+    "v5_log_loss": 0.665524,
+    "market_log_loss": 0.672695,
+    "v5_ece_5bin": 0.083006,
+    "market_ece_5bin": 0.077283,
+    "walk_forward_hit_rate_at_0_5": 0.614458
+  },
+  "note": "Final coefficients are for forward scoring only; historical metrics are expanding-window walk-forward."
+}
