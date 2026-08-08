@@ -10,6 +10,8 @@ on:
       - 'wnba_alt_game_log_recovery.py'
       - 'wnba_alt_pending_diagnostics.py'
       - 'wnba_alt_performance_tracker.py'
+      - 'wnba_alt_manual_recovery.py'
+      - 'data/manual/wnba_alt_result_overrides.json'
 
 permissions:
   contents: write
@@ -51,6 +53,7 @@ jobs:
             wnba_espn_boxscore_fallback.py \
             wnba_alt_pending_diagnostics.py \
             wnba_alt_performance_tracker.py \
+            wnba_alt_manual_recovery.py \
             wnba_player_game_log_archive.py \
             wnba_player_game_log_warehouse.py
 
@@ -106,6 +109,10 @@ jobs:
           done
           python wnba_player_game_log_archive.py snapshot
 
+      - name: Apply verified manual ALT overrides
+        run: |
+          python wnba_alt_manual_recovery.py --apply
+
       - name: Regrade entire frozen ALT archive
         run: |
           python wnba_alt_performance_tracker.py --grade
@@ -113,6 +120,7 @@ jobs:
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
           python wnba_alt_game_log_recovery.py
+          python wnba_alt_manual_recovery.py --report
 
       - name: Verify archive accounting improved
         run: |
@@ -121,14 +129,17 @@ jobs:
           perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
           diag=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          manual=json.load(open('data/dashboard/wnba_alt_pending_manual_recovery.json'))
           s=perf.get('summary') or {}
           archived=int(s.get('archived_candidates') or 0)
           graded=int(s.get('graded') or 0)
           pending=int(s.get('pending') or 0)
           diagnosed=int((diag.get('summary') or {}).get('pending_rows') or 0)
+          manual_pending=int(manual.get('pending_rows') or 0)
           assert archived == graded + pending, (archived,graded,pending)
           assert pending == diagnosed, (pending,diagnosed)
-          print({'archived':archived,'graded':graded,'pending':pending,'remaining_recovery_dates':len((recovery.get('targets') or {}).get('dates') or [])})
+          assert pending == manual_pending, (pending,manual_pending)
+          print({'archived':archived,'graded':graded,'pending':pending,'remaining_recovery_dates':len((recovery.get('targets') or {}).get('dates') or []),'manual_report_rows':manual_pending})
           PY
 
       - name: Publish recovered archive and performance data
@@ -147,4 +158,7 @@ jobs:
             'data/dashboard/wnba_alt_pending_diagnostics.json' \
             'data/warehouse/wnba_alt_pending_diagnostics.json' \
             'data/dashboard/wnba_alt_game_log_recovery.json' \
-            'data/warehouse/wnba_alt_game_log_recovery.json'
+            'data/warehouse/wnba_alt_game_log_recovery.json' \
+            'data/dashboard/wnba_alt_pending_manual_recovery.csv' \
+            'data/dashboard/wnba_alt_pending_manual_recovery.json' \
+            'data/warehouse/wnba_alt_pending_manual_recovery.json'
