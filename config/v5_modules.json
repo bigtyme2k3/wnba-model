@@ -1,0 +1,18 @@
+{
+  "version": "5.0",
+  "mission": "Turn the certified WNBA warehouse into a leakage-safe historical learning and calibration system.",
+  "baseline": {
+    "canonical_archive": "data/history/wnba_alt_streak_history_v3.jsonl",
+    "archive_health": "data/dashboard/wnba_alt_archive_health.json",
+    "minimum_coverage_pct": 95.38,
+    "minimum_certified_rows": 970
+  },
+  "modules": [
+    {"id":"V5-M01","name":"Certified Historical Feature Store","owner_file":"wnba_v5_historical_feature_engine.py","status":"active","purpose":"Create leakage-safe training features from primary certified ALT observations and prior completed player-games only."},
+    {"id":"V5-M02","name":"Probability Learner","owner_file":"wnba_v5_probability_model.py","status":"planned","purpose":"Estimate true prop hit probabilities from historical features with walk-forward validation."},
+    {"id":"V5-M03","name":"Calibration Layer","owner_file":"wnba_v5_calibration.py","status":"planned","purpose":"Calibrate predicted probabilities by stat, side, score band, and confidence bucket."},
+    {"id":"V5-M04","name":"Edge and EV Engine","owner_file":"wnba_v5_edge_engine.py","status":"planned","purpose":"Compare calibrated probability with market implied probability and rank positive-EV opportunities."},
+    {"id":"V5-M05","name":"Walk-Forward Backtester","owner_file":"wnba_v5_walkforward.py","status":"planned","purpose":"Evaluate V5 chronologically without future-data leakage and publish ROI, Brier, calibration, and drawdown."},
+    {"id":"V5-M06","name":"Champion Challenger Gate","owner_file":"wnba_v5_promotion_gate.py","status":"planned","purpose":"Promote V5 only when it beats the protected V4 baseline on predeclared validation metrics."}
+  ]
+}
