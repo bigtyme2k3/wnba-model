@@ -1,0 +1,76 @@
+name: WNBA V5 M03 Calibration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_calibration.py'
+      - 'data/dashboard/wnba_v5_probability_predictions.csv'
+      - 'data/dashboard/wnba_v5_probability_status.json'
+      - '.github/workflows/wnba-v5-m03-calibration.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-m03-calibration
+  cancel-in-progress: false
+
+jobs:
+  build-v5-calibration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile V5 M03 calibrator
+        run: python -m py_compile wnba_v5_calibration.py
+      - name: Build walk-forward calibration and bands
+        run: python wnba_v5_calibration.py
+      - name: Verify V5 calibration
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('data/dashboard/wnba_v5_calibration_report.json').read_text())
+          assert r['status']=='READY'
+          assert r['m02_walk_forward_rows']>=80
+          assert r['calibrated_walk_forward_rows']>=50
+          assert 'metrics' in r and 'probability_bands' in r and 'edge_bands' in r
+          print(r)
+          PY
+      - name: Publish V5 M03 safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 M03 Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/dashboard/wnba_v5_calibrated_predictions.csv \
+            data/dashboard/wnba_v5_probability_bands.json \
+            data/dashboard/wnba_v5_decision_thresholds.json \
+            data/dashboard/wnba_v5_calibration_report.json \
+            data/warehouse/wnba_v5_calibration_model.json
+          if git diff --cached --quiet; then
+            echo 'V5 M03 outputs already current'
+            exit 0
+          fi
+          git commit -m 'Build WNBA V5 M03 calibration outputs'
+          git push origin HEAD:main || {
+            mkdir -p /tmp/v5m03
+            cp data/dashboard/wnba_v5_calibrated_predictions.csv /tmp/v5m03/
+            cp data/dashboard/wnba_v5_probability_bands.json /tmp/v5m03/
+            cp data/dashboard/wnba_v5_decision_thresholds.json /tmp/v5m03/
+            cp data/dashboard/wnba_v5_calibration_report.json /tmp/v5m03/
+            cp data/warehouse/wnba_v5_calibration_model.json /tmp/v5m03/
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/v5m03/* data/dashboard/ 2>/dev/null || true
+            cp /tmp/v5m03/wnba_v5_calibration_model.json data/warehouse/
+            git add data/dashboard/wnba_v5_* data/warehouse/wnba_v5_calibration_model.json
+            git commit -m 'Build WNBA V5 M03 calibration outputs'
+            git push origin HEAD:main
+          }
