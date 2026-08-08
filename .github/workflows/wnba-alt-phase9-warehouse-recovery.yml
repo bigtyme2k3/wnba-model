@@ -1,0 +1,116 @@
+name: WNBA ALT Phase 9 Warehouse Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_phase9_warehouse_recovery.py'
+      - '.github/workflows/wnba-alt-phase9-warehouse-recovery.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-phase9-warehouse-recovery
+  cancel-in-progress: false
+
+jobs:
+  phase9-warehouse-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          test ! -f requirements.txt || pip install -r requirements.txt
+
+      - name: Compile Phase 9 stack
+        run: |
+          python -m py_compile \
+            wnba_alt_phase9_warehouse_recovery.py \
+            wnba_alt_game_identity_audit.py \
+            wnba_alt_archive_finalize.py \
+            wnba_alt_performance_tracker.py
+
+      - name: Reconstruct missing player-game warehouse rows
+        run: python wnba_alt_phase9_warehouse_recovery.py
+
+      - name: Verify append-only warehouse integrity
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('data/dashboard/wnba_alt_phase9_warehouse_recovery.json').read_text())
+          w=json.loads(Path('data/warehouse/wnba_player_game_logs.json').read_text())
+          assert r['warehouse_after']==len(w.get('records',[]))
+          assert r['warehouse_after']>=r['warehouse_before']
+          assert r['appended']==r['warehouse_after']-r['warehouse_before']
+          recovered=r['classification_counts'].get('RECOVERED',0)
+          assert recovered==r['appended']
+          print({'targets':r['targets'],'appended':r['appended'],'warehouse_after':r['warehouse_after'],'classifications':r['classification_counts']})
+          PY
+
+      - name: Refresh canonical identity audit
+        run: python wnba_alt_game_identity_audit.py
+
+      - name: Rebuild canonical ALT certification
+        run: python wnba_alt_archive_finalize.py
+
+      - name: Validate Phase 9 certification impact
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          rec=json.loads(Path('data/dashboard/wnba_alt_phase9_warehouse_recovery.json').read_text())
+          cert=json.loads(Path('data/dashboard/wnba_alt_archive_certification.json').read_text())
+          assert cert['certified_rows']+cert['unresolved_rows']==1017
+          assert cert['canonical_rows']==1017
+          print({
+            'recovered_player_games':rec['appended'],
+            'certified_rows':cert['certified_rows'],
+            'unresolved_rows':cert['unresolved_rows'],
+            'coverage_pct':cert['canonical_coverage_pct'],
+            'status':cert['status'],
+            'outcome_discrepancies':cert['legacy_vs_canonical_outcome_discrepancies'],
+            'duplicate_certified_wager_keys':cert['duplicate_certified_wager_keys'],
+          })
+          PY
+
+      - name: Publish Phase 9 warehouse and certification outputs
+        run: |
+          git config user.name 'WNBA ALT Phase 9 Recovery Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/warehouse/wnba_player_game_logs.json \
+            data/dashboard/wnba_alt_phase9_warehouse_recovery.json \
+            data/dashboard/wnba_alt_phase9_warehouse_recovery.csv \
+            data/warehouse/wnba_alt_phase9_warehouse_recovery.json \
+            data/dashboard/wnba_alt_game_identity_audit.json \
+            data/dashboard/wnba_alt_game_identity_audit.csv \
+            data/warehouse/wnba_alt_game_identity_audit.json \
+            data/history/wnba_alt_streak_history_v3.jsonl \
+            data/dashboard/wnba_alt_archive_certification.json \
+            data/warehouse/wnba_alt_archive_certification.json \
+            data/dashboard/wnba_alt_archive_unresolved_v3.csv \
+            data/warehouse/wnba_alt_archive_manifest.json
+          if git diff --cached --quiet; then
+            echo 'Phase 9 outputs already current'
+            exit 0
+          fi
+          git commit -m 'Recover missing player-game warehouse rows and recertify ALT archive'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((attempt * 2))
+          done
+          exit 1
