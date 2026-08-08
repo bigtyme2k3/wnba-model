@@ -1,7 +1,12 @@
 {
-  "generated_at_utc": "2026-08-08T14:55:30.777313+00:00",
   "pending_rows": 32,
-  "manual_override_file": "data/manual/wnba_alt_result_overrides.json",
+  "failure_reason_counts": {
+    "DNP": 4,
+    "GAME_DATE_MISMATCH": 3,
+    "NO_OFFICIAL_GAME_MATCH": 1,
+    "PLAYER_NOT_IN_BOX_SCORE": 4,
+    "REPEATED_MATCHUP_AMBIGUOUS": 20
+  },
   "rows": [
     {
       "candidate_id": "2026-07-15|kamilla cardoso|seattle storm @ chicago sky|reb|under|8.5||-103.67",
@@ -15,12 +20,10 @@
       "sportsbook": null,
       "odds": "-103.67",
       "score": 64.9,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-15|seattle-storm-@-chicago-sky",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "exact_date",
+      "failure_reason": "DNP",
+      "diagnostic_detail": "Player is listed in the official box score without playable stats.",
+      "official_event_id": "401857068"
     },
     {
       "candidate_id": "2026-07-15|kamilla cardoso|seattle storm @ chicago sky|ra|under|11.5||-119.5",
@@ -34,12 +37,10 @@
       "sportsbook": null,
       "odds": "-119.5",
       "score": 64.5,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-15|seattle-storm-@-chicago-sky",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "exact_date",
+      "failure_reason": "DNP",
+      "diagnostic_detail": "Player is listed in the official box score without playable stats.",
+      "official_event_id": "401857068"
     },
     {
       "candidate_id": "2026-07-15|paige bueckers|new york liberty @ dallas wings|ast|under|6.5||-142.0",
@@ -53,12 +54,11 @@
       "sportsbook": null,
       "odds": "-142.0",
       "score": 56.7,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-15|new-york-liberty-@-dallas-wings",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "unique_schedule_alias",
+      "failure_reason": "GAME_DATE_MISMATCH",
+      "diagnostic_detail": "Archived date has no exact official matchup; one completed schedule candidate exists.",
+      "suggested_date": "2026-07-20",
+      "official_event_id": "401892393"
     },
     {
       "candidate_id": "2026-07-15|kamilla cardoso|seattle storm @ chicago sky|pra|under|26.5||-121.5",
@@ -72,12 +72,10 @@
       "sportsbook": null,
       "odds": "-121.5",
       "score": 55.6,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-15|seattle-storm-@-chicago-sky",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "exact_date",
+      "failure_reason": "DNP",
+      "diagnostic_detail": "Player is listed in the official box score without playable stats.",
+      "official_event_id": "401857068"
     },
     {
       "candidate_id": "2026-07-15|kamilla cardoso|seattle storm @ chicago sky|pr|under|23.5||-113.5",
@@ -91,12 +89,10 @@
       "sportsbook": null,
       "odds": "-113.5",
       "score": 55.1,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-15|seattle-storm-@-chicago-sky",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "exact_date",
+      "failure_reason": "DNP",
+      "diagnostic_detail": "Player is listed in the official box score without playable stats.",
+      "official_event_id": "401857068"
     },
     {
       "candidate_id": "2026-07-16|paige bueckers|new york liberty @ dallas wings|ast|under|6.5||-131.33",
@@ -110,12 +106,10 @@
       "sportsbook": null,
       "odds": "-131.33",
       "score": 57.0,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-16|new-york-liberty-@-dallas-wings",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "unique_schedule_alias",
+      "failure_reason": "PLAYER_NOT_IN_BOX_SCORE",
+      "diagnostic_detail": "Official game is valid but player is absent from its box score.",
+      "official_event_id": "401857072"
     },
     {
       "candidate_id": "2026-07-19|janelle salaun|washington mystics @ golden state valkyries|3pm|over|1.5||-184.0",
@@ -129,12 +123,13 @@
       "sportsbook": null,
       "odds": "-184.0",
       "score": 70.1,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-19|washington-mystics-@-golden-state-valkyries",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-18",
+        "2026-07-20"
+      ]
     },
     {
       "candidate_id": "2026-07-19|shakira austin|washington mystics @ golden state valkyries|pra|over|25.5||-122.0",
@@ -148,12 +143,13 @@
       "sportsbook": null,
       "odds": "-122.0",
       "score": 56.8,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-19|washington-mystics-@-golden-state-valkyries",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-18",
+        "2026-07-20"
+      ]
     },
     {
       "candidate_id": "2026-07-19|shakira austin|washington mystics @ golden state valkyries|pr|over|22.5||-130.0",
@@ -167,12 +163,13 @@
       "sportsbook": null,
       "odds": "-130.0",
       "score": 55.7,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-19|washington-mystics-@-golden-state-valkyries",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-18",
+        "2026-07-20"
+      ]
     },
     {
       "candidate_id": "2026-07-19|janelle salaun|washington mystics @ golden state valkyries|3pm|over|1.5||-177.0",
@@ -186,12 +183,13 @@
       "sportsbook": null,
       "odds": "-177.0",
       "score": 70.2,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-19|washington-mystics-@-golden-state-valkyries",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-18",
+        "2026-07-20"
+      ]
     },
     {
       "candidate_id": "2026-07-19|shakira austin|washington mystics @ golden state valkyries|pra|over|25.5||-128.0",
@@ -205,12 +203,13 @@
       "sportsbook": null,
       "odds": "-128.0",
       "score": 56.6,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-19|washington-mystics-@-golden-state-valkyries",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-18",
+        "2026-07-20"
+      ]
     },
     {
       "candidate_id": "2026-07-21|kayla mcbride|minnesota lynx @ seattle storm|ast|under|2.5||-186.0",
@@ -224,12 +223,13 @@
       "sportsbook": null,
       "odds": "-186.0",
       "score": 77.3,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|natisha hiedeman|minnesota lynx @ seattle storm|3pm|under|2.5||-197.0",
@@ -243,12 +243,13 @@
       "sportsbook": null,
       "odds": "-197.0",
       "score": 71.2,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|natasha howard|minnesota lynx @ seattle storm|ast|over|2.5||-168.75",
@@ -262,12 +263,13 @@
       "sportsbook": null,
       "odds": "-168.75",
       "score": 64.8,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|courtney williams|minnesota lynx @ seattle storm|3pm|under|1.5||-201.5",
@@ -281,12 +283,13 @@
       "sportsbook": null,
       "odds": "-201.5",
       "score": 63.3,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|natasha howard|minnesota lynx @ seattle storm|pr|under|23.5||-121.5",
@@ -300,12 +303,13 @@
       "sportsbook": null,
       "odds": "-121.5",
       "score": 60.8,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|kayla mcbride|minnesota lynx @ seattle storm|reb|under|3.5||-179.5",
@@ -319,12 +323,13 @@
       "sportsbook": null,
       "odds": "-179.5",
       "score": 60.7,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|natasha howard|minnesota lynx @ seattle storm|pra|under|26.5||-118.33",
@@ -338,12 +343,13 @@
       "sportsbook": null,
       "odds": "-118.33",
       "score": 60.3,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|natisha hiedeman|minnesota lynx @ seattle storm|3pm|under|1.5||144.0",
@@ -357,12 +363,13 @@
       "sportsbook": null,
       "odds": "144.0",
       "score": 59.2,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|natisha hiedeman|minnesota lynx @ seattle storm|pr|under|17.5||-127.5",
@@ -376,12 +383,13 @@
       "sportsbook": null,
       "odds": "-127.5",
       "score": 58.2,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-21|courtney williams|minnesota lynx @ seattle storm|reb|under|4.5||-107.0",
@@ -395,12 +403,13 @@
       "sportsbook": null,
       "odds": "-107.0",
       "score": 54.1,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-21|minnesota-lynx-@-seattle-storm",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-20",
+        "2026-07-22"
+      ]
     },
     {
       "candidate_id": "2026-07-22|megan gustafson|dallas wings @ portland fire|reb|under|4.5||-151.5",
@@ -414,12 +423,10 @@
       "sportsbook": null,
       "odds": "-151.5",
       "score": 59.4,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-22|dallas-wings-@-portland-fire",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "exact_date",
+      "failure_reason": "PLAYER_NOT_IN_BOX_SCORE",
+      "diagnostic_detail": "Official game is valid but player is absent from its box score.",
+      "official_event_id": "401857091"
     },
     {
       "candidate_id": "2026-07-26|nalyssa smith|portland fire @ las vegas aces|reb|under|5.5||-125.0",
@@ -433,12 +440,11 @@
       "sportsbook": null,
       "odds": "-125.0",
       "score": 62.9,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-26|portland-fire-@-las-vegas-aces",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "unique_schedule_alias",
+      "failure_reason": "GAME_DATE_MISMATCH",
+      "diagnostic_detail": "Archived date has no exact official matchup; one completed schedule candidate exists.",
+      "suggested_date": "2026-07-28",
+      "official_event_id": "401857095"
     },
     {
       "candidate_id": "2026-07-27|nalyssa smith|portland fire @ las vegas aces|reb|under|5.5||-127.5",
@@ -452,12 +458,11 @@
       "sportsbook": null,
       "odds": "-127.5",
       "score": 62.8,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-27|portland-fire-@-las-vegas-aces",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "unique_schedule_alias",
+      "failure_reason": "GAME_DATE_MISMATCH",
+      "diagnostic_detail": "Archived date has no exact official matchup; one completed schedule candidate exists.",
+      "suggested_date": "2026-07-28",
+      "official_event_id": "401857095"
     },
     {
       "candidate_id": "2026-07-28|nalyssa smith|portland fire @ las vegas aces|reb|under|5.5||-133.0",
@@ -471,12 +476,10 @@
       "sportsbook": null,
       "odds": "-133.0",
       "score": 62.7,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-07-28|portland-fire-@-las-vegas-aces",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "exact_date",
+      "failure_reason": "PLAYER_NOT_IN_BOX_SCORE",
+      "diagnostic_detail": "Official game is valid but player is absent from its box score.",
+      "official_event_id": "401857095"
     },
     {
       "candidate_id": "2026-08-02|flau'jae johnson|seattle storm @ new york liberty|3pm|under|1.5||-200.5",
@@ -490,12 +493,9 @@
       "sportsbook": null,
       "odds": "-200.5",
       "score": 66.7,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-08-02|seattle-storm-@-new-york-liberty",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": null,
+      "failure_reason": "NO_OFFICIAL_GAME_MATCH",
+      "diagnostic_detail": "No exact official matchup or unique player event could be established for the archived date."
     },
     {
       "candidate_id": "2026-08-02|megan gustafson|los angeles sparks @ portland fire|reb|under|4.5||-150.5",
@@ -509,12 +509,10 @@
       "sportsbook": null,
       "odds": "-150.5",
       "score": 59.5,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-08-02|los-angeles-sparks-@-portland-fire",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "exact_date",
+      "failure_reason": "PLAYER_NOT_IN_BOX_SCORE",
+      "diagnostic_detail": "Official game is valid but player is absent from its box score.",
+      "official_event_id": "401857108"
     },
     {
       "candidate_id": "2026-08-02|jonquel jones|seattle storm @ new york liberty|3pm|under|1.5||-4.0",
@@ -528,12 +526,13 @@
       "sportsbook": null,
       "odds": "-4.0",
       "score": 59.1,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-08-02|seattle-storm-@-new-york-liberty",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-08-03",
+        "2026-08-05"
+      ]
     },
     {
       "candidate_id": "2026-08-04|arike ogunbowale|dallas wings @ washington mystics|pa|over|17.5||-131.0",
@@ -547,12 +546,13 @@
       "sportsbook": null,
       "odds": "-131.0",
       "score": 68.1,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-08-04|dallas-wings-@-washington-mystics",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-31",
+        "2026-08-05"
+      ]
     },
     {
       "candidate_id": "2026-08-04|arike ogunbowale|dallas wings @ washington mystics|pra|over|20.5||-132.0",
@@ -566,12 +566,13 @@
       "sportsbook": null,
       "odds": "-132.0",
       "score": 67.7,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-08-04|dallas-wings-@-washington-mystics",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-31",
+        "2026-08-05"
+      ]
     },
     {
       "candidate_id": "2026-08-04|michaela onyenwere|dallas wings @ washington mystics|ast|over|1.5||-188.0",
@@ -585,12 +586,13 @@
       "sportsbook": null,
       "odds": "-188.0",
       "score": 60.0,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-08-04|dallas-wings-@-washington-mystics",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-31",
+        "2026-08-05"
+      ]
     },
     {
       "candidate_id": "2026-08-04|paige bueckers|dallas wings @ washington mystics|pa|under|25.5||-106.5",
@@ -604,12 +606,13 @@
       "sportsbook": null,
       "odds": "-106.5",
       "score": 59.8,
-      "reason": "player-game actual unavailable",
-      "reason_key": "missing_verified_game_log",
-      "expected_game_id": "2026-08-04|dallas-wings-@-washington-mystics",
-      "actual_to_fill": "",
-      "verified_source_to_fill": "",
-      "notes_to_fill": ""
+      "schedule_classification": "repeated_matchup_ambiguous",
+      "failure_reason": "REPEATED_MATCHUP_AMBIGUOUS",
+      "diagnostic_detail": "Archived date has no exact official matchup and multiple completed candidate meetings exist.",
+      "candidate_dates": [
+        "2026-07-31",
+        "2026-08-05"
+      ]
     }
   ]
 }
