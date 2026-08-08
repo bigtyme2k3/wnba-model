@@ -54,28 +54,66 @@ jobs:
           assert r['blocking_outcome_discrepancies']==0
           print(r)
           PY
-      - name: Publish Phase 12 outputs
+      - name: Publish Phase 12 outputs atomically
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'WNBA ALT Phase 12 Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add \
-            data/warehouse/wnba_player_game_logs.json \
-            data/warehouse/wnba_alt_phase12_resolutions.json \
-            data/dashboard/wnba_alt_phase12_recovery.json \
-            data/dashboard/wnba_alt_phase12_recovery.csv \
-            data/warehouse/wnba_alt_phase12_recovery.json \
-            data/dashboard/wnba_alt_game_identity_audit.json \
-            data/history/wnba_alt_streak_history_v3.jsonl \
-            data/dashboard/wnba_alt_archive_certification.json \
-            data/warehouse/wnba_alt_archive_certification.json \
-            data/dashboard/wnba_alt_archive_unresolved_v3.csv \
-            data/dashboard/wnba_alt_phase11_cleanup.json \
-            data/dashboard/wnba_alt_phase12_final.json \
+
+          FILES=(
+            data/warehouse/wnba_player_game_logs.json
+            data/warehouse/wnba_alt_phase12_resolutions.json
+            data/dashboard/wnba_alt_phase12_recovery.json
+            data/dashboard/wnba_alt_phase12_recovery.csv
+            data/warehouse/wnba_alt_phase12_recovery.json
+            data/dashboard/wnba_alt_game_identity_audit.json
+            data/history/wnba_alt_streak_history_v3.jsonl
+            data/dashboard/wnba_alt_archive_certification.json
+            data/warehouse/wnba_alt_archive_certification.json
+            data/dashboard/wnba_alt_archive_unresolved_v3.csv
+            data/dashboard/wnba_alt_phase11_cleanup.json
+            data/dashboard/wnba_alt_phase12_final.json
             data/warehouse/wnba_alt_archive_manifest.json
+          )
+
+          SNAPSHOT="$(mktemp -d)"
+          for f in "${FILES[@]}"; do
+            if [ -f "$f" ]; then
+              mkdir -p "$SNAPSHOT/$(dirname "$f")"
+              cp "$f" "$SNAPSHOT/$f"
+            fi
+          done
+
+          publish_attempt() {
+            git add "${FILES[@]}"
+            if git diff --cached --quiet; then
+              echo 'Phase 12 outputs already current'
+              return 0
+            fi
+            git commit -m 'Complete WNBA ALT Phase 12 final recovery'
+            git push origin HEAD:main
+          }
+
+          if publish_attempt; then
+            exit 0
+          fi
+
+          echo 'Concurrent main update detected; replaying generated outputs on latest main'
+          git fetch origin main
+          git reset --hard origin/main
+
+          for f in "${FILES[@]}"; do
+            if [ -f "$SNAPSHOT/$f" ]; then
+              mkdir -p "$(dirname "$f")"
+              cp "$SNAPSHOT/$f" "$f"
+            fi
+          done
+
+          git add "${FILES[@]}"
           if git diff --cached --quiet; then
-            echo 'Phase 12 outputs already current'
+            echo 'Latest main already contains equivalent Phase 12 outputs'
             exit 0
           fi
           git commit -m 'Complete WNBA ALT Phase 12 final recovery'
-          git pull --rebase origin main
           git push origin HEAD:main
