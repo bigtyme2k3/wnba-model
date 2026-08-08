@@ -59,6 +59,16 @@ jobs:
           python wnba_alt_schedule_audit.py
           python wnba_alt_phase2_diagnostics.py
 
+      - name: Publish blocked strict diagnostic
+        if: failure()
+        run: |
+          git config user.name "WNBA Strict Regrade Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Publish blocked ALT strict-regrade diagnostics" \
+            'data/dashboard/wnba_alt_strict_regrade.json' \
+            'data/warehouse/wnba_alt_strict_regrade.json'
+
       - name: Verify strict game anchoring
         run: |
           python - <<'PY'
