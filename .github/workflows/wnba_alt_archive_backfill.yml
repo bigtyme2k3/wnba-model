@@ -6,6 +6,10 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/wnba_alt_archive_backfill.yml'
+      - 'wnba_alt_date_alias_recovery.py'
+      - 'wnba_alt_game_log_recovery.py'
+      - 'wnba_alt_pending_diagnostics.py'
+      - 'wnba_alt_performance_tracker.py'
 
 permissions:
   contents: write
@@ -92,6 +96,15 @@ jobs:
           python wnba_player_game_log_archive.py merge
           python wnba_player_game_log_archive.py snapshot
           python wnba_alt_recovery_handoff.py
+
+      - name: Re-run conservative date aliases with complete season logs
+        if: env.RECOVERY_DATES != ''
+        run: |
+          for DAY in $RECOVERY_DATES; do
+            echo "===== Rechecking aliases $DAY ====="
+            python wnba_alt_date_alias_recovery.py --date "$DAY" || true
+          done
+          python wnba_player_game_log_archive.py snapshot
 
       - name: Regrade entire frozen ALT archive
         run: |
