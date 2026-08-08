@@ -1,0 +1,91 @@
+name: WNBA V5 M04 EV and CLV Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_ev_clv_validation.py'
+      - 'data/dashboard/wnba_v5_calibrated_predictions.csv'
+      - 'data/dashboard/wnba_v5_calibration_report.json'
+      - 'data/history/wnba_line_snapshots.jsonl'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-m04-ev-clv
+  cancel-in-progress: false
+
+jobs:
+  build-v5-m04:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile V5 M04 validator
+        run: python -m py_compile wnba_v5_ev_clv_validation.py
+
+      - name: Validate EV and CLV evidence
+        run: python wnba_v5_ev_clv_validation.py
+
+      - name: Verify V5 M04
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_v5_m04_report.json')
+          assert p.exists(), 'missing M04 report'
+          r=json.loads(p.read_text())
+          assert r['status']=='READY'
+          assert r['evaluation_rows'] > 0
+          assert r['promotion_gate']['production_promotion'] is False
+          print({
+            'version':r['version'], 'module':r['module'], 'status':r['status'],
+            'evaluation_rows':r['evaluation_rows'],
+            'positive_ev_rows':r['positive_ev_rows'],
+            'high_ev_12pct_rows':r['high_ev_12pct_rows'],
+            'positive_ev_performance':r['positive_ev_performance'],
+            'high_ev_12pct_performance':r['high_ev_12pct_performance'],
+            'clv':r['clv'],
+            'research_thresholds':r['research_thresholds'],
+            'next_module':r['next_module']
+          })
+          PY
+
+      - name: Publish V5 M04 safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 M04 Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_v5_ev_validation.csv \
+                  data/dashboard/wnba_v5_clv_validation.csv \
+                  data/dashboard/wnba_v5_edge_bands.json \
+                  data/dashboard/wnba_v5_recommendation_thresholds.json \
+                  data/dashboard/wnba_v5_m04_report.json
+          if git diff --cached --quiet; then
+            echo 'No M04 output changes.'
+            exit 0
+          fi
+          git commit -m 'Build WNBA V5 M04 EV and CLV validation outputs'
+          if git push origin HEAD:main; then exit 0; fi
+          mkdir -p /tmp/v5m04/data/dashboard
+          cp data/dashboard/wnba_v5_ev_validation.csv /tmp/v5m04/data/dashboard/
+          cp data/dashboard/wnba_v5_clv_validation.csv /tmp/v5m04/data/dashboard/
+          cp data/dashboard/wnba_v5_edge_bands.json /tmp/v5m04/data/dashboard/
+          cp data/dashboard/wnba_v5_recommendation_thresholds.json /tmp/v5m04/data/dashboard/
+          cp data/dashboard/wnba_v5_m04_report.json /tmp/v5m04/data/dashboard/
+          git fetch origin main
+          git reset --hard origin/main
+          cp -r /tmp/v5m04/data/dashboard/* data/dashboard/
+          git add data/dashboard/wnba_v5_*
+          git commit -m 'Build WNBA V5 M04 EV and CLV validation outputs'
+          git push origin HEAD:main
