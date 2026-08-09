@@ -1,0 +1,41 @@
+{
+  "version": "V5",
+  "promotion_state": "SHADOW",
+  "production_ready": false,
+  "generated_at_utc": "2026-08-09T02:56:08.785786+00:00",
+  "forward": {
+    "current": 0,
+    "required": 300,
+    "remaining": 300,
+    "progress_pct": 0.0
+  },
+  "explicit_clv": {
+    "current_pct": 0.0,
+    "required_pct": 60.0,
+    "shortfall_pct": 60.0,
+    "progress_pct": 0.0
+  },
+  "quality": {
+    "v5_brier": null,
+    "market_brier": null,
+    "v5_beats_market_brier": false,
+    "v5_ece_5bin": null,
+    "v5_accuracy": null,
+    "roi": null,
+    "positive_roi": false
+  },
+  "gates": {
+    "forward_sample_gate": false,
+    "explicit_clv_gate": false,
+    "beats_market_brier_gate": false,
+    "positive_roi_gate": false,
+    "archive_health_gate": true,
+    "pipeline_health_gate": true
+  },
+  "blockers": [
+    "Need 300 more graded forward predictions",
+    "Explicit CLV coverage needs 60.0 more percentage points",
+    "V5 has not yet demonstrated lower forward Brier than market",
+    "Positive forward ROI not yet demonstrated"
+  ]
+}
