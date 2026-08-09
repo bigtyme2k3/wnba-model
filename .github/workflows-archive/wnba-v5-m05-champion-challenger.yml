@@ -1,0 +1,92 @@
+name: WNBA V5 M05 Champion Challenger
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_m05_champion_challenger.py'
+      - '.github/workflows/wnba-v5-m05-champion-challenger.yml'
+      - 'data/dashboard/wnba_v5_historical_features.csv'
+      - 'data/dashboard/wnba_v5_m04_report.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-m05-champion-challenger
+  cancel-in-progress: false
+
+jobs:
+  build-v5-m05:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile V5 M05 engine
+        run: python -m py_compile wnba_v5_m05_champion_challenger.py
+
+      - name: Run champion challenger validation
+        run: python wnba_v5_m05_champion_challenger.py
+
+      - name: Verify V5 M05
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_v5_m05_report.json')
+          assert p.exists(), 'missing M05 report'
+          r=json.loads(p.read_text())
+          assert r['status']=='READY'
+          assert r['evaluation_rows'] > 0
+          assert len(r['rankings']) >= 5
+          assert r['promotion_gate']['production_promotion'] is False
+          print({
+            'version':r['version'],
+            'module':r['module'],
+            'status':r['status'],
+            'evaluation_rows':r['evaluation_rows'],
+            'research_champion':r['research_champion'],
+            'top_models':r['rankings'][:3],
+            'ensemble_weights':r['ensemble_weights'],
+            'promotion_gate':r['promotion_gate'],
+            'next_module':r['next_module']
+          })
+          PY
+
+      - name: Publish V5 M05 safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 M05 Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_v5_m05_predictions.csv \
+                  data/dashboard/wnba_v5_model_rankings.json \
+                  data/dashboard/wnba_v5_champion.json \
+                  data/dashboard/wnba_v5_ensemble_weights.json \
+                  data/dashboard/wnba_v5_m05_report.json
+          if git diff --cached --quiet; then
+            echo 'No M05 output changes.'
+            exit 0
+          fi
+          git commit -m 'Build WNBA V5 M05 champion challenger outputs'
+          if git push origin HEAD:main; then exit 0; fi
+          mkdir -p /tmp/v5m05/data/dashboard
+          cp data/dashboard/wnba_v5_m05_predictions.csv /tmp/v5m05/data/dashboard/
+          cp data/dashboard/wnba_v5_model_rankings.json /tmp/v5m05/data/dashboard/
+          cp data/dashboard/wnba_v5_champion.json /tmp/v5m05/data/dashboard/
+          cp data/dashboard/wnba_v5_ensemble_weights.json /tmp/v5m05/data/dashboard/
+          cp data/dashboard/wnba_v5_m05_report.json /tmp/v5m05/data/dashboard/
+          git fetch origin main
+          git reset --hard origin/main
+          cp -r /tmp/v5m05/data/dashboard/* data/dashboard/
+          git add data/dashboard/wnba_v5_*
+          git commit -m 'Build WNBA V5 M05 champion challenger outputs'
+          git push origin HEAD:main

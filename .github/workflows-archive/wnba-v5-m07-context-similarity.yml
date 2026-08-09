@@ -1,0 +1,91 @@
+name: WNBA V5 M07 Context and Player Similarity
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba-v5-m07-context-similarity.yml'
+      - 'wnba_v5_m07_context_similarity.py'
+      - 'data/dashboard/wnba_v5_historical_features.csv'
+      - 'data/dashboard/wnba_v5_m05_predictions.csv'
+      - 'data/dashboard/wnba_v5_m06_report.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-m07-context-similarity
+  cancel-in-progress: false
+
+jobs:
+  build-v5-m07:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile V5 M07 engine
+        run: python -m py_compile wnba_v5_m07_context_similarity.py
+
+      - name: Build context and player similarity intelligence
+        run: python wnba_v5_m07_context_similarity.py
+
+      - name: Verify V5 M07
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_v5_m07_report.json')
+          assert p.exists(), 'missing M07 report'
+          r=json.loads(p.read_text())
+          assert r['status']=='READY'
+          assert r['evaluation_rows'] > 0
+          assert r['rows_with_similarity_peers'] > 0
+          assert r['research_only'] is True
+          print({
+            'version':r['version'],'module':r['module'],'status':r['status'],
+            'evaluation_rows':r['evaluation_rows'],
+            'rows_with_similarity_peers':r['rows_with_similarity_peers'],
+            'similarity_coverage_pct':r['similarity_coverage_pct'],
+            'back_to_back_rows':r['back_to_back_rows'],
+            'context_class_counts':r['context_class_counts'],
+            'strong_context_performance':r['strong_context_performance'],
+            'weak_context_performance':r['weak_context_performance'],
+            'next_module':r['next_module']
+          })
+          PY
+
+      - name: Publish V5 M07 safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 M07 Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_v5_context_similarity.csv \
+                  data/dashboard/wnba_v5_player_similarity.json \
+                  data/dashboard/wnba_v5_context_state.json \
+                  data/dashboard/wnba_v5_m07_report.json
+          if git diff --cached --quiet; then
+            echo 'No M07 output changes.'
+            exit 0
+          fi
+          git commit -m 'Build WNBA V5 M07 context similarity outputs'
+          if git push origin HEAD:main; then exit 0; fi
+          mkdir -p /tmp/v5m07/data/dashboard
+          cp data/dashboard/wnba_v5_context_similarity.csv /tmp/v5m07/data/dashboard/
+          cp data/dashboard/wnba_v5_player_similarity.json /tmp/v5m07/data/dashboard/
+          cp data/dashboard/wnba_v5_context_state.json /tmp/v5m07/data/dashboard/
+          cp data/dashboard/wnba_v5_m07_report.json /tmp/v5m07/data/dashboard/
+          git fetch origin main
+          git reset --hard origin/main
+          cp -r /tmp/v5m07/data/dashboard/* data/dashboard/
+          git add data/dashboard/wnba_v5_*
+          git commit -m 'Build WNBA V5 M07 context similarity outputs'
+          git push origin HEAD:main

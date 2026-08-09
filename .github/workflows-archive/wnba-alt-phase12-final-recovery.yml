@@ -1,0 +1,119 @@
+name: WNBA ALT Phase 12 Final Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_phase12_recovery.py'
+      - 'wnba_alt_phase12_apply_overrides.py'
+      - 'wnba_alt_phase12_finalize.py'
+      - 'wnba_alt_phase11_certification_cleanup.py'
+      - '.github/workflows/wnba-alt-phase12-final-recovery.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-phase12-final-recovery
+  cancel-in-progress: false
+
+jobs:
+  phase12-final-recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install requests
+      - name: Compile Phase 12 stack
+        run: |
+          python -m py_compile wnba_alt_phase12_recovery.py wnba_alt_phase12_apply_overrides.py wnba_alt_phase12_finalize.py wnba_alt_archive_finalize.py wnba_alt_phase11_certification_cleanup.py
+      - name: Phase 12 recover safe local edge cases
+        run: python wnba_alt_phase12_recovery.py
+      - name: Apply Phase 12 canonical resolutions
+        run: python wnba_alt_phase12_apply_overrides.py
+      - name: Rebuild canonical ALT certification
+        run: python wnba_alt_archive_finalize.py
+      - name: Revalidate legacy discrepancy semantics
+        run: python wnba_alt_phase11_certification_cleanup.py
+      - name: Normalize exact duplicate observations and final gate
+        run: python wnba_alt_phase12_finalize.py
+      - name: Verify Phase 12 end state
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('data/dashboard/wnba_alt_phase12_final.json').read_text())
+          assert r['canonical_rows']==1017
+          assert r['certified_rows'] + r['unresolved_rows'] == 1017
+          assert r['blocking_outcome_discrepancies']==0
+          print(r)
+          PY
+      - name: Publish Phase 12 outputs atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA ALT Phase 12 Bot'
+          git config user.email 'actions@users.noreply.github.com'
+
+          FILES=(
+            data/warehouse/wnba_player_game_logs.json
+            data/warehouse/wnba_alt_phase12_resolutions.json
+            data/dashboard/wnba_alt_phase12_recovery.json
+            data/dashboard/wnba_alt_phase12_recovery.csv
+            data/warehouse/wnba_alt_phase12_recovery.json
+            data/dashboard/wnba_alt_game_identity_audit.json
+            data/history/wnba_alt_streak_history_v3.jsonl
+            data/dashboard/wnba_alt_archive_certification.json
+            data/warehouse/wnba_alt_archive_certification.json
+            data/dashboard/wnba_alt_archive_unresolved_v3.csv
+            data/dashboard/wnba_alt_phase11_cleanup.json
+            data/dashboard/wnba_alt_phase12_final.json
+            data/warehouse/wnba_alt_archive_manifest.json
+          )
+
+          SNAPSHOT="$(mktemp -d)"
+          for f in "${FILES[@]}"; do
+            if [ -f "$f" ]; then
+              mkdir -p "$SNAPSHOT/$(dirname "$f")"
+              cp "$f" "$SNAPSHOT/$f"
+            fi
+          done
+
+          publish_attempt() {
+            git add "${FILES[@]}"
+            if git diff --cached --quiet; then
+              echo 'Phase 12 outputs already current'
+              return 0
+            fi
+            git commit -m 'Complete WNBA ALT Phase 12 final recovery'
+            git push origin HEAD:main
+          }
+
+          if publish_attempt; then
+            exit 0
+          fi
+
+          echo 'Concurrent main update detected; replaying generated outputs on latest main'
+          git fetch origin main
+          git reset --hard origin/main
+
+          for f in "${FILES[@]}"; do
+            if [ -f "$SNAPSHOT/$f" ]; then
+              mkdir -p "$(dirname "$f")"
+              cp "$SNAPSHOT/$f" "$f"
+            fi
+          done
+
+          git add "${FILES[@]}"
+          if git diff --cached --quiet; then
+            echo 'Latest main already contains equivalent Phase 12 outputs'
+            exit 0
+          fi
+          git commit -m 'Complete WNBA ALT Phase 12 final recovery'
+          git push origin HEAD:main

@@ -1,0 +1,61 @@
+name: WNBA ALT Phase 11 Forensic Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_phase11_forensic.py'
+      - '.github/workflows/wnba-alt-phase11-forensic.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-phase11-forensic
+  cancel-in-progress: false
+
+jobs:
+  phase11-forensic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile Phase 11 forensic audit
+        run: python -m py_compile wnba_alt_phase11_forensic.py
+      - name: Audit remaining certification blockers
+        run: python wnba_alt_phase11_forensic.py
+      - name: Verify audit accounting
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('data/dashboard/wnba_alt_phase11_forensic.json').read_text())
+          assert r['canonical_rows']==1017
+          assert r['certified_rows']+r['unresolved_rows']==1017
+          print({
+            'certified_rows':r['certified_rows'],
+            'unresolved_rows':r['unresolved_rows'],
+            'coverage_pct':r['coverage_pct'],
+            'outcome_discrepancies':r['outcome_discrepancies'],
+            'legacy_duplicate_excess':r['legacy_duplicate_excess'],
+            'duplicate_forensic_classification_counts':r['duplicate_forensic_classification_counts'],
+            'unresolved_classification_counts':r['unresolved_classification_counts'],
+          })
+          PY
+      - name: Publish Phase 11 forensic outputs
+        run: |
+          git config user.name 'WNBA ALT Phase 11 Audit Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_alt_phase11_forensic.json data/dashboard/wnba_alt_phase11_forensic_duplicates.csv
+          if git diff --cached --quiet; then
+            echo 'Phase 11 forensic outputs already current'
+            exit 0
+          fi
+          git commit -m 'Publish WNBA ALT Phase 11 forensic audit'
+          git pull --rebase origin main
+          git push origin HEAD:main

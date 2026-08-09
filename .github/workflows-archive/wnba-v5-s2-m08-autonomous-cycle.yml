@@ -1,0 +1,53 @@
+name: WNBA V5 S2 M08 Autonomous Daily Cycle
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '55 7 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_ops_sprint2.py'
+      - 'data/dashboard/wnba_v5_s2_m07_research_lab.json'
+      - '.github/workflows/wnba-v5-s2-m08-autonomous-cycle.yml'
+concurrency: {group: wnba-v5-s2, cancel-in-progress: false}
+jobs:
+  v5-s2-m08:
+    runs-on: ubuntu-latest
+    permissions: {contents: write}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: git pull --rebase origin main
+      - name: Compile Sprint 2 stack
+        run: python -m py_compile wnba_v5_ops_sprint2.py wnba_v5_m12_postgame_learning.py wnba_v5_m05_champion_challenger.py
+      - name: Grade latest certified outcomes
+        run: python wnba_v5_m12_postgame_learning.py
+      - name: Refresh research candidate comparison
+        run: python wnba_v5_m05_champion_challenger.py
+      - name: Run full autonomous Sprint 2 cycle
+        run: python wnba_v5_ops_sprint2.py --module all
+      - name: Verify Sprint 2 M01-M08
+        run: |
+          python - <<'PY'
+          import json
+          base='data/dashboard/'
+          names=[
+            'wnba_v5_s2_m01_outcome_grader.json','wnba_v5_s2_m02_continuous_learning.json',
+            'wnba_v5_s2_m03_drift_monitor.json','wnba_v5_s2_m04_performance_dashboard.json',
+            'wnba_v5_s2_m05_promotion_engine.json','wnba_v5_s2_m06_explainability.json',
+            'wnba_v5_s2_m07_research_lab.json','wnba_v5_s2_m08_autonomous_cycle.json'
+          ]
+          for x in names:
+              p=json.load(open(base+x)); print(x,p.get('status')); assert p.get('module')
+          s=json.load(open(base+'wnba_v5_ops_sprint2_status.json'))
+          print(s); assert s['sprint']=='OPERATIONS_SPRINT_2'; assert s['status']=='COMPLETE'
+          PY
+      - name: Publish Sprint 2 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S2 Bot"; git config user.email "actions@users.noreply.github.com"
+          git add data/history/wnba_v5_forward_predictions.jsonl data/dashboard/wnba_v5_forward_validation.csv data/dashboard/wnba_v5_forward_metrics.json data/dashboard/wnba_v5_learning_state.json data/dashboard/wnba_v5_m12_report.json data/dashboard/wnba_v5_m05_predictions.csv data/dashboard/wnba_v5_model_rankings.json data/dashboard/wnba_v5_champion.json data/dashboard/wnba_v5_ensemble_weights.json data/dashboard/wnba_v5_m05_report.json data/dashboard/wnba_v5_s2_m01_outcome_grader.json data/dashboard/wnba_v5_s2_m02_continuous_learning.json data/dashboard/wnba_v5_s2_m03_drift_monitor.json data/dashboard/wnba_v5_s2_m04_performance_dashboard.json data/dashboard/wnba_v5_s2_m05_promotion_engine.json data/dashboard/wnba_v5_s2_m06_explainability.json data/dashboard/wnba_v5_s2_m07_research_lab.json data/dashboard/wnba_v5_s2_m08_autonomous_cycle.json data/dashboard/wnba_v5_ops_sprint2_status.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Operations Sprint 2"; git pull --rebase origin main; git push origin HEAD:main

@@ -1,0 +1,39 @@
+name: WNBA Repository File Audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/repository_audit_request.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-repository-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Audit tracked repository files
+        run: python scripts/audit_repository_files.py
+      - name: Publish audit reports
+        run: |
+          git config user.name 'WNBA Repository Audit Bot'
+          git config user.email 'actions@github.com'
+          git add docs/audit/repository_file_audit.csv docs/audit/repository_file_audit.json docs/audit/REPOSITORY_FILE_AUDIT.md
+          if git diff --cached --quiet; then
+            echo 'Audit produced no report changes'
+            exit 0
+          fi
+          git commit -m 'Audit WNBA repository files for cleanup'
+          git pull --rebase origin main
+          git push origin HEAD:main

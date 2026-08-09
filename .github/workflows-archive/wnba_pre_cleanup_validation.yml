@@ -1,0 +1,140 @@
+name: WNBA Pre-Cleanup Validation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/pre_cleanup_validation_request.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-pre-cleanup-validation
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      TZ: America/New_York
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate current production baseline
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime
+          from pathlib import Path
+
+          target = datetime.now().strftime('%Y-%m-%d')
+          root = Path('data/dashboard')
+          failures = []
+          warnings = []
+
+          master_path = root / 'wnba_master.json'
+          if not master_path.exists():
+              failures.append('Missing data/dashboard/wnba_master.json')
+              master = {}
+          else:
+              master = json.loads(master_path.read_text(encoding='utf-8'))
+
+          actual = str(master.get('target_date') or '')
+          if actual != target:
+              failures.append(f'Canonical target_date is {actual or "missing"}, expected {target}')
+
+          today = [g for g in master.get('games', []) if isinstance(g, dict) and str(g.get('bucket','')).lower() == 'today']
+          if not today:
+              failures.append('No current-slate games found in canonical master')
+
+          html_path = Path('docs/index.html')
+          if not html_path.exists():
+              failures.append('Missing docs/index.html')
+              html = ''
+          else:
+              html = html_path.read_text(encoding='utf-8')
+
+          missing_matchups = []
+          for g in today:
+              matchup = str(g.get('game') or '').strip()
+              if matchup and matchup not in html:
+                  missing_matchups.append(matchup)
+          if missing_matchups:
+              failures.append('Dashboard missing current matchups: ' + '; '.join(missing_matchups))
+
+          required_any = {
+              'games': ['wnba_master.json'],
+              'game_props': ['wnba_game_props.json','wnba_game_prop_intelligence.json'],
+              'player_props': ['wnba_player_props.json','wnba_player_prop_intelligence.json'],
+              'daily_edges': ['wnba_daily_edges.json','wnba_daily_edge_engine.json'],
+              'ensemble': ['wnba_ensemble_intelligence.json','wnba_ensemble.json'],
+              'simulation': ['wnba_unified_simulation.json','wnba_monte_carlo_scenarios.json'],
+              'best_bets': ['wnba_best_bets.json'],
+              'portfolio': ['wnba_portfolio.json','wnba_portfolio_intelligence.json','wnba_portfolio_dashboard.json'],
+              'results': ['wnba_results.json','wnba_live_results.json','wnba_results_grading.json'],
+              'performance': ['wnba_game_performance.json','wnba_model_performance.json','best_bets_performance_summary.json'],
+              'ai_center': ['wnba_ai_coach.json','wnba_daily_ai_report.json','wnba_model_audit.json'],
+          }
+
+          tab_status = {}
+          for tab, candidates in required_any.items():
+              found = next((root / name for name in candidates if (root / name).exists()), None)
+              tab_status[tab] = str(found) if found else None
+              if not found:
+                  failures.append(f'Missing required output for {tab}')
+
+          if 'Model pending' in html:
+              warnings.append('Dashboard still contains Model pending states')
+          if 'Player candidates (0)' in html:
+              warnings.append('At least one game still has zero player candidates')
+
+          payload = {
+              'target_date': target,
+              'canonical_target_date': actual,
+              'today_games': len(today),
+              'matchups': [g.get('game') for g in today],
+              'tabs': tab_status,
+              'warnings': warnings,
+              'failures': failures,
+              'status': 'PASS' if not failures else 'FAIL',
+          }
+          out = Path('docs/audit/PRE_CLEANUP_VALIDATION.json')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(payload, indent=2), encoding='utf-8')
+
+          md = ['# Pre-Cleanup Validation', '', f"- **Status:** {payload['status']}", f"- **Target date:** {target}", f"- **Current games:** {len(today)}", '', '## Warnings', '']
+          md += [f'- {x}' for x in warnings] or ['- None']
+          md += ['', '## Failures', '']
+          md += [f'- {x}' for x in failures] or ['- None']
+          Path('docs/audit/PRE_CLEANUP_VALIDATION.md').write_text('\n'.join(md) + '\n', encoding='utf-8')
+
+          print(json.dumps(payload, indent=2))
+          if failures:
+              raise SystemExit('Pre-cleanup validation failed')
+          PY
+
+      - name: Publish validation report
+        if: always()
+        run: |
+          git config user.name 'WNBA Validation Bot'
+          git config user.email 'actions@github.com'
+          git add docs/audit/PRE_CLEANUP_VALIDATION.json docs/audit/PRE_CLEANUP_VALIDATION.md
+          if git diff --cached --quiet; then
+            echo 'No validation report changes'
+            exit 0
+          fi
+          git commit -m 'Record pre-cleanup production validation'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main && git push origin HEAD:main && exit 0
+            git rebase --abort || true
+            sleep $((attempt * 3))
+          done
+          exit 1

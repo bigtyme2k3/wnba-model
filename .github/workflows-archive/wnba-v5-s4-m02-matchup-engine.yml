@@ -1,0 +1,70 @@
+name: WNBA V5 S4 M02 Matchup Intelligence Engine
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 11 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s4_m02_matchup_engine.py'
+      - 'data/dashboard/wnba_v5_team_defense_profiles.csv'
+      - 'data/dashboard/wnba_v5_historical_team_context.csv'
+      - 'data/dashboard/wnba_v5_s4_m01_report.json'
+      - 'data/warehouse/wnba_opportunity_rankings.json'
+      - '.github/workflows/wnba-v5-s4-m02-matchup-engine.yml'
+jobs:
+  v5-s4-m02:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 4 M02
+        run: python -m py_compile wnba_v5_s4_m02_matchup_engine.py
+      - name: Build matchup intelligence
+        run: python wnba_v5_s4_m02_matchup_engine.py
+      - name: Verify Sprint 4 M02
+        run: |
+          python - <<'PY'
+          import csv,json
+          p=json.load(open('data/dashboard/wnba_v5_s4_m02_report.json'))
+          print(p)
+          assert p['module']=='S4-M02'
+          assert p['status'] in {
+            'READY','WAITING_FOR_OPPORTUNITY_BOARD','WAITING_FOR_M01_DEFENSE_PROFILES',
+            'WAITING_FOR_PLAYER_TEAM_MAPPING','WAITING_FOR_MATCHABLE_DEFENSE_PROFILES'
+          }
+          rows=list(csv.DictReader(open('data/dashboard/wnba_v5_matchup_adjustments.csv',encoding='utf-8-sig')))
+          assert len(rows)==p['ranked_rows']
+          assert p['matchup_adjusted_rows'] + p['unresolved_player_team_rows'] + p['unresolved_defense_profile_rows'] == p['ranked_rows']
+          for r in rows:
+            m=float(r['matchup_multiplier'])
+            assert 0.85 <= m <= 1.15
+            if r['matchup_status']=='READY':
+              assert r['player_team'] and r['opponent']
+              assert r['player_team_source'] in {'BOARD_EXPLICIT','CERTIFIED_EXACT_DATE','CERTIFIED_LATEST_PRIOR'}
+              assert r['defense_index'] not in ('',None)
+            else:
+              raw=r.get('raw_projection',''); adj=r.get('matchup_adjusted_projection','')
+              if raw not in ('',None) and adj not in ('',None):
+                assert abs(float(raw)-float(adj)) < 1e-9
+          PY
+      - name: Publish Sprint 4 M02 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S4 M02 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_matchup_adjustments.csv data/dashboard/wnba_v5_matchup_intelligence.json data/dashboard/wnba_v5_s4_m02_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 4 M02 matchup intelligence"
+          git pull --rebase origin main
+          git push origin HEAD:main

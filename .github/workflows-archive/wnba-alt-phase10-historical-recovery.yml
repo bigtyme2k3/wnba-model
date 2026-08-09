@@ -1,0 +1,112 @@
+name: WNBA ALT Phase 10 Historical Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_phase10_historical_recovery.py'
+      - 'wnba_alt_phase10_apply_overrides.py'
+      - '.github/workflows/wnba-alt-phase10-historical-recovery.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-phase10-historical-recovery
+  cancel-in-progress: false
+
+jobs:
+  phase10-historical-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          test ! -f requirements.txt || pip install -r requirements.txt
+          python -m pip install requests
+      - name: Compile Phase 10 stack
+        run: |
+          python -m py_compile wnba_alt_phase10_historical_recovery.py wnba_alt_phase10_apply_overrides.py wnba_alt_archive_finalize.py wnba_alt_performance_tracker.py
+
+      - name: Phase 10 pass 1 recover official historical player-games
+        run: python wnba_alt_phase10_historical_recovery.py
+      - name: Apply pass 1 official resolutions
+        run: python wnba_alt_phase10_apply_overrides.py
+      - name: Rebuild certification after pass 1
+        run: python wnba_alt_archive_finalize.py
+
+      - name: Phase 10 pass 2 recover newly exposed gaps
+        run: python wnba_alt_phase10_historical_recovery.py
+      - name: Apply pass 2 official resolutions
+        run: python wnba_alt_phase10_apply_overrides.py
+      - name: Rebuild certification after pass 2
+        run: python wnba_alt_archive_finalize.py
+
+      - name: Phase 10 pass 3 final recovery sweep
+        run: python wnba_alt_phase10_historical_recovery.py
+      - name: Apply pass 3 official resolutions
+        run: python wnba_alt_phase10_apply_overrides.py
+      - name: Final Phase 10 certification rebuild
+        run: python wnba_alt_archive_finalize.py
+
+      - name: Validate Phase 10 end state
+        run: |
+          python - <<'PY'
+          import csv,json
+          from collections import Counter
+          from pathlib import Path
+          cert=json.loads(Path('data/dashboard/wnba_alt_archive_certification.json').read_text())
+          rec=json.loads(Path('data/dashboard/wnba_alt_phase10_historical_recovery.json').read_text())
+          canon=[json.loads(x) for x in Path('data/history/wnba_alt_streak_history_v3.jsonl').read_text().splitlines() if x.strip()]
+          assert len(canon)==1017
+          assert cert['certified_rows']+cert['unresolved_rows']==1017
+          assert all(r.get('identity_schema')=='alt-game-v3' for r in canon)
+          unresolved=list(csv.DictReader(Path('data/dashboard/wnba_alt_archive_unresolved_v3.csv').open()))
+          assert len(unresolved)==cert['unresolved_rows']
+          print({
+            'phase10_last_pass_resolved':rec.get('resolved',0),
+            'phase10_last_pass_warehouse_appended':rec.get('warehouse_appended',0),
+            'certified_rows':cert['certified_rows'],
+            'unresolved_rows':cert['unresolved_rows'],
+            'coverage_pct':cert['canonical_coverage_pct'],
+            'status':cert['status'],
+            'outcome_discrepancies':cert['legacy_vs_canonical_outcome_discrepancies'],
+            'duplicate_certified_wager_keys':cert['duplicate_certified_wager_keys'],
+            'remaining_classes':dict(Counter(r['classification'] for r in unresolved)),
+          })
+          PY
+
+      - name: Publish Phase 10 warehouse and certification outputs
+        run: |
+          git config user.name 'WNBA ALT Phase 10 Recovery Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/warehouse/wnba_player_game_logs.json \
+            data/warehouse/wnba_alt_phase10_official_resolutions.json \
+            data/dashboard/wnba_alt_phase10_historical_recovery.json \
+            data/dashboard/wnba_alt_phase10_historical_recovery.csv \
+            data/warehouse/wnba_alt_phase10_historical_recovery.json \
+            data/dashboard/wnba_alt_game_identity_audit.json \
+            data/history/wnba_alt_streak_history_v3.jsonl \
+            data/dashboard/wnba_alt_archive_certification.json \
+            data/warehouse/wnba_alt_archive_certification.json \
+            data/dashboard/wnba_alt_archive_unresolved_v3.csv \
+            data/warehouse/wnba_alt_archive_manifest.json
+          if git diff --cached --quiet; then
+            echo 'Phase 10 outputs already current'
+            exit 0
+          fi
+          git commit -m 'Complete Phase 10 official historical recovery and recertify ALT archive'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((attempt * 2))
+          done
+          exit 1

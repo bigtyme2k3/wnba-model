@@ -1,0 +1,111 @@
+name: WNBA Repair Missing Outputs
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/repair_missing_outputs_request.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TZ: America/New_York
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Resolve target date
+        run: |
+          TARGET=$(date +%F)
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+
+      - name: Generate missing outputs
+        run: |
+          python wnba_game_prop_intelligence.py --date "$TARGET"
+          python wnba_best_bets.py --date "$TARGET"
+
+      - name: Rebuild dashboard
+        run: |
+          [ -f build_dashboard_v4.py ] && python build_dashboard_v4.py || true
+          [ -f patch_dashboard_v4_games_markets.py ] && python patch_dashboard_v4_games_markets.py || true
+          [ -f patch_dashboard_v4_consistency.py ] && python patch_dashboard_v4_consistency.py || true
+          [ -f patch_dashboard_v4_live_slate.py ] && python patch_dashboard_v4_live_slate.py || true
+          [ -f patch_dashboard_v4_portfolio_ai.py ] && python patch_dashboard_v4_portfolio_ai.py || true
+          [ -f patch_dashboard_navigation_v2.py ] && python patch_dashboard_navigation_v2.py || true
+
+      - name: Validate repaired outputs
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          target = os.environ['TARGET']
+          checks = [
+              Path('data/dashboard/wnba_game_prop_intelligence.json'),
+              Path('data/dashboard/wnba_game_props.json'),
+              Path('data/dashboard/wnba_best_bets.json'),
+          ]
+          for path in checks:
+              if not path.exists() or path.stat().st_size == 0:
+                  raise SystemExit(f'Missing repaired output: {path}')
+              payload = json.loads(path.read_text(encoding='utf-8'))
+              if str(payload.get('target_date') or '') != target:
+                  raise SystemExit(f'Target mismatch for {path}: {payload.get("target_date")} != {target}')
+          master = json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8'))
+          expected = len([g for g in master.get('games', []) if isinstance(g, dict) and str(g.get('bucket','')).lower() == 'today'])
+          props = json.loads(checks[0].read_text(encoding='utf-8'))
+          if int(props.get('game_count') or 0) != expected:
+              raise SystemExit(f'Game props count mismatch: {props.get("game_count")} != {expected}')
+          if not Path('docs/index.html').exists():
+              raise SystemExit('Dashboard HTML missing after rebuild')
+          print({'target': target, 'game_props': expected, 'best_bets_status': json.loads(checks[2].read_text()).get('status')})
+          PY
+
+      - name: Publish repaired outputs
+        run: |
+          git config user.name 'WNBA Output Repair Bot'
+          git config user.email 'actions@github.com'
+          git add data/dashboard/wnba_game_prop_intelligence.json \
+                  data/dashboard/wnba_game_props.json \
+                  data/dashboard/wnba_best_bets.json \
+                  docs/index.html
+          if git diff --cached --quiet; then
+            echo 'No repaired output changes to publish'
+            exit 0
+          fi
+          git commit -m "Repair Game Props and Best Bets outputs for ${TARGET}"
+
+          # Dashboard builders can touch additional generated files. Stash those
+          # uncommitted changes before rebasing; the runner is ephemeral, so they
+          # do not need to be restored after the verified commit is pushed.
+          if ! git diff --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+            git stash push --include-untracked -m 'repair-workflow-unpublished-generated-files'
+          fi
+
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            if git rebase origin/main; then
+              git push origin HEAD:main && exit 0
+            fi
+            git rebase --abort || true
+            sleep $((attempt * 3))
+          done
+          exit 1

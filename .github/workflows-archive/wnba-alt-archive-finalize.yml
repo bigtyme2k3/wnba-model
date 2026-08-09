@@ -1,0 +1,114 @@
+name: WNBA ALT Archive Finalize
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_archive_finalize.py'
+      - 'wnba_alt_game_identity_audit.py'
+      - '.github/workflows/wnba-alt-archive-finalize.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-archive-finalize
+  cancel-in-progress: false
+
+jobs:
+  finalize-alt-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          test ! -f requirements.txt || pip install -r requirements.txt
+
+      - name: Compile finalization stack
+        run: |
+          python -m py_compile \
+            wnba_alt_game_identity_audit.py \
+            wnba_alt_archive_finalize.py \
+            wnba_alt_performance_tracker.py
+
+      - name: Refresh Phase 3 canonical identity audit
+        run: python wnba_alt_game_identity_audit.py
+
+      - name: Phase 4 canonicalize and rebuild certified archive
+        run: python wnba_alt_archive_finalize.py
+
+      - name: Phase 5 verify unresolved schedule edge cases are explicit
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          cert=json.loads(Path('data/dashboard/wnba_alt_archive_certification.json').read_text())
+          rows=list(csv.DictReader(Path('data/dashboard/wnba_alt_archive_unresolved_v3.csv').open()))
+          assert len(rows)==cert['unresolved_rows'], (len(rows),cert['unresolved_rows'])
+          allowed={
+            'SAME_DATE_DIFFERENT_MATCHUP','NO_COMPLETED_GAME_ON_ARCHIVE_DATE',
+            'REPEATED_MATCHUP_DATE_AMBIGUOUS','NO_PLAYER_GAME_ANY_DATE',
+            'WAREHOUSE_RECORD_CARDINALITY_FAILURE','STAT_UNAVAILABLE','ARCHIVE_MATCHUP_MISSING'
+          }
+          unexpected=sorted({r['classification'] for r in rows}-allowed)
+          assert not unexpected, unexpected
+          print({'unresolved_rows':len(rows),'classifications':cert['unresolved_classification_counts']})
+          PY
+
+      - name: Phase 6 validate canonical archive integrity
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          legacy=[json.loads(x) for x in Path('data/history/wnba_alt_streak_history.jsonl').read_text().splitlines() if x.strip()]
+          canon=[json.loads(x) for x in Path('data/history/wnba_alt_streak_history_v3.jsonl').read_text().splitlines() if x.strip()]
+          cert=json.loads(Path('data/dashboard/wnba_alt_archive_certification.json').read_text())
+          manifest=json.loads(Path('data/warehouse/wnba_alt_archive_manifest.json').read_text())
+          assert len(legacy)==len(canon)==cert['canonical_rows']==1017
+          assert all(r.get('identity_schema')=='alt-game-v3' for r in canon)
+          certified=[r for r in canon if r.get('canonical_status')=='CERTIFIED']
+          assert all(r.get('canonical_game_id') and r.get('canonical_game_date') and r.get('canonical_player_game_record_id') for r in certified)
+          assert cert['certified_rows']+cert['unresolved_rows']==1017
+          assert manifest['append_only_required'] is True
+          print({
+            'rows':len(canon),'certified':cert['certified_rows'],'unresolved':cert['unresolved_rows'],
+            'coverage_pct':cert['canonical_coverage_pct'],'status':cert['status'],
+            'outcome_discrepancies':cert['legacy_vs_canonical_outcome_discrepancies'],
+          })
+          PY
+
+      - name: Phase 7 publish canonical archive certification
+        run: |
+          git config user.name 'WNBA ALT Archive Certification Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/history/wnba_alt_streak_history_v3.jsonl \
+            data/dashboard/wnba_alt_game_identity_audit.json \
+            data/dashboard/wnba_alt_game_identity_audit.csv \
+            data/warehouse/wnba_alt_game_identity_audit.json \
+            data/dashboard/wnba_alt_archive_certification.json \
+            data/warehouse/wnba_alt_archive_certification.json \
+            data/dashboard/wnba_alt_archive_unresolved_v3.csv \
+            data/warehouse/wnba_alt_archive_manifest.json
+          if git diff --cached --quiet; then
+            echo 'Canonical archive outputs already current'
+            exit 0
+          fi
+          git commit -m 'Finalize and certify WNBA ALT canonical archive v3'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((attempt * 2))
+          done
+          exit 1

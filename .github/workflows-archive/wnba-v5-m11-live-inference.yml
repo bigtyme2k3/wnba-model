@@ -1,0 +1,60 @@
+name: WNBA V5 M11 Live Inference
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '12 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_m11_live_inference.py'
+      - 'data/dashboard/wnba_v5_historical_features.csv'
+      - 'data/dashboard/wnba_v5_m05_report.json'
+      - 'data/dashboard/wnba_v5_s3_m01_freshness.json'
+      - 'data/warehouse/wnba_opportunity_rankings.json'
+      - '.github/workflows/wnba-v5-m11-live-inference.yml'
+jobs:
+  build-v5-m11:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile V5 M11 inference engine
+        run: python -m py_compile wnba_v5_m11_live_inference.py
+      - name: Score ranked board with V5 KNN
+        run: python wnba_v5_m11_live_inference.py
+      - name: Verify V5 M11
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_m11_report.json'))
+          print(p)
+          assert p['module']=='V5-M11'
+          assert p['status'] in {'READY_SHADOW','STANDBY_NO_SCORABLE_ROWS','BLOCKED_STALE_SLATE'}
+          assert p['research_champion']=='KNN'
+          assert p['production_ready'] is False
+          assert p['ranked_rows']==p['scored_rows']+p['unscored_rows']
+          if p['status']=='BLOCKED_STALE_SLATE':
+              assert p['scored_rows']==0
+              assert p.get('freshness_guard_status')=='STALE_BLOCKED'
+              assert p['next_action']=='REFRESH_CURRENT_OPPORTUNITY_BOARD'
+          PY
+      - name: Publish V5 M11 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 M11 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_live_inference.json data/dashboard/wnba_v5_live_inference.csv data/dashboard/wnba_v5_m11_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 M11 live inference outputs"
+          git pull --rebase origin main
+          git push origin HEAD:main

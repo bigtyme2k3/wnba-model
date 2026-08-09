@@ -1,0 +1,62 @@
+name: WNBA V5 S3 M05 Evidence Accumulation Dashboard
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '39 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s3_m05_evidence_dashboard.py'
+      - 'data/dashboard/wnba_v5_s3_m03_forward_grade.json'
+      - 'data/dashboard/wnba_v5_s3_m04_report.json'
+      - 'data/dashboard/wnba_v5_forward_metrics.json'
+      - 'data/dashboard/wnba_v5_learning_state.json'
+      - 'data/dashboard/wnba_v5_production_status.json'
+      - '.github/workflows/wnba-v5-s3-m05-evidence-dashboard.yml'
+jobs:
+  v5-s3-m05:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 3 M05
+        run: python -m py_compile wnba_v5_s3_m05_evidence_dashboard.py
+      - name: Build evidence accumulation dashboard
+        run: python wnba_v5_s3_m05_evidence_dashboard.py
+      - name: Verify Sprint 3 M05
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.load(open('data/dashboard/wnba_v5_s3_m05_report.json'))
+          print(p)
+          assert p['module']=='S3-M05'
+          assert p['status']=='READY'
+          assert p['promotion_state'] in {'SHADOW','CANDIDATE','PRODUCTION_READY'}
+          assert p['progress']['graded_forward_predictions'] <= p['progress']['forward_predictions_total']
+          assert p['progress']['minimum_graded_forward_predictions']==300
+          assert p['progress']['minimum_explicit_clv_coverage_pct']==60.0
+          assert Path('data/dashboard/wnba_v5_evidence_dashboard.json').exists()
+          assert Path('data/dashboard/wnba_v5_promotion_meter.json').exists()
+          assert Path('data/dashboard/wnba_v5_evidence_history.csv').exists()
+          PY
+      - name: Publish Sprint 3 M05 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S3 M05 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_evidence_dashboard.json data/dashboard/wnba_v5_promotion_meter.json data/dashboard/wnba_v5_evidence_history.csv data/dashboard/wnba_v5_s3_m05_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 3 M05 evidence dashboard"
+          git pull --rebase origin main
+          git push origin HEAD:main

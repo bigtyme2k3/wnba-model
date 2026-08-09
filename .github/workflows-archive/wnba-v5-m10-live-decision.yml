@@ -1,0 +1,54 @@
+name: WNBA V5 M10 Live Adaptive Decision Engine
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_m10_live_decision_engine.py'
+      - 'data/dashboard/wnba_v5_decision_engine.json'
+      - 'data/warehouse/wnba_opportunity_rankings.json'
+      - 'data/dashboard/market_movement.json'
+      - 'data/dashboard/wnba_v5_live_inference.json'
+      - '.github/workflows/wnba-v5-m10-live-decision.yml'
+jobs:
+  build-v5-m10:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile V5 M10 engine
+        run: python -m py_compile wnba_v5_m10_live_decision_engine.py
+      - name: Run live adaptive decision engine
+        run: python wnba_v5_m10_live_decision_engine.py
+      - name: Verify V5 M10
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_m10_report.json'))
+          print(p)
+          assert p['module']=='V5-M10'
+          assert p['status'] in {'READY_SHADOW','STANDBY_NO_LIVE_V5_SCORES','WAITING_FOR_M09'}
+          assert p['production_ready'] is False
+          PY
+      - name: Publish V5 M10 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 M10 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_live_decisions.json data/dashboard/wnba_v5_alerts.json data/dashboard/wnba_v5_market_refresh.json data/dashboard/wnba_v5_live_portfolio.json data/dashboard/wnba_v5_live_ev.csv data/dashboard/wnba_v5_line_changes.csv data/dashboard/wnba_v5_buy_signals.json data/dashboard/wnba_v5_m10_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 M10 live decision outputs"
+          git pull --rebase origin main
+          git push origin HEAD:main

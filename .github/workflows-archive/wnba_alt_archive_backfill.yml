@@ -1,0 +1,215 @@
+name: WNBA ALT Archive Backfill
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba_alt_archive_backfill.yml'
+      - 'wnba_alt_date_alias_recovery.py'
+      - 'wnba_alt_schedule_audit.py'
+      - 'wnba_alt_phase1_schedule_recovery.py'
+      - 'wnba_alt_phase2_diagnostics.py'
+      - 'wnba_alt_game_log_recovery.py'
+      - 'wnba_alt_pending_diagnostics.py'
+      - 'wnba_alt_performance_tracker.py'
+      - 'wnba_alt_manual_recovery.py'
+      - 'data/manual/wnba_alt_result_overrides.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  backfill-alt-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compile ALT recovery stack
+        run: |
+          python -m py_compile \
+            wnba_alt_game_log_recovery.py \
+            wnba_alt_recovery_handoff.py \
+            wnba_alt_date_alias_recovery.py \
+            wnba_alt_schedule_audit.py \
+            wnba_alt_phase1_schedule_recovery.py \
+            wnba_alt_phase2_diagnostics.py \
+            wnba_espn_boxscore_fallback.py \
+            wnba_alt_pending_diagnostics.py \
+            wnba_alt_performance_tracker.py \
+            wnba_alt_manual_recovery.py \
+            wnba_player_game_log_archive.py \
+            wnba_player_game_log_warehouse.py
+
+      - name: Build full pending archive recovery plan
+        run: |
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_schedule_audit.py
+          python wnba_alt_game_log_recovery.py
+          DATES=$(python wnba_alt_game_log_recovery.py --print-dates)
+          echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
+          echo "Pending dates: ${DATES:-none}"
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          s=json.load(open('data/dashboard/wnba_alt_schedule_audit.json'))
+          print('Archive recovery plan:', {
+              'records': p.get('targets',{}).get('records',0),
+              'dates': len(p.get('targets',{}).get('dates',[])),
+              'before': p.get('before',{}),
+              'schedule_classifications': s.get('classification_counts',{}),
+              'schedule_fetch_errors': len(s.get('fetch_errors') or []),
+          })
+          PY
+
+      - name: Snapshot current cumulative player game logs
+        if: env.RECOVERY_DATES != ''
+        run: python wnba_player_game_log_archive.py snapshot
+
+      - name: Recover every pending archive date
+        if: env.RECOVERY_DATES != ''
+        run: |
+          for DAY in $RECOVERY_DATES; do
+            echo "===== Recovering $DAY ====="
+            python wnba_play_by_play_layer.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+            python wnba_espn_boxscore_fallback.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+            python wnba_player_game_log_archive.py merge
+            python wnba_player_game_log_archive.py snapshot
+            python wnba_alt_date_alias_recovery.py --date "$DAY" || true
+          done
+
+      - name: Run season game-log backfill once
+        if: env.RECOVERY_DATES != ''
+        run: |
+          python wnba_player_game_log_backfill.py --season 2026 || true
+          python wnba_player_game_log_archive.py merge
+          python wnba_player_game_log_archive.py snapshot
+          python wnba_alt_recovery_handoff.py
+
+      - name: Re-run schedule-guarded date aliases with complete season logs
+        if: env.RECOVERY_DATES != ''
+        run: |
+          for DAY in $RECOVERY_DATES; do
+            echo "===== Rechecking aliases $DAY ====="
+            python wnba_alt_date_alias_recovery.py --date "$DAY" || true
+          done
+          python wnba_player_game_log_archive.py snapshot
+
+      - name: Phase 1 recover exact and unique scheduled games
+        run: |
+          python wnba_alt_phase1_schedule_recovery.py
+
+      - name: Apply verified manual ALT overrides
+        run: |
+          python wnba_alt_manual_recovery.py --apply
+
+      - name: Regrade entire frozen ALT archive
+        run: |
+          python wnba_alt_performance_tracker.py --grade
+          TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_schedule_audit.py
+          python wnba_alt_game_log_recovery.py
+          python wnba_alt_manual_recovery.py --report
+
+      - name: Phase 2 diagnose every unresolved ALT row
+        run: |
+          python wnba_alt_phase2_diagnostics.py
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_alt_phase2_diagnostics.json'))
+          print('Phase 2 diagnostics:', {
+              'pending_rows': p.get('pending_rows',0),
+              'failure_reason_counts': p.get('failure_reason_counts',{}),
+          })
+          PY
+
+      - name: Verify archive accounting improved
+        run: |
+          python - <<'PY'
+          import json
+          perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
+          diag=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
+          recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          manual=json.load(open('data/dashboard/wnba_alt_pending_manual_recovery.json'))
+          schedule=json.load(open('data/dashboard/wnba_alt_schedule_audit.json'))
+          phase1=json.load(open('data/dashboard/wnba_alt_phase1_schedule_recovery.json'))
+          phase2=json.load(open('data/dashboard/wnba_alt_phase2_diagnostics.json'))
+          s=perf.get('summary') or {}
+          archived=int(s.get('archived_candidates') or 0)
+          graded=int(s.get('graded') or 0)
+          pending=int(s.get('pending') or 0)
+          diagnosed=int((diag.get('summary') or {}).get('pending_rows') or 0)
+          manual_pending=int(manual.get('pending_rows') or 0)
+          phase2_pending=int(phase2.get('pending_rows') or 0)
+          assert archived == graded + pending, (archived,graded,pending)
+          assert pending == diagnosed, (pending,diagnosed)
+          assert pending == manual_pending, (pending,manual_pending)
+          assert pending == phase2_pending, (pending,phase2_pending)
+          assert pending == int(schedule.get('pending_rows') or 0), (pending,schedule.get('pending_rows'))
+          print({
+              'archived':archived,
+              'graded':graded,
+              'pending':pending,
+              'remaining_recovery_dates':len((recovery.get('targets') or {}).get('dates') or []),
+              'manual_report_rows':manual_pending,
+              'phase1_recovered':phase1.get('recovered',0),
+              'phase1_by_classification':phase1.get('by_classification',{}),
+              'phase1_unresolved_safe_rows':len(phase1.get('unresolved_safe_rows') or []),
+              'schedule_classifications':schedule.get('classification_counts',{}),
+              'phase2_failure_reasons':phase2.get('failure_reason_counts',{}),
+          })
+          PY
+
+      - name: Publish recovered archive and performance data
+        run: |
+          git config user.name "WNBA Archive Backfill Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Backfill and regrade WNBA ALT archive" \
+            'data/raw/wnba_boxscores_*.json' \
+            'data/history/wnba_alt_streak_history.jsonl' \
+            'data/history/wnba_player_game_logs_before_build.json' \
+            'data/dashboard/wnba_player_game_logs.json' \
+            'data/warehouse/wnba_player_game_logs.json' \
+            'data/dashboard/wnba_alt_performance.json' \
+            'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_pending_diagnostics.json' \
+            'data/warehouse/wnba_alt_pending_diagnostics.json' \
+            'data/dashboard/wnba_alt_schedule_audit.json' \
+            'data/warehouse/wnba_alt_schedule_audit.json' \
+            'data/dashboard/wnba_alt_phase1_schedule_recovery.json' \
+            'data/warehouse/wnba_alt_phase1_schedule_recovery.json' \
+            'data/dashboard/wnba_alt_phase2_diagnostics.json' \
+            'data/dashboard/wnba_alt_phase2_diagnostics.csv' \
+            'data/warehouse/wnba_alt_phase2_diagnostics.json' \
+            'data/dashboard/wnba_alt_game_log_recovery.json' \
+            'data/warehouse/wnba_alt_game_log_recovery.json' \
+            'data/dashboard/wnba_alt_pending_manual_recovery.csv' \
+            'data/dashboard/wnba_alt_pending_manual_recovery.json' \
+            'data/warehouse/wnba_alt_pending_manual_recovery.json'

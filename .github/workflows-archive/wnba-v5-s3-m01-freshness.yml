@@ -1,0 +1,66 @@
+name: WNBA V5 S3 M01 Current Slate Freshness Guard
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '5 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s3_m01_freshness_guard.py'
+      - 'data/warehouse/wnba_opportunity_rankings.json'
+      - '.github/workflows/wnba-v5-s3-m01-freshness.yml'
+concurrency:
+  group: wnba-v5-s3-m01
+  cancel-in-progress: false
+jobs:
+  v5-s3-m01:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile S3 M01 guard
+        run: python -m py_compile wnba_v5_s3_m01_freshness_guard.py
+      - name: Validate current slate freshness
+        run: python wnba_v5_s3_m01_freshness_guard.py
+      - name: Verify S3 M01
+        run: |
+          python - <<'PY'
+          import json
+          g=json.load(open('data/dashboard/wnba_v5_s3_m01_freshness.json'))
+          v=json.load(open('data/dashboard/wnba_v5_slate_validation.json'))
+          h=json.load(open('data/dashboard/wnba_v5_schedule_health.json'))
+          print(g)
+          assert g['module']=='S3-M01'
+          assert g['status'] in {'FRESH','EMPTY_CURRENT_SLATE','STALE_BLOCKED','BLOCKED_NO_RANKINGS'}
+          assert v['allow_live_inference']==g['allow_live_inference']
+          if g['status'] in {'STALE_BLOCKED','BLOCKED_NO_RANKINGS'}:
+              assert g['allow_live_inference'] is False
+              assert h['next_action']=='REFRESH_CURRENT_OPPORTUNITY_BOARD'
+          else:
+              assert g['allow_live_inference'] is True
+          PY
+      - name: Publish S3 M01 outputs safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S3 M01 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            data/dashboard/wnba_v5_s3_m01_freshness.json \
+            data/dashboard/wnba_v5_current_slate.json \
+            data/dashboard/wnba_v5_stale_game_report.json \
+            data/dashboard/wnba_v5_slate_validation.json \
+            data/dashboard/wnba_v5_schedule_health.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 S3 M01 slate freshness"
+          git pull --rebase origin main
+          git push origin HEAD:main

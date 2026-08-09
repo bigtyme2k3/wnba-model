@@ -1,0 +1,73 @@
+name: WNBA V5 S4 M01 Team Defense Intelligence
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 11 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s4_m01_team_defense_intelligence.py'
+      - 'data/dashboard/wnba_v5_historical_features.csv'
+      - 'data/warehouse/sprint22/game_context.csv'
+      - 'data/raw/boxscores_*.csv'
+      - 'data/raw/scores_*.csv'
+      - 'data/raw/scores.csv'
+      - '.github/workflows/wnba-v5-s4-m01-team-defense.yml'
+jobs:
+  v5-s4-m01:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 4 M01
+        run: python -m py_compile wnba_v5_s4_m01_team_defense_intelligence.py
+      - name: Build team defense intelligence
+        run: python wnba_v5_s4_m01_team_defense_intelligence.py
+      - name: Verify Sprint 4 M01
+        run: |
+          python - <<'PY'
+          import csv,json
+          p=json.load(open('data/dashboard/wnba_v5_s4_m01_report.json'))
+          recovery=json.load(open('data/dashboard/wnba_v5_s4_m01_schedule_recovery.json'))
+          print(p)
+          print(recovery)
+          assert p['module']=='S4-M01'
+          assert p['status'] in {'READY','WAITING_FOR_HISTORICAL_FEATURES','WAITING_FOR_MATCHABLE_OPPONENT_HISTORY'}
+          context=list(csv.DictReader(open('data/dashboard/wnba_v5_historical_team_context.csv',encoding='utf-8-sig')))
+          assert len(context)==p['historical_context_rows']
+          assert p['resolved_team_opponent_rows'] + p['unresolved_team_opponent_rows'] == p['historical_context_rows']
+          assert recovery['remaining_unresolved_rows']==p['unresolved_team_opponent_rows']
+          assert recovery['coverage_after_patch_pct']==p['team_opponent_coverage_pct']
+          assert p['raw_score_files_scanned'] >= 0
+          assert p['recovered_game_ids_from_raw_scores'] >= 0
+          if p['status']=='READY':
+              rows=list(csv.DictReader(open('data/dashboard/wnba_v5_team_defense_profiles.csv',encoding='utf-8-sig')))
+              assert len(rows)==p['profile_rows'] and len(rows)>0
+              assert p['resolved_team_opponent_rows'] > 0
+              for r in rows:
+                  assert r['team'] and r['stat']
+                  assert float(r['player_observations']) > 0
+                  assert float(r['allowed_avg']) >= 0
+              pos=list(csv.DictReader(open('data/dashboard/wnba_v5_team_defense_by_position.csv',encoding='utf-8-sig')))
+              assert len(pos)==p['position_profile_rows']
+          PY
+      - name: Publish Sprint 4 M01 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S4 M01 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_team_defense_profiles.csv data/dashboard/wnba_v5_team_defense_intelligence.json data/dashboard/wnba_v5_team_defense_by_position.csv data/dashboard/wnba_v5_historical_team_context.csv data/dashboard/wnba_v5_s4_m01_schedule_recovery.json data/dashboard/wnba_v5_s4_m01_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 4 M01 team defense intelligence"
+          git pull --rebase origin main
+          git push origin HEAD:main

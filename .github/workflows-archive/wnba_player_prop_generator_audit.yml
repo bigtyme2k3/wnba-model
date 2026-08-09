@@ -1,0 +1,43 @@
+name: WNBA Player Prop Generator Audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/player_prop_generator_audit_request.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-repository-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Audit player prop generator lineage
+        run: python scripts/audit_player_prop_generator.py
+      - name: Validate audit outputs
+        run: |
+          test -s docs/audit/PLAYER_PROP_GENERATOR_LINEAGE.md
+          test -s docs/audit/PLAYER_PROP_GENERATOR_LINEAGE.json
+      - name: Publish audit
+        run: |
+          git config user.name 'WNBA Player Prop Audit Bot'
+          git config user.email 'actions@github.com'
+          git add docs/audit/PLAYER_PROP_GENERATOR_LINEAGE.md docs/audit/PLAYER_PROP_GENERATOR_LINEAGE.json
+          if git diff --cached --quiet; then
+            echo 'No audit changes'
+            exit 0
+          fi
+          git commit -m 'Audit player prop generator lineage'
+          git pull --rebase origin main
+          git push origin HEAD:main

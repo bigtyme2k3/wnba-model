@@ -1,0 +1,128 @@
+name: WNBA Daily Canonical Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: Optional Eastern slate date (YYYY-MM-DD)
+        required: false
+        type: string
+  schedule:
+    - cron: '15 10 * * *'
+    - cron: '15 16 * * *'
+  push:
+    paths:
+      - 'data/daily_canonical_build_request.txt'
+      - 'scripts/build_daily_canonical_slate.py'
+      - 'scripts/wnba_sprint2_phase2.py'
+      - 'wnba_player_props_ingestion.py'
+      - 'wnba_sprint2_prediction_engine.py'
+      - '.github/workflows/wnba_daily_canonical_build.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TZ: America/New_York
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install requests
+        run: python -m pip install requests
+      - name: Resolve Eastern target date
+        run: |
+          MANUAL='${{ inputs.target_date }}'
+          if [ -n "$MANUAL" ]; then
+            TARGET="$MANUAL"
+          else
+            TARGET=$(python active_slate_date.py)
+          fi
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Canonical target date: $TARGET"
+      - name: Build canonical slate and player props
+        run: python scripts/build_daily_canonical_slate.py --date "$TARGET"
+      - name: Build Sprint 2 team ratings and game projections
+        run: python wnba_sprint2_prediction_engine.py --date "$TARGET"
+      - name: Build Sprint 2 Phase 2 intelligence
+        run: python scripts/wnba_sprint2_phase2.py --date "$TARGET"
+      - name: Validate manifest, Phase 2 outputs, and stale-row guardrails
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          target=os.environ['TARGET']
+          p=Path('data/dashboard/wnba_daily_canonical_manifest.json')
+          d=json.loads(p.read_text())
+          assert d['target_date']==target
+          assert d['status']=='PASS', d.get('failures')
+          props=json.loads(Path('data/dashboard/wnba_player_props.json').read_text())
+          assert props.get('target_date')==target
+          games=set(d.get('games') or [])
+          for row in props.get('rows') or []:
+            assert row.get('target_date')==target
+            assert row.get('team')
+            assert row.get('team') in {row.get('away_team'), row.get('home_team')}
+            assert not games or row.get('game') in games
+          unresolved=props.get('unresolved_rows') or []
+          assert all(not row.get('team') for row in unresolved)
+
+          ratings=json.loads(Path('data/dashboard/wnba_team_ratings.json').read_text())
+          predictions=json.loads(Path('data/dashboard/wnba_sprint2_predictions.json').read_text())
+          phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
+          assert ratings.get('target_date')==target
+          assert predictions.get('target_date')==target and predictions.get('status')=='PASS'
+          assert phase2.get('target_date')==target and phase2.get('status')=='PASS'
+          predicted_games={g.get('game') for g in predictions.get('games') or []}
+          phase2_games={g.get('game') for g in phase2.get('games') or []}
+          assert predicted_games==games==phase2_games, {'canonical':sorted(games),'predicted':sorted(predicted_games),'phase2':sorted(phase2_games)}
+          for game in phase2.get('games') or []:
+            projection=game.get('projection') or {}
+            assert projection.get('away_score') is not None and projection.get('home_score') is not None
+            assert 0 <= float(projection.get('home_win_probability')) <= 1
+            assert 35 <= float(game.get('confidence')) <= 88
+            assert game.get('model_grade')
+            assert game.get('pace_label') in {'FAST','NEUTRAL','SLOW'}
+            assert isinstance(game.get('teams'),dict)
+          print({'target':target,'games':d['game_count'],'props':d['player_prop_rows'],'unresolved_props':len(unresolved),'rated_teams':len(ratings.get('teams') or []),'phase2_games':len(phase2.get('games') or [])})
+          PY
+      - name: Publish canonical daily sources
+        run: |
+          git config user.name 'WNBA Canonical Daily Build Bot'
+          git config user.email 'actions@github.com'
+          git add data/wnba/scores.json \
+                  data/dashboard/wnba_master.json \
+                  data/dashboard/wnba_player_props.json \
+                  data/dashboard/wnba_daily_canonical_manifest.json \
+                  data/dashboard/wnba_team_ratings.json \
+                  data/dashboard/wnba_sprint2_predictions.json \
+                  data/dashboard/wnba_sprint2_phase2.json \
+                  data/raw/wnba_player_props_${TARGET}.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No canonical daily source changes to publish'
+            exit 0
+          fi
+          git commit -m "Refresh canonical WNBA sources and Sprint 2 Phase 2 for ${TARGET}"
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main && git push origin HEAD:main && exit 0
+            git rebase --abort || true
+            sleep $((attempt*3))
+          done
+          exit 1

@@ -1,0 +1,72 @@
+name: WNBA V5 Probability Learner
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_probability_learner.py'
+      - 'data/dashboard/wnba_v5_historical_features.csv'
+      - '.github/workflows/wnba-v5-probability-learner.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-probability-learner
+  cancel-in-progress: false
+
+jobs:
+  build-v5-probability-learner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile V5 M02 learner
+        run: python -m py_compile wnba_v5_probability_learner.py
+      - name: Train and walk-forward test V5 M02
+        run: python wnba_v5_probability_learner.py
+      - name: Verify V5 probability learner
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('data/dashboard/wnba_v5_probability_status.json').read_text())
+          assert s['module']=='V5-M02'
+          assert s['training_eligible_rows'] >= 100
+          assert s['walk_forward_predictions'] >= 50
+          assert s['metrics']['v5_brier'] >= 0
+          assert s['metrics']['market_brier'] >= 0
+          print(s)
+          PY
+      - name: Publish V5 M02 safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 Probability Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/dashboard/wnba_v5_probability_predictions.csv \
+            data/dashboard/wnba_v5_probability_status.json \
+            data/warehouse/wnba_v5_probability_model.json
+          if git diff --cached --quiet; then
+            echo 'V5 M02 outputs already current'
+            exit 0
+          fi
+          git commit -m 'Build WNBA V5 M02 probability learner outputs'
+          if git push origin HEAD:main; then exit 0; fi
+          mkdir -p /tmp/v5m02
+          cp data/dashboard/wnba_v5_probability_predictions.csv /tmp/v5m02/
+          cp data/dashboard/wnba_v5_probability_status.json /tmp/v5m02/
+          cp data/warehouse/wnba_v5_probability_model.json /tmp/v5m02/
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/v5m02/wnba_v5_probability_predictions.csv data/dashboard/
+          cp /tmp/v5m02/wnba_v5_probability_status.json data/dashboard/
+          cp /tmp/v5m02/wnba_v5_probability_model.json data/warehouse/
+          git add data/dashboard/wnba_v5_probability_predictions.csv data/dashboard/wnba_v5_probability_status.json data/warehouse/wnba_v5_probability_model.json
+          git commit -m 'Build WNBA V5 M02 probability learner outputs'
+          git push origin HEAD:main

@@ -1,0 +1,66 @@
+name: WNBA V5 S3 M03 Forward Outcome Reconciler
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '27 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s3_m03_forward_reconciler.py'
+      - 'wnba_v5_m12_postgame_learning.py'
+      - 'data/dashboard/wnba_v5_historical_features.csv'
+      - 'data/history/wnba_v5_forward_predictions.jsonl'
+      - '.github/workflows/wnba-v5-s3-m03-forward-reconciler.yml'
+jobs:
+  v5-s3-m03:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 3 M03
+        run: python -m py_compile wnba_v5_s3_m03_forward_reconciler.py wnba_v5_m12_postgame_learning.py
+      - name: Reconcile certified forward outcomes
+        run: python wnba_v5_s3_m03_forward_reconciler.py
+      - name: Verify Sprint 3 M03
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=json.load(open('data/dashboard/wnba_v5_s3_m03_forward_grade.json'))
+          print(p)
+          assert p['module']=='S3-M03'
+          assert p['status'] in {'READY','WAITING_FOR_FORWARD_PREDICTIONS'}
+          assert p['immutable_prediction_fields_preserved'] is True
+          assert p['ledger_rows']==p['certified_rows']+p['pending_rows']
+          rows=list(csv.DictReader(open('data/dashboard/wnba_v5_certified_results.csv',encoding='utf-8')))
+          assert len(rows)==p['certified_rows']
+          q=json.load(open('data/dashboard/wnba_v5_pending_predictions.json'))
+          assert len(q.get('pending',[]))==p['pending_rows']
+          PY
+      - name: Publish Sprint 3 M03 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S3 M03 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/history/wnba_v5_forward_predictions.jsonl \
+                  data/dashboard/wnba_v5_forward_validation.csv \
+                  data/dashboard/wnba_v5_forward_metrics.json \
+                  data/dashboard/wnba_v5_learning_state.json \
+                  data/dashboard/wnba_v5_m12_report.json \
+                  data/dashboard/wnba_v5_s3_m03_forward_grade.json \
+                  data/dashboard/wnba_v5_pending_predictions.json \
+                  data/dashboard/wnba_v5_certified_results.csv
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 3 M03 forward reconciliation"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -1,0 +1,60 @@
+name: WNBA V5 S3 M04 Explicit CLV Engine
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '33 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s3_m04_explicit_clv.py'
+      - 'data/history/wnba_v5_forward_predictions.jsonl'
+      - 'data/dashboard/wnba_v5_closing_lines.csv'
+      - '.github/workflows/wnba-v5-s3-m04-explicit-clv.yml'
+
+jobs:
+  v5-s3-m04:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 3 M04
+        run: python -m py_compile wnba_v5_s3_m04_explicit_clv.py
+      - name: Build explicit CLV evidence
+        run: python wnba_v5_s3_m04_explicit_clv.py
+      - name: Verify Sprint 3 M04
+        run: |
+          python - <<'PY'
+          import csv, json
+          p=json.load(open('data/dashboard/wnba_v5_s3_m04_report.json'))
+          print(p)
+          assert p['module']=='S3-M04'
+          assert p['status'] in {'READY','WAITING_FOR_FORWARD_PREDICTIONS'}
+          assert 0.0 <= p['explicit_clv_coverage_pct'] <= 100.0
+          assert p['forward_predictions']==p['explicit_close_predictions']+p['missing_explicit_close_predictions']
+          rows=list(csv.DictReader(open('data/dashboard/wnba_v5_explicit_clv.csv',encoding='utf-8-sig')))
+          assert len(rows)==p['explicit_close_predictions']
+          for r in rows:
+              assert r['clv_evidence_class'] in {'EXPLICIT_SAME_BOOK_CLOSE','EXPLICIT_MARKET_CLOSE'}
+              assert r['close_snapshot_id']
+              assert float(r['close_minutes_to_tip']) >= 0
+          PY
+      - name: Publish Sprint 3 M04 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 Sprint 3 M04 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_explicit_clv.csv data/dashboard/wnba_v5_clv_summary.json data/dashboard/wnba_v5_market_edge.json data/dashboard/wnba_v5_s3_m04_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 3 M04 explicit CLV evidence"
+          git pull --rebase origin main
+          git push origin HEAD:main

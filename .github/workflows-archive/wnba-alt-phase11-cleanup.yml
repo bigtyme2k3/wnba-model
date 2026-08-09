@@ -1,0 +1,54 @@
+name: WNBA ALT Phase 11 Certification Cleanup
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_phase11_certification_cleanup.py'
+      - '.github/workflows/wnba-alt-phase11-cleanup.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-alt-phase11-cleanup
+  cancel-in-progress: false
+
+jobs:
+  phase11-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile Phase 11 cleanup
+        run: python -m py_compile wnba_alt_phase11_certification_cleanup.py
+      - name: Normalize duplicate semantics and validate discrepancy source
+        run: python wnba_alt_phase11_certification_cleanup.py
+      - name: Verify Phase 11 cleanup
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('data/dashboard/wnba_alt_phase11_cleanup.json').read_text())
+          assert r['certified_rows']+r['unresolved_rows']==1017
+          assert r['exact_observation_duplicate_excess']>=0
+          assert r['blocking_outcome_discrepancies']>=0
+          print(r)
+          PY
+      - name: Publish Phase 11 cleanup outputs
+        run: |
+          git config user.name 'WNBA ALT Phase 11 Cleanup Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_alt_phase11_cleanup.json data/dashboard/wnba_alt_archive_certification.json data/warehouse/wnba_alt_archive_certification.json
+          if git diff --cached --quiet; then
+            echo 'Phase 11 cleanup outputs already current'
+            exit 0
+          fi
+          git commit -m 'Normalize ALT Phase 11 certification semantics'
+          git pull --rebase origin main
+          git push origin HEAD:main

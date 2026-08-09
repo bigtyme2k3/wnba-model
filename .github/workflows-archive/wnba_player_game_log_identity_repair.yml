@@ -1,0 +1,152 @@
+name: WNBA Player Game Log Identity Repair
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba_player_game_log_identity_repair.yml'
+      - 'wnba_player_game_log_archive.py'
+      - 'wnba_player_game_log_backfill.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  repair-player-game-identities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compile repair stack
+        run: |
+          python -m py_compile \
+            wnba_player_game_log_archive.py \
+            wnba_player_game_log_backfill.py \
+            wnba_alt_performance_tracker.py \
+            wnba_alt_pending_diagnostics.py \
+            wnba_alt_schedule_audit.py \
+            wnba_alt_phase1_schedule_recovery.py \
+            wnba_alt_phase2_diagnostics.py
+
+      - name: Snapshot pre-repair cumulative archive
+        run: |
+          python wnba_player_game_log_archive.py snapshot
+          python - <<'PY'
+          import json
+          from collections import defaultdict
+          p=json.load(open('data/history/wnba_player_game_logs_before_build.json'))
+          rows=p.get('records') or []
+          legacy=defaultdict(set)
+          for r in rows:
+              rid=str(r.get('record_id') or '')
+              date=str(r.get('game_date') or '')[:10]
+              game=str(r.get('game') or '')
+              player=str(r.get('player') or '')
+              if rid:
+                  legacy[rid].add((date,game,player))
+          collisions={k:v for k,v in legacy.items() if len({x[0] for x in v if x[0]})>1}
+          print({'pre_repair_records':len(rows),'legacy_ids_spanning_multiple_dates':len(collisions)})
+          PY
+
+      - name: Rebuild 2026 verified boxscore player-games
+        run: |
+          python wnba_player_game_log_backfill.py --season 2026
+
+      - name: Merge with player-game-v2 identity
+        run: |
+          python wnba_player_game_log_archive.py merge
+
+      - name: Verify identity integrity
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          p=json.load(open('data/warehouse/wnba_player_game_logs.json'))
+          rows=p.get('records') or []
+          ids=[str(r.get('record_id') or '') for r in rows]
+          dup=[k for k,v in Counter(ids).items() if k and v>1]
+          undated=[r for r in rows if not str(r.get('game_date') or '').strip()]
+          summary=p.get('summary') or {}
+          print({
+              'records':len(rows),
+              'duplicate_record_ids':len(dup),
+              'undated_records':len(undated),
+              'identity_version':summary.get('archive_identity_version'),
+              'legacy_collisions_prevented':summary.get('archive_legacy_collisions_prevented'),
+          })
+          assert not dup, f'duplicate canonical record ids: {dup[:10]}'
+          assert summary.get('archive_identity_version') == 'player-game-v2', summary
+          PY
+
+      - name: Regrade ALT archive against repaired player-games
+        run: |
+          python wnba_alt_performance_tracker.py --grade
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_schedule_audit.py
+          python wnba_alt_phase1_schedule_recovery.py
+          python wnba_alt_performance_tracker.py --grade
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_schedule_audit.py
+          python wnba_alt_phase2_diagnostics.py
+
+      - name: Report repair impact
+        run: |
+          python - <<'PY'
+          import json
+          logs=json.load(open('data/warehouse/wnba_player_game_logs.json'))
+          perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
+          phase2=json.load(open('data/dashboard/wnba_alt_phase2_diagnostics.json'))
+          s=perf.get('summary') or {}
+          print({
+              'player_game_records':len(logs.get('records') or []),
+              'player_game_summary':logs.get('summary') or {},
+              'alt_archived':s.get('archived_candidates'),
+              'alt_graded':s.get('graded'),
+              'alt_pending':s.get('pending'),
+              'phase2_failure_reasons':phase2.get('failure_reason_counts') or {},
+          })
+          PY
+
+      - name: Publish repaired warehouse and ALT outputs
+        run: |
+          git config user.name "WNBA Identity Repair Bot"
+          git config user.email "actions@github.com"
+          bash scripts/atomic_generated_push.sh \
+            "Repair WNBA player-game identities and regrade ALT archive" \
+            'data/warehouse/wnba_player_game_logs.json' \
+            'data/dashboard/wnba_player_game_logs.json' \
+            'data/history/wnba_player_game_logs_before_build.json' \
+            'data/dashboard/wnba_alt_performance.json' \
+            'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_pending_diagnostics.json' \
+            'data/warehouse/wnba_alt_pending_diagnostics.json' \
+            'data/dashboard/wnba_alt_schedule_audit.json' \
+            'data/warehouse/wnba_alt_schedule_audit.json' \
+            'data/dashboard/wnba_alt_phase1_schedule_recovery.json' \
+            'data/warehouse/wnba_alt_phase1_schedule_recovery.json' \
+            'data/dashboard/wnba_alt_phase2_diagnostics.json' \
+            'data/dashboard/wnba_alt_phase2_diagnostics.csv' \
+            'data/warehouse/wnba_alt_phase2_diagnostics.json'
