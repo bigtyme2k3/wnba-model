@@ -9,6 +9,7 @@ on:
       - 'wnba_v5_m11_live_inference.py'
       - 'data/dashboard/wnba_v5_historical_features.csv'
       - 'data/dashboard/wnba_v5_m05_report.json'
+      - 'data/dashboard/wnba_v5_s3_m01_freshness.json'
       - 'data/warehouse/wnba_opportunity_rankings.json'
       - '.github/workflows/wnba-v5-m11-live-inference.yml'
 jobs:
@@ -38,10 +39,13 @@ jobs:
           p=json.load(open('data/dashboard/wnba_v5_m11_report.json'))
           print(p)
           assert p['module']=='V5-M11'
-          assert p['status'] in {'READY_SHADOW','STANDBY_NO_SCORABLE_ROWS'}
+          assert p['status'] in {'READY_SHADOW','STANDBY_NO_SCORABLE_ROWS','BLOCKED_STALE_SLATE'}
           assert p['research_champion']=='KNN'
           assert p['production_ready'] is False
           assert p['ranked_rows']==p['scored_rows']+p['unscored_rows']
+          if p['status']=='BLOCKED_STALE_SLATE':
+              assert p['scored_rows']==0
+              assert p['next_action']=='REFRESH_CURRENT_OPPORTUNITY_BOARD'
           PY
       - name: Publish V5 M11 safely
         run: |
