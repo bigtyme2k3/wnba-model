@@ -1,0 +1,63 @@
+name: WNBA V5 S4 M04 Rotation Intelligence
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '27 14 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s4_m04_rotation_intelligence.py'
+      - 'data/dashboard/wnba_v5_lineup_adjustments.csv'
+      - 'data/raw/boxscores_*.csv'
+      - '.github/workflows/wnba-v5-s4-m04-rotation-intelligence.yml'
+jobs:
+  v5-s4-m04:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 4 M04
+        run: python -m py_compile wnba_v5_s4_m04_rotation_intelligence.py
+      - name: Build rotation intelligence
+        run: python wnba_v5_s4_m04_rotation_intelligence.py
+      - name: Verify Sprint 4 M04
+        run: |
+          python - <<'PY'
+          import csv,json
+          p=json.load(open('data/dashboard/wnba_v5_s4_m04_report.json'))
+          print(p)
+          assert p['module']=='S4-M04'
+          assert p['status'] in {'READY','WAITING_FOR_M03_LINEUPS','WAITING_FOR_ROTATION_HISTORY'}
+          rows=list(csv.DictReader(open('data/dashboard/wnba_v5_rotation_intelligence.csv',encoding='utf-8-sig')))
+          assert len(rows)==p['rows']
+          assert p['rotation_ready_rows'] + p['missing_rotation_history_rows'] == p['rows']
+          assert sum(p['risk_bands'].values()) == p['rows']
+          for r in rows:
+              m=float(r['workload_multiplier'])
+              assert 0.95 <= m <= 1.05
+              assert r['injury_source_used'] in {'False','false','0'}
+              assert r['coach_intent_inferred'] in {'False','false','0'}
+              if r['rotation_status']=='READY':
+                  assert float(r['rotation_stability_score']) >= 0
+                  assert r['rotation_risk_band'] in {'STABLE','MODERATE','VOLATILE'}
+          PY
+      - name: Publish Sprint 4 M04 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S4 M04 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_rotation_intelligence.csv data/dashboard/wnba_v5_rotation_intelligence.json data/dashboard/wnba_v5_rotation_risk.json data/dashboard/wnba_v5_s4_m04_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 4 M04 rotation intelligence"
+          git pull --rebase origin main
+          git push origin HEAD:main
