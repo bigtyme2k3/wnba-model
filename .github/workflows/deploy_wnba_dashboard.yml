@@ -17,6 +17,10 @@ on:
       - 'patch_dashboard_v4_ui_freeze.py'
       - 'patch_dashboard_v4_ui_freeze_safe.py'
       - 'patch_dashboard_s19_m02.py'
+      - 'patch_dashboard_s19_m03.py'
+      - 'scripts/wnba_s19_m02_prop_source.py'
+      - 'scripts/wnba_s19_m02_predictions.py'
+      - 'scripts/wnba_s19_m03_dashboard_consumer.py'
       - 'patch_dashboard_alt_props_table.py'
       - 'patch_dashboard_alt_props_scores.py'
       - 'wnba_alt_streak_confidence.py'
@@ -32,6 +36,7 @@ on:
       - 'patch_dashboard_v4_remaining_season.py'
       - 'patch_dashboard_v4_alt_streaks_display.py'
       - 'patch_dashboard_v4_alt_ladders.py'
+      - 'wnba_results_grader.py'
       - '.github/workflows/deploy_wnba_dashboard.yml'
 
 permissions:
@@ -83,6 +88,10 @@ jobs:
             patch_dashboard_v4_ui_freeze.py \
             patch_dashboard_v4_ui_freeze_safe.py \
             patch_dashboard_s19_m02.py \
+            patch_dashboard_s19_m03.py \
+            scripts/wnba_s19_m02_prop_source.py \
+            scripts/wnba_s19_m02_predictions.py \
+            scripts/wnba_s19_m03_dashboard_consumer.py \
             patch_dashboard_alt_props_table.py \
             patch_dashboard_alt_props_scores.py \
             wnba_alt_streak_confidence.py \
@@ -94,7 +103,8 @@ jobs:
             patch_dashboard_alt_recovery_progress.py \
             patch_dashboard_game_performance.py \
             patch_dashboard_v4_alt_streaks_display.py \
-            patch_dashboard_v4_alt_ladders.py
+            patch_dashboard_v4_alt_ladders.py \
+            wnba_results_grader.py
 
       - name: Compile optional data renderers
         continue-on-error: true
@@ -158,7 +168,10 @@ jobs:
           python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot --analyze
 
       - name: Build complete dashboard artifact
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
+          set -e
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
 
@@ -192,66 +205,62 @@ jobs:
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
 
-          # Canonical runtime owns data only; it must never replace routed DOM.
           python patch_dashboard_canonical_runtime.py
           python patch_dashboard_games_focus.py
-
-          # Dedicated view renderers register before the final router.
           python patch_dashboard_sprint2_phase2.py
-
-          # UI Freeze remains navigation owner.
           python patch_dashboard_v4_ui_freeze_safe.py
 
-          # Sprint 19 M02 overrides only Games, Player Props, and Best Bets with synchronized V5 predictions.
+          # Prepare the exact current-slate sportsbook prop input BEFORE M02 rebuilds predictions.
+          python scripts/wnba_s19_m02_prop_source.py --date "$TARGET"
+          python player_points.py --date "$TARGET" --out data/raw
+          python scripts/wnba_s19_m02_predictions.py --date "$TARGET"
           python patch_dashboard_s19_m02.py
 
-          # ALT Props table, then scored-performance eligibility overlay.
+          # M03 owns Best Bets, Portfolio and Results from the canonical M02 source.
+          python scripts/wnba_s19_m03_dashboard_consumer.py --date "$TARGET"
+          python patch_dashboard_s19_m03.py
+
           python patch_dashboard_alt_props_table.py
           python patch_dashboard_alt_props_scores.py
 
-      - name: Verify Sprint 19 M02 dashboard routing
+      - name: Verify Sprint 19 M02-M03 dashboard routing
         run: |
           python - <<'PY'
-          import json, os, re
+          import json, os
           from pathlib import Path
           h = Path('docs/index.html').read_text(encoding='utf-8')
           required = [
-              'id="tabs"',
-              'canonical-daily-runtime-v1','canonical-daily-runtime-script','WNBA_CANONICAL_DAILY','WNBA_CANONICAL_PROPS',
-              'v4-ui-freeze-script','WNBA_V4_UI_FREEZE','games-injury-intelligence','ensureRoot','data-v4-router-root',
-              "['alt-props','ALT Props']", "['game-performance','Game Performance']",
-              "['remaining','Remaining Season']", "['health','Data Health']",
-              'canonicalAltProps', "view==='alt-props'", 'html=canonicalAltProps()',
-              'alt-props-table-script','WNBA_ALT_PROPS_TABLE','ALT Streaks',
-              'alt-props-score-overlay-script','WNBA_ALT_PROP_SCORES','performance_eligible_only','unscored_rows_visible',
-              'game-performance-route-script','fullGamePerformance','WNBA_GAMES_FOCUS_CLEANUP',
-              'sprint2-phase2-script','WNBA_SPRINT2_PHASE2','gamesV25','Prediction Intelligence',
-              's19-m02-script','WNBA_S19_M02','Player Props · Model Predictions','Best Bets · V5 Buy Signals','Injury-Adjusted Predictions'
+              'id="tabs"','canonical-daily-runtime-v1','v4-ui-freeze-script',
+              's19-m02-script','WNBA_S19_M02','Player Props · Model Predictions','Injury-Adjusted Predictions',
+              's19-m03-script','WNBA_S19_M03','Results · Canonical Grading','Best Bets · V5 Buy Signals','Portfolio · V5 Live Portfolio'
           ]
           missing=[x for x in required if x not in h]
           if missing:
-              raise SystemExit(f'Sprint 19 M02 verification failed; missing markers: {missing}')
-          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','alt-props-table-script','alt-props-score-overlay-script','sprint2-phase2-script','game-performance-route-script','s19-m02-script'):
+              raise SystemExit(f'Sprint 19 M02-M03 verification failed; missing markers: {missing}')
+          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','s19-m02-script','s19-m03-script'):
               if h.count(f'id="{marker}"') != 1:
                   raise SystemExit(f'{marker} duplicated or missing')
-
-          root_count = h.count('id="root"')
-          tabs_count = h.count('id="tabs"')
-          if root_count > 1:
-              raise SystemExit(f'Routed #root duplicated: {root_count}')
-          if tabs_count != 1:
-              raise SystemExit(f'Navigation #tabs duplicated or missing: {tabs_count}')
+          if h.count('id="root"') > 1:
+              raise SystemExit('Routed #root duplicated')
+          if h.count('id="tabs"') != 1:
+              raise SystemExit('Navigation #tabs duplicated or missing')
 
           target=os.environ['TARGET']
-          pred=json.loads(Path('data/dashboard/wnba_s19_m02_predictions.json').read_text())
-          audit=json.loads(Path('data/dashboard/wnba_s19_m02_prediction_audit.json').read_text())
-          assert pred.get('status')=='READY' and pred.get('target_date')==target, pred
-          assert audit.get('status')=='READY' and audit.get('target_date')==target, audit
-          assert audit.get('actionable_out_props')==0, audit
-          assert audit.get('phase2_best_bets_fallback_enabled') is False, audit
-          assert audit.get('player_prop_predictions',0)>0, audit
-          assert audit.get('player_props_with_model_projection')==audit.get('player_prop_predictions'), audit
-          print({'status':'PASS','sprint':19,'module':'M02','target':target,'games':len(pred.get('games') or []),'prop_predictions':len(pred.get('player_props') or []),'v5_best_bets':len(pred.get('best_bets') or []),'phase2_best_bets_fallback':False})
+          p2=json.loads(Path('data/dashboard/wnba_s19_m02_predictions.json').read_text())
+          a2=json.loads(Path('data/dashboard/wnba_s19_m02_prediction_audit.json').read_text())
+          p3=json.loads(Path('data/dashboard/wnba_s19_m03_dashboard_consumer.json').read_text())
+          a3=json.loads(Path('data/dashboard/wnba_s19_m03_dashboard_consumer_audit.json').read_text())
+          assert p2.get('status')=='READY' and p2.get('target_date')==target, p2
+          assert a2.get('status')=='READY' and a2.get('target_date')==target, a2
+          assert a2.get('actionable_out_props')==0, a2
+          assert a2.get('player_prop_predictions',0)>0, a2
+          assert a2.get('all_rendered_props_exact_current_slate') is True, a2
+          assert p3.get('status')=='READY' and p3.get('target_date')==target, p3
+          assert a3.get('status')=='READY' and a3.get('target_date')==target, a3
+          assert a3.get('all_consumers_single_source') is True, a3
+          assert a3.get('phase2_best_bets_fallback_enabled') is False, a3
+          assert a3.get('phase2_portfolio_fallback_enabled') is False, a3
+          print({'status':'PASS','sprint':19,'modules':['M02','M03'],'target':target,'games':a3.get('games'),'player_props':a3.get('player_props'),'best_bets':a3.get('best_bets'),'portfolio':a3.get('portfolio'),'results_status':a3.get('results_status')})
           PY
 
       - name: Configure GitHub Pages
