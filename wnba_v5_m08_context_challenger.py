@@ -11,6 +11,7 @@ from pathlib import Path
 from statistics import mean, pstdev
 
 SRC=Path('data/dashboard/wnba_v5_context_similarity.csv')
+M05_PRED=Path('data/dashboard/wnba_v5_m05_predictions.csv')
 M05=Path('data/dashboard/wnba_v5_m05_report.json')
 OUT=Path('data/dashboard/wnba_v5_context_challengers.csv')
 IMPORTANCE=Path('data/dashboard/wnba_v5_context_feature_importance.json')
@@ -46,7 +47,6 @@ def sigmoid(z):
     e=math.exp(max(z,-40)); return e/(1+e)
 
 def fit(rows,features):
-    # Baseline logit(KNN) is always included; missing context is median-imputed.
     med=[]
     for k in features:
         vals=[f(r.get(k)) for r in rows if f(r.get(k)) is not None]
@@ -89,8 +89,7 @@ def units(rows,ps):
     for r,p in zip(rows,ps):
         if p<0.5: continue
         o=f(r.get('american_odds'))
-        # M07 source has no odds; ROI is unavailable here unless odds are later joined.
-        if o is None: continue
+        if o is None or o==0: continue
         bets+=1; y=int(float(r.get('target_win') or 0)); wins+=y
         total += (100/abs(o) if o<0 else o/100) if y else -1
     return {'bets':bets,'wins':wins,'profit_units':round(total,4) if bets else None,'roi':round(total/bets,6) if bets else None}
@@ -101,38 +100,41 @@ def metrics(rows,ps):
 
 def main():
     rows=list(csv.DictReader(SRC.open(encoding='utf-8-sig',newline='')))
+    # Restore archived prices from the M05 prediction artifact by stable archive index.
+    odds_by_idx={}
+    if M05_PRED.exists():
+        for r in csv.DictReader(M05_PRED.open(encoding='utf-8-sig',newline='')):
+            odds_by_idx[str(r.get('archive_index'))]=r.get('american_odds')
+    for r in rows:r['american_odds']=odds_by_idx.get(str(r.get('archive_index')))
     rows.sort(key=lambda r:(r.get('game_date',''),r.get('game_id',''),int(float(r.get('archive_index') or 0))))
     if not rows: raise SystemExit('M08_INPUT_MISSING')
     baseline=[clamp(f(r.get('knn_probability'),0.5)) for r in rows]
-    predictions={'KNN_BASELINE':baseline}
-    final_models={}
+    predictions={'KNN_BASELINE':baseline}; final_models={}
     for name,features in FEATURE_SETS.items():
         ps=[]
         for i,r in enumerate(rows):
             if i<MIN_CONTEXT_TRAIN: ps.append(baseline[i]); continue
             m=fit(rows[:i],features); ps.append(pred(m,r))
         predictions[name]=ps; final_models[name]=fit(rows,features)
-    rankings=[]
-    base_m=metrics(rows,baseline)
+    rankings=[]; base_m=metrics(rows,baseline)
     for name,ps in predictions.items():
         m=metrics(rows,ps); m['model']=name; m['brier_lift_vs_knn']=round(base_m['brier']-m['brier'],6); m['logloss_lift_vs_knn']=round(base_m['log_loss']-m['log_loss'],6)
-        m['passes_core_gate']=bool(name!='KNN_BASELINE' and m['brier']<base_m['brier'] and m['log_loss']<base_m['log_loss'] and m['ece_5bin']<=base_m['ece_5bin'])
+        roi_ok=(base_m['roi'] is None or m['roi'] is None or m['roi']>=base_m['roi'])
+        m['passes_core_gate']=bool(name!='KNN_BASELINE' and m['brier']<base_m['brier'] and m['log_loss']<base_m['log_loss'] and m['ece_5bin']<=base_m['ece_5bin'] and roi_ok)
         rankings.append(m)
     rankings.sort(key=lambda x:(x['brier'],x['log_loss']))
-    champion=rankings[0]['model']
-    promoted=champion!='KNN_BASELINE' and rankings[0]['passes_core_gate']
-    fields=['archive_index','game_date','game_id','player','stat','side','target_win']+list(predictions.keys())
+    champion=rankings[0]['model']; promoted=champion!='KNN_BASELINE' and rankings[0]['passes_core_gate']
+    fields=['archive_index','game_date','game_id','player','stat','side','target_win','american_odds']+list(predictions.keys())
     OUT.parent.mkdir(parents=True,exist_ok=True)
     with OUT.open('w',encoding='utf-8',newline='') as h:
         w=csv.DictWriter(h,fieldnames=fields);w.writeheader()
-        for i,r in enumerate(rows):w.writerow({**{k:r.get(k) for k in fields[:7]},**{k:round(v[i],6) for k,v in predictions.items()}})
-    # Context coefficient magnitudes from the full-sample diagnostic fit; never used as OOS evidence.
+        for i,r in enumerate(rows):w.writerow({**{k:r.get(k) for k in fields[:8]},**{k:round(v[i],6) for k,v in predictions.items()}})
     imp={}
     for name,m in final_models.items():
         imp[name]=[{ 'feature':'KNN_LOGIT' if j==0 else m['features'][j-1], 'abs_standardized_weight':round(abs(m['w'][j+1]),6)} for j in range(len(m['features'])+1)]
         imp[name].sort(key=lambda x:x['abs_standardized_weight'],reverse=True)
     m05=json.loads(M05.read_text(encoding='utf-8')) if M05.exists() else {}
-    report={'version':'V5','module':'V5-M08','stage':'CONTEXT_AWARE_CHALLENGER_VALIDATION','status':'READY','evaluation_rows':len(rows),'minimum_context_train_rows':MIN_CONTEXT_TRAIN,'baseline':'KNN_BASELINE','baseline_metrics':base_m,'rankings':rankings,'research_champion':champion,'context_challenger_promoted':promoted,'promotion_note':'Research-only. A context challenger must improve Brier + log loss without worsening ECE; V4 production remains unchanged.','m05_research_champion':m05.get('research_champion'),'next_module':'V5-M09 Portfolio + Decision Optimization'}
+    report={'version':'V5','module':'V5-M08','stage':'CONTEXT_AWARE_CHALLENGER_VALIDATION','status':'READY','evaluation_rows':len(rows),'minimum_context_train_rows':MIN_CONTEXT_TRAIN,'baseline':'KNN_BASELINE','baseline_metrics':base_m,'rankings':rankings,'research_champion':champion,'context_challenger_promoted':promoted,'promotion_note':'Research-only. A context challenger must improve Brier + log loss without worsening ECE or ROI; V4 production remains unchanged.','m05_research_champion':m05.get('research_champion'),'next_module':'V5-M09 Portfolio + Decision Optimization'}
     VALID.write_text(json.dumps({'predictions_compared':list(predictions),'rankings':rankings},indent=2)+'\n',encoding='utf-8')
     IMPORTANCE.write_text(json.dumps({'diagnostic_only':True,'feature_weights':imp},indent=2)+'\n',encoding='utf-8')
     COMPARE.write_text(json.dumps({'baseline':base_m,'rankings':rankings,'champion':champion},indent=2)+'\n',encoding='utf-8')
