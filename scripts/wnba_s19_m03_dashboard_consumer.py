@@ -34,7 +34,8 @@ def build(target:str):
     if not games: raise SystemExit('M03 refuses dashboard with zero canonical games')
     if not props: raise SystemExit('M03 refuses dashboard with zero canonical player prop predictions')
     if any(str(r.get('target_date') or target)[:10]!=target for r in props): raise SystemExit('M03 found off-date Player Props')
-    if any(not r.get('model_projection') for r in props): raise SystemExit('M03 found Player Props without model projection')
+    # A valid projection may be exactly 0.0; reject only absent/null projections.
+    if any(r.get('model_projection') is None for r in props): raise SystemExit('M03 found Player Props without model projection')
     if any(str(r.get('injury_status') or '').upper() in {'OUT','DOUBTFUL'} and r.get('eligible') for r in props): raise SystemExit('M03 found actionable unavailable player')
 
     payload={
