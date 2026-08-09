@@ -1,8 +1,9 @@
 """V5-M10 live adaptive decision engine.
 
 Consumes the M09 research policy, current opportunity rankings, market movement,
-and the explicit M11 live V5 inference bridge. Generic V4 probabilities are never
-relabeled as V5.
+explicit M11 live V5 inference, and current injury intelligence. Generic V4
+probabilities are never relabeled as V5, and unavailable players can never
+become actionable.
 """
 from __future__ import annotations
 import csv,json,math
@@ -13,6 +14,7 @@ POLICY=Path('data/dashboard/wnba_v5_decision_engine.json')
 RANK=Path('data/warehouse/wnba_opportunity_rankings.json')
 MOVE=Path('data/dashboard/market_movement.json')
 INFER=Path('data/dashboard/wnba_v5_live_inference.json')
+INJURY=Path('data/dashboard/wnba_injury_intelligence.json')
 OUT_DEC=Path('data/dashboard/wnba_v5_live_decisions.json')
 OUT_ALERT=Path('data/dashboard/wnba_v5_alerts.json')
 OUT_REFRESH=Path('data/dashboard/wnba_v5_market_refresh.json')
@@ -27,7 +29,7 @@ def f(v,d=None):
         x=float(v);return x if math.isfinite(x) else d
     except Exception:return d
 
-def norm(v):return ' '.join(str(v or '').strip().lower().split())
+def norm(v):return ' '.join(str(v or '').strip().lower().replace('’',"'").split())
 def implied(o):
     o=f(o)
     if o is None or o==0:return None
@@ -75,6 +77,13 @@ def main():
     inferred=inference.get('scored',[]) if isinstance(inference,dict) else []
     iidx={str(x.get('ranking_key')):x for x in inferred if x.get('ranking_key')}
 
+    injury_payload=read_json(INJURY,{})
+    injury_date=str(injury_payload.get('target_date') or '')[:10]
+    injuries={}
+    for x in injury_payload.get('adjustments',[]) if isinstance(injury_payload,dict) else []:
+        player=norm(x.get('player'))
+        if player:injuries[player]=x
+
     min_ev=f(policy.get('minimum_ev'),0.02);max_bet=f(policy.get('max_bet_units'),0.5);max_daily=f(policy.get('max_daily_units'),5.0)
     decisions=[];alerts=[]
     for raw in rows:
@@ -86,17 +95,24 @@ def main():
             r['v5_confidence_score']=inf.get('confidence_score')
             r['v5_uncertainty_score']=inf.get('uncertainty_score')
             r['v5_probability_band']=inf.get('probability_band')
+        injury=injuries.get(norm(r.get('player')),{})
+        injury_status=str(injury.get('severity') or r.get('injury_status') or 'ACTIVE').upper()
         p,psrc=p5(r);o=odds(r);mp=implied(o);e=ev(p,o) if p is not None else None;m=midx.get(movement_key(r),{})
         move=f(m.get('total_directional_line_move'),0.0);steam=bool(m.get('steam_detected'));reverse=bool(m.get('reverse_line_movement'))
         state='UNSCORED'
-        if p is not None and o is not None:
+        blocked_reason=None
+        if injury_status in {'OUT','DOUBTFUL'}:
+            state='REMOVE';blocked_reason=f'{injury_status} injury status'
+        elif p is not None and o is not None:
             if e is None or e<=0:state='REMOVE'
             elif e<min_ev:state='WATCH'
             elif reverse:state='HOLD'
             elif steam and move>0:state='BUY_BEFORE_MOVE'
             elif e>=min_ev:state='BUY_NOW'
+        if injury_status in {'QUESTIONABLE','UNKNOWN'} and state in {'BUY_NOW','BUY_BEFORE_MOVE'}:
+            state='WATCH';blocked_reason=f'{injury_status} injury status limits action to WATCH'
         edge=None if p is None or mp is None else p-mp
-        d={'ranking_key':ranking_key(r),'date':r.get('date'),'player':r.get('player'),'game':r.get('game'),'market':r.get('market') or r.get('stat'),'side':r.get('side') or r.get('signal'),'line':f(r.get('best_line',r.get('line'))),'odds':o,'best_book':r.get('best_book'),'v5_probability':p,'probability_source':psrc,'v5_confidence_score':r.get('v5_confidence_score'),'v5_uncertainty_score':r.get('v5_uncertainty_score'),'v5_probability_band':r.get('v5_probability_band'),'market_probability':mp,'edge':edge,'expected_value':e,'movement':move,'steam':steam,'reverse_move':reverse,'decision_state':state,'research_only':True}
+        d={'ranking_key':ranking_key(r),'date':r.get('date'),'player':r.get('player'),'game':r.get('game'),'market':r.get('market') or r.get('stat'),'side':r.get('side') or r.get('signal'),'line':f(r.get('best_line',r.get('line'))),'odds':o,'best_book':r.get('best_book'),'v5_probability':p,'probability_source':psrc,'v5_confidence_score':r.get('v5_confidence_score'),'v5_uncertainty_score':r.get('v5_uncertainty_score'),'v5_probability_band':r.get('v5_probability_band'),'market_probability':mp,'edge':edge,'expected_value':e,'movement':move,'steam':steam,'reverse_move':reverse,'injury_status':injury_status,'injury_detail':injury.get('detail'),'projected_minutes':injury.get('projected_minutes'),'minutes_delta':injury.get('minutes_delta'),'injury_projection_factor':injury.get('projection_factor'),'injury_source':injury.get('source'),'injury_blocked_reason':blocked_reason,'decision_state':state,'research_only':True}
         decisions.append(d)
         if state in {'BUY_NOW','BUY_BEFORE_MOVE'}:alerts.append({'type':state,'player':d['player'],'market':d['market'],'side':d['side'],'ev':e,'message':'Research-only V5 shadow signal'})
         elif reverse and p is not None:alerts.append({'type':'REVERSE_MOVE','player':d['player'],'market':d['market'],'side':d['side'],'message':'Market moved against V5 direction'})
@@ -108,15 +124,20 @@ def main():
         if used+stake>max_daily:break
         y=dict(x);y['recommended_units']=stake;portfolio.append(y);used+=stake
     scored=sum(x['v5_probability'] is not None for x in decisions)
+    injury_blocked=sum(x.get('injury_status') in {'OUT','DOUBTFUL'} for x in decisions)
+    injury_limited=sum(x.get('injury_status') in {'QUESTIONABLE','UNKNOWN'} for x in decisions)
+    actionable_out=sum(x.get('injury_status') in {'OUT','DOUBTFUL'} and x.get('decision_state') in {'BUY_NOW','BUY_BEFORE_MOVE'} for x in decisions)
     status='READY_SHADOW' if scored else ('WAITING_FOR_M09' if not policy else 'STANDBY_NO_LIVE_V5_SCORES')
-    report={'version':'V5','module':'V5-M10','stage':'LIVE_ADAPTIVE_DECISION_ENGINE','status':status,'generated_at_utc':now,'ranked_rows':len(rows),'m11_inference_rows':len(inferred),'v5_scored_rows':scored,'actionable_rows':len(actionable),'portfolio_rows':len(portfolio),'portfolio_units':round(used,3),'alerts':len(alerts),'research_only':True,'production_ready':False,'safety_note':'Only explicit M11 v5_probability/knn_probability can activate V5 decisions. Generic V4 probabilities are never relabeled as V5.','next_module':'V5-M12 Post-Game Learning + Forward Validation'}
+    report={'version':'V5','module':'V5-M10','stage':'LIVE_ADAPTIVE_DECISION_ENGINE','status':status,'generated_at_utc':now,'ranked_rows':len(rows),'m11_inference_rows':len(inferred),'v5_scored_rows':scored,'actionable_rows':len(actionable),'portfolio_rows':len(portfolio),'portfolio_units':round(used,3),'alerts':len(alerts),'injury_target_date':injury_date,'injury_adjustments_available':len(injuries),'injury_blocked_rows':injury_blocked,'injury_limited_rows':injury_limited,'actionable_out_rows':actionable_out,'research_only':True,'production_ready':False,'safety_note':'Only explicit M11 V5 probabilities can activate decisions. OUT/DOUBTFUL players are removed; QUESTIONABLE/UNKNOWN players are capped at WATCH. Generic V4 probabilities are never relabeled as V5.','next_module':'V5-M12 Post-Game Learning + Forward Validation'}
+    if actionable_out:
+        raise SystemExit(f'INJURY SAFETY FAILURE: {actionable_out} unavailable rows remained actionable')
     OUT_DEC.parent.mkdir(parents=True,exist_ok=True)
     OUT_DEC.write_text(json.dumps({'decisions':decisions,'report':report},indent=2)+'\n',encoding='utf-8')
     OUT_ALERT.write_text(json.dumps({'generated_at_utc':now,'alerts':alerts},indent=2)+'\n',encoding='utf-8')
-    OUT_REFRESH.write_text(json.dumps({'generated_at_utc':now,'ranked_rows':len(rows),'movement_rows':len(markets),'m11_inference_rows':len(inferred),'v5_scored_rows':scored,'status':status},indent=2)+'\n',encoding='utf-8')
-    OUT_PORT.write_text(json.dumps({'generated_at_utc':now,'research_only':True,'portfolio':portfolio,'total_units':round(used,3)},indent=2)+'\n',encoding='utf-8')
-    OUT_BUY.write_text(json.dumps({'generated_at_utc':now,'signals':[x for x in decisions if x['decision_state'] in {'BUY_NOW','BUY_BEFORE_MOVE'}]},indent=2)+'\n',encoding='utf-8')
-    fields=['date','player','game','market','side','line','odds','v5_probability','market_probability','edge','expected_value','movement','steam','reverse_move','decision_state']
+    OUT_REFRESH.write_text(json.dumps({'generated_at_utc':now,'ranked_rows':len(rows),'movement_rows':len(markets),'m11_inference_rows':len(inferred),'v5_scored_rows':scored,'injury_target_date':injury_date,'injury_blocked_rows':injury_blocked,'status':status},indent=2)+'\n',encoding='utf-8')
+    OUT_PORT.write_text(json.dumps({'generated_at_utc':now,'research_only':True,'injury_target_date':injury_date,'portfolio':portfolio,'total_units':round(used,3)},indent=2)+'\n',encoding='utf-8')
+    OUT_BUY.write_text(json.dumps({'generated_at_utc':now,'injury_target_date':injury_date,'signals':[x for x in decisions if x['decision_state'] in {'BUY_NOW','BUY_BEFORE_MOVE'}]},indent=2)+'\n',encoding='utf-8')
+    fields=['date','player','game','market','side','line','odds','v5_probability','market_probability','edge','expected_value','movement','steam','reverse_move','injury_status','decision_state']
     with OUT_EV.open('w',encoding='utf-8',newline='') as h:
         w=csv.DictWriter(h,fieldnames=fields);w.writeheader();w.writerows([{k:x.get(k) for k in fields} for x in decisions])
     lfields=['date','player','game','market','side','line','movement','steam','reverse_move']
