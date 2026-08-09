@@ -17,6 +17,7 @@ on:
       - 'wnba_injury_intelligence.py'
       - 'wnba_injury_rotation_guard.py'
       - 'scripts/wnba_sprint2_phase2.py'
+      - 'scripts/wnba_s19_m02_predictions.py'
       - '.github/workflows/wnba_v5_injury_dashboard.yml'
   workflow_run:
     workflows:
@@ -66,9 +67,9 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Injury target: $TARGET"
 
-      - name: Validate injury and Sprint 19 M01 pipelines
+      - name: Validate Sprint 19 M01-M02 pipelines
         run: |
-          python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_injury_rotation_guard.py scripts/wnba_sprint2_phase2.py
+          python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_injury_rotation_guard.py scripts/wnba_sprint2_phase2.py scripts/wnba_s19_m02_predictions.py
 
       - name: Refresh official WNBA injury report
         run: |
@@ -151,6 +152,27 @@ jobs:
           print('SPRINT 19 M01 VERIFIED', audit)
           PY
 
+      - name: Build Sprint 19 M02 unified predictions
+        run: |
+          python scripts/wnba_s19_m02_predictions.py --date "$TARGET"
+
+      - name: Verify Sprint 19 M02 prediction synchronization
+        run: |
+          python - <<'PY'
+          import json, os
+          target=os.environ['TARGET']
+          p=json.load(open('data/dashboard/wnba_s19_m02_predictions.json'))
+          a=json.load(open('data/dashboard/wnba_s19_m02_prediction_audit.json'))
+          assert p.get('status') == 'READY' and p.get('target_date') == target, p
+          assert a.get('status') == 'READY' and a.get('target_date') == target, a
+          assert a.get('game_projection_after_injury_refresh') is True, a
+          assert a.get('actionable_out_props') == 0, a
+          assert a.get('phase2_best_bets_fallback_enabled') is False, a
+          assert a.get('player_prop_predictions',0) > 0, a
+          assert a.get('player_props_with_model_projection') == a.get('player_prop_predictions'), a
+          print('SPRINT 19 M02 VERIFIED', a)
+          PY
+
       - name: Verify Player Props injury integration
         run: |
           python - <<'PY'
@@ -194,12 +216,12 @@ jobs:
           print('PLAYER PROPS INJURY INTEGRATION VERIFIED', audit)
           PY
 
-      - name: Publish injury-adjusted Player Props and Game Cards safely
+      - name: Publish Sprint 19 M01-M02 outputs safely
         run: |
           git config user.name "WNBA Injury Intelligence Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Sprint 19 M01 refresh injury-aware game cards" \
+            "Sprint 19 M02 refresh unified injury-aware predictions" \
             'data/raw/injuries_today.csv' \
             'data/raw/injuries_status.json' \
             'data/raw/minute_projections.csv' \
@@ -208,4 +230,6 @@ jobs:
             'data/dashboard/wnba_injury_integration_audit.json' \
             'data/dashboard/wnba_master.json' \
             'data/dashboard/wnba_sprint2_phase2.json' \
-            'data/dashboard/wnba_s19_m01_game_injury_audit.json'
+            'data/dashboard/wnba_s19_m01_game_injury_audit.json' \
+            'data/dashboard/wnba_s19_m02_predictions.json' \
+            'data/dashboard/wnba_s19_m02_prediction_audit.json'
