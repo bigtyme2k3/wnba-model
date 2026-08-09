@@ -53,8 +53,10 @@ def build(target: str):
         "players": first_existing("data/dashboard/wnba_player_intelligence.json", "data/warehouse/wnba_player_intelligence.json"),
         "monte_carlo": first_existing("data/dashboard/wnba_monte_carlo_engine.json", "data/warehouse/wnba_monte_carlo_engine.json"),
         "market_engine": first_existing("data/dashboard/wnba_market_engine.json", "data/warehouse/wnba_market_engine.json"),
-        "portfolio_v2": first_existing("data/dashboard/wnba_portfolio_optimizer_v2.json", "data/warehouse/wnba_portfolio_optimizer_v2.json"),
-        "decision_final": first_existing("data/dashboard/wnba_decision_engine_final.json", "data/warehouse/wnba_decision_engine_final.json"),
+        "v5_decisions": first_existing("data/dashboard/wnba_v5_live_decisions.json"),
+        "v5_buy_signals": first_existing("data/dashboard/wnba_v5_buy_signals.json"),
+        "v5_portfolio": first_existing("data/dashboard/wnba_v5_live_portfolio.json"),
+        "injury_intelligence": first_existing("data/dashboard/wnba_injury_intelligence.json", "data/warehouse/wnba_injury_intelligence.json"),
         "history": first_existing("data/dashboard/wnba_historical_summary.json"),
         "learning": first_existing("data/dashboard/wnba_self_learning.json"),
         "phase5": first_existing("data/dashboard/wnba_phase5_learning.json", "data/warehouse/wnba_phase5_learning.json"),
@@ -68,9 +70,12 @@ def build(target: str):
         "game_predictions": first_existing("data/dashboard/wnba_game_predictions_ledger.json", "data/warehouse/wnba_game_predictions_ledger.json"),
     }
 
-    decision = bundle["decision_final"]
+    decision_payload = bundle["v5_decisions"]
+    decisions = decision_payload.get("decisions", []) if isinstance(decision_payload, dict) else []
+    decision_report = decision_payload.get("report", {}) if isinstance(decision_payload, dict) else {}
+    buy_signals = bundle["v5_buy_signals"].get("signals", []) or []
+    live_portfolio = bundle["v5_portfolio"].get("portfolio", []) or []
     consensus = bundle["consensus"]
-    portfolio = bundle["portfolio_v2"]
     health = bundle["source_health"]
     monte_carlo = bundle["monte_carlo"]
     market = bundle["market_engine"]
@@ -83,10 +88,13 @@ def build(target: str):
     alt = bundle["alt_performance"]
     game_perf = bundle["game_performance"]
 
-    top = (decision.get("top_decisions") or consensus.get("top_consensus") or [])[:20]
+    ranked = sorted(
+        [x for x in decisions if isinstance(x, dict)],
+        key=lambda x: (x.get("decision_state") in {"BUY_NOW", "BUY_BEFORE_MOVE"}, float(x.get("expected_value") or -999)),
+        reverse=True,
+    )
+    top = ranked[:20]
     sim_summary = monte_carlo.get("summary") or {}
-    portfolio_summary = portfolio.get("summary") or {}
-    decision_summary = decision.get("summary") or {}
     market_summary = market.get("summary") or {}
     health_summary = health.get("summary") or {}
     odds_summary = odds.get("summary") or {}
@@ -100,12 +108,24 @@ def build(target: str):
     game_summary = game_perf.get("summary") or {}
 
     bundle["terminal_summary"] = {
+        "live_decision_source": "wnba_v5_live_decisions.json",
+        "live_best_bets_source": "wnba_v5_buy_signals.json",
+        "live_portfolio_source": "wnba_v5_live_portfolio.json",
         "top_cards": top[:5],
-        "final_bets": decision_summary.get("bets", 0),
-        "final_leans": decision_summary.get("leans", 0),
-        "decision_rows": decision_summary.get("rows", len(decision.get("top_decisions") or [])),
-        "bet_count": (consensus.get("summary") or {}).get("bets", 0),
-        "lean_count": (consensus.get("summary") or {}).get("leans", 0),
+        "final_bets": len(buy_signals),
+        "final_leans": sum(1 for row in decisions if row.get("decision_state") in {"WATCH", "HOLD"}),
+        "decision_rows": len(decisions),
+        "bet_count": len(buy_signals),
+        "lean_count": sum(1 for row in decisions if row.get("decision_state") in {"WATCH", "HOLD"}),
+        "v5_status": decision_report.get("status"),
+        "v5_scored_rows": decision_report.get("v5_scored_rows", 0),
+        "v5_actionable_rows": decision_report.get("actionable_rows", len(buy_signals)),
+        "injury_target_date": decision_report.get("injury_target_date") or bundle["v5_portfolio"].get("injury_target_date") or bundle["injury_intelligence"].get("target_date"),
+        "injury_blocked_rows": decision_report.get("injury_blocked_rows", 0),
+        "injury_limited_rows": decision_report.get("injury_limited_rows", 0),
+        "actionable_out_rows": decision_report.get("actionable_out_rows", 0),
+        "portfolio_card_size": len(live_portfolio),
+        "portfolio_total_units": bundle["v5_portfolio"].get("total_units", 0.0),
         "source_ok": health_summary.get("ok_or_optional", 0),
         "source_total": health_summary.get("sources", 0),
         "source_degraded": health_summary.get("degraded_or_missing", 0),
@@ -123,8 +143,6 @@ def build(target: str):
         "mc_rows": sim_summary.get("rows", len(monte_carlo.get("top_simulations") or [])),
         "mc_prob_60_plus": sim_summary.get("prob_60_plus", 0),
         "mc_low_risk": sim_summary.get("low_risk", 0),
-        "portfolio_card_size": portfolio_summary.get("card_size", len(portfolio.get("recommended_card") or [])),
-        "portfolio_total_stake": portfolio_summary.get("total_stake", 0),
         "market_rows": market_summary.get("markets", market_summary.get("rows", 0)),
         "live_odds_rows": odds_summary.get("rows", 0),
         "team_spread_rows": odds_health_summary.get("spread_rows", 0),
