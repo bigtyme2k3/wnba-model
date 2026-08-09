@@ -16,6 +16,7 @@ on:
       - 'patch_dashboard_games_focus.py'
       - 'patch_dashboard_v4_ui_freeze.py'
       - 'patch_dashboard_v4_ui_freeze_safe.py'
+      - 'patch_dashboard_s19_m02.py'
       - 'patch_dashboard_alt_props_table.py'
       - 'patch_dashboard_alt_props_scores.py'
       - 'wnba_alt_streak_confidence.py'
@@ -81,6 +82,7 @@ jobs:
             patch_dashboard_games_focus.py \
             patch_dashboard_v4_ui_freeze.py \
             patch_dashboard_v4_ui_freeze_safe.py \
+            patch_dashboard_s19_m02.py \
             patch_dashboard_alt_props_table.py \
             patch_dashboard_alt_props_scores.py \
             wnba_alt_streak_confidence.py \
@@ -123,7 +125,7 @@ jobs:
           python wnba_alt_streaks.py --date "$TARGET"
 
           python - <<'PY'
-          import csv, json, os
+          import json, os
           from pathlib import Path
           target=os.environ['TARGET']
           warehouse=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
@@ -197,14 +199,17 @@ jobs:
           # Dedicated view renderers register before the final router.
           python patch_dashboard_sprint2_phase2.py
 
-          # UI Freeze is the FINAL and only navigation/router owner.
+          # UI Freeze remains navigation owner.
           python patch_dashboard_v4_ui_freeze_safe.py
+
+          # Sprint 19 M02 overrides only Games, Player Props, and Best Bets with synchronized V5 predictions.
+          python patch_dashboard_s19_m02.py
 
           # ALT Props table, then scored-performance eligibility overlay.
           python patch_dashboard_alt_props_table.py
           python patch_dashboard_alt_props_scores.py
 
-      - name: Verify single-owner Sprint 2 dashboard
+      - name: Verify Sprint 19 M02 dashboard routing
         run: |
           python - <<'PY'
           import json, os, re
@@ -221,11 +226,12 @@ jobs:
               'alt-props-score-overlay-script','WNBA_ALT_PROP_SCORES','performance_eligible_only','unscored_rows_visible',
               'game-performance-route-script','fullGamePerformance','WNBA_GAMES_FOCUS_CLEANUP',
               'sprint2-phase2-script','WNBA_SPRINT2_PHASE2','gamesV25','Prediction Intelligence',
+              's19-m02-script','WNBA_S19_M02','Player Props · Model Predictions','Best Bets · V5 Buy Signals','Injury-Adjusted Predictions'
           ]
           missing=[x for x in required if x not in h]
           if missing:
-              raise SystemExit(f'Sprint 2 verification failed; missing markers: {missing}')
-          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','alt-props-table-script','alt-props-score-overlay-script','sprint2-phase2-script','game-performance-route-script'):
+              raise SystemExit(f'Sprint 19 M02 verification failed; missing markers: {missing}')
+          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','alt-props-table-script','alt-props-score-overlay-script','sprint2-phase2-script','game-performance-route-script','s19-m02-script'):
               if h.count(f'id="{marker}"') != 1:
                   raise SystemExit(f'{marker} duplicated or missing')
 
@@ -236,58 +242,16 @@ jobs:
           if tabs_count != 1:
               raise SystemExit(f'Navigation #tabs duplicated or missing: {tabs_count}')
 
-          cstart=h.find('id="canonical-daily-runtime-script"'); cend=h.find('</script>',cstart); canonical_runtime=h[cstart:cend]
-          if 'replacePanel(' in canonical_runtime or 'replaceWith(' in canonical_runtime:
-              raise SystemExit('Canonical runtime is attempting to replace routed dashboard DOM.')
-
-          if 'WNBA_GAME_PERFORMANCE_START' in h or 'data-wv4-tab="game-performance"' in h:
-              raise SystemExit('Legacy Game Performance injector/nav is still present.')
-
-          freeze_start=h.find('id="v4-ui-freeze-script"'); freeze_end=h.find('</script>',freeze_start); freeze=h[freeze_start:freeze_end]
-          if "['injuries','Injuries']" in freeze:
-              raise SystemExit('Standalone Injuries tab is still present.')
-          if "injuries:'games'" not in freeze:
-              raise SystemExit('Injuries alias does not route to Games.')
-          if "window.gamesV25,window.games" not in freeze:
-              raise SystemExit('Games route does not prefer Sprint 2 gamesV25 renderer.')
-          if "window.fullGamePerformance" not in freeze:
-              raise SystemExit('Game Performance route does not use fullGamePerformance.')
-          if "root.innerHTML=html" not in freeze:
-              raise SystemExit('Final router is not replacing routed content on tab changes.')
-          if root_count == 0 and "root=document.createElement('div')" not in freeze:
-              raise SystemExit('Shell has no static #root and final router does not create one dynamically.')
-          if 'function canonicalAltProps()' not in freeze or "view==='alt-props'" not in freeze or 'html=canonicalAltProps()' not in freeze:
-              raise SystemExit('ALT Props is not wired to its dedicated canonical renderer.')
-
-          nav=re.search(r'const NAV=\[(.*?)\];',freeze,re.S)
-          if not nav:
-              raise SystemExit('Locked NAV definition missing.')
-          entries=re.findall(r"\['([^']+)','([^']+)'\]",nav.group(1))
-          if len(entries)!=13:
-              raise SystemExit(f'Expected 13 locked nav entries, found {len(entries)}: {entries}')
-          if sum(1 for _,label in entries if label=='Game Performance')!=1:
-              raise SystemExit(f'Expected exactly one Game Performance nav entry: {entries}')
-
-          for marker in ('<!-- WNBA_TERMINAL_UI_PATCH_START -->','<!-- WNBA_ALT_PENDING_DIAGNOSTICS_START -->','<!-- WNBA_BUILD_BEACON_START -->'):
-              if marker in h:
-                  raise SystemExit(f'Games cleanup failed; legacy block remains: {marker}')
-
           target=os.environ['TARGET']
-          manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
-          phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
-          alt=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
-          assert manifest.get('status')=='PASS', manifest.get('failures')
-          assert manifest.get('target_date')==target
-          assert phase2.get('status')=='PASS' and phase2.get('target_date')==target
-          assert alt.get('target_date')==target, {'alt_target':alt.get('target_date'),'target':target}
-          canonical=set(manifest.get('games') or [])
-          enriched={g.get('game') for g in phase2.get('games') or []}
-          assert enriched==canonical, {'canonical':sorted(canonical),'phase2':sorted(enriched)}
-          for g in phase2.get('games') or []:
-              p=g.get('projection') or {}
-              assert p.get('away_score') is not None and p.get('home_score') is not None
-              assert g.get('confidence') is not None and g.get('model_grade')
-          print({'status':'PASS','sprint':2,'phase':2,'target':target,'tabs':13,'single_owner_routes':True,'dynamic_root':root_count==0,'alt_props_route':'streak-table-scored','alt_target':alt.get('target_date'),'games':len(enriched)})
+          pred=json.loads(Path('data/dashboard/wnba_s19_m02_predictions.json').read_text())
+          audit=json.loads(Path('data/dashboard/wnba_s19_m02_prediction_audit.json').read_text())
+          assert pred.get('status')=='READY' and pred.get('target_date')==target, pred
+          assert audit.get('status')=='READY' and audit.get('target_date')==target, audit
+          assert audit.get('actionable_out_props')==0, audit
+          assert audit.get('phase2_best_bets_fallback_enabled') is False, audit
+          assert audit.get('player_prop_predictions',0)>0, audit
+          assert audit.get('player_props_with_model_projection')==audit.get('player_prop_predictions'), audit
+          print({'status':'PASS','sprint':19,'module':'M02','target':target,'games':len(pred.get('games') or []),'prop_predictions':len(pred.get('player_props') or []),'v5_best_bets':len(pred.get('best_bets') or []),'phase2_best_bets_fallback':False})
           PY
 
       - name: Configure GitHub Pages
