@@ -1,16 +1,20 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
 from datetime import datetime, timezone
 from pathlib import Path
 
 DASH = Path('data/dashboard')
+RAW = Path('data/raw')
 MASTER = DASH / 'wnba_master.json'
 GAMES = DASH / 'wnba_sprint2_phase2.json'
 INJURY = DASH / 'wnba_injury_intelligence.json'
 BUY = DASH / 'wnba_v5_buy_signals.json'
+PORTFOLIO = DASH / 'wnba_v5_live_portfolio.json'
+PROP_PRED = RAW / 'player_points_today.csv'
 OUT = DASH / 'wnba_s19_m02_predictions.json'
 AUDIT = DASH / 'wnba_s19_m02_prediction_audit.json'
 
@@ -20,6 +24,16 @@ def load(path: Path, default):
         return json.loads(path.read_text(encoding='utf-8'))
     except Exception:
         return default
+
+
+def read_csv(path: Path):
+    if not path.exists():
+        return []
+    try:
+        with path.open(encoding='utf-8', newline='') as f:
+            return list(csv.DictReader(f))
+    except Exception:
+        return []
 
 
 def f(value, default=None):
@@ -39,13 +53,36 @@ def first(row, *keys):
 
 
 def norm(value):
-    return ' '.join(str(value or '').strip().lower().split())
+    return ' '.join(str(value or '').strip().lower().replace('’', "'").split())
 
 
-def side_from_edge(edge: float | None, threshold: float = 0.5):
-    if edge is None or abs(edge) < threshold:
-        return 'PASS'
-    return 'OVER' if edge > 0 else 'UNDER'
+def boolish(value, default=False):
+    if isinstance(value, bool):
+        return value
+    if value is None or value == '':
+        return default
+    return str(value).strip().lower() in {'1', 'true', 'yes', 'y'}
+
+
+def confidence_pct(row):
+    p = f(first(row, 'model_prob', 'probability'))
+    if p is not None:
+        return round((p * 100.0) if p <= 1.0 else p, 1)
+    label = str(first(row, 'conf', 'confidence') or '').upper()
+    return {'HIGH': 80.0, 'MED': 65.0, 'MEDIUM': 65.0, 'LOW': 50.0}.get(label)
+
+
+def current_rows(payload, target):
+    rows = payload.get('rows') or payload.get('signals') or payload.get('buy_signals') or payload.get('bets') or payload.get('portfolio') or payload.get('allocations') or []
+    top_target = str(payload.get('target_date') or payload.get('date') or '')[:10]
+    if top_target and top_target != target:
+        return []
+    out = []
+    for row in rows:
+        row_target = str(row.get('target_date') or row.get('date') or target)[:10]
+        if row_target == target:
+            out.append(dict(row))
+    return out
 
 
 def build(target: str):
@@ -53,6 +90,7 @@ def build(target: str):
     games = load(GAMES, {})
     injury = load(INJURY, {})
     buy = load(BUY, {})
+    portfolio = load(PORTFOLIO, {})
 
     for name, payload in [('master', master), ('games', games), ('injury', injury)]:
         actual = str(payload.get('target_date') or '')[:10]
@@ -67,6 +105,7 @@ def build(target: str):
         raise SystemExit('Game projections are older than injury intelligence')
 
     current_games = []
+    game_names = set()
     for row in games.get('games', []) or []:
         item = dict(row)
         context = item.get('injury_context') or {}
@@ -74,103 +113,134 @@ def build(target: str):
             raise SystemExit(f"Stale injury context on game {item.get('game')}")
         item['prediction_source'] = 'sprint19_m01_injury_aware_game_projection'
         current_games.append(item)
+        if item.get('game'):
+            game_names.add(str(item['game']))
 
-    players = {norm(p.get('player')): p for p in master.get('players', []) or [] if p.get('player')}
+    adjustments = {norm(a.get('player')): a for a in injury.get('adjustments', []) or [] if a.get('player')}
+    prop_source = read_csv(PROP_PRED)
+    if not prop_source:
+        raise SystemExit('Current player_points_today.csv is missing or empty; refusing to reuse stale master prop rows')
+
     prop_rows = []
+    off_slate = []
     missing_projection = []
     out_actionable = []
 
-    for row in master.get('props', []) or []:
-        item = dict(row)
-        player = str(item.get('player') or '')
-        stat = str(first(item, 'stat', 'market', 'prop_type') or '').upper()
-        line = f(first(item, 'line', 'market_line', 'consensus_line', 'best_line'))
-        projection = f(first(item, 'projection', 'proj', 'model_projection', 'projected_value'))
-        if projection is None and line is not None:
-            old_edge = f(item.get('edge'))
-            if old_edge is not None:
-                projection = round(line + old_edge, 3)
+    for row in prop_source:
+        game = str(row.get('game') or '').strip()
+        if not game or game not in game_names:
+            off_slate.append({'player': row.get('player'), 'game': game, 'stat': row.get('stat')})
+            continue
+
+        player = str(row.get('player') or '')
+        stat = str(first(row, 'stat', 'market', 'prop_type') or '').upper()
+        line = f(first(row, 'line', 'market_line', 'consensus_line', 'best_line'))
+        projection = f(first(row, 'pred', 'projection', 'proj', 'model_projection', 'projected_value'))
         if projection is None or line is None:
             missing_projection.append({'player': player, 'stat': stat, 'line': line, 'projection': projection})
             continue
 
+        adj = adjustments.get(norm(player))
+        injury_status = str((adj or {}).get('severity') or row.get('injury_status') or 'CLEAR').upper()
+        projection_pre_injury = projection
+        projected_minutes = None
+        minutes_delta = None
+        injury_adjusted = False
+        injury_detail = None
+        injury_factor = None
+
+        if adj:
+            injury_detail = adj.get('detail')
+            injury_factor = f(adj.get('projection_factor'), 1.0)
+            projected_minutes = adj.get('projected_minutes')
+            minutes_delta = adj.get('minutes_delta')
+            injury_adjusted = True
+            # player_points already applies direct QUESTIONABLE/PROBABLE availability.
+            # Only beneficiary redistribution is layered here to avoid double counting.
+            if injury_status == 'BENEFICIARY' and injury_factor is not None:
+                projection = round(projection * injury_factor, 2)
+
         edge = round(projection - line, 2)
-        recommendation = side_from_edge(edge)
-        confidence = f(first(item, 'confidence', 'final_score', 'model_confidence'))
-        eligible = bool(item.get('eligible', item.get('eligible_for_bet', True)))
-        injury_status = str(item.get('injury_status') or '').upper()
-        if injury_status in {'OUT', 'DOUBTFUL'} or not eligible:
+        raw_signal = str(row.get('signal') or '').upper()
+        recommendation = raw_signal if raw_signal in {'OVER', 'UNDER', 'PASS'} else ('OVER' if edge >= 0.35 else 'UNDER' if edge <= -0.35 else 'PASS')
+        eligible = boolish(row.get('is_active'), recommendation != 'PASS') and recommendation != 'PASS'
+
+        if injury_status in {'OUT', 'DOUBTFUL'}:
             recommendation = 'PASS'
             eligible = False
-        elif injury_status in {'QUESTIONABLE', 'UNKNOWN'} and recommendation != 'PASS':
-            # Keep the model direction visible while explicitly marking it non-actionable.
+        elif injury_status in {'QUESTIONABLE', 'UNKNOWN'}:
             eligible = False
 
-        if injury_status in {'OUT', 'DOUBTFUL'} and recommendation != 'PASS':
+        if injury_status in {'OUT', 'DOUBTFUL'} and eligible:
             out_actionable.append(player)
 
-        profile = players.get(norm(player), {})
         prop_rows.append({
             'target_date': target,
             'player': player,
-            'team': item.get('team'),
-            'game': item.get('game'),
+            'team': row.get('team'),
+            'game': game,
             'stat': stat,
             'line': line,
             'model_projection': round(projection, 2),
+            'projection_pre_injury': round(projection_pre_injury, 2),
             'edge': edge,
             'recommendation': recommendation,
-            'confidence': confidence,
-            'eligible': eligible and recommendation != 'PASS',
-            'best_over_book': item.get('best_over_book'),
-            'best_over_price': item.get('best_over_price'),
-            'best_under_book': item.get('best_under_book'),
-            'best_under_price': item.get('best_under_price'),
-            'projected_minutes': item.get('projected_minutes'),
-            'minutes_delta': item.get('minutes_delta'),
-            'injury_status': item.get('injury_status'),
-            'injury_adjusted': bool(item.get('injury_adjusted')),
-            'injury_projection_factor': item.get('injury_projection_factor'),
-            'injury_detail': item.get('injury_detail'),
-            'roll5_pts': profile.get('roll5_pts'),
-            'roll5_reb': profile.get('roll5_reb'),
-            'roll5_ast': profile.get('roll5_ast'),
-            'roll5_mpg': profile.get('roll5_mpg'),
-            'prediction_source': 'injury_adjusted_master_prop_projection',
+            'confidence': confidence_pct(row),
+            'confidence_label': row.get('conf'),
+            'eligible': eligible,
+            'best_over_book': row.get('best_over_book') or row.get('book_over'),
+            'best_over_price': row.get('over_price'),
+            'best_under_book': row.get('best_under_book') or row.get('book_under'),
+            'best_under_price': row.get('under_price'),
+            'projected_minutes': projected_minutes,
+            'minutes_delta': minutes_delta,
+            'injury_status': injury_status,
+            'injury_adjusted': injury_adjusted,
+            'injury_projection_factor': injury_factor,
+            'injury_detail': injury_detail,
+            'last5_hit': row.get('last5_hit'),
+            'last10_hit': row.get('last10_hit'),
+            'role_score': row.get('role_score'),
+            'minutes_trend': row.get('minutes_trend'),
+            'points_trend': row.get('points_trend'),
+            'prediction_source': 'current_player_points_v5_plus_current_injury_intelligence',
         })
 
     if out_actionable:
         raise SystemExit(f'Unavailable players remain actionable: {sorted(set(out_actionable))}')
     if not prop_rows:
-        raise SystemExit('No current model-backed Player Props predictions were generated')
+        raise SystemExit(f'No exact current-slate Player Props predictions generated; off_slate={len(off_slate)}')
+    if any(r.get('game') not in game_names for r in prop_rows):
+        raise SystemExit('Off-slate Player Props escaped exact-game guard')
 
-    buy_target = str(buy.get('target_date') or buy.get('date') or '')[:10]
-    buy_rows = buy.get('rows') or buy.get('signals') or buy.get('buy_signals') or buy.get('bets') or []
-    current_buy = []
-    if buy_target == target:
-        current_buy = [dict(r) for r in buy_rows if str(r.get('date') or r.get('target_date') or target)[:10] == target]
+    current_buy = current_rows(buy, target)
+    current_portfolio = current_rows(portfolio, target)
 
     payload = {
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
         'target_date': target,
-        'schema_version': 'sprint19-m02-unified-predictions-v1',
+        'schema_version': 'sprint19-m02-unified-predictions-v2',
         'status': 'READY',
         'source_policy': {
             'games': 'data/dashboard/wnba_sprint2_phase2.json',
-            'player_props': 'injury-adjusted data/dashboard/wnba_master.json props',
+            'player_props': 'data/raw/player_points_today.csv exact current-slate game keys + current injury intelligence',
             'best_bets': 'data/dashboard/wnba_v5_buy_signals.json only; no Phase 2 fallback',
+            'portfolio': 'data/dashboard/wnba_v5_live_portfolio.json only; no Phase 2 fallback',
         },
         'injury_generated_at_utc': injury_stamp,
         'games_generated_at_utc': game_stamp,
         'games': current_games,
         'player_props': prop_rows,
         'best_bets': current_buy,
+        'portfolio': current_portfolio,
         'summary': {
             'games': len(current_games),
             'player_prop_predictions': len(prop_rows),
             'player_props_injury_adjusted': sum(bool(r.get('injury_adjusted')) for r in prop_rows),
             'actionable_player_props': sum(bool(r.get('eligible')) for r in prop_rows),
             'v5_best_bets': len(current_buy),
+            'v5_portfolio_rows': len(current_portfolio),
+            'off_slate_prop_rows_rejected': len(off_slate),
             'missing_projection_rows_skipped': len(missing_projection),
         },
     }
@@ -187,9 +257,14 @@ def build(target: str):
         'player_props_with_model_projection': sum(r.get('model_projection') is not None for r in prop_rows),
         'player_props_injury_adjusted': sum(bool(r.get('injury_adjusted')) for r in prop_rows),
         'actionable_out_props': len(out_actionable),
+        'off_slate_prop_rows_rejected': len(off_slate),
+        'all_rendered_props_exact_current_slate': all(r.get('game') in game_names for r in prop_rows),
         'best_bets_source': 'wnba_v5_buy_signals.json',
         'best_bets_current_rows': len(current_buy),
         'phase2_best_bets_fallback_enabled': False,
+        'portfolio_source': 'wnba_v5_live_portfolio.json',
+        'portfolio_current_rows': len(current_portfolio),
+        'phase2_portfolio_fallback_enabled': False,
         'missing_projection_rows_skipped': len(missing_projection),
     }
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
