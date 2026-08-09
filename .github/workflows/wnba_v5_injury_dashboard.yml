@@ -16,6 +16,7 @@ on:
       - 'scrape_injuries.py'
       - 'wnba_injury_intelligence.py'
       - 'wnba_injury_rotation_guard.py'
+      - 'scripts/wnba_sprint2_phase2.py'
       - '.github/workflows/wnba_v5_injury_dashboard.yml'
   workflow_run:
     workflows:
@@ -65,9 +66,9 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Injury target: $TARGET"
 
-      - name: Validate existing injury pipeline
+      - name: Validate injury and Sprint 19 M01 pipelines
         run: |
-          python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_injury_rotation_guard.py
+          python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_injury_rotation_guard.py scripts/wnba_sprint2_phase2.py
 
       - name: Refresh official WNBA injury report
         run: |
@@ -99,6 +100,56 @@ jobs:
         run: |
           python wnba_injury_intelligence.py --date "$TARGET"
           python wnba_injury_rotation_guard.py
+
+      - name: Rebuild Sprint 19 M01 injury-aware game projections
+        run: |
+          python scripts/wnba_sprint2_phase2.py --date "$TARGET"
+
+      - name: Verify Sprint 19 M01 game projection freshness
+        run: |
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          def dt(value):
+              return datetime.fromisoformat(str(value).replace('Z','+00:00'))
+
+          target=os.environ['TARGET']
+          injury=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
+          games=json.load(open('data/dashboard/wnba_sprint2_phase2.json'))
+          assert injury.get('target_date') == target, injury.get('target_date')
+          assert games.get('target_date') == target, games.get('target_date')
+          assert games.get('schema_version') == 'sprint19-m01-injury-aware-games-v1', games.get('schema_version')
+
+          injury_stamp=injury.get('generated_at_utc') or injury.get('generated_at')
+          game_stamp=games.get('generated_at_utc')
+          assert injury_stamp and game_stamp, {'injury':injury_stamp,'games':game_stamp}
+          assert dt(game_stamp) >= dt(injury_stamp), {'injury':injury_stamp,'games':game_stamp}
+
+          rows=games.get('games',[]) or []
+          assert rows, 'No current-slate game cards generated'
+          assert all((r.get('injury_context') or {}).get('fresh') is True for r in rows), 'A game card is missing fresh injury context'
+          assert all((r.get('injury_context') or {}).get('target_date') == target for r in rows), 'Game injury target mismatch'
+
+          summary=games.get('summary',{}) or {}
+          audit={
+              'generated_at_utc':datetime.now(timezone.utc).isoformat(),
+              'target_date':target,
+              'status':'READY',
+              'module':'SPRINT19-M01',
+              'games':len(rows),
+              'injury_context_games':summary.get('injury_context_games',0),
+              'injury_adjusted_games':summary.get('injury_adjusted_games',0),
+              'listed_injuries_on_slate':summary.get('listed_injuries_on_slate',0),
+              'injury_generated_at_utc':injury_stamp,
+              'game_projection_generated_at_utc':game_stamp,
+              'projection_after_injury_refresh':True,
+              'source':'existing_phase2_game_engine_plus_current_injury_intelligence'
+          }
+          Path('data/dashboard/wnba_s19_m01_game_injury_audit.json').write_text(json.dumps(audit,indent=2)+'\n')
+          print('SPRINT 19 M01 VERIFIED', audit)
+          PY
 
       - name: Verify Player Props injury integration
         run: |
@@ -143,16 +194,18 @@ jobs:
           print('PLAYER PROPS INJURY INTEGRATION VERIFIED', audit)
           PY
 
-      - name: Publish injury-adjusted Player Props data safely
+      - name: Publish injury-adjusted Player Props and Game Cards safely
         run: |
           git config user.name "WNBA Injury Intelligence Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Apply current injuries to Player Props" \
+            "Sprint 19 M01 refresh injury-aware game cards" \
             'data/raw/injuries_today.csv' \
             'data/raw/injuries_status.json' \
             'data/raw/minute_projections.csv' \
             'data/dashboard/wnba_injury_intelligence.json' \
             'data/warehouse/wnba_injury_intelligence.json' \
             'data/dashboard/wnba_injury_integration_audit.json' \
-            'data/dashboard/wnba_master.json'
+            'data/dashboard/wnba_master.json' \
+            'data/dashboard/wnba_sprint2_phase2.json' \
+            'data/dashboard/wnba_s19_m01_game_injury_audit.json'
