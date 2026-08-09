@@ -1,24 +1,71 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
 from pathlib import Path
 
 HTML = Path('docs/index.html')
 DATA = Path('data/dashboard/wnba_s19_m02_predictions.json')
+AUDIT = Path('data/dashboard/wnba_s19_m02_prediction_audit.json')
+BUILDER = Path('scripts/wnba_s19_m02_predictions.py')
 START = '<!-- SPRINT19_M02_PREDICTION_UI_START -->'
 END = '<!-- SPRINT19_M02_PREDICTION_UI_END -->'
+
+
+def ensure_predictions():
+    target = str(os.environ.get('TARGET') or '').strip()
+    if not target:
+        proc = subprocess.run(['python', 'active_slate_date.py'], capture_output=True, text=True)
+        if proc.returncode == 0:
+            target = proc.stdout.strip().splitlines()[-1].strip()
+    if not target:
+        raise SystemExit('Sprint 19 M02 target date unavailable')
+
+    needs_build = not DATA.exists() or not AUDIT.exists()
+    if not needs_build:
+        try:
+            payload = json.loads(DATA.read_text(encoding='utf-8'))
+            audit = json.loads(AUDIT.read_text(encoding='utf-8'))
+            needs_build = (
+                payload.get('status') != 'READY'
+                or audit.get('status') != 'READY'
+                or str(payload.get('target_date') or '')[:10] != target
+                or str(audit.get('target_date') or '')[:10] != target
+            )
+        except Exception:
+            needs_build = True
+
+    if needs_build:
+        if not BUILDER.exists():
+            raise SystemExit(f'Sprint 19 M02 builder missing: {BUILDER}')
+        print({'status': 'BUILDING', 'module': 'SPRINT19-M02', 'target_date': target, 'reason': 'missing_or_stale_prediction_artifact'})
+        subprocess.run(['python', str(BUILDER), '--date', target], check=True)
+
+    if not DATA.exists() or not AUDIT.exists():
+        raise SystemExit('Sprint 19 M02 prediction artifacts missing after rebuild')
+
+    payload = json.loads(DATA.read_text(encoding='utf-8'))
+    audit = json.loads(AUDIT.read_text(encoding='utf-8'))
+    if payload.get('status') != 'READY' or audit.get('status') != 'READY':
+        raise SystemExit({'payload_status': payload.get('status'), 'audit_status': audit.get('status')})
+    if str(payload.get('target_date') or '')[:10] != target or str(audit.get('target_date') or '')[:10] != target:
+        raise SystemExit({'target': target, 'payload_target': payload.get('target_date'), 'audit_target': audit.get('target_date')})
+    if int(audit.get('actionable_out_props') or 0) != 0:
+        raise SystemExit({'actionable_out_props': audit.get('actionable_out_props')})
+    if int(audit.get('player_prop_predictions') or 0) <= 0:
+        raise SystemExit('Sprint 19 M02 produced zero Player Props predictions')
+    if audit.get('player_props_with_model_projection') != audit.get('player_prop_predictions'):
+        raise SystemExit('Sprint 19 M02 has Player Props without model projections')
+    return payload
 
 
 def main():
     if not HTML.exists():
         raise SystemExit('docs/index.html missing')
-    if not DATA.exists():
-        raise SystemExit('Sprint 19 M02 predictions missing')
 
-    payload = json.loads(DATA.read_text(encoding='utf-8'))
-    if payload.get('status') != 'READY':
-        raise SystemExit(f"M02 prediction payload not READY: {payload.get('status')}")
+    payload = ensure_predictions()
     raw = json.dumps(payload, ensure_ascii=False).replace('</', '<\\/')
 
     block = f'''\n{START}
@@ -55,7 +102,7 @@ def main():
         raise SystemExit('Dashboard shell missing closing body tag')
     html = html.replace('</body>', block + '\n</body>', 1)
     HTML.write_text(html, encoding='utf-8')
-    print({'status': 'PASS', 'target_date': payload.get('target_date'), 'games': len(payload.get('games') or []), 'props': len(payload.get('player_props') or []), 'best_bets': len(payload.get('best_bets') or [])})
+    print({'status': 'PASS', 'target_date': payload.get('target_date'), 'games': len(payload.get('games') or []), 'props': len(payload.get('player_props') or []), 'best_bets': len(payload.get('best_bets') or []), 'prediction_artifact_ready': True})
 
 
 if __name__ == '__main__':
