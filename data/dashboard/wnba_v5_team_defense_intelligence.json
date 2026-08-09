@@ -1,0 +1,34 @@
+{
+  "report": {
+    "version": "V5",
+    "sprint": "OPERATIONS_SPRINT_4",
+    "module": "S4-M01",
+    "stage": "TEAM_DEFENSE_INTELLIGENCE",
+    "status": "WAITING_FOR_MATCHABLE_OPPONENT_HISTORY",
+    "generated_at_utc": "2026-08-09T03:25:51.154268+00:00",
+    "source": "data/dashboard/wnba_v5_historical_features.csv",
+    "source_rows": 964,
+    "unique_player_game_stat_observations": 0,
+    "teams": 0,
+    "stats": [],
+    "profile_rows": 0,
+    "position_profile_rows": 0,
+    "position_coverage_available": false,
+    "features": [
+      "allowed_avg",
+      "defense_index",
+      "last5_allowed_avg",
+      "last10_allowed_avg",
+      "home_allowed_avg",
+      "away_allowed_avg",
+      "defense_strength_percentile"
+    ],
+    "methodology": "Deduplicated certified player-game-stat actuals are attributed to the opposing defense. Lower allowed values imply stronger defense. Recent windows are based on the opponent team game dates represented in the historical store.",
+    "limitations": "Pace, defensive rating, opponent eFG%, rim/perimeter shot profile, and position splits are only available when those source fields exist; this module does not fabricate missing advanced team metrics.",
+    "research_only": true,
+    "production_ready": false,
+    "next_module": "S4-M02 Matchup Engine"
+  },
+  "profiles": [],
+  "position_profiles": []
+}
