@@ -7,10 +7,12 @@ on:
     branches: [main]
     paths:
       - 'wnba_v5_m10_live_decision_engine.py'
+      - 'wnba_terminal_ui.py'
       - 'data/dashboard/wnba_v5_decision_engine.json'
       - 'data/warehouse/wnba_opportunity_rankings.json'
       - 'data/dashboard/market_movement.json'
       - 'data/dashboard/wnba_v5_live_inference.json'
+      - 'data/dashboard/wnba_injury_intelligence.json'
       - '.github/workflows/wnba-v5-m10-live-decision.yml'
 jobs:
   build-v5-m10:
@@ -28,8 +30,8 @@ jobs:
           python-version: '3.12'
       - name: Sync latest repository
         run: git pull --rebase origin main
-      - name: Compile V5 M10 engine
-        run: python -m py_compile wnba_v5_m10_live_decision_engine.py
+      - name: Compile V5 M10 and dashboard bundle
+        run: python -m py_compile wnba_v5_m10_live_decision_engine.py wnba_terminal_ui.py
       - name: Run live adaptive decision engine
         run: python wnba_v5_m10_live_decision_engine.py
       - name: Verify V5 M10
@@ -41,14 +43,36 @@ jobs:
           assert p['module']=='V5-M10'
           assert p['status'] in {'READY_SHADOW','STANDBY_NO_LIVE_V5_SCORES','WAITING_FOR_M09'}
           assert p['production_ready'] is False
+          assert p.get('actionable_out_rows',0)==0
           PY
-      - name: Publish V5 M10 safely
+      - name: Rebuild V5 dashboard bundle
+        run: |
+          TARGET=$(python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
+          print(p.get('target_date') or '')
+          PY
+          )
+          if [ -z "$TARGET" ]; then TARGET=$(date -u +%F); fi
+          python wnba_terminal_ui.py --date "$TARGET"
+      - name: Verify V5 dashboard source audit
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_dashboard_source_audit.json'))
+          print(json.dumps(p,indent=2))
+          assert p['legacy_live_fallback_allowed'] is False
+          assert p['actionable_out_rows']==0
+          assert p['current_buy_signals'] <= p['raw_buy_signals']
+          assert p['current_portfolio_rows'] <= p['raw_portfolio_rows']
+          PY
+      - name: Publish V5 M10 and dashboard bundle safely
         run: |
           set -euo pipefail
           git config user.name "WNBA V5 M10 Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard/wnba_v5_live_decisions.json data/dashboard/wnba_v5_alerts.json data/dashboard/wnba_v5_market_refresh.json data/dashboard/wnba_v5_live_portfolio.json data/dashboard/wnba_v5_live_ev.csv data/dashboard/wnba_v5_line_changes.csv data/dashboard/wnba_v5_buy_signals.json data/dashboard/wnba_v5_m10_report.json
+          git add data/dashboard/wnba_v5_live_decisions.json data/dashboard/wnba_v5_alerts.json data/dashboard/wnba_v5_market_refresh.json data/dashboard/wnba_v5_live_portfolio.json data/dashboard/wnba_v5_live_ev.csv data/dashboard/wnba_v5_line_changes.csv data/dashboard/wnba_v5_buy_signals.json data/dashboard/wnba_v5_m10_report.json data/dashboard/terminal_ui.json data/dashboard/wnba_v5_dashboard_source_audit.json
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Refresh WNBA V5 M10 live decision outputs"
+          git commit -m "Refresh WNBA V5 M10 and dashboard bundle"
           git pull --rebase origin main
           git push origin HEAD:main
