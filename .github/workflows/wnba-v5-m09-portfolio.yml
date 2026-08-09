@@ -1,0 +1,49 @@
+name: WNBA V5 M09 Portfolio Optimization
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_m09_portfolio_optimizer.py'
+      - 'data/dashboard/wnba_v5_m05_predictions.csv'
+      - '.github/workflows/wnba-v5-m09-portfolio.yml'
+jobs:
+  build-v5-m09:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile V5 M09 engine
+        run: python -m py_compile wnba_v5_m09_portfolio_optimizer.py
+      - name: Build portfolio and decision policy
+        run: python wnba_v5_m09_portfolio_optimizer.py
+      - name: Verify V5 M09
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_m09_report.json'))
+          print(p)
+          assert p['status']=='READY'
+          assert p['selected_rows'] <= p['candidate_rows']
+          assert p['next_module'].startswith('V5-M10')
+          PY
+      - name: Publish V5 M09 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 M09 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_portfolio.csv data/dashboard/wnba_v5_portfolio.json data/dashboard/wnba_v5_m09_report.json data/dashboard/wnba_v5_decision_engine.json data/dashboard/wnba_v5_exposure_report.json data/dashboard/wnba_v5_correlation_matrix.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Build WNBA V5 M09 portfolio outputs"
+          git pull --rebase origin main
+          git push origin HEAD:main
