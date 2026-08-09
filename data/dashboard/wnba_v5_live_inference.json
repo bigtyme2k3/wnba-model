@@ -3,274 +3,22 @@
     "version": "V5",
     "module": "V5-M11",
     "stage": "LIVE_V5_INFERENCE",
-    "status": "READY_SHADOW",
-    "generated_at_utc": "2026-08-09T00:53:01.744291+00:00",
+    "status": "BLOCKED_STALE_SLATE",
+    "generated_at_utc": "2026-08-09T02:10:14.843630+00:00",
     "target_date": "2026-08-04",
     "ranked_rows": 72,
-    "scored_rows": 7,
-    "unscored_rows": 65,
-    "scoring_coverage_pct": 9.72,
+    "scored_rows": 0,
+    "unscored_rows": 72,
+    "scoring_coverage_pct": 0.0,
     "research_champion": "KNN",
-    "training_rows": 123,
-    "leakage_policy": "Live rolling features use only certified player/stat games strictly before target_date.",
+    "training_rows": null,
+    "freshness_guard_status": "STALE_BLOCKED",
+    "freshness_reason": "Ranked board contains no exclusively current-date slate and must not be scored.",
     "research_only": true,
     "production_ready": false,
-    "next_module": "V5-M12 Post-Game Learning + Forward Validation"
+    "next_action": "REFRESH_CURRENT_OPPORTUNITY_BOARD"
   },
-  "scored": [
-    {
-      "ranking_key": "2026-08-04|natisha hiedeman|seattle storm @ new york liberty|pr|under",
-      "date": "2026-08-04",
-      "player": "Natisha Hiedeman",
-      "game": "Seattle Storm @ New York Liberty",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 19.5,
-      "odds": -114.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.541582,
-      "v5_probability": 0.541582,
-      "market_implied_probability": 0.53271,
-      "probability_edge": 0.008872,
-      "probability_band": "50-54.9%",
-      "confidence_score": 0.108056,
-      "uncertainty_score": 0.996536,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 4.813092,
-      "feature_snapshot": {
-        "market_implied_probability": 0.53271,
-        "line_minus_prior_mean": -1.0,
-        "rolling3_actual_mean": 20.666667,
-        "rolling5_actual_mean": 20.5,
-        "rolling5_actual_std": 11.368817,
-        "rolling5_trend_slope": 6.2,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-04|awa fam|seattle storm @ new york liberty|pts|under",
-      "date": "2026-08-04",
-      "player": "Awa Fam",
-      "game": "Seattle Storm @ New York Liberty",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 9.5,
-      "odds": -117.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.195968,
-      "v5_probability": 0.195968,
-      "market_implied_probability": 0.539171,
-      "probability_edge": -0.343202,
-      "probability_band": "<50%",
-      "confidence_score": 0.260778,
-      "uncertainty_score": 0.793889,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.2,
-      "average_neighbor_distance": 1.24532,
-      "feature_snapshot": {
-        "market_implied_probability": 0.539171,
-        "line_minus_prior_mean": 0.833333,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-04|azzi fudd|dallas wings @ washington mystics|pts|under",
-      "date": "2026-08-04",
-      "player": "Azzi Fudd",
-      "game": "Dallas Wings @ Washington Mystics",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 13.0,
-      "odds": -118.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.385871,
-      "v5_probability": 0.385871,
-      "market_implied_probability": 0.541284,
-      "probability_edge": -0.155414,
-      "probability_band": "<50%",
-      "confidence_score": 0.142197,
-      "uncertainty_score": 0.973601,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.33054,
-      "feature_snapshot": {
-        "market_implied_probability": 0.541284,
-        "line_minus_prior_mean": 3.75,
-        "rolling3_actual_mean": 12.333333,
-        "rolling5_actual_mean": 9.25,
-        "rolling5_actual_std": 5.584577,
-        "rolling5_trend_slope": 3.7,
-        "historical_hit_rate_at_current_line": 0.75,
-        "historical_hit_rate_l5_at_current_line": 0.75,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-04|nneka ogwumike|los angeles sparks @ chicago sky|pra|under",
-      "date": "2026-08-04",
-      "player": "Nneka Ogwumike",
-      "game": "Los Angeles Sparks @ Chicago Sky",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 31.0,
-      "odds": -116.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.430079,
-      "v5_probability": 0.430079,
-      "market_implied_probability": 0.537037,
-      "probability_edge": -0.106958,
-      "probability_band": "<50%",
-      "confidence_score": 0.114629,
-      "uncertainty_score": 0.990174,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.466667,
-      "average_neighbor_distance": 4.311264,
-      "feature_snapshot": {
-        "market_implied_probability": 0.537037,
-        "line_minus_prior_mean": -3.25,
-        "rolling3_actual_mean": 36.0,
-        "rolling5_actual_mean": 34.25,
-        "rolling5_actual_std": 3.897114,
-        "rolling5_trend_slope": 0.9,
-        "historical_hit_rate_at_current_line": 0.25,
-        "historical_hit_rate_l5_at_current_line": 0.25,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-04|nneka ogwumike|los angeles sparks @ chicago sky|pts|under",
-      "date": "2026-08-04",
-      "player": "Nneka Ogwumike",
-      "game": "Los Angeles Sparks @ Chicago Sky",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 18.0,
-      "odds": -105.0,
-      "best_book": "DraftKings",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.472859,
-      "v5_probability": 0.472859,
-      "market_implied_probability": 0.512195,
-      "probability_edge": -0.039336,
-      "probability_band": "<50%",
-      "confidence_score": 0.136195,
-      "uncertainty_score": 0.998526,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.466667,
-      "average_neighbor_distance": 3.256983,
-      "feature_snapshot": {
-        "market_implied_probability": 0.512195,
-        "line_minus_prior_mean": -1.6,
-        "rolling3_actual_mean": 18.666667,
-        "rolling5_actual_mean": 19.6,
-        "rolling5_actual_std": 2.154066,
-        "rolling5_trend_slope": -0.2,
-        "historical_hit_rate_at_current_line": 0.3,
-        "historical_hit_rate_l5_at_current_line": 0.3,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-04|nneka ogwumike|los angeles sparks @ chicago sky|pa|under",
-      "date": "2026-08-04",
-      "player": "Nneka Ogwumike",
-      "game": "Los Angeles Sparks @ Chicago Sky",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 21.0,
-      "odds": -104.0,
-      "best_book": "DraftKings",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.353813,
-      "v5_probability": 0.353813,
-      "market_implied_probability": 0.509804,
-      "probability_edge": -0.155991,
-      "probability_band": "<50%",
-      "confidence_score": 0.158874,
-      "uncertainty_score": 0.956304,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.333333,
-      "average_neighbor_distance": 3.922664,
-      "feature_snapshot": {
-        "market_implied_probability": 0.509804,
-        "line_minus_prior_mean": -3.8,
-        "rolling3_actual_mean": 24.0,
-        "rolling5_actual_mean": 24.8,
-        "rolling5_actual_std": 3.709447,
-        "rolling5_trend_slope": 0.4,
-        "historical_hit_rate_at_current_line": 0.2,
-        "historical_hit_rate_l5_at_current_line": 0.2,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-04|paige bueckers|dallas wings @ washington mystics|pra|under",
-      "date": "2026-08-04",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Washington Mystics",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 29.5,
-      "odds": -104.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.125228,
-      "v5_probability": 0.125228,
-      "market_implied_probability": 0.509804,
-      "probability_edge": -0.384576,
-      "probability_band": "<50%",
-      "confidence_score": 0.316898,
-      "uncertainty_score": 0.661955,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.133333,
-      "average_neighbor_distance": 3.035684,
-      "feature_snapshot": {
-        "market_implied_probability": 0.509804,
-        "line_minus_prior_mean": 6.5,
-        "rolling3_actual_mean": 23.0,
-        "rolling5_actual_mean": 23.0,
-        "rolling5_actual_std": 7.25718,
-        "rolling5_trend_slope": -6.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    }
-  ],
+  "scored": [],
   "unscored": [
     {
       "ranking_key": "2026-08-04|gabby williams|toronto tempo @ golden state valkyries|pts|under",
@@ -282,9 +30,9 @@
       "line": 14.0,
       "odds": -101.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|gabby williams|toronto tempo @ golden state valkyries|pr|under",
@@ -296,9 +44,9 @@
       "line": 17.0,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|veronica burton|toronto tempo @ golden state valkyries|pra|under",
@@ -310,9 +58,9 @@
       "line": 22.0,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|veronica burton|toronto tempo @ golden state valkyries|pa|under",
@@ -324,9 +72,9 @@
       "line": 18.5,
       "odds": -102.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|natisha hiedeman|seattle storm @ new york liberty|pra|under",
@@ -338,9 +86,9 @@
       "line": 25.0,
       "odds": -112.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|kayla thornton|toronto tempo @ golden state valkyries|pts|under",
@@ -352,9 +100,9 @@
       "line": 8.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|sabrina ionescu|seattle storm @ new york liberty|pa|under",
@@ -366,9 +114,9 @@
       "line": 25.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|natisha hiedeman|seattle storm @ new york liberty|pa|under",
@@ -380,9 +128,9 @@
       "line": 22.0,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|veronica burton|toronto tempo @ golden state valkyries|pts|under",
@@ -394,9 +142,9 @@
       "line": 12.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|kayla thornton|toronto tempo @ golden state valkyries|3pm|under",
@@ -408,9 +156,9 @@
       "line": 1.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|sabrina ionescu|seattle storm @ new york liberty|pr|under",
@@ -422,9 +170,9 @@
       "line": 23.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|jonquel jones|seattle storm @ new york liberty|3pm|under",
@@ -436,9 +184,9 @@
       "line": 1.5,
       "odds": 124.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|sabrina ionescu|seattle storm @ new york liberty|pts|under",
@@ -450,9 +198,9 @@
       "line": 19.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|sabrina ionescu|seattle storm @ new york liberty|pra|under",
@@ -464,9 +212,9 @@
       "line": 29.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|veronica burton|toronto tempo @ golden state valkyries|pr|under",
@@ -478,9 +226,23 @@
       "line": 15.5,
       "odds": -102.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-04|natisha hiedeman|seattle storm @ new york liberty|pr|under",
+      "date": "2026-08-04",
+      "player": "Natisha Hiedeman",
+      "game": "Seattle Storm @ New York Liberty",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 19.5,
+      "odds": -114.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|gabby williams|toronto tempo @ golden state valkyries|pra|under",
@@ -492,9 +254,9 @@
       "line": 19.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|marina mabrey|toronto tempo @ golden state valkyries|pts|under",
@@ -506,9 +268,9 @@
       "line": 18.0,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|natisha hiedeman|seattle storm @ new york liberty|pts|under",
@@ -520,9 +282,23 @@
       "line": 16.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-04|awa fam|seattle storm @ new york liberty|pts|under",
+      "date": "2026-08-04",
+      "player": "Awa Fam",
+      "game": "Seattle Storm @ New York Liberty",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 9.5,
+      "odds": -117.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|marina mabrey|toronto tempo @ golden state valkyries|3pm|under",
@@ -534,9 +310,9 @@
       "line": 2.5,
       "odds": 112.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|veronica burton|toronto tempo @ golden state valkyries|3pm|under",
@@ -548,9 +324,9 @@
       "line": 1.5,
       "odds": -146.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|sabrina ionescu|seattle storm @ new york liberty|3pm|under",
@@ -562,9 +338,9 @@
       "line": 2.5,
       "odds": 104.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|gabby williams|toronto tempo @ golden state valkyries|3pm|under",
@@ -576,9 +352,9 @@
       "line": 1.5,
       "odds": -113.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|breanna stewart|seattle storm @ new york liberty|pa|under",
@@ -590,9 +366,9 @@
       "line": 25.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|breanna stewart|seattle storm @ new york liberty|pts|under",
@@ -604,9 +380,9 @@
       "line": 22.5,
       "odds": -125.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|flau'jae johnson|seattle storm @ new york liberty|pa|under",
@@ -618,9 +394,9 @@
       "line": 18.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|veronica burton|toronto tempo @ golden state valkyries|ast|under",
@@ -632,9 +408,9 @@
       "line": 6.5,
       "odds": -150.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|breanna stewart|seattle storm @ new york liberty|pr|under",
@@ -646,9 +422,9 @@
       "line": 30.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|breanna stewart|seattle storm @ new york liberty|3pm|under",
@@ -660,9 +436,9 @@
       "line": 0.5,
       "odds": 140.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|flau'jae johnson|seattle storm @ new york liberty|pra|under",
@@ -674,9 +450,9 @@
       "line": 23.5,
       "odds": -122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|awa fam|seattle storm @ new york liberty|pr|under",
@@ -688,9 +464,9 @@
       "line": 15.5,
       "odds": -124.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|breanna stewart|seattle storm @ new york liberty|pra|under",
@@ -702,9 +478,9 @@
       "line": 34.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|marina mabrey|toronto tempo @ golden state valkyries|pa|under",
@@ -716,9 +492,9 @@
       "line": 21.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|marina mabrey|toronto tempo @ golden state valkyries|pr|under",
@@ -730,9 +506,9 @@
       "line": 21.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|jonquel jones|seattle storm @ new york liberty|pts|under",
@@ -744,9 +520,9 @@
       "line": 14.5,
       "odds": -122.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|laura juskaite|toronto tempo @ golden state valkyries|pts|under",
@@ -758,9 +534,9 @@
       "line": 10.0,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|erica wheeler|los angeles sparks @ chicago sky|pr|under",
@@ -772,9 +548,9 @@
       "line": 12.0,
       "odds": 102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|dearica hamby|los angeles sparks @ chicago sky|pts|under",
@@ -786,9 +562,9 @@
       "line": 16.0,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|erica wheeler|los angeles sparks @ chicago sky|pa|under",
@@ -800,9 +576,9 @@
       "line": 16.0,
       "odds": -103.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|paige bueckers|dallas wings @ washington mystics|pts|under",
@@ -814,9 +590,9 @@
       "line": 20.0,
       "odds": -105.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|jessica shepard|dallas wings @ washington mystics|pr|under",
@@ -828,9 +604,23 @@
       "line": 25.0,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-04|azzi fudd|dallas wings @ washington mystics|pts|under",
+      "date": "2026-08-04",
+      "player": "Azzi Fudd",
+      "game": "Dallas Wings @ Washington Mystics",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 13.0,
+      "odds": -118.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|sonia citron|dallas wings @ washington mystics|pr|under",
@@ -842,9 +632,9 @@
       "line": 20.0,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|rae burrell|los angeles sparks @ chicago sky|pts|under",
@@ -856,9 +646,9 @@
       "line": 15.5,
       "odds": -102.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|rae burrell|los angeles sparks @ chicago sky|pa|under",
@@ -870,9 +660,9 @@
       "line": 18.5,
       "odds": -120.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|nneka ogwumike|los angeles sparks @ chicago sky|pr|under",
@@ -884,9 +674,9 @@
       "line": 27.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|jessica shepard|dallas wings @ washington mystics|pa|under",
@@ -898,9 +688,9 @@
       "line": 19.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|michaela onyenwere|dallas wings @ washington mystics|pts|under",
@@ -912,9 +702,9 @@
       "line": 8.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|rae burrell|los angeles sparks @ chicago sky|pra|under",
@@ -926,9 +716,9 @@
       "line": 20.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|rae burrell|los angeles sparks @ chicago sky|pr|under",
@@ -940,9 +730,23 @@
       "line": 18.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-04|nneka ogwumike|los angeles sparks @ chicago sky|pra|under",
+      "date": "2026-08-04",
+      "player": "Nneka Ogwumike",
+      "game": "Los Angeles Sparks @ Chicago Sky",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 31.0,
+      "odds": -116.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|michaela onyenwere|dallas wings @ washington mystics|pr|under",
@@ -954,9 +758,9 @@
       "line": 11.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|maria conde|toronto tempo @ golden state valkyries|3pm|under",
@@ -968,9 +772,9 @@
       "line": 1.5,
       "odds": 128.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|jessica shepard|dallas wings @ washington mystics|pts|under",
@@ -982,9 +786,9 @@
       "line": 13.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|sonia citron|dallas wings @ washington mystics|pra|under",
@@ -996,9 +800,9 @@
       "line": 24.0,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|maria conde|toronto tempo @ golden state valkyries|pts|under",
@@ -1010,9 +814,9 @@
       "line": 10.5,
       "odds": -127.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|shakira austin|dallas wings @ washington mystics|pts|under",
@@ -1024,9 +828,9 @@
       "line": 16.0,
       "odds": -103.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|shakira austin|dallas wings @ washington mystics|pa|under",
@@ -1038,9 +842,37 @@
       "line": 19.0,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-04|nneka ogwumike|los angeles sparks @ chicago sky|pts|under",
+      "date": "2026-08-04",
+      "player": "Nneka Ogwumike",
+      "game": "Los Angeles Sparks @ Chicago Sky",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 18.0,
+      "odds": -105.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-04|nneka ogwumike|los angeles sparks @ chicago sky|pa|under",
+      "date": "2026-08-04",
+      "player": "Nneka Ogwumike",
+      "game": "Los Angeles Sparks @ Chicago Sky",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 21.0,
+      "odds": -104.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|maria conde|toronto tempo @ golden state valkyries|pa|under",
@@ -1052,9 +884,9 @@
       "line": 12.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|michaela onyenwere|dallas wings @ washington mystics|pa|under",
@@ -1066,9 +898,9 @@
       "line": 10.5,
       "odds": -112.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|rae burrell|los angeles sparks @ chicago sky|3pm|under",
@@ -1080,9 +912,9 @@
       "line": 1.5,
       "odds": -125.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|paige bueckers|dallas wings @ washington mystics|pa|under",
@@ -1094,9 +926,9 @@
       "line": 25.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|erica wheeler|los angeles sparks @ chicago sky|pts|under",
@@ -1108,9 +940,9 @@
       "line": 9.5,
       "odds": -103.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|dearica hamby|los angeles sparks @ chicago sky|pr|under",
@@ -1122,9 +954,23 @@
       "line": 23.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-04|paige bueckers|dallas wings @ washington mystics|pra|under",
+      "date": "2026-08-04",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Washington Mystics",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 29.5,
+      "odds": -104.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|dearica hamby|los angeles sparks @ chicago sky|pa|under",
@@ -1136,9 +982,9 @@
       "line": 18.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|paige bueckers|dallas wings @ washington mystics|pr|under",
@@ -1150,9 +996,9 @@
       "line": 23.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|jessica shepard|dallas wings @ washington mystics|pra|under",
@@ -1164,9 +1010,9 @@
       "line": 30.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-04|dearica hamby|los angeles sparks @ chicago sky|pra|under",
@@ -1178,9 +1024,9 @@
       "line": 26.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     }
   ]
 }
