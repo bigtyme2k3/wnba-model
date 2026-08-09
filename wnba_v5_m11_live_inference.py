@@ -3,6 +3,7 @@
 Applies the M05 KNN research champion to the current ranked opportunity board.
 Live features are reconstructed only from certified historical player/stat games
 strictly before the board date. No V4 probability is reused or relabeled as V5.
+Sprint 3 M01 freshness guard must explicitly permit live inference.
 
 Outputs:
   data/dashboard/wnba_v5_live_inference.json
@@ -22,6 +23,7 @@ from statistics import mean, pstdev
 FEATURES = Path('data/dashboard/wnba_v5_historical_features.csv')
 RANKINGS = Path('data/warehouse/wnba_opportunity_rankings.json')
 M05 = Path('data/dashboard/wnba_v5_m05_report.json')
+FRESHNESS = Path('data/dashboard/wnba_v5_s3_m01_freshness.json')
 OUT_JSON = Path('data/dashboard/wnba_v5_live_inference.json')
 OUT_CSV = Path('data/dashboard/wnba_v5_live_inference.csv')
 REPORT = Path('data/dashboard/wnba_v5_m11_report.json')
@@ -154,8 +156,6 @@ def rank_key(r):
 
 
 def build_history(feature_rows):
-    # One actual per canonical player/stat/game prevents ALT-line duplicates from
-    # masquerading as extra games when reconstructing current rolling features.
     unique = {}
     for r in feature_rows:
         player = norm(r.get('player'))
@@ -206,17 +206,39 @@ def live_features(r, history, target_date):
 
 
 def probability_band(p):
-    if p >= 0.70:
-        return '70%+'
-    if p >= 0.65:
-        return '65-69.9%'
-    if p >= 0.60:
-        return '60-64.9%'
-    if p >= 0.55:
-        return '55-59.9%'
-    if p >= 0.50:
-        return '50-54.9%'
+    if p >= 0.70: return '70%+'
+    if p >= 0.65: return '65-69.9%'
+    if p >= 0.60: return '60-64.9%'
+    if p >= 0.55: return '55-59.9%'
+    if p >= 0.50: return '50-54.9%'
     return '<50%'
+
+
+def publish_blocked(now, freshness):
+    rankings = json.loads(RANKINGS.read_text(encoding='utf-8')) if RANKINGS.exists() else {}
+    rows = ranking_rows(rankings)
+    report = {
+        'version':'V5','module':'V5-M11','stage':'LIVE_V5_INFERENCE',
+        'status':'BLOCKED_STALE_SLATE','generated_at_utc':now,
+        'target_date':rankings.get('target_date'),'ranked_rows':len(rows),
+        'scored_rows':0,'unscored_rows':len(rows),'scoring_coverage_pct':0.0,
+        'research_champion':'KNN','training_rows':None,'freshness_guard_status':freshness.get('status'),
+        'freshness_reason':freshness.get('reason'),'research_only':True,'production_ready':False,
+        'next_action':'REFRESH_CURRENT_OPPORTUNITY_BOARD'
+    }
+    unscored=[{
+        'ranking_key':rank_key(r),'date':r.get('date'),'player':r.get('player'),'game':r.get('game'),
+        'market':r.get('market') or r.get('stat'),'side':r.get('side') or r.get('signal'),
+        'line':line_of(r),'odds':odds_of(r),'best_book':r.get('best_book'),'prior_games':None,
+        'status':'UNSCORED','reason':'BLOCKED_STALE_SLATE'
+    } for r in rows]
+    OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
+    OUT_JSON.write_text(json.dumps({'report':report,'scored':[],'unscored':unscored},indent=2)+'\n',encoding='utf-8')
+    fields=['ranking_key','date','player','game','market','side','line','odds','best_book','prior_games','status','model','knn_probability','v5_probability','market_implied_probability','probability_edge','probability_band','confidence_score','uncertainty_score','neighbor_count','neighbor_hit_rate','average_neighbor_distance']
+    with OUT_CSV.open('w',encoding='utf-8',newline='') as h:
+        csv.DictWriter(h,fieldnames=fields).writeheader()
+    REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+    print(json.dumps(report,indent=2))
 
 
 def main():
@@ -224,6 +246,11 @@ def main():
     m05 = json.loads(M05.read_text(encoding='utf-8')) if M05.exists() else {}
     if m05.get('research_champion') != 'KNN':
         raise SystemExit('M11_BLOCKED: M05 research champion is not KNN')
+
+    freshness=json.loads(FRESHNESS.read_text(encoding='utf-8')) if FRESHNESS.exists() else {}
+    if not freshness or freshness.get('allow_live_inference') is not True:
+        publish_blocked(now, freshness or {'status':'MISSING_FRESHNESS_GUARD','reason':'S3-M01 freshness output is required before live scoring.'})
+        return
 
     feature_rows = list(csv.DictReader(FEATURES.open(encoding='utf-8-sig', newline='')))
     train = []
@@ -248,16 +275,9 @@ def main():
     for r in rows:
         vals, reason, prior_games = live_features(r, history, target_date)
         base = {
-            'ranking_key': rank_key(r),
-            'date': r.get('date') or target_date,
-            'player': r.get('player'),
-            'game': r.get('game'),
-            'market': r.get('market') or r.get('stat'),
-            'side': r.get('side') or r.get('signal'),
-            'line': line_of(r),
-            'odds': odds_of(r),
-            'best_book': r.get('best_book'),
-            'prior_games': prior_games,
+            'ranking_key': rank_key(r),'date': r.get('date') or target_date,'player': r.get('player'),
+            'game': r.get('game'),'market': r.get('market') or r.get('stat'),'side': r.get('side') or r.get('signal'),
+            'line': line_of(r),'odds': odds_of(r),'best_book': r.get('best_book'),'prior_games': prior_games,
         }
         if vals is None:
             unscored.append({**base, 'status': 'UNSCORED', 'reason': reason})
@@ -268,58 +288,29 @@ def main():
         uncertainty = min(1.0, math.sqrt(p * (1 - p)) * 2.0)
         confidence = max(0.0, min(1.0, (1.0 - uncertainty) * 0.65 + min(prior_games / 10.0, 1.0) * 0.20 + (1.0 / (1.0 + avg_dist)) * 0.15))
         scored.append({
-            **base,
-            'status': 'SCORED',
-            'model': 'KNN',
-            'knn_probability': round(p, 6),
-            'v5_probability': round(p, 6),
-            'market_implied_probability': round(market_p, 6),
-            'probability_edge': round(p - market_p, 6),
-            'probability_band': probability_band(p),
-            'confidence_score': round(confidence, 6),
-            'uncertainty_score': round(uncertainty, 6),
-            'neighbor_count': neighbor_count,
-            'neighbor_hit_rate': round(neighbor_rate, 6),
-            'average_neighbor_distance': round(avg_dist, 6),
-            'feature_snapshot': {k: round(vals[k], 6) for k in FEATURE_NAMES},
-            'research_only': True,
+            **base,'status':'SCORED','model':'KNN','knn_probability':round(p,6),'v5_probability':round(p,6),
+            'market_implied_probability':round(market_p,6),'probability_edge':round(p-market_p,6),
+            'probability_band':probability_band(p),'confidence_score':round(confidence,6),'uncertainty_score':round(uncertainty,6),
+            'neighbor_count':neighbor_count,'neighbor_hit_rate':round(neighbor_rate,6),'average_neighbor_distance':round(avg_dist,6),
+            'feature_snapshot':{k:round(vals[k],6) for k in FEATURE_NAMES},'research_only':True,
         })
 
     coverage = (100.0 * len(scored) / len(rows)) if rows else 0.0
     report = {
-        'version': 'V5',
-        'module': 'V5-M11',
-        'stage': 'LIVE_V5_INFERENCE',
-        'status': 'READY_SHADOW' if scored else 'STANDBY_NO_SCORABLE_ROWS',
-        'generated_at_utc': now,
-        'target_date': target_date,
-        'ranked_rows': len(rows),
-        'scored_rows': len(scored),
-        'unscored_rows': len(unscored),
-        'scoring_coverage_pct': round(coverage, 2),
-        'research_champion': 'KNN',
-        'training_rows': len(train),
-        'leakage_policy': 'Live rolling features use only certified player/stat games strictly before target_date.',
-        'research_only': True,
-        'production_ready': False,
-        'next_module': 'V5-M12 Post-Game Learning + Forward Validation',
+        'version':'V5','module':'V5-M11','stage':'LIVE_V5_INFERENCE','status':'READY_SHADOW' if scored else 'STANDBY_NO_SCORABLE_ROWS',
+        'generated_at_utc':now,'target_date':target_date,'ranked_rows':len(rows),'scored_rows':len(scored),'unscored_rows':len(unscored),
+        'scoring_coverage_pct':round(coverage,2),'research_champion':'KNN','training_rows':len(train),
+        'freshness_guard_status':freshness.get('status'),'leakage_policy':'Live rolling features use only certified player/stat games strictly before target_date.',
+        'research_only':True,'production_ready':False,'next_module':'V5-M12 Post-Game Learning + Forward Validation',
     }
-    payload = {'report': report, 'scored': scored, 'unscored': unscored}
+    payload={'report':report,'scored':scored,'unscored':unscored}
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
-    OUT_JSON.write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
-    fields = [
-        'ranking_key','date','player','game','market','side','line','odds','best_book','prior_games',
-        'status','model','knn_probability','v5_probability','market_implied_probability','probability_edge',
-        'probability_band','confidence_score','uncertainty_score','neighbor_count','neighbor_hit_rate','average_neighbor_distance'
-    ]
-    with OUT_CSV.open('w', encoding='utf-8', newline='') as h:
-        w = csv.DictWriter(h, fieldnames=fields)
-        w.writeheader()
-        for r in scored:
-            w.writerow({k: r.get(k) for k in fields})
-    REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-    print(json.dumps(report, indent=2))
+    OUT_JSON.write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
+    fields=['ranking_key','date','player','game','market','side','line','odds','best_book','prior_games','status','model','knn_probability','v5_probability','market_implied_probability','probability_edge','probability_band','confidence_score','uncertainty_score','neighbor_count','neighbor_hit_rate','average_neighbor_distance']
+    with OUT_CSV.open('w',encoding='utf-8',newline='') as h:
+        w=csv.DictWriter(h,fieldnames=fields);w.writeheader()
+        for r in scored:w.writerow({k:r.get(k) for k in fields})
+    REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+    print(json.dumps(report,indent=2))
 
-
-if __name__ == '__main__':
-    main()
+if __name__=='__main__': main()
