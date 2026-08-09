@@ -1,0 +1,40 @@
+{
+  "version": "V5",
+  "module": "V5-M12",
+  "status": "WAITING_FOR_CERTIFIED_OUTCOMES",
+  "generated_at_utc": "2026-08-09T01:06:36.128070+00:00",
+  "research_champion": "KNN",
+  "new_predictions_appended": 7,
+  "newly_graded": 0,
+  "metrics": {
+    "forward_predictions": 7,
+    "resolved_predictions": 0,
+    "binary_graded_predictions": 0,
+    "pushes": 0,
+    "pending_predictions": 7,
+    "v5_brier": null,
+    "market_brier": null,
+    "v5_log_loss": null,
+    "market_log_loss": null,
+    "v5_ece_5bin": null,
+    "market_ece_5bin": null,
+    "v5_accuracy": null,
+    "market_accuracy": null,
+    "model_bets_at_0_5": 0,
+    "model_profit_units_at_0_5": 0.0,
+    "model_roi_at_0_5": null,
+    "positive_edge_bets": 0,
+    "positive_edge_profit_units": 0.0,
+    "positive_edge_roi": null
+  },
+  "promotion_gate": {
+    "production_ready": false,
+    "minimum_forward_rows": 300,
+    "current_forward_rows": 0,
+    "minimum_explicit_clv_coverage_pct": 60.0,
+    "explicit_clv_coverage_pct": 0.0,
+    "reason": "V4 remains production champion until >=300 graded forward predictions, >=60% explicit CLV coverage, and V5 beats market forward Brier."
+  },
+  "learning_policy": "Append predictions before outcomes; grade only from later certified actuals; never rewrite issued probabilities.",
+  "next_module": "V5-M13 Production Readiness + Shadow Monitoring"
+}
