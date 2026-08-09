@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-import json,re
+import json,re,subprocess,sys
 from pathlib import Path
 
 HTML=Path('docs/index.html')
 DATA=Path('data/dashboard/wnba_s19_m03_dashboard_consumer.json')
+M04=Path('data/dashboard/wnba_s19_m04_decision_contract.json')
+M04_AUDIT=Path('data/dashboard/wnba_s19_m04_decision_contract_audit.json')
 START='<!-- SPRINT19_M03_CONSUMER_UI_START -->'
 END='<!-- SPRINT19_M03_CONSUMER_UI_END -->'
 
@@ -35,5 +37,26 @@ def main():
     if '</body>' not in html: raise SystemExit('Dashboard shell missing closing body')
     HTML.write_text(html.replace('</body>',block+'\n</body>',1),encoding='utf-8')
     print({'status':'PASS','target_date':d.get('target_date'),'best_bets':len(d.get('best_bets') or []),'portfolio':len(d.get('portfolio') or []),'results_status':(d.get('results') or {}).get('status')})
+
+    # M04 must be built by the M03 consumer and installed into the deployed HTML.
+    if not M04.exists() or not M04_AUDIT.exists():
+        raise SystemExit('Sprint 19 M04 contract artifacts missing after M03 build')
+    m04=json.loads(M04.read_text(encoding='utf-8'))
+    audit=json.loads(M04_AUDIT.read_text(encoding='utf-8'))
+    target=str(d.get('target_date') or '')[:10]
+    assert m04.get('status')=='READY' and str(m04.get('target_date') or '')[:10]==target, m04
+    assert audit.get('status')=='READY' and str(audit.get('target_date') or '')[:10]==target, audit
+    assert audit.get('all_rows_current_slate') is True, audit
+    assert audit.get('actionable_unavailable_props')==0, audit
+    assert audit.get('legacy_fallback_enabled') is False, audit
+    assert audit.get('single_dashboard_contract') is True, audit
+
+    subprocess.run([sys.executable,'patch_dashboard_s19_m04.py'],check=True)
+    final_html=HTML.read_text(encoding='utf-8')
+    if final_html.count('id="s19-m04-contract-script"') != 1:
+        raise SystemExit('Sprint 19 M04 dashboard contract marker missing or duplicated')
+    if 'WNBA_CANONICAL_DASHBOARD_CONTRACT' not in final_html:
+        raise SystemExit('Sprint 19 M04 canonical dashboard contract not installed')
+    print({'status':'PASS','sprint':19,'module':'M04','target_date':target,'games':audit.get('games'),'player_props':audit.get('player_props'),'best_bets':audit.get('best_bets'),'portfolio':audit.get('portfolio'),'results_status':audit.get('results_status'),'single_dashboard_contract':True})
 
 if __name__=='__main__':main()
