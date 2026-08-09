@@ -9,6 +9,8 @@ M04=Path('data/dashboard/wnba_s19_m04_decision_contract.json')
 M04_AUDIT=Path('data/dashboard/wnba_s19_m04_decision_contract_audit.json')
 M05=Path('data/dashboard/wnba_s19_m05_dashboard_health.json')
 M05_AUDIT=Path('data/dashboard/wnba_s19_m05_dashboard_health_audit.json')
+M06=Path('data/dashboard/wnba_s19_m06_results_lifecycle.json')
+M06_AUDIT=Path('data/dashboard/wnba_s19_m06_results_lifecycle_audit.json')
 START='<!-- SPRINT19_M03_CONSUMER_UI_START -->'
 END='<!-- SPRINT19_M03_CONSUMER_UI_END -->'
 
@@ -40,43 +42,34 @@ def main():
     HTML.write_text(html.replace('</body>',block+'\n</body>',1),encoding='utf-8')
     print({'status':'PASS','target_date':d.get('target_date'),'best_bets':len(d.get('best_bets') or []),'portfolio':len(d.get('portfolio') or []),'results_status':(d.get('results') or {}).get('status')})
 
-    if not M04.exists() or not M04_AUDIT.exists():
-        raise SystemExit('Sprint 19 M04 contract artifacts missing after M03 build')
-    m04=json.loads(M04.read_text(encoding='utf-8'))
-    audit=json.loads(M04_AUDIT.read_text(encoding='utf-8'))
-    target=str(d.get('target_date') or '')[:10]
+    if not M04.exists() or not M04_AUDIT.exists(): raise SystemExit('Sprint 19 M04 contract artifacts missing after M03 build')
+    m04=json.loads(M04.read_text(encoding='utf-8')); audit=json.loads(M04_AUDIT.read_text(encoding='utf-8')); target=str(d.get('target_date') or '')[:10]
     assert m04.get('status')=='READY' and str(m04.get('target_date') or '')[:10]==target, m04
-    assert audit.get('status')=='READY' and str(audit.get('target_date') or '')[:10]==target, audit
-    assert audit.get('all_rows_current_slate') is True, audit
-    assert audit.get('actionable_unavailable_props')==0, audit
-    assert audit.get('legacy_fallback_enabled') is False, audit
-    assert audit.get('single_dashboard_contract') is True, audit
-
+    assert audit.get('status')=='READY' and str(audit.get('target_date') or '')[:10]==target and audit.get('all_rows_current_slate') is True and audit.get('actionable_unavailable_props')==0 and audit.get('legacy_fallback_enabled') is False and audit.get('single_dashboard_contract') is True, audit
     subprocess.run([sys.executable,'patch_dashboard_s19_m04.py'],check=True)
     final_html=HTML.read_text(encoding='utf-8')
-    if final_html.count('id="s19-m04-contract-script"') != 1:
-        raise SystemExit('Sprint 19 M04 dashboard contract marker missing or duplicated')
-    if 'WNBA_CANONICAL_DASHBOARD_CONTRACT' not in final_html:
-        raise SystemExit('Sprint 19 M04 canonical dashboard contract not installed')
+    if final_html.count('id="s19-m04-contract-script"') != 1 or 'WNBA_CANONICAL_DASHBOARD_CONTRACT' not in final_html: raise SystemExit('Sprint 19 M04 dashboard contract not installed exactly once')
     print({'status':'PASS','sprint':19,'module':'M04','target_date':target,'games':audit.get('games'),'player_props':audit.get('player_props'),'best_bets':audit.get('best_bets'),'portfolio':audit.get('portfolio'),'results_status':audit.get('results_status'),'single_dashboard_contract':True})
 
-    # M05 owns contract freshness/health. It must pass before Pages deployment.
     subprocess.run([sys.executable,'scripts/wnba_s19_m05_dashboard_health.py','--date',target],check=True)
-    if not M05.exists() or not M05_AUDIT.exists():
-        raise SystemExit('Sprint 19 M05 health artifacts missing')
-    m05=json.loads(M05.read_text(encoding='utf-8'))
-    a05=json.loads(M05_AUDIT.read_text(encoding='utf-8'))
+    if not M05.exists() or not M05_AUDIT.exists(): raise SystemExit('Sprint 19 M05 health artifacts missing')
+    m05=json.loads(M05.read_text(encoding='utf-8')); a05=json.loads(M05_AUDIT.read_text(encoding='utf-8'))
     assert m05.get('status')=='READY' and str(m05.get('target_date') or '')[:10]==target, m05
-    assert a05.get('status')=='READY' and str(a05.get('target_date') or '')[:10]==target, a05
-    assert a05.get('all_health_checks_pass') is True, a05
-    assert a05.get('legacy_fallback_enabled') is False, a05
-    assert a05.get('single_dashboard_contract') is True, a05
+    assert a05.get('status')=='READY' and str(a05.get('target_date') or '')[:10]==target and a05.get('all_health_checks_pass') is True and a05.get('legacy_fallback_enabled') is False and a05.get('single_dashboard_contract') is True, a05
     subprocess.run([sys.executable,'patch_dashboard_s19_m05.py'],check=True)
     final_html=HTML.read_text(encoding='utf-8')
-    if final_html.count('id="s19-m05-health-script"') != 1:
-        raise SystemExit('Sprint 19 M05 dashboard health marker missing or duplicated')
-    if 'WNBA_DASHBOARD_HEALTH' not in final_html:
-        raise SystemExit('Sprint 19 M05 dashboard health contract not installed')
+    if final_html.count('id="s19-m05-health-script"') != 1 or 'WNBA_DASHBOARD_HEALTH' not in final_html: raise SystemExit('Sprint 19 M05 dashboard health contract not installed exactly once')
     print({'status':'PASS','sprint':19,'module':'M05','target_date':target,'health':a05.get('status'),'healthy_checks':a05.get('healthy_checks'),'total_checks':a05.get('total_checks'),'contract_age_minutes':a05.get('contract_age_minutes')})
+
+    # M06 archives the current canonical predictions into the existing durable history/edge lifecycle.
+    subprocess.run([sys.executable,'scripts/wnba_s19_m06_results_lifecycle.py','--date',target],check=True)
+    if not M06.exists() or not M06_AUDIT.exists(): raise SystemExit('Sprint 19 M06 lifecycle artifacts missing')
+    m06=json.loads(M06.read_text(encoding='utf-8')); a06=json.loads(M06_AUDIT.read_text(encoding='utf-8'))
+    assert m06.get('status')=='READY' and str(m06.get('target_date') or '')[:10]==target, m06
+    assert a06.get('status')=='READY' and str(a06.get('target_date') or '')[:10]==target and a06.get('duplicate_history_keys')==0 and a06.get('same_day_final_results_inferred') is False and a06.get('existing_grader_reused') is True and a06.get('existing_edge_database_reused') is True, a06
+    subprocess.run([sys.executable,'patch_dashboard_s19_m06.py'],check=True)
+    final_html=HTML.read_text(encoding='utf-8')
+    if final_html.count('id="s19-m06-results-script"') != 1 or 'WNBA_RESULTS_LIFECYCLE' not in final_html: raise SystemExit('Sprint 19 M06 results lifecycle not installed exactly once')
+    print({'status':'PASS','sprint':19,'module':'M06','target_date':target,'target_history_records':a06.get('target_history_records'),'added_history_records':a06.get('added_history_records'),'target_edge_records':a06.get('target_edge_records'),'results_state':a06.get('results_state')})
 
 if __name__=='__main__':main()
