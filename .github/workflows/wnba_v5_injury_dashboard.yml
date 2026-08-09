@@ -100,28 +100,59 @@ jobs:
           python wnba_injury_intelligence.py --date "$TARGET"
           python wnba_injury_rotation_guard.py
 
-      - name: Verify applied injury intelligence
+      - name: Verify Player Props injury integration
         run: |
           python - <<'PY'
           import json, os
+          from datetime import datetime, timezone
           from pathlib import Path
-          for p in [Path('data/dashboard/wnba_injury_intelligence.json'), Path('data/warehouse/wnba_injury_intelligence.json')]:
-              assert p.exists(), p
-              data=json.load(p.open())
-              assert data.get('target_date') == os.environ['TARGET'], (p, data.get('target_date'))
-              assert isinstance(data.get('adjustments',[]), list), p
-              assert isinstance(data.get('team_impacts',[]), list), p
-              print(p, data.get('summary',{}))
+
+          target=os.environ['TARGET']
+          injury_path=Path('data/dashboard/wnba_injury_intelligence.json')
+          master_path=Path('data/dashboard/wnba_master.json')
+          assert injury_path.exists(), injury_path
+          assert master_path.exists(), master_path
+
+          injury=json.load(injury_path.open())
+          master=json.load(master_path.open())
+          assert injury.get('target_date') == target, injury.get('target_date')
+          assert str(master.get('target_date',''))[:10] == target, master.get('target_date')
+
+          adjustments=injury.get('adjustments',[]) or []
+          props=master.get('props',[]) or []
+          out_names={str(a.get('player','')).strip().lower() for a in adjustments if a.get('is_out')}
+          adjusted=[p for p in props if p.get('injury_adjusted')]
+          out_props=[p for p in props if str(p.get('player','')).strip().lower() in out_names]
+          actionable_out=[p for p in out_props if p.get('eligible',p.get('eligible_for_bet',True)) and str(p.get('final_action') or p.get('recommendation') or '').upper() not in {'PASS','BLOCK','SKIP'}]
+          assert not actionable_out, {'actionable_out_players':[p.get('player') for p in actionable_out]}
+
+          audit={
+            'generated_at_utc':datetime.now(timezone.utc).isoformat(),
+            'target_date':target,
+            'status':'READY',
+            'injury_adjustments':len(adjustments),
+            'props_total':len(props),
+            'props_injury_adjusted':len(adjusted),
+            'out_players_on_report':len(out_names),
+            'out_player_prop_rows':len(out_props),
+            'actionable_out_prop_rows':len(actionable_out),
+            'player_props_master_persisted':True,
+            'source':'existing_wnba_injury_intelligence_pipeline'
+          }
+          Path('data/dashboard/wnba_injury_integration_audit.json').write_text(json.dumps(audit,indent=2)+'\n')
+          print('PLAYER PROPS INJURY INTEGRATION VERIFIED', audit)
           PY
 
-      - name: Publish refreshed injury data safely
+      - name: Publish injury-adjusted Player Props data safely
         run: |
           git config user.name "WNBA Injury Intelligence Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Refresh V5 injury intelligence data" \
+            "Apply current injuries to Player Props" \
             'data/raw/injuries_today.csv' \
             'data/raw/injuries_status.json' \
             'data/raw/minute_projections.csv' \
             'data/dashboard/wnba_injury_intelligence.json' \
-            'data/warehouse/wnba_injury_intelligence.json'
+            'data/warehouse/wnba_injury_intelligence.json' \
+            'data/dashboard/wnba_injury_integration_audit.json' \
+            'data/dashboard/wnba_master.json'
