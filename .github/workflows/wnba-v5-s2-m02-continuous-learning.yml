@@ -1,0 +1,44 @@
+name: WNBA V5 S2 M02 Continuous Learning
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '55 5 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_ops_sprint2.py'
+      - 'wnba_v5_m05_champion_challenger.py'
+      - 'data/dashboard/wnba_v5_s2_m01_outcome_grader.json'
+      - 'data/dashboard/wnba_v5_historical_features.csv'
+      - '.github/workflows/wnba-v5-s2-m02-continuous-learning.yml'
+concurrency: {group: wnba-v5-s2, cancel-in-progress: false}
+jobs:
+  v5-s2-m02:
+    runs-on: ubuntu-latest
+    permissions: {contents: write}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: git pull --rebase origin main
+      - name: Compile
+        run: python -m py_compile wnba_v5_m05_champion_challenger.py wnba_v5_ops_sprint2.py
+      - name: Refresh research candidates
+        run: python wnba_v5_m05_champion_challenger.py
+      - name: Build S2 M02
+        run: python wnba_v5_ops_sprint2.py --module M02
+      - name: Verify S2 M02
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_s2_m02_continuous_learning.json'))
+          print(p); assert p['module']=='S2-M02'; assert p['automatic_production_promotion'] is False
+          PY
+      - name: Publish
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S2 Bot"; git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_m05_predictions.csv data/dashboard/wnba_v5_model_rankings.json data/dashboard/wnba_v5_champion.json data/dashboard/wnba_v5_ensemble_weights.json data/dashboard/wnba_v5_m05_report.json data/dashboard/wnba_v5_s2_m02_continuous_learning.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh V5 S2 M02 continuous learning"; git pull --rebase origin main; git push origin HEAD:main
