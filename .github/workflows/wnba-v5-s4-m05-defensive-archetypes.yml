@@ -1,0 +1,65 @@
+name: WNBA V5 S4 M05 Defensive Archetypes
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 11 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s4_m05_defensive_archetypes.py'
+      - 'data/dashboard/wnba_v5_team_defense_profiles.csv'
+      - 'data/dashboard/wnba_v5_team_defense_by_position.csv'
+      - 'data/dashboard/wnba_v5_rotation_intelligence.csv'
+      - '.github/workflows/wnba-v5-s4-m05-defensive-archetypes.yml'
+jobs:
+  v5-s4-m05:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 4 M05
+        run: python -m py_compile wnba_v5_s4_m05_defensive_archetypes.py
+      - name: Build defensive archetypes
+        run: python wnba_v5_s4_m05_defensive_archetypes.py
+      - name: Verify Sprint 4 M05
+        run: |
+          python - <<'PY'
+          import csv,json
+          p=json.load(open('data/dashboard/wnba_v5_s4_m05_report.json'))
+          print(p)
+          assert p['module']=='S4-M05'
+          assert p['status'] in {'READY','WAITING_FOR_M01_DEFENSE_PROFILES','WAITING_FOR_M04_ROTATION_ROWS','WAITING_FOR_MATCHABLE_ARCHETYPES'}
+          teams=list(csv.DictReader(open('data/dashboard/wnba_v5_defensive_archetypes.csv',encoding='utf-8-sig')))
+          matchups=list(csv.DictReader(open('data/dashboard/wnba_v5_defensive_archetype_matchups.csv',encoding='utf-8-sig')))
+          assert len(teams)==p['team_archetype_rows']
+          assert len(matchups)==p['ranked_rows']
+          assert p['archetype_ready_rows'] + p['missing_opponent_rows'] + p['missing_archetype_rows'] == p['ranked_rows']
+          for r in teams:
+              assert r['team'] and r['overall_archetype']
+              assert r['pace_archetype']=='UNAVAILABLE_NO_SOURCE'
+              assert r['rim_protection_archetype']=='UNAVAILABLE_NO_SOURCE'
+              assert r['transition_defense_archetype']=='UNAVAILABLE_NO_SOURCE'
+          if p['status']=='READY':
+              assert p['team_archetype_rows'] > 0
+              assert p['archetype_ready_rows'] > 0
+          PY
+      - name: Publish Sprint 4 M05 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S4 M05 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_defensive_archetypes.csv data/dashboard/wnba_v5_defensive_archetype_matchups.csv data/dashboard/wnba_v5_defensive_archetypes.json data/dashboard/wnba_v5_s4_m05_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 4 M05 defensive archetypes"
+          git pull --rebase origin main
+          git push origin HEAD:main
