@@ -1,0 +1,80 @@
+name: WNBA V5 M08 Context-Aware Challenger Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_m08_context_challenger.py'
+      - 'data/dashboard/wnba_v5_context_similarity.csv'
+      - 'data/dashboard/wnba_v5_m05_predictions.csv'
+      - 'data/dashboard/wnba_v5_m05_report.json'
+      - '.github/workflows/wnba-v5-m08-context-challenger.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-m08-context-challenger
+  cancel-in-progress: false
+
+jobs:
+  build-v5-m08:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile V5 M08 engine
+        run: python -m py_compile wnba_v5_m08_context_challenger.py
+      - name: Run context-aware challenger validation
+        run: python wnba_v5_m08_context_challenger.py
+      - name: Verify V5 M08
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_v5_m08_report.json')
+          assert p.exists(), 'missing M08 report'
+          d=json.loads(p.read_text())
+          assert d['status']=='READY'
+          assert d['evaluation_rows']>=80
+          assert d['baseline']=='KNN_BASELINE'
+          assert len(d['rankings'])>=2
+          print({k:d[k] for k in ['version','module','status','evaluation_rows','research_champion','context_challenger_promoted','next_module']})
+          print('baseline_metrics',d['baseline_metrics'])
+          print('top_models',d['rankings'][:3])
+          PY
+      - name: Publish V5 M08 safely
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 M08 Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_v5_context_challengers.csv \
+                  data/dashboard/wnba_v5_context_feature_importance.json \
+                  data/dashboard/wnba_v5_model_comparison.json \
+                  data/dashboard/wnba_v5_m08_validation.json \
+                  data/dashboard/wnba_v5_m08_report.json
+          if git diff --cached --quiet; then
+            echo 'No generated M08 changes.'
+            exit 0
+          fi
+          git commit -m 'Build WNBA V5 M08 context challenger outputs'
+          if git push origin HEAD:main; then exit 0; fi
+          mkdir -p /tmp/m08-out/data/dashboard
+          cp data/dashboard/wnba_v5_context_challengers.csv /tmp/m08-out/data/dashboard/
+          cp data/dashboard/wnba_v5_context_feature_importance.json /tmp/m08-out/data/dashboard/
+          cp data/dashboard/wnba_v5_model_comparison.json /tmp/m08-out/data/dashboard/
+          cp data/dashboard/wnba_v5_m08_validation.json /tmp/m08-out/data/dashboard/
+          cp data/dashboard/wnba_v5_m08_report.json /tmp/m08-out/data/dashboard/
+          git fetch origin main
+          git reset --hard origin/main
+          cp -r /tmp/m08-out/data/dashboard/* data/dashboard/
+          git add data/dashboard/wnba_v5_*
+          git commit -m 'Build WNBA V5 M08 context challenger outputs'
+          git push origin HEAD:main
