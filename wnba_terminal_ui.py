@@ -37,6 +37,22 @@ def first_existing(*paths: str) -> dict[str, Any]:
     return {}
 
 
+def payload_date(payload: dict[str, Any]) -> str | None:
+    if not isinstance(payload, dict):
+        return None
+    for key in ("target_date", "injury_target_date", "date"):
+        value = payload.get(key)
+        if value:
+            return str(value)[:10]
+    report = payload.get("report") or {}
+    if isinstance(report, dict):
+        for key in ("target_date", "injury_target_date"):
+            value = report.get(key)
+            if value:
+                return str(value)[:10]
+    return None
+
+
 def build(target: str):
     bundle = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -71,10 +87,25 @@ def build(target: str):
     }
 
     decision_payload = bundle["v5_decisions"]
-    decisions = decision_payload.get("decisions", []) if isinstance(decision_payload, dict) else []
+    raw_decisions = decision_payload.get("decisions", []) if isinstance(decision_payload, dict) else []
     decision_report = decision_payload.get("report", {}) if isinstance(decision_payload, dict) else {}
-    buy_signals = bundle["v5_buy_signals"].get("signals", []) or []
-    live_portfolio = bundle["v5_portfolio"].get("portfolio", []) or []
+    decisions = [x for x in raw_decisions if isinstance(x, dict) and str(x.get("date") or "")[:10] == target]
+    stale_decision_rows = len([x for x in raw_decisions if isinstance(x, dict) and str(x.get("date") or "")[:10] not in {"", target}])
+    raw_signals = bundle["v5_buy_signals"].get("signals", []) or []
+    buy_signals = [x for x in raw_signals if not x.get("date") or str(x.get("date"))[:10] == target]
+    raw_portfolio = bundle["v5_portfolio"].get("portfolio", []) or []
+    live_portfolio = [x for x in raw_portfolio if not x.get("date") or str(x.get("date"))[:10] == target]
+
+    source_dates = {
+        "decisions": payload_date(decision_payload),
+        "buy_signals": payload_date(bundle["v5_buy_signals"]),
+        "portfolio": payload_date(bundle["v5_portfolio"]),
+        "injuries": payload_date(bundle["injury_intelligence"]),
+    }
+    source_alignment = {name: (value in {None, target}) for name, value in source_dates.items()}
+    actionable_out = sum(1 for row in decisions if str(row.get("injury_status") or "").upper() in {"OUT", "DOUBTFUL"} and str(row.get("decision_state") or "").upper() in {"BUY_NOW", "BUY_BEFORE_MOVE"})
+    bundle_status = "READY" if all(source_alignment.values()) and stale_decision_rows == 0 and actionable_out == 0 else "BLOCKED_STALE_OR_UNSAFE_V5_SOURCE"
+
     consensus = bundle["consensus"]
     health = bundle["source_health"]
     monte_carlo = bundle["monte_carlo"]
@@ -89,7 +120,7 @@ def build(target: str):
     game_perf = bundle["game_performance"]
 
     ranked = sorted(
-        [x for x in decisions if isinstance(x, dict)],
+        decisions,
         key=lambda x: (x.get("decision_state") in {"BUY_NOW", "BUY_BEFORE_MOVE"}, float(x.get("expected_value") or -999)),
         reverse=True,
     )
@@ -107,7 +138,24 @@ def build(target: str):
     alt_summary = alt.get("summary") or {}
     game_summary = game_perf.get("summary") or {}
 
+    bundle["v5_source_audit"] = {
+        "status": bundle_status,
+        "target_date": target,
+        "source_dates": source_dates,
+        "source_alignment": source_alignment,
+        "raw_decision_rows": len(raw_decisions),
+        "current_decision_rows": len(decisions),
+        "stale_decision_rows": stale_decision_rows,
+        "raw_buy_signals": len(raw_signals),
+        "current_buy_signals": len(buy_signals),
+        "raw_portfolio_rows": len(raw_portfolio),
+        "current_portfolio_rows": len(live_portfolio),
+        "actionable_out_rows": actionable_out,
+        "legacy_live_fallback_allowed": False,
+    }
+
     bundle["terminal_summary"] = {
+        "bundle_status": bundle_status,
         "live_decision_source": "wnba_v5_live_decisions.json",
         "live_best_bets_source": "wnba_v5_buy_signals.json",
         "live_portfolio_source": "wnba_v5_live_portfolio.json",
@@ -115,17 +163,18 @@ def build(target: str):
         "final_bets": len(buy_signals),
         "final_leans": sum(1 for row in decisions if row.get("decision_state") in {"WATCH", "HOLD"}),
         "decision_rows": len(decisions),
+        "stale_decision_rows_blocked": stale_decision_rows,
         "bet_count": len(buy_signals),
         "lean_count": sum(1 for row in decisions if row.get("decision_state") in {"WATCH", "HOLD"}),
         "v5_status": decision_report.get("status"),
-        "v5_scored_rows": decision_report.get("v5_scored_rows", 0),
-        "v5_actionable_rows": decision_report.get("actionable_rows", len(buy_signals)),
+        "v5_scored_rows": sum(1 for row in decisions if row.get("v5_probability") is not None),
+        "v5_actionable_rows": len([row for row in decisions if row.get("decision_state") in {"BUY_NOW", "BUY_BEFORE_MOVE"}]),
         "injury_target_date": decision_report.get("injury_target_date") or bundle["v5_portfolio"].get("injury_target_date") or bundle["injury_intelligence"].get("target_date"),
-        "injury_blocked_rows": decision_report.get("injury_blocked_rows", 0),
-        "injury_limited_rows": decision_report.get("injury_limited_rows", 0),
-        "actionable_out_rows": decision_report.get("actionable_out_rows", 0),
+        "injury_blocked_rows": sum(1 for row in decisions if str(row.get("injury_status") or "").upper() in {"OUT", "DOUBTFUL"}),
+        "injury_limited_rows": sum(1 for row in decisions if str(row.get("injury_status") or "").upper() in {"QUESTIONABLE", "UNKNOWN"}),
+        "actionable_out_rows": actionable_out,
         "portfolio_card_size": len(live_portfolio),
-        "portfolio_total_units": bundle["v5_portfolio"].get("total_units", 0.0),
+        "portfolio_total_units": bundle["v5_portfolio"].get("total_units", 0.0) if live_portfolio else 0.0,
         "source_ok": health_summary.get("ok_or_optional", 0),
         "source_total": health_summary.get("sources", 0),
         "source_degraded": health_summary.get("degraded_or_missing", 0),
@@ -172,6 +221,8 @@ def build(target: str):
     with open(temporary, "w", encoding="utf-8") as handle:
         json.dump(bundle, handle, indent=2, allow_nan=False)
     os.replace(temporary, path)
+    with open("data/dashboard/wnba_v5_dashboard_source_audit.json", "w", encoding="utf-8") as handle:
+        json.dump(bundle["v5_source_audit"], handle, indent=2, allow_nan=False)
     print(f"Terminal UI bundle built: {bundle['terminal_summary']}")
     return bundle["terminal_summary"]
 
