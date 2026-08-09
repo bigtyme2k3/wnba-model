@@ -1,0 +1,44 @@
+name: WNBA V5 S2 M01 Automated Outcome Grader
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 5 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_ops_sprint2.py'
+      - 'wnba_v5_m12_postgame_learning.py'
+      - 'data/dashboard/wnba_v5_live_inference.json'
+      - 'data/dashboard/wnba_v5_historical_features.csv'
+      - '.github/workflows/wnba-v5-s2-m01-outcome-grader.yml'
+concurrency: {group: wnba-v5-s2, cancel-in-progress: false}
+jobs:
+  v5-s2-m01:
+    runs-on: ubuntu-latest
+    permissions: {contents: write}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: git pull --rebase origin main
+      - name: Compile
+        run: python -m py_compile wnba_v5_m12_postgame_learning.py wnba_v5_ops_sprint2.py
+      - name: Grade certified outcomes
+        run: python wnba_v5_m12_postgame_learning.py
+      - name: Build S2 M01
+        run: python wnba_v5_ops_sprint2.py --module M01
+      - name: Verify S2 M01
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_s2_m01_outcome_grader.json'))
+          print(p); assert p['module']=='S2-M01'; assert p['immutable_probabilities'] is True
+          PY
+      - name: Publish
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S2 Bot"; git config user.email "actions@users.noreply.github.com"
+          git add data/history/wnba_v5_forward_predictions.jsonl data/dashboard/wnba_v5_forward_validation.csv data/dashboard/wnba_v5_forward_metrics.json data/dashboard/wnba_v5_learning_state.json data/dashboard/wnba_v5_m12_report.json data/dashboard/wnba_v5_s2_m01_outcome_grader.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh V5 S2 M01 outcome grading"; git pull --rebase origin main; git push origin HEAD:main
