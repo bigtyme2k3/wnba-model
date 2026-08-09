@@ -2,17 +2,26 @@ name: WNBA V5 Injury Intelligence
 
 on:
   workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target slate date (YYYY-MM-DD); blank uses active slate'
+        required: false
+        default: ''
+  schedule:
+    - cron: '12,42 * * * *'
   push:
     branches: [main]
     paths:
-      - 'data/dashboard/wnba_injury_intelligence.json'
-      - 'wnba_injury_refresh.py'
+      - 'scrape_official_wnba_injuries.py'
+      - 'scrape_injuries.py'
+      - 'wnba_injury_intelligence.py'
+      - 'wnba_injury_rotation_guard.py'
       - '.github/workflows/wnba_v5_injury_dashboard.yml'
   workflow_run:
     workflows:
-      - "WNBA Injury Refresh"
       - "WNBA V4 Player Props Polish"
       - "WNBA Postgame Learning Pipeline"
+      - "WNBA Consolidated Hourly Intelligence"
     types: [completed]
 
 concurrency:
@@ -40,34 +49,79 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Refresh injury intelligence when available
+      - name: Install injury dependencies
         run: |
-          TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
-          if [ -f wnba_injury_refresh.py ]; then
-            python wnba_injury_refresh.py --date "$TARGET"
-          else
-            echo 'wnba_injury_refresh.py unavailable; validating existing payload.'
-          fi
+          python -m pip install --upgrade pip
+          pip install pandas requests pdfplumber
 
-      - name: Verify injury payload
+      - name: Resolve target date
+        run: |
+          REQUESTED="${{ github.event.inputs.date }}"
+          if [ -n "$REQUESTED" ]; then
+            TARGET="$REQUESTED"
+          else
+            TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
+          fi
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Injury target: $TARGET"
+
+      - name: Validate existing injury pipeline
+        run: |
+          python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_injury_rotation_guard.py
+
+      - name: Refresh official WNBA injury report
+        run: |
+          python scrape_official_wnba_injuries.py --date "$TARGET" --out data/raw
+
+      - name: Verify official injury source freshness
         run: |
           python - <<'PY'
-          import json
+          import json, os
+          from datetime import datetime, timezone
           from pathlib import Path
-          p=Path('data/dashboard/wnba_injury_intelligence.json')
-          if not p.exists():
-              raise SystemExit('Injury intelligence payload missing')
-          data=json.load(p.open())
-          if not isinstance(data,dict):
-              raise SystemExit('Injury intelligence payload must be an object')
-          print({'injury_payload':str(p),'keys':sorted(data)[:20]})
+          import pandas as pd
+
+          status=json.load(open('data/raw/injuries_status.json'))
+          assert status.get('target_date') == os.environ['TARGET'], status
+          stamp=status.get('completed_at_utc') or status.get('generated_at_utc')
+          assert stamp, status
+          age=(datetime.now(timezone.utc)-datetime.fromisoformat(stamp.replace('Z','+00:00'))).total_seconds()
+          assert 0 <= age < 1800, {'age_seconds':age, **status}
+          assert status.get('primary_source') in {'official_wnba_pdf','espn_fallback'}, status
+          path=Path('data/raw/injuries_today.csv')
+          assert path.exists(), path
+          frame=pd.read_csv(path)
+          assert {'player','team','severity','source'}.issubset(frame.columns), frame.columns.tolist()
+          print('INJURY FEED FRESH', status)
           PY
 
-      - name: Publish injury data only
+      - name: Apply injury intelligence to current slate
+        run: |
+          python wnba_injury_intelligence.py --date "$TARGET"
+          python wnba_injury_rotation_guard.py
+
+      - name: Verify applied injury intelligence
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          for p in [Path('data/dashboard/wnba_injury_intelligence.json'), Path('data/warehouse/wnba_injury_intelligence.json')]:
+              assert p.exists(), p
+              data=json.load(p.open())
+              assert data.get('target_date') == os.environ['TARGET'], (p, data.get('target_date'))
+              assert isinstance(data.get('adjustments',[]), list), p
+              assert isinstance(data.get('team_impacts',[]), list), p
+              print(p, data.get('summary',{}))
+          PY
+
+      - name: Publish refreshed injury data safely
         run: |
           git config user.name "WNBA Injury Intelligence Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
             "Refresh V5 injury intelligence data" \
+            'data/raw/injuries_today.csv' \
+            'data/raw/injuries_status.json' \
+            'data/raw/minute_projections.csv' \
             'data/dashboard/wnba_injury_intelligence.json' \
             'data/warehouse/wnba_injury_intelligence.json'
