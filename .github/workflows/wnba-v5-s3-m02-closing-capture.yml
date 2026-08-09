@@ -1,0 +1,67 @@
+name: WNBA V5 S3 M02 Explicit Closing Capture
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s3_m02_closing_capture.py'
+      - 'data/dashboard/wnba_v5_s3_m01_freshness.json'
+      - 'data/dashboard/wnba_v5_live_inference.json'
+      - '.github/workflows/wnba-v5-s3-m02-closing-capture.yml'
+jobs:
+  v5-s3-m02:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      V5_CLOSE_WINDOW_MIN: '15'
+      V5_CLOSE_BOOKMAKERS: 'fanduel,draftkings'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 3 M02 capture engine
+        run: python -m py_compile wnba_v5_s3_m02_closing_capture.py
+      - name: Capture eligible explicit closing observations
+        run: python wnba_v5_s3_m02_closing_capture.py
+      - name: Verify Sprint 3 M02
+        run: |
+          python - <<'PY'
+          import csv,json
+          p=json.load(open('data/dashboard/wnba_v5_s3_m02_report.json'))
+          print(p)
+          assert p['module']=='S3-M02'
+          assert p['status'] in {
+            'BLOCKED_STALE_SLATE','WAITING_FOR_M11_SCORES','WAITING_FOR_ODDS_API_KEY',
+            'WAITING_FOR_CLOSE_WINDOW','NO_MATCHING_PROP_MARKETS','CAPTURED_EXPLICIT_CLOSES'
+          }
+          rows=list(csv.DictReader(open('data/dashboard/wnba_v5_closing_lines.csv',encoding='utf-8-sig')))
+          for r in rows:
+            assert r['capture_class']=='EXPLICIT_PRETIP_CLOSE'
+            assert r['is_explicit_close'].lower() in {'true','1'}
+            assert float(r['minutes_to_tip']) >= 0
+            assert float(r['minutes_to_tip']) <= float(p['close_window_minutes'])
+          if p['status']=='BLOCKED_STALE_SLATE':
+            assert p['api_calls']==0
+          print('explicit_close_rows',len(rows))
+          PY
+      - name: Publish Sprint 3 M02 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S3 M02 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_closing_lines.csv data/dashboard/wnba_v5_closing_snapshot.json data/dashboard/wnba_v5_clv_queue.json data/dashboard/wnba_v5_s3_m02_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 3 M02 closing capture"
+          git pull --rebase origin main
+          git push origin HEAD:main
