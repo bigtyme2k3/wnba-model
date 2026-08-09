@@ -97,6 +97,12 @@ jobs:
       - name: Grade completed games and rebuild performance data
         run: |
           YESTERDAY=$(date -d yesterday +%F)
+          if [ -f wnba_results_grader.py ]; then
+            python wnba_results_grader.py --date "$YESTERDAY"
+          fi
+          if [ -f wnba_edge_database.py ]; then
+            python wnba_edge_database.py --date "$YESTERDAY"
+          fi
           if [ -f wnba_game_performance_tracker.py ]; then
             python wnba_game_performance_tracker.py --date "$YESTERDAY" --grade || true
             python wnba_game_performance_tracker.py --analyze
@@ -109,106 +115,53 @@ jobs:
 
       - name: Reassert authoritative current slate after all rebuilds
         run: |
-          if [ ! -f wnba_current_slate.py ]; then
-            echo 'Missing authoritative current-slate refresher.' >&2
-            exit 1
-          fi
-          if [ -z "${ODDS_API_KEY:-}" ]; then
-            echo 'ODDS_API_KEY secret is unavailable; ESPN must succeed.'
-          else
-            echo 'The Odds API fallback is available.'
-          fi
+          if [ ! -f wnba_current_slate.py ]; then echo 'Missing authoritative current-slate refresher.' >&2; exit 1; fi
+          if [ -z "${ODDS_API_KEY:-}" ]; then echo 'ODDS_API_KEY secret is unavailable; ESPN must succeed.'; else echo 'The Odds API fallback is available.'; fi
           python wnba_current_slate.py --date "$TARGET"
           python - <<'PY'
           import json, os
           from pathlib import Path
-          target = os.environ['TARGET']
-          data = json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8'))
-          actual = str(data.get('target_date') or '')
-          if actual != target:
-              raise SystemExit(f'Final current-slate reassertion failed: expected {target}, found {actual or "missing"}')
-          refresh = data.get('current_slate_refresh') or {}
-          print({
-              'final_master_target': actual,
-              'today_games': data.get('summary', {}).get('today_games'),
-              'source': refresh.get('source'),
-              'fallback_errors': refresh.get('fallback_errors'),
-          })
+          target=os.environ['TARGET']; data=json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8')); actual=str(data.get('target_date') or '')
+          if actual!=target: raise SystemExit(f'Final current-slate reassertion failed: expected {target}, found {actual or "missing"}')
+          refresh=data.get('current_slate_refresh') or {}
+          print({'final_master_target':actual,'today_games':data.get('summary',{}).get('today_games'),'source':refresh.get('source'),'fallback_errors':refresh.get('fallback_errors')})
           PY
 
       - name: Build dashboard tab freshness manifest
         run: |
           python - <<'PY'
-          import json, os
-          from datetime import datetime, timezone
+          import json,os
+          from datetime import datetime,timezone
           from pathlib import Path
-          target = os.environ['TARGET']
-          mapping = {
-              'games': ['wnba_master.json','wnba_current_slate.json','wnba_daily_report.json','wnba_games.json'],
-              'game_props': ['wnba_game_props.json','wnba_game_prop_intelligence.json'],
-              'player_props': ['wnba_player_props.json','wnba_player_prop_intelligence.json'],
-              'alt_streaks': ['wnba_alt_streaks.json','wnba_alt_market_watch.json'],
-              'alt_performance': ['wnba_alt_performance.json','wnba_alt_pending_diagnostics.json'],
-              'daily_edges': ['wnba_daily_edges.json','wnba_daily_edge_engine.json'],
-              'ensemble': ['wnba_ensemble_intelligence.json','wnba_ensemble.json'],
-              'simulation': ['wnba_unified_simulation.json','wnba_monte_carlo_scenarios.json'],
-              'best_bets': ['wnba_best_bets.json'],
-              'portfolio': ['wnba_portfolio.json','wnba_portfolio_intelligence.json'],
-              'results': ['wnba_results.json','wnba_live_results.json'],
-              'performance': ['wnba_game_performance.json','wnba_model_performance.json'],
-              'explainability': ['wnba_explainability.json','wnba_model_audit.json'],
-              'remaining_season': ['wnba_remaining_season_intelligence.json'],
-              'market_intelligence': ['wnba_market_timeline_summary.json','wnba_line_movement_summary.json'],
-              'injuries': ['wnba_injury_intelligence.json'],
-          }
-          root = Path('data/dashboard')
-          now = datetime.now(timezone.utc)
-          tabs = {}
-          for tab, candidates in mapping.items():
-              found = next((root / name for name in candidates if (root / name).exists()), None)
-              if not found:
-                  tabs[tab] = {'status':'missing','target_date':target,'file':None,'generated_at':None,'age_minutes':None}
-                  continue
-              modified = datetime.fromtimestamp(found.stat().st_mtime, timezone.utc)
-              age = round((now-modified).total_seconds()/60, 1)
-              tabs[tab] = {'status':'fresh' if age <= 180 else 'stale','target_date':target,'file':str(found),'generated_at':modified.isoformat(),'age_minutes':age}
-          payload = {'target_date':target,'generated_at':now.isoformat(),'tabs':tabs}
-          root.mkdir(parents=True, exist_ok=True)
-          (root/'wnba_tab_freshness.json').write_text(json.dumps(payload, indent=2), encoding='utf-8')
-          print(json.dumps(payload, indent=2))
+          target=os.environ['TARGET']; root=Path('data/dashboard'); now=datetime.now(timezone.utc)
+          mapping={'games':['wnba_master.json','wnba_current_slate.json','wnba_daily_report.json','wnba_games.json'],'game_props':['wnba_game_props.json','wnba_game_prop_intelligence.json'],'player_props':['wnba_player_props.json','wnba_player_prop_intelligence.json'],'alt_streaks':['wnba_alt_streaks.json','wnba_alt_market_watch.json'],'alt_performance':['wnba_alt_performance.json','wnba_alt_pending_diagnostics.json'],'daily_edges':['wnba_daily_edges.json','wnba_daily_edge_engine.json'],'ensemble':['wnba_ensemble_intelligence.json','wnba_ensemble.json'],'simulation':['wnba_unified_simulation.json','wnba_monte_carlo_scenarios.json'],'best_bets':['wnba_best_bets.json'],'portfolio':['wnba_portfolio.json','wnba_portfolio_intelligence.json'],'results':['wnba_results_grading.json','wnba_results.json','wnba_live_results.json'],'performance':['wnba_game_performance.json','wnba_model_performance.json'],'explainability':['wnba_explainability.json','wnba_model_audit.json'],'remaining_season':['wnba_remaining_season_intelligence.json'],'market_intelligence':['wnba_market_timeline_summary.json','wnba_line_movement_summary.json'],'injuries':['wnba_injury_intelligence.json']}
+          tabs={}
+          for tab,candidates in mapping.items():
+              found=next((root/name for name in candidates if (root/name).exists()),None)
+              if not found: tabs[tab]={'status':'missing','target_date':target,'file':None,'generated_at':None,'age_minutes':None}; continue
+              modified=datetime.fromtimestamp(found.stat().st_mtime,timezone.utc); age=round((now-modified).total_seconds()/60,1)
+              tabs[tab]={'status':'fresh' if age<=180 else 'stale','target_date':target,'file':str(found),'generated_at':modified.isoformat(),'age_minutes':age}
+          payload={'target_date':target,'generated_at':now.isoformat(),'tabs':tabs}; root.mkdir(parents=True,exist_ok=True); (root/'wnba_tab_freshness.json').write_text(json.dumps(payload,indent=2),encoding='utf-8'); print(json.dumps(payload,indent=2))
           PY
 
       - name: Verify generated current slate and required tab data
         run: |
           python - <<'PY'
-          import json, os
+          import json,os
           from pathlib import Path
-          target = os.environ['TARGET']
-          master = Path('data/dashboard/wnba_master.json')
-          if not master.exists():
-              raise SystemExit('Canonical current-slate file was not generated: data/dashboard/wnba_master.json')
-          data = json.loads(master.read_text(encoding='utf-8'))
-          actual = str(data.get('target_date') or '')
-          if actual != target:
-              raise SystemExit(f'Canonical current-slate target mismatch: expected {target}, found {actual or "missing"}')
-          manifest = Path('data/dashboard/wnba_tab_freshness.json')
-          if not manifest.exists():
-              raise SystemExit('Dashboard tab freshness manifest was not generated')
-          payload = json.loads(manifest.read_text(encoding='utf-8'))
-          if str(payload.get('target_date') or '') != target:
-              raise SystemExit('Freshness manifest target date does not match rollover target')
-          critical = ['games','daily_edges','ensemble','simulation','best_bets','results','performance','remaining_season']
-          missing = [name for name in critical if payload['tabs'].get(name,{}).get('status') == 'missing']
-          print({'target': target,'master_target_date': actual,'today_games': data.get('summary',{}).get('today_games'),'critical_missing': missing})
-          if missing:
-              print('WARNING: critical tabs missing data:', ', '.join(missing))
+          target=os.environ['TARGET']; master=Path('data/dashboard/wnba_master.json')
+          if not master.exists(): raise SystemExit('Canonical current-slate file was not generated')
+          data=json.loads(master.read_text(encoding='utf-8')); actual=str(data.get('target_date') or '')
+          if actual!=target: raise SystemExit(f'Canonical current-slate target mismatch: expected {target}, found {actual or "missing"}')
+          payload=json.loads(Path('data/dashboard/wnba_tab_freshness.json').read_text(encoding='utf-8'))
+          if str(payload.get('target_date') or '')!=target: raise SystemExit('Freshness manifest target mismatch')
+          critical=['games','daily_edges','ensemble','simulation','best_bets','results','performance','remaining_season']; missing=[name for name in critical if payload['tabs'].get(name,{}).get('status')=='missing']
+          print({'target':target,'master_target_date':actual,'today_games':data.get('summary',{}).get('today_games'),'critical_missing':missing})
+          if missing: print('WARNING: critical tabs missing data:',', '.join(missing))
           PY
-          if git diff --quiet -- data/dashboard data/wnba data/warehouse data/market data/forecast; then
-            echo 'Rollover generated no publishable data changes; refusing false-success completion.' >&2
-            exit 1
-          fi
+          if git diff --quiet -- data/dashboard data/wnba data/warehouse data/market data/forecast data/history; then echo 'Rollover generated no publishable data changes; refusing false-success completion.' >&2; exit 1; fi
           echo 'Generated publishable changes:'
-          git status --short -- data/dashboard data/wnba data/warehouse data/market data/forecast
+          git status --short -- data/dashboard data/wnba data/warehouse data/market data/forecast data/history
 
       - name: Publish refreshed tab and slate data
         run: |
@@ -220,7 +173,8 @@ jobs:
             'data/wnba' \
             'data/warehouse' \
             'data/market' \
-            'data/forecast'
+            'data/forecast' \
+            'data/history'
 
       - name: Verify published main commit and deployment trigger
         run: |
@@ -230,19 +184,13 @@ jobs:
           echo "Published main commit: $PUBLISHED_SHA"
           git show "origin/main:data/dashboard/wnba_master.json" > /tmp/published_wnba_master.json
           python - <<'PY'
-          import json, os
+          import json,os
           from pathlib import Path
-          target = os.environ['TARGET']
-          data = json.loads(Path('/tmp/published_wnba_master.json').read_text(encoding='utf-8'))
-          actual = str(data.get('target_date') or '')
-          if actual != target:
-              raise SystemExit(f'Published main is stale: expected target_date {target}, found {actual or "missing"}')
-          print({'published_target_date': actual, 'today_games': data.get('summary',{}).get('today_games')})
+          target=os.environ['TARGET']; data=json.loads(Path('/tmp/published_wnba_master.json').read_text(encoding='utf-8')); actual=str(data.get('target_date') or '')
+          if actual!=target: raise SystemExit(f'Published main is stale: expected target_date {target}, found {actual or "missing"}')
+          print({'published_target_date':actual,'today_games':data.get('summary',{}).get('today_games')})
           PY
           CHANGED=$(git diff-tree --no-commit-id --name-only -r "$PUBLISHED_SHA")
           echo "$CHANGED"
-          if ! grep -q '^data/dashboard/' <<< "$CHANGED"; then
-            echo 'Published commit did not contain dashboard data, so Deploy WNBA Dashboard would not trigger.' >&2
-            exit 1
-          fi
+          if ! grep -q '^data/dashboard/' <<< "$CHANGED"; then echo 'Published commit did not contain dashboard data, so Deploy WNBA Dashboard would not trigger.' >&2; exit 1; fi
           echo 'Dashboard data is committed to main. The existing Deploy WNBA Dashboard push trigger will now run.'
