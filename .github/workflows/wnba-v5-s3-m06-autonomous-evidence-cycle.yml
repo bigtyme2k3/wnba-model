@@ -1,0 +1,99 @@
+name: WNBA V5 S3 M06 Autonomous Evidence Cycle
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s3_m06_autonomous_evidence_cycle.py'
+      - 'wnba_v5_s3_m01_freshness_guard.py'
+      - 'wnba_v5_m11_live_inference.py'
+      - 'wnba_v5_s3_m03_forward_reconciler.py'
+      - 'wnba_v5_s3_m04_explicit_clv.py'
+      - 'wnba_v5_s3_m05_evidence_dashboard.py'
+      - 'data/dashboard/wnba_v5_s3_m02_report.json'
+      - '.github/workflows/wnba-v5-s3-m06-autonomous-evidence-cycle.yml'
+concurrency:
+  group: wnba-v5-s3-m06
+  cancel-in-progress: true
+jobs:
+  v5-s3-m06:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 3 M06 stack
+        run: |
+          python -m py_compile wnba_v5_s3_m06_autonomous_evidence_cycle.py
+          python -m py_compile wnba_v5_s3_m01_freshness_guard.py
+          python -m py_compile wnba_v5_m11_live_inference.py
+          python -m py_compile wnba_v5_s3_m03_forward_reconciler.py
+          python -m py_compile wnba_v5_s3_m04_explicit_clv.py
+          python -m py_compile wnba_v5_s3_m05_evidence_dashboard.py
+      - name: Run autonomous evidence cycle
+        run: python wnba_v5_s3_m06_autonomous_evidence_cycle.py
+      - name: Verify Sprint 3 M01-M06
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_s3_m06_autonomous_cycle.json'))
+          s=json.load(open('data/dashboard/wnba_v5_sprint3_status.json'))
+          print(p)
+          print(s)
+          assert p['module']=='S3-M06'
+          assert p['status']=='READY'
+          assert p['api_policy']['m06_api_calls']==0
+          assert p['api_policy']['closing_capture_owner']=='S3-M02 dedicated pre-tip watcher'
+          assert p['safety']['inferred_closes_allowed'] is False
+          assert p['safety']['issued_predictions_mutable'] is False
+          assert all(p['module_outputs_present'].values())
+          assert s['sprint']=='OPERATIONS_SPRINT_3'
+          assert s['status']=='COMPLETE'
+          assert all(v=='READY' for v in s['modules'].values())
+          PY
+      - name: Publish Sprint 3 M06 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S3 M06 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_s3_m01_freshness.json \
+                  data/dashboard/wnba_v5_current_slate.json \
+                  data/dashboard/wnba_v5_stale_game_report.json \
+                  data/dashboard/wnba_v5_slate_validation.json \
+                  data/dashboard/wnba_v5_schedule_health.json \
+                  data/dashboard/wnba_v5_live_inference.json \
+                  data/dashboard/wnba_v5_live_inference.csv \
+                  data/dashboard/wnba_v5_m11_report.json \
+                  data/history/wnba_v5_forward_predictions.jsonl \
+                  data/dashboard/wnba_v5_forward_validation.csv \
+                  data/dashboard/wnba_v5_forward_metrics.json \
+                  data/dashboard/wnba_v5_learning_state.json \
+                  data/dashboard/wnba_v5_m12_report.json \
+                  data/dashboard/wnba_v5_s3_m03_forward_grade.json \
+                  data/dashboard/wnba_v5_pending_predictions.json \
+                  data/dashboard/wnba_v5_certified_results.csv \
+                  data/dashboard/wnba_v5_explicit_clv.csv \
+                  data/dashboard/wnba_v5_clv_summary.json \
+                  data/dashboard/wnba_v5_market_edge.json \
+                  data/dashboard/wnba_v5_s3_m04_report.json \
+                  data/dashboard/wnba_v5_evidence_dashboard.json \
+                  data/dashboard/wnba_v5_promotion_meter.json \
+                  data/dashboard/wnba_v5_evidence_history.csv \
+                  data/dashboard/wnba_v5_s3_m05_report.json \
+                  data/dashboard/wnba_v5_s3_m06_autonomous_cycle.json \
+                  data/dashboard/wnba_v5_sprint3_status.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 3 autonomous evidence cycle"
+          git pull --rebase origin main
+          git push origin HEAD:main
