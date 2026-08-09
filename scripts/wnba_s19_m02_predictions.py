@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 import math
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -116,6 +117,10 @@ def build(target: str):
         if item.get('game'):
             game_names.add(str(item['game']))
 
+    # Always regenerate current prop projections from the exact current raw market file.
+    # This prevents a top-level current master date from masking historical prop rows.
+    subprocess.run(['python', 'player_points.py', '--date', target, '--out', 'data/raw'], check=True)
+
     adjustments = {norm(a.get('player')): a for a in injury.get('adjustments', []) or [] if a.get('player')}
     prop_source = read_csv(PROP_PRED)
     if not prop_source:
@@ -155,8 +160,6 @@ def build(target: str):
             projected_minutes = adj.get('projected_minutes')
             minutes_delta = adj.get('minutes_delta')
             injury_adjusted = True
-            # player_points already applies direct QUESTIONABLE/PROBABLE availability.
-            # Only beneficiary redistribution is layered here to avoid double counting.
             if injury_status == 'BENEFICIARY' and injury_factor is not None:
                 projection = round(projection * injury_factor, 2)
 
@@ -219,11 +222,11 @@ def build(target: str):
     payload = {
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
         'target_date': target,
-        'schema_version': 'sprint19-m02-unified-predictions-v2',
+        'schema_version': 'sprint19-m02-unified-predictions-v3',
         'status': 'READY',
         'source_policy': {
             'games': 'data/dashboard/wnba_sprint2_phase2.json',
-            'player_props': 'data/raw/player_points_today.csv exact current-slate game keys + current injury intelligence',
+            'player_props': 'fresh player_points.py output with exact current-slate game keys + current injury intelligence',
             'best_bets': 'data/dashboard/wnba_v5_buy_signals.json only; no Phase 2 fallback',
             'portfolio': 'data/dashboard/wnba_v5_live_portfolio.json only; no Phase 2 fallback',
         },
