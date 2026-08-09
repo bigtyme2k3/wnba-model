@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-09T01:27:13.419962+00:00",
+  "generated_at_utc": "2026-08-09T14:02:15.904560+00:00",
   "version": "V5",
   "promotion_state": "SHADOW",
   "production_ready": false,
@@ -29,14 +29,15 @@
       "pass": true
     },
     "pipeline_health": {
-      "m10": "READY_SHADOW",
-      "m11": "READY_SHADOW",
-      "pass": true
+      "m10": "STANDBY_NO_LIVE_V5_SCORES",
+      "m11": "BLOCKED_STALE_SLATE",
+      "pass": false
     }
   },
   "blockers": [
     "forward graded sample 0/300",
     "explicit CLV coverage 0.00%/60%",
+    "live shadow pipeline not healthy",
     "forward V5 Brier has not yet beaten market"
   ],
   "recommendation": "CONTINUE_SHADOW_MODE"
