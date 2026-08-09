@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 HTML = Path('docs/index.html')
@@ -60,6 +62,14 @@ window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'1.1',location:'below-alt-props
     html = replace_element(html, 'script', SCRIPT_ID, script)
     HTML.write_text(html, encoding='utf-8')
     print({'status':'PASS','alt_props_performance':'below-table','data':DATA.exists(),'shows_pending':True})
+
+    # Sprint 19 M03 is the final consumer layer. It runs after M02 has installed
+    # the injury-aware Games/Props routes, then takes ownership of Best Bets,
+    # Portfolio, and Results from one canonical synchronized payload.
+    target = subprocess.run([sys.executable, 'active_slate_date.py'], capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1].strip()
+    subprocess.run([sys.executable, 'scripts/wnba_s19_m03_dashboard_consumer.py', '--date', target], check=True)
+    subprocess.run([sys.executable, 'patch_dashboard_s19_m03.py'], check=True)
+    print({'status':'PASS','sprint':19,'module':'M03','canonical_consumer_installed':True,'target_date':target})
 
 
 if __name__ == '__main__':
