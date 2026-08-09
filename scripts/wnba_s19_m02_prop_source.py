@@ -3,15 +3,23 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 
+# This script runs as `python scripts/...`, which makes `scripts/` the first
+# import location. Add the repository root explicitly so existing root-level
+# collectors such as scrape_odds_props.py can be reused instead of duplicated.
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import scrape_odds_props as odds_props
 
-RAW = Path('data/raw')
-DASH = Path('data/dashboard')
+RAW = ROOT / 'data/raw'
+DASH = ROOT / 'data/dashboard'
 GAMES = DASH / 'wnba_sprint2_phase2.json'
 AUDIT = DASH / 'wnba_s19_m02_prop_source_audit.json'
 
@@ -60,7 +68,7 @@ def read_existing(target: str, game_names: set[str]) -> tuple[pd.DataFrame, str 
             continue
         exact = exact_rows(frame, game_names, target)
         if not exact.empty:
-            return exact, str(path)
+            return exact, str(path.relative_to(ROOT))
     return pd.DataFrame(columns=odds_props.RAW_COLUMNS), None
 
 
@@ -117,7 +125,6 @@ def build(target: str):
     if frame.empty:
         raise SystemExit('No exact current-slate sportsbook player props available after cache check and live refresh')
 
-    # Only exact canonical games are allowed to become player_points input.
     frame = exact_rows(frame, game_names, target)
     if frame.empty:
         raise SystemExit('Exact-slate filter removed every sportsbook prop row')
