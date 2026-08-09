@@ -23,25 +23,10 @@ def ensure_predictions():
     if not target:
         raise SystemExit('Sprint 19 M02 target date unavailable')
 
-    needs_build = not DATA.exists() or not AUDIT.exists()
-    if not needs_build:
-        try:
-            payload = json.loads(DATA.read_text(encoding='utf-8'))
-            audit = json.loads(AUDIT.read_text(encoding='utf-8'))
-            needs_build = (
-                payload.get('status') != 'READY'
-                or audit.get('status') != 'READY'
-                or str(payload.get('target_date') or '')[:10] != target
-                or str(audit.get('target_date') or '')[:10] != target
-            )
-        except Exception:
-            needs_build = True
-
-    if needs_build:
-        if not BUILDER.exists():
-            raise SystemExit(f'Sprint 19 M02 builder missing: {BUILDER}')
-        print({'status': 'BUILDING', 'module': 'SPRINT19-M02', 'target_date': target, 'reason': 'missing_or_stale_prediction_artifact'})
-        subprocess.run(['python', str(BUILDER), '--date', target], check=True)
+    # Always rebuild the current prop prediction source first. The master props list can
+    # legitimately contain historical rows and must never be used as today's prediction board.
+    subprocess.run(['python', 'player_points.py', '--date', target, '--out', 'data/raw'], check=True)
+    subprocess.run(['python', str(BUILDER), '--date', target], check=True)
 
     if not DATA.exists() or not AUDIT.exists():
         raise SystemExit('Sprint 19 M02 prediction artifacts missing after rebuild')
@@ -58,6 +43,10 @@ def ensure_predictions():
         raise SystemExit('Sprint 19 M02 produced zero Player Props predictions')
     if audit.get('player_props_with_model_projection') != audit.get('player_prop_predictions'):
         raise SystemExit('Sprint 19 M02 has Player Props without model projections')
+    if audit.get('all_rendered_props_exact_current_slate') is not True:
+        raise SystemExit('Sprint 19 M02 exact current-slate Player Props guard failed')
+    if audit.get('phase2_portfolio_fallback_enabled') is not False:
+        raise SystemExit('Sprint 19 M02 Phase 2 portfolio fallback is still enabled')
     return payload
 
 
@@ -86,11 +75,13 @@ def main():
  const num=(v,d=1)=>v==null||v===''?'—':Number(v).toFixed(d);
  const root=()=>document.getElementById('root');
  const gate=()=>`<div class="s19badge">SPRINT 19 M02 · ${{esc(D.target_date)}}</div>`;
+ function syncTabs(view){{const tabs=document.getElementById('tabs');if(tabs)tabs.querySelectorAll('[data-view]').forEach(el=>el.classList.toggle('a',el.getAttribute('data-view')===view));try{{history.replaceState(null,'','#'+view)}}catch(e){{}}}}
  function injuryBadges(ctx){{ctx=ctx||{{}};const parts=[];if(ctx.out)parts.push(`<span class="s19badge s19bad">${{ctx.out}} OUT</span>`);if(ctx.questionable)parts.push(`<span class="s19badge s19warn">${{ctx.questionable}} Q</span>`);if(ctx.probable)parts.push(`<span class="s19badge">${{ctx.probable}} PROB</span>`);return parts.join('')||'<span class="s19badge">No listed injuries</span>'}}
  function gamesHtml(){{const games=D.games||[];return `<div class="section">${{gate()}}<h2 class="mono">Today's Games · Injury-Adjusted Predictions</h2><div class="s19muted mono">Every projection below was regenerated after the current official injury refresh.</div><div class="s19grid" style="margin-top:12px">${{games.map(g=>{{const p=g.projection||{{}},m=g.market||{{}},e=g.edge||{{}},r=g.recommendation||{{}},c=g.injury_context||{{}};return `<div class="s19card"><div class="s19muted mono">${{esc(g.game)}}</div><h3 class="mono">${{esc(g.away_team)}} ${{num(p.away_score)}} · ${{esc(g.home_team)}} ${{num(p.home_score)}}</h3>${{injuryBadges(c)}}<div class="s19metrics"><div class="s19metric">Win Probability<b>${{esc(g.home_team)}} ${{p.home_win_probability==null?'—':(Number(p.home_win_probability)*100).toFixed(1)+'%'}}</b></div><div class="s19metric">Spread<b>Book ${{esc(m.home_spread)}} · Model ${{num(p.model_home_spread)}}</b><span class="s19good">Edge ${{num(e.spread)}}</span></div><div class="s19metric">Total<b>Book ${{esc(m.total)}} · Model ${{num(p.total)}}</b><span class="s19good">Edge ${{num(e.total)}}</span></div><div class="s19metric">Recommendation<b>${{esc(r.spread||'PASS')}} · ${{esc(r.total||'PASS')}}</b>Conf ${{esc(g.confidence)}} · Grade ${{esc(g.model_grade)}}</div></div><div class="s19muted" style="margin-top:9px">Injury source ${{esc(c.generated_at_utc||D.injury_generated_at_utc)}}</div></div>`}}).join('')}}</div></div>`}}
- function propsHtml(){{const rows=D.player_props||[];return `<div class="section">${{gate()}}<h2 class="mono">Player Props · Model Predictions</h2><div class="s19muted mono">Book line vs injury-adjusted model projection. OUT/DOUBTFUL players are blocked; uncertain players remain non-actionable.</div><div class="s19scroll" style="margin-top:12px"><table class="s19table"><thead><tr><th>Player</th><th>Prop</th><th>Line</th><th>Model</th><th>Edge</th><th>Pick</th><th>Confidence</th><th>Minutes</th><th>Injury</th><th>Best O/U</th></tr></thead><tbody>${{rows.map(r=>{{const pick=String(r.recommendation||'PASS');const cls=pick==='OVER'?'s19good':pick==='UNDER'?'s19under':'s19pass';return `<tr><td><b>${{esc(r.player)}}</b><div class="s19muted">${{esc(r.team)}} · ${{esc(r.game)}}</div></td><td>${{esc(r.stat)}}</td><td>${{num(r.line)}}</td><td><b>${{num(r.model_projection)}}</b></td><td class="${{Number(r.edge)>=0?'s19good':'s19under'}}">${{Number(r.edge)>=0?'+':''}}${{num(r.edge)}}</td><td class="${{cls}}"><b>${{esc(pick)}}</b>${{r.eligible?'':'<div class="s19muted">not actionable</div>'}}</td><td>${{r.confidence==null?'—':num(r.confidence)}}</td><td>${{r.projected_minutes==null?'—':num(r.projected_minutes)}}${{r.minutes_delta==null?'':`<div class="s19muted">Δ ${{Number(r.minutes_delta)>=0?'+':''}}${{num(r.minutes_delta)}}</div>`}}</td><td>${{esc(r.injury_status||'CLEAR')}}${{r.injury_adjusted?'<div class="s19muted">adjusted</div>':''}}</td><td>O ${{esc(r.best_over_book)}} ${{esc(r.best_over_price)}}<br>U ${{esc(r.best_under_book)}} ${{esc(r.best_under_price)}}</td></tr>`}}).join('')}}</tbody></table></div></div>`}}
+ function propsHtml(){{const rows=D.player_props||[];return `<div class="section">${{gate()}}<h2 class="mono">Player Props · Model Predictions</h2><div class="s19muted mono">Exact current-slate sportsbook lines vs current V5 projections. Off-slate rows are rejected before rendering.</div><div class="s19scroll" style="margin-top:12px"><table class="s19table"><thead><tr><th>Player</th><th>Prop</th><th>Line</th><th>Model</th><th>Edge</th><th>Pick</th><th>Confidence</th><th>Minutes</th><th>Injury</th><th>Best O/U</th></tr></thead><tbody>${{rows.map(r=>{{const pick=String(r.recommendation||'PASS');const cls=pick==='OVER'?'s19good':pick==='UNDER'?'s19under':'s19pass';return `<tr><td><b>${{esc(r.player)}}</b><div class="s19muted">${{esc(r.team)}} · ${{esc(r.game)}}</div></td><td>${{esc(r.stat)}}</td><td>${{num(r.line)}}</td><td><b>${{num(r.model_projection)}}</b></td><td class="${{Number(r.edge)>=0?'s19good':'s19under'}}">${{Number(r.edge)>=0?'+':''}}${{num(r.edge)}}</td><td class="${{cls}}"><b>${{esc(pick)}}</b>${{r.eligible?'':'<div class="s19muted">not actionable</div>'}}</td><td>${{r.confidence==null?esc(r.confidence_label||'—'):num(r.confidence)}}</td><td>${{r.projected_minutes==null?'—':num(r.projected_minutes)}}${{r.minutes_delta==null?'':`<div class="s19muted">Δ ${{Number(r.minutes_delta)>=0?'+':''}}${{num(r.minutes_delta)}}</div>`}}</td><td>${{esc(r.injury_status||'CLEAR')}}${{r.injury_adjusted?'<div class="s19muted">adjusted</div>':''}}</td><td>O ${{esc(r.best_over_book)}} ${{esc(r.best_over_price)}}<br>U ${{esc(r.best_under_book)}} ${{esc(r.best_under_price)}}</td></tr>`}}).join('')}}</tbody></table></div></div>`}}
  function bestHtml(){{const rows=D.best_bets||[];if(!rows.length)return `<div class="section">${{gate()}}<h2 class="mono">Best Bets · V5 Buy Signals</h2><div class="uiFreezeUnavailable">No current V5 buy signals cleared the model guardrails. Phase 2 fallback recommendations are disabled.</div></div>`;return `<div class="section">${{gate()}}<h2 class="mono">Best Bets · V5 Buy Signals</h2><div class="s19grid">${{rows.map(r=>`<div class="s19card"><div class="s19muted mono">V5 BUY SIGNAL</div><h3>${{esc(r.player||r.pick||r.selection||r.side)}}</h3><div>${{esc(r.game)}}</div><div class="s19badge">${{esc(r.market||r.stat||r.type)}}</div><div class="s19badge">${{esc(r.side||r.recommendation||r.action)}}</div><div class="s19muted">Edge ${{esc(r.edge??r.v5_edge??'—')}} · Confidence ${{esc(r.confidence??r.score??'—')}}</div></div>`).join('')}}</div></div>`}}
- function install(){{if(window.__S19_M02_INSTALLED)return true;if(typeof window.render!=='function')return false;const old=window.render;window.__S19_M02_OLD_RENDER=old;window.render=function(view){{if(view==='games'||view==='props'||view==='best'){{const r=root();if(!r)return old(view);if(typeof window.chrome==='function')try{{window.chrome(view)}}catch(e){{}};r.innerHTML=view==='games'?gamesHtml():view==='props'?propsHtml():bestHtml();return}}return old(view)}};window.__S19_M02_INSTALLED=true;const hash=(location.hash||'').replace('#','');if(['games','props','best'].includes(hash))window.render(hash);return true}}
+ function portfolioHtml(){{const rows=D.portfolio||[];if(!rows.length)return `<div class="section">${{gate()}}<h2 class="mono">Portfolio · V5 Live Portfolio</h2><div class="uiFreezeUnavailable">No current V5 portfolio positions are approved. Phase 2 candidate fallback and stake-pending cards are disabled.</div></div>`;return `<div class="section">${{gate()}}<h2 class="mono">Portfolio · V5 Live Portfolio</h2><div class="s19grid">${{rows.map(r=>`<div class="s19card"><div class="s19muted mono">V5 PORTFOLIO</div><h3>${{esc(r.player||r.pick||r.selection||r.side)}}</h3><div>${{esc(r.game)}}</div><div class="s19badge">${{esc(r.market||r.stat||r.type)}}</div><div class="s19badge">Stake ${{esc(r.stake??r.units??r.unit_size??'—')}}</div><div class="s19muted">Edge ${{esc(r.edge??r.v5_edge??'—')}} · Confidence ${{esc(r.confidence??r.score??'—')}}</div></div>`).join('')}}</div></div>`}}
+ function install(){{if(window.__S19_M02_INSTALLED)return true;if(typeof window.render!=='function')return false;const old=window.render;window.__S19_M02_OLD_RENDER=old;window.render=function(view){{if(view==='games'||view==='props'||view==='best'||view==='portfolio'){{const r=root();if(!r)return old(view);syncTabs(view);r.innerHTML=view==='games'?gamesHtml():view==='props'?propsHtml():view==='best'?bestHtml():portfolioHtml();return}}return old(view)}};window.__S19_M02_INSTALLED=true;const hash=(location.hash||'').replace('#','');if(['games','props','best','portfolio'].includes(hash))window.render(hash);return true}}
  if(!install()){{let n=0;const t=setInterval(()=>{{n++;if(install()||n>30)clearInterval(t)}},100)}}
 }})();
 </script>
@@ -102,7 +93,7 @@ def main():
         raise SystemExit('Dashboard shell missing closing body tag')
     html = html.replace('</body>', block + '\n</body>', 1)
     HTML.write_text(html, encoding='utf-8')
-    print({'status': 'PASS', 'target_date': payload.get('target_date'), 'games': len(payload.get('games') or []), 'props': len(payload.get('player_props') or []), 'best_bets': len(payload.get('best_bets') or []), 'prediction_artifact_ready': True})
+    print({'status': 'PASS', 'target_date': payload.get('target_date'), 'games': len(payload.get('games') or []), 'props': len(payload.get('player_props') or []), 'best_bets': len(payload.get('best_bets') or []), 'portfolio': len(payload.get('portfolio') or []), 'prediction_artifact_ready': True})
 
 
 if __name__ == '__main__':
