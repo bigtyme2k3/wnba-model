@@ -45,6 +45,7 @@ jobs:
           assert p['ranked_rows']==p['scored_rows']+p['unscored_rows']
           if p['status']=='BLOCKED_STALE_SLATE':
               assert p['scored_rows']==0
+              assert p.get('freshness_guard_status')=='STALE_BLOCKED'
               assert p['next_action']=='REFRESH_CURRENT_OPPORTUNITY_BOARD'
           PY
       - name: Publish V5 M11 safely
