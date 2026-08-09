@@ -4,16 +4,23 @@
   "module": "S4-M01",
   "stage": "TEAM_DEFENSE_INTELLIGENCE",
   "status": "READY",
-  "generated_at_utc": "2026-08-09T03:47:22.921692+00:00",
+  "generated_at_utc": "2026-08-09T03:57:38.181789+00:00",
   "source_rows": 964,
-  "game_context_rows": 782,
+  "game_context_rows": 804,
   "boxscore_files_scanned": 27,
   "boxscore_rows_scanned": 1804,
+  "game_context_rows_scanned": 782,
+  "raw_score_files_scanned": 34,
+  "raw_score_rows_scanned": 1589,
+  "recovered_game_ids_from_raw_scores": 22,
   "historical_context_rows": 964,
-  "resolved_team_opponent_rows": 662,
-  "team_opponent_coverage_pct": 68.67,
-  "unresolved_team_opponent_rows": 302,
-  "unique_player_game_stat_observations": 409,
+  "resolved_team_opponent_rows": 964,
+  "resolved_rows_via_raw_scores": 302,
+  "team_opponent_coverage_pct": 100.0,
+  "coverage_target_pct": 95.0,
+  "coverage_target_met": true,
+  "unresolved_team_opponent_rows": 0,
+  "unique_player_game_stat_observations": 590,
   "teams": 17,
   "stats": [
     "3PM",
@@ -25,8 +32,8 @@
     "RA",
     "REB"
   ],
-  "profile_rows": 127,
-  "position_profile_rows": 233,
+  "profile_rows": 132,
+  "position_profile_rows": 286,
   "position_coverage_available": true,
   "features": [
     "allowed_avg",
@@ -37,91 +44,10 @@
     "away_allowed_avg",
     "defense_strength_percentile"
   ],
-  "context_methodology": "player team/position is joined by exact game_id + normalized player from repository boxscores; opponent and venue are joined by exact game_id from warehouse game_context. No inferred team/opponent fallback is used.",
+  "context_methodology": "player team/position is joined by exact game_id + normalized player from repository boxscores; opponent and venue are joined by exact game_id, first from warehouse game_context and then from repository raw score files. No fuzzy or inferred opponent fallback is used.",
   "limitations": "Advanced pace, defensive rating, opponent eFG%, rim/perimeter shot profile remain unavailable unless separately sourced.",
-  "unresolved_examples": [
-    {
-      "game_id": "401857092",
-      "game_date": "2026-07-28",
-      "player": "Aneesah Morrow",
-      "team": "Connecticut Sun",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Kayla McBride",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Kayla McBride",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Kayla McBride",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Kayla McBride",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    },
-    {
-      "game_id": "401857093",
-      "game_date": "2026-07-28",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
-      "home_team": "",
-      "away_team": ""
-    }
-  ],
+  "unresolved_examples": [],
   "research_only": true,
-  "production_ready": false,
+  "production_ready": true,
   "next_module": "S4-M02 Matchup Engine"
 }
