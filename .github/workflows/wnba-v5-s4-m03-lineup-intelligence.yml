@@ -1,0 +1,63 @@
+name: WNBA V5 S4 M03 Lineup Intelligence
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '27 11 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_s4_m03_lineup_intelligence.py'
+      - 'data/dashboard/wnba_v5_matchup_adjustments.csv'
+      - 'data/raw/boxscores_*.csv'
+      - '.github/workflows/wnba-v5-s4-m03-lineup-intelligence.yml'
+jobs:
+  v5-s4-m03:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile Sprint 4 M03
+        run: python -m py_compile wnba_v5_s4_m03_lineup_intelligence.py
+      - name: Build lineup intelligence
+        run: python wnba_v5_s4_m03_lineup_intelligence.py
+      - name: Verify Sprint 4 M03
+        run: |
+          python - <<'PY'
+          import csv,json
+          p=json.load(open('data/dashboard/wnba_v5_s4_m03_report.json'))
+          print(p)
+          assert p['module']=='S4-M03'
+          assert p['status'] in {'READY','WAITING_FOR_M02_MATCHUPS','WAITING_FOR_ROTATION_HISTORY'}
+          rows=list(csv.DictReader(open('data/dashboard/wnba_v5_lineup_adjustments.csv',encoding='utf-8-sig')))
+          assert len(rows)==p['rows']
+          for r in rows:
+              mult=float(r['rotation_multiplier'])
+              assert 0.90 <= mult <= 1.10
+              assert r['injury_status']=='UNAVAILABLE_NO_LIVE_SOURCE'
+              assert r['lineup_confirmation']=='UNAVAILABLE_NO_LIVE_SOURCE'
+              assert r['live_injury_adjustment_applied'] in {'False','false','0'}
+              if r['lineup_status']!='READY':
+                  a=r.get('matchup_projection'); b=r.get('lineup_adjusted_projection')
+                  if a not in ('',None) and b not in ('',None): assert abs(float(a)-float(b)) < 1e-9
+          assert p['lineup_ready_rows'] + p['missing_rotation_history_rows'] == p['rows']
+          PY
+      - name: Publish Sprint 4 M03 safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 S4 M03 Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_lineup_adjustments.csv data/dashboard/wnba_v5_lineup_intelligence.json data/dashboard/wnba_v5_lineup_confidence.json data/dashboard/wnba_v5_s4_m03_report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 Sprint 4 M03 lineup intelligence"
+          git pull --rebase origin main
+          git push origin HEAD:main
