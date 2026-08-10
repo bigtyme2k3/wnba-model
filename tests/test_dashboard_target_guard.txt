@@ -1,0 +1,6 @@
+Acceptance criteria:
+1. Build with TARGET=2026-08-09 rewrites every rendered `Slate YYYY-MM-DD` label to `Slate 2026-08-09`.
+2. Generated docs/index.html contains `<!-- canonical-build-target-v1:2026-08-09 -->`.
+3. Pre-Pages verification fails if any other Slate date remains.
+4. Pre-Pages verification fails if M02-M06 audits do not all report READY for TARGET.
+5. Pages upload/deploy only occurs after this gate passes.
