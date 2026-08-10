@@ -147,8 +147,6 @@ def build(target: str):
     if not game_names:
         raise SystemExit('No canonical current-slate games available')
 
-    # The upstream Sprint 19 M02 prop-source guard owns current sportsbook market selection.
-    # Never synthesize prop markets from wnba_master.json and never reuse a mismatched slate.
     sportsbook_input_rows = validate_prepared_prop_source(target, game_names)
     subprocess.run(['python', 'player_points.py', '--date', target, '--out', 'data/raw'], check=True)
 
@@ -161,6 +159,7 @@ def build(target: str):
     off_slate = []
     missing_projection = []
     out_actionable = []
+    negative_projection_rows_clamped = 0
 
     for row in prop_source:
         game = exact_game(row)
@@ -193,9 +192,22 @@ def build(target: str):
             if injury_status == 'BENEFICIARY' and injury_factor is not None:
                 projection = round(projection * injury_factor, 2)
 
+        # Counting-stat props cannot have physically negative projections. Some
+        # low-volume rows can be pushed below zero by trend/role adjustments in
+        # player_points.py; clamp them here before edge, pick, and downstream
+        # contract generation so every consumer receives a valid count forecast.
+        if projection < 0 or projection_pre_injury < 0:
+            negative_projection_rows_clamped += 1
+        projection = max(0.0, projection)
+        projection_pre_injury = max(0.0, projection_pre_injury)
+
         edge = round(projection - line, 2)
         raw_signal = str(row.get('signal') or '').upper()
         recommendation = raw_signal if raw_signal in {'OVER', 'UNDER', 'PASS'} else ('OVER' if edge >= 0.35 else 'UNDER' if edge <= -0.35 else 'PASS')
+        # Recompute impossible-row recommendations from the sanitized projection,
+        # instead of carrying a signal derived from a negative upstream value.
+        if f(first(row, 'pred', 'projection', 'proj', 'model_projection', 'projected_value')) is not None and f(first(row, 'pred', 'projection', 'proj', 'model_projection', 'projected_value')) < 0:
+            recommendation = 'OVER' if edge >= 0.35 else 'UNDER' if edge <= -0.35 else 'PASS'
         eligible = boolish(row.get('is_active'), recommendation != 'PASS') and recommendation != 'PASS'
         if injury_status in {'OUT', 'DOUBTFUL'}:
             recommendation = 'PASS'
@@ -273,6 +285,7 @@ def build(target: str):
             'v5_portfolio_rows': len(current_portfolio),
             'off_slate_prop_rows_rejected': len(off_slate),
             'missing_projection_rows_skipped': len(missing_projection),
+            'negative_projection_rows_clamped': negative_projection_rows_clamped,
         },
     }
     OUT.write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
@@ -298,6 +311,7 @@ def build(target: str):
         'portfolio_current_rows': len(current_portfolio),
         'phase2_portfolio_fallback_enabled': False,
         'missing_projection_rows_skipped': len(missing_projection),
+        'negative_projection_rows_clamped': negative_projection_rows_clamped,
     }
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(audit))
