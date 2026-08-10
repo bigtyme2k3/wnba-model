@@ -2,12 +2,17 @@ from __future__ import annotations
 
 import csv
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import wnba_game_predictions_ledger as ledger
 
-SCORES = Path('data/raw/scores_historical.csv')
+SCORES = ROOT / 'data/raw/scores_historical.csv'
 
 
 def score_index():
