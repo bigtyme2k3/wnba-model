@@ -5,17 +5,19 @@ MESSAGE=${1:?commit message required}
 shift
 FILES=("$@")
 
-# Only the canonical dashboard builder may publish docs/index.html. Other
+# Only approved dashboard publishers may publish docs/index.html. Other
 # workflows can continue publishing their generated JSON/CSV outputs without
 # overwriting the live dashboard. Local/manual callers may opt in explicitly.
 CANONICAL_DASHBOARD_WORKFLOW="WNBA V4 Player Props Polish"
+DASHBOARD_DEPLOY_WORKFLOW="Deploy WNBA Dashboard"
 ALLOW_DASHBOARD_WRITE=${ALLOW_DASHBOARD_WRITE:-0}
 CURRENT_WORKFLOW=${GITHUB_WORKFLOW:-local}
 FILTERED_FILES=()
 for supplied in "${FILES[@]}"; do
   if [ "$supplied" = "docs/index.html" ] \
      && [ "$ALLOW_DASHBOARD_WRITE" != "1" ] \
-     && [ "$CURRENT_WORKFLOW" != "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
+     && [ "$CURRENT_WORKFLOW" != "$CANONICAL_DASHBOARD_WORKFLOW" ] \
+     && [ "$CURRENT_WORKFLOW" != "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
     echo "Skipping protected dashboard output from non-canonical workflow: $CURRENT_WORKFLOW"
     continue
   fi
@@ -44,6 +46,18 @@ if [ "$CURRENT_WORKFLOW" = "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
     data/dashboard/wnba_risk_allocation.json
     data/dashboard/wnba_alt_market_warehouse.json
     data/dashboard/wnba_mission_control_acceptance.json
+  )
+fi
+
+# The deploy workflow builds docs/index.html in the runner and later invokes
+# this helper to persist M06 history. atomic_generated_push resets the working
+# tree to origin/main before committing, so without preserving the rendered
+# dashboard here that reset silently restores the old public page just before
+# the Pages artifact is uploaded. Treat the verified dashboard artifact as a
+# persistent output of the deploy workflow so the reset cannot discard it.
+if [ "$CURRENT_WORKFLOW" = "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
+  PERSISTENT_OUTPUTS+=(
+    docs/index.html
   )
 fi
 
