@@ -32,6 +32,42 @@ def safe_float(value, default=0.0):
         return default
 
 
+def clean_text(value, fallback=""):
+    try:
+        if value is None or pd.isna(value): return fallback
+    except Exception:
+        pass
+    text = str(value).strip()
+    return fallback if not text or text.lower() == "nan" else text
+
+
+def valid_american(value):
+    try:
+        n = float(value)
+        return n <= -100 or n >= 100
+    except Exception:
+        return False
+
+
+def market_price(value, default=-110.0):
+    n = safe_float(value, default)
+    return n if valid_american(n) else float(default)
+
+
+def normalize_usage(value):
+    n = safe_float(value, 0.25)
+    if n > 1.0:
+        n /= 100.0
+    return n if 0.05 <= n <= 0.50 else 0.25
+
+
+def normalize_ts(value):
+    n = safe_float(value, 0.55)
+    if n > 1.0:
+        n /= 100.0
+    return n if 0.30 <= n <= 0.80 else 0.55
+
+
 def norm_name(name):
     return str(name or "").strip().lower().replace("’", "'")
 
@@ -80,8 +116,8 @@ def apply_intelligence(base, intel):
         "reb": safe_float(season.get("reb"), safe_float(merged.get("reb"), 0)),
         "ast": safe_float(season.get("ast"), safe_float(merged.get("ast"), 0)),
         "mpg": safe_float(season.get("mpg"), safe_float(merged.get("mpg"), 30)),
-        "usage": safe_float(season.get("usage"), safe_float(merged.get("usage"), 0.25)),
-        "ts_pct": safe_float(season.get("ts_pct"), safe_float(merged.get("ts_pct", merged.get("ts")), 0.55)),
+        "usage": normalize_usage(season.get("usage", merged.get("usage", 0.25))),
+        "ts_pct": normalize_ts(season.get("ts_pct", merged.get("ts_pct", merged.get("ts", 0.55)))),
         "roll5_pts": safe_float(recent.get("last5_pts"), safe_float(merged.get("roll5_pts"), safe_float(merged.get("ppg"), 0))),
         "roll5_reb": safe_float(recent.get("last5_reb"), safe_float(merged.get("roll5_reb"), safe_float(merged.get("reb"), 0))),
         "roll5_ast": safe_float(recent.get("last5_ast"), safe_float(merged.get("roll5_ast"), safe_float(merged.get("ast"), 0))),
@@ -112,8 +148,8 @@ def load_player_baselines():
         merged = dict(existing)
         ppg = live.get("ppg", live.get("roll5_pts", existing.get("roll5_pts", 0)))
         mpg = live.get("mpg", existing.get("mpg", 30))
-        usage = live.get("usage", existing.get("usage", 0.25))
-        ts = live.get("ts_pct", live.get("ts", existing.get("ts", 0.55)))
+        usage = normalize_usage(live.get("usage", existing.get("usage", 0.25)))
+        ts = normalize_ts(live.get("ts_pct", live.get("ts", existing.get("ts", 0.55))))
         merged.update(live)
         merged.update({"ppg": ppg, "mpg": mpg, "usage": usage, "ts": ts, "ts_pct": ts, "source": "stats.wnba.com"})
         baselines[player] = merged
@@ -208,13 +244,14 @@ def recent_baseline(base, stat, line):
 
 
 def market_price_lean(over_price, under_price):
-    over_imp = implied_prob_american(safe_float(over_price, -110)); under_imp = implied_prob_american(safe_float(under_price, -110)); total = max(over_imp + under_imp, 0.0001)
+    over = market_price(over_price); under = market_price(under_price)
+    over_imp = implied_prob_american(over); under_imp = implied_prob_american(under); total = max(over_imp + under_imp, 0.0001)
     over_fair = over_imp / total; lean = (over_fair - 0.50) * 7.0
     return max(-1.75, min(1.75, lean)), over_fair
 
 
 def yes_market_prob(yes_price, no_price):
-    yes = implied_prob_american(safe_float(yes_price, -110)); no = implied_prob_american(safe_float(no_price, -110)); total = max(yes + no, 0.0001)
+    yes = implied_prob_american(market_price(yes_price)); no = implied_prob_american(market_price(no_price)); total = max(yes + no, 0.0001)
     return yes / total
 
 
@@ -233,8 +270,8 @@ def project_stat(stat, base, line, injury_status="ACTIVE", over_price=-110, unde
 
     recent_avg = recent_baseline(base, stat, season_avg)
     role_score = safe_float(base.get("role_score"), 50)
-    usage = safe_float(base.get("usage", 0.25), 0.25)
-    ts = safe_float(base.get("ts_pct", base.get("ts", 0.55)), 0.55)
+    usage = normalize_usage(base.get("usage", 0.25))
+    ts = normalize_ts(base.get("ts_pct", base.get("ts", 0.55)))
     mpg = safe_float(base.get("mpg", 30), 30)
     r5_mpg = safe_float(base.get("roll5_mpg", mpg), mpg)
     if injury_status == "QUESTIONABLE": mpg *= 0.70; r5_mpg *= 0.70
@@ -290,7 +327,7 @@ def valid_market(row):
 
 
 def exact_game_key(row):
-    home = str(row.get("home_team", "")).strip(); away = str(row.get("away_team", "")).strip(); opp = str(row.get("opp_team", row.get("opp", ""))).strip()
+    home = clean_text(row.get("home_team")); away = clean_text(row.get("away_team")); opp = clean_text(row.get("opp_team", row.get("opp", "")))
     if away and home: return f"{away} @ {home}"
     if " @ " in opp: return opp
     return opp
@@ -306,22 +343,25 @@ def get_base(baselines, player):
 
 
 def make_projection(row, baselines, injuries):
-    player = str(row.get("player", "")).strip(); market_ok, market_status = valid_market(row)
-    if not market_ok: return None
+    player = clean_text(row.get("player")); market_ok, market_status = valid_market(row)
+    if not player or not market_ok: return None
     base = get_base(baselines, player)
     injury = injuries.get(norm_name(player), {"severity": base.get("intel_injury_status", "ACTIVE"), "note": base.get("intel_injury_detail", "")})
     injury_status = str(injury.get("severity", "ACTIVE") or "ACTIVE").upper()
     if injury_status in {"OUT", "DOUBTFUL"}: return None
-    team = str(row.get("team", "")).strip(); opp = str(row.get("opp_team", row.get("opp", ""))).strip(); home_team = str(row.get("home_team", "")).strip(); away_team = str(row.get("away_team", "")).strip(); game_key = exact_game_key(row); pos = str(row.get("position", row.get("pos", ""))).strip()
+    team = clean_text(row.get("team"), clean_text(base.get("team")))
+    pos = clean_text(row.get("position", row.get("pos", "")), clean_text(base.get("pos", base.get("position", ""))))
+    opp = clean_text(row.get("opp_team", row.get("opp", "")))
+    home_team = clean_text(row.get("home_team")); away_team = clean_text(row.get("away_team")); game_key = exact_game_key(row)
     stat = normalize_stat(row.get("stat", row.get("stat_raw", "pts")))
     if stat not in STAT_MAP: return None
     line = 0.5 if stat in {"dd", "td"} else float(row.get("line"))
-    over_price = safe_float(row.get("over_price"), -110); under_price = safe_float(row.get("under_price"), -110); yes_price = None if pd.isna(row.get("yes_price")) else safe_float(row.get("yes_price")); no_price = None if pd.isna(row.get("no_price")) else safe_float(row.get("no_price"))
+    over_price = market_price(row.get("over_price")); under_price = market_price(row.get("under_price")); yes_price = None if pd.isna(row.get("yes_price")) else market_price(row.get("yes_price")); no_price = None if pd.isna(row.get("no_price")) else market_price(row.get("no_price"))
     pred, season_avg, reasoning = project_stat(stat, base, line, injury_status, over_price, under_price, yes_price, no_price)
     if stat in {"dd", "td"}:
         edge = round(pred - yes_market_prob(yes_price if yes_price is not None else over_price, no_price if no_price is not None else under_price), 3); low = max(0, round(pred - 0.08, 3)); high = min(1, round(pred + 0.08, 3)); chosen_odds = yes_price if yes_price is not None else over_price
     else:
-        low, high = round(pred - 3.5, 1), round(pred + 3.5, 1); edge = round(pred - line, 1); chosen_odds = over_price
+        low, high = round(max(0.0, pred - 3.5), 1), round(max(0.0, pred + 3.5), 1); edge = round(pred - line, 1); chosen_odds = over_price
     conf, signal = confidence(edge, stat); conf = downgrade_conf(conf, injury_status)
     if signal in {"UNDER", "NO"}: chosen_odds = no_price if stat in {"dd", "td"} and no_price is not None else under_price
     model_prob = pred if stat in {"dd", "td"} else edge_to_prob(edge, "PROP")
@@ -329,7 +369,7 @@ def make_projection(row, baselines, injuries):
     elif injury_status == "PROBABLE": model_prob = max(0.005, round(model_prob - 0.015, 4))
     ev = expected_value(model_prob, chosen_odds)
     recent10 = pseudo_recent_values(pred, player, stat, 10); last5_vals = recent10[:5]; last5_opps = ["ATL", "CHI", "DAL", "IND", "SEA"]; h2h = pseudo_recent_values(pred, player + game_key, stat, 5); filter_reason = injury.get("note", "") if injury_status != "ACTIVE" else ""
-    return {"player": player, "team": team, "opp": opp, "pos": pos, "stat": STAT_MAP[stat], "season_avg": season_avg, "pred": pred, "low": low, "high": high, "range": f"{low}-{high}", "line": line, "over_price": over_price, "under_price": under_price, "yes_price": yes_price, "no_price": no_price, "edge": edge, "signal": signal, "conf": conf, "model_prob": model_prob, "implied_prob": round(implied_prob_american(chosen_odds), 4), "ev": ev, "ev_pct": round(ev * 100, 1), "kelly_frac": kelly_fraction(model_prob, chosen_odds), "injury_status": injury_status, "market_status": market_status, "is_active": True, "filter_reason": filter_reason, "reasoning": reasoning, "game": game_key, "home_team": home_team, "away_team": away_team, "last5_vals": json.dumps(last5_vals), "last5_opps": json.dumps(last5_opps), "last5_hit": hit_rate(last5_vals, line, signal), "last10_hit": hit_rate(recent10, line, signal), "h2h_last5": json.dumps(h2h), "opp_rank": opp_rank_from_name(opp), "role_score": safe_float(base.get("role_score"), 0), "minutes_trend": base.get("minutes_trend", ""), "points_trend": base.get("points_trend", ""), "intel_source": base.get("intel_source", "")}
+    return {"player": player, "team": team, "opp": opp, "pos": pos, "stat": STAT_MAP[stat], "season_avg": season_avg, "pred": max(0.0, pred), "low": low, "high": high, "range": f"{low}-{high}", "line": line, "over_price": over_price, "under_price": under_price, "yes_price": yes_price, "no_price": no_price, "edge": edge, "signal": signal, "conf": conf, "model_prob": model_prob, "implied_prob": round(implied_prob_american(chosen_odds), 4), "ev": ev, "ev_pct": round(ev * 100, 1), "kelly_frac": kelly_fraction(model_prob, chosen_odds), "injury_status": injury_status, "market_status": market_status, "is_active": True, "filter_reason": filter_reason, "reasoning": reasoning, "game": game_key, "home_team": home_team, "away_team": away_team, "last5_vals": json.dumps(last5_vals), "last5_opps": json.dumps(last5_opps), "last5_hit": hit_rate(last5_vals, line, signal), "last10_hit": hit_rate(recent10, line, signal), "h2h_last5": json.dumps(h2h), "opp_rank": opp_rank_from_name(opp), "role_score": safe_float(base.get("role_score"), 0), "minutes_trend": base.get("minutes_trend", ""), "points_trend": base.get("points_trend", ""), "intel_source": base.get("intel_source", "")}
 
 
 def build_player_points(target_date, raw_dir):
@@ -344,7 +384,7 @@ def build_player_points(target_date, raw_dir):
         try:
             ok, _ = valid_market(row)
             if not ok: skipped_market += 1; continue
-            player = str(row.get("player", "")).strip(); injury_status = injuries.get(norm_name(player), {}).get("severity", "ACTIVE")
+            player = clean_text(row.get("player")); injury_status = injuries.get(norm_name(player), {}).get("severity", "ACTIVE")
             if str(injury_status).upper() in {"OUT", "DOUBTFUL"}: skipped_injury += 1; continue
             proj = make_projection(row, baselines, injuries)
             if proj: rows.append(proj)
