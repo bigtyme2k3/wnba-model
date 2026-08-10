@@ -5,6 +5,8 @@ import json
 import re
 from pathlib import Path
 
+from wnba_game_performance import build as build_game_performance
+
 HTML = Path("docs/index.html")
 DATA = Path("data/dashboard/wnba_game_performance.json")
 STYLE_ID = "game-performance-route-style"
@@ -18,6 +20,7 @@ STYLE = r'''<style id="game-performance-route-style">
 def main() -> None:
     if not HTML.exists():
         raise SystemExit("docs/index.html missing")
+    build_game_performance()
     payload = json.loads(DATA.read_text(encoding="utf-8")) if DATA.exists() else {}
     raw = json.dumps(payload, separators=(",", ":")).replace("</", "<\\/")
     script = r'''<script id="game-performance-route-script">(function(){
@@ -28,7 +31,6 @@ const rec=o=>{o=(o&&o.record)?o.record:(o||{});return `${Number(o.wins||0)}-${Nu
 window.fullGamePerformance=function(){const s=D.summary||{},sp=D.spread||{},to=D.total||{},rows=Array.isArray(D.recent_games)?D.recent_games:[];const cards=rows.slice(0,20).map(r=>`<article class="gp-card"><div class="gp-date mono">${esc(r.target_date||'')}</div><h3 class="mono">${esc(r.game||'Unknown game')}</h3><div class="gp-grid"><div><span>Spread pick</span><b>${esc(r.spread_recommendation||r.spread_pick||'PASS')}</b><em class="${String(r.spread_result||'').toLowerCase()}">${esc(r.spread_result||'PENDING')}</em></div><div><span>Total pick</span><b>${esc(r.total_recommendation||r.total_pick||'PASS')}</b><em class="${String(r.total_result||'').toLowerCase()}">${esc(r.total_result||'PENDING')}</em></div><div><span>Projected</span><b>${esc(r.projected_away_score)}–${esc(r.projected_home_score)}</b><small>Total ${esc(r.projected_total)}</small></div><div><span>Actual</span><b>${esc(r.actual_away_score)}–${esc(r.actual_home_score)}</b><small>Total ${esc(r.actual_total)}</small></div></div></article>`).join('');return `<div class="section"><h2 class="mono">Game Performance</h2><p class="small mono">Frozen pregame spreads, totals and projected scores graded against final results.</p><div class="gp-summary"><div class="gp-metric"><span>Archived games</span><b>${Number(s.archived_games||0)}</b></div><div class="gp-metric"><span>Graded games</span><b>${Number(s.graded_games||0)}</b></div><div class="gp-metric"><span>Spread record</span><b>${rec(sp)}</b><small>${pct(sp.hit_rate)}</small></div><div class="gp-metric"><span>Total record</span><b>${rec(to)}</b><small>${pct(to.hit_rate)}</small></div><div class="gp-metric"><span>Margin MAE</span><b>${esc(s.avg_margin_error)}</b></div><div class="gp-metric"><span>Total MAE</span><b>${esc(s.avg_total_error)}</b></div></div><div class="gp-cards">${cards||'<div class="gp-card">No graded game cards yet.</div>'}</div></div>`};
 })();</script>'''.replace('__PAYLOAD__', raw)
     html = HTML.read_text(encoding="utf-8")
-    # Remove both the old static injector and any prior routed version.
     html = re.sub(r'<!-- WNBA_GAME_PERFORMANCE_START -->.*?<!-- WNBA_GAME_PERFORMANCE_END -->', '', html, flags=re.S)
     html = re.sub(r'<style id="game-performance-route-style">.*?</style>', '', html, flags=re.S)
     html = re.sub(r'<script id="game-performance-route-script">.*?</script>', '', html, flags=re.S)
