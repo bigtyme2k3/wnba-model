@@ -10,6 +10,9 @@ on:
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
       - 'scrape_odds_props.py'
+      - 'player_points.py'
+      - 'wnba_game_predictions_ledger.py'
+      - 'wnba_game_performance.py'
       - 'wnba_player_props_ingestion.py'
       - 'wnba_alt_market_warehouse.py'
       - 'wnba_alt_streaks.py'
@@ -21,6 +24,8 @@ on:
       - 'patch_dashboard_s19_m03.py'
       - 'patch_dashboard_s19_m06.py'
       - 'scripts/build_daily_canonical_slate.py'
+      - 'scripts/scrape_odds_props_consensus.py'
+      - 'scripts/wnba_game_archive_backfill.py'
       - 'scripts/wnba_s19_m02_prop_source.py'
       - 'scripts/wnba_s19_m02_predictions.py'
       - 'scripts/wnba_s19_m03_dashboard_consumer.py'
@@ -83,10 +88,10 @@ jobs:
         run: |
           test -f docs/index.html
           python -m py_compile \
-            wnba_terminal_ui.py patch_terminal_ui.py scrape_odds_props.py wnba_player_props_ingestion.py wnba_alt_market_warehouse.py wnba_alt_streaks.py \
+            wnba_terminal_ui.py patch_terminal_ui.py scrape_odds_props.py player_points.py wnba_game_predictions_ledger.py wnba_game_performance.py wnba_player_props_ingestion.py wnba_alt_market_warehouse.py wnba_alt_streaks.py \
             patch_dashboard_canonical_runtime.py patch_dashboard_games_focus.py patch_dashboard_v4_ui_freeze.py patch_dashboard_v4_ui_freeze_safe.py \
             patch_dashboard_s19_m02.py patch_dashboard_s19_m03.py patch_dashboard_s19_m06.py scripts/build_daily_canonical_slate.py \
-            scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m06_results_lifecycle.py \
+            scripts/scrape_odds_props_consensus.py scripts/wnba_game_archive_backfill.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m06_results_lifecycle.py \
             patch_dashboard_alt_props_table.py patch_dashboard_alt_props_scores.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py \
             patch_dashboard_sprint2_phase2.py patch_dashboard_build_verification.py patch_dashboard_alt_grading_status.py wnba_alt_pending_diagnostics.py \
             patch_dashboard_alt_recovery_progress.py patch_dashboard_game_performance.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_alt_ladders.py \
@@ -104,7 +109,7 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           set -e
-          if [ -n "${ODDS_API_KEY:-}" ]; then python scrape_odds_props.py --date "$TARGET" --out data/raw; else echo "ODDS_API_KEY unavailable; cached current input required."; fi
+          if [ -n "${ODDS_API_KEY:-}" ]; then python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw; else echo "ODDS_API_KEY unavailable; cached current input required."; fi
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
           python - <<'PY'
@@ -133,6 +138,7 @@ jobs:
           python patch_dashboard_alt_grading_status.py || true
           python wnba_alt_pending_diagnostics.py || true
           if [ -f data/dashboard/wnba_alt_recovery_progress.json ]; then python patch_dashboard_alt_recovery_progress.py || true; fi
+          python scripts/wnba_game_archive_backfill.py
           python patch_dashboard_game_performance.py
           python patch_dashboard_build_verification.py || true
           python - <<'PY'
@@ -179,10 +185,6 @@ jobs:
           visible=set(re.findall(r'Slate\s+(\d{4}-\d{2}-\d{2})',h))
           stale=sorted(visible-{target})
           if stale: raise SystemExit(f'REFUSE DEPLOY: stale slate labels {stale}; target={target}')
-          # The current UI shell no longer guarantees a literal "Slate YYYY-MM-DD"
-          # text node. The canonical build marker and embedded canonical payload are
-          # the authoritative date signals; requiring a legacy label causes a
-          # false deployment failure even when every current-slate audit passes.
           canonical_target=f'"target_date": "{target}"'
           canonical_target_compact=f'"target_date":"{target}"'
           if canonical_target not in h and canonical_target_compact not in h:
