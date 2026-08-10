@@ -16,6 +16,7 @@ on:
       - 'scrape_injuries.py'
       - 'wnba_injury_intelligence.py'
       - 'wnba_injury_rotation_guard.py'
+      - 'wnba_sprint2_prediction_engine.py'
       - 'scripts/wnba_sprint2_phase2.py'
       - 'scripts/wnba_s19_m02_prop_source.py'
       - 'scripts/wnba_s19_m02_predictions.py'
@@ -70,7 +71,7 @@ jobs:
 
       - name: Validate Sprint 19 M01-M02 pipelines
         run: |
-          python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_injury_rotation_guard.py scripts/wnba_sprint2_phase2.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py
+          python -m py_compile scrape_injuries.py scrape_official_wnba_injuries.py wnba_injury_intelligence.py wnba_injury_rotation_guard.py wnba_sprint2_prediction_engine.py scripts/wnba_sprint2_phase2.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py
 
       - name: Refresh official WNBA injury report
         run: |
@@ -101,6 +102,10 @@ jobs:
         run: |
           python wnba_injury_intelligence.py --date "$TARGET"
           python wnba_injury_rotation_guard.py
+
+      - name: Rebuild current-slate base game projections
+        run: |
+          python wnba_sprint2_prediction_engine.py --date "$TARGET"
 
       - name: Rebuild Sprint 19 M01 injury-aware game projections
         run: |
