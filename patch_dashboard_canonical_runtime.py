@@ -10,6 +10,7 @@ HTML = Path('docs/index.html')
 DASH = Path('data/dashboard')
 MARKER = 'canonical-daily-runtime-v1'
 END_MARKER = 'canonical-daily-runtime-end-v1'
+BUILD_MARKER = 'canonical-build-target-v1'
 
 
 def load(name: str, default):
@@ -47,9 +48,6 @@ def main() -> None:
         'prop_count': len(rows),
     }, ensure_ascii=False).replace('</', '<\\/')
 
-    # IMPORTANT: this runtime owns canonical DATA only. It must never replace
-    # #root or any routed tab content. The V4 UI freeze is the single router,
-    # and dedicated renderers own Games / Player Props / other views.
     block = f'''\n<!-- {MARKER} -->
 <script id="canonical-daily-runtime-script">
 (function(){{
@@ -79,6 +77,8 @@ def main() -> None:
 <!-- {END_MARKER} -->\n'''
 
     html = HTML.read_text(encoding='utf-8')
+    html = re.sub(r'<!-- canonical-build-target-v1:\d{4}-\d{2}-\d{2} -->\s*', '', html)
+    html, replaced = re.subn(r'Slate\s+\d{4}-\d{2}-\d{2}', f'Slate {target}', html)
     html = re.sub(
         rf'\n?<!-- {re.escape(MARKER)} -->.*?<!-- {re.escape(END_MARKER)} -->\n?',
         '\n',
@@ -88,10 +88,17 @@ def main() -> None:
     )
     if '</body>' not in html:
         raise SystemExit('Dashboard shell invalid: closing body tag missing before canonical patch')
-    html = html.replace('</body>', block + '\n</body>', 1)
+    html = html.replace('</body>', f'<!-- {BUILD_MARKER}:{target} -->\n' + block + '\n</body>', 1)
     HTML.write_text(html, encoding='utf-8')
     apply_games_focus_cleanup()
-    print({'target_date': target, 'games': len(games), 'props': len(rows), 'marker': MARKER, 'shell_preserved': True, 'router_safe': True})
+
+    final_html = HTML.read_text(encoding='utf-8')
+    stale = sorted(set(re.findall(r'Slate\s+(\d{4}-\d{2}-\d{2})', final_html)) - {target})
+    if stale:
+        raise SystemExit(f'Stale slate labels remain after canonical build: {stale}; target={target}')
+    if f'<!-- {BUILD_MARKER}:{target} -->' not in final_html:
+        raise SystemExit('Canonical build target marker missing')
+    print({'target_date': target, 'games': len(games), 'props': len(rows), 'marker': MARKER, 'shell_target_replacements': replaced, 'shell_preserved': True, 'router_safe': True, 'stale_slate_labels': stale})
 
 
 if __name__ == '__main__':
