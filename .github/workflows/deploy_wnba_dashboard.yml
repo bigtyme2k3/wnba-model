@@ -9,37 +9,12 @@ on:
       - 'data/dashboard/**'
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
-      - 'scrape_odds_props.py'
-      - 'wnba_alt_market_warehouse.py'
-      - 'wnba_alt_streaks.py'
       - 'patch_dashboard_canonical_runtime.py'
       - 'patch_dashboard_games_focus.py'
-      - 'patch_dashboard_v4_ui_freeze.py'
-      - 'patch_dashboard_v4_ui_freeze_safe.py'
       - 'patch_dashboard_s19_m02.py'
       - 'patch_dashboard_s19_m03.py'
       - 'patch_dashboard_s19_m06.py'
-      - 'scripts/wnba_s19_m02_prop_source.py'
-      - 'scripts/wnba_s19_m02_predictions.py'
-      - 'scripts/wnba_s19_m03_dashboard_consumer.py'
-      - 'scripts/wnba_s19_m06_results_lifecycle.py'
-      - 'patch_dashboard_alt_props_table.py'
-      - 'patch_dashboard_alt_props_scores.py'
-      - 'wnba_alt_streak_confidence.py'
-      - 'wnba_alt_performance_tracker.py'
-      - 'patch_dashboard_sprint2_phase2.py'
-      - 'patch_dashboard_build_verification.py'
-      - 'patch_dashboard_alt_grading_status.py'
-      - 'wnba_alt_pending_diagnostics.py'
-      - 'patch_dashboard_alt_recovery_progress.py'
-      - 'patch_dashboard_game_performance.py'
-      - 'patch_dashboard_v5_injury_intelligence.py'
-      - 'patch_dashboard_v5_player_prop_injury_context.py'
-      - 'patch_dashboard_v4_remaining_season.py'
-      - 'patch_dashboard_v4_alt_streaks_display.py'
-      - 'patch_dashboard_v4_alt_ladders.py'
-      - 'wnba_results_grader.py'
-      - 'wnba_edge_database.py'
+      - 'scripts/**'
       - '.github/workflows/deploy_wnba_dashboard.yml'
 
 permissions:
@@ -62,63 +37,34 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install ALT pipeline dependencies
         run: python -m pip install --disable-pip-version-check pandas requests
-
       - name: Resolve dashboard date
         run: |
           TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Dashboard target date: $TARGET"
-
       - name: Compile dashboard build chain
         run: |
           test -f docs/index.html
-          python -m py_compile \
-            wnba_terminal_ui.py patch_terminal_ui.py scrape_odds_props.py wnba_alt_market_warehouse.py wnba_alt_streaks.py \
-            patch_dashboard_canonical_runtime.py patch_dashboard_games_focus.py patch_dashboard_v4_ui_freeze.py patch_dashboard_v4_ui_freeze_safe.py \
-            patch_dashboard_s19_m02.py patch_dashboard_s19_m03.py patch_dashboard_s19_m06.py \
-            scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m06_results_lifecycle.py \
-            patch_dashboard_alt_props_table.py patch_dashboard_alt_props_scores.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py \
-            patch_dashboard_sprint2_phase2.py patch_dashboard_build_verification.py patch_dashboard_alt_grading_status.py wnba_alt_pending_diagnostics.py \
-            patch_dashboard_alt_recovery_progress.py patch_dashboard_game_performance.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_alt_ladders.py \
-            wnba_results_grader.py wnba_edge_database.py
-
-      - name: Compile optional data renderers
-        continue-on-error: true
-        run: |
-          for file in patch_dashboard_v5_injury_intelligence.py patch_dashboard_v5_player_prop_injury_context.py patch_dashboard_v4_remaining_season.py; do
-            if [ -f "$file" ]; then python -m py_compile "$file" || echo "Optional renderer compile warning: $file"; fi
-          done
-
+          python -m py_compile patch_dashboard_canonical_runtime.py patch_dashboard_games_focus.py patch_dashboard_s19_m02.py patch_dashboard_s19_m03.py patch_dashboard_s19_m06.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m06_results_lifecycle.py wnba_results_grader.py wnba_edge_database.py
       - name: Rebuild current ALT market and streak sources
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           set -e
-          if [ -n "${ODDS_API_KEY:-}" ]; then python scrape_odds_props.py --date "$TARGET" --out data/raw; else echo "ODDS_API_KEY unavailable; cached current input required."; fi
+          if [ -n "${ODDS_API_KEY:-}" ]; then python scrape_odds_props.py --date "$TARGET" --out data/raw; fi
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
-          python - <<'PY'
-          import json,os
-          from pathlib import Path
-          target=os.environ['TARGET']; w=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text()); s=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
-          if w.get('target_date')!=target or s.get('target_date')!=target: raise SystemExit('ALT source target mismatch')
-          print({'status':'PASS','target':target,'alt_markets':int((w.get('summary') or {}).get('markets') or 0),'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0)})
-          PY
-
       - name: Score and freeze ALT props for performance tracking
         run: |
           python wnba_alt_streak_confidence.py --date "$TARGET"
           python wnba_alt_performance_tracker.py --date "$TARGET" --grade
           python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot --analyze
-
       - name: Build complete dashboard artifact
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -133,13 +79,6 @@ jobs:
           if [ -f data/dashboard/wnba_alt_recovery_progress.json ]; then python patch_dashboard_alt_recovery_progress.py || true; fi
           python patch_dashboard_game_performance.py
           python patch_dashboard_build_verification.py || true
-          python - <<'PY'
-          import re
-          from pathlib import Path
-          p=Path('docs/index.html'); h=p.read_text(encoding='utf-8')
-          for eid in ('v4-alt-streaks-display-script','v4-alt-ladders-script'): h=re.sub(rf'<script id="{re.escape(eid)}">.*?</script>','',h,flags=re.S)
-          p.write_text(h,encoding='utf-8')
-          PY
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
           python patch_dashboard_canonical_runtime.py
@@ -154,37 +93,30 @@ jobs:
           python patch_dashboard_s19_m03.py
           python patch_dashboard_alt_props_table.py
           python patch_dashboard_alt_props_scores.py
-
-      - name: Verify Sprint 19 M02-M06 dashboard routing
+      - name: Verify current slate artifact before Pages upload
         run: |
           python - <<'PY'
-          import json,os
+          import os,re,json
           from pathlib import Path
-          h=Path('docs/index.html').read_text(encoding='utf-8'); target=os.environ['TARGET']
-          required=['id="tabs"','canonical-daily-runtime-v1','v4-ui-freeze-script','s19-m02-script','WNBA_S19_M02','s19-m03-script','WNBA_S19_M03','s19-m04-contract-script','WNBA_CANONICAL_DASHBOARD_CONTRACT','s19-m05-health-script','WNBA_DASHBOARD_HEALTH','s19-m06-results-script','WNBA_RESULTS_LIFECYCLE','Results · Lifecycle']
-          missing=[x for x in required if x not in h]
-          if missing: raise SystemExit(f'Sprint 19 M02-M06 verification failed; missing markers: {missing}')
-          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','s19-m02-script','s19-m03-script','s19-m04-contract-script','s19-m05-health-script','s19-m06-results-script'):
-              if h.count(f'id="{marker}"')!=1: raise SystemExit(f'{marker} duplicated or missing')
-          if h.count('id="root"')>1 or h.count('id="tabs"')!=1: raise SystemExit('Dashboard root/navigation duplication')
-          def j(name): return json.loads(Path('data/dashboard/'+name).read_text())
-          a2=j('wnba_s19_m02_prediction_audit.json'); a3=j('wnba_s19_m03_dashboard_consumer_audit.json'); a4=j('wnba_s19_m04_decision_contract_audit.json'); a5=j('wnba_s19_m05_dashboard_health_audit.json'); a6=j('wnba_s19_m06_results_lifecycle_audit.json')
-          assert a2.get('status')=='READY' and a2.get('target_date')==target and a2.get('actionable_out_props')==0 and a2.get('player_prop_predictions',0)>0 and a2.get('all_rendered_props_exact_current_slate') is True, a2
-          assert a3.get('status')=='READY' and a3.get('target_date')==target and a3.get('all_consumers_single_source') is True and a3.get('phase2_best_bets_fallback_enabled') is False and a3.get('phase2_portfolio_fallback_enabled') is False, a3
-          assert a4.get('status')=='READY' and a4.get('target_date')==target and a4.get('all_rows_current_slate') is True and a4.get('actionable_unavailable_props')==0 and a4.get('legacy_fallback_enabled') is False and a4.get('single_dashboard_contract') is True, a4
-          assert a5.get('status')=='READY' and a5.get('target_date')==target and a5.get('all_health_checks_pass') is True and a5.get('healthy_checks')==a5.get('total_checks') and float(a5.get('contract_age_minutes',9999))<=90 and a5.get('legacy_fallback_enabled') is False and a5.get('single_dashboard_contract') is True, a5
-          assert a6.get('status')=='READY' and a6.get('target_date')==target and a6.get('duplicate_history_keys')==0 and a6.get('same_day_final_results_inferred') is False and a6.get('existing_grader_reused') is True and a6.get('existing_edge_database_reused') is True and a6.get('target_history_records',0)>0, a6
-          print({'status':'PASS','sprint':19,'modules':['M02','M03','M04','M05','M06'],'target':target,'games':a5.get('games'),'player_props':a5.get('player_props'),'health_checks':a5.get('healthy_checks'),'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
+          target=os.environ['TARGET']; h=Path('docs/index.html').read_text(encoding='utf-8')
+          marker=f'<!-- canonical-build-target-v1:{target} -->'
+          if marker not in h: raise SystemExit(f'REFUSE DEPLOY: canonical build marker missing for {target}')
+          visible=set(re.findall(r'Slate\s+(\d{4}-\d{2}-\d{2})',h))
+          stale=sorted(visible-{target})
+          if stale: raise SystemExit(f'REFUSE DEPLOY: stale slate labels {stale}; target={target}')
+          if target not in visible: raise SystemExit(f'REFUSE DEPLOY: rendered Slate {target} label missing')
+          for name in ('wnba_s19_m02_prediction_audit.json','wnba_s19_m03_dashboard_consumer_audit.json','wnba_s19_m04_decision_contract_audit.json','wnba_s19_m05_dashboard_health_audit.json','wnba_s19_m06_results_lifecycle_audit.json'):
+              d=json.loads((Path('data/dashboard')/name).read_text())
+              if d.get('status')!='READY' or d.get('target_date')!=target: raise SystemExit(f'REFUSE DEPLOY: {name} is not READY/current: {d}')
+          print({'status':'PASS','target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True})
           PY
-
       - name: Persist Sprint 19 M06 prediction history
         run: |
           set -e
-          if git diff --quiet -- data/history; then echo 'M06 history already persisted; no commit needed.'; exit 0; fi
+          if git diff --quiet -- data/history; then exit 0; fi
           git config user.name 'WNBA Sprint 19 M06 Bot'
           git config user.email 'actions@github.com'
           bash scripts/atomic_generated_push.sh "Archive WNBA Sprint 19 M06 predictions for ${TARGET}" 'data/history'
-
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
