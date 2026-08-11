@@ -5,9 +5,6 @@ MESSAGE=${1:?commit message required}
 shift
 FILES=("$@")
 
-# Only approved dashboard publishers may publish docs/index.html. Other
-# workflows can continue publishing their generated JSON/CSV outputs without
-# overwriting the live dashboard. Local/manual callers may opt in explicitly.
 CANONICAL_DASHBOARD_WORKFLOW="WNBA V4 Player Props Polish"
 DASHBOARD_DEPLOY_WORKFLOW="Deploy WNBA Dashboard"
 ALLOW_DASHBOARD_WRITE=${ALLOW_DASHBOARD_WRITE:-0}
@@ -49,17 +46,16 @@ if [ "$CURRENT_WORKFLOW" = "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
   )
 fi
 
-# The deploy workflow builds docs/index.html in the runner and later invokes
-# this helper to persist generated history. Preserve both the rendered page and
-# game-performance grading outputs so the reset to origin/main cannot discard
-# newly graded archive rows before they are committed and deployed.
 if [ "$CURRENT_WORKFLOW" = "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
   PERSISTENT_OUTPUTS+=(
     docs/index.html
+    data/history/wnba_game_predictions.jsonl
     data/warehouse/wnba_game_predictions_ledger.json
     data/dashboard/wnba_game_predictions_ledger.json
     data/warehouse/wnba_game_performance.json
     data/dashboard/wnba_game_performance.json
+    data/dashboard/wnba_game_archive_backfill_audit.json
+    data/raw/scores_historical.csv
   )
 fi
 
@@ -81,10 +77,6 @@ fi
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 
-# Resolve files, globs, and directory trees before resetting the repository.
-# Directory arguments are expanded recursively; the previous implementation
-# skipped directories because it only accepted regular files, which caused
-# generated dashboard changes to disappear during the reset to origin/main.
 EXPANDED_FILES=()
 copy_file() {
   local file=$1
