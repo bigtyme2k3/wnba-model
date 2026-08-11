@@ -64,14 +64,15 @@ jobs:
           run_if_present wnba_alt_market_watch.py --date "$TARGET"
           run_if_present wnba_alt_streak_engine.py --date "$TARGET"
           run_if_present wnba_remaining_season_intelligence.py
-          run_if_present wnba_forward_validation_engine.py --date "$TARGET"
+          run_if_present wnba_forward_validation_engine.py --mode freeze --date "$TARGET"
           run_if_present wnba_readiness_engine.py
           run_if_present wnba_production_readiness.py
-          run_if_present wnba_model_audit.py
           run_if_present wnba_data_lineage.py
       - name: Grade results and performance
         run: |
           YESTERDAY=$(TZ=America/New_York date -d yesterday +%F)
+          [ ! -f wnba_results_grader.py ] || python wnba_results_grader.py --date "$YESTERDAY" || true
+          [ ! -f wnba_forward_validation_engine.py ] || python wnba_forward_validation_engine.py --mode grade --date "$YESTERDAY" || true
           [ ! -f wnba_game_performance_tracker.py ] || { python wnba_game_performance_tracker.py --date "$YESTERDAY" --grade || true; python wnba_game_performance_tracker.py --analyze; }
           [ ! -f wnba_alt_performance_tracker.py ] || { python wnba_alt_performance_tracker.py --date "$YESTERDAY" --grade || true; python wnba_alt_performance_tracker.py --date "$TARGET" --analyze; }
           [ ! -f wnba_alt_pending_diagnostics.py ] || python wnba_alt_pending_diagnostics.py || true
@@ -109,7 +110,7 @@ jobs:
             'portfolio':['wnba_portfolio.json','wnba_portfolio_intelligence.json','wnba_portfolio_dashboard.json'],
             'results':['wnba_results.json','wnba_live_results.json','wnba_results_grading.json'],
             'performance':['wnba_game_performance.json','wnba_model_performance.json','best_bets_performance_summary.json'],
-            'ai_center':['wnba_ai_coach.json','wnba_daily_ai_report.json','wnba_model_audit.json']}
+            'ai_center':['wnba_ai_coach.json','wnba_daily_ai_report.json']}
           tabs={}; missing=[]
           for tab,names in required.items():
             found=next((root/n for n in names if (root/n).exists()),None)
