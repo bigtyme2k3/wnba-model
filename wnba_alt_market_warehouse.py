@@ -4,6 +4,10 @@ Input is the bookmaker-level CSV written by scrape_odds_props.py. Every
 sportsbook/player/stat/threshold remains a distinct market; lines are never
 averaged across books. Historical hit rates come from the canonical player game
 log warehouse and are calculated against the exact threshold.
+
+Historical features are strictly pregame: records dated on or after the target
+slate date are excluded so a completed same-day game can never leak into a
+current ALT score during a late refresh.
 """
 from __future__ import annotations
 
@@ -65,18 +69,29 @@ def stat_value(record: dict[str, Any], stat: str) -> float | None:
     return num(values.get(stat))
 
 
-def history_index() -> dict[str, list[dict[str, Any]]]:
+def history_index(target: str) -> tuple[dict[str, list[dict[str, Any]]], int]:
+    """Return player history strictly before the target date.
+
+    This is a hard anti-leakage boundary. A same-day result that lands in the
+    cumulative warehouse during an evening refresh must not become an input to
+    that day's pregame ALT score.
+    """
     payload = load(LOGS, {"records": []})
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    excluded_same_or_future = 0
     for row in payload.get("records", []):
         if not isinstance(row, dict) or row.get("did_not_play") is True:
             continue
         if (num(row.get("minutes")) or 0) <= 0:
             continue
+        game_date = str(row.get("game_date") or "")[:10]
+        if not game_date or game_date >= target:
+            excluded_same_or_future += 1
+            continue
         groups[norm(row.get("player"))].append(row)
     for rows in groups.values():
         rows.sort(key=lambda r: (str(r.get("game_date") or ""), str(r.get("game_id") or r.get("game") or "")), reverse=True)
-    return groups
+    return groups, excluded_same_or_future
 
 
 def hit_summary(records: list[dict[str, Any]], stat: str, threshold: float) -> dict[str, Any]:
@@ -121,7 +136,7 @@ def read_markets(target: str) -> list[dict[str, Any]]:
 
 def build(target: str) -> dict[str, Any]:
     raw = read_markets(target)
-    histories = history_index()
+    histories, excluded_history_rows = history_index(target)
     rows: list[dict[str, Any]] = []
     seen: set[tuple[str, ...]] = set()
     for source in raw:
@@ -154,6 +169,7 @@ def build(target: str) -> dict[str, Any]:
             "scraped_at_utc": source.get("scraped_at"), "implied_probability": round(implied_probability(odds), 4) if implied_probability(odds) is not None else None,
             "historical_probability": round(probability, 4) if probability is not None else None,
             "expected_value_per_unit": round(ev, 4) if ev is not None else None,
+            "history_cutoff_date": target,
             **history,
         })
     rows.sort(key=lambda r: (norm(r["player"]), r["stat"], norm(r["sportsbook"]), r["threshold"], r["side"]))
@@ -170,12 +186,15 @@ def build(target: str) -> dict[str, Any]:
             "sportsbooks": sorted({r["sportsbook"] for r in rows}),
             "stats": sorted({r["stat"] for r in rows}),
             "book_player_stat_groups": len({(r["sportsbook"], r["player"], r["stat"]) for r in rows}),
+            "history_records_excluded_same_or_future": excluded_history_rows,
         },
         "rows": rows, "players": list(ladders.values()),
         "data_contract": {
             "book_specific_lines_preserved": True, "cross_book_line_averaging": False,
             "threshold_rule": "exact sportsbook outcome point", "dd_td_supported": False,
-            "history_source": str(LOGS), "future_markets": ["PLAYER_1Q_POINTS", "PLAYER_FIRST_3_MIN_POINTS"],
+            "history_source": str(LOGS), "history_strictly_before_target_date": True,
+            "history_cutoff_date": target,
+            "future_markets": ["PLAYER_1Q_POINTS", "PLAYER_FIRST_3_MIN_POINTS"],
         },
     }
     for path in OUTS:
