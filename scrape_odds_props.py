@@ -3,6 +3,11 @@
 Standard markets continue feeding the existing props pipeline. Alternate markets
 are additionally written at bookmaker/outcome granularity so FanDuel,
 DraftKings, Fanatics, and other books retain their own exact thresholds.
+
+Current event IDs are always refreshed from The Odds API before player-market
+requests. Cached schedule files are never trusted as the event-ID authority,
+because event identifiers can become stale and return 404s even when the slate
+itself is still correct.
 """
 from __future__ import annotations
 
@@ -12,6 +17,7 @@ import os
 import time
 from collections import defaultdict
 from datetime import date, datetime, timezone
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import requests
@@ -21,6 +27,7 @@ SPORT = "basketball_wnba"
 REGIONS = "us"
 ODDS_FMT = "american"
 BASE_URL = "https://api.the-odds-api.com/v4/sports"
+ET = ZoneInfo("America/New_York")
 
 PROP_MARKETS = {
     "player_points": "pts", "player_rebounds": "reb", "player_assists": "ast", "player_threes": "threes",
@@ -60,6 +67,11 @@ def empty_alt_df():
 
 
 def load_events_from_odds(raw_dir: str, target: str) -> list[dict]:
+    """Compatibility-only cached slate reader.
+
+    Cached game IDs are deliberately not used as live event IDs. This helper is
+    retained for diagnostics and team/date comparison only.
+    """
     candidates = [os.path.join(raw_dir, f"odds_{target}.csv"), os.path.join(raw_dir, "odds_today.csv")]
     for path in candidates:
         if os.path.exists(path):
@@ -70,7 +82,7 @@ def load_events_from_odds(raw_dir: str, target: str) -> list[dict]:
                 if pd.isna(gid) or not gid:
                     continue
                 events.append({"id": str(gid), "commence_time": row.get("commence_time", ""), "home_team": row.get("home_team", ""), "away_team": row.get("away_team", "")})
-            print(f"  Loaded {len(events)} events from {path}")
+            print(f"  Cached slate contains {len(events)} event IDs in {path} (diagnostic only)")
             return events
     return []
 
@@ -85,7 +97,37 @@ def fetch_events() -> list[dict]:
     if resp.status_code == 422:
         return []
     resp.raise_for_status()
-    return resp.json()
+    payload = resp.json()
+    return payload if isinstance(payload, list) else []
+
+
+def event_et_date(event: dict) -> str | None:
+    raw = str(event.get("commence_time") or "").strip()
+    if not raw:
+        return None
+    try:
+        dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(ET).date().isoformat()
+    except Exception:
+        return None
+
+
+def fetch_current_target_events(target: str, raw_dir: str) -> list[dict]:
+    """Return fresh event IDs for the requested Eastern-time slate date."""
+    fresh = fetch_events()
+    target_events = [e for e in fresh if isinstance(e, dict) and event_et_date(e) == target and e.get("id")]
+    cached = load_events_from_odds(raw_dir, target)
+    cached_ids = {str(e.get("id")) for e in cached if e.get("id")}
+    fresh_ids = {str(e.get("id")) for e in target_events if e.get("id")}
+    stale_ids = sorted(cached_ids - fresh_ids)
+    print(f"  Fresh target-date events: {len(target_events)}")
+    if stale_ids:
+        print(f"  Rejected {len(stale_ids)} stale cached event IDs: {', '.join(stale_ids[:8])}{' ...' if len(stale_ids) > 8 else ''}")
+    if not target_events:
+        raise RuntimeError(f"No fresh The Odds API WNBA events found for Eastern slate date {target}; refusing cached event-ID fallback")
+    return target_events
 
 
 def fetch_event_markets(event_id: str, markets: list[str], label: str) -> dict:
@@ -180,19 +222,27 @@ def main():
     parser.add_argument("--skip-alt", action="store_true", help="Skip alternate-market API requests to conserve credits")
     args = parser.parse_args()
     print(f"\n═══ THE ODDS API WNBA PLAYER PROPS — {args.date} ═══\n")
-    status = {"status": "unknown", "target_date": args.date, "source": "the-odds-api", "checked_at_utc": datetime.now(timezone.utc).isoformat(), "events": 0, "rows": 0, "alt_rows": 0, "markets": list(PROP_MARKETS), "alt_markets": list(ALT_PROP_MARKETS), "error": None}
+    status = {"status": "unknown", "target_date": args.date, "source": "the-odds-api", "checked_at_utc": datetime.now(timezone.utc).isoformat(), "events": 0, "rows": 0, "alt_rows": 0, "markets": list(PROP_MARKETS), "alt_markets": list(ALT_PROP_MARKETS), "event_id_policy": "fresh_api_only", "error": None}
     try:
-        events = load_events_from_odds(args.out, args.date) or fetch_events(); status["events"] = len(events); standard_rows = []; alt_rows = []
+        events = fetch_current_target_events(args.date, args.out)
+        status["events"] = len(events); standard_rows = []; alt_rows = []
+        valid_event_requests = 0
         for event in events:
             event_id = event.get("id")
             if not event_id: continue
-            standard_rows.extend(parse_event_props(fetch_event_markets(event_id, list(PROP_MARKETS), "standard"), args.date))
+            standard_payload = fetch_event_markets(event_id, list(PROP_MARKETS), "standard")
+            alt_payload = {} if args.skip_alt else fetch_event_markets(event_id, list(ALT_PROP_MARKETS), "alternate")
+            if standard_payload or alt_payload:
+                valid_event_requests += 1
+            standard_rows.extend(parse_event_props(standard_payload, args.date))
             if not args.skip_alt:
-                alt_rows.extend(parse_alt_props(fetch_event_markets(event_id, list(ALT_PROP_MARKETS), "alternate"), args.date))
+                alt_rows.extend(parse_alt_props(alt_payload, args.date))
             time.sleep(args.delay)
+        if valid_event_requests == 0:
+            raise RuntimeError(f"Fresh event IDs were found for {args.date}, but all player-market requests failed or returned empty payloads")
         df = pd.DataFrame(standard_rows, columns=RAW_COLUMNS) if standard_rows else empty_df()
         alt_df = pd.DataFrame(alt_rows, columns=ALT_COLUMNS) if alt_rows else empty_alt_df()
-        status["rows"] = len(df); status["alt_rows"] = len(alt_df); status["status"] = "ok" if not df.empty else "empty"
+        status["rows"] = len(df); status["alt_rows"] = len(alt_df); status["status"] = "ok" if (not df.empty or not alt_df.empty) else "empty"
         save_outputs(df, alt_df, args.date, args.out)
     except Exception as exc:
         status["status"] = "error"; status["error"] = str(exc); print(f"  [ERROR] {exc}"); save_outputs(empty_df(), empty_alt_df(), args.date, args.out)
