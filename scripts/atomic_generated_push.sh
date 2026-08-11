@@ -50,14 +50,16 @@ if [ "$CURRENT_WORKFLOW" = "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
 fi
 
 # The deploy workflow builds docs/index.html in the runner and later invokes
-# this helper to persist M06 history. atomic_generated_push resets the working
-# tree to origin/main before committing, so without preserving the rendered
-# dashboard here that reset silently restores the old public page just before
-# the Pages artifact is uploaded. Treat the verified dashboard artifact as a
-# persistent output of the deploy workflow so the reset cannot discard it.
+# this helper to persist generated history. Preserve both the rendered page and
+# game-performance grading outputs so the reset to origin/main cannot discard
+# newly graded archive rows before they are committed and deployed.
 if [ "$CURRENT_WORKFLOW" = "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
   PERSISTENT_OUTPUTS+=(
     docs/index.html
+    data/warehouse/wnba_game_predictions_ledger.json
+    data/dashboard/wnba_game_predictions_ledger.json
+    data/warehouse/wnba_game_performance.json
+    data/dashboard/wnba_game_performance.json
   )
 fi
 
