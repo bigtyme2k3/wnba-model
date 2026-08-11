@@ -7,10 +7,18 @@ FILES=("$@")
 
 DASHBOARD_DEPLOY_WORKFLOW="Deploy WNBA Dashboard"
 CURRENT_WORKFLOW=${GITHUB_WORKFLOW:-local}
+
+is_protected_dashboard_file() {
+  local file=$1
+  [ "$file" = "docs/index.html" ] && [ "$CURRENT_WORKFLOW" != "$DASHBOARD_DEPLOY_WORKFLOW" ]
+}
+
+# Fast-path guard for callers that explicitly supply docs/index.html. A second
+# guard inside copy_file() enforces the rule after directory/glob expansion so
+# supplying "docs" cannot bypass single-writer ownership.
 FILTERED_FILES=()
 for supplied in "${FILES[@]}"; do
-  if [ "$supplied" = "docs/index.html" ] \
-     && [ "$CURRENT_WORKFLOW" != "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
+  if is_protected_dashboard_file "$supplied"; then
     echo "Skipping protected dashboard output from non-deploy workflow: $CURRENT_WORKFLOW"
     continue
   fi
@@ -64,6 +72,10 @@ EXPANDED_FILES=()
 copy_file() {
   local file=$1
   [ -f "$file" ] || return 0
+  if is_protected_dashboard_file "$file"; then
+    echo "Skipping protected dashboard file after path expansion: $file ($CURRENT_WORKFLOW)"
+    return 0
+  fi
   EXPANDED_FILES+=("$file")
   mkdir -p "$TMP/$(dirname "$file")"
   cp -p "$file" "$TMP/$file"
