@@ -5,6 +5,7 @@ import json
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -15,6 +16,7 @@ import scrape_scores
 
 RAW = ROOT / 'data/raw'
 AUDIT = ROOT / 'data/dashboard/wnba_game_archive_backfill_audit.json'
+ET = ZoneInfo('America/New_York')
 
 
 def score_files() -> list[Path]:
@@ -24,7 +26,8 @@ def score_files() -> list[Path]:
     for path in candidates:
         key = str(path.resolve()) if path.exists() else str(path)
         if path.exists() and key not in seen:
-            seen.add(key); out.append(path)
+            seen.add(key)
+            out.append(path)
     return out
 
 
@@ -36,12 +39,14 @@ def parse_date(value: str):
 
 
 def score_identity(row: dict) -> tuple:
-    """Collapse duplicate copies of the same final across score files."""
-    game_id = str(row.get('game_id') or '').strip()
-    if game_id:
-        return ('game_id', game_id)
+    """Deduplicate only truly equivalent finals, not every copy of a game_id.
+
+    A historical master can contain a malformed/stale variant of a game_id while
+    a dated score file contains the correct teams/date. Game id alone therefore
+    cannot safely suppress the later authoritative row.
+    """
     return (
-        'fallback',
+        str(row.get('game_id') or '').strip(),
         str(row.get('game_date') or '')[:10],
         ledger.norm(row.get('away_team')),
         ledger.norm(row.get('home_team')),
@@ -67,7 +72,8 @@ def score_index():
                 away, home = ledger.norm(raw.get('away_team')), ledger.norm(raw.get('home_team'))
                 if not game_date or not away or not home:
                     continue
-                row = dict(raw); row['_score_source'] = str(path.relative_to(ROOT))
+                row = dict(raw)
+                row['_score_source'] = str(path.relative_to(ROOT))
                 identity = score_identity(row)
                 if identity in seen_finals:
                     continue
@@ -100,8 +106,8 @@ def find_actual(exact, by_matchup, target_date: str, away: str, home: str):
     candidates.sort(key=lambda item: (item[0], item[1]))
     best_delta = candidates[0][0]
     best = [item for item in candidates if item[0] == best_delta]
-    # After score-source deduplication, multiple best candidates here represent
-    # genuinely distinct games, so refusing an ambiguous match remains safe.
+    # Equivalent duplicates were removed above. Multiple best rows now mean
+    # genuinely conflicting finals, which must never be guessed through.
     if len(best) != 1:
         return None, None
     return best[0][2], 'adjacent_date' if best_delta else 'exact_date'
@@ -121,15 +127,14 @@ def unresolved_rows(rows, exact, by_matchup):
 
 
 def refresh_missing_finals(rows, exact, by_matchup):
-    """Fetch only past unresolved slate dates from ESPN, plus the next UTC date."""
-    today = datetime.now(timezone.utc).date()
+    """Fetch only past unresolved Eastern slate dates, plus the next UTC date."""
+    today = datetime.now(ET).date()
     missing = unresolved_rows(rows, exact, by_matchup)
     dates = sorted({parse_date(r.get('target_date')) for r in missing if parse_date(r.get('target_date')) and parse_date(r.get('target_date')) < today})
-    fetched, errors = [], []
-    requested = set()
+    fetched, errors, requested = [], [], set()
     for d in dates:
         for candidate in (d, d + timedelta(days=1)):
-            if candidate >= today or candidate in requested:
+            if candidate > today or candidate in requested:
                 continue
             requested.add(candidate)
             text = candidate.isoformat()
@@ -145,7 +150,6 @@ def main():
     rows = ledger.read_ledger()
     exact, by_matchup, files_used = score_index()
     before_unresolved = unresolved_rows(rows, exact, by_matchup)
-
     fetched_dates, fetch_errors = refresh_missing_finals(rows, exact, by_matchup)
     if fetched_dates:
         exact, by_matchup, files_used = score_index()
@@ -175,18 +179,15 @@ def main():
             'actual_margin': round(h-a, 2), 'actual_total': round(h+a, 2),
             'margin_error': round(abs(pm-(h-a)), 2) if pm is not None else None,
             'total_error': round(abs(pt-(h+a)), 2) if pt is not None else None,
-            'spread_result': ledger.grade_spread(row, a, h),
-            'total_result': ledger.grade_total(row, a, h),
-            'graded': True, 'status': 'GRADED',
-            'graded_at_utc': datetime.now(timezone.utc).isoformat(),
-            'actual_source': source,
-            'actual_game_date': str(actual.get('game_date') or '')[:10],
-            'actual_match_mode': match_mode,
+            'spread_result': ledger.grade_spread(row, a, h), 'total_result': ledger.grade_total(row, a, h),
+            'graded': True, 'status': 'GRADED', 'graded_at_utc': datetime.now(timezone.utc).isoformat(),
+            'actual_source': source, 'actual_game_date': str(actual.get('game_date') or '')[:10], 'actual_match_mode': match_mode,
         })
         graded += 1
 
     ledger.write_ledger(rows)
-    report = ledger.build_report(rows, datetime.now(timezone.utc).date().isoformat(), {
+    today_et = datetime.now(ET).date().isoformat()
+    report = ledger.build_report(rows, today_et, {
         'historical_backfill_graded': graded,
         'historical_backfill_unresolved': len(unresolved_detail),
         'historical_backfill_adjacent_date_matches': adjacent_matches,
@@ -195,20 +196,11 @@ def main():
         'historical_score_dates_refreshed': fetched_dates,
     })
     audit = {
-        'generated_at_utc': datetime.now(timezone.utc).isoformat(),
-        'status': 'PASS',
-        'archived_games': len(rows),
-        'graded_games': sum(bool(r.get('graded')) for r in rows),
-        'pending_games': sum(not bool(r.get('graded')) for r in rows),
-        'unresolved_before_refresh': len(before_unresolved),
-        'graded_this_backfill': graded,
-        'adjacent_date_matches': adjacent_matches,
-        'score_dates_refreshed': fetched_dates,
-        'score_refresh_errors': fetch_errors,
-        'score_files_used': files_used,
-        'unresolved': unresolved_detail,
-        'spread_record': report.get('summary', {}).get('spread_record'),
-        'total_record': report.get('summary', {}).get('total_record'),
+        'generated_at_utc': datetime.now(timezone.utc).isoformat(), 'status': 'PASS',
+        'archived_games': len(rows), 'graded_games': sum(bool(r.get('graded')) for r in rows), 'pending_games': sum(not bool(r.get('graded')) for r in rows),
+        'unresolved_before_refresh': len(before_unresolved), 'graded_this_backfill': graded, 'adjacent_date_matches': adjacent_matches,
+        'score_dates_refreshed': fetched_dates, 'score_refresh_errors': fetch_errors, 'score_files_used': files_used, 'unresolved': unresolved_detail,
+        'spread_record': report.get('summary', {}).get('spread_record'), 'total_record': report.get('summary', {}).get('total_record'),
     }
     AUDIT.parent.mkdir(parents=True, exist_ok=True)
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
