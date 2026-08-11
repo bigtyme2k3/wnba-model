@@ -38,8 +38,17 @@ def main() -> None:
         r"(?:--date\s+|TARGET\s*=|target_date[^\n:=]*[:=]\s*['\"]?)20\d{2}-\d{2}-\d{2}",
         re.I,
     )
-    git_add_dashboard = re.compile(r"git\s+add(?:(?!\n\s*-\s+name:).){0,1200}?docs/index\.html", re.S)
-    atomic_dashboard = re.compile(r"atomic_generated_push\.sh(?:(?!\n\s*-\s+name:).){0,1200}?docs/index\.html", re.S)
+    # Non-deploy workflows may read docs, but they may not stage/publish either
+    # docs/index.html directly or the parent docs directory through a multiline
+    # command. The atomic publisher independently enforces this after expansion.
+    git_add_dashboard = re.compile(
+        r"git\s+add(?:(?!\n\s*-\s+name:).){0,1600}?(?:^|[\s'\"])(?:docs(?:/index\.html)?)(?=[\s'\"\\]|$)",
+        re.S | re.M,
+    )
+    atomic_dashboard = re.compile(
+        r"atomic_generated_push\.sh(?:(?!\n\s*-\s+name:).){0,1600}?(?:^|[\s'\"])(?:docs(?:/index\.html)?)(?=[\s'\"\\]|$)",
+        re.S | re.M,
+    )
 
     for workflow in active_workflows():
         text = workflow.read_text(encoding="utf-8")
@@ -58,7 +67,7 @@ def main() -> None:
             fail(f"{name} contains a dashboard-write bypass")
 
         if workflow != DEPLOY and (git_add_dashboard.search(text) or atomic_dashboard.search(text)):
-            fail(f"{name} can publish docs/index.html outside the canonical deploy")
+            fail(f"{name} can publish the docs dashboard outside the canonical deploy")
 
     deploy_text = DEPLOY.read_text(encoding="utf-8")
     if "python active_slate_date.py" not in deploy_text:
@@ -75,12 +84,15 @@ def main() -> None:
         fail("atomic publisher still exposes a dashboard-write bypass")
     if "CANONICAL_DASHBOARD_WORKFLOW" in atomic_text or "WNBA V4 Player Props Polish" in atomic_text:
         fail("atomic publisher still contains retired dashboard workflow ownership")
+    if "is_protected_dashboard_file" not in atomic_text or "Skipping protected dashboard file after path expansion" not in atomic_text:
+        fail("atomic publisher does not enforce dashboard protection after path expansion")
 
     print(
         {
             "status": "PASS",
             "active_workflows_checked": len(active_workflows()),
             "single_dashboard_writer": True,
+            "directory_publish_bypass_blocked": True,
             "retired_dashboard_builders_blocked": True,
             "hardcoded_executable_slate_dates_blocked": True,
             "workflow_identity_spoofing_blocked": True,
