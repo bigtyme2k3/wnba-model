@@ -5,7 +5,6 @@ MESSAGE=${1:?commit message required}
 shift
 FILES=("$@")
 
-CANONICAL_DASHBOARD_WORKFLOW="WNBA V4 Player Props Polish"
 DASHBOARD_DEPLOY_WORKFLOW="Deploy WNBA Dashboard"
 ALLOW_DASHBOARD_WRITE=${ALLOW_DASHBOARD_WRITE:-0}
 CURRENT_WORKFLOW=${GITHUB_WORKFLOW:-local}
@@ -13,41 +12,27 @@ FILTERED_FILES=()
 for supplied in "${FILES[@]}"; do
   if [ "$supplied" = "docs/index.html" ] \
      && [ "$ALLOW_DASHBOARD_WRITE" != "1" ] \
-     && [ "$CURRENT_WORKFLOW" != "$CANONICAL_DASHBOARD_WORKFLOW" ] \
      && [ "$CURRENT_WORKFLOW" != "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
-    echo "Skipping protected dashboard output from non-canonical workflow: $CURRENT_WORKFLOW"
+    echo "Skipping protected dashboard output from non-deploy workflow: $CURRENT_WORKFLOW"
     continue
   fi
   FILTERED_FILES+=("$supplied")
 done
 FILES=("${FILTERED_FILES[@]}")
 
+# These are publishable generated history products. Keep this list intentionally
+# narrow: paths under docs/ or data/dashboard/ can retrigger the dashboard deploy.
 PERSISTENT_OUTPUTS=(
   data/history/wnba_alt_market_snapshots.jsonl
 )
 
-if [ "$CURRENT_WORKFLOW" = "$CANONICAL_DASHBOARD_WORKFLOW" ]; then
-  PERSISTENT_OUTPUTS+=(
-    data/dashboard/wnba_minutes_projection_v2.json
-    data/dashboard/wnba_points_projection_v2.json
-    data/dashboard/wnba_rebounds_assists_projection_v2.json
-    data/dashboard/wnba_ancillary_projection_v2.json
-    data/dashboard/wnba_unified_player_simulation_v2.json
-    data/dashboard/wnba_cross_market_top_plays.json
-    data/dashboard/wnba_model_explainability.json
-    data/dashboard/wnba_matchup_intelligence.json
-    data/dashboard/wnba_projection_ai.json
-    data/dashboard/wnba_game_market_model.json
-    data/dashboard/wnba_decision_engine_final.json
-    data/dashboard/wnba_portfolio_optimizer_v2.json
-    data/dashboard/wnba_risk_allocation.json
-    data/dashboard/wnba_alt_market_warehouse.json
-    data/dashboard/wnba_mission_control_acceptance.json
-  )
-fi
-
+# The deploy workflow may need to reset to origin/main while publishing history.
+# Preserve its already-verified in-run artifacts across that reset, but DO NOT
+# stage/commit them here. This prevents Deploy WNBA Dashboard from committing a
+# docs/ or data/dashboard/ change and recursively triggering itself.
+WORKSPACE_PRESERVE=()
 if [ "$CURRENT_WORKFLOW" = "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
-  PERSISTENT_OUTPUTS+=(
+  WORKSPACE_PRESERVE+=(
     docs/index.html
     data/history/wnba_game_predictions.jsonl
     data/warehouse/wnba_game_predictions_ledger.json
@@ -75,7 +60,8 @@ if [ ${#FILES[@]} -eq 0 ]; then
 fi
 
 TMP=$(mktemp -d)
-trap 'rm -rf "$TMP"' EXIT
+PRESERVE_TMP=$(mktemp -d)
+trap 'rm -rf "$TMP" "$PRESERVE_TMP"' EXIT
 
 EXPANDED_FILES=()
 copy_file() {
@@ -108,6 +94,13 @@ for path in "${FILES[@]}"; do
   fi
 done
 
+for file in "${WORKSPACE_PRESERVE[@]}"; do
+  if [ -f "$file" ]; then
+    mkdir -p "$PRESERVE_TMP/$(dirname "$file")"
+    cp -p "$file" "$PRESERVE_TMP/$file"
+  fi
+done
+
 if [ ${#EXPANDED_FILES[@]} -eq 0 ]; then
   echo "No generated files were produced; nothing to publish"
   exit 0
@@ -122,6 +115,10 @@ for file in "${EXPANDED_FILES[@]}"; do
   fi
 done
 
+restore_workspace() {
+  if [ -d "$PRESERVE_TMP" ]; then cp -a "$PRESERVE_TMP/." .; fi
+}
+
 for attempt in 1 2 3 4; do
   echo "Atomic push attempt $attempt"
   git rebase --abort 2>/dev/null || true
@@ -129,6 +126,7 @@ for attempt in 1 2 3 4; do
   git reset --hard origin/main
 
   cp -a "$TMP/." .
+  restore_workspace
 
   git add -- "${UNIQUE_FILES[@]}"
   if git diff --cached --quiet; then
@@ -139,6 +137,7 @@ for attempt in 1 2 3 4; do
   git commit -m "$MESSAGE"
   if git push origin HEAD:main; then
     echo "Generated outputs pushed successfully"
+    restore_workspace
     exit 0
   fi
 
@@ -146,5 +145,6 @@ for attempt in 1 2 3 4; do
   sleep $((attempt * 2))
 done
 
+restore_workspace
 echo "Unable to push generated outputs after 4 attempts" >&2
 exit 1
