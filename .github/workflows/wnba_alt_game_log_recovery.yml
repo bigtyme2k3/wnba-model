@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       recovery_date:
-        description: 'Single completed date to recover (YYYY-MM-DD); defaults to yesterday ET'
+        description: 'Optional single completed date (YYYY-MM-DD). Leave blank to recover every pending historical date.'
         required: false
         type: string
   push:
@@ -15,6 +15,7 @@ on:
       - 'wnba_alt_date_alias_recovery.py'
       - 'wnba_espn_boxscore_fallback.py'
       - 'wnba_alt_pending_diagnostics.py'
+      - 'wnba_alt_strict_regrade.py'
       - 'wnba_player_game_log_archive.py'
       - 'wnba_player_game_log_warehouse.py'
       - 'wnba_alt_performance_tracker.py'
@@ -32,7 +33,7 @@ concurrency:
 jobs:
   recover-alt-game-logs:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,26 +57,29 @@ jobs:
       - name: Verify production architecture invariants
         run: python scripts/check_production_architecture.py
 
-      - name: Resolve one completed recovery date
+      - name: Resolve recovery scope
         run: |
           REQUESTED="${{ github.event.inputs.recovery_date }}"
-          if [ -z "$REQUESTED" ]; then
-            REQUESTED=$(python - <<'PY'
-          from datetime import datetime, timedelta
-          from zoneinfo import ZoneInfo
-          print((datetime.now(ZoneInfo('America/New_York')).date() - timedelta(days=1)).isoformat())
-          PY
-          )
-          fi
-          python - <<PY
+          if [ -n "$REQUESTED" ]; then
+            python - <<PY
           from datetime import date
           value='$REQUESTED'
           date.fromisoformat(value)
-          print('ALT recovery target:', value)
+          print('ALT recovery scope: single date', value)
           PY
-          echo "RECOVERY_REQUEST_DATE=$REQUESTED" >> "$GITHUB_ENV"
+            echo "RECOVERY_REQUEST_DATE=$REQUESTED" >> "$GITHUB_ENV"
+            python wnba_alt_game_log_recovery.py --date "$REQUESTED"
+            DATES=$(python wnba_alt_game_log_recovery.py --date "$REQUESTED" --print-dates)
+          else
+            echo "ALT recovery scope: every pending historical date"
+            echo "RECOVERY_REQUEST_DATE=" >> "$GITHUB_ENV"
+            python wnba_alt_game_log_recovery.py
+            DATES=$(python wnba_alt_game_log_recovery.py --print-dates)
+          fi
+          echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
+          echo "Target dates: ${DATES:-none}"
 
-      - name: Compile recovery tools
+      - name: Compile recovery and grading tools
         run: |
           python -m py_compile \
             active_slate_date.py \
@@ -85,25 +89,23 @@ jobs:
             wnba_espn_boxscore_fallback.py \
             wnba_alt_pending_diagnostics.py \
             wnba_alt_performance_tracker.py \
+            wnba_alt_strict_regrade.py \
             wnba_player_game_log_archive.py \
             wnba_player_game_log_warehouse.py
-
-      - name: Build targeted recovery plan
-        run: |
-          python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE"
-          DATES=$(python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE" --print-dates)
-          echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
-          echo "Target dates: ${DATES:-none}"
 
       - name: Snapshot cumulative game-log warehouse
         if: env.RECOVERY_DATES != ''
         run: python wnba_player_game_log_archive.py snapshot
 
-      - name: Recover primary verified game logs
+      - name: Recover verified game logs for every pending date
         if: env.RECOVERY_DATES != ''
         run: |
           for DAY in $RECOVERY_DATES; do
+            echo "=== Recovering $DAY ==="
             python wnba_play_by_play_layer.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+            python wnba_player_game_log_archive.py merge
+            python wnba_espn_boxscore_fallback.py --date "$DAY" || true
             python wnba_player_game_log_warehouse.py --date "$DAY" || true
             python wnba_player_game_log_archive.py merge
             python wnba_player_game_log_archive.py snapshot
@@ -112,57 +114,57 @@ jobs:
           python wnba_player_game_log_archive.py merge
           python wnba_player_game_log_archive.py snapshot
 
-      - name: Recover secondary ESPN box scores
-        if: env.RECOVERY_DATES != ''
-        run: |
-          for DAY in $RECOVERY_DATES; do
-            python wnba_espn_boxscore_fallback.py --date "$DAY" || true
-            python wnba_player_game_log_warehouse.py --date "$DAY" || true
-            python wnba_player_game_log_archive.py merge
-            python wnba_player_game_log_archive.py snapshot
-          done
-
       - name: Normalize recovered warehouse handoff
         if: env.RECOVERY_DATES != ''
         run: python wnba_alt_recovery_handoff.py
 
-      - name: Resolve one-day slate date boundary
-        if: env.RECOVERY_DATES != ''
-        run: python wnba_alt_date_alias_recovery.py --date "$RECOVERY_REQUEST_DATE"
-
-      - name: Regrade only affected date
+      - name: Resolve historical date aliases
         if: env.RECOVERY_DATES != ''
         run: |
-          python wnba_alt_performance_tracker.py --date "$RECOVERY_REQUEST_DATE" --grade
+          for DAY in $RECOVERY_DATES; do
+            python wnba_alt_date_alias_recovery.py --date "$DAY" || true
+          done
+
+      - name: Grade entire ALT archive against recovered actuals
+        if: env.RECOVERY_DATES != ''
+        run: |
+          python wnba_alt_performance_tracker.py --grade
+          python wnba_alt_strict_regrade.py
           TARGET=$(python active_slate_date.py)
           test -n "$TARGET"
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
-          python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE"
+          python wnba_alt_game_log_recovery.py
 
-      - name: Verify recovery accounting
+      - name: Verify grading accounting
         run: |
           python - <<'PY'
-          import json, os
-          recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          import json
           diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           alt=json.load(open('data/dashboard/wnba_alt_performance.json'))
-          target=os.environ['RECOVERY_REQUEST_DATE']
-          pending=int((alt.get('summary') or {}).get('pending') or 0)
+          recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          s=alt.get('summary') or {}
+          pending=int(s.get('pending') or 0)
+          graded=int(s.get('graded') or 0)
+          archived=int(s.get('archived_candidates') or 0)
           diagnosed=int((diagnostics.get('summary') or {}).get('pending_rows') or 0)
           assert pending == diagnosed, (pending, diagnosed)
-          assert recovery.get('requested_date') == target, recovery
-          assert recovery.get('status') in {'ready','nothing_to_recover'}, recovery
-          remaining=sum(1 for r in diagnostics.get('inspector',[]) if str(r.get('date') or '')[:10] == target)
-          print({'target_date':target,'target_remaining':remaining,'global_pending':pending,'recovery_status':recovery.get('status')})
+          assert graded + pending <= archived, (archived, graded, pending)
+          print({
+              'archived': archived,
+              'graded': graded,
+              'pending': pending,
+              'recovery_status': recovery.get('status'),
+              'remaining_dates': (recovery.get('targets') or {}).get('dates') or [],
+          })
           PY
 
-      - name: Publish recovery data only
+      - name: Publish recovered logs and graded ALT history
         run: |
           git config user.name "WNBA Recovery Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Recover WNBA ALT game logs for $RECOVERY_REQUEST_DATE" \
+            "Recover and grade pending WNBA ALT history" \
             'data/raw/wnba_boxscores_*.json' \
             'data/history/wnba_alt_streak_history.jsonl' \
             'data/history/wnba_player_game_logs_before_build.json' \
@@ -173,4 +175,6 @@ jobs:
             'data/dashboard/wnba_alt_pending_diagnostics.json' \
             'data/warehouse/wnba_alt_pending_diagnostics.json' \
             'data/dashboard/wnba_alt_game_log_recovery.json' \
-            'data/warehouse/wnba_alt_game_log_recovery.json'
+            'data/warehouse/wnba_alt_game_log_recovery.json' \
+            'data/dashboard/wnba_alt_strict_regrade.json' \
+            'data/warehouse/wnba_alt_strict_regrade.json'
