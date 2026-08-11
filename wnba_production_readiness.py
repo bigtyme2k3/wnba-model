@@ -45,8 +45,10 @@ def count_rows(payload: Any) -> int:
     summary = payload.get('summary') if isinstance(payload.get('summary'), dict) else {}
     for key in ('candidates_ranked','candidates_scored','candidates_simulated','frozen_predictions','records'):
         if summary.get(key) is not None:
-            try: return int(summary[key])
-            except Exception: pass
+            try:
+                return int(summary[key])
+            except Exception:
+                pass
     return 0
 
 
@@ -86,7 +88,7 @@ def build() -> dict[str, Any]:
     def gate(name: str, passed: bool, detail: str, critical: bool = True) -> None:
         gates.append({'name': name, 'passed': bool(passed), 'detail': detail, 'critical': critical})
 
-    gate('pipeline_readiness_present', bool(p['pipeline_readiness']), f"status={readiness}")
+    gate('pipeline_readiness_present', bool(p['pipeline_readiness']), f'readiness={readiness}')
     gate('forward_validation_integrity', db['integrity'] in {'ok','missing'}, f"integrity={db['integrity']}")
     gate('forward_validation_uniqueness', db['duplicates'] == 0, f"duplicates={db['duplicates']}")
     gate('forward_validation_chronology', db['chronology_violations'] == 0, f"violations={db['chronology_violations']}")
@@ -103,11 +105,14 @@ def build() -> dict[str, Any]:
     failed_critical = [g for g in gates if g['critical'] and not g['passed']]
     failed_advisory = [g for g in gates if not g['critical'] and not g['passed']]
     if failed_critical:
-        status = 'BLOCKED'; ready_for_live_slate = False
+        status = 'BLOCKED'
+        ready_for_live_slate = False
     elif offday:
-        status = 'STANDBY'; ready_for_live_slate = True
+        status = 'STANDBY'
+        ready_for_live_slate = True
     else:
-        status = 'READY'; ready_for_live_slate = True
+        status = 'READY'
+        ready_for_live_slate = True
 
     report = {
         'sprint': 13,
@@ -117,10 +122,14 @@ def build() -> dict[str, Any]:
         'ready_for_live_slate': ready_for_live_slate,
         'operating_context': {'pipeline_readiness': readiness, 'offday_or_break': offday},
         'summary': {
-            'gates': len(gates), 'passed': sum(g['passed'] for g in gates),
-            'failed_critical': len(failed_critical), 'failed_advisory': len(failed_advisory),
-            'daily_edges': live_counts['daily_edges'], 'ensemble': live_counts['ensemble'],
-            'simulations': live_counts['simulation'], 'forward_validation_records': db['records'],
+            'gates': len(gates),
+            'passed': sum(g['passed'] for g in gates),
+            'failed_critical': len(failed_critical),
+            'failed_advisory': len(failed_advisory),
+            'daily_edges': live_counts['daily_edges'],
+            'ensemble': live_counts['ensemble'],
+            'simulations': live_counts['simulation'],
+            'forward_validation_records': db['records'],
         },
         'gates': gates,
         'forward_validation_database': db,
