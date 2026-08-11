@@ -1,25 +1,27 @@
-"""Snapshot, grade, and analyze ALT Streak candidates.
+"""Snapshot, grade, and analyze exact ALT candidates.
 
-The archive freezes pregame inputs so later model changes cannot rewrite history.
-Grading uses the cumulative player game-log warehouse. Every archived candidate
-is assigned WIN, LOSS, PUSH, VOID, or PENDING and one-unit profit/loss at its
-listed American odds. Missing actuals and missing prices remain explicit.
+Only exact alternate-market rows with provable pregame chronology enter the
+canonical performance sample. The archive freezes pregame inputs so later model
+changes cannot rewrite history. Historical/standard/fallback rows may remain in
+the raw JSONL for audit purposes but are excluded from canonical analytics unless
+they carry the current chronology-valid marker.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import math
-import os
 from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
 ALT = Path("data/dashboard/wnba_alt_streaks.json")
+MARKETS = Path("data/dashboard/wnba_alt_market_warehouse.json")
 LOGS = Path("data/warehouse/wnba_player_game_logs.json")
 ARCHIVE = Path("data/history/wnba_alt_streak_history.jsonl")
 REPORTS = [Path("data/warehouse/wnba_alt_performance.json"), Path("data/dashboard/wnba_alt_performance.json")]
+CANONICAL_ARCHIVE_SCHEMA = "2.0"
 
 
 def load(path: Path, default: Any) -> Any:
@@ -68,38 +70,93 @@ def norm(value: Any) -> str:
     return " ".join(str(value or "").strip().lower().replace("’","'").split())
 
 
+def parse_time(value: Any) -> datetime | None:
+    try:
+        text=str(value or "").strip().replace("Z","+00:00")
+        if not text:return None
+        parsed=datetime.fromisoformat(text)
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+    except Exception:
+        return None
+
+
 def candidate_id(row: dict[str,Any], target: str) -> str:
     parts=(target,row.get("player"),row.get("game"),row.get("stat"),row.get("side"),row.get("alt_line"),row.get("best_book"),row.get("best_odds"))
     return "|".join(norm(v) for v in parts)
 
 
+def market_key(row: dict[str,Any]) -> tuple[str,...]:
+    return (
+        norm(row.get("player")), norm(row.get("game")), str(row.get("stat") or "").upper(),
+        str(row.get("side") or "").upper(), str(num(row.get("threshold",row.get("alt_line")))),
+        norm(row.get("sportsbook",row.get("best_book"))),
+    )
+
+
+def current_market_index(target: str) -> dict[tuple[str,...],dict[str,Any]]:
+    payload=load(MARKETS,{})
+    if str(payload.get("target_date") or "")!=target:
+        return {}
+    out={}
+    for row in payload.get("rows",[]):
+        if not isinstance(row,dict) or str(row.get("target_date") or target)!=target:
+            continue
+        out[market_key(row)]=row
+    return out
+
+
 def snapshot(target: str) -> dict[str,int]:
     payload=load(ALT,{"rows":[]})
+    if str(payload.get("target_date") or "")!=target:
+        raise SystemExit(f"ALT snapshot source target mismatch: {payload.get('target_date')} != {target}")
+    markets=current_market_index(target)
+    if not markets:
+        raise SystemExit(f"Exact ALT market warehouse unavailable for {target}; refusing performance snapshot")
     history=read_jsonl(ARCHIVE)
-    existing={str(r.get("candidate_id")) for r in history}
-    added=duplicates=0
+    existing={str(r.get("candidate_id")) for r in history if r.get("canonical_performance_eligible") is True}
+    added=duplicates=skipped_non_alt=skipped_unmatched=skipped_missing_start=skipped_started=0
     frozen_fields=(
         "player","team","game","opponent","stat","side","alt_line","line_type","streak",
         "l5_hits","l5_games","l5_pct","l10_hits","l10_games","l10_pct","season_hits","season_games","season_pct",
         "average","recent_values","best_odds","best_book","streak_score","streak_grade","streak_confidence",
         "streak_action","expected_edge","risk_level","score_components","score_weights","score_explanation",
         "opponent_rank","opponent_rank_total_teams","opponent_label","opponent_rank_source","opponent_rank_definition",
+        "history_cutoff_date",
     )
+    now=datetime.now(timezone.utc)
     for source in payload.get("rows",[]):
-        if not isinstance(source,dict): continue
+        if not isinstance(source,dict):continue
+        if source.get("line_type")!="alternate":
+            skipped_non_alt+=1;continue
+        market=markets.get(market_key(source))
+        if not market:
+            skipped_unmatched+=1;continue
+        start=parse_time(market.get("game_time"))
+        if start is None:
+            skipped_missing_start+=1;continue
+        if now>=start:
+            skipped_started+=1;continue
         cid=candidate_id(source,target)
         if cid in existing:
-            duplicates+=1; continue
+            duplicates+=1;continue
         row={field:clean(source.get(field)) for field in frozen_fields}
         row.update({
-            "candidate_id":cid,"date":target,"snapshot_at_utc":datetime.now(timezone.utc).isoformat(),
+            "candidate_id":cid,"date":target,"snapshot_at_utc":now.isoformat(),
+            "game_time":market.get("game_time"),"market_id":market.get("market_id"),
+            "market_scraped_at_utc":market.get("scraped_at_utc"),
             "outcome":"PENDING","actual":None,"profit_loss":None,"graded_at_utc":None,
             "closing_line":None,"closing_odds":None,"clv_line":None,"clv_price":None,
-            "archive_schema_version":"1.0",
+            "archive_schema_version":CANONICAL_ARCHIVE_SCHEMA,
+            "canonical_performance_eligible":True,"snapshot_chronology_valid":True,
+            "source_policy":"exact_alt_market_only",
         })
         history.append(row);existing.add(cid);added+=1
     write_jsonl(ARCHIVE,history)
-    return {"added":added,"duplicates":duplicates,"total":len(history)}
+    return {
+        "added":added,"duplicates":duplicates,"total":len(history),
+        "skipped_non_alt":skipped_non_alt,"skipped_unmatched_exact_market":skipped_unmatched,
+        "skipped_missing_start":skipped_missing_start,"skipped_started":skipped_started,
+    }
 
 
 def stat_value(record: dict[str,Any], stat: str) -> float | None:
@@ -120,20 +177,24 @@ def stat_value(record: dict[str,Any], stat: str) -> float | None:
 
 
 def outcome(side: str, actual: float | None, line: float | None) -> str:
-    if actual is None or line is None: return "PENDING"
-    if actual==line: return "PUSH"
-    if str(side).upper()=="OVER": return "WIN" if actual>line else "LOSS"
-    if str(side).upper()=="UNDER": return "WIN" if actual<line else "LOSS"
+    if actual is None or line is None:return "PENDING"
+    if actual==line:return "PUSH"
+    if str(side).upper()=="OVER":return "WIN" if actual>line else "LOSS"
+    if str(side).upper()=="UNDER":return "WIN" if actual<line else "LOSS"
     return "VOID"
 
 
 def one_unit_profit(result: str, odds: Any) -> float | None:
     price=num(odds)
-    if result in {"PUSH","VOID"}: return 0.0
-    if result=="PENDING": return None
-    if result=="LOSS": return -1.0
-    if price is None or price==0: return None
+    if result in {"PUSH","VOID"}:return 0.0
+    if result=="PENDING":return None
+    if result=="LOSS":return -1.0
+    if price is None or price==0:return None
     return round(100/abs(price),4) if price<0 else round(price/100,4)
+
+
+def canonical_rows(rows: list[dict[str,Any]]) -> list[dict[str,Any]]:
+    return [r for r in rows if r.get("canonical_performance_eligible") is True and r.get("snapshot_chronology_valid") is True and r.get("line_type")=="alternate"]
 
 
 def grade_all() -> dict[str,int]:
@@ -141,10 +202,12 @@ def grade_all() -> dict[str,int]:
     logs=load(LOGS,{"records":[]})
     index: dict[tuple[str,str],list[dict[str,Any]]]=defaultdict(list)
     for record in logs.get("records",[]):
-        if not isinstance(record,dict): continue
+        if not isinstance(record,dict):continue
         index[(norm(record.get("player")),str(record.get("game_date") or "")[:10])].append(record)
-    counts={k:0 for k in ("WIN","LOSS","PUSH","VOID","PENDING")};newly=0
+    counts={k:0 for k in ("WIN","LOSS","PUSH","VOID","PENDING")};newly=0;excluded_legacy=0
     for row in history:
+        if row.get("canonical_performance_eligible") is not True or row.get("snapshot_chronology_valid") is not True or row.get("line_type")!="alternate":
+            excluded_legacy+=1;continue
         if row.get("outcome") in {"WIN","LOSS","PUSH","VOID"}:
             counts[row["outcome"]]+=1;continue
         candidates=index.get((norm(row.get("player")),str(row.get("date") or "")[:10]),[])
@@ -158,12 +221,12 @@ def grade_all() -> dict[str,int]:
         row["grading_reason"]=None if result!="PENDING" else "actual stat unavailable"
         counts[result]+=1;newly+=result in {"WIN","LOSS","PUSH","VOID"}
     write_jsonl(ARCHIVE,history)
-    return {"newly_graded":newly,**{k.lower():v for k,v in counts.items()}}
+    return {"newly_graded":newly,"excluded_legacy_or_unverified":excluded_legacy,**{k.lower():v for k,v in counts.items()}}
 
 
 def group_summary(rows: list[dict[str,Any]], field: str) -> list[dict[str,Any]]:
     groups: dict[str,list[dict[str,Any]]]=defaultdict(list)
-    for row in rows: groups[str(row.get(field) or "Unknown")].append(row)
+    for row in rows:groups[str(row.get(field) or "Unknown")].append(row)
     output=[]
     for name,items in groups.items():
         wins=sum(r.get("outcome")=="WIN" for r in items);losses=sum(r.get("outcome")=="LOSS" for r in items)
@@ -178,7 +241,8 @@ def group_summary(rows: list[dict[str,Any]], field: str) -> list[dict[str,Any]]:
 
 
 def analyze(target: str) -> dict[str,Any]:
-    rows=read_jsonl(ARCHIVE);graded=[r for r in rows if r.get("outcome") in {"WIN","LOSS","PUSH","VOID"}]
+    raw=read_jsonl(ARCHIVE);rows=canonical_rows(raw)
+    graded=[r for r in rows if r.get("outcome") in {"WIN","LOSS","PUSH","VOID"}]
     wins=sum(r.get("outcome")=="WIN" for r in graded);losses=sum(r.get("outcome")=="LOSS" for r in graded);pushes=sum(r.get("outcome")=="PUSH" for r in graded)
     decisions=wins+losses;priced=[num(r.get("profit_loss")) for r in graded if num(r.get("profit_loss")) is not None];pnl=sum(priced)
     score_bands=[]
@@ -193,15 +257,19 @@ def analyze(target: str) -> dict[str,Any]:
     threshold=max((r["group"] for r in profitable),default=None) if profitable else None
     report={
         "generated_at_utc":datetime.now(timezone.utc).isoformat(),"target_date":target,"status":"ok",
-        "summary":{"archived_candidates":len(rows),"graded":len(graded),"pending":sum(r.get("outcome")=="PENDING" for r in rows),
+        "summary":{"raw_archive_rows":len(raw),"excluded_legacy_or_unverified":len(raw)-len(rows),"archived_candidates":len(rows),
+                   "graded":len(graded),"pending":sum(r.get("outcome")=="PENDING" for r in rows),
                    "wins":wins,"losses":losses,"pushes":pushes,"hit_rate":round(wins/decisions,4) if decisions else None,
                    "profit_loss_units":round(pnl,4),"roi":round(pnl/decisions,4) if decisions else None,
                    "recommended_minimum_score_band":threshold,"calibration_ready":decisions>=100},
         "by_grade":by_grade,"by_action":by_action,"by_score_band":score_bands,"by_stat":by_stat,"by_side":by_side,
         "by_sportsbook":by_book,"by_matchup_rank_source":by_rank_source,
         "recent_results":sorted(graded,key=lambda r:str(r.get("date") or ""),reverse=True)[:100],
-        "policy":{"unit_size":1.0,"profit_basis":"listed American odds at snapshot","minimum_threshold_sample":20,
-                  "recalibration_minimum_decisions":100,"closing_line_policy":"blank until verified closing market snapshot exists"},
+        "policy":{"unit_size":1.0,"profit_basis":"listed American odds at verified pregame snapshot",
+                  "canonical_sample":"exact ALT market + snapshot before game_time only",
+                  "legacy_unverified_rows":"retained in raw archive but excluded from analytics",
+                  "minimum_threshold_sample":20,"recalibration_minimum_decisions":100,
+                  "closing_line_policy":"blank until verified closing market snapshot exists"},
     }
     for path in REPORTS:
         path.parent.mkdir(parents=True,exist_ok=True)
@@ -212,9 +280,9 @@ def analyze(target: str) -> dict[str,Any]:
 def main() -> None:
     parser=argparse.ArgumentParser();parser.add_argument("--date",default=str(date.today()));parser.add_argument("--snapshot",action="store_true");parser.add_argument("--grade",action="store_true");parser.add_argument("--analyze",action="store_true");args=parser.parse_args()
     run_all=not any((args.snapshot,args.grade,args.analyze))
-    if args.grade or run_all: print("ALT grade:",grade_all())
-    if args.snapshot or run_all: print("ALT snapshot:",snapshot(args.date))
-    if args.analyze or run_all: print("ALT analytics:",analyze(args.date)["summary"])
+    if args.grade or run_all:print("ALT grade:",grade_all())
+    if args.snapshot or run_all:print("ALT snapshot:",snapshot(args.date))
+    if args.analyze or run_all:print("ALT analytics:",analyze(args.date)["summary"])
 
 
-if __name__=="__main__": main()
+if __name__=="__main__":main()
