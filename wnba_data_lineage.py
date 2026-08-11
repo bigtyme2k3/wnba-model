@@ -37,14 +37,13 @@ def build()->dict[str,Any]:
         records.append({
           'rank':rank,'candidate_key':k,'player':row.get('player'),'market':row.get('market'),'side':row.get('side'),'line':row.get('line'),'sportsbook':row.get('sportsbook'),
           'stages':{
-            'daily_edge':{'present':bool(edge),'score':edge.get('edge_score'),'confidence':edge.get('confidence')},
-            'adaptive_confidence':{'present':row.get('adaptive_probability') is not None,'probability':row.get('adaptive_probability'),'extrapolated':row.get('calibration_extrapolated')},
+            'daily_edge':{'present':bool(edge),'score':edge.get('edge_score'),'confidence':edge.get('confidence'),'model_probability':edge.get('model_probability')},
             'ensemble':{'present':True,'score':row.get('ensemble_score'),'grade':row.get('grade')},
             'simulation':{'present':bool(sim),'probability':sim.get('simulation_probability'),'ev_percent':sim.get('expected_value_percent')},
           },
-          'source_files':['data/dashboard/wnba_daily_edges.json','data/dashboard/wnba_adaptive_confidence.json','data/dashboard/wnba_ensemble_intelligence.json','data/dashboard/wnba_monte_carlo_scenarios.json']
+          'source_files':['data/dashboard/wnba_daily_edges.json','data/dashboard/wnba_ensemble_intelligence.json','data/dashboard/wnba_monte_carlo_scenarios.json']
         })
-    report={'sprint':11,'phase':'data-lineage','generated_at_utc':datetime.now(timezone.utc).isoformat(),'summary':{'daily_edges':len(edge_rows),'ensemble_candidates':len(ens_rows),'simulations':len(sim_rows),'lineage_records':len(records),'simulation_coverage':round(sum(1 for r in records if r['stages']['simulation']['present'])/len(records),4) if records else None},'records':records[:100]}
+    report={'sprint':11,'phase':'data-lineage','generated_at_utc':datetime.now(timezone.utc).isoformat(),'summary':{'daily_edges':len(edge_rows),'ensemble_candidates':len(ens_rows),'simulations':len(sim_rows),'lineage_records':len(records),'simulation_coverage':round(sum(1 for r in records if r['stages']['simulation']['present'])/len(records),4) if records else None},'records':records[:100],'historical_reconstruction_used':False}
     for path in OUTS:path.parent.mkdir(parents=True,exist_ok=True);json.dump(report,path.open('w',encoding='utf-8'),indent=2,allow_nan=False)
     print(json.dumps(report['summary'],indent=2));return report
 
