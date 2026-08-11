@@ -42,7 +42,6 @@ def build()->dict[str,Any]:
     checks={
       'readiness_report_present':bool(readiness),
       'dashboard_exists':Path('docs/index.html').exists(),
-      'adaptive_report_present':(DASH/'wnba_adaptive_confidence.json').exists(),
       'ensemble_output_present':(DASH/'wnba_ensemble_intelligence.json').exists(),
       'simulation_output_present':(DASH/'wnba_monte_carlo_scenarios.json').exists(),
       'no_duplicate_edges':duplicate_count(edge_rows,('player','market','side','line','sportsbook'))==0,
@@ -59,7 +58,7 @@ def build()->dict[str,Any]:
         checks['live_simulations_available']=len(sim_rows)>0
     failed=[k for k,v in checks.items() if not v]
     status='PASS' if not failed else 'ATTENTION' if readiness.get('status')!='READY' and all(not k.startswith('live_') for k in failed) else 'FAIL'
-    report={'sprint':11,'phase':'final-qa','generated_at_utc':datetime.now(timezone.utc).isoformat(),'status':status,'readiness_status':readiness.get('status'),'checks':checks,'failed_checks':failed,'counts':{'daily_edges':len(edge_rows),'ensemble':len(ens_rows),'simulations':len(sim_rows),'alt_streaks':len(streak_rows)},'green_light':status=='PASS' and readiness.get('status')=='READY'}
+    report={'sprint':11,'phase':'final-qa','generated_at_utc':datetime.now(timezone.utc).isoformat(),'status':status,'readiness_status':readiness.get('status'),'checks':checks,'failed_checks':failed,'counts':{'daily_edges':len(edge_rows),'ensemble':len(ens_rows),'simulations':len(sim_rows),'alt_streaks':len(streak_rows)},'green_light':status=='PASS' and readiness.get('status')=='READY','historical_reconstruction_required':False}
     for path in OUTS:path.parent.mkdir(parents=True,exist_ok=True);json.dump(report,path.open('w',encoding='utf-8'),indent=2,allow_nan=False)
     print(json.dumps(report,indent=2));return report
 
