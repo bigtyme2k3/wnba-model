@@ -160,19 +160,29 @@ jobs:
           diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           alt=json.load(open('data/dashboard/wnba_alt_performance.json'))
           recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
+          strict=json.load(open('data/dashboard/wnba_alt_strict_regrade.json'))
           s=alt.get('summary') or {}
+          ds=diagnostics.get('summary') or {}
+          ss=strict.get('stats') or {}
           canonical_archived=int(s.get('archived_candidates') or 0)
           canonical_graded=int(s.get('graded') or 0)
           canonical_pending=int(s.get('pending') or 0)
-          diagnosed=int((diagnostics.get('summary') or {}).get('pending_rows') or 0)
+          diagnosed_all=int(ds.get('pending_rows') or 0)
+          diagnostics_reported=int(ds.get('reported_pending') or 0)
+          strict_pending=int(ss.get('proposed_pending') or 0)
 
-          # Diagnostics and performance summary intentionally cover only the
-          # chronology-valid canonical sample. The JSONL archive also contains
-          # preserved legacy/audit rows, so never compare full archive counts
-          # against canonical archived_candidates.
-          assert canonical_pending == diagnosed, (canonical_pending, diagnosed)
+          # Three populations intentionally coexist:
+          # 1) raw JSONL archive, including legacy/audit rows;
+          # 2) chronology-valid canonical performance sample;
+          # 3) strict-regrade unresolved pool, which also audits legacy rows.
+          # Verify each against its own accounting source instead of requiring
+          # the canonical pending count to equal the larger strict-regrade pool.
           assert canonical_graded + canonical_pending <= canonical_archived, (canonical_archived, canonical_graded, canonical_pending)
           assert full_graded + full_pending + other == len(archive), (len(archive), full_graded, full_pending, other)
+          assert diagnostics_reported == canonical_pending, (diagnostics_reported, canonical_pending)
+          if strict_pending:
+              assert diagnosed_all == strict_pending, (diagnosed_all, strict_pending)
+          assert diagnosed_all >= canonical_pending, (diagnosed_all, canonical_pending)
 
           print({
               'full_archive_rows': len(archive),
@@ -182,6 +192,9 @@ jobs:
               'canonical_archived': canonical_archived,
               'canonical_graded': canonical_graded,
               'canonical_pending': canonical_pending,
+              'strict_regrade_pending': strict_pending,
+              'diagnostics_all_pending': diagnosed_all,
+              'diagnostics_reported_canonical_pending': diagnostics_reported,
               'recovery_status': recovery.get('status'),
               'remaining_dates': (recovery.get('targets') or {}).get('dates') or [],
           })
