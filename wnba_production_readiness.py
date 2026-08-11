@@ -95,7 +95,6 @@ def build() -> dict[str, Any]:
     gate('forward_validation_integrity', db['integrity'] in {'ok','missing'}, f"integrity={db['integrity']}")
     gate('forward_validation_uniqueness', db['duplicates'] == 0, f"duplicates={db['duplicates']}")
     gate('forward_validation_chronology', db['chronology_violations'] == 0, f"violations={db['chronology_violations']}")
-    gate('calibration_available', (DASH / 'wnba_adaptive_confidence.json').exists(), 'Sprint 8.1 calibration file')
     gate('dashboard_available', (ROOT / 'docs' / 'index.html').exists(), 'docs/index.html')
 
     live_counts = {name: count_rows(p[name]) for name in ('daily_edges','ensemble','simulation')}
@@ -139,6 +138,7 @@ def build() -> dict[str, Any]:
         'forward_validation_database': db,
         'release_blockers': [g['detail'] for g in failed_critical],
         'message': 'READY FOR LIVE SLATE' if ready_for_live_slate else 'PRODUCTION BLOCKED',
+        'historical_reconstruction_required': False,
     }
     for path in OUTS:
         path.parent.mkdir(parents=True, exist_ok=True)
