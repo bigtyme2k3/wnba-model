@@ -65,6 +65,8 @@ def main() -> None:
             fail(f"{name} spoofs GITHUB_WORKFLOW")
         if "ALLOW_DASHBOARD_WRITE" in text:
             fail(f"{name} contains a dashboard-write bypass")
+        if "date -u +%F" in text:
+            fail(f"{name} contains a UTC-date slate fallback")
 
         if workflow != DEPLOY and (git_add_dashboard.search(text) or atomic_dashboard.search(text)):
             fail(f"{name} can publish the docs dashboard outside the canonical deploy")
@@ -72,8 +74,6 @@ def main() -> None:
     deploy_text = DEPLOY.read_text(encoding="utf-8")
     if "python active_slate_date.py" not in deploy_text:
         fail("deploy does not resolve the slate through active_slate_date.py")
-    if "date -u +%F" in deploy_text:
-        fail("deploy still contains UTC-date rollover fallback")
     if "uses: actions/upload-pages-artifact@" not in deploy_text or "uses: actions/deploy-pages@" not in deploy_text:
         fail("deploy is missing the Pages artifact/deploy chain")
 
@@ -96,7 +96,7 @@ def main() -> None:
             "retired_dashboard_builders_blocked": True,
             "hardcoded_executable_slate_dates_blocked": True,
             "workflow_identity_spoofing_blocked": True,
-            "utc_rollover_fallback_blocked": True,
+            "utc_rollover_fallback_blocked_globally": True,
         }
     )
 
