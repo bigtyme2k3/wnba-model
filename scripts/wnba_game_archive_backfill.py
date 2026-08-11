@@ -35,8 +35,24 @@ def parse_date(value: str):
         return None
 
 
+def score_identity(row: dict) -> tuple:
+    """Collapse duplicate copies of the same final across score files."""
+    game_id = str(row.get('game_id') or '').strip()
+    if game_id:
+        return ('game_id', game_id)
+    return (
+        'fallback',
+        str(row.get('game_date') or '')[:10],
+        ledger.norm(row.get('away_team')),
+        ledger.norm(row.get('home_team')),
+        str(row.get('away_score') or ''),
+        str(row.get('home_score') or ''),
+    )
+
+
 def score_index():
     exact, by_matchup, files_used = {}, {}, []
+    seen_finals = set()
     for path in score_files():
         used = 0
         try:
@@ -52,11 +68,15 @@ def score_index():
                 if not game_date or not away or not home:
                     continue
                 row = dict(raw); row['_score_source'] = str(path.relative_to(ROOT))
+                identity = score_identity(row)
+                if identity in seen_finals:
+                    continue
+                seen_finals.add(identity)
                 exact[(game_date, away, home)] = row
                 by_matchup.setdefault((away, home), []).append(row)
                 used += 1
         if used:
-            files_used.append({'path': str(path.relative_to(ROOT)), 'final_rows': used})
+            files_used.append({'path': str(path.relative_to(ROOT)), 'unique_final_rows': used})
     return exact, by_matchup, files_used
 
 
@@ -80,6 +100,8 @@ def find_actual(exact, by_matchup, target_date: str, away: str, home: str):
     candidates.sort(key=lambda item: (item[0], item[1]))
     best_delta = candidates[0][0]
     best = [item for item in candidates if item[0] == best_delta]
+    # After score-source deduplication, multiple best candidates here represent
+    # genuinely distinct games, so refusing an ambiguous match remains safe.
     if len(best) != 1:
         return None, None
     return best[0][2], 'adjacent_date' if best_delta else 'exact_date'
@@ -138,7 +160,7 @@ def main():
         away, home = ledger.norm(row.get('away_team')), ledger.norm(row.get('home_team'))
         actual, match_mode = find_actual(exact, by_matchup, target_date, away, home)
         if not actual:
-            unresolved_detail.append({'target_date': target_date, 'game': row.get('game'), 'reason': 'no_final_score_match'})
+            unresolved_detail.append({'target_date': target_date, 'game': row.get('game'), 'reason': 'no_unique_final_score_match'})
             continue
         a, h = ledger.num(actual.get('away_score')), ledger.num(actual.get('home_score'))
         if a is None or h is None:
