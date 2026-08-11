@@ -3,7 +3,7 @@
 Input is the bookmaker-level CSV written by scrape_odds_props.py. Every
 sportsbook/player/stat/threshold remains a distinct market; lines are never
 averaged across books. Historical hit rates come from the canonical player game
-log warehouse and are calculated against the exact threshold.
+log warehouse and are calculated against the exact threshold and side.
 
 Historical features are strictly pregame: records dated on or after the target
 slate date are excluded so a completed same-day game can never leak into a
@@ -70,12 +70,7 @@ def stat_value(record: dict[str, Any], stat: str) -> float | None:
 
 
 def history_index(target: str) -> tuple[dict[str, list[dict[str, Any]]], int]:
-    """Return player history strictly before the target date.
-
-    This is a hard anti-leakage boundary. A same-day result that lands in the
-    cumulative warehouse during an evening refresh must not become an input to
-    that day's pregame ALT score.
-    """
+    """Return player history strictly before the target date."""
     payload = load(LOGS, {"records": []})
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     excluded_same_or_future = 0
@@ -94,30 +89,56 @@ def history_index(target: str) -> tuple[dict[str, list[dict[str, Any]]], int]:
     return groups, excluded_same_or_future
 
 
-def hit_summary(records: list[dict[str, Any]], stat: str, threshold: float) -> dict[str, Any]:
-    values: list[float] = []
+def result_for_value(value: float, threshold: float, side: str) -> str:
+    if value == threshold:
+        return "PUSH"
+    if side == "OVER":
+        return "WIN" if value > threshold else "LOSS"
+    return "WIN" if value < threshold else "LOSS"
+
+
+def hit_summary(records: list[dict[str, Any]], stat: str, threshold: float, side: str) -> dict[str, Any]:
+    results: list[str] = []
     games: list[dict[str, Any]] = []
     for record in records:
         value = stat_value(record, stat)
         if value is None:
             continue
-        values.append(value)
-        games.append({"date": record.get("game_date"), "opponent": record.get("opponent"), "value": value, "hit": value >= threshold})
+        result = result_for_value(value, threshold, side)
+        results.append(result)
+        games.append({
+            "date": record.get("game_date"), "opponent": record.get("opponent"),
+            "value": value, "result": result, "hit": True if result == "WIN" else False if result == "LOSS" else None,
+        })
+
     def window(size: int) -> dict[str, Any]:
-        sample = values[:size]
-        hits = sum(value >= threshold for value in sample)
-        return {"hits": hits, "games": len(sample), "rate": round(hits / len(sample), 4) if sample else None}
-    season_hits = sum(value >= threshold for value in values)
+        sample = results[:size]
+        hits = sum(r == "WIN" for r in sample)
+        losses = sum(r == "LOSS" for r in sample)
+        pushes = sum(r == "PUSH" for r in sample)
+        decisions = hits + losses
+        return {
+            "hits": hits, "losses": losses, "pushes": pushes, "games": len(sample), "decisions": decisions,
+            "rate": round(hits / decisions, 4) if decisions else None,
+        }
+
+    wins = sum(r == "WIN" for r in results)
+    losses = sum(r == "LOSS" for r in results)
+    pushes = sum(r == "PUSH" for r in results)
+    decisions = wins + losses
     streak = 0
-    for value in values:
-        if value >= threshold:
+    for result in results:
+        if result == "WIN":
             streak += 1
         else:
             break
     return {
         "l5": window(5), "l10": window(10),
-        "season": {"hits": season_hits, "games": len(values), "rate": round(season_hits / len(values), 4) if values else None},
-        "current_hit_streak": streak, "recent_games": games[:10], "history_games_available": len(values),
+        "season": {
+            "hits": wins, "losses": losses, "pushes": pushes, "games": len(results), "decisions": decisions,
+            "rate": round(wins / decisions, 4) if decisions else None,
+        },
+        "current_hit_streak": streak, "recent_games": games[:10], "history_games_available": len(results),
     }
 
 
@@ -152,11 +173,8 @@ def build(target: str) -> dict[str, Any]:
         if key in seen:
             continue
         seen.add(key)
-        history = hit_summary(histories.get(norm(player), []), stat, threshold)
-        probability = history["l10"]["rate"] if history["l10"]["games"] >= 5 else history["season"]["rate"]
-        if side == "UNDER" and probability is not None:
-            pushes = sum(game["value"] == threshold for game in history["recent_games"])
-            probability = max(0, min(1, 1 - probability - pushes / max(1, len(history["recent_games"]))))
+        history = hit_summary(histories.get(norm(player), []), stat, threshold, side)
+        probability = history["l10"]["rate"] if history["l10"]["decisions"] >= 5 else history["season"]["rate"]
         decimal = american_decimal(odds)
         ev = probability * decimal - 1 if probability is not None and decimal is not None else None
         rows.append({
@@ -193,7 +211,7 @@ def build(target: str) -> dict[str, Any]:
             "book_specific_lines_preserved": True, "cross_book_line_averaging": False,
             "threshold_rule": "exact sportsbook outcome point", "dd_td_supported": False,
             "history_source": str(LOGS), "history_strictly_before_target_date": True,
-            "history_cutoff_date": target,
+            "history_cutoff_date": target, "pushes_excluded_from_hit_rate_denominator": True,
             "future_markets": ["PLAYER_1Q_POINTS", "PLAYER_FIRST_3_MIN_POINTS"],
         },
     }
