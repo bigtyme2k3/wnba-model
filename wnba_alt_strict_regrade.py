@@ -2,9 +2,10 @@
 
 A wager grades only from a completed player-game whose canonical matchup agrees
 with the archived matchup. Same-date exact matches are preferred. When a frozen
-snapshot date drifted from the actual game date, a cross-date recovery is allowed
-ONLY when that player's completed warehouse contains exactly one occurrence of
-that matchup in the season. Repeated matchups remain unresolved rather than guessed.
+snapshot date drifted from the actual game date, the frozen sportsbook game time
+is used as the next deterministic date anchor. Only after those exact checks may
+a cross-date recovery use a matchup that occurs exactly once in the player's
+completed season. Repeated matchups remain unresolved rather than guessed.
 
 Verified manual overrides and Phase 1 official-event recoveries are preserved.
 The proposed regrade is built in memory and protected by a destructive-write
@@ -19,6 +20,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from wnba_alt_performance_tracker import stat_value, outcome, one_unit_profit
 
@@ -28,6 +30,7 @@ REPORT = Path("data/dashboard/wnba_alt_strict_regrade.json")
 WAREHOUSE_REPORT = Path("data/warehouse/wnba_alt_strict_regrade.json")
 TRUSTED_SOURCES = {"manual_verified_override", "espn_schedule_event_phase1"}
 FINAL = {"WIN", "LOSS", "PUSH", "VOID"}
+ET = ZoneInfo("America/New_York")
 
 TEAM_ALIASES = {
     "la sparks": "los angeles sparks", "los angeles": "los angeles sparks",
@@ -58,6 +61,31 @@ def team_norm(value: Any) -> str:
     text = re.sub(r"[^a-z0-9' ]+", " ", text)
     text = " ".join(text.split())
     return TEAM_ALIASES.get(text, text)
+
+
+def parse_time(value: Any) -> datetime | None:
+    try:
+        text = str(value or "").strip().replace("Z", "+00:00")
+        if not text:
+            return None
+        parsed = datetime.fromisoformat(text)
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+    except Exception:
+        return None
+
+
+def frozen_game_date(row: dict[str, Any]) -> str:
+    """Return the local WNBA calendar date encoded by the frozen market start.
+
+    Snapshot target dates were historically vulnerable to rollover/date alias
+    bugs. The sportsbook game_time was frozen with canonical exact-ALT snapshots,
+    so its America/New_York calendar date is a safer deterministic resolver for
+    repeated matchups. It is never used unless the matchup also agrees.
+    """
+    start = parse_time(row.get("game_time"))
+    if start is None:
+        return ""
+    return start.astimezone(ET).date().isoformat()
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -149,10 +177,12 @@ def main() -> None:
         if player and game_date:
             by_player_date[(player, game_date)].append(record)
 
-    now = datetime.now(timezone.utc).isoformat()
+    now_dt = datetime.now(timezone.utc)
+    now = now_dt.isoformat()
     stats = {
         "rows": len(history), "baseline_final": baseline_final, "trusted_preserved": 0,
-        "strictly_graded": 0, "same_date_exact": 0, "unique_matchup_date_shift": 0,
+        "strictly_graded": 0, "same_date_exact": 0, "frozen_game_time_exact": 0,
+        "unique_matchup_date_shift": 0, "game_not_completed_yet": 0,
         "no_player_game": 0, "archive_matchup_missing": 0, "warehouse_matchup_missing": 0,
         "matchup_mismatch": 0, "repeated_matchup_date_ambiguous": 0,
         "multiple_exact_matches": 0, "unique_player_date_fallback": 0, "stat_unavailable": 0,
@@ -168,11 +198,20 @@ def main() -> None:
         reset_warehouse_grade(row)
         player = norm(row.get("player"))
         snapshot_date = str(row.get("date") or "")[:10]
+        scheduled_date = frozen_game_date(row)
         wanted_pair = team_pair(row)
         same_date = by_player_date.get((player, snapshot_date), [])
+        scheduled_date_rows = by_player_date.get((player, scheduled_date), []) if scheduled_date else []
         all_player = by_player.get(player, [])
         exact: list[dict[str, Any]] = []
         match_mode = ""
+
+        start = parse_time(row.get("game_time"))
+        if start is not None and start > now_dt:
+            row["grading_reason"] = "frozen sportsbook game has not started yet"
+            row["scheduled_game_date"] = scheduled_date or None
+            stats["game_not_completed_yet"] += 1
+            continue
 
         if wanted_pair:
             same_exact = [r for r in same_date if team_pair(r) == wanted_pair]
@@ -186,47 +225,65 @@ def main() -> None:
                 stats["multiple_exact_matches"] += 1
                 continue
             else:
-                season_exact = [r for r in all_player if team_pair(r) == wanted_pair]
-                unique_games: dict[str, dict[str, Any]] = {}
-                for r in season_exact:
-                    identity = str(r.get("game_id") or r.get("event_id") or f"{str(r.get('game_date') or '')[:10]}|{r.get('game')}")
-                    unique_games[identity] = r
-                season_exact = list(unique_games.values())
-                if len(season_exact) == 1:
-                    exact = season_exact
-                    match_mode = "unique_matchup_date_shift"
-                    stats["unique_matchup_date_shift"] += 1
-                elif len(season_exact) > 1:
-                    row["grading_reason"] = "repeated matchup across season; archive date cannot be shifted safely"
-                    row["candidate_completed_games"] = [f"{str(r.get('game_date') or '')[:10]} {r.get('game')}" for r in season_exact]
-                    row["candidate_record_ids"] = [record_identity(r) for r in season_exact]
-                    stats["repeated_matchup_date_ambiguous"] += 1
+                # The frozen market start is a deterministic date anchor and is
+                # safer than guessing among repeated season matchups.
+                scheduled_exact = [r for r in scheduled_date_rows if team_pair(r) == wanted_pair]
+                if scheduled_date and scheduled_date != snapshot_date and len(scheduled_exact) == 1:
+                    exact = scheduled_exact
+                    match_mode = "frozen_game_time_exact"
+                    stats["frozen_game_time_exact"] += 1
+                elif scheduled_date and scheduled_date != snapshot_date and len(scheduled_exact) > 1:
+                    row["grading_reason"] = "multiple completed player-games match frozen sportsbook game date"
+                    row["candidate_record_ids"] = [record_identity(r) for r in scheduled_exact]
+                    stats["multiple_exact_matches"] += 1
                     continue
                 else:
-                    if not same_date:
-                        stats["no_player_game"] += 1
-                        row["grading_reason"] = "no completed player-game on snapshot date or elsewhere for archived matchup"
+                    season_exact = [r for r in all_player if team_pair(r) == wanted_pair]
+                    unique_games: dict[str, dict[str, Any]] = {}
+                    for r in season_exact:
+                        identity = str(r.get("game_id") or r.get("event_id") or f"{str(r.get('game_date') or '')[:10]}|{r.get('game')}")
+                        unique_games[identity] = r
+                    season_exact = list(unique_games.values())
+                    if len(season_exact) == 1:
+                        exact = season_exact
+                        match_mode = "unique_matchup_date_shift"
+                        stats["unique_matchup_date_shift"] += 1
+                    elif len(season_exact) > 1:
+                        row["grading_reason"] = "repeated matchup across season; snapshot date and frozen game-time date do not resolve exactly one completed game"
+                        row["scheduled_game_date"] = scheduled_date or None
+                        row["candidate_completed_games"] = [f"{str(r.get('game_date') or '')[:10]} {r.get('game')}" for r in season_exact]
+                        row["candidate_record_ids"] = [record_identity(r) for r in season_exact]
+                        stats["repeated_matchup_date_ambiguous"] += 1
+                        continue
                     else:
-                        stats["matchup_mismatch"] += 1
-                        row["grading_reason"] = "completed player-game exists on snapshot date but no completed archived matchup found"
-                        row["candidate_completed_games"] = [str(r.get("game") or "") for r in same_date]
-                    if len(mismatch_samples) < 25:
-                        mismatch_samples.append({
-                            "date": snapshot_date, "player": row.get("player"), "archive_game": row.get("game"),
-                            "wanted_pair": sorted(wanted_pair),
-                            "same_date_candidates": [str(r.get("game") or "") for r in same_date],
-                            "season_player_games": [f"{str(r.get('game_date') or '')[:10]} {r.get('game')}" for r in all_player[:30]],
-                        })
-                    continue
+                        if not same_date and not scheduled_date_rows:
+                            stats["no_player_game"] += 1
+                            row["grading_reason"] = "no completed player-game on snapshot/frozen game date or elsewhere for archived matchup"
+                        else:
+                            stats["matchup_mismatch"] += 1
+                            row["grading_reason"] = "completed player-game exists on candidate date but no completed archived matchup found"
+                            candidates = scheduled_date_rows or same_date
+                            row["candidate_completed_games"] = [str(r.get("game") or "") for r in candidates]
+                        if len(mismatch_samples) < 25:
+                            mismatch_samples.append({
+                                "date": snapshot_date, "scheduled_game_date": scheduled_date,
+                                "player": row.get("player"), "archive_game": row.get("game"),
+                                "wanted_pair": sorted(wanted_pair),
+                                "same_date_candidates": [str(r.get("game") or "") for r in same_date],
+                                "scheduled_date_candidates": [str(r.get("game") or "") for r in scheduled_date_rows],
+                                "season_player_games": [f"{str(r.get('game_date') or '')[:10]} {r.get('game')}" for r in all_player[:30]],
+                            })
+                        continue
         else:
             stats["archive_matchup_missing"] += 1
-            if len(same_date) == 1:
-                exact = same_date
+            candidate_date_rows = scheduled_date_rows if scheduled_date_rows else same_date
+            if len(candidate_date_rows) == 1:
+                exact = candidate_date_rows
                 match_mode = "unique_player_date_fallback"
                 stats["unique_player_date_fallback"] += 1
             else:
-                row["grading_reason"] = "archive matchup missing and player does not have exactly one completed game on snapshot date"
-                row["candidate_record_ids"] = [record_identity(r) for r in same_date]
+                row["grading_reason"] = "archive matchup missing and player does not have exactly one completed game on candidate date"
+                row["candidate_record_ids"] = [record_identity(r) for r in candidate_date_rows]
                 continue
 
         if len(exact) != 1:
@@ -268,9 +325,10 @@ def main() -> None:
         "minimum_safe_final": minimum_safe_final,
         "stats": stats,
         "mismatch_samples": mismatch_samples,
-        "identity_rule": "player + canonical matchup; prefer snapshot-date exact, otherwise allow only a single unique completed occurrence of that matchup across the player's season",
-        "repeated_matchup_policy": "never guess among repeated completed matchups; leave pending for explicit game-id/date resolution",
-        "odds_snapshot_policy": "raw odds schedule/game IDs are never accepted as completed-game truth",
+        "identity_rule": "player + canonical matchup; prefer snapshot-date exact, then frozen sportsbook game-time date exact, otherwise allow only a single unique completed occurrence of that matchup across the player's season",
+        "repeated_matchup_policy": "never guess among repeated completed matchups; frozen game_time may resolve an exact local-date matchup, otherwise leave pending",
+        "future_game_policy": "a row with frozen game_time later than the grading run remains pending and is never matched to an older repeated matchup",
+        "odds_snapshot_policy": "raw odds market IDs are not accepted as completed-game truth; frozen game_time is used only as a date anchor and still requires player+matchup agreement",
     }
     emit_report(report)
 
