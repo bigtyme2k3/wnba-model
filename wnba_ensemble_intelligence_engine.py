@@ -9,18 +9,18 @@ from typing import Any
 DASH = Path('data/dashboard')
 WARE = Path('data/warehouse')
 EDGES = DASH / 'wnba_daily_edges.json'
-ADAPTIVE = DASH / 'wnba_adaptive_confidence.json'
 OUTS = [DASH / 'wnba_ensemble_intelligence.json', WARE / 'wnba_ensemble_intelligence.json']
 
+# Production ensemble uses only contemporaneous/frozen evidence. Historical
+# reconstructed calibration was retired because it was not a live pregame source.
 WEIGHTS = {
-    'projection': 0.22,
-    'recent_form': 0.14,
-    'season_history': 0.10,
-    'market_value': 0.14,
-    'clv': 0.12,
-    'roi': 0.08,
-    'sample_strength': 0.08,
-    'adaptive_calibration': 0.12,
+    'projection': 0.25,
+    'recent_form': 0.16,
+    'season_history': 0.11,
+    'market_value': 0.16,
+    'clv': 0.14,
+    'roi': 0.09,
+    'sample_strength': 0.09,
 }
 
 
@@ -43,13 +43,7 @@ def clamp(value: float, lo: float = 0.0, hi: float = 100.0) -> float:
     return max(lo, min(hi, value))
 
 
-def grade(score: float, evidence_count: int, extrapolated: bool) -> tuple[str, str]:
-    if extrapolated:
-        if score >= 80 and evidence_count >= 4:
-            return 'B+', 'UNVALIDATED_HIGH'
-        if score >= 68:
-            return 'B', 'MODERATE'
-        return 'C', 'LEAN'
+def grade(score: float, evidence_count: int) -> tuple[str, str]:
     if score >= 90 and evidence_count >= 5:
         return 'A+', 'ELITE'
     if score >= 84 and evidence_count >= 4:
@@ -65,11 +59,6 @@ def grade(score: float, evidence_count: int, extrapolated: bool) -> tuple[str, s
 
 def score_candidate(row: dict[str, Any]) -> dict[str, Any]:
     comps = row.get('components') if isinstance(row.get('components'), dict) else {}
-    adaptive_prob = num(row.get('calibrated_probability'))
-    if adaptive_prob is None:
-        adaptive_prob = num(row.get('model_probability'))
-    adaptive_score = clamp((adaptive_prob or 0.5) * 100)
-
     component_values = {
         'projection': num(comps.get('projection')) or 50.0,
         'recent_form': num(comps.get('recent_form')) or 50.0,
@@ -78,18 +67,15 @@ def score_candidate(row: dict[str, Any]) -> dict[str, Any]:
         'clv': num(comps.get('clv')) or 50.0,
         'roi': num(comps.get('roi')) or 50.0,
         'sample_strength': num(comps.get('sample_strength')) or 20.0,
-        'adaptive_calibration': adaptive_score,
     }
     evidence_count = sum(
         component_values[k] != 50.0
-        for k in ('projection', 'recent_form', 'season_history', 'market_value', 'clv', 'roi', 'adaptive_calibration')
+        for k in ('projection', 'recent_form', 'season_history', 'market_value', 'clv', 'roi')
     )
     raw = sum(component_values[k] * WEIGHTS[k] for k in WEIGHTS)
     missing_penalty = max(0, 4 - evidence_count) * 3.5
-    extrapolated = bool(row.get('calibration_extrapolated'))
-    extrapolation_penalty = 7.0 if extrapolated else 0.0
-    score = clamp(raw - missing_penalty - extrapolation_penalty)
-    letter, confidence = grade(score, evidence_count, extrapolated)
+    score = clamp(raw - missing_penalty)
+    letter, confidence = grade(score, evidence_count)
 
     breakdown = {
         key: {
@@ -99,12 +85,6 @@ def score_candidate(row: dict[str, Any]) -> dict[str, Any]:
         }
         for key in WEIGHTS
     }
-
-    reasons = list(row.get('evidence') or [])[:6]
-    if adaptive_prob is not None:
-        reasons.append(f'Calibrated probability {adaptive_prob:.1%}')
-    if extrapolated:
-        reasons.append('Score lies outside the historically validated calibration range')
 
     return {
         'player': row.get('player'),
@@ -117,14 +97,13 @@ def score_candidate(row: dict[str, Any]) -> dict[str, Any]:
         'odds': row.get('odds'),
         'projection': row.get('projection'),
         'market_type': row.get('market_type', 'standard'),
+        'model_probability': row.get('model_probability'),
         'ensemble_score': round(score, 2),
         'grade': letter,
         'ensemble_confidence': confidence,
-        'adaptive_probability': round(adaptive_prob, 4) if adaptive_prob is not None else None,
-        'calibration_extrapolated': extrapolated,
         'evidence_count': evidence_count,
         'component_breakdown': breakdown,
-        'reasons': reasons,
+        'reasons': list(row.get('evidence') or [])[:6],
         'source_edge_score': row.get('edge_score'),
         'source_confidence': row.get('confidence'),
     }
@@ -132,7 +111,6 @@ def score_candidate(row: dict[str, Any]) -> dict[str, Any]:
 
 def build() -> dict[str, Any]:
     edges = load(EDGES, {})
-    adaptive = load(ADAPTIVE, {})
     rows = edges.get('top_edges', []) if isinstance(edges, dict) else []
     scored = [score_candidate(r) for r in rows if isinstance(r, dict)]
     scored.sort(key=lambda r: (r['ensemble_score'], r['evidence_count']), reverse=True)
@@ -150,9 +128,7 @@ def build() -> dict[str, Any]:
             'a': sum(r['grade'] == 'A' for r in scored),
             'b_plus': sum(r['grade'] == 'B+' for r in scored),
             'high_or_better': sum(r['ensemble_confidence'] in {'ELITE', 'VERY_HIGH', 'HIGH'} for r in scored),
-            'extrapolated': sum(r['calibration_extrapolated'] for r in scored),
             'top_score': scored[0]['ensemble_score'] if scored else None,
-            'adaptive_curve_points': adaptive.get('summary', {}).get('curve_points') if isinstance(adaptive, dict) else None,
         },
         'top_10': scored[:10],
         'elite_plays': [r for r in scored if r['grade'] == 'A+'][:20],
@@ -160,8 +136,9 @@ def build() -> dict[str, Any]:
         'methodology': {
             'weights': WEIGHTS,
             'explainable': True,
-            'calibration_aware': True,
-            'warning': 'Ensemble grades rank agreement across model evidence. They are not guarantees and must remain subject to live validation.',
+            'calibration_aware': False,
+            'historical_reconstruction_used': False,
+            'warning': 'Ensemble grades rank agreement across current model evidence. They are not guarantees and remain subject to forward validation.',
         },
     }
     for path in OUTS:
