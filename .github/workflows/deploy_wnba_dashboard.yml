@@ -10,6 +10,7 @@ on:
       - 'wnba_terminal_ui.py'
       - 'patch_terminal_ui.py'
       - 'scrape_odds_props.py'
+      - 'scrape_scores.py'
       - 'player_points.py'
       - 'wnba_game_predictions_ledger.py'
       - 'wnba_game_performance.py'
@@ -26,6 +27,7 @@ on:
       - 'scripts/build_daily_canonical_slate.py'
       - 'scripts/scrape_odds_props_consensus.py'
       - 'scripts/wnba_game_archive_backfill.py'
+      - 'scripts/atomic_generated_push.sh'
       - 'scripts/wnba_s19_m02_prop_source.py'
       - 'scripts/wnba_s19_m02_predictions.py'
       - 'scripts/wnba_s19_m03_dashboard_consumer.py'
@@ -88,7 +90,7 @@ jobs:
         run: |
           test -f docs/index.html
           python -m py_compile \
-            wnba_terminal_ui.py patch_terminal_ui.py scrape_odds_props.py player_points.py wnba_game_predictions_ledger.py wnba_game_performance.py wnba_player_props_ingestion.py wnba_alt_market_warehouse.py wnba_alt_streaks.py \
+            wnba_terminal_ui.py patch_terminal_ui.py scrape_odds_props.py scrape_scores.py player_points.py wnba_game_predictions_ledger.py wnba_game_performance.py wnba_player_props_ingestion.py wnba_alt_market_warehouse.py wnba_alt_streaks.py \
             patch_dashboard_canonical_runtime.py patch_dashboard_games_focus.py patch_dashboard_v4_ui_freeze.py patch_dashboard_v4_ui_freeze_safe.py \
             patch_dashboard_s19_m02.py patch_dashboard_s19_m03.py patch_dashboard_s19_m06.py scripts/build_daily_canonical_slate.py \
             scripts/scrape_odds_props_consensus.py scripts/wnba_game_archive_backfill.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m06_results_lifecycle.py \
