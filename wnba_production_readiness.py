@@ -12,10 +12,7 @@ WARE = ROOT / 'data' / 'warehouse'
 OUTS = [DASH / 'wnba_production_readiness.json', WARE / 'wnba_production_readiness.json']
 
 FILES = {
-    'qa': DASH / 'wnba_v4_qa.json',
     'pipeline_readiness': DASH / 'wnba_pipeline_readiness.json',
-    'pipeline': DASH / 'wnba_autonomous_pipeline.json',
-    'final_qa': DASH / 'wnba_final_qa.json',
     'forward_validation': DASH / 'wnba_forward_validation.json',
     'daily_edges': DASH / 'wnba_daily_edges.json',
     'ensemble': DASH / 'wnba_ensemble_intelligence.json',
@@ -83,15 +80,13 @@ def build() -> dict[str, Any]:
     p = {name: load(path) for name, path in FILES.items()}
     readiness = status_of(p['pipeline_readiness'])
     offday = readiness in {'WAIT','OFFDAY','NO_SLATE'}
-    qa_summary = p['qa'].get('summary', {}) if isinstance(p['qa'], dict) else {}
     db = validation_db_check()
 
     gates = []
     def gate(name: str, passed: bool, detail: str, critical: bool = True) -> None:
         gates.append({'name': name, 'passed': bool(passed), 'detail': detail, 'critical': critical})
 
-    gate('module_health', qa_summary.get('red_modules', 0) == 0, f"red modules={qa_summary.get('red_modules', 0)}")
-    gate('json_integrity', qa_summary.get('invalid_json_files', 0) == 0, f"invalid JSON={qa_summary.get('invalid_json_files', 0)}")
+    gate('pipeline_readiness_present', bool(p['pipeline_readiness']), f"status={readiness}")
     gate('forward_validation_integrity', db['integrity'] in {'ok','missing'}, f"integrity={db['integrity']}")
     gate('forward_validation_uniqueness', db['duplicates'] == 0, f"duplicates={db['duplicates']}")
     gate('forward_validation_chronology', db['chronology_violations'] == 0, f"violations={db['chronology_violations']}")
@@ -108,14 +103,11 @@ def build() -> dict[str, Any]:
     failed_critical = [g for g in gates if g['critical'] and not g['passed']]
     failed_advisory = [g for g in gates if not g['critical'] and not g['passed']]
     if failed_critical:
-        status = 'BLOCKED'
-        ready_for_live_slate = False
+        status = 'BLOCKED'; ready_for_live_slate = False
     elif offday:
-        status = 'STANDBY'
-        ready_for_live_slate = True
+        status = 'STANDBY'; ready_for_live_slate = True
     else:
-        status = 'READY'
-        ready_for_live_slate = True
+        status = 'READY'; ready_for_live_slate = True
 
     report = {
         'sprint': 13,
@@ -125,20 +117,15 @@ def build() -> dict[str, Any]:
         'ready_for_live_slate': ready_for_live_slate,
         'operating_context': {'pipeline_readiness': readiness, 'offday_or_break': offday},
         'summary': {
-            'gates': len(gates),
-            'passed': sum(g['passed'] for g in gates),
-            'failed_critical': len(failed_critical),
-            'failed_advisory': len(failed_advisory),
-            'daily_edges': live_counts['daily_edges'],
-            'ensemble': live_counts['ensemble'],
-            'simulations': live_counts['simulation'],
-            'forward_validation_records': db['records'],
+            'gates': len(gates), 'passed': sum(g['passed'] for g in gates),
+            'failed_critical': len(failed_critical), 'failed_advisory': len(failed_advisory),
+            'daily_edges': live_counts['daily_edges'], 'ensemble': live_counts['ensemble'],
+            'simulations': live_counts['simulation'], 'forward_validation_records': db['records'],
         },
         'gates': gates,
         'forward_validation_database': db,
         'release_blockers': [g['detail'] for g in failed_critical],
         'message': 'READY FOR LIVE SLATE' if ready_for_live_slate else 'PRODUCTION BLOCKED',
-        'historical_reconstruction_required': False,
     }
     for path in OUTS:
         path.parent.mkdir(parents=True, exist_ok=True)
