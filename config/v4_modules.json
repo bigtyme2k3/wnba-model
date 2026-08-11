@@ -1,6 +1,6 @@
 {
   "version": "4.0",
-  "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, retraining, explainability, and dashboard layers.",
+  "mission": "Build a modular WNBA betting intelligence platform with schedule, odds, stats, projections, risk, CLV, explainability, results grading, and dashboard layers.",
   "status_scale": ["planned", "partial", "active", "validated"],
   "modules": [
     {"id":"M01","name":"Source Registry","owner_file":"config/source_registry.json","status":"active","purpose":"Track every primary, fallback, and backup data source with reliability."},
@@ -22,11 +22,9 @@
     {"id":"M17","name":"Results Grading","owner_file":"wnba_results_grader.py","status":"active","purpose":"Grade win, loss, push, void and pending outcomes with duplicate protection, profit/loss, ROI and missing-data reasons."},
     {"id":"M18","name":"Self Learning","owner_file":"wnba_self_learning.py","status":"active","purpose":"Apply minimum-sample, bounded and validation-gated weight updates from finalized outcomes and CLV."},
     {"id":"M19","name":"Model Explainability","owner_file":"wnba_reasoning_layer.py","status":"active","purpose":"Explain BET, LEAN, WATCH and PASS actions with positive factors, negative factors, guardrails and selection failures."},
-    {"id":"M20","name":"Dashboard V4","owner_file":"patch_dashboard_navigation_v2.py","status":"active","purpose":"Display clean games, props, books, best bets, portfolio, AI, and health views."},
-    {"id":"M21","name":"Model Calibration","owner_file":"wnba_model_calibration.py","status":"active","purpose":"Measure Brier score, ECE, reliability buckets, and bounded confidence correction."},
-    {"id":"M22","name":"Feature Importance","owner_file":"wnba_feature_importance.py","status":"active","purpose":"Rank outcome-linked features and track importance drift without claiming significance on small samples."},
-    {"id":"M23","name":"Hyperparameter Optimization","owner_file":"wnba_hyperparameter_optimizer.py","status":"active","purpose":"Run deterministic champion-challenger tuning with minimum samples, improvement thresholds, and rollback safety."},
-    {"id":"M24","name":"Daily Retraining","owner_file":"wnba_daily_retraining.py","status":"active","purpose":"Audit the learning pipeline daily and promote only validated improvements; otherwise hold production safely."},
-    {"id":"M25","name":"Ensemble Learning","owner_file":"wnba_ensemble_learning.py","status":"active","purpose":"Combine projection edge, EV, simulation, market, calibration, optimization, and learning into a bounded final decision."}
+    {"id":"M20","name":"Dashboard V4","owner_file":"patch_dashboard_navigation_v2.py","status":"active","purpose":"Display clean games, props, books, best bets, portfolio, AI, and health views."}
+  ],
+  "retired_modules": [
+    {"id":"M21-M25","reason":"Removed 2026-08-10 after dependency tracing showed the calibration, feature-importance, hyperparameter, daily-retraining, and ensemble-learning branch was stale, duplicated newer production paths, or depended on retired historical artifacts."}
   ]
 }
