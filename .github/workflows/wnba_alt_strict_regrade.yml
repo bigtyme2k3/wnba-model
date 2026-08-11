@@ -8,6 +8,8 @@ on:
       - '.github/workflows/wnba_alt_strict_regrade.yml'
       - 'wnba_alt_strict_regrade.py'
       - 'wnba_alt_performance_tracker.py'
+      - 'active_slate_date.py'
+      - 'scripts/check_production_architecture.py'
       - 'data/warehouse/wnba_player_game_logs.json'
 
 permissions:
@@ -41,9 +43,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Verify production architecture invariants
+        run: python scripts/check_production_architecture.py
+
       - name: Compile strict grader
         run: |
           python -m py_compile \
+            active_slate_date.py \
             wnba_alt_strict_regrade.py \
             wnba_alt_performance_tracker.py \
             wnba_alt_pending_diagnostics.py \
@@ -53,7 +59,8 @@ jobs:
       - name: Strictly regrade against completed player-games
         run: |
           python wnba_alt_strict_regrade.py
-          TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
+          TARGET=$(python active_slate_date.py)
+          test -n "$TARGET"
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
           python wnba_alt_schedule_audit.py
