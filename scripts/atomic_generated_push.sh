@@ -6,12 +6,10 @@ shift
 FILES=("$@")
 
 DASHBOARD_DEPLOY_WORKFLOW="Deploy WNBA Dashboard"
-ALLOW_DASHBOARD_WRITE=${ALLOW_DASHBOARD_WRITE:-0}
 CURRENT_WORKFLOW=${GITHUB_WORKFLOW:-local}
 FILTERED_FILES=()
 for supplied in "${FILES[@]}"; do
   if [ "$supplied" = "docs/index.html" ] \
-     && [ "$ALLOW_DASHBOARD_WRITE" != "1" ] \
      && [ "$CURRENT_WORKFLOW" != "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
     echo "Skipping protected dashboard output from non-deploy workflow: $CURRENT_WORKFLOW"
     continue
@@ -20,16 +18,15 @@ for supplied in "${FILES[@]}"; do
 done
 FILES=("${FILTERED_FILES[@]}")
 
-# These are publishable generated history products. Keep this list intentionally
-# narrow: paths under docs/ or data/dashboard/ can retrigger the dashboard deploy.
+# Publishable generated history only. Do not add docs/ or data/dashboard/ here:
+# those paths can retrigger Deploy WNBA Dashboard from inside itself.
 PERSISTENT_OUTPUTS=(
   data/history/wnba_alt_market_snapshots.jsonl
 )
 
-# The deploy workflow may need to reset to origin/main while publishing history.
-# Preserve its already-verified in-run artifacts across that reset, but DO NOT
-# stage/commit them here. This prevents Deploy WNBA Dashboard from committing a
-# docs/ or data/dashboard/ change and recursively triggering itself.
+# A deploy may need to reset to origin/main while publishing history. Preserve
+# the already-verified in-run artifact and grading state across that reset, but
+# never stage these files implicitly. This avoids self-triggering deploy loops.
 WORKSPACE_PRESERVE=()
 if [ "$CURRENT_WORKFLOW" = "$DASHBOARD_DEPLOY_WORKFLOW" ]; then
   WORKSPACE_PRESERVE+=(
