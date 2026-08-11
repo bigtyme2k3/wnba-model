@@ -28,7 +28,6 @@ def build(target_date:str|None=None,execute_models:bool=True)->dict[str,Any]:
     if ready and execute_models:
         commands=[
           ('daily_edge',[sys.executable,'wnba_daily_edge_engine.py']+(['--date',target_date] if target_date else []),True),
-          ('adaptive_confidence',[sys.executable,'wnba_adaptive_confidence_engine.py'],True),
           ('ensemble',[sys.executable,'wnba_ensemble_intelligence_engine.py'],True),
           ('monte_carlo',[sys.executable,'wnba_monte_carlo_scenario_engine.py']+(['--date',target_date] if target_date else []),True),
         ]
@@ -50,7 +49,7 @@ def build(target_date:str|None=None,execute_models:bool=True)->dict[str,Any]:
     required_failures=[s['name'] for s in steps if s.get('required') and s.get('status')=='FAIL']
     qa=load(DASH/'wnba_final_qa.json',{})
     status='READY' if ready and not required_failures and qa.get('green_light') else 'WAIT' if not ready and not required_failures else 'FAIL'
-    report={'sprint':11,'phase':'autonomous-orchestration','generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target_date or readiness.get('target_date'),'status':status,'readiness':readiness,'required_failures':required_failures,'steps':steps,'qa_status':qa.get('status'),'green_light':bool(qa.get('green_light'))}
+    report={'sprint':11,'phase':'autonomous-orchestration','generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target_date or readiness.get('target_date'),'status':status,'readiness':readiness,'required_failures':required_failures,'steps':steps,'qa_status':qa.get('status'),'green_light':bool(qa.get('green_light')),'historical_reconstruction_used':False}
     for path in OUTS:path.parent.mkdir(parents=True,exist_ok=True);json.dump(report,path.open('w',encoding='utf-8'),indent=2,allow_nan=False)
     print(json.dumps({'status':status,'readiness':readiness.get('status'),'steps':[(s['name'],s['status']) for s in steps],'green_light':report['green_light']},indent=2));return report
 
