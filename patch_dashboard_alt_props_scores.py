@@ -131,21 +131,21 @@ function applyScores(){
       const score=Number(scored.streak_score).toFixed(1);
       const grade=scored.streak_grade||'—', action=scored.streak_action||'—';
       cell.innerHTML='<div class="altScoreNum">'+score+'</div><div class="altScoreMeta '+scoreClass(action)+'">'+grade+' · '+action+'</div>';
-      tr.dataset.performanceEligible='1';
+      tr.dataset.scoreEligible='1';
     }else{
       cell.innerHTML='<span class="altUnscored">UNSCORED</span>';
-      tr.dataset.performanceEligible='0';
+      tr.dataset.scoreEligible='0';
     }
     tr.insertBefore(cell,tr.firstElementChild);tr.dataset.altScoreApplied='1';
   }
   const allRows=[...table.querySelectorAll('tbody tr')];
-  const eligible=allRows.filter(tr=>tr.dataset.performanceEligible==='1').length;
-  const unscored=allRows.filter(tr=>tr.dataset.performanceEligible==='0').length;
+  const eligible=allRows.filter(tr=>tr.dataset.scoreEligible==='1').length;
+  const unscored=allRows.filter(tr=>tr.dataset.scoreEligible==='0').length;
   const summary=document.querySelector('.altSummary');
   if(summary){
     let badge=summary.querySelector('[data-score-eligible]');
     if(!badge){badge=document.createElement('span');badge.dataset.scoreEligible='1';summary.appendChild(badge)}
-    badge.innerHTML='<b>'+eligible+'</b> scored / performance eligible'+(unscored?' · '+unscored+' unmatched current rows':'');
+    badge.innerHTML='<b>'+eligible+'</b> scored · verified history eligible'+(unscored?' · '+unscored+' current rows without a score match':'');
   }
 }
 function later(){setTimeout(applyScores,0);setTimeout(applyScores,60)}
@@ -154,7 +154,7 @@ if(typeof oldRender==='function')window.render=function(view){const out=oldRende
 const oldFilter=window.altPropsSetFilter;
 if(typeof oldFilter==='function')window.altPropsSetFilter=function(){const out=oldFilter.apply(this,arguments);domSortKey=null;domSortDir='asc';later();return out};
 window.altPropsSort=function(key){later();setTimeout(()=>sortDom(key),70)};
-window.WNBA_ALT_PROP_SCORES={version:'1.4',source:'wnba_alt_streaks',alternate_only:true,performance_eligible_only:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length,dom_sorting:true,sortable_score:true,sortable_true_metrics:true,stable_eligibility_count:true};
+window.WNBA_ALT_PROP_SCORES={version:'1.5',source:'wnba_alt_streaks',alternate_only:true,score_history_eligible_only:true,performance_archive_eligibility_separate:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length,dom_sorting:true,sortable_score:true,sortable_true_metrics:true,stable_eligibility_count:true};
 later();
 })();</script>'''.replace('__DATA__',data)
 
@@ -175,7 +175,7 @@ def main() -> None:
     html=replace_or_insert(html,'style',STYLE_ID,STYLE)
     html=replace_or_insert(html,'script',SCRIPT_ID,build_script(payload))
     HTML.write_text(html,encoding='utf-8')
-    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'performance_eligible_only':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True,'dom_sorting':True,'sortable_score':True,'stable_eligibility_count':True})
+    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'score_history_eligible_only':True,'performance_archive_eligibility_separate':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True,'dom_sorting':True,'sortable_score':True,'stable_eligibility_count':True})
 
 
 def refresh_performance_panel() -> None:
