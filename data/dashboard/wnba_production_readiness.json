@@ -1,7 +1,7 @@
 {
   "sprint": 13,
   "phase": "production-readiness",
-  "generated_at_utc": "2026-08-10T12:34:18.986481+00:00",
+  "generated_at_utc": "2026-08-11T11:32:21.160300+00:00",
   "status": "READY",
   "ready_for_live_slate": true,
   "operating_context": {
@@ -9,26 +9,20 @@
     "offday_or_break": false
   },
   "summary": {
-    "gates": 10,
-    "passed": 10,
+    "gates": 8,
+    "passed": 8,
     "failed_critical": 0,
     "failed_advisory": 0,
     "daily_edges": 100,
     "ensemble": 100,
     "simulations": 100,
-    "forward_validation_records": 3000
+    "forward_validation_records": 3200
   },
   "gates": [
     {
-      "name": "module_health",
+      "name": "pipeline_readiness_present",
       "passed": true,
-      "detail": "red modules=0",
-      "critical": true
-    },
-    {
-      "name": "json_integrity",
-      "passed": true,
-      "detail": "invalid JSON=0",
+      "detail": "readiness=READY",
       "critical": true
     },
     {
@@ -47,12 +41,6 @@
       "name": "forward_validation_chronology",
       "passed": true,
       "detail": "violations=0",
-      "critical": true
-    },
-    {
-      "name": "calibration_available",
-      "passed": true,
-      "detail": "Sprint 8.1 calibration file",
       "critical": true
     },
     {
@@ -83,7 +71,7 @@
   "forward_validation_database": {
     "exists": true,
     "integrity": "ok",
-    "records": 3000,
+    "records": 3200,
     "duplicates": 0,
     "chronology_violations": 0
   },
