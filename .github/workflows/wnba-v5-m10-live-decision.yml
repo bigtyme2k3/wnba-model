@@ -53,7 +53,10 @@ jobs:
           print(p.get('target_date') or '')
           PY
           )
-          if [ -z "$TARGET" ]; then TARGET=$(date -u +%F); fi
+          if [ -z "$TARGET" ]; then
+            echo "ERROR: injury intelligence target_date is missing; refusing UTC date fallback"
+            exit 1
+          fi
           python wnba_terminal_ui.py --date "$TARGET"
       - name: Verify V5 dashboard source audit
         run: |
