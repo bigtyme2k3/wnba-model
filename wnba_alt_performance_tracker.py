@@ -3,8 +3,10 @@
 Only exact alternate-market rows with provable pregame chronology enter the
 canonical performance sample. The archive freezes pregame inputs so later model
 changes cannot rewrite history. Historical/standard/fallback rows may remain in
-the raw JSONL for audit purposes but are excluded from canonical analytics unless
-they carry the current chronology-valid marker.
+the raw JSONL for audit purposes but are excluded from canonical analytics.
+
+Canonical performance is one observation per stable sportsbook market identity.
+Price refreshes do not create new independent betting observations.
 """
 from __future__ import annotations
 
@@ -80,9 +82,22 @@ def parse_time(value: Any) -> datetime | None:
         return None
 
 
-def candidate_id(row: dict[str,Any], target: str) -> str:
-    parts=(target,row.get("player"),row.get("game"),row.get("stat"),row.get("side"),row.get("alt_line"),row.get("best_book"),row.get("best_odds"))
+def stable_candidate_key(row: dict[str,Any], target: str | None = None) -> str:
+    """Identity of one sportsbook ALT market observation.
+
+    Odds are intentionally excluded. A price refresh is the same market, not a
+    new independent prediction. The first verified pregame snapshot is frozen.
+    """
+    target = target or str(row.get("date") or row.get("target_date") or "")[:10]
+    parts=(
+        target,row.get("player"),row.get("game"),row.get("stat"),row.get("side"),
+        row.get("alt_line",row.get("threshold")),row.get("best_book",row.get("sportsbook")),
+    )
     return "|".join(norm(v) for v in parts)
+
+
+def candidate_id(row: dict[str,Any], target: str) -> str:
+    return stable_candidate_key(row,target)
 
 
 def market_key(row: dict[str,Any]) -> tuple[str,...]:
@@ -105,6 +120,37 @@ def current_market_index(target: str) -> dict[tuple[str,...],dict[str,Any]]:
     return out
 
 
+def strict_canonical_row(row: dict[str,Any]) -> bool:
+    if not isinstance(row,dict): return False
+    if row.get("canonical_performance_eligible") is not True: return False
+    if row.get("snapshot_chronology_valid") is not True: return False
+    if row.get("line_type") != "alternate": return False
+    if str(row.get("archive_schema_version") or "") != CANONICAL_ARCHIVE_SCHEMA: return False
+    if row.get("source_policy") != "exact_alt_market_only": return False
+    if not str(row.get("market_id") or "").strip(): return False
+    snap=parse_time(row.get("snapshot_at_utc")); start=parse_time(row.get("game_time"))
+    if snap is None or start is None or snap >= start: return False
+    return True
+
+
+def canonical_rows(rows: list[dict[str,Any]]) -> list[dict[str,Any]]:
+    """Return earliest verified snapshot for each stable exact market."""
+    chosen: dict[str,dict[str,Any]]={}
+    for row in rows:
+        if not strict_canonical_row(row):
+            continue
+        key=stable_candidate_key(row)
+        prior=chosen.get(key)
+        if prior is None:
+            chosen[key]=row
+            continue
+        current_time=parse_time(row.get("snapshot_at_utc"))
+        prior_time=parse_time(prior.get("snapshot_at_utc"))
+        if current_time is not None and (prior_time is None or current_time < prior_time):
+            chosen[key]=row
+    return list(chosen.values())
+
+
 def snapshot(target: str) -> dict[str,int]:
     payload=load(ALT,{"rows":[]})
     if str(payload.get("target_date") or "")!=target:
@@ -113,7 +159,7 @@ def snapshot(target: str) -> dict[str,int]:
     if not markets:
         raise SystemExit(f"Exact ALT market warehouse unavailable for {target}; refusing performance snapshot")
     history=read_jsonl(ARCHIVE)
-    existing={str(r.get("candidate_id")) for r in history if r.get("canonical_performance_eligible") is True}
+    existing={stable_candidate_key(r) for r in canonical_rows(history)}
     added=duplicates=skipped_non_alt=skipped_unmatched=skipped_missing_start=skipped_started=0
     frozen_fields=(
         "player","team","game","opponent","stat","side","alt_line","line_type","streak",
@@ -141,7 +187,7 @@ def snapshot(target: str) -> dict[str,int]:
             duplicates+=1;continue
         row={field:clean(source.get(field)) for field in frozen_fields}
         row.update({
-            "candidate_id":cid,"date":target,"snapshot_at_utc":now.isoformat(),
+            "candidate_id":cid,"stable_candidate_key":cid,"date":target,"snapshot_at_utc":now.isoformat(),
             "game_time":market.get("game_time"),"market_id":market.get("market_id"),
             "market_scraped_at_utc":market.get("scraped_at_utc"),
             "outcome":"PENDING","actual":None,"profit_loss":None,"graded_at_utc":None,
@@ -153,7 +199,7 @@ def snapshot(target: str) -> dict[str,int]:
         history.append(row);existing.add(cid);added+=1
     write_jsonl(ARCHIVE,history)
     return {
-        "added":added,"duplicates":duplicates,"total":len(history),
+        "added":added,"duplicates":duplicates,"total_raw_rows":len(history),"canonical_unique":len(canonical_rows(history)),
         "skipped_non_alt":skipped_non_alt,"skipped_unmatched_exact_market":skipped_unmatched,
         "skipped_missing_start":skipped_missing_start,"skipped_started":skipped_started,
     }
@@ -193,21 +239,20 @@ def one_unit_profit(result: str, odds: Any) -> float | None:
     return round(100/abs(price),4) if price<0 else round(price/100,4)
 
 
-def canonical_rows(rows: list[dict[str,Any]]) -> list[dict[str,Any]]:
-    return [r for r in rows if r.get("canonical_performance_eligible") is True and r.get("snapshot_chronology_valid") is True and r.get("line_type")=="alternate"]
-
-
 def grade_all() -> dict[str,int]:
     history=read_jsonl(ARCHIVE)
+    canonical=canonical_rows(history)
+    canonical_keys={stable_candidate_key(r) for r in canonical}
+    earliest={stable_candidate_key(r):r for r in canonical}
     logs=load(LOGS,{"records":[]})
     index: dict[tuple[str,str],list[dict[str,Any]]]=defaultdict(list)
     for record in logs.get("records",[]):
         if not isinstance(record,dict):continue
         index[(norm(record.get("player")),str(record.get("game_date") or "")[:10])].append(record)
-    counts={k:0 for k in ("WIN","LOSS","PUSH","VOID","PENDING")};newly=0;excluded_legacy=0
-    for row in history:
-        if row.get("canonical_performance_eligible") is not True or row.get("snapshot_chronology_valid") is not True or row.get("line_type")!="alternate":
-            excluded_legacy+=1;continue
+    counts={k:0 for k in ("WIN","LOSS","PUSH","VOID","PENDING")};newly=0
+    excluded_legacy=sum(not strict_canonical_row(r) for r in history)
+    duplicate_snapshots=max(0,sum(strict_canonical_row(r) for r in history)-len(canonical_keys))
+    for key,row in earliest.items():
         if row.get("outcome") in {"WIN","LOSS","PUSH","VOID"}:
             counts[row["outcome"]]+=1;continue
         candidates=index.get((norm(row.get("player")),str(row.get("date") or "")[:10]),[])
@@ -221,7 +266,7 @@ def grade_all() -> dict[str,int]:
         row["grading_reason"]=None if result!="PENDING" else "actual stat unavailable"
         counts[result]+=1;newly+=result in {"WIN","LOSS","PUSH","VOID"}
     write_jsonl(ARCHIVE,history)
-    return {"newly_graded":newly,"excluded_legacy_or_unverified":excluded_legacy,**{k.lower():v for k,v in counts.items()}}
+    return {"newly_graded":newly,"excluded_legacy_or_unverified":excluded_legacy,"excluded_duplicate_snapshots":duplicate_snapshots,**{k.lower():v for k,v in counts.items()}}
 
 
 def group_summary(rows: list[dict[str,Any]], field: str) -> list[dict[str,Any]]:
@@ -241,7 +286,7 @@ def group_summary(rows: list[dict[str,Any]], field: str) -> list[dict[str,Any]]:
 
 
 def analyze(target: str) -> dict[str,Any]:
-    raw=read_jsonl(ARCHIVE);rows=canonical_rows(raw)
+    raw=read_jsonl(ARCHIVE);strict=[r for r in raw if strict_canonical_row(r)];rows=canonical_rows(raw)
     graded=[r for r in rows if r.get("outcome") in {"WIN","LOSS","PUSH","VOID"}]
     wins=sum(r.get("outcome")=="WIN" for r in graded);losses=sum(r.get("outcome")=="LOSS" for r in graded);pushes=sum(r.get("outcome")=="PUSH" for r in graded)
     decisions=wins+losses;priced=[num(r.get("profit_loss")) for r in graded if num(r.get("profit_loss")) is not None];pnl=sum(priced)
@@ -257,7 +302,8 @@ def analyze(target: str) -> dict[str,Any]:
     threshold=max((r["group"] for r in profitable),default=None) if profitable else None
     report={
         "generated_at_utc":datetime.now(timezone.utc).isoformat(),"target_date":target,"status":"ok",
-        "summary":{"raw_archive_rows":len(raw),"excluded_legacy_or_unverified":len(raw)-len(rows),"archived_candidates":len(rows),
+        "summary":{"raw_archive_rows":len(raw),"strict_verified_snapshots":len(strict),"excluded_legacy_or_unverified":len(raw)-len(strict),
+                   "excluded_duplicate_snapshots":len(strict)-len(rows),"archived_candidates":len(rows),
                    "graded":len(graded),"pending":sum(r.get("outcome")=="PENDING" for r in rows),
                    "wins":wins,"losses":losses,"pushes":pushes,"hit_rate":round(wins/decisions,4) if decisions else None,
                    "profit_loss_units":round(pnl,4),"roi":round(pnl/decisions,4) if decisions else None,
@@ -265,9 +311,11 @@ def analyze(target: str) -> dict[str,Any]:
         "by_grade":by_grade,"by_action":by_action,"by_score_band":score_bands,"by_stat":by_stat,"by_side":by_side,
         "by_sportsbook":by_book,"by_matchup_rank_source":by_rank_source,
         "recent_results":sorted(graded,key=lambda r:str(r.get("date") or ""),reverse=True)[:100],
-        "policy":{"unit_size":1.0,"profit_basis":"listed American odds at verified pregame snapshot",
-                  "canonical_sample":"exact ALT market + snapshot before game_time only",
+        "policy":{"unit_size":1.0,"profit_basis":"listed American odds at first verified pregame snapshot",
+                  "canonical_sample":"one earliest exact ALT sportsbook market snapshot per date/player/game/stat/side/line/book",
+                  "price_refresh_policy":"price changes do not create independent observations",
                   "legacy_unverified_rows":"retained in raw archive but excluded from analytics",
+                  "duplicate_verified_snapshots":"retained in raw archive but excluded from analytics",
                   "minimum_threshold_sample":20,"recalibration_minimum_decisions":100,
                   "closing_line_policy":"blank until verified closing market snapshot exists"},
     }
