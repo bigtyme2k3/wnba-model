@@ -1,14 +1,8 @@
-"""Score ALT Streak candidates with transparent, bounded components.
+"""Score exact current-slate ALT candidates with transparent components.
 
-The engine never invents missing inputs. Unavailable factors receive a neutral
-score and are marked in the explanation. Final score weights:
-- Trend: 30%
-- Matchup: 20%
-- Player form: 20%
-- Market value: 15%
-- Risk: 15%
-
-Scores are descriptive ranking aids, not guarantees of profitability.
+Only rows already produced by the exact ALT warehouse/streak pipeline are
+scored. Missing exact ALT data remains degraded instead of being reconstructed
+from a different market feed. Historical inputs are strictly before target date.
 """
 from __future__ import annotations
 
@@ -16,8 +10,6 @@ import argparse
 import json
 import math
 import statistics
-import subprocess
-import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -188,11 +180,16 @@ def risk_component(row: dict[str, Any], profile: dict[str, Any]) -> tuple[float,
     return round(clamp(score), 1), reasons
 
 
-def main() -> None:
+def main(target: str) -> None:
     warehouse = load(WAREHOUSE, {"records": []})
     by_player: dict[str, list[dict[str, Any]]] = {}
+    excluded_same_or_future = 0
     for record in warehouse.get("records", []):
         if not isinstance(record, dict) or not record.get("player"):
+            continue
+        game_date = str(record.get("game_date") or "")[:10]
+        if not game_date or game_date >= target:
+            excluded_same_or_future += 1
             continue
         by_player.setdefault(norm(record.get("player")), []).append(record)
     for values in by_player.values():
@@ -201,6 +198,8 @@ def main() -> None:
     updated = 0
     for path in ALT_PATHS:
         payload = load(path, {"rows": []})
+        if str(payload.get("target_date") or "") != target:
+            raise SystemExit(f"ALT scoring source target mismatch: {payload.get('target_date')} != {target}")
         rows = [r for r in payload.get("rows", []) if isinstance(r, dict)]
         for row in rows:
             profile = minutes_profile(by_player.get(norm(row.get("player")), []))
@@ -221,21 +220,18 @@ def main() -> None:
             row["score_components"] = components
             row["score_weights"] = WEIGHTS
             row["minutes_profile"] = profile
+            row["history_cutoff_date"] = target
             positives = []
             negatives = []
             for name, value in components.items():
-                target = positives if value >= 70 else negatives if value < 50 else None
-                if target is not None:
-                    target.append(f"{name.title()} {value:.0f}/100")
+                bucket = positives if value >= 70 else negatives if value < 50 else None
+                if bucket is not None:
+                    bucket.append(f"{name.title()} {value:.0f}/100")
             row["score_explanation"] = {
                 "summary": f"{letter} {confidence}: score {score:.1f}/100",
-                "positives": positives[:4],
-                "risks": negatives[:4],
-                "trend": trend_reasons,
-                "matchup": matchup_reasons,
-                "form": form_reasons,
-                "market": market_reasons,
-                "risk": risk_reasons,
+                "positives": positives[:4], "risks": negatives[:4],
+                "trend": trend_reasons, "matchup": matchup_reasons,
+                "form": form_reasons, "market": market_reasons, "risk": risk_reasons,
             }
             updated += 1
         rows.sort(key=lambda r: (num(r.get("streak_score")) or 0, num(r.get("expected_edge")) or -999), reverse=True)
@@ -248,22 +244,24 @@ def main() -> None:
             "lean_rows": sum(r.get("streak_action") == "LEAN" for r in rows),
             "watch_rows": sum(r.get("streak_action") == "WATCH" for r in rows),
             "pass_rows": sum(r.get("streak_action") == "PASS" for r in rows),
+            "history_records_excluded_same_or_future": excluded_same_or_future,
         })
         payload["scoring_methodology"] = {
             "weights": WEIGHTS,
             "missing_data_policy": "neutral score; never imputed as favorable",
+            "history_policy": "strictly before target date; same-day/future game logs excluded",
+            "source_policy": "exact ALT source only; no canonical-ladder reconstruction",
             "grade_scale": {"A+":"90-100","A":"85-89.9","B+":"80-84.9","B":"75-79.9","C+":"70-74.9","C":"60-69.9","D":"below 60"},
             "disclaimer": "Ranking aid only; not a guarantee of profit.",
         }
         payload["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
         with path.open("w", encoding="utf-8") as handle:
             json.dump(payload, handle, indent=2, allow_nan=False)
-    print("ALT Streak confidence scoring:", {"updated": updated})
+    print("ALT Streak confidence scoring:", {"updated": updated, "target": target, "excluded_same_or_future_history": excluded_same_or_future})
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=str(date.today()))
     args = parser.parse_args()
-    subprocess.run([sys.executable, "wnba_alt_canonical_fallback.py", "--date", args.date], check=True)
-    main()
+    main(args.date)
