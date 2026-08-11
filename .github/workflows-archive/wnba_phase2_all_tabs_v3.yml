@@ -64,8 +64,7 @@ jobs:
           run_if_present wnba_alt_market_watch.py --date "$TARGET"
           run_if_present wnba_alt_streak_engine.py --date "$TARGET"
           run_if_present wnba_remaining_season_intelligence.py
-          run_if_present wnba_adaptive_confidence_engine.py
-          run_if_present wnba_forward_validation_engine.py
+          run_if_present wnba_forward_validation_engine.py --date "$TARGET"
           run_if_present wnba_readiness_engine.py
           run_if_present wnba_production_readiness.py
           run_if_present wnba_model_audit.py
@@ -97,7 +96,7 @@ jobs:
           master=json.loads((root/'wnba_master.json').read_text(encoding='utf-8'))
           if str(master.get('target_date') or '') != target: raise SystemExit('Master target mismatch')
           today=[g for g in master.get('games',[]) if str(g.get('bucket','')).lower()=='today']
-          if len(today) != 4: raise SystemExit(f'Expected 4 current games, found {len(today)}')
+          if not today: raise SystemExit('No current-slate games in canonical master')
           required={
             'games':['wnba_master.json'], 'game_props':['wnba_game_props.json','wnba_game_prop_intelligence.json'],
             'player_props':['wnba_player_props.json','wnba_player_prop_intelligence.json'],
