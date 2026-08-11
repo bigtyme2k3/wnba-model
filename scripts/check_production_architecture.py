@@ -32,7 +32,12 @@ def main() -> None:
     if not ATOMIC.exists():
         fail("atomic generated publisher is missing")
 
-    hardcoded_date = re.compile(r"20\d{2}-\d{2}-\d{2}")
+    # Block hardcoded dates only where they are being used as execution state.
+    # Documentation/comments may legitimately mention historical dates.
+    hardcoded_slate_date = re.compile(
+        r"(?:--date\s+|TARGET\s*=|target_date[^\n:=]*[:=]\s*['\"]?)20\d{2}-\d{2}-\d{2}",
+        re.I,
+    )
     git_add_dashboard = re.compile(r"git\s+add(?:(?!\n\s*-\s+name:).){0,1200}?docs/index\.html", re.S)
     atomic_dashboard = re.compile(r"atomic_generated_push\.sh(?:(?!\n\s*-\s+name:).){0,1200}?docs/index\.html", re.S)
 
@@ -44,8 +49,8 @@ def main() -> None:
         if retired:
             fail(f"{name} references retired dashboard builders: {retired}")
 
-        if hardcoded_date.search(text):
-            fail(f"{name} contains a hardcoded YYYY-MM-DD slate date")
+        if hardcoded_slate_date.search(text):
+            fail(f"{name} hardcodes an executable slate date")
 
         if "GITHUB_WORKFLOW=" in text:
             fail(f"{name} spoofs GITHUB_WORKFLOW")
@@ -77,7 +82,7 @@ def main() -> None:
             "active_workflows_checked": len(active_workflows()),
             "single_dashboard_writer": True,
             "retired_dashboard_builders_blocked": True,
-            "hardcoded_active_slate_dates_blocked": True,
+            "hardcoded_executable_slate_dates_blocked": True,
             "workflow_identity_spoofing_blocked": True,
             "utc_rollover_fallback_blocked": True,
         }
