@@ -140,20 +140,48 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          from pathlib import Path
+
+          archive=[]
+          archive_path=Path('data/history/wnba_alt_streak_history.jsonl')
+          if archive_path.exists():
+              for line in archive_path.read_text(encoding='utf-8').splitlines():
+                  try:
+                      row=json.loads(line)
+                  except Exception:
+                      continue
+                  if isinstance(row,dict): archive.append(row)
+
+          final_states={'WIN','LOSS','PUSH','VOID'}
+          full_graded=sum(str(r.get('outcome') or '').upper() in final_states for r in archive)
+          full_pending=sum(str(r.get('outcome') or 'PENDING').upper() == 'PENDING' for r in archive)
+          other=len(archive)-full_graded-full_pending
+
           diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           alt=json.load(open('data/dashboard/wnba_alt_performance.json'))
           recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
           s=alt.get('summary') or {}
-          pending=int(s.get('pending') or 0)
-          graded=int(s.get('graded') or 0)
-          archived=int(s.get('archived_candidates') or 0)
+          canonical_archived=int(s.get('archived_candidates') or 0)
+          canonical_graded=int(s.get('graded') or 0)
+          canonical_pending=int(s.get('pending') or 0)
           diagnosed=int((diagnostics.get('summary') or {}).get('pending_rows') or 0)
-          assert pending == diagnosed, (pending, diagnosed)
-          assert graded + pending <= archived, (archived, graded, pending)
+
+          # Diagnostics and performance summary intentionally cover only the
+          # chronology-valid canonical sample. The JSONL archive also contains
+          # preserved legacy/audit rows, so never compare full archive counts
+          # against canonical archived_candidates.
+          assert canonical_pending == diagnosed, (canonical_pending, diagnosed)
+          assert canonical_graded + canonical_pending <= canonical_archived, (canonical_archived, canonical_graded, canonical_pending)
+          assert full_graded + full_pending + other == len(archive), (len(archive), full_graded, full_pending, other)
+
           print({
-              'archived': archived,
-              'graded': graded,
-              'pending': pending,
+              'full_archive_rows': len(archive),
+              'full_archive_graded': full_graded,
+              'full_archive_pending': full_pending,
+              'full_archive_other': other,
+              'canonical_archived': canonical_archived,
+              'canonical_graded': canonical_graded,
+              'canonical_pending': canonical_pending,
               'recovery_status': recovery.get('status'),
               'remaining_dates': (recovery.get('targets') or {}).get('dates') or [],
           })
