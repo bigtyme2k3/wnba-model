@@ -18,6 +18,8 @@ on:
       - 'wnba_player_game_log_archive.py'
       - 'wnba_player_game_log_warehouse.py'
       - 'wnba_alt_performance_tracker.py'
+      - 'active_slate_date.py'
+      - 'scripts/check_production_architecture.py'
       - '.github/workflows/wnba_alt_game_log_recovery.yml'
 
 permissions:
@@ -51,6 +53,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Verify production architecture invariants
+        run: python scripts/check_production_architecture.py
+
       - name: Resolve one completed recovery date
         run: |
           REQUESTED="${{ github.event.inputs.recovery_date }}"
@@ -73,6 +78,7 @@ jobs:
       - name: Compile recovery tools
         run: |
           python -m py_compile \
+            active_slate_date.py \
             wnba_alt_game_log_recovery.py \
             wnba_alt_recovery_handoff.py \
             wnba_alt_date_alias_recovery.py \
@@ -85,7 +91,6 @@ jobs:
       - name: Build targeted recovery plan
         run: |
           python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE"
-          cp data/dashboard/wnba_alt_game_log_recovery.json /tmp/alt_recovery_before.json
           DATES=$(python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE" --print-dates)
           echo "RECOVERY_DATES=$DATES" >> "$GITHUB_ENV"
           echo "Target dates: ${DATES:-none}"
@@ -125,102 +130,12 @@ jobs:
         if: env.RECOVERY_DATES != ''
         run: python wnba_alt_date_alias_recovery.py --date "$RECOVERY_REQUEST_DATE"
 
-      - name: Diagnose pending player identity around target date
-        if: env.RECOVERY_DATES != ''
-        run: |
-          python - <<'PY'
-          import json, os, re, unicodedata
-          from datetime import date, timedelta
-
-          def norm(value):
-              text = unicodedata.normalize('NFKD', str(value or '')).encode('ascii', 'ignore').decode().lower()
-              return ' '.join(re.sub(r'[^a-z0-9]+', ' ', text).split())
-
-          def record_day(row):
-              return str(row.get('game_date') or row.get('date') or row.get('event_date') or '')[:10]
-
-          target = os.environ['RECOVERY_REQUEST_DATE']
-          target_date = date.fromisoformat(target)
-          nearby = {(target_date + timedelta(days=offset)).isoformat() for offset in (-2, -1, 0, 1, 2)}
-          warehouse = json.load(open('data/warehouse/wnba_player_game_logs.json'))
-          diagnostics = json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
-          records = [row for row in warehouse.get('records', []) if isinstance(row, dict)]
-          inspector = [row for row in diagnostics.get('inspector', []) if isinstance(row, dict) and str(row.get('date') or '')[:10] == target]
-
-          print('TARGET_PENDING_ROWS')
-          for row in inspector:
-              print({
-                  'player': row.get('player'),
-                  'normalized_player': norm(row.get('player')),
-                  'date': row.get('date'),
-                  'game': row.get('game'),
-                  'market': row.get('market'),
-                  'expected_game_id': row.get('expected_game_id'),
-              })
-
-          pending_names = {norm(row.get('player')) for row in inspector if norm(row.get('player'))}
-          exact_or_near = []
-          fuzzy = []
-          for row in records:
-              player = row.get('player') or row.get('player_name') or row.get('athlete_name')
-              player_norm = norm(player)
-              day = record_day(row)
-              if day not in nearby:
-                  continue
-              summary = {
-                  'player': player,
-                  'normalized_player': player_norm,
-                  'game_date': day,
-                  'team': row.get('team') or row.get('team_name') or row.get('team_abbreviation'),
-                  'opponent': row.get('opponent') or row.get('opponent_name') or row.get('opponent_abbreviation'),
-                  'game': row.get('game') or row.get('matchup'),
-                  'game_id': row.get('game_id') or row.get('event_id') or row.get('espn_event_id'),
-                  'source': row.get('source') or row.get('actual_source'),
-                  'date_alias_for_alt_grading': row.get('date_alias_for_alt_grading'),
-              }
-              if player_norm in pending_names:
-                  exact_or_near.append(summary)
-              elif any(name and (name in player_norm or player_norm in name) for name in pending_names):
-                  fuzzy.append(summary)
-
-          print('EXACT_NORMALIZED_PLAYER_RECORDS_WITHIN_2_DAYS', len(exact_or_near))
-          for row in exact_or_near:
-              print(row)
-          print('FUZZY_PLAYER_RECORDS_WITHIN_2_DAYS', len(fuzzy))
-          for row in fuzzy[:50]:
-              print(row)
-
-          if inspector and not exact_or_near and not fuzzy:
-              print('DIAGNOSTIC: no warehouse record within two days shares the pending player identity')
-          PY
-
-      - name: Audit recovered warehouse handoff
-        if: env.RECOVERY_DATES != ''
-        run: |
-          python - <<'PY'
-          import json,re,unicodedata,os
-          def norm(v):
-              s=unicodedata.normalize('NFKD',str(v or '')).encode('ascii','ignore').decode().lower()
-              return ' '.join(re.sub(r'[^a-z0-9]+',' ',s).split())
-          def day(r): return str(r.get('game_date') or r.get('date') or r.get('event_date') or '')[:10]
-          target=os.environ['RECOVERY_REQUEST_DATE']
-          warehouse=json.load(open('data/warehouse/wnba_player_game_logs.json'))
-          diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
-          records=[r for r in warehouse.get('records',[]) if isinstance(r,dict)]
-          inspector=[r for r in diagnostics.get('inspector',[]) if isinstance(r,dict) and str(r.get('date') or '')[:10] == target]
-          index={(norm(r.get('player') or r.get('player_name')),day(r)) for r in records}
-          matches=sum((norm(r.get('player')),str(r.get('date') or '')[:10]) in index for r in inspector)
-          aliases=sum(bool(r.get('date_alias_for_alt_grading')) and day(r)==target for r in records)
-          print({'target_date':target,'canonical_records':len(records),'target_pending_rows':len(inspector),'player_date_matches':matches,'date_aliases':aliases})
-          if not records: raise SystemExit('Canonical warehouse is empty before ALT grading')
-          if inspector and matches == 0: raise SystemExit('Recovered logs exist but no pending player/date rows reached the canonical warehouse')
-          PY
-
       - name: Regrade only affected date
         if: env.RECOVERY_DATES != ''
         run: |
           python wnba_alt_performance_tracker.py --date "$RECOVERY_REQUEST_DATE" --grade
-          TARGET=$(python active_slate_date.py 2>/dev/null || date -u +%F)
+          TARGET=$(python active_slate_date.py)
+          test -n "$TARGET"
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
           python wnba_alt_game_log_recovery.py --date "$RECOVERY_REQUEST_DATE"
@@ -228,7 +143,7 @@ jobs:
       - name: Verify recovery accounting
         run: |
           python - <<'PY'
-          import json,os
+          import json, os
           recovery=json.load(open('data/dashboard/wnba_alt_game_log_recovery.json'))
           diagnostics=json.load(open('data/dashboard/wnba_alt_pending_diagnostics.json'))
           alt=json.load(open('data/dashboard/wnba_alt_performance.json'))
