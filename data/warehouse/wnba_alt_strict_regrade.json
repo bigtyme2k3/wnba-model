@@ -1,14 +1,14 @@
 {
-  "generated_at_utc": "2026-08-12T19:46:57.759576+00:00",
+  "generated_at_utc": "2026-08-12T20:16:59.341192+00:00",
   "status": "PASS",
   "safe_to_apply": true,
-  "minimum_safe_final": 7153,
+  "minimum_safe_final": 7165,
   "stats": {
     "rows": 12408,
-    "baseline_final": 7153,
-    "verified_final_preserved": 7153,
-    "strictly_graded": 12,
-    "same_date_exact": 12,
+    "baseline_final": 7165,
+    "verified_final_preserved": 7165,
+    "strictly_graded": 428,
+    "same_date_exact": 0,
     "frozen_game_time_exact": 0,
     "unique_matchup_date_shift": 0,
     "game_not_completed_yet": 4663,
@@ -16,11 +16,13 @@
     "archive_matchup_missing": 0,
     "matchup_mismatch": 1,
     "repeated_matchup_date_ambiguous": 151,
-    "multiple_exact_matches": 428,
+    "multiple_exact_matches": 0,
+    "consensus_duplicate_matches": 428,
+    "consensus_duplicate_rows_graded": 428,
     "unique_player_date_fallback": 0,
     "stat_unavailable": 0,
-    "proposed_final": 7165,
-    "proposed_pending": 5243
+    "proposed_final": 7593,
+    "proposed_pending": 4815
   },
   "mismatch_samples": [
     {
@@ -30,7 +32,8 @@
       "archive_game": "Toronto Tempo @ Minnesota Lynx"
     }
   ],
-  "identity_rule": "player + canonical matchup; snapshot date exact, then frozen game-time date exact, then unique completed season matchup",
+  "identity_rule": "player + canonical matchup; snapshot date exact, then frozen game-time date exact, then unique completed season matchup; duplicate exact candidates require unanimous requested-stat consensus",
+  "duplicate_policy": "multiple exact player/date/matchup records are gradeable only when every candidate exposes the requested stat and all values are identical",
   "repeated_matchup_policy": "never guess among repeated completed matchups",
   "future_game_policy": "future frozen game times remain pending",
   "preservation_policy": "every pre-existing final outcome is immutable; strict recovery only promotes pending rows"
