@@ -2,6 +2,10 @@
 
 Recovery is paired with the monotonic strict grader: existing final outcomes are
 immutable and only unresolved rows may be promoted after verified game matching.
+
+Blank recovery scope is historical-only. Current/future slate rows are deferred
+so the backlog worker does not spend most of its time trying to grade games that
+have not finished yet. A manual --date remains an explicit override.
 """
 from __future__ import annotations
 
@@ -10,6 +14,8 @@ import json
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
+
+from active_slate_date import resolve_target_date
 
 DIAGNOSTICS = Path("data/dashboard/wnba_alt_pending_diagnostics.json")
 ALT_REPORT = Path("data/dashboard/wnba_alt_performance.json")
@@ -33,17 +39,33 @@ def inspector_rows(payload: dict) -> list[dict]:
     return [r for r in rows if isinstance(r, dict)]
 
 
+def row_date(row: dict) -> str:
+    return str(row.get("date") or "")[:10]
+
+
 def build_payload(requested_date: str | None = None) -> dict:
     diagnostics = load(DIAGNOSTICS)
     alt = load(ALT_REPORT)
     rows = inspector_rows(diagnostics)
-    targeted = [r for r in rows if str(r.get("category") or "missing_verified_game_log") == "missing_verified_game_log"]
+    missing = [r for r in rows if str(r.get("category") or "missing_verified_game_log") == "missing_verified_game_log"]
+
+    active_date = resolve_target_date()
+    deferred: list[dict] = []
     if requested_date:
-        targeted = [r for r in targeted if str(r.get("date") or "")[:10] == requested_date]
-    dates = sorted({str(r.get("date"))[:10] for r in targeted if r.get("date")})
+        # Explicit manual recovery is authoritative, including same-day recovery
+        # after games have completed.
+        targeted = [r for r in missing if row_date(r) == requested_date]
+    else:
+        # Automatic backlog recovery is completed-history only. The live slate is
+        # graded by the normal postgame flow and becomes historical tomorrow.
+        targeted = [r for r in missing if row_date(r) and row_date(r) < active_date]
+        deferred = [r for r in missing if row_date(r) and row_date(r) >= active_date]
+
+    dates = sorted({row_date(r) for r in targeted if row_date(r)})
     games = sorted({str(r.get("expected_game_id") or r.get("game")) for r in targeted if r.get("expected_game_id") or r.get("game")})
     players = sorted({str(r.get("player")) for r in targeted if r.get("player")})
-    by_date = Counter(str(r.get("date") or "unknown")[:10] for r in targeted)
+    by_date = Counter(row_date(r) or "unknown" for r in targeted)
+    deferred_by_date = Counter(row_date(r) or "unknown" for r in deferred)
     summary = alt.get("summary") or {}
     commands = [f"python wnba_play_by_play_layer.py --date {d}" for d in dates]
     commands += [f"python wnba_player_game_log_warehouse.py --date {d}" for d in dates]
@@ -52,6 +74,8 @@ def build_payload(requested_date: str | None = None) -> dict:
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "requested_date": requested_date,
+        "active_slate_date": active_date,
+        "scope_policy": "explicit_single_date" if requested_date else "completed_history_only",
         "status": "ready" if dates else "nothing_to_recover",
         "before": {
             "archived": int(summary.get("archived_candidates") or summary.get("archived") or 0),
@@ -64,6 +88,12 @@ def build_payload(requested_date: str | None = None) -> dict:
             "games": games,
             "players": players,
             "by_date": [{"date": d, "records": by_date[d]} for d in dates],
+        },
+        "deferred_active_or_future": {
+            "records": len(deferred),
+            "dates": sorted(d for d in deferred_by_date if d != "unknown"),
+            "by_date": [{"date": d, "records": deferred_by_date[d]} for d in sorted(deferred_by_date) if d != "unknown"],
+            "reason": "automatic backlog recovery only processes dates before the active Eastern slate date",
         },
         "recovery_commands": commands,
     }
