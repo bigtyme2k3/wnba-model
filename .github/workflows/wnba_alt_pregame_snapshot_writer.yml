@@ -4,6 +4,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '7 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba_alt_pregame_snapshot_writer.yml'
 
 permissions:
   contents: write
@@ -74,7 +78,7 @@ jobs:
       - name: Verify canonical accounting
         run: |
           python - <<'PY'
-          import json
+          import json, os
           from pathlib import Path
           p=json.loads(Path('data/dashboard/wnba_alt_performance.json').read_text())
           s=p.get('summary') or {}
@@ -82,7 +86,7 @@ jobs:
           graded=int(s.get('graded') or 0)
           pending=int(s.get('pending') or 0)
           assert archived == graded + pending, (archived, graded, pending)
-          assert p.get('target_date') == __import__('os').environ['TARGET'], p.get('target_date')
+          assert p.get('target_date') == os.environ['TARGET'], p.get('target_date')
           print({'status':'PASS','target':p.get('target_date'),'archived':archived,'graded':graded,'pending':pending})
           PY
 
