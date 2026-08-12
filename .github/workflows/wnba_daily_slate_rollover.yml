@@ -91,6 +91,16 @@ jobs:
           run_if_present wnba_alt_streak_engine.py --date "$TARGET"
           run_if_present wnba_remaining_season_intelligence.py
 
+      - name: Freeze canonical current ALT observations
+        run: |
+          # Writer ownership: persist exact pregame ALT observations here, before
+          # Pages consumes the archive. Deployment itself remains read-only.
+          if [ -f wnba_alt_market_warehouse.py ] && [ -f wnba_alt_streaks.py ] && [ -f wnba_alt_performance_tracker.py ]; then
+            python wnba_alt_market_warehouse.py --date "$TARGET"
+            python wnba_alt_streaks.py --date "$TARGET"
+            python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot
+          fi
+
       - name: Grade completed games and rebuild performance data
         run: |
           YESTERDAY=$(date -d yesterday +%F)
