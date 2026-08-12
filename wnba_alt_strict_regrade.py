@@ -1,4 +1,4 @@
-"""Strictly regrade ALT history against completed canonical player-games.
+"""Strictly grade unresolved ALT history against completed canonical player-games.
 
 A wager grades only from a completed player-game whose canonical matchup agrees
 with the archived matchup. Same-date exact matches are preferred. When a frozen
@@ -7,9 +7,11 @@ is used as the next deterministic date anchor. Only after those exact checks may
 a cross-date recovery use a matchup that occurs exactly once in the player's
 completed season. Repeated matchups remain unresolved rather than guessed.
 
-Verified manual overrides and Phase 1 official-event recoveries are preserved.
-The proposed regrade is built in memory and protected by a destructive-write
-safety floor.
+Already verified final grades are preserved. This script is deliberately
+non-destructive for the historical backlog: the repeated-matchup resolver may
+promote PENDING rows to final outcomes, but it must not erase a previously
+verified strict/manual/official grade merely because a newer resolver cannot
+reconstruct that row again.
 """
 from __future__ import annotations
 
@@ -29,6 +31,8 @@ LOGS = Path("data/warehouse/wnba_player_game_logs.json")
 REPORT = Path("data/dashboard/wnba_alt_strict_regrade.json")
 WAREHOUSE_REPORT = Path("data/warehouse/wnba_alt_strict_regrade.json")
 TRUSTED_SOURCES = {"manual_verified_override", "espn_schedule_event_phase1"}
+STRICT_SOURCE = "player_game_log_warehouse_strict_match"
+PRESERVE_SOURCES = TRUSTED_SOURCES | {STRICT_SOURCE}
 FINAL = {"WIN", "LOSS", "PUSH", "VOID"}
 ET = ZoneInfo("America/New_York")
 
@@ -75,13 +79,6 @@ def parse_time(value: Any) -> datetime | None:
 
 
 def frozen_game_date(row: dict[str, Any]) -> str:
-    """Return the local WNBA calendar date encoded by the frozen market start.
-
-    Snapshot target dates were historically vulnerable to rollover/date alias
-    bugs. The sportsbook game_time was frozen with canonical exact-ALT snapshots,
-    so its America/New_York calendar date is a safer deterministic resolver for
-    repeated matchups. It is never used unless the matchup also agrees.
-    """
     start = parse_time(row.get("game_time"))
     if start is None:
         return ""
@@ -180,8 +177,9 @@ def main() -> None:
     now_dt = datetime.now(timezone.utc)
     now = now_dt.isoformat()
     stats = {
-        "rows": len(history), "baseline_final": baseline_final, "trusted_preserved": 0,
-        "strictly_graded": 0, "same_date_exact": 0, "frozen_game_time_exact": 0,
+        "rows": len(history), "baseline_final": baseline_final,
+        "verified_final_preserved": 0, "strictly_graded": 0,
+        "same_date_exact": 0, "frozen_game_time_exact": 0,
         "unique_matchup_date_shift": 0, "game_not_completed_yet": 0,
         "no_player_game": 0, "archive_matchup_missing": 0, "warehouse_matchup_missing": 0,
         "matchup_mismatch": 0, "repeated_matchup_date_ambiguous": 0,
@@ -191,8 +189,12 @@ def main() -> None:
 
     for row in history:
         source = str(row.get("actual_source") or "")
-        if source in TRUSTED_SOURCES and str(row.get("outcome") or "").upper() in FINAL:
-            stats["trusted_preserved"] += 1
+        current_outcome = str(row.get("outcome") or "").upper()
+
+        # Preserve grades already established by a verified source. The backlog
+        # resolver is allowed to promote pending rows, never to destroy these.
+        if source in PRESERVE_SOURCES and current_outcome in FINAL:
+            stats["verified_final_preserved"] += 1
             continue
 
         reset_warehouse_grade(row)
@@ -225,8 +227,6 @@ def main() -> None:
                 stats["multiple_exact_matches"] += 1
                 continue
             else:
-                # The frozen market start is a deterministic date anchor and is
-                # safer than guessing among repeated season matchups.
                 scheduled_exact = [r for r in scheduled_date_rows if team_pair(r) == wanted_pair]
                 if scheduled_date and scheduled_date != snapshot_date and len(scheduled_exact) == 1:
                     exact = scheduled_exact
@@ -303,7 +303,7 @@ def main() -> None:
         row["outcome"] = result
         row["profit_loss"] = one_unit_profit(result, row.get("best_odds"))
         row["graded_at_utc"] = now
-        row["actual_source"] = "player_game_log_warehouse_strict_match"
+        row["actual_source"] = STRICT_SOURCE
         row["actual_record_id"] = record_identity(record)
         row["actual_game_id"] = record.get("game_id") or record.get("event_id")
         row["actual_game_date"] = str(record.get("game_date") or "")[:10]
@@ -316,27 +316,28 @@ def main() -> None:
     final = sum(str(r.get("outcome") or "").upper() in FINAL for r in history)
     stats.update({"proposed_final": final, "proposed_pending": pending})
 
-    minimum_safe_final = int(baseline_final * 0.90)
-    safe_to_apply = final >= minimum_safe_final
+    # Backlog recovery is monotonic: verified final count may stay flat or grow,
+    # but never shrink.
+    safe_to_apply = final >= baseline_final
     report = {
         "generated_at_utc": now,
         "status": "PASS" if safe_to_apply else "BLOCKED",
         "safe_to_apply": safe_to_apply,
-        "minimum_safe_final": minimum_safe_final,
+        "minimum_safe_final": baseline_final,
         "stats": stats,
         "mismatch_samples": mismatch_samples,
         "identity_rule": "player + canonical matchup; prefer snapshot-date exact, then frozen sportsbook game-time date exact, otherwise allow only a single unique completed occurrence of that matchup across the player's season",
         "repeated_matchup_policy": "never guess among repeated completed matchups; frozen game_time may resolve an exact local-date matchup, otherwise leave pending",
         "future_game_policy": "a row with frozen game_time later than the grading run remains pending and is never matched to an older repeated matchup",
+        "preservation_policy": "verified manual, official-event, and prior strict warehouse grades are immutable during backlog recovery",
         "odds_snapshot_policy": "raw odds market IDs are not accepted as completed-game truth; frozen game_time is used only as a date anchor and still requires player+matchup agreement",
     }
     emit_report(report)
 
     if not safe_to_apply:
-        print("Strict ALT regrade blocked by safety guard:", stats)
+        print("Strict ALT regrade blocked by monotonic safety guard:", stats)
         raise SystemExit(
-            f"Refusing destructive archive rewrite: proposed final {final} < safety floor {minimum_safe_final} "
-            f"from baseline {baseline_final}. See {REPORT}."
+            f"Refusing destructive archive rewrite: proposed final {final} < existing verified final {baseline_final}. See {REPORT}."
         )
 
     write_jsonl(ARCHIVE, history)
