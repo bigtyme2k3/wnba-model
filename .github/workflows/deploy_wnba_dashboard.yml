@@ -36,6 +36,7 @@ on:
       - 'scripts/wnba_s19_m06_results_lifecycle.py'
       - 'patch_dashboard_alt_props_table.py'
       - 'patch_dashboard_alt_props_scores.py'
+      - 'patch_dashboard_alt_props_performance_panel.py'
       - 'wnba_alt_streak_confidence.py'
       - 'wnba_alt_performance_tracker.py'
       - 'patch_dashboard_sprint2_phase2.py'
@@ -100,7 +101,7 @@ jobs:
             patch_dashboard_canonical_runtime.py patch_dashboard_games_focus.py patch_dashboard_v4_ui_freeze.py patch_dashboard_v4_ui_freeze_safe.py \
             patch_dashboard_s19_m02.py patch_dashboard_s19_m03.py patch_dashboard_s19_m06.py scripts/build_daily_canonical_slate.py \
             scripts/scrape_odds_props_consensus.py scripts/wnba_game_archive_backfill.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m06_results_lifecycle.py \
-            patch_dashboard_alt_props_table.py patch_dashboard_alt_props_scores.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py \
+            patch_dashboard_alt_props_table.py patch_dashboard_alt_props_scores.py patch_dashboard_alt_props_performance_panel.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py \
             patch_dashboard_sprint2_phase2.py patch_dashboard_build_verification.py patch_dashboard_alt_grading_status.py wnba_alt_pending_diagnostics.py \
             patch_dashboard_alt_recovery_progress.py patch_dashboard_game_performance.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_alt_ladders.py \
             wnba_results_grader.py wnba_edge_database.py
@@ -181,6 +182,9 @@ jobs:
           python patch_dashboard_s19_m03.py
           python patch_dashboard_alt_props_table.py
           python patch_dashboard_alt_props_scores.py
+          # Refresh the embedded performance panel after grading/snapshotting so
+          # the public dashboard cannot keep stale pre-recovery counts.
+          python patch_dashboard_alt_props_performance_panel.py
 
       - name: Verify Sprint 19 M02-M06 dashboard routing and current slate artifact
         run: |
@@ -197,10 +201,10 @@ jobs:
           canonical_target_compact=f'"target_date":"{target}"'
           if canonical_target not in h and canonical_target_compact not in h:
               raise SystemExit(f'REFUSE DEPLOY: canonical payload target {target} missing')
-          required=['id="tabs"','canonical-daily-runtime-v1','v4-ui-freeze-script','s19-m02-script','WNBA_S19_M02','s19-m03-script','WNBA_S19_M03','s19-m04-contract-script','WNBA_CANONICAL_DASHBOARD_CONTRACT','s19-m05-health-script','WNBA_DASHBOARD_HEALTH','s19-m06-results-script','WNBA_RESULTS_LIFECYCLE','Results · Lifecycle']
+          required=['id="tabs"','canonical-daily-runtime-v1','v4-ui-freeze-script','s19-m02-script','WNBA_S19_M02','s19-m03-script','WNBA_S19_M03','s19-m04-contract-script','WNBA_CANONICAL_DASHBOARD_CONTRACT','s19-m05-health-script','WNBA_DASHBOARD_HEALTH','s19-m06-results-script','WNBA_RESULTS_LIFECYCLE','Results · Lifecycle','alt-props-performance-panel-data']
           missing=[x for x in required if x not in h]
           if missing: raise SystemExit(f'Sprint 19 M02-M06 verification failed; missing markers: {missing}')
-          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','s19-m02-script','s19-m03-script','s19-m04-contract-script','s19-m05-health-script','s19-m06-results-script'):
+          for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','s19-m02-script','s19-m03-script','s19-m04-contract-script','s19-m05-health-script','s19-m06-results-script','alt-props-performance-panel-data'):
               if h.count(f'id="{marker}"')!=1: raise SystemExit(f'{marker} duplicated or missing')
           if h.count('id="root"')>1 or h.count('id="tabs"')!=1: raise SystemExit('Dashboard root/navigation duplication')
           def j(name): return json.loads(Path('data/dashboard/'+name).read_text())
