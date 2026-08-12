@@ -59,6 +59,23 @@ def _canonical_actuals(target):
         return pd.DataFrame(rows)
     except Exception:return pd.DataFrame()
 
+def _raw_json_actuals(target):
+    """Load the canonical daily ESPN fallback emitted by wnba_live_results.py.
+
+    The results pipeline writes daily player boxscores as JSON, not CSV. Keeping
+    this loader inside the grader fixes the broken handoff without changing the
+    existing history, recovery, or P/L accounting paths.
+    """
+    path=f'data/raw/wnba_boxscores_{target}.json'
+    if not os.path.exists(path):return pd.DataFrame(),None
+    try:
+        payload=json.load(open(path,encoding='utf-8'))
+        rows=payload.get('players',[]) if isinstance(payload,dict) else []
+        df=_date_filter(pd.DataFrame(rows),target) if rows else pd.DataFrame()
+        if not df.empty and 'player' in df.columns:return df,path
+    except Exception:pass
+    return pd.DataFrame(),None
+
 def load_actuals(target):
     candidates=(
         f'data/raw/player_results_{target}.csv',
@@ -72,6 +89,8 @@ def load_actuals(target):
                 df=_date_filter(pd.read_csv(p),target)
                 if not df.empty and 'player' in df.columns:return df,p
             except Exception:pass
+    df,source=_raw_json_actuals(target)
+    if not df.empty:return df,source
     df=_canonical_actuals(target)
     if not df.empty and 'player' in df.columns:return df,'data/warehouse/wnba_player_game_logs.json'
     return pd.DataFrame(),None
