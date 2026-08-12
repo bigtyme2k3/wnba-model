@@ -55,17 +55,12 @@ def _canonical_actuals(target):
             if str(r.get('game_date') or '')[:10]!=target:continue
             scoring=r.get('scoring') if isinstance(r.get('scoring'),dict) else {}
             box=r.get('boxscore') if isinstance(r.get('boxscore'),dict) else {}
-            rows.append({'game_date':target,'player':r.get('player'),'team':r.get('team'),'pts':scoring.get('total_pts'),'reb':box.get('reb'),'ast':box.get('ast'),'threes':scoring.get('three_pm'),'stl':box.get('stl'),'blk':box.get('blk'),'tov':box.get('tov')})
+            rows.append({'game_date':target,'game':r.get('game'),'player':r.get('player'),'team':r.get('team'),'pts':scoring.get('total_pts'),'reb':box.get('reb'),'ast':box.get('ast'),'threes':scoring.get('three_pm'),'stl':box.get('stl'),'blk':box.get('blk'),'tov':box.get('tov')})
         return pd.DataFrame(rows)
     except Exception:return pd.DataFrame()
 
 def _raw_json_actuals(target):
-    """Load the canonical daily ESPN fallback emitted by wnba_live_results.py.
-
-    The results pipeline writes daily player boxscores as JSON, not CSV. Keeping
-    this loader inside the grader fixes the broken handoff without changing the
-    existing history, recovery, or P/L accounting paths.
-    """
+    """Load the canonical daily ESPN fallback emitted by wnba_live_results.py."""
     path=f'data/raw/wnba_boxscores_{target}.json'
     if not os.path.exists(path):return pd.DataFrame(),None
     try:
@@ -95,6 +90,21 @@ def load_actuals(target):
     if not df.empty and 'player' in df.columns:return df,'data/warehouse/wnba_player_game_logs.json'
     return pd.DataFrame(),None
 
+def game_pair(value):
+    text=norm(value).replace(' vs. ',' @ ').replace(' vs ',' @ ')
+    if ' @ ' not in text:return None
+    left,right=[norm(x) for x in text.split(' @ ',1)]
+    if not left or not right:return None
+    return frozenset((left,right))
+
+def completed_game_pairs(actuals):
+    if actuals.empty or 'game' not in actuals.columns:return set()
+    pairs=set()
+    for value in actuals['game'].dropna().tolist():
+        pair=game_pair(value)
+        if pair:pairs.add(pair)
+    return pairs
+
 def actual_value(row,stat):
     stat=str(stat or '').upper(); pts=sf(row.get('pts',row.get('PTS')),0); reb=sf(row.get('reb',row.get('REB')),0); ast=sf(row.get('ast',row.get('AST')),0); th=sf(row.get('threes',row.get('3pm',row.get('3PM',row.get('fg3m')))),0)
     return {'PTS':pts,'REB':reb,'AST':ast,'3PM':th,'PRA':pts+reb+ast,'PA':pts+ast,'PR':pts+reb,'RA':reb+ast}.get(stat,sf(row.get(stat.lower())))
@@ -115,8 +125,9 @@ def profit(outcome,stake,odds):
 
 def build(target):
     hist=read_history(); actuals,source=load_actuals(target); amap={norm(r.get('player')):clean(r.to_dict()) for _,r in actuals.iterrows()} if not actuals.empty else {}
+    completed_pairs=completed_game_pairs(actuals)
     counts={k:0 for k in ('WIN','LOSS','PUSH','VOID','PENDING')}; graded=0; total_stake=0.0; pnl=0.0; missing=[]
-    target_rows=0
+    target_rows=0; dnp_voided=0
     for r in hist:
         if r.get('date')!=target:continue
         target_rows+=1
@@ -124,14 +135,23 @@ def build(target):
             counts[r['outcome']]+=1; continue
         a=amap.get(norm(r.get('player')))
         if not a:
-            counts['PENDING']+=1; missing.append({'player':r.get('player'),'reason':'actual player row unavailable'}); continue
+            archived_pair=game_pair(r.get('game'))
+            # A missing player row is a sportsbook void only when we can prove the
+            # archived matchup itself is present in the completed daily boxscore.
+            # This handles DNP/inactive players without treating a missing feed as
+            # a statistical zero or guessing across games.
+            if archived_pair and archived_pair in completed_pairs:
+                r['actual']=None; r['outcome']='VOID'; r['graded_at_utc']=datetime.now(timezone.utc).isoformat(); r['grading_reason']='completed game verified; player did not record participation'; r['profit_loss']=0.0
+                counts['VOID']+=1; graded+=1; dnp_voided+=1
+                continue
+            counts['PENDING']+=1; missing.append({'player':r.get('player'),'game':r.get('game'),'reason':'actual player row unavailable and completed matchup could not be verified'}); continue
         val=actual_value(a,r.get('stat')); out=grade(r.get('signal'),val,sf(r.get('line')))
         if out=='PENDING':missing.append({'player':r.get('player'),'reason':'actual stat or line unavailable'})
         r['actual']=val; r['outcome']=out; r['graded_at_utc']=datetime.now(timezone.utc).isoformat(); stake=sf(r.get('stake',r.get('recommended_stake')),0) or 0; p=profit(out,stake,r.get('american_odds')); r['profit_loss']=round(p,2)
         counts[out]+=1; graded+=out in {'WIN','LOSS','PUSH','VOID'}; total_stake+=stake if out in {'WIN','LOSS'} else 0; pnl+=p
     write_history(hist); decisions=counts['WIN']+counts['LOSS']; roi=pnl/total_stake if total_stake else 0
     status='ok' if decisions or counts['PUSH'] or counts['VOID'] else 'no_archived_predictions' if target_rows==0 else 'waiting_for_actuals'
-    report={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':status,'actual_source':source,'actual_rows':len(actuals),'archived_predictions':target_rows,'summary':{'graded_this_run':graded,**{k.lower():v for k,v in counts.items()},'win_rate':round(counts['WIN']/decisions,4) if decisions else 0,'total_stake':round(total_stake,2),'profit_loss':round(pnl,2),'roi':round(roi,4)},'missing_actuals':missing[:100]}
+    report={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':status,'actual_source':source,'actual_rows':len(actuals),'archived_predictions':target_rows,'completed_matchups_verified':len(completed_pairs),'summary':{'graded_this_run':graded,'dnp_voided':dnp_voided,**{k.lower():v for k,v in counts.items()},'win_rate':round(counts['WIN']/decisions,4) if decisions else 0,'total_stake':round(total_stake,2),'profit_loss':round(pnl,2),'roi':round(roi,4)},'missing_actuals':missing[:100]}
     os.makedirs('data/warehouse',exist_ok=True);os.makedirs('data/dashboard',exist_ok=True)
     for p in ('data/warehouse/wnba_results_grading.json','data/dashboard/wnba_results_grading.json'):json.dump(clean(report),open(p,'w',encoding='utf-8'),indent=2,allow_nan=False)
     return report
