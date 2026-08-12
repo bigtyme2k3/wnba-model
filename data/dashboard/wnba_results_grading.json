@@ -1,23 +1,524 @@
 {
-  "generated_at_utc": "2026-08-12T00:35:08.946494+00:00",
-  "target_date": "2026-08-10",
+  "generated_at_utc": "2026-08-12T11:33:05.434684+00:00",
+  "target_date": "2026-08-11",
   "status": "ok",
-  "actual_source": "data/raw/wnba_boxscores_2026-08-10.json",
-  "actual_rows": 40,
-  "archived_predictions": 588,
+  "actual_source": "data/warehouse/wnba_player_game_logs.json",
+  "actual_rows": 16,
+  "archived_predictions": 375,
   "completed_matchups_verified": 2,
   "summary": {
-    "graded_this_run": 588,
-    "dnp_voided": 19,
-    "win": 222,
-    "loss": 290,
+    "graded_this_run": 109,
+    "dnp_voided": 0,
+    "win": 45,
+    "loss": 41,
     "push": 0,
-    "void": 76,
-    "pending": 0,
-    "win_rate": 0.4336,
+    "void": 23,
+    "pending": 266,
+    "win_rate": 0.5233,
     "total_stake": 0.0,
     "profit_loss": 0.0,
     "roi": 0
   },
-  "missing_actuals": []
+  "missing_actuals": [
+    {
+      "player": "Aliyah Boston",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Aliyah Boston",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Aliyah Boston",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Monique Billings",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Makayla Timpson",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Aliyah Boston",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Chelsea Gray",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Dearica Hamby",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Cameron Brink",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sabrina Ionescu",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sabrina Ionescu",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Chelsea Gray",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Chelsea Gray",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Aliyah Boston",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Chelsea Gray",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Aliyah Boston",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Chelsea Gray",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Kelsey Mitchell",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "A'ja Wilson",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "A'ja Wilson",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sabrina Ionescu",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Dearica Hamby",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "A'ja Wilson",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Chelsea Gray",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Dearica Hamby",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sabrina Ionescu",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "A'ja Wilson",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Aliyah Boston",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Dearica Hamby",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sabrina Ionescu",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Makayla Timpson",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Aliyah Boston",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Jonquel Jones",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Pauline Astier",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Erica Wheeler",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Kelsey Mitchell",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Breanna Stewart",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Rae Burrell",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Breanna Stewart",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sabrina Ionescu",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Erica Wheeler",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Dearica Hamby",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Caitlin Clark",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Dearica Hamby",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Cameron Brink",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Cameron Brink",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sabrina Ionescu",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Breanna Stewart",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "A'ja Wilson",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Dearica Hamby",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Erica Wheeler",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Ariel Atkins",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Kelsey Mitchell",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Lexie Hull",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Pauline Astier",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "A'ja Wilson",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Breanna Stewart",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Cameron Brink",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Erica Wheeler",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Caitlin Clark",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Erica Wheeler",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Erica Wheeler",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Pauline Astier",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Caitlin Clark",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Jonquel Jones",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Caitlin Clark",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Pauline Astier",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Chelsea Gray",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Nneka Ogwumike",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Pauline Astier",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Chelsea Gray",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Pauline Astier",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sophie Cunningham",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Cameron Brink",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sophie Cunningham",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Rae Burrell",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Sophie Cunningham",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Caitlin Clark",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Jonquel Jones",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Erica Wheeler",
+      "game": "Phoenix Mercury @ Los Angeles Sparks",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Jackie Young",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Breanna Stewart",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Jackie Young",
+      "game": "Washington Mystics @ Las Vegas Aces",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    },
+    {
+      "player": "Breanna Stewart",
+      "game": "New York Liberty @ Indiana Fever",
+      "reason": "actual player row unavailable and completed matchup could not be verified"
+    }
+  ]
 }
