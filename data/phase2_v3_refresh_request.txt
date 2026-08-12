@@ -1,2 +1,2 @@
-Requested refresh: 2026-08-11 20:19 America/New_York
-Reason: rerun Phase 2 after repairing wnba_results_grader.py to consume the canonical daily ESPN fallback JSON at data/raw/wnba_boxscores_<date>.json, so 2026-08-10 archived predictions can grade without altering the existing recovery/accounting architecture.
+Requested refresh: 2026-08-11 20:29 America/New_York
+Reason: rerun Phase 2 after results-grader fix that marks a missing player boxscore row as VOID only when the archived matchup itself is verified completed in the daily canonical boxscore; this should resolve the remaining 19 Aug. 10 pending Flau'jae Johnson props without treating missing participation as zero production.
