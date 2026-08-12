@@ -1,15 +1,17 @@
 """Bridge verified player logs across archive/slate date drift.
 
 Archived ALT candidates can carry a dashboard slate date that differs from the
-verified completed-game date. Recovery is deliberately conservative and now
-consults an official-schedule audit before creating aliases:
+verified completed-game date. Recovery is deliberately conservative and consults
+an official-schedule audit before creating aliases:
 
 1. Never alias a row when the official schedule says the archive date is exact.
 2. If the schedule identifies exactly one completed same-orientation matchup in +/-7 days,
    only that official date may be used as the alias source.
-3. If teams met more than once in completed games in the window, or only a reversed
-   home/away game exists, leave the row unresolved for manual review.
-4. If schedule events exist but none completed, never fall back to proximity matching.
+3. If teams met more than once in completed games in the window, resolve only when
+   verified player-game logs prove the player appeared in exactly one of those
+   official candidate games; otherwise leave the row unresolved.
+4. If only reversed home/away games exist, or schedule events exist but none
+   completed, never fall back to proximity matching.
 5. If schedule data is unavailable, retain the older conservative record-based
    logic: adjacent-date match first, then unique exact-matchup within +/-7 days.
 
@@ -133,7 +135,7 @@ def choose_source(
         classification = str(schedule_guard.get("classification") or "")
         if classification == "exact_date":
             return None, "official_schedule_exact_date", {}
-        if classification in {"repeated_matchup_ambiguous", "home_away_mismatch", "no_completed_matchup"}:
+        if classification in {"home_away_mismatch", "no_completed_matchup"}:
             return None, classification, {
                 str(day): [] for day in (schedule_guard.get("candidate_dates") or schedule_guard.get("reversed_candidate_dates") or [])
             }
@@ -149,6 +151,26 @@ def choose_source(
             if suggested and suggested in by_date:
                 return max(by_date[suggested], key=quality), "official_unique_schedule_alias", by_date
             return None, "official_alias_log_missing", by_date
+        if classification == "repeated_matchup_ambiguous":
+            candidate_dates = {
+                str(day)[:10] for day in (schedule_guard.get("candidate_dates") or []) if str(day)[:10]
+            }
+            exact = [
+                row for row in records
+                if norm(row.get("player") or row.get("player_name")) == player
+                and record_date(row) in candidate_dates
+                and exact_matchup_compatible(item, row)
+            ]
+            by_date = collapse_by_date(exact)
+            # The schedule can be ambiguous at team level while the wager is still
+            # deterministic at player level. A player who appeared in exactly one
+            # of the repeated official meetings provides a safe identity anchor.
+            if len(by_date) == 1:
+                only_date = next(iter(by_date))
+                return max(by_date[only_date], key=quality), "official_repeated_matchup_unique_player_date", by_date
+            return None, "repeated_matchup_ambiguous", {
+                day: by_date.get(day, []) for day in sorted(candidate_dates)
+            }
 
     # Schedule unavailable/not found: preserve conservative legacy fallback.
     near_dates = {
@@ -209,6 +231,7 @@ def main() -> None:
     unresolved: list[dict[str, Any]] = []
     methods: dict[str, int] = {
         "official_unique_schedule_alias": 0,
+        "official_repeated_matchup_unique_player_date": 0,
         "adjacent_date": 0,
         "exact_matchup_wide_date": 0,
     }
@@ -228,7 +251,7 @@ def main() -> None:
                 "schedule_classification": guard.get("classification") if guard else None,
                 "suggested_date": guard.get("suggested_date") if guard else None,
                 "candidate_dates": sorted(candidates_by_date),
-                "collapsed_candidate_count": len(candidates_by_date),
+                "collapsed_candidate_count": len([d for d, rows in candidates_by_date.items() if rows]),
                 "resolution": method,
             })
             continue
@@ -240,6 +263,7 @@ def main() -> None:
         alias["date_alias_for_alt_grading"] = True
         alias["date_alias_reason"] = {
             "official_unique_schedule_alias": "official schedule identifies one unique completed same-orientation matchup within seven days",
+            "official_repeated_matchup_unique_player_date": "official schedule has repeated matchup, but verified player-game logs place player in exactly one candidate game",
             "adjacent_date": "dashboard slate date differs from verified completed-game date; adjacent-date recovery",
             "exact_matchup_wide_date": "dashboard slate date differs from verified completed-game date; unique exact-matchup recovery within seven days",
         }.get(method, method)
@@ -248,6 +272,7 @@ def main() -> None:
         if guard:
             alias["official_schedule_guard"] = guard.get("classification")
             alias["official_schedule_suggested_date"] = guard.get("suggested_date")
+            alias["official_schedule_candidate_dates"] = guard.get("candidate_dates") or []
         aliases.append(alias)
         methods[method] = methods.get(method, 0) + 1
         existing.add((player, args.date))
