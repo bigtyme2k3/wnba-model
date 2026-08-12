@@ -15,6 +15,25 @@ STYLE = r'''<style id="alt-props-score-overlay-style">
 </style>'''
 
 
+def apply_calibration() -> None:
+    """Make the public ALT action layer use verified historical calibration.
+
+    Deployment may rebuild raw component scores, but it is not allowed to
+    restore the old static BET/LEAN thresholds.  Calibration is recomputed from
+    frozen, verified history and applied before the table is embedded.
+    """
+    if not SCORES.exists():
+        return
+    try:
+        payload=json.load(SCORES.open(encoding='utf-8'))
+        target=str(payload.get('target_date') or '')[:10]
+    except Exception:
+        target=''
+    if not target:
+        raise SystemExit('ALT calibration target unavailable')
+    subprocess.run([sys.executable,'wnba_alt_apply_calibration.py','--date',target],check=True)
+
+
 def load_scores() -> dict:
     try:
         payload=json.load(SCORES.open(encoding='utf-8')) if SCORES.exists() else {}
@@ -22,7 +41,7 @@ def load_scores() -> dict:
         payload={}
     rows=[r for r in payload.get('rows',[]) if isinstance(r,dict)]
     rows=[r for r in rows if r.get('streak_score') is not None and r.get('line_type') == 'alternate']
-    return {'target_date': payload.get('target_date'), 'rows': rows}
+    return {'target_date': payload.get('target_date'), 'rows': rows, 'calibration':payload.get('calibration')}
 
 
 def esc_script_json(value: dict) -> str:
@@ -145,7 +164,7 @@ function applyScores(){
   if(summary){
     let badge=summary.querySelector('[data-score-eligible]');
     if(!badge){badge=document.createElement('span');badge.dataset.scoreEligible='1';summary.appendChild(badge)}
-    badge.innerHTML='<b>'+eligible+'</b> scored · verified history eligible'+(unscored?' · '+unscored+' current rows without a score match':'');
+    badge.innerHTML='<b>'+eligible+'</b> scored · calibrated verified-history actions'+(unscored?' · '+unscored+' current rows without a score match':'');
   }
 }
 function later(){setTimeout(applyScores,0);setTimeout(applyScores,60)}
@@ -154,7 +173,7 @@ if(typeof oldRender==='function')window.render=function(view){const out=oldRende
 const oldFilter=window.altPropsSetFilter;
 if(typeof oldFilter==='function')window.altPropsSetFilter=function(){const out=oldFilter.apply(this,arguments);domSortKey=null;domSortDir='asc';later();return out};
 window.altPropsSort=function(key){later();setTimeout(()=>sortDom(key),70)};
-window.WNBA_ALT_PROP_SCORES={version:'1.5',source:'wnba_alt_streaks',alternate_only:true,score_history_eligible_only:true,performance_archive_eligibility_separate:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length,dom_sorting:true,sortable_score:true,sortable_true_metrics:true,stable_eligibility_count:true};
+window.WNBA_ALT_PROP_SCORES={version:'1.6',source:'wnba_alt_streaks',alternate_only:true,score_history_eligible_only:true,calibrated_actions:true,price_aware_calibration:true,performance_archive_eligibility_separate:true,unscored_rows_visible:true,team_optional_match:true,scored_rows:(SCORE_DATA.rows||[]).length,calibration:SCORE_DATA.calibration||null,dom_sorting:true,sortable_score:true,sortable_true_metrics:true,stable_eligibility_count:true};
 later();
 })();</script>'''.replace('__DATA__',data)
 
@@ -170,21 +189,21 @@ def replace_or_insert(html: str, tag: str, element_id: str, replacement: str) ->
 
 def main() -> None:
     if not HTML.exists():raise SystemExit('docs/index.html missing')
+    apply_calibration()
     payload=load_scores()
     html=HTML.read_text(encoding='utf-8')
     html=replace_or_insert(html,'style',STYLE_ID,STYLE)
     html=replace_or_insert(html,'script',SCRIPT_ID,build_script(payload))
     HTML.write_text(html,encoding='utf-8')
-    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'alternate_only':True,'score_history_eligible_only':True,'performance_archive_eligibility_separate':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True,'dom_sorting':True,'sortable_score':True,'stable_eligibility_count':True})
+    actions={}
+    for row in payload['rows']:
+        action=str(row.get('streak_action') or 'PASS')
+        actions[action]=actions.get(action,0)+1
+    print({'status':'PASS','scored_alt_rows':len(payload['rows']),'actions':actions,'calibrated_actions':True,'price_aware_calibration':True,'alternate_only':True,'score_history_eligible_only':True,'performance_archive_eligibility_separate':True,'unscored_rows_visible':True,'team_optional_match':True,'true_streak_metrics':True,'dom_sorting':True,'sortable_score':True,'stable_eligibility_count':True})
 
 
 def refresh_performance_panel() -> None:
-    """Embed the latest ALT performance JSON into the same dashboard artifact.
-
-    This keeps the visible ALT Performance panel synchronized with the archive
-    that was just graded by the deployment pipeline instead of preserving a
-    stale payload already embedded in docs/index.html.
-    """
+    """Embed the latest ALT performance JSON into the same dashboard artifact."""
     panel = Path('patch_dashboard_alt_props_performance_panel.py')
     if not panel.exists():
         raise SystemExit('ALT performance panel renderer missing')
