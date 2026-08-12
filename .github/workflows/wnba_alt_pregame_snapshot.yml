@@ -47,6 +47,8 @@ jobs:
             wnba_alt_market_warehouse.py \
             wnba_alt_streaks.py \
             wnba_alt_streak_confidence.py \
+            wnba_alt_calibration.py \
+            wnba_alt_apply_calibration.py \
             wnba_alt_performance_tracker.py
 
       - name: Refresh exact ALT markets and scores
@@ -62,6 +64,7 @@ jobs:
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
           python wnba_alt_streak_confidence.py --date "$TARGET"
+          python wnba_alt_apply_calibration.py --date "$TARGET"
 
       - name: Freeze canonical pregame observations
         run: |
@@ -73,14 +76,19 @@ jobs:
           from pathlib import Path
           target=os.environ['TARGET']
           report=json.loads(Path('data/dashboard/wnba_alt_performance.json').read_text())
+          calibration=json.loads(Path('data/dashboard/wnba_alt_calibration.json').read_text())
           summary=report.get('summary') or {}
           if report.get('target_date') != target:
               raise SystemExit(f"ALT performance target mismatch: {report.get('target_date')} != {target}")
+          if calibration.get('target_date') != target:
+              raise SystemExit(f"ALT calibration target mismatch: {calibration.get('target_date')} != {target}")
           print({
               'target': target,
               'archived': summary.get('archived_candidates'),
               'graded': summary.get('graded'),
               'pending': summary.get('pending'),
+              'calibration_training_rows': calibration.get('graded_training_rows'),
+              'qualified_segments': len(calibration.get('qualified_segments') or []),
           })
           PY
 
@@ -89,7 +97,9 @@ jobs:
           git config user.name 'WNBA ALT Snapshot Bot'
           git config user.email 'actions@github.com'
           bash scripts/atomic_generated_push.sh \
-            "Freeze canonical WNBA ALT pregame snapshot for ${TARGET}" \
+            "Freeze calibrated WNBA ALT pregame snapshot for ${TARGET}" \
             'data/history/wnba_alt_streak_history.jsonl' \
             'data/dashboard/wnba_alt_performance.json' \
-            'data/warehouse/wnba_alt_performance.json'
+            'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_calibration.json' \
+            'data/warehouse/wnba_alt_calibration.json'
