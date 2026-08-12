@@ -81,30 +81,64 @@ jobs:
           python - <<'PY'
           import json
           from collections import Counter
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
+
+          ET=ZoneInfo('America/New_York')
+          def game_date(value):
+              try:
+                  text=str(value or '').replace('Z','+00:00')
+                  if not text: return ''
+                  dt=datetime.fromisoformat(text)
+                  if dt.tzinfo is None: dt=dt.replace(tzinfo=timezone.utc)
+                  return dt.astimezone(ET).date().isoformat()
+              except Exception:
+                  return ''
+
           history=[]
           for line in open('data/history/wnba_alt_streak_history.jsonl'):
               try: history.append(json.loads(line))
               except Exception: pass
+
           bad=[]
+          strict_rows=0
+          modes=Counter()
           for r in history:
-              if r.get('actual_source') == 'player_game_log_warehouse_strict_match':
-                  if str(r.get('actual_game_date') or '')[:10] != str(r.get('date') or '')[:10]:
-                      bad.append(r.get('candidate_id'))
+              if r.get('actual_source') != 'player_game_log_warehouse_strict_match':
+                  continue
+              strict_rows += 1
+              mode=str(r.get('grading_match_mode') or 'legacy_strict')
+              modes[mode] += 1
+              actual_date=str(r.get('actual_game_date') or '')[:10]
+              if not actual_date or not str(r.get('actual_record_id') or '').strip():
+                  bad.append(r.get('candidate_id'))
+                  continue
+              if mode == 'same_date_exact' and actual_date != str(r.get('date') or '')[:10]:
+                  bad.append(r.get('candidate_id'))
+              elif mode == 'frozen_game_time_exact' and actual_date != game_date(r.get('game_time')):
+                  bad.append(r.get('candidate_id'))
+              elif mode not in {'same_date_exact','frozen_game_time_exact','unique_matchup_date_shift','unique_player_date_fallback','legacy_strict'}:
+                  bad.append(r.get('candidate_id'))
+
           perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
           phase2=json.load(open('data/dashboard/wnba_alt_phase2_diagnostics.json'))
           strict=json.load(open('data/dashboard/wnba_alt_strict_regrade.json'))
           s=perf.get('summary') or {}
           sources=Counter(str(r.get('actual_source') or 'pending') for r in history)
+          stats=strict.get('stats') or {}
           print({
               'archived':s.get('archived_candidates'),
               'graded':s.get('graded'),
               'pending':s.get('pending'),
               'actual_sources':dict(sources),
-              'strict_date_mismatches':len(bad),
-              'strict_match_stats':strict.get('stats') or {},
+              'strict_rows':strict_rows,
+              'strict_match_modes':dict(modes),
+              'invalid_strict_anchors':len(bad),
+              'strict_match_stats':stats,
               'phase2_failure_reasons':phase2.get('failure_reason_counts') or {},
           })
           assert strict.get('safe_to_apply') is True, strict
+          assert int(stats.get('proposed_final') or 0) >= int(stats.get('baseline_final') or 0), stats
           assert not bad, bad[:10]
           PY
 
