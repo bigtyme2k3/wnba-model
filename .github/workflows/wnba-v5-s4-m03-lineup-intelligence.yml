@@ -10,6 +10,9 @@ on:
       - 'data/dashboard/wnba_v5_matchup_adjustments.csv'
       - 'data/raw/boxscores_*.csv'
       - '.github/workflows/wnba-v5-s4-m03-lineup-intelligence.yml'
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
 jobs:
   v5-s4-m03:
     runs-on: ubuntu-latest
@@ -53,11 +56,11 @@ jobs:
           PY
       - name: Publish Sprint 4 M03 safely
         run: |
-          set -euo pipefail
           git config user.name "WNBA V5 S4 M03 Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard/wnba_v5_lineup_adjustments.csv data/dashboard/wnba_v5_lineup_intelligence.json data/dashboard/wnba_v5_lineup_confidence.json data/dashboard/wnba_v5_s4_m03_report.json
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Refresh WNBA V5 Sprint 4 M03 lineup intelligence"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          bash scripts/atomic_generated_push.sh \
+            "Refresh WNBA V5 Sprint 4 M03 lineup intelligence" \
+            data/dashboard/wnba_v5_lineup_adjustments.csv \
+            data/dashboard/wnba_v5_lineup_intelligence.json \
+            data/dashboard/wnba_v5_lineup_confidence.json \
+            data/dashboard/wnba_v5_s4_m03_report.json
