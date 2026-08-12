@@ -129,11 +129,13 @@ jobs:
           print({'status':'PASS','target':target,'alt_markets':int((w.get('summary') or {}).get('markets') or 0),'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0)})
           PY
 
-      - name: Score and freeze ALT props for performance tracking
+      - name: Score current ALT props
         run: |
+          # Deployment is a read-only consumer of the persisted ALT performance
+          # archive. Snapshotting/grading belong to writer workflows so a Pages
+          # rebuild cannot create deploy-only archive rows or rewrite history.
           python wnba_alt_streak_confidence.py --date "$TARGET"
-          python wnba_alt_performance_tracker.py --date "$TARGET" --grade
-          python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot --analyze
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
 
       - name: Build complete dashboard artifact
         env:
@@ -182,8 +184,7 @@ jobs:
           python patch_dashboard_s19_m03.py
           python patch_dashboard_alt_props_table.py
           python patch_dashboard_alt_props_scores.py
-          # Refresh the embedded performance panel after grading/snapshotting so
-          # the public dashboard cannot keep stale pre-recovery counts.
+          # Refresh the embedded performance panel from the persisted archive.
           python patch_dashboard_alt_props_performance_panel.py
 
       - name: Verify Sprint 19 M02-M06 dashboard routing and current slate artifact
