@@ -1,4 +1,8 @@
-"""Targeted recovery planner for pending ALT records missing verified game logs."""
+"""Targeted recovery planner for pending ALT records missing verified game logs.
+
+Recovery is paired with the monotonic strict grader: existing final outcomes are
+immutable and only unresolved rows may be promoted after verified game matching.
+"""
 from __future__ import annotations
 
 import argparse
