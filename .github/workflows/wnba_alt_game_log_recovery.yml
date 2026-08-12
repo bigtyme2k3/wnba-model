@@ -13,6 +13,7 @@ on:
       - 'wnba_alt_game_log_recovery.py'
       - 'wnba_alt_recovery_handoff.py'
       - 'wnba_alt_date_alias_recovery.py'
+      - 'wnba_alt_schedule_audit.py'
       - 'wnba_espn_boxscore_fallback.py'
       - 'wnba_alt_pending_diagnostics.py'
       - 'wnba_alt_strict_regrade.py'
@@ -86,6 +87,7 @@ jobs:
             wnba_alt_game_log_recovery.py \
             wnba_alt_recovery_handoff.py \
             wnba_alt_date_alias_recovery.py \
+            wnba_alt_schedule_audit.py \
             wnba_espn_boxscore_fallback.py \
             wnba_alt_pending_diagnostics.py \
             wnba_alt_performance_tracker.py \
@@ -117,6 +119,17 @@ jobs:
       - name: Normalize recovered warehouse handoff
         if: env.RECOVERY_DATES != ''
         run: python wnba_alt_recovery_handoff.py
+
+      - name: Refresh pending diagnostics and official schedule guards
+        if: env.RECOVERY_DATES != ''
+        run: |
+          # Recovery can make previously missing player-games gradeable before any
+          # date alias is needed. Refresh the pending population first so the
+          # schedule audit is generated from the current archive, not a stale
+          # diagnostic left by an earlier run.
+          python wnba_alt_performance_tracker.py --grade
+          python wnba_alt_pending_diagnostics.py
+          python wnba_alt_schedule_audit.py
 
       - name: Resolve historical date aliases
         if: env.RECOVERY_DATES != ''
@@ -215,6 +228,8 @@ jobs:
             'data/warehouse/wnba_alt_performance.json' \
             'data/dashboard/wnba_alt_pending_diagnostics.json' \
             'data/warehouse/wnba_alt_pending_diagnostics.json' \
+            'data/dashboard/wnba_alt_schedule_audit.json' \
+            'data/warehouse/wnba_alt_schedule_audit.json' \
             'data/dashboard/wnba_alt_game_log_recovery.json' \
             'data/warehouse/wnba_alt_game_log_recovery.json' \
             'data/dashboard/wnba_alt_strict_regrade.json' \
