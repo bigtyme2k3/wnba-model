@@ -1,0 +1,97 @@
+name: WNBA ALT Pregame Snapshot Writer
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  freeze-alt-pregame-markets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install ALT pipeline dependencies
+        run: python -m pip install --disable-pip-version-check pandas requests
+
+      - name: Resolve active slate
+        run: |
+          TARGET=$(python active_slate_date.py)
+          test -n "$TARGET"
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "ALT snapshot target: $TARGET"
+
+      - name: Compile canonical snapshot chain
+        run: |
+          python -m py_compile \
+            active_slate_date.py \
+            wnba_alt_market_warehouse.py \
+            wnba_alt_streaks.py \
+            wnba_alt_streak_confidence.py \
+            wnba_alt_performance_tracker.py \
+            scripts/scrape_odds_props_consensus.py
+
+      - name: Refresh exact ALT market inputs
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          set -e
+          if [ -n "${ODDS_API_KEY:-}" ]; then
+            python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw
+          else
+            echo 'ODDS_API_KEY unavailable; using persisted current-slate raw input only.'
+          fi
+          python wnba_alt_market_warehouse.py --date "$TARGET"
+          python wnba_alt_streaks.py --date "$TARGET"
+          python wnba_alt_streak_confidence.py --date "$TARGET"
+
+      - name: Freeze earliest verified pregame ALT observations
+        run: |
+          set -e
+          python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot
+          python wnba_alt_performance_tracker.py --grade
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+
+      - name: Verify canonical accounting
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_alt_performance.json').read_text())
+          s=p.get('summary') or {}
+          archived=int(s.get('archived_candidates') or 0)
+          graded=int(s.get('graded') or 0)
+          pending=int(s.get('pending') or 0)
+          assert archived == graded + pending, (archived, graded, pending)
+          assert p.get('target_date') == __import__('os').environ['TARGET'], p.get('target_date')
+          print({'status':'PASS','target':p.get('target_date'),'archived':archived,'graded':graded,'pending':pending})
+          PY
+
+      - name: Persist frozen ALT archive and performance
+        run: |
+          git config user.name 'WNBA ALT Snapshot Bot'
+          git config user.email 'actions@github.com'
+          bash scripts/atomic_generated_push.sh \
+            "Freeze canonical WNBA ALT pregame observations for ${TARGET}" \
+            'data/history/wnba_alt_streak_history.jsonl' \
+            'data/dashboard/wnba_alt_performance.json' \
+            'data/warehouse/wnba_alt_performance.json'
