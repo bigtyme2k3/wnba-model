@@ -6,6 +6,9 @@ immutable and only unresolved rows may be promoted after verified game matching.
 Blank recovery scope is historical-only. Current/future slate rows are deferred
 so the backlog worker does not spend most of its time trying to grade games that
 have not finished yet. A manual --date remains an explicit override.
+
+The recovery plan is deliberately ordered oldest-first so verified historical
+results are reconciled deterministically before newer pending observations.
 """
 from __future__ import annotations
 
@@ -52,12 +55,8 @@ def build_payload(requested_date: str | None = None) -> dict:
     active_date = resolve_target_date()
     deferred: list[dict] = []
     if requested_date:
-        # Explicit manual recovery is authoritative, including same-day recovery
-        # after games have completed.
         targeted = [r for r in missing if row_date(r) == requested_date]
     else:
-        # Automatic backlog recovery is completed-history only. The live slate is
-        # graded by the normal postgame flow and becomes historical tomorrow.
         targeted = [r for r in missing if row_date(r) and row_date(r) < active_date]
         deferred = [r for r in missing if row_date(r) and row_date(r) >= active_date]
 
@@ -67,15 +66,19 @@ def build_payload(requested_date: str | None = None) -> dict:
     by_date = Counter(row_date(r) or "unknown" for r in targeted)
     deferred_by_date = Counter(row_date(r) or "unknown" for r in deferred)
     summary = alt.get("summary") or {}
-    commands = [f"python wnba_play_by_play_layer.py --date {d}" for d in dates]
-    commands += [f"python wnba_player_game_log_warehouse.py --date {d}" for d in dates]
+    commands = []
+    for d in dates:
+        commands += [
+            f"python wnba_play_by_play_layer.py --date {d}",
+            f"python wnba_player_game_log_warehouse.py --date {d}",
+            f"python wnba_alt_performance_tracker.py --date {d} --grade",
+        ]
     commands.append("python wnba_player_game_log_archive.py merge")
-    commands += [f"python wnba_alt_performance_tracker.py --date {d} --grade" for d in dates]
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "requested_date": requested_date,
         "active_slate_date": active_date,
-        "scope_policy": "explicit_single_date" if requested_date else "completed_history_only",
+        "scope_policy": "explicit_single_date" if requested_date else "completed_history_only_oldest_first",
         "status": "ready" if dates else "nothing_to_recover",
         "before": {
             "archived": int(summary.get("archived_candidates") or summary.get("archived") or 0),
