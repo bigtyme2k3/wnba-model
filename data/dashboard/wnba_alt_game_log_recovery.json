@@ -1,16 +1,16 @@
 {
-  "generated_at_utc": "2026-08-12T20:17:01.295374+00:00",
+  "generated_at_utc": "2026-08-13T16:13:23.603364+00:00",
   "requested_date": null,
-  "active_slate_date": "2026-08-12",
+  "active_slate_date": "2026-08-13",
   "scope_policy": "completed_history_only",
   "status": "ready",
   "before": {
-    "archived": 10358,
-    "graded": 5654,
-    "pending": 4704
+    "archived": 17069,
+    "graded": 11565,
+    "pending": 5504
   },
   "targets": {
-    "records": 152,
+    "records": 641,
     "dates": [
       "2026-07-15",
       "2026-07-16",
@@ -26,7 +26,8 @@
       "2026-08-04",
       "2026-08-09",
       "2026-08-10",
-      "2026-08-11"
+      "2026-08-11",
+      "2026-08-12"
     ],
     "games": [
       "2026-07-15|new-york-liberty-@-dallas-wings",
@@ -54,7 +55,9 @@
       "2026-08-04|los-angeles-sparks-@-chicago-sky",
       "2026-08-09|dallas-wings-@-minnesota-lynx",
       "2026-08-10|chicago-sky-@-seattle-storm",
-      "2026-08-11|phoenix-mercury-@-los-angeles-sparks"
+      "2026-08-11|phoenix-mercury-@-los-angeles-sparks",
+      "2026-08-12|minnesota-lynx-@-portland-fire",
+      "2026-08-12|toronto-tempo-@-dallas-wings"
     ],
     "players": [
       "A'ja Wilson",
@@ -65,6 +68,7 @@
       "Azzi Fudd",
       "Breanna Stewart",
       "Cameron Brink",
+      "Carla Leite",
       "Charlisse Leger-Walker",
       "Chelsea Gray",
       "Courtney Williams",
@@ -81,6 +85,7 @@
       "Kamilla Cardoso",
       "Kayla McBride",
       "Kelsey Plum",
+      "Maria Conde",
       "Monique Akoa Makani",
       "NaLyssa Smith",
       "Natasha Cloud",
@@ -153,18 +158,22 @@
       {
         "date": "2026-08-11",
         "records": 51
+      },
+      {
+        "date": "2026-08-12",
+        "records": 489
       }
     ]
   },
   "deferred_active_or_future": {
-    "records": 4663,
+    "records": 4974,
     "dates": [
-      "2026-08-12"
+      "2026-08-13"
     ],
     "by_date": [
       {
-        "date": "2026-08-12",
-        "records": 4663
+        "date": "2026-08-13",
+        "records": 4974
       }
     ],
     "reason": "automatic backlog recovery only processes dates before the active Eastern slate date"
@@ -185,6 +194,7 @@
     "python wnba_play_by_play_layer.py --date 2026-08-09",
     "python wnba_play_by_play_layer.py --date 2026-08-10",
     "python wnba_play_by_play_layer.py --date 2026-08-11",
+    "python wnba_play_by_play_layer.py --date 2026-08-12",
     "python wnba_player_game_log_warehouse.py --date 2026-07-15",
     "python wnba_player_game_log_warehouse.py --date 2026-07-16",
     "python wnba_player_game_log_warehouse.py --date 2026-07-19",
@@ -200,6 +210,7 @@
     "python wnba_player_game_log_warehouse.py --date 2026-08-09",
     "python wnba_player_game_log_warehouse.py --date 2026-08-10",
     "python wnba_player_game_log_warehouse.py --date 2026-08-11",
+    "python wnba_player_game_log_warehouse.py --date 2026-08-12",
     "python wnba_player_game_log_archive.py merge",
     "python wnba_alt_performance_tracker.py --date 2026-07-15 --grade",
     "python wnba_alt_performance_tracker.py --date 2026-07-16 --grade",
@@ -215,6 +226,7 @@
     "python wnba_alt_performance_tracker.py --date 2026-08-04 --grade",
     "python wnba_alt_performance_tracker.py --date 2026-08-09 --grade",
     "python wnba_alt_performance_tracker.py --date 2026-08-10 --grade",
-    "python wnba_alt_performance_tracker.py --date 2026-08-11 --grade"
+    "python wnba_alt_performance_tracker.py --date 2026-08-11 --grade",
+    "python wnba_alt_performance_tracker.py --date 2026-08-12 --grade"
   ]
 }
