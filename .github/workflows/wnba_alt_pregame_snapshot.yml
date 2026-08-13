@@ -2,6 +2,16 @@ name: WNBA ALT Pregame Snapshot Writer
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_alt_calibration.py'
+      - 'wnba_alt_apply_calibration.py'
+      - 'wnba_alt_performance_tracker.py'
+      - 'wnba_alt_market_warehouse.py'
+      - 'wnba_alt_streaks.py'
+      - 'wnba_alt_streak_confidence.py'
+      - '.github/workflows/wnba_alt_pregame_snapshot.yml'
   schedule:
     - cron: '7 * * * *'
 
@@ -66,6 +76,32 @@ jobs:
           python wnba_alt_streak_confidence.py --date "$TARGET"
           python wnba_alt_apply_calibration.py --date "$TARGET"
 
+      - name: Verify current side coverage
+        run: |
+          python - <<'PY'
+          import json, os
+          from collections import Counter
+          from pathlib import Path
+          target=os.environ['TARGET']
+          market=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
+          scores=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
+          calibration=json.loads(Path('data/dashboard/wnba_alt_calibration.json').read_text())
+          market_sides=Counter(str(r.get('side') or 'UNKNOWN').upper() for r in market.get('rows',[]) if isinstance(r,dict))
+          score_sides=Counter(str(r.get('side') or 'UNKNOWN').upper() for r in scores.get('rows',[]) if isinstance(r,dict) and r.get('line_type')=='alternate')
+          if market.get('target_date') != target or scores.get('target_date') != target:
+              raise SystemExit('ALT side coverage target mismatch')
+          # Never silently collapse a two-sided live market into a one-sided scored source.
+          for side in ('OVER','UNDER'):
+              if market_sides.get(side,0) > 0 and score_sides.get(side,0) == 0:
+                  raise SystemExit(f'ALT side coverage lost between market warehouse and scoring source: {side}')
+          print({
+              'status':'PASS', 'target':target,
+              'market_sides':dict(market_sides), 'scored_sides':dict(score_sides),
+              'historical_side_coverage':calibration.get('side_coverage'),
+              'cross_side_fallback_allowed':(calibration.get('policy') or {}).get('cross_side_fallback_allowed'),
+          })
+          PY
+
       - name: Freeze canonical pregame observations
         run: |
           set -e
@@ -82,12 +118,15 @@ jobs:
               raise SystemExit(f"ALT performance target mismatch: {report.get('target_date')} != {target}")
           if calibration.get('target_date') != target:
               raise SystemExit(f"ALT calibration target mismatch: {calibration.get('target_date')} != {target}")
+          if (calibration.get('policy') or {}).get('cross_side_fallback_allowed') is not False:
+              raise SystemExit('ALT calibration must prohibit cross-side evidence fallback')
           print({
               'target': target,
               'archived': summary.get('archived_candidates'),
               'graded': summary.get('graded'),
               'pending': summary.get('pending'),
               'calibration_training_rows': calibration.get('graded_training_rows'),
+              'side_coverage': calibration.get('side_coverage'),
               'qualified_segments': len(calibration.get('qualified_segments') or []),
           })
           PY
