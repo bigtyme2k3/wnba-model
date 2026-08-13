@@ -6,10 +6,19 @@ on:
   push:
     branches: [main]
     paths:
+      - 'wnba_v5_current_opportunity_board.py'
+      - 'wnba_v5_s3_m01_freshness_guard.py'
+      - 'wnba_v5_m11_live_inference.py'
       - 'wnba_v5_s3_m02_closing_capture.py'
+      - 'data/dashboard/wnba_player_props.json'
       - 'data/dashboard/wnba_v5_s3_m01_freshness.json'
       - 'data/dashboard/wnba_v5_live_inference.json'
       - '.github/workflows/wnba-v5-s3-m02-closing-capture.yml'
+
+concurrency:
+  group: wnba-v5-s3-m02-closing-capture
+  cancel-in-progress: true
+
 jobs:
   v5-s3-m02:
     runs-on: ubuntu-latest
@@ -24,27 +33,59 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Sync latest repository
         run: git pull --rebase origin main
-      - name: Compile Sprint 3 M02 capture engine
-        run: python -m py_compile wnba_v5_s3_m02_closing_capture.py
+
+      - name: Compile Sprint 3 M02 context and capture engines
+        run: |
+          python -m py_compile wnba_v5_current_opportunity_board.py
+          python -m py_compile wnba_v5_s3_m01_freshness_guard.py
+          python -m py_compile wnba_v5_m11_live_inference.py
+          python -m py_compile wnba_v5_s3_m02_closing_capture.py
+
+      - name: Refresh current-slate inference context
+        run: |
+          set -euo pipefail
+          python wnba_v5_current_opportunity_board.py
+          python wnba_v5_s3_m01_freshness_guard.py
+          python wnba_v5_m11_live_inference.py
+          python - <<'PY'
+          import json
+          board=json.load(open('data/warehouse/wnba_opportunity_rankings.json'))
+          fresh=json.load(open('data/dashboard/wnba_v5_s3_m01_freshness.json'))
+          props=json.load(open('data/dashboard/wnba_player_props.json'))
+          target=str(props.get('target_date') or '')[:10]
+          assert target, 'canonical player-prop target date missing'
+          assert str(board.get('target_date') or '')[:10] == target, (board.get('target_date'), target)
+          assert fresh.get('current_date_et') == target, (fresh.get('current_date_et'), target)
+          assert fresh.get('status') in {'FRESH','EMPTY_CURRENT_SLATE'}, fresh
+          print({'target':target,'freshness':fresh.get('status'),'ranked_rows':fresh.get('ranked_rows')})
+          PY
+
       - name: Capture eligible explicit closing observations
         run: python wnba_v5_s3_m02_closing_capture.py
+
       - name: Verify Sprint 3 M02
         run: |
           python - <<'PY'
           import csv,json
           p=json.load(open('data/dashboard/wnba_v5_s3_m02_report.json'))
+          fresh=json.load(open('data/dashboard/wnba_v5_s3_m01_freshness.json'))
           print(p)
           assert p['module']=='S3-M02'
           assert p['status'] in {
             'BLOCKED_STALE_SLATE','WAITING_FOR_M11_SCORES','WAITING_FOR_ODDS_API_KEY',
             'WAITING_FOR_CLOSE_WINDOW','NO_MATCHING_PROP_MARKETS','CAPTURED_EXPLICIT_CLOSES'
           }
+          # A freshly authorized slate must never publish the old stale-blocked state.
+          if fresh.get('allow_live_inference'):
+            assert p['status'] != 'BLOCKED_STALE_SLATE', (fresh,p)
           rows=list(csv.DictReader(open('data/dashboard/wnba_v5_closing_lines.csv',encoding='utf-8-sig')))
           for r in rows:
             assert r['capture_class']=='EXPLICIT_PRETIP_CLOSE'
@@ -55,13 +96,33 @@ jobs:
             assert p['api_calls']==0
           print('explicit_close_rows',len(rows))
           PY
+
       - name: Publish Sprint 3 M02 safely
         run: |
           set -euo pipefail
           git config user.name "WNBA V5 S3 M02 Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/dashboard/wnba_v5_closing_lines.csv data/dashboard/wnba_v5_closing_snapshot.json data/dashboard/wnba_v5_clv_queue.json data/dashboard/wnba_v5_s3_m02_report.json
+          git add \
+            data/warehouse/wnba_opportunity_rankings.json \
+            data/dashboard/wnba_opportunity_rankings.json \
+            data/dashboard/wnba_v5_s3_m01_freshness.json \
+            data/dashboard/wnba_v5_current_slate.json \
+            data/dashboard/wnba_v5_stale_game_report.json \
+            data/dashboard/wnba_v5_slate_validation.json \
+            data/dashboard/wnba_v5_schedule_health.json \
+            data/dashboard/wnba_v5_live_inference.json \
+            data/dashboard/wnba_v5_live_inference.csv \
+            data/dashboard/wnba_v5_m11_report.json \
+            data/dashboard/wnba_v5_closing_lines.csv \
+            data/dashboard/wnba_v5_closing_snapshot.json \
+            data/dashboard/wnba_v5_clv_queue.json \
+            data/dashboard/wnba_v5_s3_m02_report.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Refresh WNBA V5 Sprint 3 M02 closing capture"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
