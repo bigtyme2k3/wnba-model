@@ -93,27 +93,47 @@ jobs:
 
       - name: Freeze canonical current ALT observations
         run: |
-          # Writer ownership: persist exact pregame ALT observations here, before
-          # Pages consumes the archive. Deployment itself remains read-only.
           if [ -f wnba_alt_market_warehouse.py ] && [ -f wnba_alt_streaks.py ] && [ -f wnba_alt_performance_tracker.py ]; then
             python wnba_alt_market_warehouse.py --date "$TARGET"
             python wnba_alt_streaks.py --date "$TARGET"
             python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot
           fi
 
-      - name: Grade completed games and rebuild performance data
+      - name: Grade full historical backlog and rebuild performance data
         run: |
           YESTERDAY=$(date -d yesterday +%F)
-          if [ -f wnba_results_grader.py ]; then python wnba_results_grader.py --date "$YESTERDAY"; fi
+          # Results grader is date-scoped, so resolve every archived date that can
+          # now be matched to verified player-game actuals. This is intentionally
+          # oldest-first and never fabricates missing actuals.
+          if [ -f wnba_results_grader.py ] && [ -f data/history/wnba_model_history.jsonl ]; then
+            python - <<'PY' > /tmp/wnba_grade_dates.txt
+          import json
+          dates=set()
+          with open('data/history/wnba_model_history.jsonl',encoding='utf-8') as f:
+              for line in f:
+                  try:
+                      row=json.loads(line); d=str(row.get('date') or '')[:10]
+                      if d: dates.add(d)
+                  except Exception: pass
+          print('\n'.join(sorted(dates)))
+          PY
+            while IFS= read -r d; do
+              [ -n "$d" ] && python wnba_results_grader.py --date "$d"
+            done < /tmp/wnba_grade_dates.txt
+          elif [ -f wnba_results_grader.py ]; then
+            python wnba_results_grader.py --date "$YESTERDAY"
+          fi
+          # ALT grader already indexes the complete player-game warehouse and
+          # grades every unresolved canonical observation across all dates.
+          if [ -f wnba_alt_performance_tracker.py ]; then
+            python wnba_alt_performance_tracker.py --date "$TARGET" --grade
+            python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          fi
           if [ -f wnba_edge_database.py ]; then python wnba_edge_database.py --date "$YESTERDAY"; fi
           if [ -f wnba_forward_validation_engine.py ]; then python wnba_forward_validation_engine.py --mode grade --date "$YESTERDAY" || true; fi
           if [ -f wnba_game_performance_tracker.py ]; then
             python wnba_game_performance_tracker.py --date "$YESTERDAY" --grade || true
             python wnba_game_performance_tracker.py --analyze
-          fi
-          if [ -f wnba_alt_performance_tracker.py ]; then
-            python wnba_alt_performance_tracker.py --date "$YESTERDAY" --grade || true
-            python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           fi
           [ -f wnba_alt_pending_diagnostics.py ] && python wnba_alt_pending_diagnostics.py || true
 
