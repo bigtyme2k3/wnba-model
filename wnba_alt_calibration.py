@@ -1,17 +1,12 @@
 """Evidence-based calibration for WNBA alternate prop decisions.
 
-This module never changes frozen historical scores. It evaluates only verified
-canonical pregame observations strictly before the target date and determines
-whether a current score/price/stat/side segment has demonstrated enough realized
-profitability to justify a BUY label.
-
-A high hit rate alone is not sufficient: alternate markets can carry very short
-prices, so every gate is price-aware and requires positive realized unit ROI plus
-a conservative win-rate lower bound above the segment's average break-even rate.
+This module never changes frozen historical scores. It evaluates verified graded
+ALT observations strictly before the target date and determines whether a current
+score/price/stat/side segment has demonstrated enough realized profitability to
+justify a BUY label.
 
 Calibration evidence is side-isolated. OVER history can never qualify or soften
-an UNDER decision, and vice versa. This is critical while the recovered legacy
-archive remains overwhelmingly/entirely OVER-only.
+an UNDER decision, and vice versa.
 """
 from __future__ import annotations
 
@@ -80,10 +75,18 @@ def wilson_lower(wins: int, n: int, z: float = 1.96) -> float | None:
 
 
 def eligible_history(target: str) -> list[dict[str, Any]]:
-    rows = tracker.canonical_rows(tracker.read_jsonl(ARCHIVE))
-    out = []
-    for row in rows:
-        if str(row.get("date") or "")[:10] >= target:
+    """Calibration sample: one graded observation per candidate_id before target.
+
+    Do not call tracker.canonical_rows() here. That helper intentionally applies
+    strict archive-schema-2.0/exact-market chronology gates used by the performance
+    tracker. Historical UNDER observations predate those metadata flags, so using
+    it for calibration silently removed valid graded UNDER evidence.
+    """
+    raw = tracker.read_jsonl(ARCHIVE)
+    chosen: dict[str, dict[str, Any]] = {}
+    for row in raw:
+        row_date = str(row.get("date") or row.get("target_date") or "")[:10]
+        if not row_date or row_date >= target:
             continue
         if row.get("outcome") not in {"WIN", "LOSS"}:
             continue
@@ -92,8 +95,19 @@ def eligible_history(target: str) -> list[dict[str, Any]]:
         side = str(row.get("side") or "").upper()
         if side not in {"OVER", "UNDER"}:
             continue
-        out.append(row)
-    return out
+        key = str(row.get("candidate_id") or row.get("stable_candidate_key") or "").strip()
+        if not key:
+            key = tracker.stable_candidate_key(row, row_date)
+        prior = chosen.get(key)
+        if prior is None:
+            chosen[key] = row
+            continue
+        # Prefer the earliest timestamp when duplicate snapshots share a candidate.
+        current_time = tracker.parse_time(row.get("snapshot_at_utc"))
+        prior_time = tracker.parse_time(prior.get("snapshot_at_utc"))
+        if current_time is not None and (prior_time is None or current_time < prior_time):
+            chosen[key] = row
+    return list(chosen.values())
 
 
 def segment_keys(row: dict[str, Any]) -> dict[str, str]:
@@ -101,8 +115,6 @@ def segment_keys(row: dict[str, Any]) -> dict[str, str]:
     tier = odds_tier(row.get("best_odds"))
     stat = str(row.get("stat") or "UNKNOWN").upper()
     side = str(row.get("side") or "UNKNOWN").upper()
-    # Every level contains side. This prevents OVER performance from being used
-    # as fallback evidence for an UNDER market (or the reverse).
     return {
         "broad": f"{band}|{side}",
         "price": f"{band}|{side}|{tier}",
@@ -181,7 +193,7 @@ def build(target: str) -> dict[str, Any]:
         for side in ("OVER", "UNDER")
     }
     report = {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "target_date": target,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "READY" if len(history) >= 100 else "COLLECTING",
@@ -189,7 +201,7 @@ def build(target: str) -> dict[str, Any]:
         "side_coverage": side_coverage,
         "historical_side_bias_detected": not all(v["calibration_ready"] for v in side_coverage.values()),
         "policy": {
-            "history": "canonical verified WIN/LOSS rows strictly before target date",
+            "history": "candidate_id-deduplicated graded WIN/LOSS rows strictly before target date",
             "price_aware": True,
             "side_isolated": True,
             "cross_side_fallback_allowed": False,
@@ -221,8 +233,6 @@ def decision(row: dict[str, Any], report: dict[str, Any]) -> dict[str, Any]:
             "evidence_checked": [],
             "side_coverage": coverage,
         }
-
-    # Most-specific evidence wins. All fallback keys remain side-specific.
     evidence = []
     chosen = None
     for level in ("specific", "price", "broad"):
