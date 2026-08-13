@@ -1,20 +1,24 @@
 """Evidence-based calibration for WNBA alternate prop decisions.
 
-This module never changes frozen historical scores.  It evaluates only verified
-canonical pregame observations strictly before the target date, and determines
-whether a current score/price/stat segment has demonstrated enough realized
+This module never changes frozen historical scores. It evaluates only verified
+canonical pregame observations strictly before the target date and determines
+whether a current score/price/stat/side segment has demonstrated enough realized
 profitability to justify a BUY label.
 
 A high hit rate alone is not sufficient: alternate markets can carry very short
 prices, so every gate is price-aware and requires positive realized unit ROI plus
 a conservative win-rate lower bound above the segment's average break-even rate.
+
+Calibration evidence is side-isolated. OVER history can never qualify or soften
+an UNDER decision, and vice versa. This is critical while the recovered legacy
+archive remains overwhelmingly/entirely OVER-only.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -25,6 +29,7 @@ ARCHIVE = Path("data/history/wnba_alt_streak_history.jsonl")
 REPORTS = [Path("data/warehouse/wnba_alt_calibration.json"), Path("data/dashboard/wnba_alt_calibration.json")]
 
 MIN_SAMPLE = {"specific": 25, "price": 50, "broad": 100}
+MIN_SIDE_SAMPLE = 100
 MIN_ROI = 0.03
 MIN_PROB_EDGE = 0.01
 
@@ -84,6 +89,9 @@ def eligible_history(target: str) -> list[dict[str, Any]]:
             continue
         if num(row.get("streak_score")) is None or implied(row.get("best_odds")) is None:
             continue
+        side = str(row.get("side") or "").upper()
+        if side not in {"OVER", "UNDER"}:
+            continue
         out.append(row)
     return out
 
@@ -93,9 +101,11 @@ def segment_keys(row: dict[str, Any]) -> dict[str, str]:
     tier = odds_tier(row.get("best_odds"))
     stat = str(row.get("stat") or "UNKNOWN").upper()
     side = str(row.get("side") or "UNKNOWN").upper()
+    # Every level contains side. This prevents OVER performance from being used
+    # as fallback evidence for an UNDER market (or the reverse).
     return {
-        "broad": band,
-        "price": f"{band}|{tier}",
+        "broad": f"{band}|{side}",
+        "price": f"{band}|{side}|{tier}",
         "specific": f"{band}|{stat}|{side}|{tier}",
     }
 
@@ -128,6 +138,7 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 def build(target: str) -> dict[str, Any]:
     history = eligible_history(target)
+    side_counts = Counter(str(r.get("side") or "UNKNOWN").upper() for r in history)
     buckets: dict[str, dict[str, list[dict[str, Any]]]] = {
         "broad": defaultdict(list), "price": defaultdict(list), "specific": defaultdict(list)
     }
@@ -144,28 +155,49 @@ def build(target: str) -> dict[str, Any]:
             min_n = MIN_SAMPLE[level]
             roi = stats.get("roi")
             margin = stats.get("probability_margin_lower")
+            side = str(rows[0].get("side") or "UNKNOWN").upper() if rows else "UNKNOWN"
+            side_n = int(side_counts.get(side, 0))
+            side_ready = side_n >= MIN_SIDE_SAMPLE
             qualifies = bool(
-                stats["n"] >= min_n and roi is not None and roi >= MIN_ROI and
+                side_ready and stats["n"] >= min_n and roi is not None and roi >= MIN_ROI and
                 margin is not None and margin >= MIN_PROB_EDGE
             )
-            stats.update({"level": level, "key": key, "min_sample": min_n, "qualifies_buy": qualifies})
+            stats.update({
+                "level": level, "key": key, "min_sample": min_n,
+                "side": side, "side_training_rows": side_n,
+                "side_calibration_ready": side_ready,
+                "qualifies_buy": qualifies,
+            })
             segments[level][key] = stats
             if qualifies:
                 qualified.append({"level": level, "key": key, **stats})
 
+    side_coverage = {
+        side: {
+            "graded_training_rows": int(side_counts.get(side, 0)),
+            "calibration_ready": int(side_counts.get(side, 0)) >= MIN_SIDE_SAMPLE,
+            "minimum_required": MIN_SIDE_SAMPLE,
+        }
+        for side in ("OVER", "UNDER")
+    }
     report = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "target_date": target,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "READY" if len(history) >= 100 else "COLLECTING",
         "graded_training_rows": len(history),
+        "side_coverage": side_coverage,
+        "historical_side_bias_detected": not all(v["calibration_ready"] for v in side_coverage.values()),
         "policy": {
             "history": "canonical verified WIN/LOSS rows strictly before target date",
             "price_aware": True,
+            "side_isolated": True,
+            "cross_side_fallback_allowed": False,
+            "minimum_side_sample": MIN_SIDE_SAMPLE,
             "minimum_samples": MIN_SAMPLE,
             "minimum_realized_roi": MIN_ROI,
             "minimum_wilson_lower_edge_over_break_even": MIN_PROB_EDGE,
-            "selection_rule": "BUY requires a qualifying price-aware historical segment; hit rate alone never qualifies",
+            "selection_rule": "BUY requires a qualifying side-specific price-aware historical segment; hit rate alone never qualifies",
         },
         "qualified_segments": qualified,
         "segments": segments,
@@ -178,8 +210,19 @@ def build(target: str) -> dict[str, Any]:
 
 def decision(row: dict[str, Any], report: dict[str, Any]) -> dict[str, Any]:
     keys = segment_keys(row)
-    # Most-specific evidence wins. A broad score band can never override a
-    # contradictory price/stat segment when that segment has sufficient sample.
+    side = str(row.get("side") or "UNKNOWN").upper()
+    coverage = ((report.get("side_coverage") or {}).get(side) or {})
+    if coverage.get("calibration_ready") is not True:
+        return {
+            "action": "PASS",
+            "reason": f"{side} calibration blocked: insufficient verified same-side history",
+            "segment": None,
+            "keys": keys,
+            "evidence_checked": [],
+            "side_coverage": coverage,
+        }
+
+    # Most-specific evidence wins. All fallback keys remain side-specific.
     evidence = []
     chosen = None
     for level in ("specific", "price", "broad"):
@@ -196,16 +239,17 @@ def decision(row: dict[str, Any], report: dict[str, Any]) -> dict[str, Any]:
         reason = f"Calibrated BUY: {chosen['level']} segment {chosen['key']}"
     elif score >= 70 and chosen and (chosen.get("roi") or -99) > -0.05:
         action = "WATCH"
-        reason = "Score is competitive but historical segment has not cleared the conservative BUY gate"
+        reason = "Score is competitive but same-side historical segment has not cleared the conservative BUY gate"
     else:
         action = "PASS"
-        reason = "No price-aware historical segment cleared the conservative BUY gate"
+        reason = "No same-side price-aware historical segment cleared the conservative BUY gate"
     return {
         "action": action,
         "reason": reason,
         "segment": chosen,
         "keys": keys,
         "evidence_checked": evidence,
+        "side_coverage": coverage,
     }
 
 
@@ -214,6 +258,7 @@ def main(target: str) -> None:
     print({
         "status": report["status"], "target": target,
         "training_rows": report["graded_training_rows"],
+        "side_coverage": report["side_coverage"],
         "qualified_segments": len(report["qualified_segments"]),
     })
 
