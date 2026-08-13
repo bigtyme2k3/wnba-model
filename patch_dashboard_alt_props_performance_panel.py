@@ -33,13 +33,42 @@ def replace_element(html: str, tag: str, element_id: str, replacement: str) -> s
     return html.replace(anchor, replacement + '\n' + anchor, 1)
 
 
+def load_payload() -> tuple[dict, str]:
+    """Load the newest persisted ALT performance artifact.
+
+    Pages deployments can queue behind older commits. Prefer origin/main so an
+    older queued checkout cannot republish an obsolete performance snapshot
+    after recovery has already advanced the canonical archive.
+    """
+    try:
+        subprocess.run(
+            ['git', 'fetch', '--quiet', 'origin', 'main'],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        raw = subprocess.run(
+            ['git', 'show', 'origin/main:data/dashboard/wnba_alt_performance.json'],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
+        payload = json.loads(raw)
+        if isinstance(payload, dict):
+            return payload, 'origin/main'
+    except Exception:
+        pass
+    try:
+        payload = json.loads(DATA.read_text(encoding='utf-8')) if DATA.exists() else {}
+        return (payload if isinstance(payload, dict) else {}), 'working-tree'
+    except Exception:
+        return {}, 'missing'
+
+
 def main() -> None:
     if not HTML.exists():
         raise SystemExit('docs/index.html missing')
-    try:
-        payload = json.loads(DATA.read_text(encoding='utf-8')) if DATA.exists() else {}
-    except Exception:
-        payload = {}
+    payload, payload_source = load_payload()
 
     data_script = f'<script id="{DATA_ID}">window.WNBA_ALT_PERFORMANCE_DATA={json.dumps(payload, separators=(",", ":"), ensure_ascii=False)};</script>'
     script = r'''<script id="alt-props-performance-panel-script">(function(){
@@ -53,7 +82,7 @@ function panel(){const raw=D(),p=raw.alt_performance||raw||{},s=p.summary||{};re
 function append(){const root=document.getElementById('root');if(!root)return;if(document.getElementById('alt-props-performance-panel'))return;const host=root.querySelector('.altDesk')||root;host.insertAdjacentHTML('beforeend',panel())}
 const prevRender=window.render;window.render=function(view){if(typeof prevRender==='function')prevRender(view);if(view==='alt-props')setTimeout(append,10)};
 const prevFilter=window.altPropsSetFilter;window.altPropsSetFilter=function(kind,value){if(typeof prevFilter==='function')prevFilter(kind,value);setTimeout(append,10)};
-window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'1.1',location:'below-alt-props-table',shows_pending:true};
+window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'1.2',location:'below-alt-props-table',shows_pending:true,canonical_source:'origin/main'};
 })();</script>'''
 
     html = HTML.read_text(encoding='utf-8')
@@ -61,7 +90,18 @@ window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'1.1',location:'below-alt-props
     html = replace_element(html, 'script', DATA_ID, data_script)
     html = replace_element(html, 'script', SCRIPT_ID, script)
     HTML.write_text(html, encoding='utf-8')
-    print({'status':'PASS','alt_props_performance':'below-table','data':DATA.exists(),'shows_pending':True})
+
+    summary = payload.get('summary') or {}
+    print({
+        'status': 'PASS',
+        'alt_props_performance': 'below-table',
+        'data': bool(payload),
+        'payload_source': payload_source,
+        'archived': summary.get('archived_candidates'),
+        'graded': summary.get('graded'),
+        'pending': summary.get('pending'),
+        'shows_pending': True,
+    })
 
     # Sprint 19 M03 is the final consumer layer. It runs after M02 has installed
     # the injury-aware Games/Props routes, then takes ownership of Best Bets,
