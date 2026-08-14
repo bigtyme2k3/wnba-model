@@ -23,6 +23,7 @@ from typing import Any
 ALT_WAREHOUSE = Path("data/dashboard/wnba_alt_market_warehouse.json")
 MIN_HISTORY = 3
 ACTIVE_STREAK_MIN = 3
+ALLOWED_BOOKS = {"draftkings", "fanduel", "fanatics"}
 
 
 def load(path: str | Path, default: Any) -> Any:
@@ -160,6 +161,9 @@ def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any], i
     output: list[dict[str, Any]] = []
     omitted_history = 0
     for market in markets:
+        book = str(market.get("sportsbook_key") or market.get("sportsbook") or "").strip().lower()
+        if book not in ALLOWED_BOOKS:
+            continue
         if str(market.get("target_date") or target) != target:
             continue
         player = str(market.get("player") or "").strip()
@@ -229,6 +233,9 @@ def standard_rows(target: str) -> tuple[list[dict[str, Any]], int, int, int]:
         stat = str(prop.get("stat") or "").upper().replace("THREES", "3PM")
         line = num(prop.get("line", prop.get("consensus_line")))
         side = str(prop.get("signal") or prop.get("side") or "OVER").upper()
+        selected_book = prop.get("best_over_book") if side == "OVER" else prop.get("best_under_book")
+        if selected_book and str(selected_book).strip().lower() not in ALLOWED_BOOKS:
+            continue
         if not player or not stat or line is None:
             continue
         values, opponents = history_from_prop(prop, stat)

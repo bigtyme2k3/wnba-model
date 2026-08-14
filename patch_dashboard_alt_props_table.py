@@ -44,6 +44,10 @@ window.altPropsSort=function(key){if(sortKey!==key){sortKey=key;sortDir='asc'}el
 window.render=function(view){if(typeof originalRender==='function')originalRender(view);if(view==='alt-props')setTimeout(renderTable,0)};
 window.WNBA_ALT_PROPS_TABLE={version:'1.1',style:'streak-table',canonical_only:true,sortable_columns:columns.map(c=>c[0])};
 })();</script>'''
+SCRIPT = SCRIPT.replace(
+    'Current alternate lines · canonical sportsbook feed',
+    'FanDuel · DraftKings · Fanatics only',
+)
 
 
 def replace_element(html: str, tag: str, element_id: str, replacement: str) -> str:

@@ -9,7 +9,7 @@ def test_exact_threshold_hit_rates():
         {"minutes": 30, "scoring": {"total_pts": 22, "three_pm": 2}, "boxscore": {"reb": 5, "ast": 4}, "derived": {"pra": 31, "pr": 27, "pa": 26, "ra": 9}, "game_date": "2026-07-10"},
         {"minutes": 30, "scoring": {"total_pts": 18, "three_pm": 1}, "boxscore": {"reb": 4, "ast": 3}, "derived": {"pra": 25, "pr": 22, "pa": 21, "ra": 7}, "game_date": "2026-07-08"},
     ]
-    summary = engine.hit_summary(games, "PTS", 20)
+    summary = engine.hit_summary(games, "PTS", 20, "OVER")
     assert summary["l5"]["hits"] == 1
     assert summary["l5"]["games"] == 2
     assert summary["l5"]["rate"] == .5
@@ -32,12 +32,20 @@ def test_price_math():
     assert round(engine.american_decimal(150), 2) == 2.5
 
 
+def test_three_book_policy():
+    assert engine.allowed_sportsbook({"sportsbook_key": "fanduel", "sportsbook": "FanDuel"})
+    assert engine.allowed_sportsbook({"sportsbook_key": "draftkings", "sportsbook": "DraftKings"})
+    assert engine.allowed_sportsbook({"sportsbook_key": "fanatics", "sportsbook": "Fanatics"})
+    assert not engine.allowed_sportsbook({"sportsbook_key": "betmgm", "sportsbook": "BetMGM"})
+
+
 def main():
     tests = [
         ("exact threshold hit rates", test_exact_threshold_hit_rates),
         ("book lines remain distinct", test_book_lines_are_distinct),
         ("supported market policy", test_supported_market_policy),
         ("price math", test_price_math),
+        ("three-book policy", test_three_book_policy),
     ]
     failed = []
     for name, fn in tests:

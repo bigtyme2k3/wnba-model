@@ -24,6 +24,8 @@ RAW = Path("data/raw")
 LOGS = Path("data/warehouse/wnba_player_game_logs.json")
 OUTS = [Path("data/warehouse/wnba_alt_market_warehouse.json"), Path("data/dashboard/wnba_alt_market_warehouse.json")]
 SUPPORTED = {"PTS", "REB", "AST", "3PM", "PRA", "PR", "PA", "RA", "STL", "BLK"}
+ALLOWED_BOOK_KEYS = {"draftkings", "fanduel", "fanatics"}
+ALLOWED_BOOK_NAMES = {"draftkings", "fanduel", "fanatics"}
 
 
 def load(path: Path, default: Any) -> Any:
@@ -43,6 +45,12 @@ def num(value: Any) -> float | None:
 
 def norm(value: Any) -> str:
     return " ".join(str(value or "").strip().lower().replace("’", "'").split())
+
+
+def allowed_sportsbook(row: dict[str, Any]) -> bool:
+    key = norm(row.get("sportsbook_key"))
+    name = norm(row.get("sportsbook") or row.get("book"))
+    return key in ALLOWED_BOOK_KEYS or name in ALLOWED_BOOK_NAMES
 
 
 def american_decimal(odds: Any) -> float | None:
@@ -161,7 +169,8 @@ def read_markets(target: str) -> list[dict[str, Any]]:
 
 
 def build(target: str) -> dict[str, Any]:
-    raw = read_markets(target)
+    source_raw = read_markets(target)
+    raw = [row for row in source_raw if allowed_sportsbook(row)]
     histories, excluded_history_rows = history_index(target)
     rows: list[dict[str, Any]] = []
     seen: set[tuple[str, ...]] = set()
@@ -205,7 +214,10 @@ def build(target: str) -> dict[str, Any]:
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target,
         "status": "ok" if rows else "empty", "summary": {
-            "raw_rows": len(raw), "markets": len(rows), "players": len(ladders),
+            "raw_rows": len(raw), "source_raw_rows": len(source_raw),
+            "unsupported_sportsbook_rows_rejected": len(source_raw) - len(raw),
+            "allowed_sportsbooks": ["DraftKings", "FanDuel", "Fanatics"],
+            "markets": len(rows), "players": len(ladders),
             "market_sides": {
                 side: sum(r["side"] == side for r in rows)
                 for side in ("OVER", "UNDER")
@@ -226,6 +238,8 @@ def build(target: str) -> dict[str, Any]:
             "history_source": str(LOGS), "history_strictly_before_target_date": True,
             "history_cutoff_date": target, "pushes_excluded_from_hit_rate_denominator": True,
             "input_game_date_must_match_target": True,
+            "allowed_sportsbook_keys": sorted(ALLOWED_BOOK_KEYS),
+            "unsupported_sportsbooks_rejected": True,
             "future_markets": ["PLAYER_1Q_POINTS", "PLAYER_FIRST_3_MIN_POINTS"],
         },
     }

@@ -22,7 +22,7 @@ window.altLadders=function(){
  const note=active.size
   ?`${games.length} active game${games.length===1?'':'s'} · ${excluded} off-slate player${excluded===1?'':'s'} excluded · canonical slate ${E(DATA.active_alt_target_date||'')}`
   :'No canonical active-slate game was available, so historical ALT ladders are hidden.';
- return `<div class="section"><h2 class="mono">Sportsbook ALT Ladders</h2><div class="small mono">Exact thresholds by sportsbook. FanDuel, DraftKings, Fanatics, and other books remain separate; lines are never averaged.</div><div class="alSlateNote mono">${E(note)}</div><div class="row"><span>${E(markets)} active markets</span><span>${E(players.length)} active players</span><span>${(s.sportsbooks||[]).map(E).join(', ')||'No books'}</span></div><div class="alWrap">${players.map(playerCard).join('')||'<div class="alEmpty mono">No active-slate sportsbook alternate ladders were returned.</div>'}</div></div>`
+ return `<div class="section"><h2 class="mono">Sportsbook ALT Ladders</h2><div class="small mono">Exact thresholds from FanDuel, DraftKings, and Fanatics only. Books and lines remain separate; lines are never averaged.</div><div class="alSlateNote mono">${E(note)}</div><div class="row"><span>${E(markets)} active markets</span><span>${E(players.length)} active players</span><span>${(s.sportsbooks||[]).map(E).join(', ')||'No books'}</span></div><div class="alWrap">${players.map(playerCard).join('')||'<div class="alEmpty mono">No active-slate sportsbook alternate ladders were returned.</div>'}</div></div>`
 };
 const prior=window.altStreaks;window.altStreaks=function(){const base=typeof prior==='function'?prior():'';return window.altLadders()+base}
 })();</script>'''
