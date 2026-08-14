@@ -96,7 +96,20 @@ jobs:
           if [ -f wnba_alt_market_warehouse.py ] && [ -f wnba_alt_streaks.py ] && [ -f wnba_alt_performance_tracker.py ]; then
             python wnba_alt_market_warehouse.py --date "$TARGET"
             python wnba_alt_streaks.py --date "$TARGET"
-            python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot
+            ALT_MARKETS=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_alt_market_warehouse.json')
+          d=json.loads(p.read_text()) if p.exists() else {}
+          print(int((d.get('summary') or {}).get('markets') or 0))
+          PY
+            )
+            if [ "$ALT_MARKETS" -gt 0 ]; then
+              python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot
+            else
+              echo "Exact ALT markets are not available yet for ${TARGET}; skipping only the pregame ALT snapshot."
+              echo 'Historical grading, the remaining tabs, and later authenticated ALT writer runs will continue.'
+            fi
           fi
 
       - name: Grade full historical backlog and rebuild performance data
