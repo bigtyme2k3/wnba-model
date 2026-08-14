@@ -184,6 +184,13 @@ jobs:
           if props.get('target_date')!=target: raise SystemExit(f"Canonical player props target mismatch after rebuild: {props.get('target_date')} != {target}")
           print({'status':'PASS','target':target,'canonical_manifest':manifest.get('target_date'),'canonical_player_props':props.get('row_count',len(props.get('rows') or []))})
           PY
+          # A legacy ALT overlay occasionally consumes the document shell when
+          # its old marker is malformed. Recover the committed valid shell;
+          # canonical/current renderers below will repopulate live data.
+          if ! grep -qi '<body' docs/index.html; then
+            echo 'Legacy overlay consumed dashboard shell; restoring committed shell.'
+            git show HEAD:docs/index.html > docs/index.html
+          fi
           python patch_dashboard_canonical_runtime.py
           python patch_dashboard_games_focus.py
           python patch_dashboard_sprint2_phase2.py
