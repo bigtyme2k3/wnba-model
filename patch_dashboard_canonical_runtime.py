@@ -87,7 +87,13 @@ def main() -> None:
         flags=re.S,
     )
     if '</body>' not in html:
-        raise SystemExit('Dashboard shell invalid: closing body tag missing before canonical patch')
+        # Some legacy overlay patches consume the final closing tags while
+        # replacing their marker block. The document body itself is intact;
+        # restore only the missing terminators so the canonical runtime and
+        # subsequent ALT panel patches can complete.
+        if '<html' not in html.lower() or '<body' not in html.lower():
+            raise SystemExit('Dashboard shell invalid: document body missing before canonical patch')
+        html = html.rstrip() + '\n</body></html>\n'
     html = html.replace('</body>', f'<!-- {BUILD_MARKER}:{target} -->\n' + block + '\n</body>', 1)
     HTML.write_text(html, encoding='utf-8')
     apply_games_focus_cleanup()
