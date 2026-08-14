@@ -186,7 +186,10 @@ def main() -> None:
     if not os.path.exists(HTML_PATH):
         print("No docs/index.html found")
         return
-    html = open(HTML_PATH, encoding="utf-8").read()
+    # Upstream dashboard generation can occasionally preserve a legacy
+    # single-byte glyph. Normalize it here so one non-UTF-8 byte cannot abort
+    # the entire Pages deployment before the ALT panel is installed.
+    html = open(HTML_PATH, encoding="utf-8", errors="replace").read()
     block = script(load_data())
     html = re.sub(re.escape(START) + r".*?" + re.escape(END), block, html, flags=re.S)
     if START not in html:
