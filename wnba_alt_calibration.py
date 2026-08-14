@@ -102,7 +102,6 @@ def eligible_history(target: str) -> list[dict[str, Any]]:
         if prior is None:
             chosen[key] = row
             continue
-        # Prefer the earliest timestamp when duplicate snapshots share a candidate.
         current_time = tracker.parse_time(row.get("snapshot_at_utc"))
         prior_time = tracker.parse_time(prior.get("snapshot_at_utc"))
         if current_time is not None and (prior_time is None or current_time < prior_time):
@@ -193,7 +192,7 @@ def build(target: str) -> dict[str, Any]:
         for side in ("OVER", "UNDER")
     }
     report = {
-        "schema_version": "1.2",
+        "schema_version": "1.3",
         "target_date": target,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "READY" if len(history) >= 100 else "COLLECTING",
@@ -209,7 +208,7 @@ def build(target: str) -> dict[str, Any]:
             "minimum_samples": MIN_SAMPLE,
             "minimum_realized_roi": MIN_ROI,
             "minimum_wilson_lower_edge_over_break_even": MIN_PROB_EDGE,
-            "selection_rule": "BUY requires a qualifying side-specific price-aware historical segment; hit rate alone never qualifies",
+            "selection_rule": "BUY requires a qualifying side-specific price-aware historical segment; the score band is already part of that evidence key and no additional global score floor is applied",
         },
         "qualified_segments": qualified,
         "segments": segments,
@@ -244,7 +243,11 @@ def decision(row: dict[str, Any], report: dict[str, Any]) -> dict[str, Any]:
             chosen = stats
             break
     score = num(row.get("streak_score")) or 0.0
-    if chosen and chosen.get("qualifies_buy") and score >= 70:
+    # The calibrated segment already includes score band, side and price tier
+    # (and stat at the specific level). Requiring score >= 70 here made every
+    # qualified 60-69.9 segment impossible to act on, including the recovered
+    # UNDER segments. Trust the conservative segment gate directly.
+    if chosen and chosen.get("qualifies_buy"):
         action = "BET"
         reason = f"Calibrated BUY: {chosen['level']} segment {chosen['key']}"
     elif score >= 70 and chosen and (chosen.get("roi") or -99) > -0.05:
