@@ -16,6 +16,9 @@ from typing import Any
 
 LEDGER = Path("data/history/wnba_game_predictions.jsonl")
 OUTPUTS = [Path("data/dashboard/wnba_game_performance.json"), Path("data/warehouse/wnba_game_performance.json")]
+MIN_LIVE_DECISIONS = 50
+MIN_CALIBRATION_OBSERVATIONS = 100
+MIN_CALIBRATION_BUCKET = 20
 
 
 def num(value: Any) -> float | None:
@@ -90,6 +93,13 @@ def rate(wins: int, losses: int) -> float | None:
     return round(wins / decisions, 4) if decisions else None
 
 
+def wilson_interval(wins: int, n: int, z: float = 1.96) -> tuple[float | None, float | None]:
+    if n <= 0: return None, None
+    p=wins/n;denom=1+z*z/n;center=(p+z*z/(2*n))/denom
+    spread=z*math.sqrt((p*(1-p)+z*z/(4*n))/n)/denom
+    return max(0.0,center-spread),min(1.0,center+spread)
+
+
 def market_summary(data: list[dict[str, Any]], result_key: str, rec_key: str) -> dict[str, Any]:
     graded = [r for r in data if r.get("graded") and r.get(result_key) not in {None, "PASS", "VOID"}]
     wins = sum(r.get(result_key) == "WIN" for r in graded)
@@ -102,7 +112,16 @@ def market_summary(data: list[dict[str, Any]], result_key: str, rec_key: str) ->
         if result == "WIN": sides[side]["wins"] += 1
         elif result == "LOSS": sides[side]["losses"] += 1
         elif result == "PUSH": sides[side]["pushes"] += 1
-    return {"record": {"wins": wins, "losses": losses, "pushes": pushes}, "hit_rate": rate(wins, losses), "by_side": [{"side": key, **value, "hit_rate": rate(value["wins"], value["losses"])} for key, value in sorted(sides.items())]}
+    decisions=wins+losses;low,high=wilson_interval(wins,decisions)
+    return {
+        "scope":"RECOMMENDED_WAGERS_ONLY","record":{"wins":wins,"losses":losses,"pushes":pushes},
+        "decisions":decisions,"hit_rate":rate(wins,losses),
+        "wilson_low_95":round(low,4) if low is not None else None,
+        "wilson_high_95":round(high,4) if high is not None else None,
+        "sample_sufficient":decisions>=MIN_LIVE_DECISIONS,"minimum_sample":MIN_LIVE_DECISIONS,
+        "display_status":"TRACKING" if decisions>=MIN_LIVE_DECISIONS else "PRELIMINARY",
+        "by_side":[{"side":key,**value,"hit_rate":rate(value["wins"],value["losses"])} for key,value in sorted(sides.items())],
+    }
 
 
 def spread_pick_outcome(row: dict[str, Any]) -> str | None:
@@ -130,13 +149,33 @@ def calibration(data: list[dict[str, Any]], probability_key: str, outcome_fn) ->
         if probability is None or outcome not in {"WIN", "LOSS"}: continue
         observations.append((max(0.0, min(1.0, probability)), 1 if outcome == "WIN" else 0))
     brier = round(sum((p-y)**2 for p,y in observations)/len(observations), 4) if observations else None
+    baseline=sum(y for _,y in observations)/len(observations) if observations else None
+    baseline_brier=round(sum((baseline-y)**2 for _,y in observations)/len(observations),4) if observations else None
     buckets = []
     for low, high in ((0.50,0.55),(0.55,0.60),(0.60,0.65),(0.65,0.70),(0.70,0.80),(0.80,1.01)):
         values=[(p,y) for p,y in observations if low <= p < high]
         if not values: continue
-        avg=sum(p for p,_ in values)/len(values); hit=sum(y for _,y in values)/len(values)
-        buckets.append({"label":f"{int(low*100)}-{int(min(high,1.0)*100)}%","samples":len(values),"avg_probability":round(avg,4),"hit_rate":round(hit,4),"calibration_gap":round(hit-avg,4)})
-    return {"samples":len(observations),"brier_score":brier,"buckets":buckets}
+        n=len(values);wins=sum(y for _,y in values);avg=sum(p for p,_ in values)/n;hit=wins/n
+        lo,hi=wilson_interval(wins,n);shrunk=(wins+2)/(n+4)
+        buckets.append({
+            "label":f"{int(low*100)}-{int(min(high,1.0)*100)}%","samples":n,"wins":wins,
+            "avg_probability":round(avg,4),"hit_rate":round(hit,4),"calibration_gap":round(hit-avg,4),
+            "wilson_low_95":round(lo,4) if lo is not None else None,"wilson_high_95":round(hi,4) if hi is not None else None,
+            "shrunk_empirical_probability":round(shrunk,4),"bucket_ready":n>=MIN_CALIBRATION_BUCKET,
+        })
+    ece=round(sum(b["samples"]*abs(b["calibration_gap"]) for b in buckets)/len(observations),4) if observations else None
+    weighted_gap=round(sum(b["samples"]*b["calibration_gap"] for b in buckets)/len(observations),4) if observations else None
+    ready=len(observations)>=MIN_CALIBRATION_OBSERVATIONS and bool(buckets) and all(b["bucket_ready"] for b in buckets)
+    direction="OVERCONFIDENT" if weighted_gap is not None and weighted_gap < -0.05 else "UNDERCONFIDENT" if weighted_gap is not None and weighted_gap > 0.05 else "WELL_ALIGNED"
+    return {
+        "scope":"ALL_FROZEN_PROBABILITY_FORECASTS","samples":len(observations),"brier_score":brier,
+        "baseline_brier_score":baseline_brier,"brier_skill_vs_constant":round(baseline_brier-brier,4) if brier is not None and baseline_brier is not None else None,
+        "expected_calibration_error":ece,"weighted_calibration_gap":weighted_gap,"diagnosis":direction,
+        "calibration_ready":ready,"status":"READY" if ready else "COLLECTING",
+        "minimum_observations":MIN_CALIBRATION_OBSERVATIONS,"minimum_bucket_sample":MIN_CALIBRATION_BUCKET,
+        "recalibration_policy":"Shrunk empirical bucket probabilities are research-only until readiness gates pass.",
+        "buckets":buckets,
+    }
 
 
 def edge_buckets(data: list[dict[str, Any]], edge_key: str, outcome_fn) -> list[dict[str, Any]]:
@@ -150,7 +189,8 @@ def edge_buckets(data: list[dict[str, Any]], edge_key: str, outcome_fn) -> list[
             if low <= abs(edge) < high: decisions.append(result)
         if decisions:
             wins=decisions.count("WIN"); losses=decisions.count("LOSS"); pushes=decisions.count("PUSH")
-            out.append({"label":f"{low:g}-{high:g}" if math.isfinite(high) else f"{low:g}+","samples":len(decisions),"wins":wins,"losses":losses,"pushes":pushes,"hit_rate":rate(wins,losses)})
+            n=wins+losses;lo,hi_ci=wilson_interval(wins,n)
+            out.append({"label":f"{low:g}-{high:g}" if math.isfinite(high) else f"{low:g}+","samples":len(decisions),"wins":wins,"losses":losses,"pushes":pushes,"hit_rate":rate(wins,losses),"wilson_low_95":round(lo,4) if lo is not None else None,"wilson_high_95":round(hi_ci,4) if hi_ci is not None else None,"sample_sufficient":n>=MIN_CALIBRATION_BUCKET})
     return out
 
 
@@ -184,7 +224,7 @@ def build() -> dict[str, Any]:
     excluded_counts=defaultdict(int)
     for row in excluded: excluded_counts[row["reason"]]+=1
     report={
-        "generated_at_utc":datetime.now(timezone.utc).isoformat(),"status":"ok",
+        "schema_version":"game-performance-calibration-v3","generated_at_utc":datetime.now(timezone.utc).isoformat(),"status":"ok",
         "summary":{
             "raw_ledger_rows":len(raw),"archived_games":len(data),"graded_games":len(graded),"pending_games":sum(not r.get("graded") for r in data),"grade_coverage":round(len(graded)/len(data),4) if data else None,
             "excluded_rows":len(excluded),"excluded_by_reason":dict(sorted(excluded_counts.items())),
@@ -197,7 +237,7 @@ def build() -> dict[str, Any]:
         "largest_total_misses":sorted(enriched,key=lambda r:num(r.get("total_error")) or -1,reverse=True)[:20],
         "largest_margin_misses":sorted(enriched,key=lambda r:num(r.get("margin_error")) or -1,reverse=True)[:20],
         "excluded_snapshots":excluded[:200],
-        "policy":{"source":"frozen pregame game prediction ledger","chronology_required":True,"missing_start_time_excluded":True,"post_tipoff_snapshots_excluded":True,"duplicate_event_snapshots_keep_latest_pregame":True,"pass_rows_retained":True,"pass_rows_not_counted_as_betting_wins":True,"calibration_uses_frozen_pick_probability":True,"closing_line_value":"not reported because verified closing lines are not frozen in this ledger","auto_model_changes":False},
+        "policy":{"source":"frozen pregame game prediction ledger","chronology_required":True,"missing_start_time_excluded":True,"post_tipoff_snapshots_excluded":True,"duplicate_event_snapshots_keep_latest_pregame":True,"recommended_performance_scope":"stored non-PASS recommendation results only","forecast_calibration_scope":"all frozen probability forecasts with computable outcomes","pass_rows_retained":True,"pass_rows_not_counted_as_betting_wins":True,"calibration_uses_frozen_pick_probability":True,"shrunk_empirical_probabilities_research_only":True,"closing_line_value":"not reported because verified closing lines are not frozen in this ledger","auto_model_changes":False},
     }
     for path in OUTPUTS:
         path.parent.mkdir(parents=True,exist_ok=True); json.dump(report,path.open("w",encoding="utf-8"),indent=2,allow_nan=False)
