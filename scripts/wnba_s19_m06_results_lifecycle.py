@@ -10,6 +10,7 @@ M04=DASH/'wnba_s19_m04_decision_contract.json'
 M05=DASH/'wnba_s19_m05_dashboard_health.json'
 OUT=DASH/'wnba_s19_m06_results_lifecycle.json'
 AUDIT=DASH/'wnba_s19_m06_results_lifecycle_audit.json'
+CURRENT_MODEL_VERSION='sprint19_player_props_v5_m02'
 
 
 def load(path, default):
@@ -45,6 +46,31 @@ def history_key(target,row):
     return '|'.join(str(x or '') for x in (target,row.get('player'),row.get('game'),row.get('stat'),row.get('line'),row.get('recommendation')))
 
 
+def model_version(row):
+    stamped=str(row.get('model_version') or '').strip()
+    if stamped:return stamped
+    source=str(row.get('prediction_source') or '')
+    return CURRENT_MODEL_VERSION if source.startswith('exact_current_slate_sportsbook_props_plus_player_points_v5') else 'legacy_unversioned'
+
+
+def recommendation_scope(row):
+    signal=str(row.get('signal') or row.get('recommendation') or '').upper()
+    return 'RECOMMENDED' if bool(row.get('eligible_for_bet')) and signal in {'OVER','UNDER'} else 'RESEARCH_ONLY'
+
+
+def result_summary(rows):
+    wins=sum(r.get('outcome')=='WIN' for r in rows);losses=sum(r.get('outcome')=='LOSS' for r in rows)
+    pushes=sum(r.get('outcome')=='PUSH' for r in rows);voids=sum(r.get('outcome')=='VOID' for r in rows)
+    pending=sum(r.get('outcome') not in {'WIN','LOSS','PUSH','VOID'} for r in rows);decisions=wins+losses
+    return {'rows':len(rows),'wins':wins,'losses':losses,'pushes':pushes,'voids':voids,'pending':pending,'decisions':decisions,'hit_rate':round(wins/decisions,4) if decisions else None}
+
+
+def grouped(rows,field):
+    groups={}
+    for row in rows:groups.setdefault(str(row.get(field) or 'UNKNOWN'),[]).append(row)
+    return [{'group':key,**result_summary(value)} for key,value in sorted(groups.items())]
+
+
 def build(target):
     m04=load(M04,{})
     m05=load(M05,{})
@@ -77,6 +103,7 @@ def build(target):
             'injury_projection_factor':sf(row.get('injury_projection_factor')),
             'projected_minutes':sf(row.get('projected_minutes')),'minutes_delta':sf(row.get('minutes_delta')),
             'prediction_source':row.get('prediction_source'),'outcome':None,'actual':None,'closing_line':None,'clv':None,
+            'model_version':CURRENT_MODEL_VERSION,'result_scope':'RECOMMENDED' if bool(row.get('eligible')) and rec in {'OVER','UNDER'} else 'RESEARCH_ONLY',
             'stake':0.0,'recommended_stake':0.0,
         })
         seen.add(key)
@@ -95,8 +122,24 @@ def build(target):
     if duplicate_keys: raise SystemExit(f'M06 history duplicate keys detected: {duplicate_keys}')
 
     edge_report=load(DASH/'wnba_edge_database.json',{})
+    versioned=[]
+    for row in history_after:
+        item=dict(row);item['model_version']=model_version(item);item['result_scope']=recommendation_scope(item);versioned.append(item)
+    current=[r for r in versioned if r['model_version']==CURRENT_MODEL_VERSION]
+    current_recommended=[r for r in current if r['result_scope']=='RECOMMENDED']
+    legacy=[r for r in versioned if r['model_version']!=CURRENT_MODEL_VERSION]
+    target_current=[r for r in current if str(r.get('date') or '')[:10]==target]
+    target_recommended=[r for r in target_current if r['result_scope']=='RECOMMENDED']
+    recent_results=sorted([r for r in current_recommended if r.get('outcome') in {'WIN','LOSS','PUSH','VOID'}],key=lambda r:(str(r.get('date') or ''),str(r.get('graded_at_utc') or '')),reverse=True)[:100]
+    current_quality={
+        'negative_projections':sum((sf(r.get('pred')) or 0)<0 for r in current),
+        'invalid_american_odds':sum(sf(r.get('american_odds')) is not None and -100 < sf(r.get('american_odds')) < 100 for r in current),
+        'missing_sportsbook':sum(not str(r.get('sportsbook') or '').strip() for r in current),
+        'zero_stake_rows':sum((sf(r.get('stake')) or 0)==0 for r in current),
+    }
     payload={
-        'generated_at_utc':now,'target_date':target,'schema_version':'sprint19-m06-results-lifecycle-v1','status':'READY',
+        'generated_at_utc':now,'target_date':target,'schema_version':'sprint19-m06-results-lifecycle-v2','status':'READY',
+        'current_model_version':CURRENT_MODEL_VERSION,
         'source_policy':{
             'prediction_source':'wnba_s19_m04_decision_contract.json',
             'health_source':'wnba_s19_m05_dashboard_health.json',
@@ -111,6 +154,14 @@ def build(target):
             'open_edge_records':int(edge_report.get('open_records') or 0),'settled_edge_records':int(edge_report.get('settled_records') or 0),
             'results_state':'ARCHIVED_WAITING_FOR_COMPLETED_ACTUALS',
         },
+        'current_model':{
+            'label':'Current model recommendations','scope':'eligible OVER/UNDER recommendations only; research candidates excluded','performance':result_summary(current_recommended),
+            'target':{'date':target,'archived_candidates':len(target_current),'recommended':result_summary(target_recommended)},
+            'by_stat':grouped(current_recommended,'stat'),'by_side':grouped(current_recommended,'signal'),'by_date':grouped(current_recommended,'date'),
+            'recent_results':recent_results,'data_quality':current_quality,'profit_loss_status':'UNAVAILABLE — archived stakes are zero; results are model recommendations, not recorded wagers',
+        },
+        'legacy_reference':{'label':'Legacy models — historical reference only','included_in_current_performance':False,'performance':result_summary(legacy)},
+        'research_archive':{'label':'Research and lifecycle diagnostics','all_history_rows':len(versioned),'current_research_rows':sum(r['result_scope']=='RESEARCH_ONLY' for r in current),'edge_database_total':int(edge_report.get('total_records') or 0),'edge_database_open':int(edge_report.get('open_records') or 0),'edge_database_settled':int(edge_report.get('settled_records') or 0)},
     }
     OUT.write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
     audit={
