@@ -76,7 +76,7 @@ def main() -> None:
 </script>
 <!-- {END_MARKER} -->\n'''
 
-    html = HTML.read_text(encoding='utf-8')
+    html = HTML.read_text(encoding='utf-8', errors='replace')
     html = re.sub(r'<!-- canonical-build-target-v1:\d{4}-\d{2}-\d{2} -->\s*', '', html)
     html, replaced = re.subn(r'Slate\s+\d{4}-\d{2}-\d{2}', f'Slate {target}', html)
     html = re.sub(
