@@ -221,7 +221,7 @@ jobs:
           canonical_target_compact=f'"target_date":"{target}"'
           if canonical_target not in h and canonical_target_compact not in h:
               raise SystemExit(f'REFUSE DEPLOY: canonical payload target {target} missing')
-          required=['id="tabs"','canonical-daily-runtime-v1','v4-ui-freeze-script','s19-m02-script','WNBA_S19_M02','s19-m03-script','WNBA_S19_M03','s19-m04-contract-script','WNBA_CANONICAL_DASHBOARD_CONTRACT','s19-m05-health-script','WNBA_DASHBOARD_HEALTH','s19-m06-results-script','WNBA_RESULTS_LIFECYCLE','Results · Lifecycle','alt-props-performance-panel-data']
+          required=['id="tabs"','canonical-daily-runtime-v1','v4-ui-freeze-script','s19-m02-script','WNBA_S19_M02','s19-m03-script','WNBA_S19_M03','s19-m04-contract-script','WNBA_CANONICAL_DASHBOARD_CONTRACT','s19-m05-health-script','WNBA_DASHBOARD_HEALTH','s19-m06-results-script','WNBA_RESULTS_LIFECYCLE','Current Model Results','alt-props-performance-panel-data']
           missing=[x for x in required if x not in h]
           if missing: raise SystemExit(f'Sprint 19 M02-M06 verification failed; missing markers: {missing}')
           for marker in ('canonical-daily-runtime-script','v4-ui-freeze-script','s19-m02-script','s19-m03-script','s19-m04-contract-script','s19-m05-health-script','s19-m06-results-script','alt-props-performance-panel-data'):
