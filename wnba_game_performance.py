@@ -19,6 +19,8 @@ OUTPUTS = [Path("data/dashboard/wnba_game_performance.json"), Path("data/warehou
 MIN_LIVE_DECISIONS = 50
 MIN_CALIBRATION_OBSERVATIONS = 100
 MIN_CALIBRATION_BUCKET = 20
+CURRENT_MODEL_VERSION = "game_score_l10_market_42_58_v1"
+LEGACY_MODEL_VERSION = "legacy_standings_market_72_28_v1"
 
 
 def num(value: Any) -> float | None:
@@ -198,8 +200,16 @@ def mean(values: list[float]) -> float | None:
     return round(sum(values)/len(values),2) if values else None
 
 
-def build() -> dict[str, Any]:
-    raw = rows(); data, excluded = canonicalize(raw); graded=[r for r in data if r.get("graded")]
+def row_model_version(row: dict[str, Any]) -> str:
+    stamped=str(row.get("model_version") or "").strip()
+    if stamped: return stamped
+    source=str(row.get("total_source") or row.get("spread_source") or "").lower()
+    if "standings_strength" in source: return LEGACY_MODEL_VERSION
+    return "legacy_unversioned"
+
+
+def performance_slice(data: list[dict[str, Any]]) -> dict[str, Any]:
+    graded=[r for r in data if r.get("graded")]
     margin_abs=[]; total_abs=[]; margin_signed=[]; total_signed=[]; away_score_abs=[]; home_score_abs=[]; winner_correct=0; winner_decisions=0; enriched=[]
     for row in graded:
         item=dict(row)
@@ -221,13 +231,9 @@ def build() -> dict[str, Any]:
         actual=num(row.get("actual_total")); market=num(row.get("market_total"))
         if actual is None or market is None: continue
         over_games += actual>market; under_games += actual<market
-    excluded_counts=defaultdict(int)
-    for row in excluded: excluded_counts[row["reason"]]+=1
-    report={
-        "schema_version":"game-performance-calibration-v3","generated_at_utc":datetime.now(timezone.utc).isoformat(),"status":"ok",
+    return {
         "summary":{
-            "raw_ledger_rows":len(raw),"archived_games":len(data),"graded_games":len(graded),"pending_games":sum(not r.get("graded") for r in data),"grade_coverage":round(len(graded)/len(data),4) if data else None,
-            "excluded_rows":len(excluded),"excluded_by_reason":dict(sorted(excluded_counts.items())),
+            "archived_games":len(data),"graded_games":len(graded),"pending_games":sum(not r.get("graded") for r in data),"grade_coverage":round(len(graded)/len(data),4) if data else None,
             "winner_accuracy":round(winner_correct/winner_decisions,4) if winner_decisions else None,"winner_correct":winner_correct,"winner_decisions":winner_decisions,
             "avg_margin_error":mean(margin_abs),"avg_total_error":mean(total_abs),"margin_bias":mean(margin_signed),"total_bias":mean(total_signed),"away_score_mae":mean(away_score_abs),"home_score_mae":mean(home_score_abs),"market_totals_over":over_games,"market_totals_under":under_games,
         },
@@ -236,12 +242,33 @@ def build() -> dict[str, Any]:
         "recent_games":sorted(enriched,key=lambda r:str(r.get("start_time") or r.get("target_date") or ""),reverse=True)[:100],
         "largest_total_misses":sorted(enriched,key=lambda r:num(r.get("total_error")) or -1,reverse=True)[:20],
         "largest_margin_misses":sorted(enriched,key=lambda r:num(r.get("margin_error")) or -1,reverse=True)[:20],
+    }
+
+
+def build() -> dict[str, Any]:
+    raw = rows(); data, excluded = canonicalize(raw)
+    for row in data: row["model_version"] = row_model_version(row)
+    current=[r for r in data if r["model_version"]==CURRENT_MODEL_VERSION]
+    legacy=[r for r in data if r["model_version"]!=CURRENT_MODEL_VERSION]
+    current_metrics=performance_slice(current); legacy_metrics=performance_slice(legacy); all_metrics=performance_slice(data)
+    excluded_counts=defaultdict(int)
+    for row in excluded: excluded_counts[row["reason"]]+=1
+    versions=defaultdict(lambda:{"archived":0,"graded":0})
+    for row in data:
+        version=versions[row["model_version"]];version["archived"]+=1;version["graded"]+=int(bool(row.get("graded")))
+    report={
+        "schema_version":"game-performance-calibration-v4","generated_at_utc":datetime.now(timezone.utc).isoformat(),"status":"ok",
+        "current_model_version":CURRENT_MODEL_VERSION,
+        **current_metrics,
+        "result_history":all_metrics["recent_games"],
+        "archive_summary":{"raw_ledger_rows":len(raw),"canonical_rows":len(data),"excluded_rows":len(excluded),"excluded_by_reason":dict(sorted(excluded_counts.items())),"by_model_version":[{"model_version":k,**v} for k,v in sorted(versions.items())]},
+        "legacy_reference":{"label":"Legacy model — historical reference only","included_in_current_calibration":False,"model_versions":sorted({r["model_version"] for r in legacy}),**legacy_metrics},
         "excluded_snapshots":excluded[:200],
-        "policy":{"source":"frozen pregame game prediction ledger","chronology_required":True,"missing_start_time_excluded":True,"post_tipoff_snapshots_excluded":True,"duplicate_event_snapshots_keep_latest_pregame":True,"recommended_performance_scope":"stored non-PASS recommendation results only","forecast_calibration_scope":"all frozen probability forecasts with computable outcomes","pass_rows_retained":True,"pass_rows_not_counted_as_betting_wins":True,"calibration_uses_frozen_pick_probability":True,"shrunk_empirical_probabilities_research_only":True,"closing_line_value":"not reported because verified closing lines are not frozen in this ledger","auto_model_changes":False},
+        "policy":{"source":"frozen pregame game prediction ledger","chronology_required":True,"model_version_required_for_future_rows":True,"current_calibration_model_version":CURRENT_MODEL_VERSION,"legacy_rows_excluded_from_current_metrics":True,"missing_start_time_excluded":True,"post_tipoff_snapshots_excluded":True,"duplicate_event_snapshots_keep_latest_pregame":True,"recommended_performance_scope":"stored non-PASS recommendation results only within current model version","forecast_calibration_scope":"current-model frozen probability forecasts only","pass_rows_retained":True,"pass_rows_not_counted_as_betting_wins":True,"calibration_uses_frozen_pick_probability":True,"shrunk_empirical_probabilities_research_only":True,"closing_line_value":"not reported because verified closing lines are not frozen in this ledger","auto_model_changes":False},
     }
     for path in OUTPUTS:
         path.parent.mkdir(parents=True,exist_ok=True); json.dump(report,path.open("w",encoding="utf-8"),indent=2,allow_nan=False)
-    print(json.dumps(report["summary"],indent=2)); return report
+    print(json.dumps({"current_model":report["summary"],"legacy_reference":legacy_metrics["summary"]},indent=2)); return report
 
 
 if __name__=="__main__": build()

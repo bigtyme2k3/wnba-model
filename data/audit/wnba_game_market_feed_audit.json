@@ -1,0 +1,99 @@
+{
+  "generated_at_utc": "2026-08-14T21:24:15.502540+00:00",
+  "status": "FAIL_PROVENANCE",
+  "scope": "frozen sportsbook total inputs evaluated directly against final game totals; model projections ignored",
+  "historical_market_totals": {
+    "samples": 38,
+    "mean_signed_error_market_minus_actual": -9.12,
+    "mean_absolute_error": 17.25,
+    "market_low": 27,
+    "market_high": 11,
+    "exact": 0,
+    "source_counts": {
+      "UNSTAMPED": 38
+    },
+    "sportsbook_counts": {
+      "UNSTAMPED": 38
+    },
+    "non_half_point_market_totals": 20,
+    "by_target_date": [
+      {
+        "target_date": "2026-07-18",
+        "n": 3,
+        "mean_signed_error": -9.95
+      },
+      {
+        "target_date": "2026-07-19",
+        "n": 3,
+        "mean_signed_error": 11.59
+      },
+      {
+        "target_date": "2026-07-20",
+        "n": 3,
+        "mean_signed_error": -21.06
+      },
+      {
+        "target_date": "2026-07-22",
+        "n": 6,
+        "mean_signed_error": -13.67
+      },
+      {
+        "target_date": "2026-07-28",
+        "n": 5,
+        "mean_signed_error": -17.1
+      },
+      {
+        "target_date": "2026-07-29",
+        "n": 2,
+        "mean_signed_error": -3.78
+      },
+      {
+        "target_date": "2026-07-30",
+        "n": 3,
+        "mean_signed_error": -8.94
+      },
+      {
+        "target_date": "2026-07-31",
+        "n": 3,
+        "mean_signed_error": -7.38
+      },
+      {
+        "target_date": "2026-08-01",
+        "n": 2,
+        "mean_signed_error": 2.0
+      },
+      {
+        "target_date": "2026-08-02",
+        "n": 4,
+        "mean_signed_error": -5.45
+      },
+      {
+        "target_date": "2026-08-03",
+        "n": 3,
+        "mean_signed_error": -13.17
+      },
+      {
+        "target_date": "2026-08-04",
+        "n": 1,
+        "mean_signed_error": -6.94
+      }
+    ]
+  },
+  "current_feed_contract": {
+    "scores_target_date": "2026-08-13",
+    "scores_generated_at_utc": "2026-08-13T17:15:13.402843+00:00",
+    "scores_source": "espn_scoreboard",
+    "master_target_date": "2026-08-13",
+    "master_generated_at_utc": "2026-08-13T17:15:13.402843+00:00",
+    "refresh_source": "espn_scoreboard",
+    "refresh_generated_at_utc": "2026-08-13T17:15:13.402843+00:00",
+    "selection_policy": "ESPN first listed competition odds; fallback The Odds API prefers FanDuel, then DraftKings, then first available book"
+  },
+  "findings": [
+    "The frozen historical market totals were 9.12 points below finals on average.",
+    "Historical ledger rows do not stamp market source, sportsbook, or raw observation identifier, so the claimed sportsbook inputs cannot be independently reproduced.",
+    "Decimal totals outside normal half-point increments indicate these archived values were transformed/aggregated rather than preserved as an exact book line.",
+    "Future rows now preserve market source and sportsbook alongside model version; raw observation IDs remain unavailable from ESPN and should be added if the upstream provider supplies one."
+  ],
+  "excluded_chronology_rows": 30
+}

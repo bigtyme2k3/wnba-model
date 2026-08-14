@@ -77,6 +77,7 @@ jobs:
             wnba_injury_intelligence.py \
             wnba_injury_rotation_guard.py \
             wnba_sprint2_prediction_engine.py \
+            wnba_game_predictions_ledger.py \
             scripts/wnba_sprint2_phase2.py \
             scripts/wnba_s19_m02_prop_source.py \
             scripts/wnba_s19_m02_predictions.py
@@ -155,6 +156,17 @@ jobs:
           print('SPRINT 19 M01 VERIFIED', audit)
           PY
 
+      - name: Freeze versioned current game predictions
+        run: |
+          python wnba_game_predictions_ledger.py archive --date "$TARGET"
+          python - <<'PY'
+          import json,os
+          target=os.environ['TARGET']; rows=[json.loads(x) for x in open('data/history/wnba_game_predictions.jsonl') if x.strip()]
+          current=[r for r in rows if str(r.get('target_date') or '')[:10]==target]
+          assert current and all(r.get('model_version')=='game_score_l10_market_42_58_v1' for r in current), current
+          print({'status':'PASS','target':target,'versioned_game_rows':len(current)})
+          PY
+
       - name: Prepare exact current sportsbook prop source
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -228,6 +240,9 @@ jobs:
             'data/dashboard/wnba_injury_integration_audit.json' \
             'data/dashboard/wnba_master.json' \
             'data/dashboard/wnba_sprint2_phase2.json' \
+            'data/history/wnba_game_predictions.jsonl' \
+            'data/dashboard/wnba_game_predictions_ledger.json' \
+            'data/warehouse/wnba_game_predictions_ledger.json' \
             'data/dashboard/wnba_s19_m01_game_injury_audit.json' \
             'data/dashboard/wnba_s19_m02_prop_source_audit.json' \
             'data/dashboard/wnba_s19_m02_predictions.json' \

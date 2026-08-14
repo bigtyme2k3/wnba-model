@@ -150,12 +150,15 @@ jobs:
             assert isinstance(game.get('teams'),dict)
           print({'target':target,'phase2_games':len(phase2.get('games') or [])})
           PY
+      - name: Freeze versioned game predictions when Phase 2 is built
+        if: env.PHASE2_BUILT == '1'
+        run: python wnba_game_predictions_ledger.py archive --date "$TARGET"
       - name: Publish Phase 2 when built
         if: env.PHASE2_BUILT == '1'
         run: |
           git config user.name 'WNBA Canonical Daily Build Bot'
           git config user.email 'actions@github.com'
-          git add data/dashboard/wnba_sprint2_phase2.json
+          git add data/dashboard/wnba_sprint2_phase2.json data/history/wnba_game_predictions.jsonl data/dashboard/wnba_game_predictions_ledger.json data/warehouse/wnba_game_predictions_ledger.json
           if git diff --cached --quiet; then
             echo 'No Phase 2 changes to publish'
             exit 0

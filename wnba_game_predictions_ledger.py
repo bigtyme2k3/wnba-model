@@ -16,6 +16,8 @@ from typing import Any
 LEDGER = Path("data/history/wnba_game_predictions.jsonl")
 DASH = Path("data/dashboard/wnba_game_predictions_ledger.json")
 WAREHOUSE = Path("data/warehouse/wnba_game_predictions_ledger.json")
+CURRENT_MODEL_VERSION = "game_score_l10_market_42_58_v1"
+LEGACY_MODEL_VERSION = "legacy_standings_market_72_28_v1"
 
 
 def load(path: str | Path, default: Any) -> Any:
@@ -36,6 +38,13 @@ def num(value: Any) -> float | None:
 
 def norm(value: Any) -> str:
     return " ".join(str(value or "").strip().lower().replace("’", "'").split())
+
+
+def infer_model_version(row: dict[str, Any]) -> str:
+    stamped=str(row.get("model_version") or "").strip()
+    if stamped: return stamped
+    source=str(row.get("total_source") or row.get("spread_source") or "").lower()
+    return LEGACY_MODEL_VERSION if "standings_strength" in source else "legacy_unversioned"
 
 
 def read_ledger() -> list[dict[str, Any]]:
@@ -80,8 +89,28 @@ def parse_time(value: Any) -> datetime | None:
 
 
 def archive(target: str) -> dict[str, Any]:
-    model = load("data/dashboard/wnba_game_market_model.json", {})
-    games = model.get("games", []) if isinstance(model, dict) else []
+    phase2 = load("data/dashboard/wnba_sprint2_phase2.json", {})
+    use_phase2 = isinstance(phase2, dict) and str(phase2.get("target_date") or "")[:10] == target
+    model = phase2 if use_phase2 else load("data/dashboard/wnba_game_market_model.json", {})
+    source_games = model.get("games", []) if isinstance(model, dict) else []
+    games = []
+    for source in source_games:
+        if not use_phase2:
+            games.append(source)
+            continue
+        projection=source.get("projection") or {}; market=source.get("market") or {}; edge=source.get("edge") or {}; rec=source.get("recommendation") or {}
+        spread_edge=num(edge.get("spread")); total_edge=num(edge.get("total"))
+        games.append({
+            "game":source.get("game"),"start_time":source.get("start_time"),"away_team":source.get("away_team"),"home_team":source.get("home_team"),
+            "projected_away_score":projection.get("away_score"),"projected_home_score":projection.get("home_score"),"projected_margin":projection.get("home_margin"),"projected_total":projection.get("total"),
+            "market_spread":market.get("home_spread"),"market_total":market.get("total"),"spread_edge":spread_edge,"total_edge":total_edge,
+            "spread_pick":source.get("home_team") if spread_edge is not None and spread_edge>0 else source.get("away_team") if spread_edge is not None and spread_edge<0 else "PASS",
+            "spread_recommendation":rec.get("spread") or "PASS","total_pick":"OVER" if total_edge is not None and total_edge>0 else "UNDER" if total_edge is not None and total_edge<0 else "PASS",
+            "total_recommendation":rec.get("total") or "PASS","spread_probability":None,"total_probability":None,
+            "spread_source":"team_l10_scoring_allowed+roster_form+market_58pct+injury_adjustment","total_source":"team_l10_scoring_allowed+roster_form+market_58pct+injury_adjustment",
+            "model_version":source.get("model_version") or model.get("model_version") or CURRENT_MODEL_VERSION,"blend_weights":source.get("blend_weights") or {"market":0.58,"statistical":0.42},
+            "market_source":source.get("market_source"),"sportsbook":source.get("sportsbook"),"model_available":True,
+        })
     ledger = read_ledger()
     existing = {(r.get("target_date"), norm(r.get("game"))) for r in ledger}
     now = datetime.now(timezone.utc)
@@ -108,6 +137,8 @@ def archive(target: str) -> dict[str, Any]:
             "total_pick": game.get("total_pick"), "total_recommendation": game.get("total_recommendation"),
             "spread_probability": game.get("spread_probability"), "total_probability": game.get("total_probability"),
             "spread_source": game.get("spread_source"), "total_source": game.get("total_source"),
+            "model_version": game.get("model_version") or model.get("model_version") or LEGACY_MODEL_VERSION,
+            "blend_weights": game.get("blend_weights"), "market_source": game.get("market_source"), "sportsbook": game.get("sportsbook"),
             "model_available": bool(game.get("model_available")), "status": "PENDING", "graded": False,
         })
         existing.add(key)
@@ -205,6 +236,7 @@ def grade(target: str) -> dict[str, Any]:
         projected_margin = num(row.get("projected_margin"))
         projected_total = num(row.get("projected_total"))
         row.update({
+            "model_version": infer_model_version(row),
             "actual_away_score": away, "actual_home_score": home,
             "actual_margin": round(home-away, 2), "actual_total": round(home+away, 2),
             "margin_error": round(abs(projected_margin - (home-away)), 2) if projected_margin is not None else None,

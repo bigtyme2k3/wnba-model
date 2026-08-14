@@ -12,6 +12,7 @@ MASTER = DASH / "wnba_master.json"
 PERFORMANCE = DASH / "wnba_game_performance.json"
 RATINGS_OUT = DASH / "wnba_team_ratings.json"
 PREDICTIONS_OUT = DASH / "wnba_sprint2_predictions.json"
+MODEL_VERSION = "game_score_l10_market_42_58_v1"
 
 
 def f(v, default=None):
@@ -39,9 +40,11 @@ def load(path: Path, default):
         return default
 
 
-def build_team_history(perf: dict) -> dict[str, list[dict]]:
+def build_team_history(perf: dict, target_date: str) -> dict[str, list[dict]]:
     history: dict[str, list[dict]] = defaultdict(list)
-    for row in perf.get("recent_games") or []:
+    # Calibration is version-segmented, but actual final scores remain valid
+    # training inputs across model versions.
+    for row in perf.get("result_history") or perf.get("recent_games") or []:
         if not isinstance(row, dict) or not row.get("graded"):
             continue
         away = str(row.get("away_team") or "").strip()
@@ -50,7 +53,12 @@ def build_team_history(perf: dict) -> dict[str, list[dict]]:
         home_score = f(row.get("actual_home_score"))
         if not away or not home or away_score is None or home_score is None:
             continue
-        date = str(row.get("target_date") or "")
+        date = str(row.get("target_date") or "")[:10]
+        # Enforce chronology here rather than relying on the caller to provide
+        # a pre-trimmed archive. This prevents future results from entering a
+        # historical rerun/backtest of the current model.
+        if not date or date >= str(target_date)[:10]:
+            continue
         history[away].append({"date": date, "pf": away_score, "pa": home_score, "home": False})
         history[home].append({"date": date, "pf": home_score, "pa": away_score, "home": True})
     for rows in history.values():
@@ -87,7 +95,8 @@ def roster_form(master: dict) -> dict[str, dict]:
 
 
 def build_ratings(master: dict, perf: dict) -> dict:
-    history = build_team_history(perf)
+    target_date = str(master.get("target_date") or "")[:10]
+    history = build_team_history(perf, target_date)
     form = roster_form(master)
     all_team_games = [r for rows in history.values() for r in rows]
     league_pf = mean([r["pf"] for r in all_team_games], 82.0) or 82.0
@@ -222,11 +231,14 @@ def build_predictions(master: dict, ratings: dict) -> dict:
             total_pick = "OVER" if total_edge > 0 else "UNDER"
 
         predictions.append({
+            "model_version": MODEL_VERSION,
             "game": g.get("game") or f"{away} @ {home}",
             "away_team": away,
             "home_team": home,
             "start_time": g.get("start_time"),
             "market": {"home_spread": home_spread, "total": total},
+            "market_source": g.get("source"),
+            "sportsbook": g.get("sportsbook"),
             "projection": {
                 "away_score": round(proj_away, 1),
                 "home_score": round(proj_home, 1),
@@ -243,13 +255,15 @@ def build_predictions(master: dict, ratings: dict) -> dict:
             "recommendation": {"spread": spread_pick, "total": total_pick},
             "confidence": round(confidence, 1),
             "source": source,
+            "blend_weights": {"market": 0.58, "statistical": 0.42},
             "team_ratings": {"away": ar, "home": hr},
         })
 
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": master.get("target_date"),
-        "schema_version": "sprint2-game-projections-v1",
+        "schema_version": "sprint2-game-projections-v2",
+        "model_version": MODEL_VERSION,
         "status": "PASS",
         "games": predictions,
         "summary": {"game_count": len(predictions), "qualified_spreads": sum(1 for p in predictions if p["recommendation"]["spread"] != "PASS"), "qualified_totals": sum(1 for p in predictions if p["recommendation"]["total"] != "PASS")},

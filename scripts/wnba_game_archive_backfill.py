@@ -175,6 +175,7 @@ def main():
         source_counts[source] = source_counts.get(source, 0) + 1
         adjacent_matches += int(match_mode == 'adjacent_date')
         row.update({
+            'model_version': ledger.infer_model_version(row),
             'actual_away_score': a, 'actual_home_score': h,
             'actual_margin': round(h-a, 2), 'actual_total': round(h+a, 2),
             'margin_error': round(abs(pm-(h-a)), 2) if pm is not None else None,

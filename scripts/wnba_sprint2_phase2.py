@@ -175,8 +175,11 @@ def main():
         pace=round(avg([ar.get('pace_index'),hr.get('pace_index')],100),1)
         card_injury_count=sum(int(x or 0) for x in [a_injury.get('players'),h_injury.get('players')])
         cards.append({
+            'model_version':p.get('model_version') or preds.get('model_version'),
             'game':p.get('game'),'away_team':away,'home_team':home,'start_time':p.get('start_time'),
+            'market_source':p.get('market_source'),'sportsbook':p.get('sportsbook'),
             'market':market,'projection':projection,'edge':edge,'confidence':conf,
+            'blend_weights':p.get('blend_weights') or {'market':0.58,'statistical':0.42},
             'model_grade':grade(conf,spread_edge,total_edge),
             'recommendation':{'spread':spread_pick,'total':total_pick},
             'pace_index':pace,'pace_label':'FAST' if pace>=103 else ('SLOW' if pace<=97 else 'NEUTRAL'),

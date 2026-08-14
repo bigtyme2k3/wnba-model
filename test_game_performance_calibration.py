@@ -1,4 +1,5 @@
 import wnba_game_performance as gp
+import wnba_sprint2_prediction_engine as game_engine
 
 
 def test_calibration_requires_segment_depth():
@@ -24,3 +25,19 @@ def test_recommended_performance_excludes_passes():
     assert out["record"]=={"wins":1,"losses":1,"pushes":0}
     assert out["scope"]=="RECOMMENDED_WAGERS_ONLY"
     assert out["sample_sufficient"] is False
+
+
+def test_legacy_rows_are_identified_without_rewriting_ledger():
+    row={"total_source":"standings_strength+market_prior"}
+    assert gp.row_model_version(row)==gp.LEGACY_MODEL_VERSION
+    assert "model_version" not in row
+
+
+def test_team_history_blocks_target_and_future_games():
+    perf={"result_history":[
+        {"graded":True,"target_date":"2026-08-13","away_team":"Away","home_team":"Home","actual_away_score":80,"actual_home_score":90},
+        {"graded":True,"target_date":"2026-08-14","away_team":"Away","home_team":"Home","actual_away_score":81,"actual_home_score":91},
+        {"graded":True,"target_date":"2026-08-15","away_team":"Away","home_team":"Home","actual_away_score":82,"actual_home_score":92},
+    ]}
+    history=game_engine.build_team_history(perf,"2026-08-14")
+    assert [row["date"] for row in history["Away"]]==["2026-08-13"]

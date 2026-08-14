@@ -101,6 +101,7 @@ def build(target: str) -> dict[str, Any]:
             picks.append({"market": "TOTAL", "pick": total_recommendation, "line": market_total, "edge": round(total_edge, 2), "probability": round(total_probability, 4)})
 
         output.append({
+            "model_version": model.get("model_version") or "legacy_standings_market_72_28_v1",
             "game": name, "target_date": target,
             "start_time": game.get("start_time") or game.get("commence_time") or game.get("tip"),
             "away_team": away, "home_team": home,
@@ -121,6 +122,7 @@ def build(target: str) -> dict[str, Any]:
 
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target,
+        "model_version": "legacy_standings_market_72_28_v1",
         "status": "ok" if any(x["model_available"] for x in output) else "degraded",
         "summary": {
             "games": len(output),
