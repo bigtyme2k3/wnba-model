@@ -201,6 +201,31 @@ def parse_alt_props(event_data: dict, target: str) -> list[dict]:
     return rows
 
 
+def audit_alt_payload(event_data: dict) -> dict[str, object]:
+    """Describe raw upstream alternate outcomes before local filtering.
+
+    The Odds API does not accept separate OVER/UNDER market parameters. Both
+    sides, when offered by a book, are outcomes inside the requested
+    ``*_alternate`` market. This audit proves which sides arrived upstream.
+    """
+    sides = {"OVER": 0, "UNDER": 0, "OTHER": 0}
+    by_market: dict[str, dict[str, int]] = {}
+    bookmakers = 0
+    for book in (event_data or {}).get("bookmakers", []) or []:
+        bookmakers += 1
+        for market in book.get("markets", []) or []:
+            key = str(market.get("key") or "")
+            if key not in ALT_PROP_MARKETS:
+                continue
+            bucket = by_market.setdefault(key, {"OVER": 0, "UNDER": 0, "OTHER": 0})
+            for item in market.get("outcomes", []) or []:
+                side = str(item.get("name") or "").upper()
+                label = side if side in {"OVER", "UNDER"} else "OTHER"
+                sides[label] += 1
+                bucket[label] += 1
+    return {"bookmakers": bookmakers, "outcome_sides": sides, "by_market": by_market}
+
+
 def save_outputs(df: pd.DataFrame, alt_df: pd.DataFrame, target: str, out_dir: str):
     os.makedirs(out_dir, exist_ok=True)
     if df.empty: df = empty_df()
@@ -222,7 +247,7 @@ def main():
     parser.add_argument("--skip-alt", action="store_true", help="Skip alternate-market API requests to conserve credits")
     args = parser.parse_args()
     print(f"\n═══ THE ODDS API WNBA PLAYER PROPS — {args.date} ═══\n")
-    status = {"status": "unknown", "target_date": args.date, "source": "the-odds-api", "checked_at_utc": datetime.now(timezone.utc).isoformat(), "events": 0, "rows": 0, "alt_rows": 0, "markets": list(PROP_MARKETS), "alt_markets": list(ALT_PROP_MARKETS), "event_id_policy": "fresh_api_only", "error": None}
+    status = {"status": "unknown", "target_date": args.date, "source": "the-odds-api", "checked_at_utc": datetime.now(timezone.utc).isoformat(), "events": 0, "rows": 0, "alt_rows": 0, "markets": list(PROP_MARKETS), "alt_markets": list(ALT_PROP_MARKETS), "alt_request_contract": "OVER and UNDER are outcomes returned inside each *_alternate market; there is no separate side request parameter", "raw_alt_api_audit": [], "event_id_policy": "fresh_api_only", "error": None}
     try:
         events = fetch_current_target_events(args.date, args.out)
         status["events"] = len(events); standard_rows = []; alt_rows = []
@@ -232,6 +257,11 @@ def main():
             if not event_id: continue
             standard_payload = fetch_event_markets(event_id, list(PROP_MARKETS), "standard")
             alt_payload = {} if args.skip_alt else fetch_event_markets(event_id, list(ALT_PROP_MARKETS), "alternate")
+            if not args.skip_alt:
+                raw_audit = audit_alt_payload(alt_payload)
+                raw_audit["event_id"] = event_id
+                status["raw_alt_api_audit"].append(raw_audit)
+                print(f"  Raw ALT upstream side audit {event_id}: {raw_audit['outcome_sides']}")
             if standard_payload or alt_payload:
                 valid_event_requests += 1
             standard_rows.extend(parse_event_props(standard_payload, args.date))

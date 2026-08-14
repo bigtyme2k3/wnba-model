@@ -131,8 +131,21 @@ jobs:
               raise SystemExit(f"ALT calibration target mismatch: {calibration.get('target_date')} != {target}")
           if graded + pending != archived:
               raise SystemExit(f'ALT accounting mismatch: {archived} != {graded}+{pending}')
+          live=report.get('live_performance') or {}
+          research=report.get('research_archive') or {}
+          training=report.get('calibration_training_set') or {}
+          if int(live.get('n') or 0) != sum(
+              int(r.get('decisions') or 0) for r in (report.get('by_action') or [])
+              if str(r.get('group') or '').upper() == 'BET'
+          ):
+              raise SystemExit('ALT live performance must contain BET decisions only')
+          if [r.get('group') for r in (research.get('tiers') or [])] != ['LEAN','WATCH','PASS']:
+              raise SystemExit('ALT research tier ordering contract missing')
+          if bool(training.get('calibration_ready')) != bool(training.get('qualified_segment_count')):
+              raise SystemExit('ALT calibration readiness must derive from independently qualified segments')
           print({
               'target':target,'archived':archived,'graded':graded,'pending':pending,
+              'live_bet_n':live.get('n'),'research_tier_order_verified':research.get('tier_order_verified'),
               'calibration_training_rows':calibration.get('graded_training_rows'),
               'side_coverage':calibration.get('side_coverage'),
               'qualified_segments':len(calibration.get('qualified_segments') or []),

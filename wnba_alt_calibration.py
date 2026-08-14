@@ -191,12 +191,23 @@ def build(target: str) -> dict[str, Any]:
         }
         for side in ("OVER", "UNDER")
     }
+    ready_segments = [
+        row for row in qualified
+        if row.get("n", 0) >= int(row.get("min_sample") or 0)
+        and row.get("probability_margin_lower") is not None
+        and row.get("roi") is not None
+    ]
     report = {
-        "schema_version": "1.3",
+        "schema_version": "1.4",
         "target_date": target,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "status": "READY" if len(history) >= 100 else "COLLECTING",
+        # Readiness is a property of independently qualified segments, never
+        # the league-wide row count.  A large pile of unrelated PASS markets
+        # cannot make an uncovered live segment ready.
+        "status": "READY" if ready_segments else "COLLECTING",
+        "calibration_ready": bool(ready_segments),
         "graded_training_rows": len(history),
+        "ready_segment_count": len(ready_segments),
         "side_coverage": side_coverage,
         "historical_side_bias_detected": not all(v["calibration_ready"] for v in side_coverage.values()),
         "policy": {
@@ -208,6 +219,7 @@ def build(target: str) -> dict[str, Any]:
             "minimum_samples": MIN_SAMPLE,
             "minimum_realized_roi": MIN_ROI,
             "minimum_wilson_lower_edge_over_break_even": MIN_PROB_EDGE,
+            "readiness_rule": "READY requires at least one segment that independently meets its level-specific sample, ROI, Wilson-edge, and same-side coverage gates",
             "selection_rule": "BUY requires a qualifying side-specific price-aware historical segment; the score band is already part of that evidence key and no additional global score floor is applied",
         },
         "qualified_segments": qualified,

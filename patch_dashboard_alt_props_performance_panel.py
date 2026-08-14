@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -19,7 +20,7 @@ STYLE = r'''<style id="alt-props-performance-panel-style">
 .altPerfGrid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px;margin-bottom:14px}
 .altPerfMetric{border:1px solid #1b2a40;border-radius:10px;background:#08111f;padding:10px}.altPerfMetricLabel{font-size:9px;color:#6f7d96;text-transform:uppercase;letter-spacing:.1em}.altPerfMetricValue{font-size:20px;font-weight:900;margin-top:4px}
 .altPerfGood{color:#52e0aa}.altPerfBad{color:#ff7188}.altPerfNeutral{color:#ffd166}
-.altPerfBreakouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}.altPerfBox{border:1px solid #17263c;border-radius:10px;overflow:auto}.altPerfBox h4{margin:0;padding:10px 11px;border-bottom:1px solid #17263c;font-size:12px}.altPerfMini{width:100%;border-collapse:collapse;min-width:360px}.altPerfMini th,.altPerfMini td{padding:8px 9px;border-bottom:1px solid #111d2e;text-align:left;font-size:10px}.altPerfMini th{color:#69768d;text-transform:uppercase;letter-spacing:.07em}.altPerfMini tr:last-child td{border-bottom:0}
+.altPerfSection{margin-top:14px;padding-top:14px;border-top:1px solid #17263c}.altPerfSection h3{margin:0 0 4px;font-size:15px}.altPerfSectionNote{font-size:10px;color:#738198;margin-bottom:10px}.altPerfAlert{border:1px solid #6b5724;background:#171307;color:#ffd166;border-radius:10px;padding:11px;margin-bottom:12px;font-size:12px}.altPerfBreakouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}.altPerfBox{border:1px solid #17263c;border-radius:10px;overflow:auto}.altPerfBox h4{margin:0;padding:10px 11px;border-bottom:1px solid #17263c;font-size:12px}.altPerfMini{width:100%;border-collapse:collapse;min-width:360px}.altPerfMini th,.altPerfMini td{padding:8px 9px;border-bottom:1px solid #111d2e;text-align:left;font-size:10px}.altPerfMini th{color:#69768d;text-transform:uppercase;letter-spacing:.07em}.altPerfMini tr:last-child td{border-bottom:0}
 @media(max-width:800px){.altPerfPanel{margin-left:-10px;margin-right:-10px;border-radius:0}.altPerfGrid2{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>'''
 
@@ -34,12 +35,19 @@ def replace_element(html: str, tag: str, element_id: str, replacement: str) -> s
 
 
 def load_payload() -> tuple[dict, str]:
-    """Load the newest persisted ALT performance artifact.
+    """Load the newest valid ALT performance artifact.
 
-    Pages deployments can queue behind older commits. Prefer origin/main so an
-    older queued checkout cannot republish an obsolete performance snapshot
-    after recovery has already advanced the canonical archive.
+    A deployment rebuild may create the new three-view schema before it exists
+    on origin/main. Compare timestamps instead of blindly preferring the remote
+    copy, while still preventing an older queued checkout from winning.
     """
+    candidates = []
+    try:
+        payload = json.loads(DATA.read_text(encoding='utf-8')) if DATA.exists() else {}
+        if isinstance(payload, dict):
+            candidates.append((str(payload.get('generated_at_utc') or ''), payload, 'working-tree'))
+    except Exception:
+        pass
     try:
         subprocess.run(
             ['git', 'fetch', '--quiet', 'origin', 'main'],
@@ -55,14 +63,13 @@ def load_payload() -> tuple[dict, str]:
         ).stdout
         payload = json.loads(raw)
         if isinstance(payload, dict):
-            return payload, 'origin/main'
+            candidates.append((str(payload.get('generated_at_utc') or ''), payload, 'origin/main'))
     except Exception:
         pass
-    try:
-        payload = json.loads(DATA.read_text(encoding='utf-8')) if DATA.exists() else {}
-        return (payload if isinstance(payload, dict) else {}), 'working-tree'
-    except Exception:
+    if not candidates:
         return {}, 'missing'
+    _stamp, payload, source = max(candidates, key=lambda item: item[0])
+    return payload, source
 
 
 def main() -> None:
@@ -78,11 +85,11 @@ const D=()=>window.WNBA_ALT_PERFORMANCE_DATA||{};
 const pct=v=>v===null||v===undefined?'—':(Number(v)*100).toFixed(1)+'%';
 const cls=v=>Number(v||0)>0?'altPerfGood':Number(v||0)<0?'altPerfBad':'altPerfNeutral';
 function mini(title,rows){const body=arr(rows).slice(0,8).map(r=>`<tr><td><b>${esc(r.group??'—')}</b></td><td>${esc(r.wins??0)}-${esc(r.losses??0)}-${esc(r.pushes??0)}</td><td>${pct(r.hit_rate)}</td><td class="${cls(r.profit_loss_units)}">${Number(r.profit_loss_units||0).toFixed(2)}u</td><td class="${cls(r.roi)}">${pct(r.roi)}</td></tr>`).join('');return `<div class="altPerfBox"><h4 class="mono">${esc(title)}</h4><table class="altPerfMini"><thead><tr><th>Group</th><th>Record</th><th>Hit</th><th>P/L</th><th>ROI</th></tr></thead><tbody>${body||'<tr><td colspan="5">No graded results yet.</td></tr>'}</tbody></table></div>`}
-function panel(){const raw=D(),p=raw.alt_performance||raw||{},s=p.summary||{};return `<section id="alt-props-performance-panel" class="altPerfPanel"><div class="altPerfPanelHead"><div><div class="altPerfPanelTitle mono">ALT Props Performance</div><div class="altPerfPanelNote mono">Frozen pregame ALT selections graded against verified results. Pending includes current-slate picks awaiting final results plus any historical rows still missing verified actuals.</div></div></div><div class="altPerfGrid2"><div class="altPerfMetric"><div class="altPerfMetricLabel">Archived</div><div class="altPerfMetricValue">${esc(s.archived_candidates??0)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Graded</div><div class="altPerfMetricValue">${esc(s.graded??0)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Pending</div><div class="altPerfMetricValue altPerfNeutral">${esc(s.pending??0)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Record</div><div class="altPerfMetricValue">${esc(s.wins??0)}-${esc(s.losses??0)}-${esc(s.pushes??0)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Hit Rate</div><div class="altPerfMetricValue">${pct(s.hit_rate)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">P/L</div><div class="altPerfMetricValue ${cls(s.profit_loss_units)}">${Number(s.profit_loss_units||0).toFixed(2)}u</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">ROI</div><div class="altPerfMetricValue ${cls(s.roi)}">${pct(s.roi)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Threshold</div><div class="altPerfMetricValue">${esc(s.recommended_minimum_score_band??'—')}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Calibration</div><div class="altPerfMetricValue">${s.calibration_ready?'Ready':'Collecting'}</div></div></div><div class="altPerfBreakouts">${mini('By Score Band',p.by_score_band)}${mini('By Stat',p.by_stat)}${mini('By Side',p.by_side)}${mini('By Sportsbook',p.by_sportsbook)}</div></section>`}
+function panel(){const raw=D(),p=raw.alt_performance||raw||{},s=p.summary||{},l=p.live_performance||{},r=p.research_archive||{},c=p.calibration_training_set||{};const liveRate=l.sample_sufficient?pct(l.hit_rate):'—',liveRoi=l.sample_sufficient?pct(l.roi):'—';return `<section id="alt-props-performance-panel" class="altPerfPanel"><div class="altPerfPanelHead"><div><div class="altPerfPanelTitle mono">ALT Props Performance</div><div class="altPerfPanelNote mono">Live recommendations, research diagnostics, and calibration evidence are reported separately.</div></div></div><div class="altPerfSection"><h3 class="mono">1 · LIVE PERFORMANCE</h3><div class="altPerfSectionNote mono">Only frozen pregame rows whose archived action was BET. These are the model's recommendation results.</div>${l.sample_sufficient?'':`<div class="altPerfAlert mono">${esc(l.message||'Insufficient sample — BET recommendations just started')}</div>`}<div class="altPerfGrid2"><div class="altPerfMetric"><div class="altPerfMetricLabel">BET sample</div><div class="altPerfMetricValue">${esc(l.n??0)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Record</div><div class="altPerfMetricValue">${esc(l.wins??0)}-${esc(l.losses??0)}-${esc(l.pushes??0)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Win rate</div><div class="altPerfMetricValue">${liveRate}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Units</div><div class="altPerfMetricValue ${cls(l.profit_loss_units)}">${Number(l.profit_loss_units||0).toFixed(2)}u</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">ROI</div><div class="altPerfMetricValue ${cls(l.roi)}">${liveRoi}</div></div></div></div><div class="altPerfSection"><h3 class="mono">2 · RESEARCH ARCHIVE</h3><div class="altPerfSectionNote mono">Diagnostic only: did LEAN out-hit WATCH, and WATCH out-hit PASS? These were not recommended wagers; units are not included in live performance.</div>${mini('Tier ordering · '+(r.tier_order_verified?'VERIFIED':'NOT VERIFIED'),r.tiers)}</div><div class="altPerfSection"><h3 class="mono">3 · CALIBRATION TRAINING SET</h3><div class="altPerfSectionNote mono">A segment qualifies independently by score, stat, side, and price bucket. League-wide row count alone cannot trigger readiness.</div><div class="altPerfGrid2"><div class="altPerfMetric"><div class="altPerfMetricLabel">Training rows</div><div class="altPerfMetricValue">${esc(c.graded_training_rows??0)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Qualified segments</div><div class="altPerfMetricValue">${esc(c.qualified_segment_count??0)}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Segment status</div><div class="altPerfMetricValue">${esc(c.status||'Collecting')}</div></div><div class="altPerfMetric"><div class="altPerfMetricLabel">Forward BET validation</div><div class="altPerfMetricValue">${c.live_bet_validation_ready?'Ready':'Collecting'} · n=${esc(c.live_bet_validation_n??0)}</div></div></div></div><div class="altPerfSection"><h3 class="mono">Archive Diagnostics</h3><div class="altPerfSectionNote mono">All exact ALT candidates: ${esc(s.archived_candidates??0)} archived · ${esc(s.graded??0)} graded · ${esc(s.pending??0)} pending.</div><div class="altPerfBreakouts">${mini('By Score Band',p.by_score_band)}${mini('By Stat',p.by_stat)}${mini('By Side',p.by_side)}${mini('By Sportsbook',p.by_sportsbook)}</div></div></section>`}
 function append(){const root=document.getElementById('root');if(!root)return;if(document.getElementById('alt-props-performance-panel'))return;const host=root.querySelector('.altDesk')||root;host.insertAdjacentHTML('beforeend',panel())}
 const prevRender=window.render;window.render=function(view){if(typeof prevRender==='function')prevRender(view);if(view==='alt-props')setTimeout(append,10)};
 const prevFilter=window.altPropsSetFilter;window.altPropsSetFilter=function(kind,value){if(typeof prevFilter==='function')prevFilter(kind,value);setTimeout(append,10)};
-window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'1.2',location:'below-alt-props-table',shows_pending:true,canonical_source:'origin/main'};
+window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'2.0',location:'below-alt-props-table',separated_live_research_calibration:true,shows_pending:true,canonical_source:'origin/main'};
 })();</script>'''
 
     html = HTML.read_text(encoding='utf-8')
@@ -102,6 +109,9 @@ window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'1.2',location:'below-alt-props
         'pending': summary.get('pending'),
         'shows_pending': True,
     })
+
+    if os.getenv('ALT_PANEL_ONLY') == '1':
+        return
 
     # Sprint 19 M03 is the final consumer layer. It runs after M02 has installed
     # the injury-aware Games/Props routes, then takes ownership of Best Bets,

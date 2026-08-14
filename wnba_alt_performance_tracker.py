@@ -23,7 +23,9 @@ MARKETS = Path("data/dashboard/wnba_alt_market_warehouse.json")
 LOGS = Path("data/warehouse/wnba_player_game_logs.json")
 ARCHIVE = Path("data/history/wnba_alt_streak_history.jsonl")
 REPORTS = [Path("data/warehouse/wnba_alt_performance.json"), Path("data/dashboard/wnba_alt_performance.json")]
+CALIBRATION = Path("data/dashboard/wnba_alt_calibration.json")
 CANONICAL_ARCHIVE_SCHEMA = "2.0"
+MIN_LIVE_BET_DECISIONS = 30
 
 
 def load(path: Path, default: Any) -> Any:
@@ -285,6 +287,18 @@ def group_summary(rows: list[dict[str,Any]], field: str) -> list[dict[str,Any]]:
     return output
 
 
+def performance_summary(rows: list[dict[str,Any]]) -> dict[str,Any]:
+    graded=[r for r in rows if r.get("outcome") in {"WIN","LOSS","PUSH","VOID"}]
+    wins=sum(r.get("outcome")=="WIN" for r in graded);losses=sum(r.get("outcome")=="LOSS" for r in graded)
+    pushes=sum(r.get("outcome")=="PUSH" for r in graded);decisions=wins+losses
+    pnl=sum(num(r.get("profit_loss")) or 0.0 for r in graded)
+    return {
+        "n":decisions,"graded":len(graded),"wins":wins,"losses":losses,"pushes":pushes,
+        "hit_rate":round(wins/decisions,4) if decisions else None,
+        "profit_loss_units":round(pnl,4),"roi":round(pnl/decisions,4) if decisions else None,
+    }
+
+
 def analyze(target: str) -> dict[str,Any]:
     raw=read_jsonl(ARCHIVE);strict=[r for r in raw if strict_canonical_row(r)];rows=canonical_rows(raw)
     graded=[r for r in rows if r.get("outcome") in {"WIN","LOSS","PUSH","VOID"}]
@@ -300,14 +314,64 @@ def analyze(target: str) -> dict[str,Any]:
     by_side=group_summary(graded,"side");by_book=group_summary(graded,"best_book");by_rank_source=group_summary(graded,"opponent_rank_source")
     profitable=[r for r in score_bands if (r.get("decisions") or 0)>=20 and (r.get("roi") or 0)>0]
     threshold=max((r["group"] for r in profitable),default=None) if profitable else None
+    live_bets=[r for r in rows if str(r.get("streak_action") or "").upper()=="BET"]
+    live=performance_summary(live_bets)
+    live.update({
+        "minimum_sample":MIN_LIVE_BET_DECISIONS,
+        "sample_sufficient":live["n"]>=MIN_LIVE_BET_DECISIONS,
+        "display_status":"TRACKING" if live["n"]>=MIN_LIVE_BET_DECISIONS else "INSUFFICIENT_SAMPLE",
+        "message":None if live["n"]>=MIN_LIVE_BET_DECISIONS else "Insufficient sample — BET recommendations just started",
+        "scope":"frozen pregame rows whose archived action was BET",
+    })
+    research_rows=[r for r in graded if str(r.get("streak_action") or "").upper() in {"LEAN","WATCH","PASS"}]
+    research_tiers=[]
+    tier_map={r["group"]:r for r in group_summary(research_rows,"streak_action")}
+    for tier in ("LEAN","WATCH","PASS"):
+        item=tier_map.get(tier) or {"group":tier,"candidates":0,"wins":0,"losses":0,"pushes":0,"decisions":0,"hit_rate":None,"profit_loss_units":0.0,"roi":None}
+        # P/L is retained for audit but is explicitly not a wager ledger.
+        research_tiers.append(item)
+    rates=[tier_map.get(t,{}).get("hit_rate") for t in ("LEAN","WATCH","PASS")]
+    ordered=all(v is not None for v in rates) and rates[0] >= rates[1] >= rates[2]
+    calibration=load(CALIBRATION,{})
+    ready_segments=[]
+    for segment in calibration.get("qualified_segments") or []:
+        if not isinstance(segment,dict):continue
+        if segment.get("qualifies_buy") is True and int(segment.get("n") or 0)>=int(segment.get("min_sample") or 0):
+            ready_segments.append(segment)
+    calibration_view={
+        "status":"READY" if ready_segments else "COLLECTING",
+        "calibration_ready":bool(ready_segments),
+        "graded_training_rows":int(calibration.get("graded_training_rows") or 0),
+        "qualified_segment_count":len(ready_segments),
+        "segments":ready_segments,
+        "readiness_rule":"Each qualifying score/stat/side/price segment must independently meet its sample, ROI, Wilson-edge, and same-side coverage gates.",
+        "live_bet_validation_ready":live["sample_sufficient"],
+        "live_bet_validation_n":live["n"],
+    }
     report={
         "generated_at_utc":datetime.now(timezone.utc).isoformat(),"target_date":target,"status":"ok",
         "summary":{"raw_archive_rows":len(raw),"strict_verified_snapshots":len(strict),"excluded_legacy_or_unverified":len(raw)-len(strict),
                    "excluded_duplicate_snapshots":len(strict)-len(rows),"archived_candidates":len(rows),
                    "graded":len(graded),"pending":sum(r.get("outcome")=="PENDING" for r in rows),
-                   "wins":wins,"losses":losses,"pushes":pushes,"hit_rate":round(wins/decisions,4) if decisions else None,
-                   "profit_loss_units":round(pnl,4),"roi":round(pnl/decisions,4) if decisions else None,
-                   "recommended_minimum_score_band":threshold,"calibration_ready":decisions>=100},
+                   # Backward-compatible headline fields now describe actual
+                   # archived BET recommendations only. Research candidates
+                   # remain available exclusively in research_archive.
+                   "wins":live["wins"],"losses":live["losses"],"pushes":live["pushes"],
+                   "hit_rate":live["hit_rate"] if live["sample_sufficient"] else None,
+                   "profit_loss_units":live["profit_loss_units"],
+                   "roi":live["roi"] if live["sample_sufficient"] else None,
+                   "performance_scope":"BET_ONLY",
+                   "recommended_minimum_score_band":threshold,
+                   "calibration_ready":calibration_view["calibration_ready"]},
+        "live_performance":live,
+        "research_archive":{
+            "purpose":"Did the model correctly rank non-recommended markets as lower quality?",
+            "graded":len(research_rows),"tiers":research_tiers,
+            "tier_order_expected":"LEAN >= WATCH >= PASS",
+            "tier_order_verified":ordered,
+            "profit_is_counterfactual":True,
+        },
+        "calibration_training_set":calibration_view,
         "by_grade":by_grade,"by_action":by_action,"by_score_band":score_bands,"by_stat":by_stat,"by_side":by_side,
         "by_sportsbook":by_book,"by_matchup_rank_source":by_rank_source,
         "recent_results":sorted(graded,key=lambda r:str(r.get("date") or ""),reverse=True)[:100],

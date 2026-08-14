@@ -136,6 +136,18 @@ jobs:
           # rebuild cannot create deploy-only archive rows or rewrite history.
           python wnba_alt_streak_confidence.py --date "$TARGET"
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_alt_performance.json').read_text())
+          assert 'live_performance' in p and 'research_archive' in p and 'calibration_training_set' in p
+          assert p['live_performance']['n'] == sum(
+              int(r.get('decisions') or 0) for r in p.get('by_action',[])
+              if str(r.get('group') or '').upper() == 'BET'
+          )
+          assert [r.get('group') for r in p['research_archive']['tiers']] == ['LEAN','WATCH','PASS']
+          print({'status':'PASS','alt_performance_views':3,'live_bet_n':p['live_performance']['n']})
+          PY
 
       - name: Build complete dashboard artifact
         env:
