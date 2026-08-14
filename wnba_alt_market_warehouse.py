@@ -152,7 +152,12 @@ def read_markets(target: str) -> list[dict[str, Any]]:
     if not path.exists():
         return []
     with path.open(encoding="utf-8", newline="") as handle:
-        return [dict(row) for row in csv.DictReader(handle)]
+        # The ``today`` filename is only an alias, not proof of freshness.  A
+        # previous slate must never be relabelled as the requested target date.
+        return [
+            dict(row) for row in csv.DictReader(handle)
+            if str(row.get("game_date") or "")[:10] == target
+        ]
 
 
 def build(target: str) -> dict[str, Any]:
@@ -201,6 +206,14 @@ def build(target: str) -> dict[str, Any]:
         "generated_at_utc": datetime.now(timezone.utc).isoformat(), "target_date": target,
         "status": "ok" if rows else "empty", "summary": {
             "raw_rows": len(raw), "markets": len(rows), "players": len(ladders),
+            "market_sides": {
+                side: sum(r["side"] == side for r in rows)
+                for side in ("OVER", "UNDER")
+            },
+            "under_market_warning": (
+                "No exact sportsbook UNDER alternate markets were supplied by the source"
+                if rows and not any(r["side"] == "UNDER" for r in rows) else None
+            ),
             "sportsbooks": sorted({r["sportsbook"] for r in rows}),
             "stats": sorted({r["stat"] for r in rows}),
             "book_player_stat_groups": len({(r["sportsbook"], r["player"], r["stat"]) for r in rows}),
@@ -212,6 +225,7 @@ def build(target: str) -> dict[str, Any]:
             "threshold_rule": "exact sportsbook outcome point", "dd_td_supported": False,
             "history_source": str(LOGS), "history_strictly_before_target_date": True,
             "history_cutoff_date": target, "pushes_excluded_from_hit_rate_denominator": True,
+            "input_game_date_must_match_target": True,
             "future_markets": ["PLAYER_1Q_POINTS", "PLAYER_FIRST_3_MIN_POINTS"],
         },
     }

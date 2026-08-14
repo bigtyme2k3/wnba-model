@@ -28,7 +28,10 @@ def main(target: str) -> None:
         rows = [r for r in payload.get("rows", []) if isinstance(r, dict)]
         local_counts = {"BET": 0, "WATCH": 0, "PASS": 0}
         for row in rows:
-            raw_action = str(row.get("streak_action") or "PASS")
+            # Preserve the original component-score action across repeated
+            # calibration passes.  ``streak_action`` is replaced below, so it
+            # is not a stable raw source after the first run.
+            raw_action = str(row.get("raw_score_action") or row.get("streak_action") or "PASS")
             result = calibration.decision(row, report)
             action = result["action"]
             row["raw_score_action"] = raw_action
@@ -41,11 +44,26 @@ def main(target: str) -> None:
             row["calibration_training_rows"] = report.get("graded_training_rows")
             local_counts[action] += 1
             updated += 1
+        exact_rows = [r for r in rows if r.get("line_type") == "alternate"]
+        standard_rows = [r for r in rows if r.get("line_type") == "standard"]
+        exact_counts = {a: sum(r.get("streak_action") == a for r in exact_rows) for a in local_counts}
+        standard_counts = {a: sum(r.get("streak_action") == a for r in standard_rows) for a in local_counts}
+        exact_side_actions = {
+            side: {a: sum(r.get("side") == side and r.get("streak_action") == a for r in exact_rows) for a in local_counts}
+            for side in ("OVER", "UNDER")
+        }
         summary = payload.setdefault("summary", {})
         summary.update({
-            "bet_rows": local_counts["BET"],
-            "watch_rows": local_counts["WATCH"],
-            "pass_rows": local_counts["PASS"],
+            # Public ALT counts describe exact alternate markets only.  Standard
+            # compatibility rows remain available to their own consumers but
+            # must not inflate the ALT dashboard totals.
+            "bet_rows": exact_counts["BET"],
+            "watch_rows": exact_counts["WATCH"],
+            "pass_rows": exact_counts["PASS"],
+            "all_line_type_action_counts": local_counts,
+            "exact_alt_action_counts": exact_counts,
+            "standard_prop_action_counts": standard_counts,
+            "exact_alt_side_action_counts": exact_side_actions,
             "calibration_status": report.get("status"),
             "calibration_training_rows": report.get("graded_training_rows"),
             "calibration_qualified_segments": len(report.get("qualified_segments") or []),
