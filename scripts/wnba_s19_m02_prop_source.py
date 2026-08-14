@@ -67,6 +67,15 @@ def read_existing(target: str, game_names: set[str]) -> tuple[pd.DataFrame, str 
         except Exception:
             continue
         exact = exact_rows(frame, game_names, target)
+        # Old caches contain a consensus across an unknown/all-book universe.
+        # They cannot safely feed the new three-book model contract.
+        if 'sportsbooks' not in exact.columns:
+            continue
+        allowed = odds_props.PLAYER_PROP_BOOKS
+        valid_books = exact['sportsbooks'].fillna('').astype(str).map(
+            lambda value: bool(value) and set(value.split(',')).issubset(allowed)
+        )
+        exact = exact[valid_books].copy()
         if not exact.empty:
             return exact, str(path.relative_to(ROOT))
     return pd.DataFrame(columns=odds_props.RAW_COLUMNS), None
@@ -141,9 +150,10 @@ def build(target: str):
         'matched_live_events': matched_events,
         'canonical_games': sorted(game_names),
         'prop_games': rendered_games,
+        'sportsbooks': sorted(odds_props.PLAYER_PROP_BOOKS),
         'rows': int(len(frame)),
         'all_rows_exact_current_slate': all(g in game_names for g in rendered_games),
-        'policy': 'Reuse exact current-slate sportsbook cache when available; otherwise make one live standard-market refresh. Alternate markets are not requested here.',
+        'policy': 'Use only DraftKings, FanDuel, and Fanatics. Reuse a verified three-book exact-slate cache when available; otherwise make one live standard-market refresh. Alternate markets are not requested here.',
     }
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     print('SPRINT19_M02_PROP_SOURCE_READY', json.dumps(audit))

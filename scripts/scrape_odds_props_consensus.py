@@ -50,7 +50,9 @@ def parse_event_props(event_data: dict, target: str) -> list[dict]:
     scraped_at = base.datetime.now(base.timezone.utc).isoformat()
     grouped = defaultdict(lambda: {'over_prices': [], 'under_prices': [], 'lines': [], 'books': set()})
     for book in event_data.get('bookmakers', []) or []:
-        book_key = book.get('key') or book.get('title') or 'book'
+        book_key = str(book.get('key') or '').lower()
+        if book_key not in base.PLAYER_PROP_BOOKS:
+            continue
         for market in book.get('markets', []) or []:
             mkey = market.get('key')
             stat = base.PROP_MARKETS.get(mkey)
@@ -92,6 +94,7 @@ def parse_event_props(event_data: dict, target: str) -> list[dict]:
             'yes_price': None,
             'no_price': None,
             'num_books': len(info['books']),
+            'sportsbooks': ','.join(sorted(info['books'])),
             'odds_type': 'sportsbook_consensus_probability_space',
             'game_time': game_time,
             'home_team': home,

@@ -26,6 +26,8 @@ API_KEY = os.getenv("ODDS_API_KEY")
 SPORT = "basketball_wnba"
 REGIONS = "us"
 ODDS_FMT = "american"
+PLAYER_PROP_BOOKS = {"draftkings", "fanduel", "fanatics"}
+PLAYER_PROP_BOOKMAKERS = ",".join(sorted(PLAYER_PROP_BOOKS))
 BASE_URL = "https://api.the-odds-api.com/v4/sports"
 ET = ZoneInfo("America/New_York")
 
@@ -45,7 +47,7 @@ ALT_PROP_MARKETS = {
 RAW_COLUMNS = [
     "game_date", "event_id", "player", "team", "position", "opp_team", "is_home",
     "stat_raw", "stat", "line", "over_price", "under_price", "yes_price", "no_price",
-    "num_books", "odds_type", "game_time", "home_team", "away_team", "source", "scraped_at",
+    "num_books", "sportsbooks", "odds_type", "game_time", "home_team", "away_team", "source", "scraped_at",
 ]
 ALT_COLUMNS = [
     "game_date", "event_id", "game", "game_time", "home_team", "away_team", "player", "team",
@@ -134,7 +136,10 @@ def fetch_event_markets(event_id: str, markets: list[str], label: str) -> dict:
     if not API_KEY:
         raise ValueError("ODDS_API_KEY not set")
     url = f"{BASE_URL}/{SPORT}/events/{event_id}/odds"
-    params = {"apiKey": API_KEY, "regions": REGIONS, "markets": ",".join(markets), "oddsFormat": ODDS_FMT}
+    # The model's supported book universe is deliberately narrow. Supplying
+    # bookmakers here reduces upstream response volume as well as preventing
+    # unsupported books from entering consensus prices.
+    params = {"apiKey": API_KEY, "bookmakers": PLAYER_PROP_BOOKMAKERS, "markets": ",".join(markets), "oddsFormat": ODDS_FMT}
     resp = requests.get(url, params=params, timeout=25)
     print(f"  Event {event_id} {label}: HTTP {resp.status_code} | used {resp.headers.get('x-requests-used','?')} remaining {resp.headers.get('x-requests-remaining','?')}")
     if resp.status_code in (404, 422):
@@ -150,7 +155,9 @@ def parse_event_props(event_data: dict, target: str) -> list[dict]:
     game_time = event_data.get("commence_time", ""); scraped_at = datetime.now(timezone.utc).isoformat()
     grouped = defaultdict(lambda: {"over_prices": [], "under_prices": [], "yes_prices": [], "no_prices": [], "lines": [], "books": set()})
     for book in event_data.get("bookmakers", []) or []:
-        book_key = book.get("key") or book.get("title") or "book"
+        book_key = str(book.get("key") or "").lower()
+        if book_key not in PLAYER_PROP_BOOKS:
+            continue
         for market in book.get("markets", []) or []:
             mkey = market.get("key"); stat = PROP_MARKETS.get(mkey)
             if not stat:
@@ -170,7 +177,8 @@ def parse_event_props(event_data: dict, target: str) -> list[dict]:
             "game_date": target, "event_id": event_id, "player": player, "team": "", "position": "",
             "opp_team": f"{away} @ {home}", "is_home": "", "stat_raw": mkey, "stat": stat,
             "line": avg(info["lines"]), "over_price": avg(info["over_prices"]), "under_price": avg(info["under_prices"]),
-            "yes_price": None, "no_price": None, "num_books": len(info["books"]), "odds_type": "sportsbook",
+            "yes_price": None, "no_price": None, "num_books": len(info["books"]),
+            "sportsbooks": ",".join(sorted(info["books"])), "odds_type": "sportsbook",
             "game_time": game_time, "home_team": home, "away_team": away, "source": "the-odds-api", "scraped_at": scraped_at,
         })
     return rows
@@ -183,6 +191,8 @@ def parse_alt_props(event_data: dict, target: str) -> list[dict]:
     game_time = event_data.get("commence_time", ""); scraped_at = datetime.now(timezone.utc).isoformat(); rows = []
     for book in event_data.get("bookmakers", []) or []:
         book_key = str(book.get("key") or ""); book_title = str(book.get("title") or book_key or "book")
+        if book_key.lower() not in PLAYER_PROP_BOOKS:
+            continue
         for market in book.get("markets", []) or []:
             market_key = str(market.get("key") or ""); stat = ALT_PROP_MARKETS.get(market_key)
             if not stat:
@@ -247,7 +257,7 @@ def main():
     parser.add_argument("--skip-alt", action="store_true", help="Skip alternate-market API requests to conserve credits")
     args = parser.parse_args()
     print(f"\n═══ THE ODDS API WNBA PLAYER PROPS — {args.date} ═══\n")
-    status = {"status": "unknown", "target_date": args.date, "source": "the-odds-api", "checked_at_utc": datetime.now(timezone.utc).isoformat(), "events": 0, "rows": 0, "alt_rows": 0, "markets": list(PROP_MARKETS), "alt_markets": list(ALT_PROP_MARKETS), "alt_request_contract": "OVER and UNDER are outcomes returned inside each *_alternate market; there is no separate side request parameter", "raw_alt_api_audit": [], "event_id_policy": "fresh_api_only", "error": None}
+    status = {"status": "unknown", "target_date": args.date, "source": "the-odds-api", "checked_at_utc": datetime.now(timezone.utc).isoformat(), "events": 0, "rows": 0, "alt_rows": 0, "sportsbooks": sorted(PLAYER_PROP_BOOKS), "markets": list(PROP_MARKETS), "alt_markets": list(ALT_PROP_MARKETS), "alt_request_contract": "OVER and UNDER are outcomes returned inside each *_alternate market; there is no separate side request parameter", "raw_alt_api_audit": [], "event_id_policy": "fresh_api_only", "error": None}
     try:
         events = fetch_current_target_events(args.date, args.out)
         status["events"] = len(events); standard_rows = []; alt_rows = []
