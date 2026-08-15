@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: wnba-main-writer
@@ -212,7 +213,9 @@ jobs:
             'data/forecast' \
             'data/history'
 
-      - name: Verify published main commit and deployment trigger
+      - name: Verify published main commit and dispatch deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git fetch origin main
           PUBLISHED_SHA=$(git rev-parse origin/main)
@@ -228,5 +231,8 @@ jobs:
           PY
           CHANGED=$(git diff-tree --no-commit-id --name-only -r "$PUBLISHED_SHA")
           echo "$CHANGED"
-          if ! grep -q '^data/dashboard/' <<< "$CHANGED"; then echo 'Published commit did not contain dashboard data, so Deploy WNBA Dashboard would not trigger.' >&2; exit 1; fi
-          echo 'Dashboard data is committed to main. The existing Deploy WNBA Dashboard push trigger will now run.'
+          if ! grep -q '^data/dashboard/' <<< "$CHANGED"; then echo 'Published commit did not contain dashboard data; refusing deployment dispatch.' >&2; exit 1; fi
+          # Commits created with GITHUB_TOKEN do not trigger other push
+          # workflows. Dispatch Pages explicitly after the verified publish.
+          gh workflow run deploy_wnba_dashboard.yml --ref main
+          echo 'Dashboard data is committed to main and deployment was explicitly dispatched.'
