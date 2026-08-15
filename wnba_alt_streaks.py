@@ -22,7 +22,7 @@ from typing import Any
 
 ALT_WAREHOUSE = Path("data/dashboard/wnba_alt_market_warehouse.json")
 MIN_HISTORY = 5
-ACTIVE_STREAK_MIN = 3
+ACTIVE_STREAK_MIN = 5
 ALLOWED_BOOKS = {"draftkings", "fanduel", "fanatics"}
 
 
@@ -185,7 +185,7 @@ def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any], i
             continue
 
         streak = consecutive(values, line, side)
-        if streak == 0:
+        if streak < ACTIVE_STREAK_MIN:
             continue
         l5_hits, l5_games, l5_pct = hit_window(values, line, side, 5)
         l10_hits, l10_games, l10_pct = hit_window(values, line, side, 10)
