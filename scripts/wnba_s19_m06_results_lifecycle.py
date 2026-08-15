@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import argparse, json, math, os, subprocess, sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 DASH=Path('data/dashboard')
@@ -119,6 +119,21 @@ def calibration_training_set(rows, live_rows, minimum=25):
     return {'status':'READY' if ready else 'COLLECTING','graded_training_rows':len(graded),'minimum_per_segment':minimum,'qualified_segment_count':len(qualified),'required_dimensions':list(dimensions),'qualified_dimensions':sorted(covered),'forward_bet_validation_n':live_n,'forward_bet_validation_ready':live_n>=15,'segments':segments}
 
 
+def daily_directional_results(rows, result_date):
+    daily=[r for r in rows if str(r.get('date') or '')[:10]==result_date and r.get('result_scope') in {'LIVE_BET','RESEARCH_ONLY'} and str(r.get('signal') or '').upper() in {'OVER','UNDER'}]
+    live=[r for r in daily if r.get('result_scope')=='LIVE_BET']
+    research=[r for r in daily if r.get('result_scope')=='RESEARCH_ONLY']
+    return {
+        'date':result_date,
+        'label':"Yesterday's approved-book OVER/UNDER results",
+        'scope':'DraftKings, FanDuel, and Fanatics; quarantined rows excluded',
+        'all_directional':result_summary(daily),
+        'bet':result_summary(live),
+        'research':result_summary(research),
+        'by_side':grouped(daily,'signal'),
+    }
+
+
 def build(target):
     m04=load(M04,{})
     m05=load(M05,{})
@@ -179,6 +194,8 @@ def build(target):
     current_live=[r for r in current if r['result_scope']=='LIVE_BET']
     current_research=[r for r in current if r['result_scope']=='RESEARCH_ONLY']
     current_quarantine=[r for r in current if r['result_scope']=='QUARANTINED']
+    yesterday_date=(date.fromisoformat(target)-timedelta(days=1)).isoformat()
+    yesterday=daily_directional_results(current,yesterday_date)
     calibration=calibration_training_set(current_live+current_research,current_live)
     legacy=[r for r in versioned if r['model_version']!=CURRENT_MODEL_VERSION]
     target_current=[r for r in current if str(r.get('date') or '')[:10]==target]
@@ -211,7 +228,7 @@ def build(target):
             'label':'Current model BET recommendations','scope':'explicit final_action == BET only; research and quarantined rows excluded','performance':result_summary(current_live),
             'target':{'date':target,'archived_candidates':len(target_current),'recommended':result_summary(target_live)},
             'by_stat':grouped(current_live,'stat'),'by_side':grouped(current_live,'signal'),'by_date':grouped(current_live,'date'),
-            'recent_results':recent_results,'data_quality':current_quality,'profit_loss_status':'UNAVAILABLE — archived stakes are zero; results are model recommendations, not recorded wagers',
+            'recent_results':recent_results,'yesterday':yesterday,'data_quality':current_quality,'profit_loss_status':'UNAVAILABLE — archived stakes are zero; results are model recommendations, not recorded wagers',
         },
         'legacy_reference':{'label':'Legacy models — historical reference only','included_in_current_performance':False,'performance':result_summary(legacy)},
         'research_archive':{'label':'Directional candidates — evaluation only','all_history_rows':len(versioned),'current_research_rows':len(current_research),'performance':result_summary(current_research),'by_action':grouped(current_research,'final_action'),'by_stat':grouped(current_research,'stat'),'edge_database_total':int(edge_report.get('total_records') or 0),'edge_database_open':int(edge_report.get('open_records') or 0),'edge_database_settled':int(edge_report.get('settled_records') or 0)},
