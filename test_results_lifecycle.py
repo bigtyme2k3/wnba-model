@@ -32,3 +32,18 @@ def test_research_rows_do_not_enter_current_record():
 def test_invalid_price_is_quarantined():
     row={"signal":"OVER","action":"BET","player":"A","pred":12,"line":10.5,"american_odds":-50,"sportsbook":"FanDuel"}
     assert results.recommendation_scope(row)=="QUARANTINED"
+
+
+def test_yesterday_directional_results_separate_bets_and_research():
+    rows=[
+        {"date":"2026-08-14","signal":"OVER","outcome":"WIN","result_scope":"LIVE_BET"},
+        {"date":"2026-08-14","signal":"UNDER","outcome":"LOSS","result_scope":"RESEARCH_ONLY"},
+        {"date":"2026-08-14","signal":"OVER","outcome":"WIN","result_scope":"QUARANTINED"},
+        {"date":"2026-08-13","signal":"OVER","outcome":"WIN","result_scope":"LIVE_BET"},
+    ]
+    daily=results.daily_directional_results(rows,"2026-08-14")
+    assert daily["all_directional"]["rows"]==2
+    assert daily["all_directional"]["wins"]==1
+    assert daily["bet"]["decisions"]==1
+    assert daily["research"]["decisions"]==1
+    assert [row["group"] for row in daily["by_side"]]==["OVER","UNDER"]
