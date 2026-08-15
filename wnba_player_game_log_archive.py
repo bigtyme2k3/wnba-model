@@ -161,6 +161,17 @@ def merge() -> None:
     for row in list(old.get("records", [])) + list(new.get("records", [])):
         if not isinstance(row, dict):
             continue
+        # Date aliases exist only to bridge a historical wager to the verified
+        # game it belongs to. They must never become additional games in rolling
+        # player history. Restore their verified source date before identity
+        # collapse so the alias merges back into its canonical player-game.
+        source_game_date = str(row.get("source_game_date") or "").strip()[:10]
+        game_date = str(row.get("game_date") or "").strip()[:10]
+        if source_game_date and game_date and source_game_date != game_date:
+            row = dict(row)
+            row["game_date"] = source_game_date
+            row.pop("date", None)
+            row.pop("date_alias_for_alt_grading", None)
         k = key(row)
         if not k:
             continue
