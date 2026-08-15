@@ -82,6 +82,10 @@ def history_index(target: str) -> tuple[dict[str, list[dict[str, Any]]], int]:
     payload = load(LOGS, {"records": []})
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     excluded_same_or_future = 0
+    # The archive should already be canonical, but deduplicate again here so a
+    # malformed recovery merge can never inflate L10 or exact-line streaks.
+    from wnba_player_game_log_archive import key as player_game_key, merge_rows
+    unique: dict[str, dict[str, Any]] = {}
     for row in payload.get("records", []):
         if not isinstance(row, dict) or row.get("did_not_play") is True:
             continue
@@ -91,6 +95,11 @@ def history_index(target: str) -> tuple[dict[str, list[dict[str, Any]]], int]:
         if not game_date or game_date >= target:
             excluded_same_or_future += 1
             continue
+        identity = player_game_key(row)
+        if not identity:
+            continue
+        unique[identity] = merge_rows(unique[identity], row) if identity in unique else row
+    for row in unique.values():
         groups[norm(row.get("player"))].append(row)
     for rows in groups.values():
         rows.sort(key=lambda r: (str(r.get("game_date") or ""), str(r.get("game_id") or r.get("game") or "")), reverse=True)
