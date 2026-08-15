@@ -116,6 +116,16 @@ jobs:
       - name: Grade full historical backlog and rebuild performance data
         run: |
           YESTERDAY=$(date -d yesterday +%F)
+          DAY_BEFORE=$(date -d '2 days ago' +%F)
+          # Recover verified finals for the two most recently completed slates
+          # before any tab-specific grader runs. Player actuals feed standard
+          # and ALT props; final scores feed the game prediction ledger.
+          for DAY in "$DAY_BEFORE" "$YESTERDAY"; do
+            python scrape_scores.py --date "$DAY" --boxscores || true
+            python wnba_espn_boxscore_fallback.py --date "$DAY" || true
+            python wnba_player_game_log_warehouse.py --date "$DAY" || true
+          done
+          python wnba_player_game_log_archive.py merge || true
           # Results grader is date-scoped, so resolve every archived date that can
           # now be matched to verified player-game actuals. This is intentionally
           # oldest-first and never fabricates missing actuals.
@@ -143,12 +153,13 @@ jobs:
             python wnba_alt_performance_tracker.py --date "$TARGET" --grade
             python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           fi
+          if [ -f wnba_game_predictions_ledger.py ]; then
+            python wnba_game_predictions_ledger.py grade --date "$DAY_BEFORE"
+            python wnba_game_predictions_ledger.py grade --date "$YESTERDAY"
+          fi
+          if [ -f wnba_game_performance.py ]; then python wnba_game_performance.py; fi
           if [ -f wnba_edge_database.py ]; then python wnba_edge_database.py --date "$YESTERDAY"; fi
           if [ -f wnba_forward_validation_engine.py ]; then python wnba_forward_validation_engine.py --mode grade --date "$YESTERDAY" || true; fi
-          if [ -f wnba_game_performance_tracker.py ]; then
-            python wnba_game_performance_tracker.py --date "$YESTERDAY" --grade || true
-            python wnba_game_performance_tracker.py --analyze
-          fi
           [ -f wnba_alt_pending_diagnostics.py ] && python wnba_alt_pending_diagnostics.py || true
 
       - name: Reassert authoritative current slate after all rebuilds
@@ -211,7 +222,11 @@ jobs:
             'data/warehouse' \
             'data/market' \
             'data/forecast' \
-            'data/history'
+            'data/history' \
+            'data/raw/scores_historical.csv' \
+            'data/raw/scores_*.csv' \
+            'data/raw/boxscores_*.csv' \
+            'data/raw/wnba_boxscores_*.json'
 
       - name: Verify published main commit and dispatch deployment
         env:
