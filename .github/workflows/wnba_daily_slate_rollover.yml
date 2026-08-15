@@ -97,8 +97,8 @@ jobs:
           if [ -f wnba_alt_market_warehouse.py ] && [ -f wnba_alt_streaks.py ] && [ -f wnba_alt_performance_tracker.py ]; then
             python wnba_alt_market_warehouse.py --date "$TARGET"
             python wnba_alt_streaks.py --date "$TARGET"
-          python wnba_opponent_stat_rankings.py --date "$TARGET"
-          python wnba_alt_streaks_opponent_context.py
+            python wnba_opponent_stat_rankings.py --date "$TARGET"
+            python wnba_alt_streaks_opponent_context.py
             ALT_MARKETS=$(python - <<'PY'
           import json
           from pathlib import Path
@@ -119,15 +119,19 @@ jobs:
         run: |
           YESTERDAY=$(date -d yesterday +%F)
           DAY_BEFORE=$(date -d '2 days ago' +%F)
-          # Recover verified finals for the two most recently completed slates
-          # before any tab-specific grader runs. Player actuals feed standard
-          # and ALT props; final scores feed the game prediction ledger.
-          for DAY in "$DAY_BEFORE" "$YESTERDAY"; do
+          # Recheck a rolling ten-day window so a transient provider failure
+          # cannot leave a permanent hole in player history. Merge and snapshot
+          # after every date because the daily builder intentionally emits only
+          # one date at a time.
+          python wnba_player_game_log_archive.py snapshot
+          for OFFSET in $(seq 10 -1 1); do
+            DAY=$(date -d "$OFFSET days ago" +%F)
             python scrape_scores.py --date "$DAY" --boxscores || true
             python wnba_espn_boxscore_fallback.py --date "$DAY" || true
             python wnba_player_game_log_warehouse.py --date "$DAY" || true
+            python wnba_player_game_log_archive.py merge
+            python wnba_player_game_log_archive.py snapshot
           done
-          python wnba_player_game_log_archive.py merge || true
           # Results grader is date-scoped, so resolve every archived date that can
           # now be matched to verified player-game actuals. This is intentionally
           # oldest-first and never fabricates missing actuals.
