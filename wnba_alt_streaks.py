@@ -26,6 +26,11 @@ ACTIVE_STREAK_MIN = 3
 ALLOWED_BOOKS = {"draftkings", "fanduel", "fanatics"}
 
 
+def allowed_output_book(row: dict[str, Any]) -> bool:
+    """Final consumer gate: no current row can leak an unsupported book."""
+    return str(row.get("best_book") or "").strip().lower() in ALLOWED_BOOKS
+
+
 def load(path: str | Path, default: Any) -> Any:
     try:
         path = Path(path)
@@ -218,7 +223,6 @@ def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any], i
         }))
     return output, summary, omitted_history
 
-
 def standard_rows(target: str) -> tuple[list[dict[str, Any]], int, int, int]:
     master = load("data/dashboard/wnba_master.json", {})
     master_props = list_rows(master, "props")
@@ -273,7 +277,9 @@ def standard_rows(target: str) -> tuple[list[dict[str, Any]], int, int, int]:
 def build(target: str) -> dict[str, Any]:
     alt_rows, alt_summary, alt_omitted_history = exact_alt_rows(target)
     std_rows, source_rows, omitted_no_history, omitted_no_streak = standard_rows(target)
-    rows_out = alt_rows + std_rows
+    candidate_rows = alt_rows + std_rows
+    rows_out = [row for row in candidate_rows if allowed_output_book(row)]
+    rejected_output_books = len(candidate_rows) - len(rows_out)
     unique: dict[tuple[str, str, str, float, str, str], dict[str, Any]] = {}
     for row in rows_out:
         key = (
@@ -300,6 +306,8 @@ def build(target: str) -> dict[str, Any]:
         "source": "exact_alt_warehouse+daily_standard_props",
         "summary": {
             "source_rows": source_rows,
+            "allowed_sportsbooks": ["DraftKings", "FanDuel", "Fanatics"],
+            "unsupported_output_rows_rejected": rejected_output_books,
             "alt_warehouse_markets": warehouse_markets,
             "rows": len(rows_out),
             "players": len({r["player"] for r in rows_out}),
