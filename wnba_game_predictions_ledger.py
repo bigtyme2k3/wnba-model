@@ -7,6 +7,7 @@ available.
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
 from datetime import date, datetime, timezone
@@ -163,7 +164,27 @@ def possible_result_rows() -> list[dict[str, Any]]:
                 value = payload.get(key)
                 if isinstance(value, list):
                     out.extend(x for x in value if isinstance(x, dict))
+    # Dashboard payloads are current-slate views and can drop yesterday's
+    # finals. Read the durable score archive as the authoritative fallback.
+    score_files = [Path("data/raw/scores_historical.csv"), *sorted(Path("data/raw").glob("scores_*.csv"))]
+    seen_files: set[Path] = set()
+    for path in score_files:
+        if path in seen_files or not path.exists():
+            continue
+        seen_files.add(path)
+        try:
+            with path.open(encoding="utf-8-sig", newline="") as handle:
+                for row in csv.DictReader(handle):
+                    if isinstance(row, dict):
+                        row["actual_source"] = str(path)
+                        out.append(row)
+        except Exception:
+            continue
     return out
+
+
+def result_date(row: dict[str, Any]) -> str:
+    return str(row.get("game_date") or row.get("date") or row.get("target_date") or "")[:10]
 
 
 def final_score(row: dict[str, Any]) -> tuple[float, float] | None:
@@ -199,7 +220,6 @@ def grade_spread(pred: dict[str, Any], away_score: float, home_score: float) -> 
     picked_home = norm(rec) == home
     return "WIN" if (home_cover_margin > 0) == picked_home else "LOSS"
 
-
 def grade_total(pred: dict[str, Any], away_score: float, home_score: float) -> str:
     rec = str(pred.get("total_recommendation") or "PASS").upper()
     line = num(pred.get("market_total"))
@@ -216,19 +236,21 @@ def grade_total(pred: dict[str, Any], away_score: float, home_score: float) -> s
 def grade(target: str) -> dict[str, Any]:
     ledger = read_ledger()
     results = possible_result_rows()
-    by_game: dict[str, dict[str, Any]] = {}
+    by_game: dict[tuple[str, str], dict[str, Any]] = {}
     for result in results:
         name = norm(game_name(result))
         if not name:
             continue
         # Prefer a final row over any pregame/live duplicate of the same game.
-        if name not in by_game or final_score(result) is not None:
-            by_game[name] = result
+        key = (result_date(result), name)
+        if key not in by_game or final_score(result) is not None:
+            by_game[key] = result
     graded = 0
     for row in ledger:
         if row.get("target_date") != target or row.get("graded"):
             continue
-        actual_row = by_game.get(norm(row.get("game")))
+        target_date = str(row.get("target_date") or "")[:10]
+        actual_row = by_game.get((target_date, norm(row.get("game"))))
         score = final_score(actual_row or {})
         if not score:
             continue
@@ -243,6 +265,7 @@ def grade(target: str) -> dict[str, Any]:
             "total_error": round(abs(projected_total - (home+away)), 2) if projected_total is not None else None,
             "spread_result": grade_spread(row, away, home), "total_result": grade_total(row, away, home),
             "graded": True, "status": "GRADED", "graded_at_utc": datetime.now(timezone.utc).isoformat(),
+            "actual_source": (actual_row or {}).get("actual_source") or "verified_final_score_feed",
         })
         graded += 1
     write_ledger(ledger)
