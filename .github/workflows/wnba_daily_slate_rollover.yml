@@ -179,7 +179,8 @@ jobs:
 
       - name: Build dashboard tab freshness manifest
         run: |
-          python - <<'PY'          import json,os
+          python - <<'PY'
+          import json,os
           from datetime import datetime,timezone
           from pathlib import Path
           target=os.environ['TARGET']; root=Path('data/dashboard'); now=datetime.now(timezone.utc)
