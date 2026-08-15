@@ -18,6 +18,7 @@ PORTFOLIO = DASH / 'wnba_v5_live_portfolio.json'
 PROP_PRED = RAW / 'player_points_today.csv'
 OUT = DASH / 'wnba_s19_m02_predictions.json'
 AUDIT = DASH / 'wnba_s19_m02_prediction_audit.json'
+MODEL_VERSION = 'sprint19_player_props_v5_m02_action_v2'
 
 
 def load(path: Path, default):
@@ -98,6 +99,15 @@ def exact_game(row):
     if ' @ ' in opp:
         return opp
     return game or opp
+
+
+def decision_key(row):
+    return (
+        norm(row.get('player')),
+        norm(exact_game(row)),
+        str(first(row, 'stat', 'market', 'prop_type') or '').upper(),
+        str(first(row, 'signal', 'side', 'recommendation') or '').upper(),
+    )
 
 
 def validate_prepared_prop_source(target: str, game_names: set[str]) -> int:
@@ -258,6 +268,23 @@ def build(target: str):
 
     current_buy = current_rows(buy, target)
     current_portfolio = current_rows(portfolio, target)
+    finalized_bets = {decision_key(row): row for row in current_buy if decision_key(row)[0] and decision_key(row)[2]}
+    for row in prop_rows:
+        finalized = finalized_bets.get(decision_key(row))
+        action = 'BET' if finalized else ('WATCH' if row.get('recommendation') in {'OVER', 'UNDER'} else 'PASS')
+        if finalized:
+            side = str(row.get('recommendation') or '').upper()
+            book = first(finalized, 'sportsbook', 'best_book', 'book')
+            price = first(finalized, 'american_odds', 'odds', 'price')
+            if side == 'OVER':
+                row['best_over_book'], row['best_over_price'] = book, price
+            elif side == 'UNDER':
+                row['best_under_book'], row['best_under_price'] = book, price
+        row['candidate_eligible'] = bool(row.get('eligible'))
+        row['model_version'] = MODEL_VERSION
+        row['action'] = action
+        row['final_action'] = action
+        row['eligible_for_bet'] = action == 'BET'
     payload = {
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
         'target_date': target,
@@ -280,7 +307,8 @@ def build(target: str):
             'sportsbook_prop_input_rows': sportsbook_input_rows,
             'player_prop_predictions': len(prop_rows),
             'player_props_injury_adjusted': sum(bool(r.get('injury_adjusted')) for r in prop_rows),
-            'actionable_player_props': sum(bool(r.get('eligible')) for r in prop_rows),
+            'candidate_player_props': sum(bool(r.get('candidate_eligible')) for r in prop_rows),
+            'bet_player_props': sum(r.get('final_action') == 'BET' for r in prop_rows),
             'v5_best_bets': len(current_buy),
             'v5_portfolio_rows': len(current_portfolio),
             'off_slate_prop_rows_rejected': len(off_slate),

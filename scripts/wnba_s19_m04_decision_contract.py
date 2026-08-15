@@ -39,7 +39,7 @@ def build(target: str):
         if off:
             raise SystemExit(f'M04 found {len(off)} off-date rows in {name}')
 
-    unavailable = [r for r in props if str(r.get('injury_status') or '').upper() in {'OUT','DOUBTFUL'} and r.get('eligible')]
+    unavailable = [r for r in props if str(r.get('injury_status') or '').upper() in {'OUT','DOUBTFUL'} and r.get('final_action') == 'BET']
     if unavailable:
         raise SystemExit('M04 found actionable unavailable player props')
 
@@ -64,7 +64,8 @@ def build(target: str):
         'summary': {
             'games': len(games),
             'player_props': len(props),
-            'actionable_player_props': sum(bool(r.get('eligible')) for r in props),
+            'candidate_player_props': sum(bool(r.get('candidate_eligible', r.get('eligible'))) for r in props),
+            'bet_player_props': sum(r.get('final_action') == 'BET' for r in props),
             'injury_adjusted_player_props': sum(bool(r.get('injury_adjusted')) for r in props),
             'best_bets': len(best),
             'portfolio': len(portfolio),
