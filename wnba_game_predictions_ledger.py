@@ -10,6 +10,7 @@ import argparse
 import csv
 import json
 import math
+from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -180,6 +181,24 @@ def possible_result_rows() -> list[dict[str, Any]]:
                         out.append(row)
         except Exception:
             continue
+    # ESPN's player fallback contains only completed events. Reconstruct the
+    # final team score by summing verified player PTS when no game row exists.
+    for path in sorted(Path("data/raw").glob("wnba_boxscores_*.json")):
+        payload = load(path, {})
+        groups: dict[tuple[str, str], dict[str, float]] = defaultdict(lambda: defaultdict(float))
+        for player in payload.get("players", []) if isinstance(payload, dict) else []:
+            game = str(player.get("game") or "").strip()
+            team = str(player.get("team") or "").strip()
+            points = num(player.get("pts"))
+            if game and team and points is not None:
+                key = (str(player.get("date") or payload.get("date") or "")[:10], game)
+                groups[key][team] += points
+        for (game_date, game), team_scores in groups.items():
+            away, home = [part.strip() for part in game.split(" @ ", 1)] if " @ " in game else ("", "")
+            if away in team_scores and home in team_scores:
+                out.append({"game_date": game_date, "game": game, "away_team": away, "home_team": home,
+                            "away_score": team_scores[away], "home_score": team_scores[home],
+                            "status": "FINAL", "actual_source": str(path)})
     return out
 
 
@@ -197,8 +216,7 @@ def final_score(row: dict[str, Any]) -> tuple[float, float] | None:
     )
     away = num(row.get("away_score", row.get("away_points")))
     home = num(row.get("home_score", row.get("home_points")))
-    if away is None and isinstance(row.get("away"), dict):
-        away = num(row["away"].get("score"))
+    if away is None and isinstance(row.get("away"), dict):        away = num(row["away"].get("score"))
     if home is None and isinstance(row.get("home"), dict):
         home = num(row["home"].get("score"))
     if away is None or home is None or not finalish:
