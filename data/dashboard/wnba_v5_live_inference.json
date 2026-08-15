@@ -3,1535 +3,22 @@
     "version": "V5",
     "module": "V5-M11",
     "stage": "LIVE_V5_INFERENCE",
-    "status": "READY_SHADOW",
-    "generated_at_utc": "2026-08-15T03:54:12.577453+00:00",
+    "status": "BLOCKED_STALE_SLATE",
+    "generated_at_utc": "2026-08-15T04:47:31.526698+00:00",
     "target_date": "2026-08-14",
     "ranked_rows": 361,
-    "scored_rows": 42,
-    "unscored_rows": 319,
-    "scoring_coverage_pct": 11.63,
+    "scored_rows": 0,
+    "unscored_rows": 361,
+    "scoring_coverage_pct": 0.0,
     "research_champion": "KNN",
-    "training_rows": 123,
-    "freshness_guard_status": "FRESH",
-    "leakage_policy": "Live rolling features use only certified player/stat games strictly before target_date.",
+    "training_rows": null,
+    "freshness_guard_status": "STALE_BLOCKED",
+    "freshness_reason": "Ranked board contains no exclusively current-date slate and must not be scored.",
     "research_only": true,
     "production_ready": false,
-    "next_module": "V5-M12 Post-Game Learning + Forward Validation"
+    "next_action": "REFRESH_CURRENT_OPPORTUNITY_BOARD"
   },
-  "scored": [
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pr|over",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "PR",
-      "side": "OVER",
-      "line": 25.5,
-      "odds": -115.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.496954,
-      "v5_probability": 0.496954,
-      "market_implied_probability": 0.534884,
-      "probability_edge": -0.03793,
-      "probability_band": "<50%",
-      "confidence_score": 0.099504,
-      "uncertainty_score": 0.999981,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.798228,
-      "feature_snapshot": {
-        "market_implied_probability": 0.534884,
-        "line_minus_prior_mean": 1.166667,
-        "rolling3_actual_mean": 24.333333,
-        "rolling5_actual_mean": 24.333333,
-        "rolling5_actual_std": 2.624669,
-        "rolling5_trend_slope": 0.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pr|under",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 25.5,
-      "odds": -112.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.458821,
-      "v5_probability": 0.458821,
-      "market_implied_probability": 0.528302,
-      "probability_edge": -0.069481,
-      "probability_band": "<50%",
-      "confidence_score": 0.105187,
-      "uncertainty_score": 0.996603,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.466667,
-      "average_neighbor_distance": 2.490124,
-      "feature_snapshot": {
-        "market_implied_probability": 0.528302,
-        "line_minus_prior_mean": 1.166667,
-        "rolling3_actual_mean": 24.333333,
-        "rolling5_actual_mean": 24.333333,
-        "rolling5_actual_std": 2.624669,
-        "rolling5_trend_slope": 0.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pts|over",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 15.5,
-      "odds": -141.0,
-      "best_book": "BetRivers",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.427972,
-      "v5_probability": 0.427972,
-      "market_implied_probability": 0.585062,
-      "probability_edge": -0.157091,
-      "probability_band": "<50%",
-      "confidence_score": 0.131881,
-      "uncertainty_score": 0.989569,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.325887,
-      "feature_snapshot": {
-        "market_implied_probability": 0.585062,
-        "line_minus_prior_mean": -2.25,
-        "rolling3_actual_mean": 17.333333,
-        "rolling5_actual_mean": 17.75,
-        "rolling5_actual_std": 2.947457,
-        "rolling5_trend_slope": -0.5,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pts|over",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 16.5,
-      "odds": -113.0,
-      "best_book": "BetRivers",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.424676,
-      "v5_probability": 0.424676,
-      "market_implied_probability": 0.530516,
-      "probability_edge": -0.10584,
-      "probability_band": "<50%",
-      "confidence_score": 0.135062,
-      "uncertainty_score": 0.988588,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.148335,
-      "feature_snapshot": {
-        "market_implied_probability": 0.530516,
-        "line_minus_prior_mean": -1.25,
-        "rolling3_actual_mean": 17.333333,
-        "rolling5_actual_mean": 17.75,
-        "rolling5_actual_std": 2.947457,
-        "rolling5_trend_slope": -0.5,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pts|over",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 17.5,
-      "odds": 110.0,
-      "best_book": "BetRivers",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.409944,
-      "v5_probability": 0.409944,
-      "market_implied_probability": 0.47619,
-      "probability_edge": -0.066247,
-      "probability_band": "<50%",
-      "confidence_score": 0.135279,
-      "uncertainty_score": 0.983646,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.359559,
-      "feature_snapshot": {
-        "market_implied_probability": 0.47619,
-        "line_minus_prior_mean": -0.25,
-        "rolling3_actual_mean": 17.333333,
-        "rolling5_actual_mean": 17.75,
-        "rolling5_actual_std": 2.947457,
-        "rolling5_trend_slope": -0.5,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pts|under",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 16.5,
-      "odds": 100.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.419387,
-      "v5_probability": 0.419387,
-      "market_implied_probability": 0.5,
-      "probability_edge": -0.080613,
-      "probability_band": "<50%",
-      "confidence_score": 0.134765,
-      "uncertainty_score": 0.986918,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.242413,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": -1.25,
-        "rolling3_actual_mean": 17.333333,
-        "rolling5_actual_mean": 17.75,
-        "rolling5_actual_std": 2.947457,
-        "rolling5_trend_slope": -0.5,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|ra|over",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "RA",
-      "side": "OVER",
-      "line": 12.5,
-      "odds": 102.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.257915,
-      "v5_probability": 0.257915,
-      "market_implied_probability": 0.49505,
-      "probability_edge": -0.237135,
-      "probability_band": "<50%",
-      "confidence_score": 0.203358,
-      "uncertainty_score": 0.874974,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 2.563756,
-      "feature_snapshot": {
-        "market_implied_probability": 0.49505,
-        "line_minus_prior_mean": 4.0,
-        "rolling3_actual_mean": 6.333333,
-        "rolling5_actual_mean": 8.5,
-        "rolling5_actual_std": 6.538348,
-        "rolling5_trend_slope": 0.2,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|ra|under",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 12.5,
-      "odds": -136.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.203301,
-      "v5_probability": 0.203301,
-      "market_implied_probability": 0.576271,
-      "probability_edge": -0.37297,
-      "probability_band": "<50%",
-      "confidence_score": 0.248877,
-      "uncertainty_score": 0.804909,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.2,
-      "average_neighbor_distance": 2.565635,
-      "feature_snapshot": {
-        "market_implied_probability": 0.576271,
-        "line_minus_prior_mean": 4.0,
-        "rolling3_actual_mean": 6.333333,
-        "rolling5_actual_mean": 8.5,
-        "rolling5_actual_std": 6.538348,
-        "rolling5_trend_slope": 0.2,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|reb|over",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "REB",
-      "side": "OVER",
-      "line": 8.5,
-      "odds": -125.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.660074,
-      "v5_probability": 0.660074,
-      "market_implied_probability": 0.555556,
-      "probability_edge": 0.104519,
-      "probability_band": "65-69.9%",
-      "confidence_score": 0.154314,
-      "uncertainty_score": 0.947367,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 2.740403,
-      "feature_snapshot": {
-        "market_implied_probability": 0.555556,
-        "line_minus_prior_mean": 3.75,
-        "rolling3_actual_mean": 4.0,
-        "rolling5_actual_mean": 4.75,
-        "rolling5_actual_std": 3.344772,
-        "rolling5_trend_slope": 0.7,
-        "historical_hit_rate_at_current_line": 0.25,
-        "historical_hit_rate_l5_at_current_line": 0.25,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|reb|under",
-      "date": "2026-08-14",
-      "player": "Aliyah Boston",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 8.5,
-      "odds": 100.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.409802,
-      "v5_probability": 0.409802,
-      "market_implied_probability": 0.5,
-      "probability_edge": -0.090198,
-      "probability_band": "<50%",
-      "confidence_score": 0.143754,
-      "uncertainty_score": 0.983594,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.466667,
-      "average_neighbor_distance": 1.825397,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": 3.75,
-        "rolling3_actual_mean": 4.0,
-        "rolling5_actual_mean": 4.75,
-        "rolling5_actual_std": 3.344772,
-        "rolling5_trend_slope": 0.7,
-        "historical_hit_rate_at_current_line": 0.75,
-        "historical_hit_rate_l5_at_current_line": 0.75,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|reb|over",
-      "date": "2026-08-14",
-      "player": "Caitlin Clark",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "REB",
-      "side": "OVER",
-      "line": 3.5,
-      "odds": -157.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.648496,
-      "v5_probability": 0.648496,
-      "market_implied_probability": 0.610895,
-      "probability_edge": 0.037601,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.134255,
-      "uncertainty_score": 0.95488,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 2.338788,
-      "feature_snapshot": {
-        "market_implied_probability": 0.610895,
-        "line_minus_prior_mean": -0.833333,
-        "rolling3_actual_mean": 4.333333,
-        "rolling5_actual_mean": 4.333333,
-        "rolling5_actual_std": 4.027682,
-        "rolling5_trend_slope": -0.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|reb|over",
-      "date": "2026-08-14",
-      "player": "Caitlin Clark",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "REB",
-      "side": "OVER",
-      "line": 4.5,
-      "odds": 118.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.61645,
-      "v5_probability": 0.61645,
-      "market_implied_probability": 0.458716,
-      "probability_edge": 0.157735,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.116723,
-      "uncertainty_score": 0.972501,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 2.861124,
-      "feature_snapshot": {
-        "market_implied_probability": 0.458716,
-        "line_minus_prior_mean": 0.166667,
-        "rolling3_actual_mean": 4.333333,
-        "rolling5_actual_mean": 4.333333,
-        "rolling5_actual_std": 4.027682,
-        "rolling5_trend_slope": -0.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|reb|under",
-      "date": "2026-08-14",
-      "player": "Caitlin Clark",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 3.5,
-      "odds": 125.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.270044,
-      "v5_probability": 0.270044,
-      "market_implied_probability": 0.444444,
-      "probability_edge": -0.1744,
-      "probability_band": "<50%",
-      "confidence_score": 0.179425,
-      "uncertainty_score": 0.887965,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 2.218733,
-      "feature_snapshot": {
-        "market_implied_probability": 0.444444,
-        "line_minus_prior_mean": -0.833333,
-        "rolling3_actual_mean": 4.333333,
-        "rolling5_actual_mean": 4.333333,
-        "rolling5_actual_std": 4.027682,
-        "rolling5_trend_slope": -0.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|reb|under",
-      "date": "2026-08-14",
-      "player": "Caitlin Clark",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 4.5,
-      "odds": -148.0,
-      "best_book": "Caesars",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.475444,
-      "v5_probability": 0.475444,
-      "market_implied_probability": 0.596774,
-      "probability_edge": -0.121331,
-      "probability_band": "<50%",
-      "confidence_score": 0.11615,
-      "uncertainty_score": 0.998793,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.466667,
-      "average_neighbor_distance": 1.709279,
-      "feature_snapshot": {
-        "market_implied_probability": 0.596774,
-        "line_minus_prior_mean": 0.166667,
-        "rolling3_actual_mean": 4.333333,
-        "rolling5_actual_mean": 4.333333,
-        "rolling5_actual_std": 4.027682,
-        "rolling5_trend_slope": -0.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|3pm|over",
-      "date": "2026-08-14",
-      "player": "Kelsey Mitchell",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "3PM",
-      "side": "OVER",
-      "line": 3.5,
-      "odds": 140.0,
-      "best_book": "FanDuel",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.415714,
-      "v5_probability": 0.415714,
-      "market_implied_probability": 0.416667,
-      "probability_edge": -0.000952,
-      "probability_band": "<50%",
-      "confidence_score": 0.138817,
-      "uncertainty_score": 0.98569,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 4.0821,
-      "feature_snapshot": {
-        "market_implied_probability": 0.416667,
-        "line_minus_prior_mean": 0.3,
-        "rolling3_actual_mean": 3.333333,
-        "rolling5_actual_mean": 3.2,
-        "rolling5_actual_std": 0.4,
-        "rolling5_trend_slope": 0.1,
-        "historical_hit_rate_at_current_line": 0.2,
-        "historical_hit_rate_l5_at_current_line": 0.2,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|3pm|under",
-      "date": "2026-08-14",
-      "player": "Kelsey Mitchell",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "3PM",
-      "side": "UNDER",
-      "line": 3.5,
-      "odds": -179.0,
-      "best_book": "Caesars",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.420814,
-      "v5_probability": 0.420814,
-      "market_implied_probability": 0.641577,
-      "probability_edge": -0.220763,
-      "probability_band": "<50%",
-      "confidence_score": 0.155364,
-      "uncertainty_score": 0.987379,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.180649,
-      "feature_snapshot": {
-        "market_implied_probability": 0.641577,
-        "line_minus_prior_mean": 0.3,
-        "rolling3_actual_mean": 3.333333,
-        "rolling5_actual_mean": 3.2,
-        "rolling5_actual_std": 0.4,
-        "rolling5_trend_slope": 0.1,
-        "historical_hit_rate_at_current_line": 0.8,
-        "historical_hit_rate_l5_at_current_line": 0.8,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|ast|over",
-      "date": "2026-08-14",
-      "player": "Kelsey Mitchell",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "AST",
-      "side": "OVER",
-      "line": 2.5,
-      "odds": -130.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 7,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.385599,
-      "v5_probability": 0.385599,
-      "market_implied_probability": 0.565217,
-      "probability_edge": -0.179618,
-      "probability_band": "<50%",
-      "confidence_score": 0.1844,
-      "uncertainty_score": 0.973473,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 4.523305,
-      "feature_snapshot": {
-        "market_implied_probability": 0.565217,
-        "line_minus_prior_mean": 0.357143,
-        "rolling3_actual_mean": 2.333333,
-        "rolling5_actual_mean": 1.6,
-        "rolling5_actual_std": 1.019804,
-        "rolling5_trend_slope": 0.7,
-        "historical_hit_rate_at_current_line": 0.428571,
-        "historical_hit_rate_l5_at_current_line": 0.2,
-        "prior_games": 7.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|ast|under",
-      "date": "2026-08-14",
-      "player": "Kelsey Mitchell",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 2.5,
-      "odds": 100.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 7,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.442933,
-      "v5_probability": 0.442933,
-      "market_implied_probability": 0.5,
-      "probability_edge": -0.057067,
-      "probability_band": "<50%",
-      "confidence_score": 0.176385,
-      "uncertainty_score": 0.993465,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 3.667408,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": 0.357143,
-        "rolling3_actual_mean": 2.333333,
-        "rolling5_actual_mean": 1.6,
-        "rolling5_actual_std": 1.019804,
-        "rolling5_trend_slope": 0.7,
-        "historical_hit_rate_at_current_line": 0.571429,
-        "historical_hit_rate_l5_at_current_line": 0.8,
-        "prior_games": 7.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pra|over",
-      "date": "2026-08-14",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 31.5,
-      "odds": -112.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.213315,
-      "v5_probability": 0.213315,
-      "market_implied_probability": 0.528302,
-      "probability_edge": -0.314987,
-      "probability_band": "<50%",
-      "confidence_score": 0.202391,
-      "uncertainty_score": 0.819296,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.2,
-      "average_neighbor_distance": 5.015917,
-      "feature_snapshot": {
-        "market_implied_probability": 0.528302,
-        "line_minus_prior_mean": 8.5,
-        "rolling3_actual_mean": 23.0,
-        "rolling5_actual_mean": 23.0,
-        "rolling5_actual_std": 7.25718,
-        "rolling5_trend_slope": -6.5,
-        "historical_hit_rate_at_current_line": 0.0,
-        "historical_hit_rate_l5_at_current_line": 0.0,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pra|under",
-      "date": "2026-08-14",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 31.5,
-      "odds": -108.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.80287,
-      "v5_probability": 0.80287,
-      "market_implied_probability": 0.519231,
-      "probability_edge": 0.283639,
-      "probability_band": "70%+",
-      "confidence_score": 0.227682,
-      "uncertainty_score": 0.795662,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.8,
-      "average_neighbor_distance": 3.302646,
-      "feature_snapshot": {
-        "market_implied_probability": 0.519231,
-        "line_minus_prior_mean": 8.5,
-        "rolling3_actual_mean": 23.0,
-        "rolling5_actual_mean": 23.0,
-        "rolling5_actual_std": 7.25718,
-        "rolling5_trend_slope": -6.5,
-        "historical_hit_rate_at_current_line": 1.0,
-        "historical_hit_rate_l5_at_current_line": 1.0,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|ra|over",
-      "date": "2026-08-14",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "RA",
-      "side": "OVER",
-      "line": 10.5,
-      "odds": -104.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.616577,
-      "v5_probability": 0.616577,
-      "market_implied_probability": 0.509804,
-      "probability_edge": 0.106773,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.109807,
-      "uncertainty_score": 0.97244,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 3.703234,
-      "feature_snapshot": {
-        "market_implied_probability": 0.509804,
-        "line_minus_prior_mean": 2.5,
-        "rolling3_actual_mean": 8.0,
-        "rolling5_actual_mean": 8.0,
-        "rolling5_actual_std": 1.414214,
-        "rolling5_trend_slope": -1.5,
-        "historical_hit_rate_at_current_line": 0.0,
-        "historical_hit_rate_l5_at_current_line": 0.0,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|ra|under",
-      "date": "2026-08-14",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Indiana Fever",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 10.5,
-      "odds": -128.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.711784,
-      "v5_probability": 0.711784,
-      "market_implied_probability": 0.561404,
-      "probability_edge": 0.150381,
-      "probability_band": "70%+",
-      "confidence_score": 0.19092,
-      "uncertainty_score": 0.905864,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.733333,
-      "average_neighbor_distance": 1.15109,
-      "feature_snapshot": {
-        "market_implied_probability": 0.561404,
-        "line_minus_prior_mean": 2.5,
-        "rolling3_actual_mean": 8.0,
-        "rolling5_actual_mean": 8.0,
-        "rolling5_actual_std": 1.414214,
-        "rolling5_trend_slope": -1.5,
-        "historical_hit_rate_at_current_line": 1.0,
-        "historical_hit_rate_l5_at_current_line": 1.0,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pa|over",
-      "date": "2026-08-14",
-      "player": "Awa Fam",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PA",
-      "side": "OVER",
-      "line": 9.5,
-      "odds": -115.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.258142,
-      "v5_probability": 0.258142,
-      "market_implied_probability": 0.534884,
-      "probability_edge": -0.276742,
-      "probability_band": "<50%",
-      "confidence_score": 0.181747,
-      "uncertainty_score": 0.875225,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 2.690646,
-      "feature_snapshot": {
-        "market_implied_probability": 0.534884,
-        "line_minus_prior_mean": -0.833333,
-        "rolling3_actual_mean": 10.333333,
-        "rolling5_actual_mean": 10.333333,
-        "rolling5_actual_std": 4.988877,
-        "rolling5_trend_slope": -6.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pa|under",
-      "date": "2026-08-14",
-      "player": "Awa Fam",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 9.5,
-      "odds": -118.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.139703,
-      "v5_probability": 0.139703,
-      "market_implied_probability": 0.541284,
-      "probability_edge": -0.401581,
-      "probability_band": "<50%",
-      "confidence_score": 0.317259,
-      "uncertainty_score": 0.693357,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.133333,
-      "average_neighbor_distance": 1.588812,
-      "feature_snapshot": {
-        "market_implied_probability": 0.541284,
-        "line_minus_prior_mean": -0.833333,
-        "rolling3_actual_mean": 10.333333,
-        "rolling5_actual_mean": 10.333333,
-        "rolling5_actual_std": 4.988877,
-        "rolling5_trend_slope": -6.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pts|over",
-      "date": "2026-08-14",
-      "player": "Awa Fam",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 7.5,
-      "odds": -115.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.208775,
-      "v5_probability": 0.208775,
-      "market_implied_probability": 0.534884,
-      "probability_edge": -0.326109,
-      "probability_band": "<50%",
-      "confidence_score": 0.24221,
-      "uncertainty_score": 0.812866,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.2,
-      "average_neighbor_distance": 1.476372,
-      "feature_snapshot": {
-        "market_implied_probability": 0.534884,
-        "line_minus_prior_mean": -1.166667,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pts|over",
-      "date": "2026-08-14",
-      "player": "Awa Fam",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 8.5,
-      "odds": -104.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.270622,
-      "v5_probability": 0.270622,
-      "market_implied_probability": 0.509804,
-      "probability_edge": -0.239182,
-      "probability_band": "<50%",
-      "confidence_score": 0.174557,
-      "uncertainty_score": 0.888562,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 2.561078,
-      "feature_snapshot": {
-        "market_implied_probability": 0.509804,
-        "line_minus_prior_mean": -0.166667,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pts|over",
-      "date": "2026-08-14",
-      "player": "Awa Fam",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 9.5,
-      "odds": 128.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.259413,
-      "v5_probability": 0.259413,
-      "market_implied_probability": 0.438596,
-      "probability_edge": -0.179184,
-      "probability_band": "<50%",
-      "confidence_score": 0.178421,
-      "uncertainty_score": 0.876625,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 2.923938,
-      "feature_snapshot": {
-        "market_implied_probability": 0.438596,
-        "line_minus_prior_mean": 0.833333,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pts|under",
-      "date": "2026-08-14",
-      "player": "Awa Fam",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 7.5,
-      "odds": -108.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.398172,
-      "v5_probability": 0.398172,
-      "market_implied_probability": 0.519231,
-      "probability_edge": -0.121059,
-      "probability_band": "<50%",
-      "confidence_score": 0.115433,
-      "uncertainty_score": 0.979042,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.58763,
-      "feature_snapshot": {
-        "market_implied_probability": 0.519231,
-        "line_minus_prior_mean": -1.166667,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|reb|over",
-      "date": "2026-08-14",
-      "player": "Awa Fam",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "REB",
-      "side": "OVER",
-      "line": 4.5,
-      "odds": 100.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.668648,
-      "v5_probability": 0.668648,
-      "market_implied_probability": 0.5,
-      "probability_edge": 0.168648,
-      "probability_band": "65-69.9%",
-      "confidence_score": 0.168925,
-      "uncertainty_score": 0.941399,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 1.950783,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": -2.0,
-        "rolling3_actual_mean": 7.0,
-        "rolling5_actual_mean": 6.5,
-        "rolling5_actual_std": 1.658312,
-        "rolling5_trend_slope": 1.0,
-        "historical_hit_rate_at_current_line": 1.0,
-        "historical_hit_rate_l5_at_current_line": 1.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|reb|under",
-      "date": "2026-08-14",
-      "player": "Awa Fam",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 4.5,
-      "odds": -125.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.609815,
-      "v5_probability": 0.609815,
-      "market_implied_probability": 0.555556,
-      "probability_edge": 0.05426,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.128409,
-      "uncertainty_score": 0.975583,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 3.610053,
-      "feature_snapshot": {
-        "market_implied_probability": 0.555556,
-        "line_minus_prior_mean": -2.0,
-        "rolling3_actual_mean": 7.0,
-        "rolling5_actual_mean": 6.5,
-        "rolling5_actual_std": 1.658312,
-        "rolling5_trend_slope": 1.0,
-        "historical_hit_rate_at_current_line": 0.0,
-        "historical_hit_rate_l5_at_current_line": 0.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pts|over",
-      "date": "2026-08-14",
-      "player": "Dominique Malonga",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 19.5,
-      "odds": -120.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.631137,
-      "v5_probability": 0.631137,
-      "market_implied_probability": 0.545455,
-      "probability_edge": 0.085682,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.106788,
-      "uncertainty_score": 0.964994,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 5.241107,
-      "feature_snapshot": {
-        "market_implied_probability": 0.545455,
-        "line_minus_prior_mean": 3.5,
-        "rolling3_actual_mean": 16.0,
-        "rolling5_actual_mean": 16.0,
-        "rolling5_actual_std": 9.797959,
-        "rolling5_trend_slope": 12.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pts|over",
-      "date": "2026-08-14",
-      "player": "Dominique Malonga",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 20.5,
-      "odds": -122.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.632041,
-      "v5_probability": 0.632041,
-      "market_implied_probability": 0.54955,
-      "probability_edge": 0.082491,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.107058,
-      "uncertainty_score": 0.9645,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 5.254372,
-      "feature_snapshot": {
-        "market_implied_probability": 0.54955,
-        "line_minus_prior_mean": 4.5,
-        "rolling3_actual_mean": 16.0,
-        "rolling5_actual_mean": 16.0,
-        "rolling5_actual_std": 9.797959,
-        "rolling5_trend_slope": 12.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pts|over",
-      "date": "2026-08-14",
-      "player": "Dominique Malonga",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 21.5,
-      "odds": 100.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.63321,
-      "v5_probability": 0.63321,
-      "market_implied_probability": 0.5,
-      "probability_edge": 0.13321,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.10724,
-      "uncertainty_score": 0.963857,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 5.316644,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": 5.5,
-        "rolling3_actual_mean": 16.0,
-        "rolling5_actual_mean": 16.0,
-        "rolling5_actual_std": 9.797959,
-        "rolling5_trend_slope": 12.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pts|under",
-      "date": "2026-08-14",
-      "player": "Dominique Malonga",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 19.5,
-      "odds": 100.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.83606,
-      "v5_probability": 0.83606,
-      "market_implied_probability": 0.5,
-      "probability_edge": 0.33606,
-      "probability_band": "70%+",
-      "confidence_score": 0.255546,
-      "uncertainty_score": 0.740441,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.8,
-      "average_neighbor_distance": 4.590123,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": 3.5,
-        "rolling3_actual_mean": 16.0,
-        "rolling5_actual_mean": 16.0,
-        "rolling5_actual_std": 9.797959,
-        "rolling5_trend_slope": 12.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|reb|over",
-      "date": "2026-08-14",
-      "player": "Dominique Malonga",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "REB",
-      "side": "OVER",
-      "line": 9.5,
-      "odds": -108.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.254861,
-      "v5_probability": 0.254861,
-      "market_implied_probability": 0.519231,
-      "probability_edge": -0.26437,
-      "probability_band": "<50%",
-      "confidence_score": 0.207949,
-      "uncertainty_score": 0.871566,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.2,
-      "average_neighbor_distance": 1.326774,
-      "feature_snapshot": {
-        "market_implied_probability": 0.519231,
-        "line_minus_prior_mean": -0.833333,
-        "rolling3_actual_mean": 10.333333,
-        "rolling5_actual_mean": 10.333333,
-        "rolling5_actual_std": 3.091206,
-        "rolling5_trend_slope": -3.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|reb|under",
-      "date": "2026-08-14",
-      "player": "Dominique Malonga",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 9.5,
-      "odds": -120.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.619103,
-      "v5_probability": 0.619103,
-      "market_implied_probability": 0.545455,
-      "probability_edge": 0.073649,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.124384,
-      "uncertainty_score": 0.971215,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 2.284157,
-      "feature_snapshot": {
-        "market_implied_probability": 0.545455,
-        "line_minus_prior_mean": -0.833333,
-        "rolling3_actual_mean": 10.333333,
-        "rolling5_actual_mean": 10.333333,
-        "rolling5_actual_std": 3.091206,
-        "rolling5_trend_slope": -3.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|3pm|over",
-      "date": "2026-08-14",
-      "player": "Natisha Hiedeman",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "3PM",
-      "side": "OVER",
-      "line": 1.5,
-      "odds": -172.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.660703,
-      "v5_probability": 0.660703,
-      "market_implied_probability": 0.632353,
-      "probability_edge": 0.02835,
-      "probability_band": "65-69.9%",
-      "confidence_score": 0.139644,
-      "uncertainty_score": 0.946942,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 2.321804,
-      "feature_snapshot": {
-        "market_implied_probability": 0.632353,
-        "line_minus_prior_mean": -1.166667,
-        "rolling3_actual_mean": 2.666667,
-        "rolling5_actual_mean": 2.666667,
-        "rolling5_actual_std": 2.357023,
-        "rolling5_trend_slope": 2.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|3pm|under",
-      "date": "2026-08-14",
-      "player": "Natisha Hiedeman",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "3PM",
-      "side": "UNDER",
-      "line": 1.5,
-      "odds": 142.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.38667,
-      "v5_probability": 0.38667,
-      "market_implied_probability": 0.413223,
-      "probability_edge": -0.026553,
-      "probability_band": "<50%",
-      "confidence_score": 0.115554,
-      "uncertainty_score": 0.973974,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.882313,
-      "feature_snapshot": {
-        "market_implied_probability": 0.413223,
-        "line_minus_prior_mean": -1.166667,
-        "rolling3_actual_mean": 2.666667,
-        "rolling5_actual_mean": 2.666667,
-        "rolling5_actual_std": 2.357023,
-        "rolling5_trend_slope": 2.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|ast|over",
-      "date": "2026-08-14",
-      "player": "Natisha Hiedeman",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "AST",
-      "side": "OVER",
-      "line": 5.5,
-      "odds": 110.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.366968,
-      "v5_probability": 0.366968,
-      "market_implied_probability": 0.47619,
-      "probability_edge": -0.109222,
-      "probability_band": "<50%",
-      "confidence_score": 0.149698,
-      "uncertainty_score": 0.963956,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.333333,
-      "average_neighbor_distance": 2.241931,
-      "feature_snapshot": {
-        "market_implied_probability": 0.47619,
-        "line_minus_prior_mean": 0.25,
-        "rolling3_actual_mean": 6.0,
-        "rolling5_actual_mean": 5.25,
-        "rolling5_actual_std": 2.277608,
-        "rolling5_trend_slope": 1.7,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|ast|under",
-      "date": "2026-08-14",
-      "player": "Natisha Hiedeman",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 5.5,
-      "odds": -136.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.484406,
-      "v5_probability": 0.484406,
-      "market_implied_probability": 0.576271,
-      "probability_edge": -0.091865,
-      "probability_band": "<50%",
-      "confidence_score": 0.134636,
-      "uncertainty_score": 0.999514,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 1.761435,
-      "feature_snapshot": {
-        "market_implied_probability": 0.576271,
-        "line_minus_prior_mean": 0.25,
-        "rolling3_actual_mean": 6.0,
-        "rolling5_actual_mean": 5.25,
-        "rolling5_actual_std": 2.277608,
-        "rolling5_trend_slope": 1.7,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pr|over",
-      "date": "2026-08-14",
-      "player": "Natisha Hiedeman",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PR",
-      "side": "OVER",
-      "line": 18.5,
-      "odds": -107.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.539888,
-      "v5_probability": 0.539888,
-      "market_implied_probability": 0.516908,
-      "probability_edge": 0.02298,
-      "probability_band": "50-54.9%",
-      "confidence_score": 0.107665,
-      "uncertainty_score": 0.996813,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 4.860831,
-      "feature_snapshot": {
-        "market_implied_probability": 0.516908,
-        "line_minus_prior_mean": -2.0,
-        "rolling3_actual_mean": 20.666667,
-        "rolling5_actual_mean": 20.5,
-        "rolling5_actual_std": 11.368817,
-        "rolling5_trend_slope": 6.2,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pr|under",
-      "date": "2026-08-14",
-      "player": "Natisha Hiedeman",
-      "game": "Portland Fire @ Seattle Storm",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 18.5,
-      "odds": -122.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.540264,
-      "v5_probability": 0.540264,
-      "market_implied_probability": 0.54955,
-      "probability_edge": -0.009285,
-      "probability_band": "50-54.9%",
-      "confidence_score": 0.107727,
-      "uncertainty_score": 0.996752,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 4.855633,
-      "feature_snapshot": {
-        "market_implied_probability": 0.54955,
-        "line_minus_prior_mean": -2.0,
-        "rolling3_actual_mean": 20.666667,
-        "rolling5_actual_mean": 20.5,
-        "rolling5_actual_std": 11.368817,
-        "rolling5_trend_slope": 6.2,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    }
-  ],
+  "scored": [],
   "unscored": [
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|3pm|over",
@@ -1543,9 +30,9 @@
       "line": 1.5,
       "odds": 110.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|3pm|under",
@@ -1557,9 +44,9 @@
       "line": 1.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|ast|over",
@@ -1571,9 +58,9 @@
       "line": 2.5,
       "odds": -143.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|ast|over",
@@ -1585,9 +72,9 @@
       "line": 3.5,
       "odds": 139.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|ast|under",
@@ -1599,9 +86,9 @@
       "line": 2.5,
       "odds": 110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|ast|under",
@@ -1613,9 +100,9 @@
       "line": 3.5,
       "odds": -161.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pa|over",
@@ -1627,9 +114,9 @@
       "line": 15.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pa|under",
@@ -1641,9 +128,9 @@
       "line": 15.5,
       "odds": -123.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pr|over",
@@ -1655,9 +142,9 @@
       "line": 20.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pr|under",
@@ -1669,9 +156,9 @@
       "line": 20.5,
       "odds": -123.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pra|over",
@@ -1683,9 +170,9 @@
       "line": 22.5,
       "odds": -125.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pra|over",
@@ -1697,9 +184,9 @@
       "line": 23.5,
       "odds": -106.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pra|under",
@@ -1711,9 +198,9 @@
       "line": 22.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pra|under",
@@ -1725,9 +212,9 @@
       "line": 23.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pts|over",
@@ -1739,9 +226,9 @@
       "line": 11.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pts|over",
@@ -1753,9 +240,9 @@
       "line": 12.5,
       "odds": 110.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|pts|under",
@@ -1767,9 +254,9 @@
       "line": 11.5,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|ra|over",
@@ -1781,9 +268,9 @@
       "line": 11.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|ra|under",
@@ -1795,9 +282,9 @@
       "line": 11.5,
       "odds": -126.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|reb|over",
@@ -1809,9 +296,9 @@
       "line": 7.5,
       "odds": -139.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|reb|over",
@@ -1823,9 +310,9 @@
       "line": 8.5,
       "odds": 102.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|alanna smith|dallas wings @ indiana fever|reb|under",
@@ -1837,9 +324,9 @@
       "line": 7.5,
       "odds": 109.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|ast|over",
@@ -1851,9 +338,9 @@
       "line": 3.5,
       "odds": 122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|ast|under",
@@ -1865,9 +352,9 @@
       "line": 3.5,
       "odds": -154.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pa|over",
@@ -1879,9 +366,9 @@
       "line": 19.5,
       "odds": -130.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pa|over",
@@ -1893,9 +380,9 @@
       "line": 20.5,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pa|under",
@@ -1907,9 +394,9 @@
       "line": 19.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pa|under",
@@ -1921,9 +408,37 @@
       "line": 20.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pr|over",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "PR",
+      "side": "OVER",
+      "line": 25.5,
+      "odds": -115.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pr|under",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 25.5,
+      "odds": -112.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pra|over",
@@ -1935,9 +450,9 @@
       "line": 28.5,
       "odds": -122.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pra|over",
@@ -1949,9 +464,9 @@
       "line": 29.5,
       "odds": -105.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pra|under",
@@ -1963,9 +478,9 @@
       "line": 28.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pra|under",
@@ -1977,9 +492,121 @@
       "line": 29.5,
       "odds": -123.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pts|over",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 15.5,
+      "odds": -141.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pts|over",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 16.5,
+      "odds": -113.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pts|over",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 17.5,
+      "odds": 110.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|pts|under",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 16.5,
+      "odds": 100.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|ra|over",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "RA",
+      "side": "OVER",
+      "line": 12.5,
+      "odds": 102.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|ra|under",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 12.5,
+      "odds": -136.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|reb|over",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "REB",
+      "side": "OVER",
+      "line": 8.5,
+      "odds": -125.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|aliyah boston|dallas wings @ indiana fever|reb|under",
+      "date": "2026-08-14",
+      "player": "Aliyah Boston",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 8.5,
+      "odds": 100.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|3pm|over",
@@ -1991,9 +618,9 @@
       "line": 1.5,
       "odds": -158.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|3pm|over",
@@ -2005,9 +632,9 @@
       "line": 2.5,
       "odds": 140.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|3pm|under",
@@ -2019,9 +646,9 @@
       "line": 1.5,
       "odds": 140.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|ast|over",
@@ -2033,9 +660,9 @@
       "line": 3.5,
       "odds": -129.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|ast|under",
@@ -2047,9 +674,9 @@
       "line": 3.5,
       "odds": 109.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pa|over",
@@ -2061,9 +688,9 @@
       "line": 20.5,
       "odds": -130.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pa|over",
@@ -2075,9 +702,9 @@
       "line": 21.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pa|under",
@@ -2089,9 +716,9 @@
       "line": 20.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pa|under",
@@ -2103,9 +730,9 @@
       "line": 21.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pr|over",
@@ -2117,9 +744,9 @@
       "line": 20.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pr|under",
@@ -2131,9 +758,9 @@
       "line": 20.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pra|over",
@@ -2145,9 +772,9 @@
       "line": 24.5,
       "odds": -101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pra|over",
@@ -2159,9 +786,9 @@
       "line": 25.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pra|under",
@@ -2173,9 +800,9 @@
       "line": 24.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pra|under",
@@ -2187,9 +814,9 @@
       "line": 25.5,
       "odds": -127.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pts|over",
@@ -2201,9 +828,9 @@
       "line": 16.5,
       "odds": -117.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pts|over",
@@ -2215,9 +842,9 @@
       "line": 17.5,
       "odds": 107.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pts|under",
@@ -2229,9 +856,9 @@
       "line": 16.5,
       "odds": 100.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|pts|under",
@@ -2243,9 +870,9 @@
       "line": 17.5,
       "odds": -120.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|ra|over",
@@ -2257,9 +884,9 @@
       "line": 7.5,
       "odds": 116.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|ra|under",
@@ -2271,9 +898,9 @@
       "line": 7.5,
       "odds": -125.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|reb|over",
@@ -2285,9 +912,9 @@
       "line": 3.5,
       "odds": 109.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|arike ogunbowale|dallas wings @ indiana fever|reb|under",
@@ -2299,9 +926,9 @@
       "line": 3.5,
       "odds": -141.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awak kuier|dallas wings @ indiana fever|pts|over",
@@ -2313,9 +940,9 @@
       "line": 8.5,
       "odds": -114.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awak kuier|dallas wings @ indiana fever|pts|under",
@@ -2327,9 +954,9 @@
       "line": 8.5,
       "odds": 100.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awak kuier|dallas wings @ indiana fever|reb|over",
@@ -2341,9 +968,9 @@
       "line": 3.5,
       "odds": -244.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|3pm|over",
@@ -2355,9 +982,9 @@
       "line": 2.5,
       "odds": -112.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|3pm|under",
@@ -2369,9 +996,9 @@
       "line": 2.5,
       "odds": -101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|ast|over",
@@ -2383,9 +1010,9 @@
       "line": 9.5,
       "odds": -105.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|ast|under",
@@ -2397,9 +1024,9 @@
       "line": 9.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pa|over",
@@ -2411,9 +1038,9 @@
       "line": 31.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pa|under",
@@ -2425,9 +1052,9 @@
       "line": 31.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pr|over",
@@ -2439,9 +1066,9 @@
       "line": 26.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pr|under",
@@ -2453,9 +1080,9 @@
       "line": 26.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pra|over",
@@ -2467,9 +1094,9 @@
       "line": 36.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pra|under",
@@ -2481,9 +1108,9 @@
       "line": 36.5,
       "odds": -125.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pts|over",
@@ -2495,9 +1122,9 @@
       "line": 21.5,
       "odds": -127.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pts|over",
@@ -2509,9 +1136,9 @@
       "line": 22.5,
       "odds": -102.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pts|over",
@@ -2523,9 +1150,9 @@
       "line": 23.5,
       "odds": 117.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pts|under",
@@ -2537,9 +1164,9 @@
       "line": 21.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|pts|under",
@@ -2551,9 +1178,9 @@
       "line": 22.5,
       "odds": -122.0,
       "best_book": "Caesars",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|ra|over",
@@ -2565,9 +1192,9 @@
       "line": 13.5,
       "odds": -129.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|ra|under",
@@ -2579,9 +1206,121 @@
       "line": 13.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|reb|over",
+      "date": "2026-08-14",
+      "player": "Caitlin Clark",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "REB",
+      "side": "OVER",
+      "line": 3.5,
+      "odds": -157.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|reb|over",
+      "date": "2026-08-14",
+      "player": "Caitlin Clark",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "REB",
+      "side": "OVER",
+      "line": 4.5,
+      "odds": 118.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|reb|under",
+      "date": "2026-08-14",
+      "player": "Caitlin Clark",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 3.5,
+      "odds": 125.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|caitlin clark|dallas wings @ indiana fever|reb|under",
+      "date": "2026-08-14",
+      "player": "Caitlin Clark",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 4.5,
+      "odds": -148.0,
+      "best_book": "Caesars",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|3pm|over",
+      "date": "2026-08-14",
+      "player": "Kelsey Mitchell",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "3PM",
+      "side": "OVER",
+      "line": 3.5,
+      "odds": 140.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|3pm|under",
+      "date": "2026-08-14",
+      "player": "Kelsey Mitchell",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "3PM",
+      "side": "UNDER",
+      "line": 3.5,
+      "odds": -179.0,
+      "best_book": "Caesars",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|ast|over",
+      "date": "2026-08-14",
+      "player": "Kelsey Mitchell",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "AST",
+      "side": "OVER",
+      "line": 2.5,
+      "odds": -130.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|ast|under",
+      "date": "2026-08-14",
+      "player": "Kelsey Mitchell",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 2.5,
+      "odds": 100.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pa|over",
@@ -2593,9 +1332,9 @@
       "line": 27.5,
       "odds": -125.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pa|over",
@@ -2607,9 +1346,9 @@
       "line": 28.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pa|under",
@@ -2621,9 +1360,9 @@
       "line": 27.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pa|under",
@@ -2635,9 +1374,9 @@
       "line": 28.5,
       "odds": -126.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pr|over",
@@ -2649,9 +1388,9 @@
       "line": 27.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pr|under",
@@ -2663,9 +1402,9 @@
       "line": 27.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pra|over",
@@ -2677,9 +1416,9 @@
       "line": 30.5,
       "odds": -109.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pra|under",
@@ -2691,9 +1430,9 @@
       "line": 30.5,
       "odds": -119.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pts|over",
@@ -2705,9 +1444,9 @@
       "line": 24.5,
       "odds": -125.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pts|over",
@@ -2719,9 +1458,9 @@
       "line": 25.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pts|over",
@@ -2733,9 +1472,9 @@
       "line": 26.5,
       "odds": -127.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pts|under",
@@ -2747,9 +1486,9 @@
       "line": 24.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|kelsey mitchell|dallas wings @ indiana fever|pts|under",
@@ -2761,9 +1500,9 @@
       "line": 25.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|lexie hull|dallas wings @ indiana fever|pts|over",
@@ -2775,9 +1514,9 @@
       "line": 4.5,
       "odds": -110.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|lexie hull|dallas wings @ indiana fever|pts|over",
@@ -2789,9 +1528,9 @@
       "line": 5.5,
       "odds": 130.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|lexie hull|dallas wings @ indiana fever|pts|under",
@@ -2803,9 +1542,9 @@
       "line": 4.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|lexie hull|dallas wings @ indiana fever|reb|over",
@@ -2817,9 +1556,9 @@
       "line": 2.5,
       "odds": -129.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|lexie hull|dallas wings @ indiana fever|reb|over",
@@ -2831,9 +1570,9 @@
       "line": 3.5,
       "odds": 171.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|lexie hull|dallas wings @ indiana fever|reb|under",
@@ -2845,9 +1584,9 @@
       "line": 2.5,
       "odds": 112.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|lexie hull|dallas wings @ indiana fever|reb|under",
@@ -2859,9 +1598,9 @@
       "line": 3.5,
       "odds": -227.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pr|over",
@@ -2873,9 +1612,9 @@
       "line": 12.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pr|over",
@@ -2887,9 +1626,9 @@
       "line": 13.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pr|under",
@@ -2901,9 +1640,9 @@
       "line": 12.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pr|under",
@@ -2915,9 +1654,9 @@
       "line": 13.5,
       "odds": -119.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pra|over",
@@ -2929,9 +1668,9 @@
       "line": 14.5,
       "odds": -111.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pra|under",
@@ -2943,9 +1682,9 @@
       "line": 14.5,
       "odds": -116.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pts|over",
@@ -2957,9 +1696,9 @@
       "line": 6.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pts|over",
@@ -2971,9 +1710,9 @@
       "line": 7.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|pts|under",
@@ -2985,9 +1724,9 @@
       "line": 6.5,
       "odds": -109.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|reb|over",
@@ -2999,9 +1738,9 @@
       "line": 5.5,
       "odds": -150.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|reb|over",
@@ -3013,9 +1752,9 @@
       "line": 6.5,
       "odds": -119.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|reb|under",
@@ -3027,9 +1766,9 @@
       "line": 5.5,
       "odds": 119.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|makayla timpson|dallas wings @ indiana fever|reb|under",
@@ -3041,9 +1780,9 @@
       "line": 6.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|monique billings|dallas wings @ indiana fever|pts|over",
@@ -3055,9 +1794,9 @@
       "line": 5.5,
       "odds": -130.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|monique billings|dallas wings @ indiana fever|pts|under",
@@ -3069,9 +1808,9 @@
       "line": 5.5,
       "odds": 101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|monique billings|dallas wings @ indiana fever|reb|over",
@@ -3083,9 +1822,9 @@
       "line": 3.5,
       "odds": -147.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|monique billings|dallas wings @ indiana fever|reb|under",
@@ -3097,9 +1836,9 @@
       "line": 3.5,
       "odds": 113.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|ast|over",
@@ -3111,9 +1850,9 @@
       "line": 4.5,
       "odds": 112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|ast|under",
@@ -3125,9 +1864,9 @@
       "line": 4.5,
       "odds": -138.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pa|over",
@@ -3139,9 +1878,9 @@
       "line": 16.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pa|under",
@@ -3153,9 +1892,9 @@
       "line": 16.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pr|over",
@@ -3167,9 +1906,9 @@
       "line": 14.5,
       "odds": -126.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pr|under",
@@ -3181,9 +1920,9 @@
       "line": 14.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pra|over",
@@ -3195,9 +1934,9 @@
       "line": 18.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pra|over",
@@ -3209,9 +1948,9 @@
       "line": 19.5,
       "odds": -115.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pra|under",
@@ -3223,9 +1962,9 @@
       "line": 18.5,
       "odds": -114.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pra|under",
@@ -3237,9 +1976,9 @@
       "line": 19.5,
       "odds": -118.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pts|over",
@@ -3251,9 +1990,9 @@
       "line": 11.5,
       "odds": -117.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pts|over",
@@ -3265,9 +2004,9 @@
       "line": 12.5,
       "odds": 112.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pts|under",
@@ -3279,9 +2018,9 @@
       "line": 11.5,
       "odds": 104.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|pts|under",
@@ -3293,9 +2032,9 @@
       "line": 12.5,
       "odds": -122.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|ra|over",
@@ -3307,9 +2046,9 @@
       "line": 6.5,
       "odds": -139.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|ra|under",
@@ -3321,9 +2060,9 @@
       "line": 6.5,
       "odds": 102.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|reb|over",
@@ -3335,9 +2074,9 @@
       "line": 2.5,
       "odds": -102.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|odyssey sims|dallas wings @ indiana fever|reb|under",
@@ -3349,9 +2088,9 @@
       "line": 2.5,
       "odds": -127.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|3pm|over",
@@ -3363,9 +2102,9 @@
       "line": 1.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|3pm|under",
@@ -3377,9 +2116,9 @@
       "line": 1.5,
       "odds": -110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|ast|over",
@@ -3391,9 +2130,9 @@
       "line": 5.5,
       "odds": -182.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|ast|over",
@@ -3405,9 +2144,9 @@
       "line": 6.5,
       "odds": 101.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|ast|under",
@@ -3419,9 +2158,9 @@
       "line": 6.5,
       "odds": -128.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pa|over",
@@ -3433,9 +2172,9 @@
       "line": 27.5,
       "odds": -118.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pa|under",
@@ -3447,9 +2186,9 @@
       "line": 27.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pr|over",
@@ -3461,9 +2200,9 @@
       "line": 25.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pr|under",
@@ -3475,9 +2214,37 @@
       "line": 25.5,
       "odds": -127.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pra|over",
+      "date": "2026-08-14",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 31.5,
+      "odds": -112.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pra|under",
+      "date": "2026-08-14",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 31.5,
+      "odds": -108.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pts|over",
@@ -3489,9 +2256,9 @@
       "line": 20.5,
       "odds": -127.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pts|over",
@@ -3503,9 +2270,9 @@
       "line": 21.5,
       "odds": -130.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|pts|under",
@@ -3517,9 +2284,37 @@
       "line": 20.5,
       "odds": 101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|ra|over",
+      "date": "2026-08-14",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "RA",
+      "side": "OVER",
+      "line": 10.5,
+      "odds": -104.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|ra|under",
+      "date": "2026-08-14",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Indiana Fever",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 10.5,
+      "odds": -128.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|reb|over",
@@ -3531,9 +2326,9 @@
       "line": 3.5,
       "odds": -135.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|reb|over",
@@ -3545,9 +2340,9 @@
       "line": 4.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|paige bueckers|dallas wings @ indiana fever|reb|under",
@@ -3559,9 +2354,9 @@
       "line": 3.5,
       "odds": 117.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|sophie cunningham|dallas wings @ indiana fever|3pm|over",
@@ -3573,9 +2368,9 @@
       "line": 1.5,
       "odds": 116.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|sophie cunningham|dallas wings @ indiana fever|3pm|under",
@@ -3587,9 +2382,9 @@
       "line": 1.5,
       "odds": -147.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|sophie cunningham|dallas wings @ indiana fever|pra|over",
@@ -3601,9 +2396,9 @@
       "line": 10.5,
       "odds": -130.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|sophie cunningham|dallas wings @ indiana fever|pra|under",
@@ -3615,9 +2410,9 @@
       "line": 10.5,
       "odds": 101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|sophie cunningham|dallas wings @ indiana fever|pts|over",
@@ -3629,9 +2424,9 @@
       "line": 7.5,
       "odds": -110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|sophie cunningham|dallas wings @ indiana fever|pts|over",
@@ -3643,9 +2438,9 @@
       "line": 8.5,
       "odds": 120.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|sophie cunningham|dallas wings @ indiana fever|pts|under",
@@ -3657,9 +2452,9 @@
       "line": 7.5,
       "odds": -113.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|3pm|over",
@@ -3671,9 +2466,9 @@
       "line": 1.5,
       "odds": 170.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|3pm|under",
@@ -3685,9 +2480,9 @@
       "line": 1.5,
       "odds": -192.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|ast|over",
@@ -3699,9 +2494,9 @@
       "line": 1.5,
       "odds": -141.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|ast|under",
@@ -3713,9 +2508,37 @@
       "line": 1.5,
       "odds": 108.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pa|over",
+      "date": "2026-08-14",
+      "player": "Awa Fam",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PA",
+      "side": "OVER",
+      "line": 9.5,
+      "odds": -115.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pa|under",
+      "date": "2026-08-14",
+      "player": "Awa Fam",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 9.5,
+      "odds": -118.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pr|over",
@@ -3727,9 +2550,9 @@
       "line": 12.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pr|under",
@@ -3741,9 +2564,9 @@
       "line": 12.5,
       "odds": -128.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pra|over",
@@ -3755,9 +2578,9 @@
       "line": 14.5,
       "odds": -101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pra|over",
@@ -3769,9 +2592,9 @@
       "line": 15.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pra|under",
@@ -3783,9 +2606,65 @@
       "line": 14.5,
       "odds": -128.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pts|over",
+      "date": "2026-08-14",
+      "player": "Awa Fam",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 7.5,
+      "odds": -115.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pts|over",
+      "date": "2026-08-14",
+      "player": "Awa Fam",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 8.5,
+      "odds": -104.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pts|over",
+      "date": "2026-08-14",
+      "player": "Awa Fam",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 9.5,
+      "odds": 128.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|pts|under",
+      "date": "2026-08-14",
+      "player": "Awa Fam",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 7.5,
+      "odds": -108.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|ra|over",
@@ -3797,9 +2676,9 @@
       "line": 6.5,
       "odds": 102.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|ra|under",
@@ -3811,9 +2690,37 @@
       "line": 6.5,
       "odds": -139.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|reb|over",
+      "date": "2026-08-14",
+      "player": "Awa Fam",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "REB",
+      "side": "OVER",
+      "line": 4.5,
+      "odds": 100.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|awa fam|portland fire @ seattle storm|reb|under",
+      "date": "2026-08-14",
+      "player": "Awa Fam",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 4.5,
+      "odds": -125.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|3pm|over",
@@ -3825,9 +2732,9 @@
       "line": 2.5,
       "odds": -164.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|3pm|over",
@@ -3839,9 +2746,9 @@
       "line": 3.5,
       "odds": 130.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|3pm|under",
@@ -3853,9 +2760,9 @@
       "line": 2.5,
       "odds": 136.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|3pm|under",
@@ -3867,9 +2774,9 @@
       "line": 3.5,
       "odds": -178.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|ast|over",
@@ -3881,9 +2788,9 @@
       "line": 2.5,
       "odds": 103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|ast|under",
@@ -3895,9 +2802,9 @@
       "line": 2.5,
       "odds": -133.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pa|over",
@@ -3909,9 +2816,9 @@
       "line": 19.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pa|under",
@@ -3923,9 +2830,9 @@
       "line": 19.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pr|over",
@@ -3937,9 +2844,9 @@
       "line": 21.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pr|under",
@@ -3951,9 +2858,9 @@
       "line": 21.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pra|over",
@@ -3965,9 +2872,9 @@
       "line": 24.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pra|under",
@@ -3979,9 +2886,9 @@
       "line": 24.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pts|over",
@@ -3993,9 +2900,9 @@
       "line": 16.5,
       "odds": -115.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pts|over",
@@ -4007,9 +2914,9 @@
       "line": 17.5,
       "odds": 102.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|pts|under",
@@ -4021,9 +2928,9 @@
       "line": 16.5,
       "odds": -112.0,
       "best_book": "Caesars",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|ra|over",
@@ -4035,9 +2942,9 @@
       "line": 7.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|ra|under",
@@ -4049,9 +2956,9 @@
       "line": 7.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|reb|over",
@@ -4063,9 +2970,9 @@
       "line": 4.5,
       "odds": -130.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|bridget carleton|portland fire @ seattle storm|reb|under",
@@ -4077,9 +2984,9 @@
       "line": 4.5,
       "odds": 102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|3pm|over",
@@ -4091,9 +2998,9 @@
       "line": 0.5,
       "odds": -149.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|3pm|under",
@@ -4105,9 +3012,9 @@
       "line": 0.5,
       "odds": 115.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|ast|over",
@@ -4119,9 +3026,9 @@
       "line": 6.5,
       "odds": -130.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|ast|under",
@@ -4133,9 +3040,9 @@
       "line": 6.5,
       "odds": 108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pa|over",
@@ -4147,9 +3054,9 @@
       "line": 23.5,
       "odds": -122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pa|under",
@@ -4161,9 +3068,9 @@
       "line": 23.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pr|over",
@@ -4175,9 +3082,9 @@
       "line": 19.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pr|under",
@@ -4189,9 +3096,9 @@
       "line": 19.5,
       "odds": -118.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pra|over",
@@ -4203,9 +3110,9 @@
       "line": 26.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pra|under",
@@ -4217,9 +3124,9 @@
       "line": 26.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pts|over",
@@ -4231,9 +3138,9 @@
       "line": 16.5,
       "odds": -115.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pts|over",
@@ -4245,9 +3152,9 @@
       "line": 17.5,
       "odds": 105.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|pts|under",
@@ -4259,9 +3166,9 @@
       "line": 16.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|ra|over",
@@ -4273,9 +3180,9 @@
       "line": 9.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|ra|under",
@@ -4287,9 +3194,9 @@
       "line": 9.5,
       "odds": -122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|reb|over",
@@ -4301,9 +3208,9 @@
       "line": 2.5,
       "odds": -108.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|carla leite|portland fire @ seattle storm|reb|under",
@@ -4315,9 +3222,9 @@
       "line": 2.5,
       "odds": -120.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|3pm|over",
@@ -4329,9 +3236,9 @@
       "line": 0.5,
       "odds": -181.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|3pm|under",
@@ -4343,9 +3250,9 @@
       "line": 0.5,
       "odds": 139.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|ast|over",
@@ -4357,9 +3264,9 @@
       "line": 1.5,
       "odds": -182.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|ast|over",
@@ -4371,9 +3278,9 @@
       "line": 2.5,
       "odds": 136.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|ast|under",
@@ -4385,9 +3292,9 @@
       "line": 1.5,
       "odds": 140.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|ast|under",
@@ -4399,9 +3306,9 @@
       "line": 2.5,
       "odds": -187.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pa|over",
@@ -4413,9 +3320,9 @@
       "line": 22.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pa|under",
@@ -4427,9 +3334,9 @@
       "line": 22.5,
       "odds": -126.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pr|over",
@@ -4441,9 +3348,9 @@
       "line": 29.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pr|under",
@@ -4455,9 +3362,9 @@
       "line": 29.5,
       "odds": -113.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pra|over",
@@ -4469,9 +3376,9 @@
       "line": 31.5,
       "odds": -114.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pra|under",
@@ -4483,9 +3390,65 @@
       "line": 31.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pts|over",
+      "date": "2026-08-14",
+      "player": "Dominique Malonga",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 19.5,
+      "odds": -120.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pts|over",
+      "date": "2026-08-14",
+      "player": "Dominique Malonga",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 20.5,
+      "odds": -122.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pts|over",
+      "date": "2026-08-14",
+      "player": "Dominique Malonga",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 21.5,
+      "odds": 100.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|pts|under",
+      "date": "2026-08-14",
+      "player": "Dominique Malonga",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 19.5,
+      "odds": 100.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|ra|over",
@@ -4497,9 +3460,9 @@
       "line": 11.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|ra|under",
@@ -4511,9 +3474,37 @@
       "line": 11.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|reb|over",
+      "date": "2026-08-14",
+      "player": "Dominique Malonga",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "REB",
+      "side": "OVER",
+      "line": 9.5,
+      "odds": -108.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|dominique malonga|portland fire @ seattle storm|reb|under",
+      "date": "2026-08-14",
+      "player": "Dominique Malonga",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 9.5,
+      "odds": -120.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|3pm|over",
@@ -4525,9 +3516,9 @@
       "line": 0.5,
       "odds": -250.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|3pm|over",
@@ -4539,9 +3530,9 @@
       "line": 1.5,
       "odds": 169.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|3pm|under",
@@ -4553,9 +3544,9 @@
       "line": 1.5,
       "odds": -200.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|ast|over",
@@ -4567,9 +3558,9 @@
       "line": 2.5,
       "odds": 144.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|ast|under",
@@ -4581,9 +3572,9 @@
       "line": 2.5,
       "odds": -184.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pa|over",
@@ -4595,9 +3586,9 @@
       "line": 12.5,
       "odds": -101.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pa|under",
@@ -4609,9 +3600,9 @@
       "line": 12.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pr|over",
@@ -4623,9 +3614,9 @@
       "line": 15.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pr|under",
@@ -4637,9 +3628,9 @@
       "line": 15.5,
       "odds": -128.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pra|over",
@@ -4651,9 +3642,9 @@
       "line": 17.5,
       "odds": -112.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pra|over",
@@ -4665,9 +3656,9 @@
       "line": 18.5,
       "odds": 103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pra|under",
@@ -4679,9 +3670,9 @@
       "line": 17.5,
       "odds": -121.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pra|under",
@@ -4693,9 +3684,9 @@
       "line": 18.5,
       "odds": -130.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pts|over",
@@ -4707,9 +3698,9 @@
       "line": 9.5,
       "odds": -125.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pts|over",
@@ -4721,9 +3712,9 @@
       "line": 10.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pts|under",
@@ -4735,9 +3726,9 @@
       "line": 9.5,
       "odds": 102.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|pts|under",
@@ -4749,9 +3740,9 @@
       "line": 10.5,
       "odds": -130.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|ra|over",
@@ -4763,9 +3754,9 @@
       "line": 7.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|ra|under",
@@ -4777,9 +3768,9 @@
       "line": 7.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|reb|over",
@@ -4791,9 +3782,9 @@
       "line": 5.5,
       "odds": 108.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|emily engstler|portland fire @ seattle storm|reb|under",
@@ -4805,9 +3796,9 @@
       "line": 5.5,
       "odds": -133.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|3pm|over",
@@ -4819,9 +3810,9 @@
       "line": 0.5,
       "odds": -137.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|3pm|under",
@@ -4833,9 +3824,9 @@
       "line": 0.5,
       "odds": 101.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|ast|over",
@@ -4847,9 +3838,9 @@
       "line": 1.5,
       "odds": -182.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|ast|over",
@@ -4861,9 +3852,9 @@
       "line": 2.5,
       "odds": 132.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|ast|under",
@@ -4875,9 +3866,9 @@
       "line": 2.5,
       "odds": -172.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pa|over",
@@ -4889,9 +3880,9 @@
       "line": 9.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pa|under",
@@ -4903,9 +3894,9 @@
       "line": 9.5,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pr|over",
@@ -4917,9 +3908,9 @@
       "line": 12.5,
       "odds": -125.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pr|under",
@@ -4931,9 +3922,9 @@
       "line": 12.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pra|over",
@@ -4945,9 +3936,9 @@
       "line": 15.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pra|under",
@@ -4959,9 +3950,9 @@
       "line": 15.5,
       "odds": -114.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pts|over",
@@ -4973,9 +3964,9 @@
       "line": 7.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pts|over",
@@ -4987,9 +3978,9 @@
       "line": 8.5,
       "odds": -104.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|pts|under",
@@ -5001,9 +3992,9 @@
       "line": 7.5,
       "odds": 100.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|ra|over",
@@ -5015,9 +4006,9 @@
       "line": 7.5,
       "odds": -103.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|ra|under",
@@ -5029,9 +4020,9 @@
       "line": 7.5,
       "odds": -132.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|reb|over",
@@ -5043,9 +4034,9 @@
       "line": 4.5,
       "odds": -146.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|reb|over",
@@ -5057,9 +4048,9 @@
       "line": 5.5,
       "odds": 120.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|reb|under",
@@ -5071,9 +4062,9 @@
       "line": 4.5,
       "odds": 110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|ezi magbegor|portland fire @ seattle storm|reb|under",
@@ -5085,9 +4076,9 @@
       "line": 5.5,
       "odds": -156.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|3pm|over",
@@ -5099,9 +4090,9 @@
       "line": 0.5,
       "odds": -204.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|3pm|over",
@@ -5113,9 +4104,9 @@
       "line": 1.5,
       "odds": 175.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|3pm|under",
@@ -5127,9 +4118,9 @@
       "line": 0.5,
       "odds": 169.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|3pm|under",
@@ -5141,9 +4132,9 @@
       "line": 1.5,
       "odds": -240.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|ast|over",
@@ -5155,9 +4146,9 @@
       "line": 4.5,
       "odds": -149.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|ast|over",
@@ -5169,9 +4160,9 @@
       "line": 5.5,
       "odds": 115.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|ast|under",
@@ -5183,9 +4174,9 @@
       "line": 4.5,
       "odds": 109.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|ast|under",
@@ -5197,9 +4188,9 @@
       "line": 5.5,
       "odds": -133.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pa|over",
@@ -5211,9 +4202,9 @@
       "line": 15.5,
       "odds": -102.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pa|under",
@@ -5225,9 +4216,9 @@
       "line": 15.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pr|over",
@@ -5239,9 +4230,9 @@
       "line": 11.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pr|under",
@@ -5253,9 +4244,9 @@
       "line": 11.5,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pra|over",
@@ -5267,9 +4258,9 @@
       "line": 17.5,
       "odds": 102.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pra|over",
@@ -5281,9 +4272,9 @@
       "line": 18.5,
       "odds": 120.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pra|under",
@@ -5295,9 +4286,9 @@
       "line": 17.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pts|over",
@@ -5309,9 +4300,9 @@
       "line": 9.5,
       "odds": -117.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pts|over",
@@ -5323,9 +4314,9 @@
       "line": 10.5,
       "odds": 112.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|pts|under",
@@ -5337,9 +4328,9 @@
       "line": 9.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|ra|over",
@@ -5351,9 +4342,9 @@
       "line": 6.5,
       "odds": -143.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|ra|under",
@@ -5365,9 +4356,9 @@
       "line": 6.5,
       "odds": 105.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|reb|over",
@@ -5379,9 +4370,9 @@
       "line": 2.5,
       "odds": 167.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jade melbourne|portland fire @ seattle storm|reb|under",
@@ -5393,9 +4384,9 @@
       "line": 2.5,
       "odds": -222.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jordan horston|portland fire @ seattle storm|pts|over",
@@ -5407,9 +4398,9 @@
       "line": 7.5,
       "odds": 110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jordan horston|portland fire @ seattle storm|pts|under",
@@ -5421,9 +4412,9 @@
       "line": 7.5,
       "odds": -143.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jordan horston|portland fire @ seattle storm|reb|over",
@@ -5435,9 +4426,9 @@
       "line": 3.5,
       "odds": -167.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|jordan horston|portland fire @ seattle storm|reb|under",
@@ -5449,9 +4440,9 @@
       "line": 3.5,
       "odds": 127.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|3pm|over",
@@ -5463,9 +4454,9 @@
       "line": 1.5,
       "odds": 138.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|3pm|under",
@@ -5477,9 +4468,9 @@
       "line": 1.5,
       "odds": -167.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|ast|over",
@@ -5491,9 +4482,9 @@
       "line": 1.5,
       "odds": 140.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pa|over",
@@ -5505,9 +4496,9 @@
       "line": 14.5,
       "odds": -132.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pa|under",
@@ -5519,9 +4510,9 @@
       "line": 14.5,
       "odds": -103.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pr|over",
@@ -5533,9 +4524,9 @@
       "line": 18.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pr|under",
@@ -5547,9 +4538,9 @@
       "line": 18.5,
       "odds": -126.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pra|over",
@@ -5561,9 +4552,9 @@
       "line": 19.5,
       "odds": -115.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pra|under",
@@ -5575,9 +4566,9 @@
       "line": 19.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pts|over",
@@ -5589,9 +4580,9 @@
       "line": 13.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pts|over",
@@ -5603,9 +4594,9 @@
       "line": 14.5,
       "odds": 108.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|pts|under",
@@ -5617,9 +4608,9 @@
       "line": 13.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|ra|over",
@@ -5631,9 +4622,9 @@
       "line": 5.5,
       "odds": -120.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|ra|under",
@@ -5645,9 +4636,9 @@
       "line": 5.5,
       "odds": -113.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|reb|over",
@@ -5659,9 +4650,9 @@
       "line": 4.5,
       "odds": 107.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan dileo|portland fire @ seattle storm|reb|under",
@@ -5673,9 +4664,9 @@
       "line": 4.5,
       "odds": -136.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan gustafson|portland fire @ seattle storm|3pm|over",
@@ -5687,9 +4678,9 @@
       "line": 1.5,
       "odds": 139.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan gustafson|portland fire @ seattle storm|3pm|under",
@@ -5701,9 +4692,9 @@
       "line": 1.5,
       "odds": -176.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan gustafson|portland fire @ seattle storm|pra|over",
@@ -5715,9 +4706,9 @@
       "line": 19.5,
       "odds": -111.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan gustafson|portland fire @ seattle storm|pra|under",
@@ -5729,9 +4720,9 @@
       "line": 19.5,
       "odds": -116.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan gustafson|portland fire @ seattle storm|pts|over",
@@ -5743,9 +4734,9 @@
       "line": 13.5,
       "odds": -120.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan gustafson|portland fire @ seattle storm|pts|under",
@@ -5757,9 +4748,9 @@
       "line": 13.5,
       "odds": -106.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan gustafson|portland fire @ seattle storm|reb|over",
@@ -5771,9 +4762,9 @@
       "line": 4.5,
       "odds": 106.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|megan gustafson|portland fire @ seattle storm|reb|under",
@@ -5785,9 +4776,65 @@
       "line": 4.5,
       "odds": -135.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|3pm|over",
+      "date": "2026-08-14",
+      "player": "Natisha Hiedeman",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "3PM",
+      "side": "OVER",
+      "line": 1.5,
+      "odds": -172.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|3pm|under",
+      "date": "2026-08-14",
+      "player": "Natisha Hiedeman",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "3PM",
+      "side": "UNDER",
+      "line": 1.5,
+      "odds": 142.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|ast|over",
+      "date": "2026-08-14",
+      "player": "Natisha Hiedeman",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "AST",
+      "side": "OVER",
+      "line": 5.5,
+      "odds": 110.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|ast|under",
+      "date": "2026-08-14",
+      "player": "Natisha Hiedeman",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 5.5,
+      "odds": -136.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pa|over",
@@ -5799,9 +4846,9 @@
       "line": 21.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pa|under",
@@ -5813,9 +4860,37 @@
       "line": 21.5,
       "odds": -130.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pr|over",
+      "date": "2026-08-14",
+      "player": "Natisha Hiedeman",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PR",
+      "side": "OVER",
+      "line": 18.5,
+      "odds": -107.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pr|under",
+      "date": "2026-08-14",
+      "player": "Natisha Hiedeman",
+      "game": "Portland Fire @ Seattle Storm",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 18.5,
+      "odds": -122.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pra|over",
@@ -5827,9 +4902,9 @@
       "line": 22.5,
       "odds": -148.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pra|over",
@@ -5841,9 +4916,9 @@
       "line": 23.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pra|under",
@@ -5855,9 +4930,9 @@
       "line": 23.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pts|over",
@@ -5869,9 +4944,9 @@
       "line": 14.5,
       "odds": -148.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pts|over",
@@ -5883,9 +4958,9 @@
       "line": 15.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pts|over",
@@ -5897,9 +4972,9 @@
       "line": 16.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|pts|under",
@@ -5911,9 +4986,9 @@
       "line": 15.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|ra|over",
@@ -5925,9 +5000,9 @@
       "line": 7.5,
       "odds": -129.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|ra|under",
@@ -5939,9 +5014,9 @@
       "line": 7.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|reb|over",
@@ -5953,9 +5028,9 @@
       "line": 2.5,
       "odds": 105.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|natisha hiedeman|portland fire @ seattle storm|reb|under",
@@ -5967,9 +5042,9 @@
       "line": 2.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|zia cooke|portland fire @ seattle storm|pts|over",
@@ -5981,9 +5056,9 @@
       "line": 9.5,
       "odds": -108.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-14|zia cooke|portland fire @ seattle storm|pts|under",
@@ -5995,9 +5070,9 @@
       "line": 9.5,
       "odds": -120.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     }
   ]
 }
