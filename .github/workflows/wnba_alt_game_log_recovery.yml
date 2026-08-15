@@ -153,9 +153,17 @@ jobs:
 
       - name: Rebuild current ALT display from repaired history
         if: env.RECOVERY_DATES != ''
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           export TARGET=$(python active_slate_date.py)
           test -n "$TARGET"
+          if [ -n "${ODDS_API_KEY:-}" ]; then
+            python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw
+          else
+            echo 'ODDS_API_KEY unavailable; refusing to replace the current ALT market with an empty rebuild.' >&2
+            exit 1
+          fi
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
           python wnba_opponent_stat_rankings.py --date "$TARGET"
