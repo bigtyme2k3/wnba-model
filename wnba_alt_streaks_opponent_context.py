@@ -55,9 +55,10 @@ def main() -> None:
             stat = str(row.get("stat") or "").upper()
             ranking = index.get((opponent, stat))
             if ranking:
-                row["opponent_rank"] = ranking.get("easiest_rank")
+                row["opponent_rank"] = ranking.get("toughest_rank")
                 row["opponent_rank_total_teams"] = len(ranking_payload.get("by_stat", {}).get(stat, []))
-                row["opponent_label"] = ranking.get("rank_label")
+                rank = int(ranking.get("toughest_rank") or 0)
+                row["opponent_label"] = "ELITE" if rank <= 3 else "TOUGH" if rank <= 5 else "AVERAGE" if rank <= 8 else "SOFT" if rank <= 11 else "WEAK"
                 row["opponent_average_allowed"] = ranking.get("average_allowed_per_opposing_player_game")
                 row["opponent_rank_samples"] = ranking.get("samples")
                 row["opponent_rank_source"] = "wnba_opponent_stat_rankings"
@@ -76,7 +77,7 @@ def main() -> None:
         payload["opponent_rank_methodology"] = ranking_payload.get("methodology", {})
         payload["data_policy"] = (
             "L5, L10, and season records come from verified player game logs. "
-            "Opponent rank is stat-specific: average allowed per opposing player-game, where rank 1 is easiest."
+            "Opponent rank is stat-specific: average allowed per opposing player-game, where rank 1 is the toughest defense."
         )
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("w", encoding="utf-8") as handle:
