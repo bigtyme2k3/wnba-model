@@ -22,6 +22,49 @@ def norm(value: Any) -> str:
     return " ".join(str(value or "").strip().lower().replace("’", "'").split())
 
 
+TEAM_ALIASES = {
+    "atlanta dream": "dream", "dream": "dream",
+    "chicago sky": "sky", "sky": "sky",
+    "connecticut sun": "sun", "sun": "sun",
+    "dallas wings": "wings", "wings": "wings",
+    "golden state valkyries": "valkyries", "valkyries": "valkyries",
+    "indiana fever": "fever", "fever": "fever",
+    "las vegas aces": "aces", "aces": "aces",
+    "los angeles sparks": "sparks", "sparks": "sparks",
+    "minnesota lynx": "lynx", "lynx": "lynx",
+    "new york liberty": "liberty", "liberty": "liberty",
+    "phoenix mercury": "mercury", "mercury": "mercury",
+    "portland fire": "fire", "fire": "fire",
+    "seattle storm": "storm", "storm": "storm",
+    "toronto tempo": "tempo", "tempo": "tempo",
+    "washington mystics": "mystics", "mystics": "mystics",
+}
+
+
+def team_key(value: Any) -> str:
+    value_norm = norm(value)
+    return TEAM_ALIASES.get(value_norm, value_norm)
+
+
+def matchup_teams(row: dict[str, Any]) -> tuple[str, ...]:
+    """Return a source-independent matchup identity.
+
+    Some feeds use ``Sun @ Wings`` while recovery rows use
+    ``Connecticut Sun @ Dallas Wings``.  Normalizing both team names prevents
+    the same player-game from surviving twice merely because one row has an
+    ESPN event ID and the other does not.
+    """
+    team = team_key(row.get("team"))
+    opponent = team_key(row.get("opponent"))
+    members = {value for value in (team, opponent) if value}
+    game = norm(row.get("game"))
+    if len(members) < 2 and game:
+        separator = " @ " if " @ " in game else " vs " if " vs " in game else None
+        if separator:
+            members.update(team_key(value) for value in game.split(separator, 1))
+    return tuple(sorted(value for value in members if value))
+
+
 def key(row: dict[str, Any]) -> str:
     """Return a true player-game identity.
 
@@ -36,6 +79,12 @@ def key(row: dict[str, Any]) -> str:
     player = norm(row.get("player") or row.get("player_name") or row.get("athlete"))
     game = norm(row.get("game"))
 
+    teams = matchup_teams(row)
+
+    # Prefer the semantic player/date/matchup identity across all sources. An
+    # event ID is source-specific and cannot merge a fallback row that lacks it.
+    if game_date and player and len(teams) == 2:
+        return f"date:{game_date}|teams:{'|'.join(teams)}|player:{player}"
     if game_id and (player_id or player):
         return f"event:{game_id}|player:{player_id or player}"
     if game_date and game and player:
@@ -147,7 +196,7 @@ def merge() -> None:
         "archive_new_records": len(new.get("records", [])),
         "archive_recovered_game_dates": recovered_dates,
         "archive_identity_version": "player-game-v2",
-        "archive_identity_rule": "game_id+player_id/player; else game_date+game+player",
+        "archive_identity_rule": "game_date+normalized matchup+player; else game_id+player_id/player",
         "archive_legacy_collisions_prevented": identity_collisions_prevented,
         "archive_cumulative": True,
     })
