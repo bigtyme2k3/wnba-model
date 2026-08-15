@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-15T19:22:37.699360+00:00",
+  "generated_at_utc": "2026-08-15T19:37:44.815914+00:00",
   "target_date": "2026-08-14",
   "status": "ok",
   "schema_version": "1.2",
@@ -20,7 +20,7 @@
     "records_with_fouls": 4281,
     "historical_backfill": true,
     "archive_previous_records": 5270,
-    "archive_new_records": 9471,
+    "archive_new_records": 5270,
     "archive_recovered_game_dates": 0,
     "archive_identity_version": "player-game-v2",
     "archive_identity_rule": "game_date+normalized matchup+player; else game_id+player_id/player",
@@ -42726,7 +42726,16 @@
         "sources": [
           "boxscores"
         ]
-      }
+      },
+      "source_game_date": "2026-08-05",
+      "date_alias_reason": "official schedule identifies one unique completed same-orientation matchup within seven days",
+      "date_alias_method": "official_unique_schedule_alias",
+      "date_alias_duplicate_sources_collapsed": 1,
+      "official_schedule_guard": "unique_schedule_alias",
+      "official_schedule_suggested_date": "2026-08-05",
+      "official_schedule_candidate_dates": [
+        "2026-08-05"
+      ]
     },
     {
       "record_id": "date:2026-08-05|teams:sky|sparks|player:jihyun park",
@@ -429327,93 +429336,6 @@
           "historical_espn_play_by_play"
         ]
       }
-    },
-    {
-      "record_id": "date:2026-08-05|teams:sky|sparks|player:kamilla cardoso",
-      "game": "Los Angeles Sparks @ Chicago Sky",
-      "game_date": "2026-08-04",
-      "player": "Kamilla Cardoso",
-      "team": "Chicago Sky",
-      "opponent": null,
-      "home_away": null,
-      "starter": true,
-      "minutes": 29.0,
-      "minutes_by_period": {
-        "q1": null,
-        "q2": null,
-        "q3": null,
-        "q4": null,
-        "ot": null
-      },
-      "scoring": {
-        "q1_pts": null,
-        "q2_pts": null,
-        "q3_pts": null,
-        "q4_pts": null,
-        "ot_pts": null,
-        "first_half_pts": null,
-        "second_half_pts": null,
-        "total_pts": 15,
-        "fgm": 4,
-        "fga": 9,
-        "two_pm": null,
-        "two_pa": null,
-        "three_pm": 0,
-        "three_pa": 0,
-        "ftm": 7,
-        "fta": 9,
-        "free_throw_points": 7
-      },
-      "fouls": {
-        "personal": 5,
-        "offensive": 0,
-        "shooting": 0,
-        "technical": 0,
-        "flagrant": 0,
-        "total_committed": 5,
-        "fouls_drawn": null,
-        "fouled_out": false
-      },
-      "boxscore": {
-        "reb": 7.0,
-        "oreb": 2.0,
-        "dreb": 5.0,
-        "ast": 3.0,
-        "stl": 0.0,
-        "blk": 2.0,
-        "tov": 3.0,
-        "plus_minus": 1.0
-      },
-      "derived": {
-        "pra": 25.0,
-        "pr": 22.0,
-        "pa": 18.0,
-        "ra": 10.0,
-        "points_per_minute": 0.5172,
-        "free_throw_points_per_minute": 0.2414,
-        "fouls_per_minute": 0.1724
-      },
-      "data_quality": {
-        "quarter_data_status": "unavailable",
-        "event_data_status": "unavailable",
-        "boxscore_data_status": "observed",
-        "quarter_points_match_total": null,
-        "validation_flags": [],
-        "sources": [
-          "boxscores"
-        ]
-      },
-      "source_game_date": "2026-08-05",
-      "date": "2026-08-04",
-      "date_alias_for_alt_grading": true,
-      "date_alias_reason": "official schedule identifies one unique completed same-orientation matchup within seven days",
-      "date_alias_method": "official_unique_schedule_alias",
-      "date_alias_duplicate_sources_collapsed": 1,
-      "official_schedule_guard": "unique_schedule_alias",
-      "official_schedule_suggested_date": "2026-08-05",
-      "official_schedule_candidate_dates": [
-        "2026-08-05"
-      ]
     }
   ],
   "data_contract": {
@@ -429430,13 +429352,5 @@
     "requested_season": 2026,
     "boxscore_only_quarter_policy": "unavailable",
     "record_identity": "game_id + player_id preferred"
-  },
-  "alt_date_aliases_added": 1,
-  "alt_date_alias_last_target": "2026-08-04",
-  "alt_date_alias_last_methods": {
-    "official_unique_schedule_alias": 1,
-    "official_repeated_matchup_unique_player_date": 0,
-    "adjacent_date": 0,
-    "exact_matchup_wide_date": 0
   }
 }
