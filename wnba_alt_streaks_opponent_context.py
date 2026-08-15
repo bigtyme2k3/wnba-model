@@ -74,7 +74,11 @@ def main() -> None:
                 row["opponent_rank_definition"] = None
                 missing += 1
         payload.setdefault("summary", {})["opponent_rank_rows"] = sum(r.get("opponent_rank") is not None for r in payload.get("rows", []))
-        payload["opponent_rank_methodology"] = ranking_payload.get("methodology", {})
+        payload["opponent_rank_methodology"] = {
+            **ranking_payload.get("methodology", {}),
+            "display_rank_direction": "1 = toughest defense / lowest allowed",
+            "display_classes": {"1-3": "ELITE", "4-5": "TOUGH", "6-8": "AVERAGE", "9-11": "SOFT", "12+": "WEAK"},
+        }
         payload["data_policy"] = (
             "L5, L10, and season records come from verified player game logs. "
             "Opponent rank is stat-specific: average allowed per opposing player-game, where rank 1 is the toughest defense."
