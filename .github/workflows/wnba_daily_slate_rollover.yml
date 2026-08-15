@@ -97,6 +97,8 @@ jobs:
           if [ -f wnba_alt_market_warehouse.py ] && [ -f wnba_alt_streaks.py ] && [ -f wnba_alt_performance_tracker.py ]; then
             python wnba_alt_market_warehouse.py --date "$TARGET"
             python wnba_alt_streaks.py --date "$TARGET"
+          python wnba_opponent_stat_rankings.py --date "$TARGET"
+          python wnba_alt_streaks_opponent_context.py
             ALT_MARKETS=$(python - <<'PY'
           import json
           from pathlib import Path
@@ -177,8 +179,7 @@ jobs:
 
       - name: Build dashboard tab freshness manifest
         run: |
-          python - <<'PY'
-          import json,os
+          python - <<'PY'          import json,os
           from datetime import datetime,timezone
           from pathlib import Path
           target=os.environ['TARGET']; root=Path('data/dashboard'); now=datetime.now(timezone.utc)
