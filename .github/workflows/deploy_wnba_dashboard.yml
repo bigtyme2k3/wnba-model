@@ -179,7 +179,8 @@ jobs:
           python scripts/build_daily_canonical_slate.py --date "$TARGET"
           python - <<'PY'
           import json,os
-          from pathlib import Path          target=os.environ['TARGET']
+          from pathlib import Path
+          target=os.environ['TARGET']
           manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
           props=json.loads(Path('data/dashboard/wnba_player_props.json').read_text())
           if manifest.get('status')!='PASS' or manifest.get('target_date')!=target: raise SystemExit(f"Canonical manifest mismatch after rebuild: {manifest.get('target_date')} status={manifest.get('status')} target={target}")
