@@ -145,6 +145,10 @@ jobs:
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
           python wnba_alt_game_log_recovery.py
+          # Remove temporary date aliases from canonical rolling history after
+          # the grader has consumed them, then persist the cleaned archive.
+          python wnba_player_game_log_archive.py merge
+          python wnba_player_game_log_archive.py snapshot
 
       - name: Verify grading accounting
         run: |
