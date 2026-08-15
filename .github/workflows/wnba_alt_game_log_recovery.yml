@@ -150,6 +150,34 @@ jobs:
           python wnba_player_game_log_archive.py merge
           python wnba_player_game_log_archive.py snapshot
 
+      - name: Rebuild current ALT display from repaired history
+        if: env.RECOVERY_DATES != ''
+        run: |
+          export TARGET=$(python active_slate_date.py)
+          test -n "$TARGET"
+          python wnba_alt_market_warehouse.py --date "$TARGET"
+          python wnba_alt_streaks.py --date "$TARGET"
+          python wnba_opponent_stat_rankings.py --date "$TARGET"
+          python wnba_alt_streaks_opponent_context.py
+          python wnba_alt_streak_confidence.py --date "$TARGET"
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          python patch_dashboard_alt_props_table.py
+          python patch_dashboard_alt_props_scores.py
+          python patch_dashboard_alt_props_performance_panel.py
+          python patch_dashboard_v4_alt_streaks_display.py
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          target = os.environ.get('TARGET') or ''
+          streaks = json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
+          assert streaks.get('target_date') == target, (streaks.get('target_date'), target)
+          assert int((streaks.get('summary') or {}).get('active_streak_minimum') or 0) == 5
+          html = Path('docs/index.html').read_text(encoding='utf-8')
+          stamp = str(streaks.get('generated_at_utc') or '')
+          assert stamp and f'"generated_at_utc":"{stamp}"' in html
+          print({'status': 'PASS', 'target': target, 'rows': len(streaks.get('rows') or []), 'stamp': stamp})
+          PY
+
       - name: Verify grading accounting
         run: |
           python - <<'PY'
@@ -201,4 +229,11 @@ jobs:
             'data/dashboard/wnba_alt_game_log_recovery.json' \
             'data/warehouse/wnba_alt_game_log_recovery.json' \
             'data/dashboard/wnba_alt_strict_regrade.json' \
-            'data/warehouse/wnba_alt_strict_regrade.json'
+            'data/warehouse/wnba_alt_strict_regrade.json' \
+            'data/dashboard/wnba_alt_market_warehouse.json' \
+            'data/warehouse/wnba_alt_market_warehouse.json' \
+            'data/dashboard/wnba_alt_streaks.json' \
+            'data/warehouse/wnba_alt_streaks.json' \
+            'data/dashboard/wnba_opponent_stat_rankings.json' \
+            'data/warehouse/wnba_opponent_stat_rankings.json' \
+            'docs/index.html'
