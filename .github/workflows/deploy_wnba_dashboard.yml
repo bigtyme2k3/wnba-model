@@ -122,6 +122,8 @@ jobs:
           if [ -n "${ODDS_API_KEY:-}" ]; then python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw; else echo "ODDS_API_KEY unavailable; cached current input required."; fi
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
+          python wnba_opponent_stat_rankings.py --date "$TARGET"
+          python wnba_alt_streaks_opponent_context.py
           python - <<'PY'
           import json,os
           from pathlib import Path
@@ -177,8 +179,7 @@ jobs:
           python scripts/build_daily_canonical_slate.py --date "$TARGET"
           python - <<'PY'
           import json,os
-          from pathlib import Path
-          target=os.environ['TARGET']
+          from pathlib import Path          target=os.environ['TARGET']
           manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
           props=json.loads(Path('data/dashboard/wnba_player_props.json').read_text())
           if manifest.get('status')!='PASS' or manifest.get('target_date')!=target: raise SystemExit(f"Canonical manifest mismatch after rebuild: {manifest.get('target_date')} status={manifest.get('status')} target={target}")
