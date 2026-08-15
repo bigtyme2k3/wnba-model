@@ -23,7 +23,7 @@ const columns=[
 ];
 function canonical(){return window.WNBA_CANONICAL_DAILY||{}}
 function games(){const c=canonical();return Array.isArray(c.games)?c.games:[]}
-function rows(){const p=(window.DATA&&DATA.alt_streaks)||{},gs=games(),allowed=new Set(['fanduel','draftkings','fanatics']);return (Array.isArray(p.rows)?p.rows:[]).filter(r=>r.line_type==='alternate'&&Number(r.streak)>0&&Number(r.l10_games??r.last10_games??0)>=5&&allowed.has(String(r.best_book||'').toLowerCase())&&(!r.game||gs.some(g=>g.game===r.game)))}
+function rows(){const p=(window.DATA&&DATA.alt_streaks)||{},gs=games(),allowed=new Set(['fanduel','draftkings','fanatics']);return (Array.isArray(p.rows)?p.rows:[]).filter(r=>r.line_type==='alternate'&&Number(r.streak)>=5&&allowed.has(String(r.best_book||'').toLowerCase())&&(!r.game||gs.some(g=>g.game===r.game)))}
 function firstValue(obj,keys){for(const k of keys){const v=obj?.[k];if(v!==null&&v!==undefined&&v!=='')return v}return null}
 function numValue(obj,keys){const v=firstValue(obj,keys);if(v===null)return null;const n=Number(v);return Number.isFinite(n)?n:null}
 function exactPrice(r){const n=Number(r.best_odds);return {side:String(r.side||'—').toUpperCase(),price:Number.isFinite(n)?n:null,book:r.best_book||'—'}}
