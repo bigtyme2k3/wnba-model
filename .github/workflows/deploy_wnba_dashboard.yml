@@ -208,6 +208,10 @@ jobs:
           python patch_dashboard_alt_props_scores.py
           # Refresh the embedded performance panel from the persisted archive.
           python patch_dashboard_alt_props_performance_panel.py
+          # Canonical/runtime overlays can restore an older embedded DATA block.
+          # Re-embed the just-built ALT source last so Pages cannot publish a
+          # stale streak snapshot over the repaired warehouse output.
+          python patch_dashboard_v4_alt_streaks_display.py
 
       - name: Verify Sprint 19 M02-M06 dashboard routing and current slate artifact
         run: |
@@ -215,6 +219,12 @@ jobs:
           import json,os,re
           from pathlib import Path
           h=Path('docs/index.html').read_text(encoding='utf-8'); target=os.environ['TARGET']
+          alt=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
+          alt_stamp=str(alt.get('generated_at_utc') or '')
+          if not alt_stamp or f'"generated_at_utc":"{alt_stamp}"' not in h:
+              raise SystemExit(f'ALT embedded payload is stale: expected generated_at_utc={alt_stamp}')
+          if str(alt.get('target_date') or '') != target:
+              raise SystemExit(f'ALT source target mismatch: {alt.get("target_date")} != {target}')
           build_marker=f'<!-- canonical-build-target-v1:{target} -->'
           if build_marker not in h: raise SystemExit(f'REFUSE DEPLOY: canonical build target marker missing for {target}')
           visible=set(re.findall(r'Slate\s+(\d{4}-\d{2}-\d{2})',h))
