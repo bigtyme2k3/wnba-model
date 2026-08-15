@@ -27,7 +27,8 @@ WAREHOUSE = Path("data/warehouse/wnba_alt_game_log_recovery.json")
 PLAYER_LOGS = Path("data/warehouse/wnba_player_game_logs.json")
 
 # Confirmed completed schedule dates that were skipped by the historical feed.
-# A date is complete only when every scheduled matchup has player-game records;
+# Expected counts below come from the official completed WNBA schedule. A date
+# is complete only when every scheduled matchup has player-game records;
 # one partially recovered box score must not clear the repair guard.
 REQUIRED_COMPLETED_GAME_COUNTS = {
     "2026-08-05": 4,
