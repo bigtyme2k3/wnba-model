@@ -118,9 +118,7 @@ jobs:
       - name: Rebuild current ALT market and streak sources
         run: |
           set -e
-          echo 'Deployment is cache-only; sportsbook requests belong to the authoritative market writer.'
-          python wnba_alt_market_warehouse.py --date "$TARGET"
-          python wnba_alt_streaks.py --date "$TARGET"
+          echo 'Deployment consumes the persisted authoritative ALT warehouse; it does not rebuild from transient raw files.'
           python wnba_opponent_stat_rankings.py --date "$TARGET"
           python wnba_alt_streaks_opponent_context.py
           python - <<'PY'
@@ -128,6 +126,7 @@ jobs:
           from pathlib import Path
           target=os.environ['TARGET']; w=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text()); s=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
           if w.get('target_date')!=target or s.get('target_date')!=target: raise SystemExit('ALT source target mismatch')
+          if int((w.get('summary') or {}).get('markets') or 0)<=0 or int((s.get('summary') or {}).get('alternate_rows') or 0)<=0: raise SystemExit('Persisted authoritative ALT source is empty')
           print({'status':'PASS','target':target,'alt_markets':int((w.get('summary') or {}).get('markets') or 0),'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0)})
           PY
 
