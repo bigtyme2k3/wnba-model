@@ -56,8 +56,23 @@ def standings_strength():
             except Exception:pass
     return strength
 
-def build(games):
-    strength=standings_strength(); by=defaultdict(list)
+def scoreboard_strength(raw):
+    """Read the current overall records embedded in the schedule response."""
+    strength=standings_strength()
+    for event in raw.get('events',[]):
+        for competition in event.get('competitions') or []:
+            for competitor in competition.get('competitors') or []:
+                team=norm(str((competitor.get('team') or {}).get('abbreviation') or ''))
+                overall=next((r for r in competitor.get('records') or [] if r.get('type')=='total' or r.get('name')=='overall'),None)
+                summary=str((overall or {}).get('summary') or '')
+                try:
+                    wins,losses=(int(x) for x in summary.split('-',1))
+                    if team and wins+losses: strength[team]=wins/(wins+losses)
+                except Exception: pass
+    return strength
+
+def build(games,strength=None):
+    strength=strength or standings_strength(); by=defaultdict(list)
     for g in games:
         by[g['home']].append((g,False,g['away']));by[g['away']].append((g,True,g['home']))
     teams=[]
@@ -86,7 +101,7 @@ def main():
     try:raw=get_json(ESPN); source='ESPN scoreboard API'
     except Exception as exc:
         raw={'events':[]};source=f'fetch_failed: {exc}'
-    games=parse_events(raw,now);teams=build(games)
+    games=parse_events(raw,now);teams=build(games,scoreboard_strength(raw))
     payload={'generated_at_utc':now.isoformat(),'status':'ready' if games else 'standby','source':source,'summary':{'remaining_games':len(games),'teams':len(teams),'first_game_utc':games[0]['date_utc'] if games else None,'last_game_utc':games[-1]['date_utc'] if games else None},'hardest_schedules':teams[:5],'easiest_schedules':list(reversed(teams[-5:])),'teams':teams,'games':games}
     OUT.parent.mkdir(parents=True,exist_ok=True);OUT.write_text(json.dumps(payload,indent=2),encoding='utf-8')
     print(json.dumps(payload['summary'],indent=2))

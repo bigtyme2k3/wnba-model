@@ -24,6 +24,8 @@ SCRIPT = r'''<script id="v4-remaining-season-script">
   const rows=t.map(x=>`<div class="rsRow"><b>#${e(x.difficulty_rank)}</b><b>${e(x.team)}</b><span>${e(x.remaining_games)} games</span><span>${e(x.schedule_difficulty)} diff</span><span class="rsHide">${e(x.back_to_backs)} B2B</span><span class="rsHide">${e(x.three_in_four)} 3-in-4</span><span class="rsHide">${e(x.travel_miles)} mi</span></div>`).join('');
   return `<div class="section"><h2 class="mono">Remaining Season Intelligence</h2><div class="rsGrid"><div class="rsCard"><div class="small">Remaining games</div><b>${e(s.remaining_games||0)}</b></div><div class="rsCard"><div class="small">Teams tracked</div><b>${e(s.teams||0)}</b></div><div class="rsCard"><div class="small">First game</div><b>${e((s.first_game_utc||'').slice(0,10)||'—')}</b></div><div class="rsCard"><div class="small">Last game</div><b>${e((s.last_game_utc||'').slice(0,10)||'—')}</b></div></div></div><div class="section"><h3 class="mono">Schedule Difficulty</h3>${rows||'<div class="empty mono">Schedule data not loaded.</div>'}</div><div class="section"><h3 class="mono">Next Games</h3>${g.slice(0,20).map(x=>`<div class="prodGate"><span>${e(x.away)} @ ${e(x.home)}</span><b>${e((x.date_utc||'').replace('T',' ').slice(0,16))} UTC</b></div>`).join('')}</div></div>`;
  };
+ window.remainingSeasonIntelligence=window.remainingSeasonView;
+ window.remainingSeason=window.remainingSeasonView;
 })();
 </script>'''
 

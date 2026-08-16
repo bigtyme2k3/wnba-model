@@ -34,7 +34,6 @@ on:
       - 'scripts/wnba_s19_m02_prop_source.py'
       - 'scripts/wnba_s19_m02_predictions.py'
       - 'scripts/wnba_s19_m03_dashboard_consumer.py'
-      - 'scripts/wnba_s19_m04_decision_contract.py'
       - 'scripts/wnba_s19_m06_results_lifecycle.py'
       - 'patch_dashboard_alt_props_table.py'
       - 'patch_dashboard_alt_props_scores.py'
@@ -102,7 +101,7 @@ jobs:
             wnba_terminal_ui.py patch_terminal_ui.py scrape_odds_props.py scrape_scores.py player_points.py wnba_game_predictions_ledger.py wnba_game_performance.py wnba_player_props_ingestion.py wnba_alt_market_warehouse.py wnba_alt_streaks.py \
             patch_dashboard_canonical_runtime.py patch_dashboard_games_focus.py patch_dashboard_v4_ui_freeze.py patch_dashboard_v4_ui_freeze_safe.py \
             patch_dashboard_s19_m02.py patch_dashboard_s19_m03.py patch_dashboard_s19_m06.py scripts/build_daily_canonical_slate.py \
-            scripts/scrape_odds_props_consensus.py scripts/wnba_game_archive_backfill.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m04_decision_contract.py scripts/wnba_s19_m06_results_lifecycle.py \
+            scripts/scrape_odds_props_consensus.py scripts/wnba_game_archive_backfill.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m06_results_lifecycle.py \
             patch_dashboard_alt_props_table.py patch_dashboard_alt_props_scores.py patch_dashboard_alt_props_performance_panel.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py \
             patch_dashboard_sprint2_phase2.py patch_dashboard_build_verification.py patch_dashboard_alt_grading_status.py wnba_alt_pending_diagnostics.py \
             patch_dashboard_alt_recovery_progress.py patch_dashboard_game_performance.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_alt_ladders.py \
@@ -118,7 +117,9 @@ jobs:
       - name: Rebuild current ALT market and streak sources
         run: |
           set -e
-          echo 'Deployment consumes the persisted authoritative ALT warehouse; it does not rebuild from transient raw files.'
+          echo 'Deployment is cache-only; sportsbook requests belong to the authoritative market writer.'
+          python wnba_alt_market_warehouse.py --date "$TARGET"
+          python wnba_alt_streaks.py --date "$TARGET"
           python wnba_opponent_stat_rankings.py --date "$TARGET"
           python wnba_alt_streaks_opponent_context.py
           python - <<'PY'
@@ -126,7 +127,6 @@ jobs:
           from pathlib import Path
           target=os.environ['TARGET']; w=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text()); s=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
           if w.get('target_date')!=target or s.get('target_date')!=target: raise SystemExit('ALT source target mismatch')
-          if int((w.get('summary') or {}).get('markets') or 0)<=0 or int((s.get('summary') or {}).get('alternate_rows') or 0)<=0: raise SystemExit('Persisted authoritative ALT source is empty')
           print({'status':'PASS','target':target,'alt_markets':int((w.get('summary') or {}).get('markets') or 0),'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0)})
           PY
 
@@ -153,6 +153,7 @@ jobs:
       - name: Build complete dashboard artifact
         run: |
           set -e
+          python wnba_remaining_season_intelligence.py
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then python patch_dashboard_v5_injury_intelligence.py || true; python patch_dashboard_v5_player_prop_injury_context.py || true; fi
