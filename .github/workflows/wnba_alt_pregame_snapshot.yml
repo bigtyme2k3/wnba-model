@@ -14,7 +14,10 @@ on:
       - 'scripts/scrape_odds_props_consensus.py'
       - '.github/workflows/wnba_alt_pregame_snapshot.yml'
   schedule:
-    - cron: '7 * * * *'
+    # One authoritative full-market refresh every three hours. The dedicated
+    # closing capture handles the final 15-minute window without duplicating
+    # this full feed.
+    - cron: '7 */3 * * *'
 
 permissions:
   contents: write
@@ -65,6 +68,7 @@ jobs:
       - name: Refresh exact ALT markets and scores
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ODDS_API_MIN_REMAINING: '1500'
         run: |
           set -e
           if [ -n "${ODDS_API_KEY:-}" ]; then
