@@ -8,6 +8,7 @@ DASH = Path('data/dashboard')
 M03 = DASH / 'wnba_s19_m03_dashboard_consumer.json'
 OUT = DASH / 'wnba_s19_m04_decision_contract.json'
 AUDIT = DASH / 'wnba_s19_m04_decision_contract_audit.json'
+ALLOWED_BOOKS = {'draftkings', 'fanduel', 'fanatics'}
 
 
 def load(path: Path, default):
@@ -42,6 +43,12 @@ def build(target: str):
     unavailable = [r for r in props if str(r.get('injury_status') or '').upper() in {'OUT','DOUBTFUL'} and r.get('final_action') == 'BET']
     if unavailable:
         raise SystemExit('M04 found actionable unavailable player props')
+    if any(str(r.get('final_action') or r.get('action') or '').upper() != 'BET' for r in best):
+        raise SystemExit('M04 Best Bets contains a non-BET row')
+    if any(r.get('research_only') is True for r in best):
+        raise SystemExit('M04 Best Bets contains research-only rows')
+    if any(str(r.get('sportsbook') or '').strip().lower().replace(' ', '') not in ALLOWED_BOOKS for r in best):
+        raise SystemExit('M04 Best Bets contains an unsupported sportsbook')
 
     generated = datetime.now(timezone.utc).isoformat()
     payload = {
