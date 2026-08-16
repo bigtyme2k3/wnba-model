@@ -14,10 +14,9 @@ on:
       - 'scripts/scrape_odds_props_consensus.py'
       - '.github/workflows/wnba_alt_pregame_snapshot.yml'
   schedule:
-    # One authoritative full-market refresh every three hours. The dedicated
-    # closing capture handles the final 15-minute window without duplicating
-    # this full feed.
-    - cron: '7 */3 * * *'
+    # Emergency credit-control cadence through the monthly reset: one complete
+    # ALT snapshot at 1:07 PM Eastern, plus the separate tip-window close.
+    - cron: '7 17 * * *'
 
 permissions:
   contents: write
