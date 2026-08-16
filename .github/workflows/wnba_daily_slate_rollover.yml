@@ -168,6 +168,7 @@ jobs:
             python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           fi
           if [ -f wnba_game_predictions_ledger.py ]; then
+            python wnba_game_predictions_ledger.py grade --date "$TARGET"
             python wnba_game_predictions_ledger.py grade --date "$DAY_BEFORE"
             python wnba_game_predictions_ledger.py grade --date "$YESTERDAY"
           fi
