@@ -2,8 +2,8 @@ name: WNBA ALT Pregame Snapshot Writer
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '7 * * * *'
+  # Manual recovery only. The calibrated pregame snapshot workflow is the
+  # single scheduled owner of full ALT sportsbook refreshes.
   push:
     branches: [main]
     paths:
@@ -55,15 +55,9 @@ jobs:
             scripts/scrape_odds_props_consensus.py
 
       - name: Refresh exact ALT market inputs
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           set -e
-          if [ -n "${ODDS_API_KEY:-}" ]; then
-            python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw
-          else
-            echo 'ODDS_API_KEY unavailable; using persisted current-slate raw input only.'
-          fi
+          echo 'Recovery writer is cache-only; scheduled API ownership belongs to wnba_alt_pregame_snapshot.yml.'
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
           python wnba_alt_streak_confidence.py --date "$TARGET"
