@@ -134,16 +134,17 @@ def daily_directional_results(rows, result_date):
     }
 
 
-def build(target):
+def build(target, results_only=False):
     m04=load(M04,{})
     m05=load(M05,{})
-    if m04.get('status')!='READY' or str(m04.get('target_date') or '')[:10]!=target:
-        raise SystemExit(f'M06 requires current READY M04 contract for {target}')
-    if m05.get('status')!='READY' or str(m05.get('target_date') or '')[:10]!=target:
-        raise SystemExit(f'M06 requires current READY M05 health for {target}')
+    if not results_only:
+        if m04.get('status')!='READY' or str(m04.get('target_date') or '')[:10]!=target:
+            raise SystemExit(f'M06 requires current READY M04 contract for {target}')
+        if m05.get('status')!='READY' or str(m05.get('target_date') or '')[:10]!=target:
+            raise SystemExit(f'M06 requires current READY M05 health for {target}')
 
-    props=m04.get('player_props') or []
-    if not props: raise SystemExit('M06 refuses to archive an empty Player Props contract')
+    props=[] if results_only else (m04.get('player_props') or [])
+    if not results_only and not props: raise SystemExit('M06 refuses to archive an empty Player Props contract')
     if any(str(r.get('target_date') or target)[:10]!=target for r in props):
         raise SystemExit('M06 found off-date Player Props')
     if any(str(r.get('injury_status') or '').upper() in {'OUT','DOUBTFUL'} and r.get('eligible') for r in props):
@@ -207,6 +208,8 @@ def build(target):
         'missing_sportsbook':sum(not str(r.get('sportsbook') or '').strip() for r in current),
         'zero_stake_rows':sum((sf(r.get('stake')) or 0)==0 for r in current),
     }
+    target_pending=sum(r.get('outcome') not in {'WIN','LOSS','PUSH','VOID'} for r in target_current)
+    results_state='ALL_FINAL_RESULTS_GRADED' if results_only and target_current and target_pending==0 else 'ARCHIVED_WAITING_FOR_COMPLETED_ACTUALS'
     payload={
         'generated_at_utc':now,'target_date':target,'schema_version':'sprint19-m06-results-lifecycle-v2','status':'READY',
         'current_model_version':CURRENT_MODEL_VERSION,
@@ -222,7 +225,7 @@ def build(target):
             'contract_player_props':len(props),'added_history_records':len(additions),'target_history_records':len(target_rows),
             'duplicate_history_keys':duplicate_keys,'target_edge_records':int(edge_report.get('target_records') or 0),
             'open_edge_records':int(edge_report.get('open_records') or 0),'settled_edge_records':int(edge_report.get('settled_records') or 0),
-            'results_state':'ARCHIVED_WAITING_FOR_COMPLETED_ACTUALS',
+            'results_state':results_state,
         },
         'current_model':{
             'label':'Current model BET recommendations','scope':'explicit final_action == BET only; research and quarantined rows excluded','performance':result_summary(current_live),
@@ -241,7 +244,7 @@ def build(target):
         'contract_player_props':len(props),'added_history_records':len(additions),'target_history_records':len(target_rows),
         'duplicate_history_keys':duplicate_keys,'target_edge_records':int(edge_report.get('target_records') or 0),
         'same_day_final_results_inferred':False,'existing_grader_reused':True,'existing_edge_database_reused':True,
-        'history_persistence_required':True,'results_state':'ARCHIVED_WAITING_FOR_COMPLETED_ACTUALS',
+        'history_persistence_required':not results_only,'results_only':results_only,'results_state':results_state,
     }
     AUDIT.write_text(json.dumps(audit,indent=2)+'\n',encoding='utf-8')
     print('SPRINT19_M06_RESULTS_LIFECYCLE',json.dumps(audit))
@@ -249,6 +252,6 @@ def build(target):
 
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--date',required=True); args=ap.parse_args(); build(args.date)
+    ap=argparse.ArgumentParser(); ap.add_argument('--date',required=True); ap.add_argument('--results-only',action='store_true'); args=ap.parse_args(); build(args.date,args.results_only)
 
 if __name__=='__main__': main()
