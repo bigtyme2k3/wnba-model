@@ -198,12 +198,19 @@ jobs:
           python patch_dashboard_games_focus.py
           python patch_dashboard_sprint2_phase2.py
           python patch_dashboard_v4_ui_freeze_safe.py
-          python scripts/wnba_s19_m02_prop_source.py --date "$TARGET"
-          python player_points.py --date "$TARGET" --out data/raw
-          python scripts/wnba_s19_m02_predictions.py --date "$TARGET"
-          python patch_dashboard_s19_m02.py
-          python scripts/wnba_s19_m03_dashboard_consumer.py --date "$TARGET"
-          python patch_dashboard_s19_m03.py
+          if python scripts/wnba_s19_m02_prop_source.py --date "$TARGET"; then
+            echo 'CLOSED_SLATE=false' >> "$GITHUB_ENV"
+            python player_points.py --date "$TARGET" --out data/raw
+            python scripts/wnba_s19_m02_predictions.py --date "$TARGET"
+            python patch_dashboard_s19_m02.py
+            python scripts/wnba_s19_m03_dashboard_consumer.py --date "$TARGET"
+            python patch_dashboard_s19_m03.py
+          else
+            echo 'No open current-slate props after finals; rendering verified archived results only.'
+            echo 'CLOSED_SLATE=true' >> "$GITHUB_ENV"
+            python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" --results-only
+            python patch_dashboard_s19_m06.py
+          fi
           python patch_dashboard_alt_props_table.py
           python patch_dashboard_alt_props_scores.py
           # Refresh the embedded performance panel from the persisted archive.
@@ -241,13 +248,18 @@ jobs:
               if h.count(f'id="{marker}"')!=1: raise SystemExit(f'{marker} duplicated or missing')
           if h.count('id="root"')>1 or h.count('id="tabs"')!=1: raise SystemExit('Dashboard root/navigation duplication')
           def j(name): return json.loads(Path('data/dashboard/'+name).read_text())
-          a2=j('wnba_s19_m02_prediction_audit.json'); a3=j('wnba_s19_m03_dashboard_consumer_audit.json'); a4=j('wnba_s19_m04_decision_contract_audit.json'); a5=j('wnba_s19_m05_dashboard_health_audit.json'); a6=j('wnba_s19_m06_results_lifecycle_audit.json')
-          assert a2.get('status')=='READY' and a2.get('target_date')==target and a2.get('actionable_out_props')==0 and a2.get('player_prop_predictions',0)>0 and a2.get('all_rendered_props_exact_current_slate') is True, a2
-          assert a3.get('status')=='READY' and a3.get('target_date')==target and a3.get('all_consumers_single_source') is True and a3.get('phase2_best_bets_fallback_enabled') is False and a3.get('phase2_portfolio_fallback_enabled') is False, a3
-          assert a4.get('status')=='READY' and a4.get('target_date')==target and a4.get('all_rows_current_slate') is True and a4.get('actionable_unavailable_props')==0 and a4.get('legacy_fallback_enabled') is False and a4.get('single_dashboard_contract') is True, a4
-          assert a5.get('status')=='READY' and a5.get('target_date')==target and a5.get('all_health_checks_pass') is True and a5.get('healthy_checks')==a5.get('total_checks') and float(a5.get('contract_age_minutes',9999))<=90 and a5.get('legacy_fallback_enabled') is False and a5.get('single_dashboard_contract') is True, a5
+          closed=os.environ.get('CLOSED_SLATE','false').lower()=='true'
+          a6=j('wnba_s19_m06_results_lifecycle_audit.json')
+          if not closed:
+              a2=j('wnba_s19_m02_prediction_audit.json'); a3=j('wnba_s19_m03_dashboard_consumer_audit.json'); a4=j('wnba_s19_m04_decision_contract_audit.json'); a5=j('wnba_s19_m05_dashboard_health_audit.json')
+              assert a2.get('status')=='READY' and a2.get('target_date')==target and a2.get('actionable_out_props')==0 and a2.get('player_prop_predictions',0)>0 and a2.get('all_rendered_props_exact_current_slate') is True, a2
+              assert a3.get('status')=='READY' and a3.get('target_date')==target and a3.get('all_consumers_single_source') is True and a3.get('phase2_best_bets_fallback_enabled') is False and a3.get('phase2_portfolio_fallback_enabled') is False, a3
+              assert a4.get('status')=='READY' and a4.get('target_date')==target and a4.get('all_rows_current_slate') is True and a4.get('actionable_unavailable_props')==0 and a4.get('legacy_fallback_enabled') is False and a4.get('single_dashboard_contract') is True, a4
+              assert a5.get('status')=='READY' and a5.get('target_date')==target and a5.get('all_health_checks_pass') is True and a5.get('healthy_checks')==a5.get('total_checks') and float(a5.get('contract_age_minutes',9999))<=90 and a5.get('legacy_fallback_enabled') is False and a5.get('single_dashboard_contract') is True, a5
+          else:
+              assert a6.get('results_only') is True and a6.get('results_state')=='ALL_FINAL_RESULTS_GRADED', a6
           assert a6.get('status')=='READY' and a6.get('target_date')==target and a6.get('duplicate_history_keys')==0 and a6.get('same_day_final_results_inferred') is False and a6.get('existing_grader_reused') is True and a6.get('existing_edge_database_reused') is True and a6.get('target_history_records',0)>0, a6
-          print({'status':'PASS','sprint':19,'modules':['M02','M03','M04','M05','M06'],'target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True,'games':a5.get('games'),'player_props':a5.get('player_props'),'health_checks':a5.get('healthy_checks'),'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
+          print({'status':'PASS','sprint':19,'mode':'results-only' if closed else 'live','target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True,'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
           PY
 
       - name: Persist Sprint 19 M06 prediction history
