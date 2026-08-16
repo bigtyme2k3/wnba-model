@@ -115,11 +115,9 @@ jobs:
           done
 
       - name: Rebuild current ALT market and streak sources
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           set -e
-          if [ -n "${ODDS_API_KEY:-}" ]; then python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw; else echo "ODDS_API_KEY unavailable; cached current input required."; fi
+          echo 'Deployment is cache-only; sportsbook requests belong to the authoritative market writer.'
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
           python wnba_opponent_stat_rankings.py --date "$TARGET"
@@ -153,8 +151,6 @@ jobs:
           PY
 
       - name: Build complete dashboard artifact
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           set -e
           python wnba_terminal_ui.py --date "$TARGET"
