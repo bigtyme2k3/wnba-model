@@ -9,6 +9,7 @@ M02=DASH/'wnba_s19_m02_predictions.json'
 RESULTS=DASH/'wnba_results_grading.json'
 OUT=DASH/'wnba_s19_m03_dashboard_consumer.json'
 AUDIT=DASH/'wnba_s19_m03_dashboard_consumer_audit.json'
+ALLOWED_BOOKS={'draftkings','fanduel','fanatics'}
 
 
 def load(path, default):
@@ -37,6 +38,9 @@ def build(target:str):
     # A valid projection may be exactly 0.0; reject only absent/null projections.
     if any(r.get('model_projection') is None for r in props): raise SystemExit('M03 found Player Props without model projection')
     if any(str(r.get('injury_status') or '').upper() in {'OUT','DOUBTFUL'} and r.get('eligible') for r in props): raise SystemExit('M03 found actionable unavailable player')
+    if any(str(r.get('final_action') or r.get('action') or '').upper()!='BET' for r in best): raise SystemExit('M03 Best Bets contains a non-BET row')
+    if any(r.get('research_only') is True for r in best): raise SystemExit('M03 Best Bets contains research-only rows')
+    if any(str(r.get('sportsbook') or '').strip().lower().replace(' ','') not in ALLOWED_BOOKS for r in best): raise SystemExit('M03 Best Bets contains an unsupported sportsbook')
 
     payload={
       'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,
