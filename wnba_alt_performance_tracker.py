@@ -14,7 +14,7 @@ import argparse
 import json
 import math
 from collections import defaultdict
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -323,6 +323,15 @@ def analyze(target: str) -> dict[str,Any]:
         "message":None if live["n"]>=MIN_LIVE_BET_DECISIONS else "Insufficient sample — BET recommendations just started",
         "scope":"frozen pregame rows whose archived action was BET",
     })
+    yesterday=(date.fromisoformat(target)-timedelta(days=1)).isoformat()
+    yesterday_bets=[r for r in live_bets if str(r.get("date") or "")[:10]==yesterday and r.get("outcome") in {"WIN","LOSS","PUSH","VOID"}]
+    yesterday_view=performance_summary(yesterday_bets)
+    yesterday_view.update({
+        "date":yesterday,
+        "status":"GRADED" if yesterday_bets else "AWAITING_VERIFIED_RESULTS",
+        "scope":"frozen pregame BET recommendations for the previous calendar date",
+        "rows":sorted(yesterday_bets,key=lambda r:(str(r.get("game") or ""),str(r.get("player") or ""),str(r.get("stat") or ""),num(r.get("alt_line")) or 0)),
+    })
     research_rows=[r for r in graded if str(r.get("streak_action") or "").upper() in {"LEAN","WATCH","PASS"}]
     research_tiers=[]
     tier_map={r["group"]:r for r in group_summary(research_rows,"streak_action")}
@@ -364,6 +373,7 @@ def analyze(target: str) -> dict[str,Any]:
                    "recommended_minimum_score_band":threshold,
                    "calibration_ready":calibration_view["calibration_ready"]},
         "live_performance":live,
+        "yesterday_performance":yesterday_view,
         "research_archive":{
             "purpose":"Did the model correctly rank non-recommended markets as lower quality?",
             "graded":len(research_rows),"tiers":research_tiers,
