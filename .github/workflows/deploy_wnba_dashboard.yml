@@ -199,6 +199,7 @@ jobs:
           python patch_dashboard_sprint2_phase2.py
           python patch_dashboard_v4_ui_freeze_safe.py
           if python scripts/wnba_s19_m02_prop_source.py --date "$TARGET"; then
+            export CLOSED_SLATE=false
             echo 'CLOSED_SLATE=false' >> "$GITHUB_ENV"
             python player_points.py --date "$TARGET" --out data/raw
             python scripts/wnba_s19_m02_predictions.py --date "$TARGET"
@@ -207,6 +208,7 @@ jobs:
             python patch_dashboard_s19_m03.py
           else
             echo 'No open current-slate props after finals; rendering verified archived results only.'
+            export CLOSED_SLATE=true
             echo 'CLOSED_SLATE=true' >> "$GITHUB_ENV"
             python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" --results-only
             python patch_dashboard_s19_m06.py
