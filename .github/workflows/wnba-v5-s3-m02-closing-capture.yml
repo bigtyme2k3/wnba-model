@@ -2,7 +2,7 @@ name: WNBA V5 S3 M02 Explicit Closing Capture
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/15 * * * *'
   push:
     branches: [main]
     paths:
@@ -27,7 +27,8 @@ jobs:
     env:
       ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
       V5_CLOSE_WINDOW_MIN: '15'
-      V5_CLOSE_BOOKMAKERS: 'fanduel,draftkings'
+      V5_CLOSE_BOOKMAKERS: 'fanduel,draftkings,fanatics'
+      ODDS_API_MIN_REMAINING: '1500'
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
