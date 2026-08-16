@@ -64,6 +64,17 @@ jobs:
             exit 0
           fi
           python wnba_alt_market_warehouse.py --date "$TARGET"
+          if ! python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
+          raise SystemExit(0 if int((payload.get('summary') or {}).get('markets') or 0) > 0 else 1)
+          PY
+          then
+            echo 'Persisted ALT cache has no exact current-slate markets; skipping recovery safely.'
+            echo 'SKIP_RECOVERY=true' >> "$GITHUB_ENV"
+            exit 0
+          fi
           python wnba_alt_streaks.py --date "$TARGET"
           python wnba_alt_streak_confidence.py --date "$TARGET"
 
