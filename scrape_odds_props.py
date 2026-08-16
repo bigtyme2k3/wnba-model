@@ -23,6 +23,7 @@ import pandas as pd
 import requests
 
 API_KEY = os.getenv("ODDS_API_KEY")
+MIN_REMAINING = int(os.getenv("ODDS_API_MIN_REMAINING", "1500"))
 SPORT = "basketball_wnba"
 REGIONS = "us"
 ODDS_FMT = "american"
@@ -30,6 +31,20 @@ PLAYER_PROP_BOOKS = {"draftkings", "fanduel", "fanatics"}
 PLAYER_PROP_BOOKMAKERS = ",".join(sorted(PLAYER_PROP_BOOKS))
 BASE_URL = "https://api.the-odds-api.com/v4/sports"
 ET = ZoneInfo("America/New_York")
+
+
+def enforce_credit_reserve(response, label: str) -> None:
+    """Stop additional paid market calls before the monthly reserve is spent."""
+    raw = response.headers.get("x-requests-remaining")
+    try:
+        remaining = int(raw)
+    except (TypeError, ValueError):
+        return
+    if remaining <= MIN_REMAINING:
+        raise RuntimeError(
+            f"Odds API credit reserve reached after {label}: {remaining} remaining "
+            f"(minimum reserve {MIN_REMAINING}). Refusing additional market calls."
+        )
 
 PROP_MARKETS = {
     "player_points": "pts", "player_rebounds": "reb", "player_assists": "ast", "player_threes": "threes",
@@ -99,6 +114,7 @@ def fetch_events() -> list[dict]:
     if resp.status_code == 422:
         return []
     resp.raise_for_status()
+    enforce_credit_reserve(resp, "events refresh")
     payload = resp.json()
     return payload if isinstance(payload, list) else []
 
@@ -145,6 +161,7 @@ def fetch_event_markets(event_id: str, markets: list[str], label: str) -> dict:
     if resp.status_code in (404, 422):
         return {}
     resp.raise_for_status()
+    enforce_credit_reserve(resp, f"event market {event_id}")
     return resp.json()
 
 
