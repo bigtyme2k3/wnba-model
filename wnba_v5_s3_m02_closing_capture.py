@@ -18,6 +18,7 @@ from urllib.request import urlopen
 DASH = Path('data/dashboard')
 FRESH = DASH/'wnba_v5_s3_m01_freshness.json'
 INFERENCE = DASH/'wnba_v5_live_inference.json'
+GAMES = DASH/'wnba_sprint2_phase2.json'
 OUT_CSV = DASH/'wnba_v5_closing_lines.csv'
 OUT_SNAPSHOT = DASH/'wnba_v5_closing_snapshot.json'
 OUT_QUEUE = DASH/'wnba_v5_clv_queue.json'
@@ -28,6 +29,7 @@ BASE='https://api.the-odds-api.com/v4/sports'
 BOOKMAKERS=os.getenv('V5_CLOSE_BOOKMAKERS','fanduel,draftkings')
 CLOSE_WINDOW_MIN=int(os.getenv('V5_CLOSE_WINDOW_MIN','15'))
 API_KEY=os.getenv('ODDS_API_KEY')
+MIN_REMAINING=int(os.getenv('ODDS_API_MIN_REMAINING','1500'))
 
 STAT_MARKETS={
  'PTS':['player_points','player_points_alternate'],
@@ -56,7 +58,13 @@ def api(path, params):
     if not API_KEY: raise RuntimeError('ODDS_API_KEY is not configured')
     q=dict(params);q['apiKey']=API_KEY
     with urlopen(f"{BASE}/{SPORT}/{path}?{urlencode(q)}",timeout=25) as r:
-        return json.loads(r.read().decode('utf-8'))
+        remaining=r.headers.get('x-requests-remaining')
+        payload=json.loads(r.read().decode('utf-8'))
+        try: remaining_n=int(remaining)
+        except (TypeError,ValueError): remaining_n=None
+        if remaining_n is not None and remaining_n <= MIN_REMAINING:
+            raise RuntimeError(f'Odds API reserve reached: {remaining_n} remaining; minimum reserve is {MIN_REMAINING}')
+        return payload
 
 def game_tokens(game):
     x=norm(game).replace(' vs. ',' @ ').replace(' vs ',' @ ')
@@ -97,6 +105,19 @@ def main():
         write_csv(history);finish(report,{'report':report,'observations':[]},{'report':report,'predictions':[]});return
     if not API_KEY:
         report={**base,'status':'WAITING_FOR_ODDS_API_KEY','candidate_predictions':len(scored),'eligible_events':0,'api_calls':0,'new_close_rows':0,'total_close_rows':len(history),'reason':'ODDS_API_KEY secret is required for explicit live capture.'}
+        write_csv(history);finish(report,{'report':report,'observations':[]},{'report':report,'predictions':[]});return
+
+    # Use the already-owned canonical schedule as a free preflight gate. The
+    # API event list is requested only when at least one game is close enough
+    # to tip for this run to capture a valid closing observation.
+    games=load(GAMES,{})
+    canonical_starts=[]
+    for game in games.get('games',[]) or []:
+        tip=dt(game.get('start_time') or game.get('commence_time'))
+        if tip is not None:
+            canonical_starts.append((tip-now).total_seconds()/60)
+    if not any(0 <= minutes <= CLOSE_WINDOW_MIN+5 for minutes in canonical_starts):
+        report={**base,'status':'WAITING_FOR_CLOSE_WINDOW','candidate_predictions':len(scored),'eligible_events':0,'api_calls':0,'new_close_rows':0,'total_close_rows':len(history),'reason':'Canonical schedule has no event within the pre-tip close window; no Odds API request was made.'}
         write_csv(history);finish(report,{'report':report,'observations':[]},{'report':report,'predictions':[]});return
 
     events=api('events',{}); api_calls=1
