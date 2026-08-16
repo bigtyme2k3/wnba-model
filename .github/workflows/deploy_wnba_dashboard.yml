@@ -172,7 +172,9 @@ jobs:
           PY
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
-          python scripts/build_daily_canonical_slate.py --date "$TARGET"
+          # The canonical writer owns sportsbook ingestion. Deployment only
+          # validates and renders its persisted current-slate artifact.
+          echo 'Using persisted canonical slate; deploy performs no sportsbook ingestion.'
           python - <<'PY'
           import json,os
           from pathlib import Path
