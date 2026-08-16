@@ -1,16 +1,16 @@
 {
-  "generated_at_utc": "2026-08-15T19:44:14.248587+00:00",
+  "generated_at_utc": "2026-08-16T18:43:58.535153+00:00",
   "requested_date": null,
-  "active_slate_date": "2026-08-15",
+  "active_slate_date": "2026-08-16",
   "scope_policy": "completed_history_only_oldest_first",
   "status": "ready",
   "before": {
-    "archived": 25014,
-    "graded": 21749,
-    "pending": 3265
+    "archived": 25292,
+    "graded": 24311,
+    "pending": 981
   },
   "targets": {
-    "records": 711,
+    "records": 794,
     "dates": [
       "2026-07-15",
       "2026-07-16",
@@ -26,7 +26,8 @@
       "2026-08-09",
       "2026-08-11",
       "2026-08-12",
-      "2026-08-14"
+      "2026-08-14",
+      "2026-08-15"
     ],
     "games": [
       "2026-07-15|new-york-liberty-@-dallas-wings",
@@ -54,7 +55,8 @@
       "2026-08-11|phoenix-mercury-@-los-angeles-sparks",
       "2026-08-12|minnesota-lynx-@-portland-fire",
       "2026-08-12|toronto-tempo-@-dallas-wings",
-      "2026-08-14|portland-fire-@-seattle-storm"
+      "2026-08-14|portland-fire-@-seattle-storm",
+      "2026-08-15|new-york-liberty-@-connecticut-sun"
     ],
     "players": [
       "A'ja Wilson",
@@ -63,6 +65,7 @@
       "Azura Stevens",
       "Azzi Fudd",
       "Breanna Stewart",
+      "Brittney Griner",
       "Cameron Brink",
       "Carla Leite",
       "Charlisse Leger-Walker",
@@ -154,6 +157,10 @@
       {
         "date": "2026-08-14",
         "records": 93
+      },
+      {
+        "date": "2026-08-15",
+        "records": 83
       }
     ],
     "schedule_coverage_gaps": [],
@@ -177,14 +184,14 @@
     }
   },
   "deferred_active_or_future": {
-    "records": 2642,
+    "records": 275,
     "dates": [
-      "2026-08-15"
+      "2026-08-16"
     ],
     "by_date": [
       {
-        "date": "2026-08-15",
-        "records": 2642
+        "date": "2026-08-16",
+        "records": 275
       }
     ],
     "reason": "automatic backlog recovery only processes dates before the active Eastern slate date"
@@ -235,6 +242,9 @@
     "python wnba_play_by_play_layer.py --date 2026-08-14",
     "python wnba_player_game_log_warehouse.py --date 2026-08-14",
     "python wnba_alt_performance_tracker.py --date 2026-08-14 --grade",
+    "python wnba_play_by_play_layer.py --date 2026-08-15",
+    "python wnba_player_game_log_warehouse.py --date 2026-08-15",
+    "python wnba_alt_performance_tracker.py --date 2026-08-15 --grade",
     "python wnba_player_game_log_archive.py merge"
   ]
 }
