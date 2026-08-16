@@ -19,6 +19,7 @@ PROP_PRED = RAW / 'player_points_today.csv'
 OUT = DASH / 'wnba_s19_m02_predictions.json'
 AUDIT = DASH / 'wnba_s19_m02_prediction_audit.json'
 MODEL_VERSION = 'sprint19_player_props_v5_m02_action_v2'
+ALLOWED_BOOKS = {'draftkings', 'fanduel', 'fanatics'}
 
 
 def load(path: Path, default):
@@ -108,6 +109,12 @@ def decision_key(row):
         str(first(row, 'stat', 'market', 'prop_type') or '').upper(),
         str(first(row, 'signal', 'side', 'recommendation') or '').upper(),
     )
+
+
+def explicit_supported_bet(row):
+    action = str(first(row, 'final_action', 'action') or '').upper()
+    book = norm(first(row, 'sportsbook', 'best_book', 'book')).replace(' ', '')
+    return action == 'BET' and row.get('research_only') is not True and book in ALLOWED_BOOKS
 
 
 def validate_prepared_prop_source(target: str, game_names: set[str]) -> int:
@@ -268,7 +275,9 @@ def build(target: str):
 
     current_buy = current_rows(buy, target)
     current_portfolio = current_rows(portfolio, target)
-    finalized_bets = {decision_key(row): row for row in current_buy if decision_key(row)[0] and decision_key(row)[2]}
+    approved_buy = [row for row in current_buy if explicit_supported_bet(row)]
+    approved_portfolio = [row for row in current_portfolio if explicit_supported_bet(row)]
+    finalized_bets = {decision_key(row): row for row in approved_buy if decision_key(row)[0] and decision_key(row)[2]}
     for row in prop_rows:
         finalized = finalized_bets.get(decision_key(row))
         action = 'BET' if finalized else ('WATCH' if row.get('recommendation') in {'OVER', 'UNDER'} else 'PASS')
@@ -285,6 +294,10 @@ def build(target: str):
         row['action'] = action
         row['final_action'] = action
         row['eligible_for_bet'] = action == 'BET'
+        if action == 'BET':
+            row['sportsbook'] = first(finalized, 'sportsbook', 'best_book', 'book')
+            row['american_odds'] = f(first(finalized, 'american_odds', 'odds', 'price'))
+    explicit_best_bets = [dict(row) for row in prop_rows if row.get('final_action') == 'BET']
     payload = {
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
         'target_date': target,
@@ -300,8 +313,8 @@ def build(target: str):
         'games_generated_at_utc': game_stamp,
         'games': current_games,
         'player_props': prop_rows,
-        'best_bets': current_buy,
-        'portfolio': current_portfolio,
+        'best_bets': explicit_best_bets,
+        'portfolio': approved_portfolio,
         'summary': {
             'games': len(current_games),
             'sportsbook_prop_input_rows': sportsbook_input_rows,
@@ -309,8 +322,9 @@ def build(target: str):
             'player_props_injury_adjusted': sum(bool(r.get('injury_adjusted')) for r in prop_rows),
             'candidate_player_props': sum(bool(r.get('candidate_eligible')) for r in prop_rows),
             'bet_player_props': sum(r.get('final_action') == 'BET' for r in prop_rows),
-            'v5_best_bets': len(current_buy),
-            'v5_portfolio_rows': len(current_portfolio),
+            'v5_best_bets': len(explicit_best_bets),
+            'v5_portfolio_rows': len(approved_portfolio),
+            'research_buy_signals_excluded': len(current_buy) - len(approved_buy),
             'off_slate_prop_rows_rejected': len(off_slate),
             'missing_projection_rows_skipped': len(missing_projection),
             'negative_projection_rows_clamped': negative_projection_rows_clamped,
@@ -333,10 +347,11 @@ def build(target: str):
         'off_slate_prop_rows_rejected': len(off_slate),
         'all_rendered_props_exact_current_slate': all(r.get('game') in game_names for r in prop_rows),
         'best_bets_source': 'wnba_v5_buy_signals.json',
-        'best_bets_current_rows': len(current_buy),
+        'best_bets_current_rows': len(explicit_best_bets),
+        'research_buy_signals_excluded': len(current_buy) - len(approved_buy),
         'phase2_best_bets_fallback_enabled': False,
         'portfolio_source': 'wnba_v5_live_portfolio.json',
-        'portfolio_current_rows': len(current_portfolio),
+        'portfolio_current_rows': len(approved_portfolio),
         'phase2_portfolio_fallback_enabled': False,
         'missing_projection_rows_skipped': len(missing_projection),
         'negative_projection_rows_clamped': negative_projection_rows_clamped,
