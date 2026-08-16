@@ -23,6 +23,17 @@ def test_live_performance_excludes_research_actions():
     assert live["profit_loss_units"] == 0.8
 
 
+def test_daily_performance_summary_reports_only_supplied_bets():
+    daily = performance.performance_summary([
+        row("BET", "WIN", 0.25), row("BET", "LOSS", -1.0),
+    ])
+    assert daily["n"] == 2
+    assert daily["wins"] == 1
+    assert daily["losses"] == 1
+    assert daily["profit_loss_units"] == -0.75
+    assert daily["roi"] == -0.375
+
+
 def test_alt_payload_audit_reads_both_sides_before_filtering():
     payload = {"bookmakers": [{"markets": [{
         "key": "player_points_alternate",
