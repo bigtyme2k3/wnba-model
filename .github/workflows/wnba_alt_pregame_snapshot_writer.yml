@@ -58,11 +58,17 @@ jobs:
         run: |
           set -e
           echo 'Recovery writer is cache-only; scheduled API ownership belongs to wnba_alt_pregame_snapshot.yml.'
+          if [ ! -s "data/raw/alt_props_bookmakers_${TARGET}.csv" ] && [ ! -s data/raw/alt_props_bookmakers_today.csv ]; then
+            echo 'No persisted exact ALT cache is available; recovery writer has nothing to do.'
+            echo 'SKIP_RECOVERY=true' >> "$GITHUB_ENV"
+            exit 0
+          fi
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
           python wnba_alt_streak_confidence.py --date "$TARGET"
 
       - name: Freeze earliest verified pregame ALT observations
+        if: env.SKIP_RECOVERY != 'true'
         run: |
           set -e
           python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot
@@ -70,6 +76,7 @@ jobs:
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
 
       - name: Verify canonical accounting
+        if: env.SKIP_RECOVERY != 'true'
         run: |
           python - <<'PY'
           import json, os
@@ -85,6 +92,7 @@ jobs:
           PY
 
       - name: Persist frozen ALT archive and performance
+        if: env.SKIP_RECOVERY != 'true'
         run: |
           git config user.name 'WNBA ALT Snapshot Bot'
           git config user.email 'actions@github.com'
