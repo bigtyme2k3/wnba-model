@@ -219,6 +219,13 @@ jobs:
           # Re-embed the just-built ALT source last so Pages cannot publish a
           # stale streak snapshot over the repaired warehouse output.
           python patch_dashboard_v4_alt_streaks_display.py
+          # Some legacy ALT patchers invoke the live M03-M06 chain as a side
+          # effect. Reassert the archived-results payload last on a closed
+          # slate so that chain cannot replace it with stale pregame inputs.
+          if [ "${CLOSED_SLATE:-false}" = 'true' ]; then
+            python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" --results-only
+            python patch_dashboard_s19_m06.py
+          fi
 
       - name: Verify Sprint 19 M02-M06 dashboard routing and current slate artifact
         run: |
