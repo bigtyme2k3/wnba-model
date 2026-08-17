@@ -153,7 +153,6 @@ jobs:
       - name: Build complete dashboard artifact
         run: |
           set -e
-          python wnba_remaining_season_intelligence.py
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then python patch_dashboard_v5_injury_intelligence.py || true; python patch_dashboard_v5_player_prop_injury_context.py || true; fi
@@ -240,6 +239,11 @@ jobs:
               raise SystemExit(f'ALT embedded payload is stale: expected generated_at_utc={alt_stamp}')
           if str(alt.get('target_date') or '') != target:
               raise SystemExit(f'ALT source target mismatch: {alt.get("target_date")} != {target}')
+          eligible=[r for r in alt.get('rows',[]) if r.get('line_type')=='alternate' and int(r.get('streak') or 0)>=5 and str(r.get('best_book') or '').lower() in {'fanduel','draftkings','fanatics'}]
+          if alt.get('rows') and not eligible:
+              raise SystemExit('ALT source is nonempty but has zero renderer-eligible rows')
+          if eligible and "row_gate:'target-date-artifact'" not in h:
+              raise SystemExit('ALT renderer is not using the stable target-date artifact gate')
           build_marker=f'<!-- canonical-build-target-v1:{target} -->'
           if build_marker not in h: raise SystemExit(f'REFUSE DEPLOY: canonical build target marker missing for {target}')
           visible=set(re.findall(r'Slate\s+(\d{4}-\d{2}-\d{2})',h))
@@ -267,7 +271,7 @@ jobs:
           else:
               assert a6.get('results_only') is True and a6.get('results_state')=='ALL_FINAL_RESULTS_GRADED', a6
           assert a6.get('status')=='READY' and a6.get('target_date')==target and a6.get('duplicate_history_keys')==0 and a6.get('same_day_final_results_inferred') is False and a6.get('existing_grader_reused') is True and a6.get('existing_edge_database_reused') is True and a6.get('target_history_records',0)>0, a6
-          print({'status':'PASS','sprint':19,'mode':'results-only' if closed else 'live','target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True,'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
+          print({'status':'PASS','sprint':19,'mode':'results-only' if closed else 'live','target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True,'alt_source_rows':len(alt.get('rows') or []),'alt_renderer_eligible_rows':len(eligible),'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
           PY
 
       - name: Persist Sprint 19 M06 prediction history
