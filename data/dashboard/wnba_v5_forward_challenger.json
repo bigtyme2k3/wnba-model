@@ -1,0 +1,93 @@
+{
+  "version": "V5",
+  "module": "FORWARD_CHAMPION_CHALLENGER",
+  "stage": "CANONICAL_CHRONOLOGICAL_SHADOW",
+  "generated_at_utc": "2026-08-18T01:53:56.114310+00:00",
+  "canonical_resolved_eligible_rows": 0,
+  "minimum_prior_canonical_rows": 60,
+  "chronologically_scored_rows": 0,
+  "features": [
+    "market_implied_probability",
+    "line_minus_prior_mean",
+    "rolling3_actual_mean",
+    "rolling5_actual_mean",
+    "rolling5_actual_std",
+    "rolling5_trend_slope",
+    "historical_hit_rate_at_current_line",
+    "historical_hit_rate_l5_at_current_line",
+    "prior_games"
+  ],
+  "rankings": [
+    {
+      "model": "MARKET",
+      "n": 0
+    },
+    {
+      "model": "RAW_KNN",
+      "n": 0
+    },
+    {
+      "model": "LOGISTIC_FORWARD",
+      "n": 0
+    },
+    {
+      "model": "RIDGE_FORWARD",
+      "n": 0
+    },
+    {
+      "model": "CHALLENGER_ENSEMBLE",
+      "n": 0
+    }
+  ],
+  "forward_research_champion": "MARKET",
+  "by_side": {
+    "OVER": [
+      {
+        "model": "MARKET",
+        "n": 0
+      },
+      {
+        "model": "RAW_KNN",
+        "n": 0
+      },
+      {
+        "model": "LOGISTIC_FORWARD",
+        "n": 0
+      },
+      {
+        "model": "RIDGE_FORWARD",
+        "n": 0
+      },
+      {
+        "model": "CHALLENGER_ENSEMBLE",
+        "n": 0
+      }
+    ],
+    "UNDER": [
+      {
+        "model": "MARKET",
+        "n": 0
+      },
+      {
+        "model": "RAW_KNN",
+        "n": 0
+      },
+      {
+        "model": "LOGISTIC_FORWARD",
+        "n": 0
+      },
+      {
+        "model": "RIDGE_FORWARD",
+        "n": 0
+      },
+      {
+        "model": "CHALLENGER_ENSEMBLE",
+        "n": 0
+      }
+    ]
+  },
+  "production_ready": false,
+  "research_only": true,
+  "policy": "Only earliest immutable prediction per ranking_key is eligible. Challenger fits use prior canonical resolved markets only. No production promotion from this module.",
+  "promotion_note": "Require materially larger canonical sample and repeated chronological superiority before altering M10/M11."
+}
