@@ -1,8 +1,9 @@
 """V5-M12 post-game learning + forward validation.
 
 Persists every M11 live V5 score in an append-safe ledger, grades it only when a
-certified actual later appears in the V5 historical feature store, and computes
-true forward-only model metrics. Predictions are never recomputed after outcome.
+verified actual later appears in a certified historical feature or canonical
+player game-log source, and computes true forward-only model metrics. Predictions
+are never recomputed after outcome.
 
 Outputs:
   data/history/wnba_v5_forward_predictions.jsonl
@@ -23,6 +24,7 @@ from statistics import mean
 
 INFERENCE = Path('data/dashboard/wnba_v5_live_inference.json')
 FEATURES = Path('data/dashboard/wnba_v5_historical_features.csv')
+PLAYER_LOGS = Path('data/warehouse/wnba_player_game_logs.json')
 LEDGER = Path('data/history/wnba_v5_forward_predictions.jsonl')
 OUT_CSV = Path('data/dashboard/wnba_v5_forward_validation.csv')
 METRICS = Path('data/dashboard/wnba_v5_forward_metrics.json')
@@ -91,21 +93,59 @@ def prediction_id(r):
     ])
 
 
+def game_log_actual(record, stat):
+    """Return a full-game actual from the canonical player game-log warehouse."""
+    s=record.get('scoring') if isinstance(record.get('scoring'),dict) else {}
+    b=record.get('boxscore') if isinstance(record.get('boxscore'),dict) else {}
+    d=record.get('derived') if isinstance(record.get('derived'),dict) else {}
+    key=str(stat or '').upper().replace('THREES','3PM').replace(' ','_')
+    values={
+        'PTS':s.get('total_pts'),'3PM':s.get('three_pm'),
+        'REB':b.get('reb'),'AST':b.get('ast'),'STL':b.get('stl'),'BLK':b.get('blk'),
+        'PRA':d.get('pra'),'PR':d.get('pr'),'PA':d.get('pa'),'RA':d.get('ra'),
+    }
+    return f(values.get(key))
+
+
 def build_actual_index():
-    if not FEATURES.exists():
-        return {}
-    rows=list(csv.DictReader(FEATURES.open(encoding='utf-8-sig',newline='')))
+    """Build date/player/stat actuals from both historical and current sources.
+
+    The V5 historical feature store is a protected training snapshot and does not
+    automatically acquire later forward-game results. M12 therefore seeds from it
+    for backward compatibility, then extends the index from the canonical player
+    game-log warehouse used by the production grading stack. Only unambiguous
+    date/player/stat actuals are accepted.
+    """
     buckets=defaultdict(list)
-    for r in rows:
+    if FEATURES.exists():
+        for r in csv.DictReader(FEATURES.open(encoding='utf-8-sig',newline='')):
+            date=str(r.get('game_date') or '')[:10]
+            player=norm(r.get('player'))
+            stat=str(r.get('stat') or '').upper()
+            actual=f(r.get('target_actual'))
+            if date and player and stat and actual is not None:
+                buckets[(date,player,stat)].append(actual)
+
+    logs=read_json(PLAYER_LOGS,{'records':[]})
+    for r in logs.get('records',[]) if isinstance(logs,dict) else []:
+        if not isinstance(r,dict):
+            continue
         date=str(r.get('game_date') or '')[:10]
         player=norm(r.get('player'))
-        stat=str(r.get('stat') or '').upper()
-        actual=f(r.get('target_actual'))
-        if date and player and stat and actual is not None:
-            buckets[(date,player,stat)].append(actual)
+        if not date or not player:
+            continue
+        # A zero-minute/DNP row is not a played-game prop actual. Missing minutes
+        # are tolerated because some historical boxscore imports omit the field.
+        minutes=f(r.get('minutes'))
+        if minutes is not None and minutes <= 0:
+            continue
+        for stat in ('PTS','REB','AST','3PM','PRA','PR','PA','RA','STL','BLK'):
+            actual=game_log_actual(r,stat)
+            if actual is not None:
+                buckets[(date,player,stat)].append(actual)
+
     idx={}
     for k,vals in buckets.items():
-        # ALT variants for the same player/stat/game should share the same actual.
         uniq=sorted({round(x,8) for x in vals})
         if len(uniq)==1:
             idx[k]=uniq[0]
@@ -210,6 +250,7 @@ def main():
         if out:
             r['actual']=actual;r['outcome']=out;r['graded_at_utc']=now
             r['target_win']=1 if out=='WIN' else (0 if out=='LOSS' else None)
+            r['actual_source']='canonical_player_game_log_or_certified_feature_store'
             newly_graded+=1
 
     LEDGER.parent.mkdir(parents=True,exist_ok=True)
@@ -267,7 +308,8 @@ def main():
             'explicit_clv_coverage_pct':explicit_clv_coverage,
             'reason':'V4 remains production champion until >=300 graded forward predictions, >=60% explicit CLV coverage, and V5 beats market forward Brier.'
         },
-        'learning_policy':'Append predictions before outcomes; grade only from later certified actuals; never rewrite issued probabilities.',
+        'learning_policy':'Append predictions before outcomes; grade only from later verified actuals; never rewrite issued probabilities.',
+        'actual_sources':['certified_v5_historical_feature_store','canonical_player_game_log_warehouse'],
         'next_module':'V5-M13 Production Readiness + Shadow Monitoring'
     }
     report=dict(state)
