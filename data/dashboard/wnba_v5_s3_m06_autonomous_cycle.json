@@ -3,7 +3,7 @@
   "sprint": "OPERATIONS_SPRINT_3",
   "module": "S3-M06",
   "stage": "AUTONOMOUS_EVIDENCE_CYCLE",
-  "generated_at_utc": "2026-08-17T23:59:38.682529+00:00",
+  "generated_at_utc": "2026-08-18T02:14:12.958168+00:00",
   "status": "READY",
   "module_outputs_present": {
     "M01": true,
@@ -15,7 +15,7 @@
   },
   "freshness_status": "FRESH",
   "live_inference_status": "READY_SHADOW",
-  "closing_capture_status": "WAITING_FOR_CLOSE_WINDOW",
+  "closing_capture_status": "CAPTURED_EXPLICIT_CLOSES",
   "forward_reconciler_status": "READY",
   "explicit_clv_status": "READY",
   "evidence_dashboard_status": "READY",
@@ -33,20 +33,24 @@
     "issued_predictions_mutable": false
   },
   "progress": {
-    "graded_forward_predictions": 0,
-    "minimum_graded_forward_predictions": 300,
-    "graded_forward_progress_pct": 0.0,
-    "graded_forward_remaining": 300,
-    "forward_predictions_total": 6183,
-    "pending_predictions": 6183,
-    "explicit_close_predictions": 2107,
-    "explicit_clv_coverage_pct": 34.08,
+    "canonical_graded_forward_markets": 187,
+    "minimum_canonical_graded_forward_markets": 300,
+    "canonical_forward_progress_pct": 62.33,
+    "canonical_forward_remaining": 113,
+    "canonical_forward_markets_total": 204,
+    "canonical_pending_markets": 17,
+    "snapshot_ledger_rows_diagnostic_only": 6231,
+    "snapshot_graded_rows_diagnostic_only": 5872,
+    "snapshot_pending_rows_diagnostic_only": 359,
+    "average_snapshots_per_ranking_key": 30.3676,
+    "explicit_close_predictions": 2427,
+    "explicit_clv_coverage_pct": 38.95,
     "minimum_explicit_clv_coverage_pct": 60.0,
-    "explicit_clv_progress_pct": 56.8,
-    "explicit_clv_shortfall_pct": 25.92
+    "explicit_clv_progress_pct": 64.92,
+    "explicit_clv_shortfall_pct": 21.05
   },
   "gates": {
-    "forward_sample_gate": false,
+    "canonical_forward_sample_gate": false,
     "explicit_clv_gate": false,
     "beats_market_brier_gate": false,
     "positive_roi_gate": false,
@@ -54,10 +58,10 @@
     "pipeline_health_gate": true
   },
   "blockers": [
-    "Need 300 more graded forward predictions",
-    "Explicit CLV coverage needs 25.92 more percentage points",
-    "V5 has not yet demonstrated lower forward Brier than market",
-    "Positive forward ROI not yet demonstrated"
+    "Need 113 more canonical independent graded forward markets",
+    "Explicit CLV coverage needs 21.05 more percentage points",
+    "V5 has not yet demonstrated lower canonical forward Brier than market",
+    "Positive canonical forward ROI not yet demonstrated"
   ],
   "next_focus": "ACCUMULATE_FORWARD_EVIDENCE_AND_EXPLICIT_CLV",
   "policy": "Sprint 3 automates trustworthy evidence accumulation while keeping odds polling centralized in M02 and promotion locked to established gates."

@@ -2,30 +2,35 @@
   "version": "V5",
   "promotion_state": "SHADOW",
   "production_ready": false,
-  "generated_at_utc": "2026-08-18T00:00:31.474636+00:00",
+  "generated_at_utc": "2026-08-18T02:15:21.414669+00:00",
   "forward": {
-    "current": 0,
+    "current": 187,
     "required": 300,
-    "remaining": 300,
-    "progress_pct": 0.0
+    "remaining": 113,
+    "progress_pct": 62.33,
+    "evidence_unit": "canonical_independent_market"
   },
   "explicit_clv": {
-    "current_pct": 34.08,
+    "current_pct": 38.95,
     "required_pct": 60.0,
-    "shortfall_pct": 25.92,
-    "progress_pct": 56.8
+    "shortfall_pct": 21.05,
+    "progress_pct": 64.92
   },
   "quality": {
-    "v5_brier": null,
-    "market_brier": null,
+    "evidence_unit": "earliest_immutable_prediction_per_ranking_key",
+    "canonical_v5_brier": 0.28532,
+    "canonical_market_brier": 0.25066,
     "v5_beats_market_brier": false,
-    "v5_ece_5bin": null,
-    "v5_accuracy": null,
-    "roi": null,
-    "positive_roi": false
+    "canonical_positive_edge_roi": -0.181876,
+    "canonical_model_roi_at_0_5": -0.089103,
+    "positive_roi": false,
+    "snapshot_v5_ece_5bin_diagnostic_only": 0.196053,
+    "snapshot_v5_accuracy_diagnostic_only": 0.484843,
+    "shadow_recalibration_global_alpha": 0.0,
+    "shadow_recalibration_status": "READY_SHADOW"
   },
   "gates": {
-    "forward_sample_gate": false,
+    "canonical_forward_sample_gate": false,
     "explicit_clv_gate": false,
     "beats_market_brier_gate": false,
     "positive_roi_gate": false,
@@ -33,9 +38,9 @@
     "pipeline_health_gate": true
   },
   "blockers": [
-    "Need 300 more graded forward predictions",
-    "Explicit CLV coverage needs 25.92 more percentage points",
-    "V5 has not yet demonstrated lower forward Brier than market",
-    "Positive forward ROI not yet demonstrated"
+    "Need 113 more canonical independent graded forward markets",
+    "Explicit CLV coverage needs 21.05 more percentage points",
+    "V5 has not yet demonstrated lower canonical forward Brier than market",
+    "Positive canonical forward ROI not yet demonstrated"
   ]
 }
