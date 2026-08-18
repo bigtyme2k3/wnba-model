@@ -1,0 +1,47 @@
+name: WNBA V5 Forward Diagnostics
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_forward_diagnostics.py'
+      - 'data/history/wnba_v5_forward_predictions.jsonl'
+      - '.github/workflows/wnba-v5-forward-diagnostics.yml'
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest
+        run: git pull --rebase origin main
+      - name: Compile
+        run: python -m py_compile wnba_v5_forward_diagnostics.py
+      - name: Analyze canonical forward evidence
+        run: python wnba_v5_forward_diagnostics.py
+      - name: Verify report
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_forward_diagnostics.json'))
+          assert p['module']=='FORWARD_DIAGNOSTICS'
+          assert p['ledger_rows']>=p['unique_ranking_keys']
+          assert 'canonical_earliest_prediction_per_market' in p
+          print(json.dumps({k:p[k] for k in ('ledger_rows','unique_ranking_keys','snapshot_multiplicity')},indent=2))
+          PY
+      - name: Publish diagnostics safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 Diagnostics Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_forward_diagnostics.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 forward diagnostics"
+          git pull --rebase origin main
+          git push origin HEAD:main
