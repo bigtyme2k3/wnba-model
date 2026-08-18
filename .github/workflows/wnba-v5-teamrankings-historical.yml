@@ -5,7 +5,8 @@ on:
     branches: [main]
     paths:
       - 'wnba_v5_teamrankings_historical_reconstructor.py'
-      - 'data/warehouse/teamrankings/historical_matchup_manifest.json'
+      - 'wnba_v5_teamrankings_manifest_builder.py'
+      - 'data/raw/scores.csv'
       - '.github/workflows/wnba-v5-teamrankings-historical.yml'
 permissions:
   contents: write
@@ -22,26 +23,30 @@ jobs:
         with: {python-version: '3.12'}
       - name: Sync latest repository
         run: git pull --rebase origin main
-      - name: Compile reconstructor
-        run: python -m py_compile wnba_v5_teamrankings_historical_reconstructor.py
-      - name: Capture historical point-in-time evidence
+      - name: Compile historical stack
+        run: python -m py_compile wnba_v5_teamrankings_manifest_builder.py wnba_v5_teamrankings_historical_reconstructor.py
+      - name: Build completed-game manifest
+        run: python wnba_v5_teamrankings_manifest_builder.py
+      - name: Capture first historical batch
         run: python wnba_v5_teamrankings_historical_reconstructor.py --limit 30
       - name: Verify no-lookahead contract
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+          m=json.loads(Path('data/warehouse/teamrankings/historical_matchup_manifest.json').read_text())
           p=json.loads(Path('data/dashboard/wnba_v5_teamrankings_historical_reconstruction.json').read_text())
+          assert m['research_only'] is True and m['lookahead_safe'] is True
           assert p['research_only'] is True and p['production_ready'] is False
           assert 'Current snapshots may never backfill prior dates' in p['lookahead_policy']
-          print({'requested':p['requested'],'captured':p['captured'],'missing':p['missing']})
+          print({'manifest_games':len(m['matchups']),'requested':p['requested'],'captured':p['captured'],'missing':p['missing']})
           PY
       - name: Publish research evidence safely
         run: |
           set -euo pipefail
           git config user.name 'WNBA V5 Historical Research Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/warehouse/teamrankings/historical data/dashboard/wnba_v5_teamrankings_historical_reconstruction.json || true
+          git add data/warehouse/teamrankings/historical_matchup_manifest.json data/warehouse/teamrankings/historical data/dashboard/wnba_v5_teamrankings_historical_reconstruction.json || true
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Freeze V5 TeamRankings historical point-in-time evidence'
           for attempt in 1 2 3 4; do
