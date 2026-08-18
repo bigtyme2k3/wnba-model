@@ -15,8 +15,10 @@ on:
       - '.github/workflows/wnba_alt_pregame_snapshot.yml'
   schedule:
     # Emergency credit-control cadence through the monthly reset: one complete
-    # ALT snapshot at 1:07 PM Eastern, plus the separate tip-window close.
-    - cron: '7 17 * * *'
+    # ALT snapshot at 8:07 AM Eastern (12:07 UTC during EDT), plus the separate
+    # tip-window close. This keeps one full paid ALT refresh per day while making
+    # the dashboard useful during the morning session.
+    - cron: '7 12 * * *'
 
 permissions:
   contents: write
