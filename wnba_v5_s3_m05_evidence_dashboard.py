@@ -1,8 +1,14 @@
 """WNBA V5 Operations Sprint 3 M05 - evidence accumulation dashboard.
 
-Combines forward grading (M03), explicit CLV evidence (M04), and M12 forward
-metrics into one promotion-control payload. This module never promotes V5; it
-only reports progress toward the locked production gates.
+Combines forward grading (M03), explicit CLV evidence (M04), canonical forward
+performance diagnostics, and M12 state into one promotion-control payload.
+This module never promotes V5; it only reports progress toward the locked
+production gates.
+
+IMPORTANT: promotion evidence is counted at the independent market level using
+one earliest immutable prediction per ranking_key. Repeated refresh snapshots
+remain useful operational diagnostics but MUST NOT inflate forward sample size
+or quality metrics.
 """
 from __future__ import annotations
 
@@ -16,6 +22,8 @@ M03=DASH/'wnba_v5_s3_m03_forward_grade.json'
 M04=DASH/'wnba_v5_s3_m04_report.json'
 M12_METRICS=DASH/'wnba_v5_forward_metrics.json'
 M12_STATE=DASH/'wnba_v5_learning_state.json'
+FORWARD_DIAG=DASH/'wnba_v5_forward_diagnostics.json'
+RECAL=DASH/'wnba_v5_probability_recalibration.json'
 M13=DASH/'wnba_v5_production_status.json'
 OUT=DASH/'wnba_v5_evidence_dashboard.json'
 METER=DASH/'wnba_v5_promotion_meter.json'
@@ -43,7 +51,6 @@ def append_history(row):
         try:existing=list(csv.DictReader(HIST.open(encoding='utf-8-sig',newline='')))
         except Exception:existing=[]
     existing.append({k:row.get(k) for k in fields})
-    # Keep a bounded operational history while retaining enough trend depth.
     existing=existing[-1000:]
     with HIST.open('w',encoding='utf-8',newline='') as h:
         w=csv.DictWriter(h,fieldnames=fields);w.writeheader();w.writerows(existing)
@@ -54,32 +61,52 @@ def main():
     m04=load(M04,{})
     metrics=load(M12_METRICS,{})
     state=load(M12_STATE,{})
+    diag=load(FORWARD_DIAG,{})
+    recal=load(RECAL,{})
     m13=load(M13,{})
 
-    forward=int(m03.get('ledger_rows',metrics.get('forward_predictions',0)) or 0)
-    graded=int(m03.get('certified_rows',metrics.get('binary_graded_predictions',0)) or 0)
-    pending=int(m03.get('pending_rows',metrics.get('pending_predictions',0)) or 0)
+    # Snapshot counts remain operational telemetry only.
+    snapshot_forward=int(m03.get('ledger_rows',metrics.get('forward_predictions',0)) or 0)
+    snapshot_graded=int(m03.get('certified_rows',metrics.get('binary_graded_predictions',0)) or 0)
+    snapshot_pending=int(m03.get('pending_rows',metrics.get('pending_predictions',0)) or 0)
+
+    canonical=diag.get('canonical_earliest_prediction_per_market',{}) if isinstance(diag,dict) else {}
+    canonical_overall=canonical.get('overall',{}) if isinstance(canonical,dict) else {}
+    canonical_total=int(diag.get('unique_ranking_keys',0) or 0) if isinstance(diag,dict) else 0
+    canonical_graded=int(canonical_overall.get('n',0) or 0)
+    canonical_pending=max(0,canonical_total-canonical_graded)
+
+    # Fail closed if the independent-market diagnostic has not been produced yet.
+    canonical_evidence_ready=canonical_total>0 and canonical_graded>0
+    graded=canonical_graded if canonical_evidence_ready else 0
+    forward=canonical_total if canonical_evidence_ready else 0
+    pending=canonical_pending if canonical_evidence_ready else 0
+
     explicit=int(m04.get('explicit_close_predictions',0) or 0)
     clv_cov=num(m04.get('explicit_clv_coverage_pct'),0.0)
-    v5_brier=metrics.get('v5_brier')
-    market_brier=metrics.get('market_brier')
-    roi=metrics.get('positive_edge_roi') if metrics.get('positive_edge_roi') is not None else metrics.get('model_roi_at_0_5')
+    v5_brier=canonical_overall.get('v5_brier') if canonical_evidence_ready else None
+    market_brier=canonical_overall.get('market_brier') if canonical_evidence_ready else None
+    roi=canonical_overall.get('positive_edge_roi') if canonical_evidence_ready else None
+    if roi is None and canonical_evidence_ready:
+        roi=canonical_overall.get('model_roi_at_0_5')
+
+    # ECE/accuracy are retained from snapshot-level M12 only as diagnostics until
+    # canonical diagnostics explicitly publish independent-market versions.
     ece=metrics.get('v5_ece_5bin')
     accuracy=metrics.get('v5_accuracy')
 
     brier_gate=(v5_brier is not None and market_brier is not None and num(v5_brier,999)<num(market_brier,-999))
-    sample_gate=graded>=MIN_FORWARD
+    sample_gate=canonical_evidence_ready and graded>=MIN_FORWARD
     clv_gate=clv_cov>=MIN_CLV
     roi_gate=(roi is not None and num(roi,-999)>0)
     archive_gate=True
     pipeline_gate=True
-    # Respect explicit M13 blockers if a production status exists.
     if isinstance(m13,dict) and m13:
         archive_gate=bool(m13.get('archive_healthy',m13.get('archive_health',True)) not in {False,'FAIL','UNHEALTHY'})
         pipeline_gate=bool(m13.get('pipeline_healthy',m13.get('pipeline_health',True)) not in {False,'FAIL','UNHEALTHY'})
 
     gates={
-        'forward_sample_gate':sample_gate,
+        'canonical_forward_sample_gate':sample_gate,
         'explicit_clv_gate':clv_gate,
         'beats_market_brier_gate':brier_gate,
         'positive_roi_gate':roi_gate,
@@ -90,12 +117,16 @@ def main():
     state_name='PRODUCTION_READY' if all_pass else ('CANDIDATE' if sample_gate and clv_gate else 'SHADOW')
 
     progress={
-        'graded_forward_predictions':graded,
-        'minimum_graded_forward_predictions':MIN_FORWARD,
-        'graded_forward_progress_pct':round(min(100.0,pct(graded,MIN_FORWARD)),2),
-        'graded_forward_remaining':max(0,MIN_FORWARD-graded),
-        'forward_predictions_total':forward,
-        'pending_predictions':pending,
+        'canonical_graded_forward_markets':graded,
+        'minimum_canonical_graded_forward_markets':MIN_FORWARD,
+        'canonical_forward_progress_pct':round(min(100.0,pct(graded,MIN_FORWARD)),2),
+        'canonical_forward_remaining':max(0,MIN_FORWARD-graded),
+        'canonical_forward_markets_total':forward,
+        'canonical_pending_markets':pending,
+        'snapshot_ledger_rows_diagnostic_only':snapshot_forward,
+        'snapshot_graded_rows_diagnostic_only':snapshot_graded,
+        'snapshot_pending_rows_diagnostic_only':snapshot_pending,
+        'average_snapshots_per_ranking_key':(diag.get('snapshot_multiplicity',{}) or {}).get('average_snapshots_per_ranking_key') if isinstance(diag,dict) else None,
         'explicit_close_predictions':explicit,
         'explicit_clv_coverage_pct':round(clv_cov,2),
         'minimum_explicit_clv_coverage_pct':MIN_CLV,
@@ -103,41 +134,55 @@ def main():
         'explicit_clv_shortfall_pct':round(max(0.0,MIN_CLV-clv_cov),2),
     }
     performance={
-        'v5_brier':v5_brier,
-        'market_brier':market_brier,
+        'evidence_unit':'earliest_immutable_prediction_per_ranking_key',
+        'canonical_v5_brier':v5_brier,
+        'canonical_market_brier':market_brier,
         'v5_beats_market_brier':brier_gate,
-        'v5_ece_5bin':ece,
-        'v5_accuracy':accuracy,
-        'roi':roi,
+        'canonical_positive_edge_roi':canonical_overall.get('positive_edge_roi') if canonical_evidence_ready else None,
+        'canonical_model_roi_at_0_5':canonical_overall.get('model_roi_at_0_5') if canonical_evidence_ready else None,
         'positive_roi':roi_gate,
+        'snapshot_v5_ece_5bin_diagnostic_only':ece,
+        'snapshot_v5_accuracy_diagnostic_only':accuracy,
+        'shadow_recalibration_global_alpha':recal.get('global_alpha') if isinstance(recal,dict) else None,
+        'shadow_recalibration_status':recal.get('status') if isinstance(recal,dict) else None,
     }
     blockers=[]
-    if not sample_gate:blockers.append(f'Need {max(0,MIN_FORWARD-graded)} more graded forward predictions')
+    if not canonical_evidence_ready:blockers.append('Canonical independent forward diagnostics are unavailable')
+    elif not sample_gate:blockers.append(f'Need {max(0,MIN_FORWARD-graded)} more canonical independent graded forward markets')
     if not clv_gate:blockers.append(f'Explicit CLV coverage needs {round(max(0.0,MIN_CLV-clv_cov),2)} more percentage points')
-    if not brier_gate:blockers.append('V5 has not yet demonstrated lower forward Brier than market')
-    if not roi_gate:blockers.append('Positive forward ROI not yet demonstrated')
+    if not brier_gate:blockers.append('V5 has not yet demonstrated lower canonical forward Brier than market')
+    if not roi_gate:blockers.append('Positive canonical forward ROI not yet demonstrated')
     if not archive_gate:blockers.append('Archive health gate failed')
     if not pipeline_gate:blockers.append('Pipeline health gate failed')
+
+    # KNN may remain the historical research champion, but forward authority is
+    # explicitly unresolved until independent-market production gates are met.
+    historical_champion=state.get('research_champion','KNN')
+    forward_champion_status='UNRESOLVED' if not all_pass else historical_champion
 
     dashboard={
         'version':'V5','sprint':'OPERATIONS_SPRINT_3','module':'S3-M05','stage':'EVIDENCE_ACCUMULATION_DASHBOARD',
         'generated_at_utc':now,'status':'READY','promotion_state':state_name,'production_ready':all_pass,
-        'research_champion':state.get('research_champion','KNN'),'progress':progress,'performance':performance,
+        'historical_research_champion':historical_champion,
+        'authoritative_forward_champion':forward_champion_status,
+        'progress':progress,'performance':performance,
         'gates':gates,'blockers':blockers,
-        'recommendation':'PROMOTE_V5' if all_pass else 'CONTINUE_SHADOW_AND_ACCUMULATE_FORWARD_EVIDENCE',
-        'policy':'M05 is reporting-only. Promotion remains locked to the established forward-sample, explicit-CLV, Brier, ROI, archive, and pipeline gates.',
+        'recommendation':'PROMOTE_V5' if all_pass else 'CONTINUE_SHADOW_AND_ACCUMULATE_CANONICAL_FORWARD_EVIDENCE',
+        'policy':'M05 is reporting-only. Promotion uses one earliest immutable prediction per ranking_key; repeated refresh snapshots never count as independent evidence.',
         'next_module':'S3-M06 Autonomous Evidence Cycle'
     }
     meter={
         'version':'V5','promotion_state':state_name,'production_ready':all_pass,'generated_at_utc':now,
-        'forward':{'current':graded,'required':MIN_FORWARD,'remaining':max(0,MIN_FORWARD-graded),'progress_pct':progress['graded_forward_progress_pct']},
+        'forward':{'current':graded,'required':MIN_FORWARD,'remaining':max(0,MIN_FORWARD-graded),'progress_pct':progress['canonical_forward_progress_pct'],'evidence_unit':'canonical_independent_market'},
         'explicit_clv':{'current_pct':round(clv_cov,2),'required_pct':MIN_CLV,'shortfall_pct':progress['explicit_clv_shortfall_pct'],'progress_pct':progress['explicit_clv_progress_pct']},
         'quality':performance,'gates':gates,'blockers':blockers
     }
     histrow={
-        'generated_at_utc':now,'promotion_state':state_name,'forward_predictions_total':forward,'graded_predictions':graded,
-        'pending_predictions':pending,'explicit_close_predictions':explicit,'explicit_clv_coverage_pct':round(clv_cov,2),
-        'v5_brier':v5_brier,'market_brier':market_brier,'v5_ece_5bin':ece,'v5_accuracy':accuracy,'roi':roi,'production_ready':all_pass
+        'generated_at_utc':now,'promotion_state':state_name,
+        'canonical_forward_markets_total':forward,'canonical_graded_markets':graded,'canonical_pending_markets':pending,
+        'snapshot_ledger_rows':snapshot_forward,'snapshot_graded_rows':snapshot_graded,
+        'explicit_close_predictions':explicit,'explicit_clv_coverage_pct':round(clv_cov,2),
+        'v5_brier':v5_brier,'market_brier':market_brier,'roi':roi,'production_ready':all_pass
     }
     append_history(histrow)
     OUT.write_text(json.dumps(dashboard,indent=2,allow_nan=False)+'\n',encoding='utf-8')
