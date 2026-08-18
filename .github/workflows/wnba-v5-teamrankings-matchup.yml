@@ -1,0 +1,57 @@
+name: WNBA V5 TeamRankings Matchup Intelligence
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 12 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_teamrankings_matchup_intelligence.py'
+      - '.github/workflows/wnba-v5-teamrankings-matchup.yml'
+permissions:
+  contents: write
+concurrency:
+  group: wnba-v5-teamrankings-matchup
+  cancel-in-progress: false
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Resolve Eastern date
+        run: echo "TARGET=$(TZ=America/New_York date +%F)" >> "$GITHUB_ENV"
+      - name: Compile collector
+        run: python -m py_compile wnba_v5_teamrankings_matchup_intelligence.py
+      - name: Freeze TeamRankings matchup snapshot
+        run: python wnba_v5_teamrankings_matchup_intelligence.py --date "$TARGET"
+      - name: Verify research snapshot
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_v5_team_matchup_intelligence.json').read_text())
+          assert p['target_date']==os.environ['TARGET']
+          assert p['production_ready'] is False and p['research_only'] is True
+          if p['status']=='READY_SHADOW':
+              assert len(p['teams'])>=10
+              assert sum(1 for x in p['metric_status'].values() if x['ok'])>=5
+          print({'status':p['status'],'teams':len(p['teams']),'metrics_ok':sum(1 for x in p['metric_status'].values() if x['ok'])})
+          PY
+      - name: Publish immutable matchup snapshot
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 Matchup Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/warehouse/teamrankings data/dashboard/wnba_v5_team_matchup_intelligence.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Freeze V5 TeamRankings matchup intelligence for ${TARGET}"
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*3))
+          done
+          exit 1
