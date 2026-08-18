@@ -1,0 +1,2345 @@
+{
+  "version": "V5",
+  "module": "TEAMRANKINGS_MATCHUP_INTELLIGENCE",
+  "status": "READY_SHADOW",
+  "production_ready": false,
+  "research_only": true,
+  "target_date": "2026-08-18",
+  "generated_at_utc": "2026-08-18T22:28:07.193071+00:00",
+  "source": "TeamRankings public WNBA team-stat tables",
+  "source_policy": "Derived matchup features only; never canonical outcomes. Freeze before games and validate out-of-sample before promotion.",
+  "metric_status": {
+    "opp_points_paint": {
+      "slug": "opponent-points-in-paint-per-game",
+      "rows": 15,
+      "ok": true
+    },
+    "def_efficiency": {
+      "slug": "defensive-efficiency",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_efg_pct": {
+      "slug": "opponent-effective-field-goal-pct",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_two_pt_pct": {
+      "slug": "opponent-two-point-pct",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_three_pt_pct": {
+      "slug": "opponent-three-point-pct",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_two_pt_rate": {
+      "slug": "opponent-two-point-rate",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_three_pt_rate": {
+      "slug": "opponent-three-point-rate",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_off_reb_pct": {
+      "slug": "opponent-offensive-rebounding-pct",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_def_reb_pct": {
+      "slug": "opponent-defensive-rebounding-pct",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_assists_game": {
+      "slug": "opponent-assists-per-game",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_assists_fgm": {
+      "slug": "opponent-assists-per-fgm",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_turnovers_poss": {
+      "slug": "opponent-turnovers-per-possession",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_personal_fouls_game": {
+      "slug": "opponent-personal-fouls-per-game",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_fta_fga": {
+      "slug": "opponent-fta-per-fga",
+      "rows": 15,
+      "ok": true
+    },
+    "possessions_game": {
+      "slug": "possessions-per-game",
+      "rows": 15,
+      "ok": true
+    },
+    "opp_fastbreak_points": {
+      "slug": "opponent-fastbreak-points-per-game",
+      "rows": 15,
+      "ok": true
+    }
+  },
+  "teams": {
+    "GS": {
+      "team": "Golden State",
+      "team_code": "GS",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 32.7,
+          "last3": 35.3,
+          "last1": 32.0,
+          "home": 33.5,
+          "away": 31.7,
+          "prior_season": 29.2,
+          "recent_delta": 2.5999999999999943
+        },
+        "def_efficiency": {
+          "season": 0.97,
+          "last3": 0.926,
+          "last1": 0.882,
+          "home": 0.959,
+          "away": 0.984,
+          "prior_season": 0.971,
+          "recent_delta": -0.04399999999999993
+        },
+        "opp_efg_pct": {
+          "season": 0.488,
+          "last3": 0.5,
+          "last1": 0.491,
+          "home": 0.486,
+          "away": 0.49,
+          "prior_season": 0.475,
+          "recent_delta": 0.01200000000000001
+        },
+        "opp_two_pt_pct": {
+          "season": 0.479,
+          "last3": 0.5379999999999999,
+          "last1": 0.583,
+          "home": 0.48,
+          "away": 0.47700000000000004,
+          "prior_season": 0.474,
+          "recent_delta": 0.05899999999999994
+        },
+        "opp_three_pt_pct": {
+          "season": 0.336,
+          "last3": 0.292,
+          "last1": 0.22699999999999998,
+          "home": 0.332,
+          "away": 0.341,
+          "prior_season": 0.318,
+          "recent_delta": -0.04400000000000004
+        },
+        "opp_two_pt_rate": {
+          "season": 0.631,
+          "last3": 0.623,
+          "last1": 0.621,
+          "home": 0.6459999999999999,
+          "away": 0.613,
+          "prior_season": 0.579,
+          "recent_delta": -0.008000000000000007
+        },
+        "opp_three_pt_rate": {
+          "season": 0.369,
+          "last3": 0.377,
+          "last1": 0.379,
+          "home": 0.354,
+          "away": 0.387,
+          "prior_season": 0.42100000000000004,
+          "recent_delta": 0.008000000000000007
+        },
+        "opp_off_reb_pct": {
+          "season": 0.257,
+          "last3": 0.247,
+          "last1": 0.16699999999999998,
+          "home": 0.243,
+          "away": 0.27399999999999997,
+          "prior_season": 0.24100000000000002,
+          "recent_delta": -0.010000000000000009
+        },
+        "opp_def_reb_pct": {
+          "season": 0.73,
+          "last3": 0.701,
+          "last1": 0.7440000000000001,
+          "home": 0.743,
+          "away": 0.7140000000000001,
+          "prior_season": 0.7440000000000001,
+          "recent_delta": -0.029000000000000026
+        },
+        "opp_assists_game": {
+          "season": 18.2,
+          "last3": 17.3,
+          "last1": 15.0,
+          "home": 18.6,
+          "away": 17.7,
+          "prior_season": 19.4,
+          "recent_delta": -0.8999999999999986
+        },
+        "opp_assists_fgm": {
+          "season": 0.682,
+          "last3": 0.612,
+          "last1": 0.577,
+          "home": 0.695,
+          "away": 0.664,
+          "prior_season": 0.721,
+          "recent_delta": -0.07000000000000006
+        },
+        "opp_turnovers_poss": {
+          "season": 0.184,
+          "last3": 0.19899999999999998,
+          "last1": 0.22699999999999998,
+          "home": 0.182,
+          "away": 0.18600000000000003,
+          "prior_season": 0.161,
+          "recent_delta": 0.014999999999999986
+        },
+        "opp_personal_fouls_game": {
+          "season": 19.3,
+          "last3": 17.0,
+          "last1": 16.0,
+          "home": 19.2,
+          "away": 19.5,
+          "prior_season": 17.8,
+          "recent_delta": -2.3000000000000007
+        },
+        "opp_fta_fga": {
+          "season": 0.328,
+          "last3": 0.204,
+          "last1": 0.259,
+          "home": 0.31,
+          "away": 0.351,
+          "prior_season": 0.273,
+          "recent_delta": -0.12400000000000003
+        },
+        "possessions_game": {
+          "season": 79.1,
+          "last3": 78.8,
+          "last1": 79.4,
+          "home": 79.2,
+          "away": 79.0,
+          "prior_season": 79.1,
+          "recent_delta": -0.29999999999999716
+        },
+        "opp_fastbreak_points": {
+          "season": 7.7,
+          "last3": 6.3,
+          "last1": 9.0,
+          "home": 8.3,
+          "away": 7.0,
+          "prior_season": 10.1,
+          "recent_delta": -1.4000000000000004
+        }
+      }
+    },
+    "WAS": {
+      "team": "Washington",
+      "team_code": "WAS",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 33.9,
+          "last3": 26.7,
+          "last1": 30.0,
+          "home": 37.1,
+          "away": 30.4,
+          "prior_season": 34.8,
+          "recent_delta": -7.199999999999999
+        },
+        "def_efficiency": {
+          "season": 0.992,
+          "last3": 1.015,
+          "last1": 0.884,
+          "home": 0.966,
+          "away": 1.023,
+          "prior_season": 1.005,
+          "recent_delta": 0.02299999999999991
+        },
+        "opp_efg_pct": {
+          "season": 0.48700000000000004,
+          "last3": 0.495,
+          "last1": 0.467,
+          "home": 0.485,
+          "away": 0.488,
+          "prior_season": 0.505,
+          "recent_delta": 0.007999999999999952
+        },
+        "opp_two_pt_pct": {
+          "season": 0.48100000000000004,
+          "last3": 0.44799999999999995,
+          "last1": 0.429,
+          "home": 0.498,
+          "away": 0.461,
+          "prior_season": 0.511,
+          "recent_delta": -0.033000000000000085
+        },
+        "opp_three_pt_pct": {
+          "season": 0.33,
+          "last3": 0.37799999999999995,
+          "last1": 0.34600000000000003,
+          "home": 0.31,
+          "away": 0.35200000000000004,
+          "prior_season": 0.33,
+          "recent_delta": 0.04799999999999993
+        },
+        "opp_two_pt_rate": {
+          "season": 0.618,
+          "last3": 0.611,
+          "last1": 0.574,
+          "home": 0.628,
+          "away": 0.607,
+          "prior_season": 0.633,
+          "recent_delta": -0.007000000000000006
+        },
+        "opp_three_pt_rate": {
+          "season": 0.382,
+          "last3": 0.389,
+          "last1": 0.426,
+          "home": 0.37200000000000005,
+          "away": 0.39299999999999996,
+          "prior_season": 0.36700000000000005,
+          "recent_delta": 0.007000000000000006
+        },
+        "opp_off_reb_pct": {
+          "season": 0.225,
+          "last3": 0.155,
+          "last1": 0.086,
+          "home": 0.225,
+          "away": 0.225,
+          "prior_season": 0.22399999999999998,
+          "recent_delta": -0.07
+        },
+        "opp_def_reb_pct": {
+          "season": 0.687,
+          "last3": 0.68,
+          "last1": 0.6859999999999999,
+          "home": 0.6759999999999999,
+          "away": 0.701,
+          "prior_season": 0.765,
+          "recent_delta": -0.007000000000000006
+        },
+        "opp_assists_game": {
+          "season": 19.6,
+          "last3": 19.7,
+          "last1": 20.0,
+          "home": 19.9,
+          "away": 19.3,
+          "prior_season": 20.0,
+          "recent_delta": 0.09999999999999787
+        },
+        "opp_assists_fgm": {
+          "season": 0.671,
+          "last3": 0.738,
+          "last1": 0.833,
+          "home": 0.657,
+          "away": 0.689,
+          "prior_season": 0.681,
+          "recent_delta": 0.06699999999999995
+        },
+        "opp_turnovers_poss": {
+          "season": 0.158,
+          "last3": 0.14400000000000002,
+          "last1": 0.177,
+          "home": 0.17,
+          "away": 0.14300000000000002,
+          "prior_season": 0.168,
+          "recent_delta": -0.013999999999999985
+        },
+        "opp_personal_fouls_game": {
+          "season": 23.2,
+          "last3": 18.0,
+          "last1": 18.0,
+          "home": 24.6,
+          "away": 21.7,
+          "prior_season": 19.6,
+          "recent_delta": -5.199999999999999
+        },
+        "opp_fta_fga": {
+          "season": 0.284,
+          "last3": 0.3,
+          "last1": 0.262,
+          "home": 0.257,
+          "away": 0.315,
+          "prior_season": 0.283,
+          "recent_delta": 0.016000000000000014
+        },
+        "possessions_game": {
+          "season": 83.0,
+          "last3": 78.5,
+          "last1": 79.2,
+          "home": 85.5,
+          "away": 80.2,
+          "prior_season": 81.2,
+          "recent_delta": -4.5
+        },
+        "opp_fastbreak_points": {
+          "season": 9.5,
+          "last3": 8.7,
+          "last1": 9.0,
+          "home": 10.4,
+          "away": 8.4,
+          "prior_season": 8.8,
+          "recent_delta": -0.8000000000000007
+        }
+      }
+    },
+    "MIN": {
+      "team": "Minnesota",
+      "team_code": "MIN",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 35.8,
+          "last3": 40.0,
+          "last1": 30.0,
+          "home": 36.4,
+          "away": 35.2,
+          "prior_season": 34.4,
+          "recent_delta": 4.200000000000003
+        },
+        "def_efficiency": {
+          "season": 1.003,
+          "last3": 1.054,
+          "last1": 1.087,
+          "home": 1.03,
+          "away": 0.973,
+          "prior_season": 0.951,
+          "recent_delta": 0.051000000000000156
+        },
+        "opp_efg_pct": {
+          "season": 0.501,
+          "last3": 0.536,
+          "last1": 0.514,
+          "home": 0.522,
+          "away": 0.47700000000000004,
+          "prior_season": 0.48100000000000004,
+          "recent_delta": 0.03500000000000003
+        },
+        "opp_two_pt_pct": {
+          "season": 0.507,
+          "last3": 0.597,
+          "last1": 0.537,
+          "home": 0.52,
+          "away": 0.49200000000000005,
+          "prior_season": 0.47100000000000003,
+          "recent_delta": 0.08999999999999997
+        },
+        "opp_three_pt_pct": {
+          "season": 0.32799999999999996,
+          "last3": 0.29100000000000004,
+          "last1": 0.321,
+          "home": 0.35,
+          "away": 0.302,
+          "prior_season": 0.33299999999999996,
+          "recent_delta": -0.03699999999999992
+        },
+        "opp_two_pt_rate": {
+          "season": 0.597,
+          "last3": 0.62,
+          "last1": 0.594,
+          "home": 0.591,
+          "away": 0.604,
+          "prior_season": 0.645,
+          "recent_delta": 0.02300000000000002
+        },
+        "opp_three_pt_rate": {
+          "season": 0.40299999999999997,
+          "last3": 0.38,
+          "last1": 0.406,
+          "home": 0.409,
+          "away": 0.396,
+          "prior_season": 0.355,
+          "recent_delta": -0.022999999999999965
+        },
+        "opp_off_reb_pct": {
+          "season": 0.268,
+          "last3": 0.301,
+          "last1": 0.324,
+          "home": 0.278,
+          "away": 0.257,
+          "prior_season": 0.253,
+          "recent_delta": 0.032999999999999974
+        },
+        "opp_def_reb_pct": {
+          "season": 0.7090000000000001,
+          "last3": 0.789,
+          "last1": 0.708,
+          "home": 0.711,
+          "away": 0.708,
+          "prior_season": 0.745,
+          "recent_delta": 0.07999999999999996
+        },
+        "opp_assists_game": {
+          "season": 20.5,
+          "last3": 21.7,
+          "last1": 20.0,
+          "home": 21.6,
+          "away": 19.2,
+          "prior_season": 19.1,
+          "recent_delta": 1.1999999999999993
+        },
+        "opp_assists_fgm": {
+          "season": 0.688,
+          "last3": 0.65,
+          "last1": 0.645,
+          "home": 0.694,
+          "away": 0.68,
+          "prior_season": 0.67,
+          "recent_delta": -0.03799999999999992
+        },
+        "opp_turnovers_poss": {
+          "season": 0.187,
+          "last3": 0.188,
+          "last1": 0.162,
+          "home": 0.188,
+          "away": 0.18600000000000003,
+          "prior_season": 0.188,
+          "recent_delta": 0.0010000000000000009
+        },
+        "opp_personal_fouls_game": {
+          "season": 16.4,
+          "last3": 13.7,
+          "last1": 14.0,
+          "home": 16.2,
+          "away": 16.7,
+          "prior_season": 16.0,
+          "recent_delta": -2.6999999999999993
+        },
+        "opp_fta_fga": {
+          "season": 0.28,
+          "last3": 0.216,
+          "last1": 0.261,
+          "home": 0.246,
+          "away": 0.318,
+          "prior_season": 0.231,
+          "recent_delta": -0.06400000000000003
+        },
+        "possessions_game": {
+          "season": 83.6,
+          "last3": 81.6,
+          "last1": 80.1,
+          "home": 83.3,
+          "away": 84.0,
+          "prior_season": 80.9,
+          "recent_delta": -2.0
+        },
+        "opp_fastbreak_points": {
+          "season": 8.5,
+          "last3": 10.3,
+          "last1": 9.0,
+          "home": 8.0,
+          "away": 9.1,
+          "prior_season": 8.8,
+          "recent_delta": 1.8000000000000007
+        }
+      }
+    },
+    "PHX": {
+      "team": "Phoenix",
+      "team_code": "PHX",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 36.5,
+          "last3": 40.7,
+          "last1": 36.0,
+          "home": 36.4,
+          "away": 36.6,
+          "prior_season": 33.6,
+          "recent_delta": 4.200000000000003
+        },
+        "def_efficiency": {
+          "season": 1.054,
+          "last3": 1.058,
+          "last1": 1.055,
+          "home": 1.061,
+          "away": 1.048,
+          "prior_season": 0.975,
+          "recent_delta": 0.0040000000000000036
+        },
+        "opp_efg_pct": {
+          "season": 0.536,
+          "last3": 0.525,
+          "last1": 0.521,
+          "home": 0.5329999999999999,
+          "away": 0.5379999999999999,
+          "prior_season": 0.483,
+          "recent_delta": -0.01100000000000001
+        },
+        "opp_two_pt_pct": {
+          "season": 0.531,
+          "last3": 0.605,
+          "last1": 0.647,
+          "home": 0.524,
+          "away": 0.537,
+          "prior_season": 0.488,
+          "recent_delta": 0.07399999999999995
+        },
+        "opp_three_pt_pct": {
+          "season": 0.36200000000000004,
+          "last3": 0.28600000000000003,
+          "last1": 0.27,
+          "home": 0.364,
+          "away": 0.359,
+          "prior_season": 0.317,
+          "recent_delta": -0.07600000000000001
+        },
+        "opp_two_pt_rate": {
+          "season": 0.598,
+          "last3": 0.5479999999999999,
+          "last1": 0.479,
+          "home": 0.615,
+          "away": 0.583,
+          "prior_season": 0.63,
+          "recent_delta": -0.050000000000000044
+        },
+        "opp_three_pt_rate": {
+          "season": 0.402,
+          "last3": 0.452,
+          "last1": 0.521,
+          "home": 0.385,
+          "away": 0.41700000000000004,
+          "prior_season": 0.37,
+          "recent_delta": 0.04999999999999999
+        },
+        "opp_off_reb_pct": {
+          "season": 0.24,
+          "last3": 0.267,
+          "last1": 0.256,
+          "home": 0.25,
+          "away": 0.23199999999999998,
+          "prior_season": 0.239,
+          "recent_delta": 0.027000000000000024
+        },
+        "opp_def_reb_pct": {
+          "season": 0.7929999999999999,
+          "last3": 0.7959999999999999,
+          "last1": 0.7879999999999999,
+          "home": 0.769,
+          "away": 0.8109999999999999,
+          "prior_season": 0.7609999999999999,
+          "recent_delta": 0.0030000000000000027
+        },
+        "opp_assists_game": {
+          "season": 21.5,
+          "last3": 21.3,
+          "last1": 15.0,
+          "home": 20.3,
+          "away": 22.4,
+          "prior_season": 19.7,
+          "recent_delta": -0.1999999999999993
+        },
+        "opp_assists_fgm": {
+          "season": 0.684,
+          "last3": 0.64,
+          "last1": 0.469,
+          "home": 0.644,
+          "away": 0.717,
+          "prior_season": 0.683,
+          "recent_delta": -0.04400000000000004
+        },
+        "opp_turnovers_poss": {
+          "season": 0.16699999999999998,
+          "last3": 0.141,
+          "last1": 0.132,
+          "home": 0.162,
+          "away": 0.171,
+          "prior_season": 0.17600000000000002,
+          "recent_delta": -0.025999999999999995
+        },
+        "opp_personal_fouls_game": {
+          "season": 21.8,
+          "last3": 21.7,
+          "last1": 23.0,
+          "home": 23.1,
+          "away": 20.7,
+          "prior_season": 16.2,
+          "recent_delta": -0.10000000000000142
+        },
+        "opp_fta_fga": {
+          "season": 0.276,
+          "last3": 0.286,
+          "last1": 0.296,
+          "home": 0.285,
+          "away": 0.268,
+          "prior_season": 0.271,
+          "recent_delta": 0.009999999999999953
+        },
+        "possessions_game": {
+          "season": 83.0,
+          "last3": 85.1,
+          "last1": 83.4,
+          "home": 83.2,
+          "away": 82.8,
+          "prior_season": 82.5,
+          "recent_delta": 2.0999999999999943
+        },
+        "opp_fastbreak_points": {
+          "season": 8.6,
+          "last3": 9.0,
+          "last1": 3.0,
+          "home": 7.8,
+          "away": 9.3,
+          "prior_season": 10.7,
+          "recent_delta": 0.40000000000000036
+        }
+      }
+    },
+    "NY": {
+      "team": "New York",
+      "team_code": "NY",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 38.2,
+          "last3": 32.7,
+          "last1": 28.0,
+          "home": 35.9,
+          "away": 40.2,
+          "prior_season": 35.4,
+          "recent_delta": -5.5
+        },
+        "def_efficiency": {
+          "season": 1.043,
+          "last3": 1.07,
+          "last1": 0.939,
+          "home": 0.976,
+          "away": 1.101,
+          "prior_season": 0.978,
+          "recent_delta": 0.027000000000000135
+        },
+        "opp_efg_pct": {
+          "season": 0.518,
+          "last3": 0.539,
+          "last1": 0.418,
+          "home": 0.48,
+          "away": 0.552,
+          "prior_season": 0.48,
+          "recent_delta": 0.02100000000000002
+        },
+        "opp_two_pt_pct": {
+          "season": 0.51,
+          "last3": 0.49200000000000005,
+          "last1": 0.42100000000000004,
+          "home": 0.48200000000000004,
+          "away": 0.535,
+          "prior_season": 0.485,
+          "recent_delta": -0.01799999999999996
+        },
+        "opp_three_pt_pct": {
+          "season": 0.355,
+          "last3": 0.405,
+          "last1": 0.276,
+          "home": 0.318,
+          "away": 0.38799999999999996,
+          "prior_season": 0.314,
+          "recent_delta": 0.050000000000000044
+        },
+        "opp_two_pt_rate": {
+          "season": 0.63,
+          "last3": 0.588,
+          "last1": 0.5670000000000001,
+          "home": 0.632,
+          "away": 0.628,
+          "prior_season": 0.63,
+          "recent_delta": -0.04200000000000004
+        },
+        "opp_three_pt_rate": {
+          "season": 0.37,
+          "last3": 0.41200000000000003,
+          "last1": 0.433,
+          "home": 0.368,
+          "away": 0.37200000000000005,
+          "prior_season": 0.37,
+          "recent_delta": 0.04200000000000004
+        },
+        "opp_off_reb_pct": {
+          "season": 0.231,
+          "last3": 0.21600000000000003,
+          "last1": 0.25,
+          "home": 0.23399999999999999,
+          "away": 0.228,
+          "prior_season": 0.258,
+          "recent_delta": -0.014999999999999986
+        },
+        "opp_def_reb_pct": {
+          "season": 0.735,
+          "last3": 0.7170000000000001,
+          "last1": 0.897,
+          "home": 0.738,
+          "away": 0.733,
+          "prior_season": 0.794,
+          "recent_delta": -0.017999999999999905
+        },
+        "opp_assists_game": {
+          "season": 21.4,
+          "last3": 20.3,
+          "last1": 17.0,
+          "home": 20.4,
+          "away": 22.4,
+          "prior_season": 19.8,
+          "recent_delta": -1.0999999999999979
+        },
+        "opp_assists_fgm": {
+          "season": 0.671,
+          "last3": 0.656,
+          "last1": 0.708,
+          "home": 0.682,
+          "away": 0.662,
+          "prior_season": 0.671,
+          "recent_delta": -0.015000000000000013
+        },
+        "opp_turnovers_poss": {
+          "season": 0.14300000000000002,
+          "last3": 0.155,
+          "last1": 0.15,
+          "home": 0.14300000000000002,
+          "away": 0.14400000000000002,
+          "prior_season": 0.165,
+          "recent_delta": 0.011999999999999983
+        },
+        "opp_personal_fouls_game": {
+          "season": 20.6,
+          "last3": 18.0,
+          "last1": 17.0,
+          "home": 19.6,
+          "away": 21.5,
+          "prior_season": 16.8,
+          "recent_delta": -2.6000000000000014
+        },
+        "opp_fta_fga": {
+          "season": 0.26,
+          "last3": 0.265,
+          "last1": 0.328,
+          "home": 0.239,
+          "away": 0.278,
+          "prior_season": 0.246,
+          "recent_delta": 0.0050000000000000044
+        },
+        "possessions_game": {
+          "season": 83.5,
+          "last3": 81.6,
+          "last1": 79.8,
+          "home": 82.7,
+          "away": 84.3,
+          "prior_season": 81.9,
+          "recent_delta": -1.9000000000000057
+        },
+        "opp_fastbreak_points": {
+          "season": 10.1,
+          "last3": 9.0,
+          "last1": 4.0,
+          "home": 8.8,
+          "away": 11.2,
+          "prior_season": 9.5,
+          "recent_delta": -1.0999999999999996
+        }
+      }
+    },
+    "SEA": {
+      "team": "Seattle",
+      "team_code": "SEA",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 38.5,
+          "last3": 40.7,
+          "last1": 36.0,
+          "home": 39.0,
+          "away": 38.0,
+          "prior_season": 38.1,
+          "recent_delta": 2.200000000000003
+        },
+        "def_efficiency": {
+          "season": 1.041,
+          "last3": 0.946,
+          "last1": 0.866,
+          "home": 1.016,
+          "away": 1.064,
+          "prior_season": 0.98,
+          "recent_delta": -0.09499999999999997
+        },
+        "opp_efg_pct": {
+          "season": 0.495,
+          "last3": 0.457,
+          "last1": 0.4,
+          "home": 0.478,
+          "away": 0.511,
+          "prior_season": 0.5,
+          "recent_delta": -0.03799999999999998
+        },
+        "opp_two_pt_pct": {
+          "season": 0.507,
+          "last3": 0.46,
+          "last1": 0.40399999999999997,
+          "home": 0.49700000000000005,
+          "away": 0.517,
+          "prior_season": 0.496,
+          "recent_delta": -0.046999999999999986
+        },
+        "opp_three_pt_pct": {
+          "season": 0.317,
+          "last3": 0.3,
+          "last1": 0.261,
+          "home": 0.297,
+          "away": 0.33399999999999996,
+          "prior_season": 0.34,
+          "recent_delta": -0.017000000000000015
+        },
+        "opp_two_pt_rate": {
+          "season": 0.613,
+          "last3": 0.635,
+          "last1": 0.693,
+          "home": 0.627,
+          "away": 0.599,
+          "prior_season": 0.679,
+          "recent_delta": 0.02200000000000002
+        },
+        "opp_three_pt_rate": {
+          "season": 0.387,
+          "last3": 0.365,
+          "last1": 0.307,
+          "home": 0.373,
+          "away": 0.401,
+          "prior_season": 0.321,
+          "recent_delta": -0.02200000000000002
+        },
+        "opp_off_reb_pct": {
+          "season": 0.28,
+          "last3": 0.293,
+          "last1": 0.293,
+          "home": 0.281,
+          "away": 0.28,
+          "prior_season": 0.255,
+          "recent_delta": 0.012999999999999956
+        },
+        "opp_def_reb_pct": {
+          "season": 0.757,
+          "last3": 0.7609999999999999,
+          "last1": 0.875,
+          "home": 0.757,
+          "away": 0.758,
+          "prior_season": 0.797,
+          "recent_delta": 0.0039999999999998925
+        },
+        "opp_assists_game": {
+          "season": 20.7,
+          "last3": 19.0,
+          "last1": 17.0,
+          "home": 19.2,
+          "away": 22.2,
+          "prior_season": 19.7,
+          "recent_delta": -1.6999999999999993
+        },
+        "opp_assists_fgm": {
+          "season": 0.679,
+          "last3": 0.648,
+          "last1": 0.63,
+          "home": 0.641,
+          "away": 0.714,
+          "prior_season": 0.672,
+          "recent_delta": -0.031000000000000028
+        },
+        "opp_turnovers_poss": {
+          "season": 0.165,
+          "last3": 0.182,
+          "last1": 0.201,
+          "home": 0.158,
+          "away": 0.171,
+          "prior_season": 0.193,
+          "recent_delta": 0.016999999999999987
+        },
+        "opp_personal_fouls_game": {
+          "season": 17.7,
+          "last3": 21.3,
+          "last1": 24.0,
+          "home": 18.9,
+          "away": 16.5,
+          "prior_season": 16.6,
+          "recent_delta": 3.6000000000000014
+        },
+        "opp_fta_fga": {
+          "season": 0.323,
+          "last3": 0.329,
+          "last1": 0.36,
+          "home": 0.316,
+          "away": 0.329,
+          "prior_season": 0.281,
+          "recent_delta": 0.006000000000000005
+        },
+        "possessions_game": {
+          "season": 84.9,
+          "last3": 89.5,
+          "last1": 94.7,
+          "home": 84.6,
+          "away": 85.2,
+          "prior_season": 82.2,
+          "recent_delta": 4.599999999999994
+        },
+        "opp_fastbreak_points": {
+          "season": 10.2,
+          "last3": 7.0,
+          "last1": 6.0,
+          "home": 9.8,
+          "away": 10.5,
+          "prior_season": 10.6,
+          "recent_delta": -3.1999999999999993
+        }
+      }
+    },
+    "LV": {
+      "team": "Las Vegas",
+      "team_code": "LV",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 38.6,
+          "last3": 41.3,
+          "last1": 32.0,
+          "home": 37.9,
+          "away": 39.3,
+          "prior_season": 37.7,
+          "recent_delta": 2.6999999999999957
+        },
+        "def_efficiency": {
+          "season": 1.047,
+          "last3": 1.032,
+          "last1": 1.149,
+          "home": 1.069,
+          "away": 1.028,
+          "prior_season": 0.993,
+          "recent_delta": -0.014999999999999902
+        },
+        "opp_efg_pct": {
+          "season": 0.511,
+          "last3": 0.534,
+          "last1": 0.586,
+          "home": 0.527,
+          "away": 0.496,
+          "prior_season": 0.49,
+          "recent_delta": 0.02300000000000002
+        },
+        "opp_two_pt_pct": {
+          "season": 0.498,
+          "last3": 0.522,
+          "last1": 0.5529999999999999,
+          "home": 0.525,
+          "away": 0.47600000000000003,
+          "prior_season": 0.494,
+          "recent_delta": 0.02400000000000002
+        },
+        "opp_three_pt_pct": {
+          "season": 0.355,
+          "last3": 0.373,
+          "last1": 0.423,
+          "home": 0.354,
+          "away": 0.35600000000000004,
+          "prior_season": 0.321,
+          "recent_delta": 0.018000000000000016
+        },
+        "opp_two_pt_rate": {
+          "season": 0.6409999999999999,
+          "last3": 0.6940000000000001,
+          "last1": 0.594,
+          "home": 0.626,
+          "away": 0.653,
+          "prior_season": 0.6729999999999999,
+          "recent_delta": 0.05300000000000016
+        },
+        "opp_three_pt_rate": {
+          "season": 0.359,
+          "last3": 0.306,
+          "last1": 0.406,
+          "home": 0.374,
+          "away": 0.34700000000000003,
+          "prior_season": 0.327,
+          "recent_delta": -0.05299999999999999
+        },
+        "opp_off_reb_pct": {
+          "season": 0.249,
+          "last3": 0.315,
+          "last1": 0.292,
+          "home": 0.23600000000000002,
+          "away": 0.261,
+          "prior_season": 0.26,
+          "recent_delta": 0.066
+        },
+        "opp_def_reb_pct": {
+          "season": 0.77,
+          "last3": 0.762,
+          "last1": 0.6759999999999999,
+          "home": 0.7759999999999999,
+          "away": 0.765,
+          "prior_season": 0.768,
+          "recent_delta": -0.008000000000000007
+        },
+        "opp_assists_game": {
+          "season": 19.0,
+          "last3": 16.7,
+          "last1": 14.0,
+          "home": 18.0,
+          "away": 19.9,
+          "prior_season": 19.8,
+          "recent_delta": -2.3000000000000007
+        },
+        "opp_assists_fgm": {
+          "season": 0.606,
+          "last3": 0.543,
+          "last1": 0.438,
+          "home": 0.57,
+          "away": 0.64,
+          "prior_season": 0.659,
+          "recent_delta": -0.06299999999999994
+        },
+        "opp_turnovers_poss": {
+          "season": 0.16,
+          "last3": 0.207,
+          "last1": 0.2,
+          "home": 0.157,
+          "away": 0.162,
+          "prior_season": 0.17,
+          "recent_delta": 0.046999999999999986
+        },
+        "opp_personal_fouls_game": {
+          "season": 19.2,
+          "last3": 20.0,
+          "last1": 22.0,
+          "home": 19.5,
+          "away": 18.9,
+          "prior_season": 17.6,
+          "recent_delta": 0.8000000000000007
+        },
+        "opp_fta_fga": {
+          "season": 0.279,
+          "last3": 0.269,
+          "last1": 0.281,
+          "home": 0.266,
+          "away": 0.289,
+          "prior_season": 0.252,
+          "recent_delta": -0.010000000000000009
+        },
+        "possessions_game": {
+          "season": 83.2,
+          "last3": 78.8,
+          "last1": 80.1,
+          "home": 81.3,
+          "away": 84.9,
+          "prior_season": 81.7,
+          "recent_delta": -4.400000000000006
+        },
+        "opp_fastbreak_points": {
+          "season": 7.4,
+          "last3": 4.7,
+          "last1": 3.0,
+          "home": 6.9,
+          "away": 7.9,
+          "prior_season": 10.3,
+          "recent_delta": -2.7
+        }
+      }
+    },
+    "CON": {
+      "team": "Connecticut",
+      "team_code": "CON",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 38.8,
+          "last3": 34.0,
+          "last1": 34.0,
+          "home": 36.5,
+          "away": 41.3,
+          "prior_season": 38.5,
+          "recent_delta": -4.799999999999997
+        },
+        "def_efficiency": {
+          "season": 1.042,
+          "last3": 1.053,
+          "last1": 1.027,
+          "home": 1.025,
+          "away": 1.061,
+          "prior_season": 1.057,
+          "recent_delta": 0.010999999999999899
+        },
+        "opp_efg_pct": {
+          "season": 0.525,
+          "last3": 0.51,
+          "last1": 0.562,
+          "home": 0.523,
+          "away": 0.527,
+          "prior_season": 0.53,
+          "recent_delta": -0.015000000000000013
+        },
+        "opp_two_pt_pct": {
+          "season": 0.516,
+          "last3": 0.45399999999999996,
+          "last1": 0.447,
+          "home": 0.5,
+          "away": 0.531,
+          "prior_season": 0.534,
+          "recent_delta": -0.062000000000000055
+        },
+        "opp_three_pt_pct": {
+          "season": 0.36200000000000004,
+          "last3": 0.395,
+          "last1": 0.48100000000000004,
+          "home": 0.375,
+          "away": 0.34700000000000003,
+          "prior_season": 0.349,
+          "recent_delta": 0.032999999999999974
+        },
+        "opp_two_pt_rate": {
+          "season": 0.644,
+          "last3": 0.595,
+          "last1": 0.585,
+          "home": 0.632,
+          "away": 0.6559999999999999,
+          "prior_season": 0.632,
+          "recent_delta": -0.049000000000000044
+        },
+        "opp_three_pt_rate": {
+          "season": 0.35600000000000004,
+          "last3": 0.405,
+          "last1": 0.415,
+          "home": 0.368,
+          "away": 0.344,
+          "prior_season": 0.368,
+          "recent_delta": 0.04899999999999999
+        },
+        "opp_off_reb_pct": {
+          "season": 0.248,
+          "last3": 0.192,
+          "last1": 0.10300000000000001,
+          "home": 0.249,
+          "away": 0.248,
+          "prior_season": 0.27399999999999997,
+          "recent_delta": -0.055999999999999994
+        },
+        "opp_def_reb_pct": {
+          "season": 0.728,
+          "last3": 0.773,
+          "last1": 0.75,
+          "home": 0.742,
+          "away": 0.7120000000000001,
+          "prior_season": 0.7559999999999999,
+          "recent_delta": 0.04500000000000004
+        },
+        "opp_assists_game": {
+          "season": 19.8,
+          "last3": 18.7,
+          "last1": 18.0,
+          "home": 18.5,
+          "away": 21.3,
+          "prior_season": 21.6,
+          "recent_delta": -1.1000000000000014
+        },
+        "opp_assists_fgm": {
+          "season": 0.664,
+          "last3": 0.651,
+          "last1": 0.6,
+          "home": 0.639,
+          "away": 0.688,
+          "prior_season": 0.71,
+          "recent_delta": -0.013000000000000012
+        },
+        "opp_turnovers_poss": {
+          "season": 0.18100000000000002,
+          "last3": 0.14300000000000002,
+          "last1": 0.15,
+          "home": 0.188,
+          "away": 0.174,
+          "prior_season": 0.182,
+          "recent_delta": -0.038000000000000006
+        },
+        "opp_personal_fouls_game": {
+          "season": 20.3,
+          "last3": 21.3,
+          "last1": 21.0,
+          "home": 20.4,
+          "away": 20.3,
+          "prior_season": 17.5,
+          "recent_delta": 1.0
+        },
+        "opp_fta_fga": {
+          "season": 0.371,
+          "last3": 0.35,
+          "last1": 0.169,
+          "home": 0.371,
+          "away": 0.371,
+          "prior_season": 0.322,
+          "recent_delta": -0.02100000000000002
+        },
+        "possessions_game": {
+          "season": 83.7,
+          "last3": 81.7,
+          "last1": 79.8,
+          "home": 83.1,
+          "away": 84.3,
+          "prior_season": 81.3,
+          "recent_delta": -2.0
+        },
+        "opp_fastbreak_points": {
+          "season": 8.4,
+          "last3": 6.0,
+          "last1": 8.0,
+          "home": 7.8,
+          "away": 9.1,
+          "prior_season": 11.3,
+          "recent_delta": -2.4000000000000004
+        }
+      }
+    },
+    "ATL": {
+      "team": "Atlanta",
+      "team_code": "ATL",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 39.9,
+          "last3": 38.0,
+          "last1": 48.0,
+          "home": 42.8,
+          "away": 36.8,
+          "prior_season": 36.3,
+          "recent_delta": -1.8999999999999986
+        },
+        "def_efficiency": {
+          "season": 1.007,
+          "last3": 0.986,
+          "last1": 1.004,
+          "home": 1.027,
+          "away": 0.984,
+          "prior_season": 0.954,
+          "recent_delta": -0.020999999999999908
+        },
+        "opp_efg_pct": {
+          "season": 0.5429999999999999,
+          "last3": 0.47700000000000004,
+          "last1": 0.48100000000000004,
+          "home": 0.542,
+          "away": 0.544,
+          "prior_season": 0.475,
+          "recent_delta": -0.06599999999999989
+        },
+        "opp_two_pt_pct": {
+          "season": 0.541,
+          "last3": 0.45899999999999996,
+          "last1": 0.526,
+          "home": 0.56,
+          "away": 0.519,
+          "prior_season": 0.474,
+          "recent_delta": -0.08200000000000007
+        },
+        "opp_three_pt_pct": {
+          "season": 0.365,
+          "last3": 0.34299999999999997,
+          "last1": 0.25,
+          "home": 0.342,
+          "away": 0.395,
+          "prior_season": 0.319,
+          "recent_delta": -0.02200000000000002
+        },
+        "opp_two_pt_rate": {
+          "season": 0.647,
+          "last3": 0.679,
+          "last1": 0.7040000000000001,
+          "home": 0.629,
+          "away": 0.669,
+          "prior_season": 0.698,
+          "recent_delta": 0.03200000000000003
+        },
+        "opp_three_pt_rate": {
+          "season": 0.353,
+          "last3": 0.321,
+          "last1": 0.29600000000000004,
+          "home": 0.371,
+          "away": 0.331,
+          "prior_season": 0.302,
+          "recent_delta": -0.03199999999999997
+        },
+        "opp_off_reb_pct": {
+          "season": 0.209,
+          "last3": 0.235,
+          "last1": 0.256,
+          "home": 0.195,
+          "away": 0.22699999999999998,
+          "prior_season": 0.205,
+          "recent_delta": 0.025999999999999995
+        },
+        "opp_def_reb_pct": {
+          "season": 0.684,
+          "last3": 0.6890000000000001,
+          "last1": 0.732,
+          "home": 0.693,
+          "away": 0.674,
+          "prior_season": 0.735,
+          "recent_delta": 0.0050000000000000044
+        },
+        "opp_assists_game": {
+          "season": 19.4,
+          "last3": 17.7,
+          "last1": 18.0,
+          "home": 20.1,
+          "away": 18.7,
+          "prior_season": 18.8,
+          "recent_delta": -1.6999999999999993
+        },
+        "opp_assists_fgm": {
+          "season": 0.627,
+          "last3": 0.576,
+          "last1": 0.5,
+          "home": 0.632,
+          "away": 0.62,
+          "prior_season": 0.652,
+          "recent_delta": -0.051000000000000045
+        },
+        "opp_turnovers_poss": {
+          "season": 0.191,
+          "last3": 0.122,
+          "last1": 0.095,
+          "home": 0.177,
+          "away": 0.207,
+          "prior_season": 0.153,
+          "recent_delta": -0.069
+        },
+        "opp_personal_fouls_game": {
+          "season": 21.7,
+          "last3": 22.0,
+          "last1": 19.0,
+          "home": 21.7,
+          "away": 21.6,
+          "prior_season": 17.0,
+          "recent_delta": 0.3000000000000007
+        },
+        "opp_fta_fga": {
+          "season": 0.318,
+          "last3": 0.317,
+          "last1": 0.284,
+          "home": 0.325,
+          "away": 0.311,
+          "prior_season": 0.24,
+          "recent_delta": -0.0010000000000000009
+        },
+        "possessions_game": {
+          "season": 85.2,
+          "last3": 87.6,
+          "last1": 94.6,
+          "home": 86.2,
+          "away": 84.0,
+          "prior_season": 80.5,
+          "recent_delta": 2.3999999999999915
+        },
+        "opp_fastbreak_points": {
+          "season": 7.0,
+          "last3": 5.7,
+          "last1": 4.0,
+          "home": 7.2,
+          "away": 6.8,
+          "prior_season": 8.3,
+          "recent_delta": -1.2999999999999998
+        }
+      }
+    },
+    "POR": {
+      "team": "Portland",
+      "team_code": "POR",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 40.1,
+          "last3": 33.3,
+          "last1": 36.0,
+          "home": 37.4,
+          "away": 42.9,
+          "prior_season": null,
+          "recent_delta": -6.800000000000004
+        },
+        "def_efficiency": {
+          "season": 1.081,
+          "last3": 1.004,
+          "last1": 1.019,
+          "home": 1.088,
+          "away": 1.073,
+          "prior_season": null,
+          "recent_delta": -0.07699999999999996
+        },
+        "opp_efg_pct": {
+          "season": 0.53,
+          "last3": 0.467,
+          "last1": 0.485,
+          "home": 0.5379999999999999,
+          "away": 0.522,
+          "prior_season": null,
+          "recent_delta": -0.063
+        },
+        "opp_two_pt_pct": {
+          "season": 0.54,
+          "last3": 0.441,
+          "last1": 0.475,
+          "home": 0.5429999999999999,
+          "away": 0.536,
+          "prior_season": null,
+          "recent_delta": -0.09900000000000003
+        },
+        "opp_three_pt_pct": {
+          "season": 0.34299999999999997,
+          "last3": 0.337,
+          "last1": 0.33299999999999996,
+          "home": 0.354,
+          "away": 0.33299999999999996,
+          "prior_season": null,
+          "recent_delta": -0.00599999999999995
+        },
+        "opp_two_pt_rate": {
+          "season": 0.615,
+          "last3": 0.596,
+          "last1": 0.597,
+          "home": 0.608,
+          "away": 0.622,
+          "prior_season": null,
+          "recent_delta": -0.019000000000000017
+        },
+        "opp_three_pt_rate": {
+          "season": 0.385,
+          "last3": 0.40399999999999997,
+          "last1": 0.40299999999999997,
+          "home": 0.392,
+          "away": 0.37799999999999995,
+          "prior_season": null,
+          "recent_delta": 0.01899999999999996
+        },
+        "opp_off_reb_pct": {
+          "season": 0.298,
+          "last3": 0.239,
+          "last1": 0.212,
+          "home": 0.304,
+          "away": 0.293,
+          "prior_season": null,
+          "recent_delta": -0.059
+        },
+        "opp_def_reb_pct": {
+          "season": 0.758,
+          "last3": 0.736,
+          "last1": 0.7440000000000001,
+          "home": 0.773,
+          "away": 0.743,
+          "prior_season": null,
+          "recent_delta": -0.02200000000000002
+        },
+        "opp_assists_game": {
+          "season": 23.2,
+          "last3": 19.3,
+          "last1": 18.0,
+          "home": 23.2,
+          "away": 23.1,
+          "prior_season": null,
+          "recent_delta": -3.8999999999999986
+        },
+        "opp_assists_fgm": {
+          "season": 0.729,
+          "last3": 0.682,
+          "last1": 0.643,
+          "home": 0.74,
+          "away": 0.717,
+          "prior_season": null,
+          "recent_delta": -0.04699999999999993
+        },
+        "opp_turnovers_poss": {
+          "season": 0.17,
+          "last3": 0.14300000000000002,
+          "last1": 0.156,
+          "home": 0.174,
+          "away": 0.165,
+          "prior_season": null,
+          "recent_delta": -0.026999999999999996
+        },
+        "opp_personal_fouls_game": {
+          "season": 18.6,
+          "last3": 17.7,
+          "last1": 20.0,
+          "home": 18.3,
+          "away": 18.9,
+          "prior_season": null,
+          "recent_delta": -0.9000000000000021
+        },
+        "opp_fta_fga": {
+          "season": 0.343,
+          "last3": 0.319,
+          "last1": 0.373,
+          "home": 0.355,
+          "away": 0.331,
+          "prior_season": null,
+          "recent_delta": -0.02400000000000002
+        },
+        "possessions_game": {
+          "season": 84.3,
+          "last3": 83.7,
+          "last1": 83.4,
+          "home": 83.2,
+          "away": 85.5,
+          "prior_season": null,
+          "recent_delta": -0.5999999999999943
+        },
+        "opp_fastbreak_points": {
+          "season": 10.8,
+          "last3": 6.7,
+          "last1": 5.0,
+          "home": 10.6,
+          "away": 11.1,
+          "prior_season": null,
+          "recent_delta": -4.1000000000000005
+        }
+      }
+    },
+    "CHI": {
+      "team": "Chicago",
+      "team_code": "CHI",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 41.0,
+          "last3": 42.0,
+          "last1": 46.0,
+          "home": 41.3,
+          "away": 40.7,
+          "prior_season": 35.0,
+          "recent_delta": 1.0
+        },
+        "def_efficiency": {
+          "season": 1.038,
+          "last3": 1.014,
+          "last1": 0.845,
+          "home": 1.049,
+          "away": 1.027,
+          "prior_season": 1.061,
+          "recent_delta": -0.02400000000000002
+        },
+        "opp_efg_pct": {
+          "season": 0.5,
+          "last3": 0.505,
+          "last1": 0.444,
+          "home": 0.514,
+          "away": 0.488,
+          "prior_season": 0.521,
+          "recent_delta": 0.0050000000000000044
+        },
+        "opp_two_pt_pct": {
+          "season": 0.512,
+          "last3": 0.507,
+          "last1": 0.479,
+          "home": 0.532,
+          "away": 0.494,
+          "prior_season": 0.504,
+          "recent_delta": -0.0050000000000000044
+        },
+        "opp_three_pt_pct": {
+          "season": 0.318,
+          "last3": 0.33299999999999996,
+          "last1": 0.25,
+          "home": 0.32,
+          "away": 0.316,
+          "prior_season": 0.366,
+          "recent_delta": 0.014999999999999958
+        },
+        "opp_two_pt_rate": {
+          "season": 0.662,
+          "last3": 0.68,
+          "last1": 0.667,
+          "home": 0.655,
+          "away": 0.667,
+          "prior_season": 0.624,
+          "recent_delta": 0.018000000000000016
+        },
+        "opp_three_pt_rate": {
+          "season": 0.33799999999999997,
+          "last3": 0.32,
+          "last1": 0.33299999999999996,
+          "home": 0.345,
+          "away": 0.33299999999999996,
+          "prior_season": 0.376,
+          "recent_delta": -0.01799999999999996
+        },
+        "opp_off_reb_pct": {
+          "season": 0.273,
+          "last3": 0.218,
+          "last1": 0.125,
+          "home": 0.284,
+          "away": 0.263,
+          "prior_season": 0.253,
+          "recent_delta": -0.05500000000000002
+        },
+        "opp_def_reb_pct": {
+          "season": 0.774,
+          "last3": 0.7090000000000001,
+          "last1": 0.7070000000000001,
+          "home": 0.7829999999999999,
+          "away": 0.765,
+          "prior_season": 0.7090000000000001,
+          "recent_delta": -0.06499999999999995
+        },
+        "opp_assists_game": {
+          "season": 20.2,
+          "last3": 20.0,
+          "last1": 21.0,
+          "home": 21.5,
+          "away": 18.9,
+          "prior_season": 21.4,
+          "recent_delta": -0.1999999999999993
+        },
+        "opp_assists_fgm": {
+          "season": 0.641,
+          "last3": 0.645,
+          "last1": 0.724,
+          "home": 0.672,
+          "away": 0.611,
+          "prior_season": 0.692,
+          "recent_delta": 0.0040000000000000036
+        },
+        "opp_turnovers_poss": {
+          "season": 0.163,
+          "last3": 0.17800000000000002,
+          "last1": 0.19,
+          "home": 0.16899999999999998,
+          "away": 0.157,
+          "prior_season": 0.147,
+          "recent_delta": 0.015000000000000013
+        },
+        "opp_personal_fouls_game": {
+          "season": 20.0,
+          "last3": 17.3,
+          "last1": 17.0,
+          "home": 19.9,
+          "away": 20.1,
+          "prior_season": 16.7,
+          "recent_delta": -2.6999999999999993
+        },
+        "opp_fta_fga": {
+          "season": 0.34,
+          "last3": 0.35,
+          "last1": 0.278,
+          "home": 0.337,
+          "away": 0.344,
+          "prior_season": 0.28,
+          "recent_delta": 0.009999999999999953
+        },
+        "possessions_game": {
+          "season": 86.6,
+          "last3": 88.1,
+          "last1": 94.7,
+          "home": 86.2,
+          "away": 87.0,
+          "prior_season": 80.9,
+          "recent_delta": 1.5
+        },
+        "opp_fastbreak_points": {
+          "season": 9.7,
+          "last3": 12.0,
+          "last1": 14.0,
+          "home": 8.2,
+          "away": 11.1,
+          "prior_season": 13.7,
+          "recent_delta": 2.3000000000000007
+        }
+      }
+    },
+    "DAL": {
+      "team": "Dallas",
+      "team_code": "DAL",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 41.3,
+          "last3": 38.0,
+          "last1": 22.0,
+          "home": 40.4,
+          "away": 42.0,
+          "prior_season": 35.8,
+          "recent_delta": -3.299999999999997
+        },
+        "def_efficiency": {
+          "season": 1.043,
+          "last3": 1.072,
+          "last1": 0.983,
+          "home": 0.98,
+          "away": 1.092,
+          "prior_season": 1.057,
+          "recent_delta": 0.029000000000000137
+        },
+        "opp_efg_pct": {
+          "season": 0.519,
+          "last3": 0.507,
+          "last1": 0.45799999999999996,
+          "home": 0.485,
+          "away": 0.546,
+          "prior_season": 0.531,
+          "recent_delta": -0.01200000000000001
+        },
+        "opp_two_pt_pct": {
+          "season": 0.522,
+          "last3": 0.523,
+          "last1": 0.41700000000000004,
+          "home": 0.496,
+          "away": 0.5429999999999999,
+          "prior_season": 0.501,
+          "recent_delta": 0.0010000000000000009
+        },
+        "opp_three_pt_pct": {
+          "season": 0.34299999999999997,
+          "last3": 0.322,
+          "last1": 0.33299999999999996,
+          "home": 0.308,
+          "away": 0.368,
+          "prior_season": 0.38799999999999996,
+          "recent_delta": -0.020999999999999963
+        },
+        "opp_two_pt_rate": {
+          "season": 0.657,
+          "last3": 0.595,
+          "last1": 0.5,
+          "home": 0.674,
+          "away": 0.643,
+          "prior_season": 0.63,
+          "recent_delta": -0.062000000000000055
+        },
+        "opp_three_pt_rate": {
+          "season": 0.34299999999999997,
+          "last3": 0.405,
+          "last1": 0.5,
+          "home": 0.326,
+          "away": 0.35700000000000004,
+          "prior_season": 0.37,
+          "recent_delta": 0.062000000000000055
+        },
+        "opp_off_reb_pct": {
+          "season": 0.244,
+          "last3": 0.314,
+          "last1": 0.256,
+          "home": 0.251,
+          "away": 0.237,
+          "prior_season": 0.243,
+          "recent_delta": 0.07
+        },
+        "opp_def_reb_pct": {
+          "season": 0.748,
+          "last3": 0.7559999999999999,
+          "last1": 0.833,
+          "home": 0.74,
+          "away": 0.7559999999999999,
+          "prior_season": 0.7240000000000001,
+          "recent_delta": 0.007999999999999896
+        },
+        "opp_assists_game": {
+          "season": 20.1,
+          "last3": 16.7,
+          "last1": 17.0,
+          "home": 19.1,
+          "away": 21.0,
+          "prior_season": 23.0,
+          "recent_delta": -3.400000000000002
+        },
+        "opp_assists_fgm": {
+          "season": 0.636,
+          "last3": 0.51,
+          "last1": 0.63,
+          "home": 0.635,
+          "away": 0.637,
+          "prior_season": 0.748,
+          "recent_delta": -0.126
+        },
+        "opp_turnovers_poss": {
+          "season": 0.156,
+          "last3": 0.146,
+          "last1": 0.139,
+          "home": 0.159,
+          "away": 0.153,
+          "prior_season": 0.162,
+          "recent_delta": -0.010000000000000009
+        },
+        "opp_personal_fouls_game": {
+          "season": 18.3,
+          "last3": 19.3,
+          "last1": 14.0,
+          "home": 19.0,
+          "away": 17.7,
+          "prior_season": 17.6,
+          "recent_delta": 1.0
+        },
+        "opp_fta_fga": {
+          "season": 0.274,
+          "last3": 0.203,
+          "last1": 0.194,
+          "home": 0.252,
+          "away": 0.292,
+          "prior_season": 0.326,
+          "recent_delta": -0.07100000000000001
+        },
+        "possessions_game": {
+          "season": 82.8,
+          "last3": 82.1,
+          "last1": 79.4,
+          "home": 82.3,
+          "away": 83.3,
+          "prior_season": 83.2,
+          "recent_delta": -0.7000000000000028
+        },
+        "opp_fastbreak_points": {
+          "season": 8.8,
+          "last3": 7.7,
+          "last1": 2.0,
+          "home": 7.3,
+          "away": 10.1,
+          "prior_season": 12.7,
+          "recent_delta": -1.1000000000000005
+        }
+      }
+    },
+    "LA": {
+      "team": "Los Angeles",
+      "team_code": "LA",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 42.5,
+          "last3": 49.3,
+          "last1": 60.0,
+          "home": 43.0,
+          "away": 42.1,
+          "prior_season": 37.3,
+          "recent_delta": 6.799999999999997
+        },
+        "def_efficiency": {
+          "season": 1.09,
+          "last3": 1.03,
+          "last1": 1.011,
+          "home": 1.08,
+          "away": 1.099,
+          "prior_season": 1.055,
+          "recent_delta": -0.06000000000000005
+        },
+        "opp_efg_pct": {
+          "season": 0.544,
+          "last3": 0.512,
+          "last1": 0.5,
+          "home": 0.552,
+          "away": 0.537,
+          "prior_season": 0.524,
+          "recent_delta": -0.03200000000000003
+        },
+        "opp_two_pt_pct": {
+          "season": 0.563,
+          "last3": 0.5660000000000001,
+          "last1": 0.588,
+          "home": 0.583,
+          "away": 0.547,
+          "prior_season": 0.509,
+          "recent_delta": 0.0030000000000001137
+        },
+        "opp_three_pt_pct": {
+          "season": 0.342,
+          "last3": 0.27399999999999997,
+          "last1": 0.19,
+          "home": 0.337,
+          "away": 0.34600000000000003,
+          "prior_season": 0.366,
+          "recent_delta": -0.06800000000000006
+        },
+        "opp_two_pt_rate": {
+          "season": 0.612,
+          "last3": 0.6509999999999999,
+          "last1": 0.708,
+          "home": 0.597,
+          "away": 0.625,
+          "prior_season": 0.613,
+          "recent_delta": 0.038999999999999924
+        },
+        "opp_three_pt_rate": {
+          "season": 0.38799999999999996,
+          "last3": 0.349,
+          "last1": 0.292,
+          "home": 0.40299999999999997,
+          "away": 0.375,
+          "prior_season": 0.387,
+          "recent_delta": -0.03899999999999998
+        },
+        "opp_off_reb_pct": {
+          "season": 0.287,
+          "last3": 0.305,
+          "last1": 0.314,
+          "home": 0.281,
+          "away": 0.293,
+          "prior_season": 0.264,
+          "recent_delta": 0.018000000000000016
+        },
+        "opp_def_reb_pct": {
+          "season": 0.773,
+          "last3": 0.7929999999999999,
+          "last1": 0.914,
+          "home": 0.772,
+          "away": 0.774,
+          "prior_season": 0.759,
+          "recent_delta": 0.019999999999999907
+        },
+        "opp_assists_game": {
+          "season": 22.6,
+          "last3": 22.3,
+          "last1": 23.0,
+          "home": 22.7,
+          "away": 22.4,
+          "prior_season": 22.6,
+          "recent_delta": -0.3000000000000007
+        },
+        "opp_assists_fgm": {
+          "season": 0.669,
+          "last3": 0.691,
+          "last1": 0.676,
+          "home": 0.671,
+          "away": 0.667,
+          "prior_season": 0.699,
+          "recent_delta": 0.02199999999999991
+        },
+        "opp_turnovers_poss": {
+          "season": 0.168,
+          "last3": 0.187,
+          "last1": 0.152,
+          "home": 0.18100000000000002,
+          "away": 0.156,
+          "prior_season": 0.161,
+          "recent_delta": 0.01899999999999999
+        },
+        "opp_personal_fouls_game": {
+          "season": 21.2,
+          "last3": 19.3,
+          "last1": 17.0,
+          "home": 21.1,
+          "away": 21.3,
+          "prior_season": 18.3,
+          "recent_delta": -1.8999999999999986
+        },
+        "opp_fta_fga": {
+          "season": 0.288,
+          "last3": 0.287,
+          "last1": 0.167,
+          "home": 0.276,
+          "away": 0.297,
+          "prior_season": 0.231,
+          "recent_delta": -0.0010000000000000009
+        },
+        "possessions_game": {
+          "season": 85.3,
+          "last3": 83.8,
+          "last1": 79.2,
+          "home": 85.8,
+          "away": 84.9,
+          "prior_season": 83.7,
+          "recent_delta": -1.5
+        },
+        "opp_fastbreak_points": {
+          "season": 10.7,
+          "last3": 12.7,
+          "last1": 9.0,
+          "home": 9.8,
+          "away": 11.6,
+          "prior_season": 10.8,
+          "recent_delta": 2.0
+        }
+      }
+    },
+    "TOR": {
+      "team": "Toronto",
+      "team_code": "TOR",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 42.9,
+          "last3": 40.0,
+          "last1": 36.0,
+          "home": 40.9,
+          "away": 44.6,
+          "prior_season": null,
+          "recent_delta": -2.8999999999999986
+        },
+        "def_efficiency": {
+          "season": 1.12,
+          "last3": 1.155,
+          "last1": 1.1,
+          "home": 1.076,
+          "away": 1.156,
+          "prior_season": null,
+          "recent_delta": 0.03499999999999992
+        },
+        "opp_efg_pct": {
+          "season": 0.541,
+          "last3": 0.568,
+          "last1": 0.507,
+          "home": 0.52,
+          "away": 0.5589999999999999,
+          "prior_season": null,
+          "recent_delta": 0.026999999999999913
+        },
+        "opp_two_pt_pct": {
+          "season": 0.552,
+          "last3": 0.545,
+          "last1": 0.5,
+          "home": 0.53,
+          "away": 0.5710000000000001,
+          "prior_season": null,
+          "recent_delta": -0.007000000000000006
+        },
+        "opp_three_pt_pct": {
+          "season": 0.349,
+          "last3": 0.4,
+          "last1": 0.34600000000000003,
+          "home": 0.336,
+          "away": 0.36,
+          "prior_season": null,
+          "recent_delta": 0.051000000000000045
+        },
+        "opp_two_pt_rate": {
+          "season": 0.615,
+          "last3": 0.5870000000000001,
+          "last1": 0.629,
+          "home": 0.606,
+          "away": 0.622,
+          "prior_season": null,
+          "recent_delta": -0.027999999999999914
+        },
+        "opp_three_pt_rate": {
+          "season": 0.385,
+          "last3": 0.413,
+          "last1": 0.371,
+          "home": 0.39399999999999996,
+          "away": 0.37799999999999995,
+          "prior_season": null,
+          "recent_delta": 0.02799999999999997
+        },
+        "opp_off_reb_pct": {
+          "season": 0.305,
+          "last3": 0.287,
+          "last1": 0.233,
+          "home": 0.305,
+          "away": 0.305,
+          "prior_season": null,
+          "recent_delta": -0.018000000000000016
+        },
+        "opp_def_reb_pct": {
+          "season": 0.7509999999999999,
+          "last3": 0.708,
+          "last1": 0.622,
+          "home": 0.7509999999999999,
+          "away": 0.75,
+          "prior_season": null,
+          "recent_delta": -0.04299999999999993
+        },
+        "opp_assists_game": {
+          "season": 22.3,
+          "last3": 25.3,
+          "last1": 24.0,
+          "home": 20.4,
+          "away": 23.8,
+          "prior_season": null,
+          "recent_delta": 3.0
+        },
+        "opp_assists_fgm": {
+          "season": 0.667,
+          "last3": 0.76,
+          "last1": 0.774,
+          "home": 0.632,
+          "away": 0.694,
+          "prior_season": null,
+          "recent_delta": 0.09299999999999997
+        },
+        "opp_turnovers_poss": {
+          "season": 0.154,
+          "last3": 0.151,
+          "last1": 0.105,
+          "home": 0.158,
+          "away": 0.151,
+          "prior_season": null,
+          "recent_delta": -0.0030000000000000027
+        },
+        "opp_personal_fouls_game": {
+          "season": 19.8,
+          "last3": 21.0,
+          "last1": 21.0,
+          "home": 20.7,
+          "away": 19.0,
+          "prior_season": null,
+          "recent_delta": 1.1999999999999993
+        },
+        "opp_fta_fga": {
+          "season": 0.32,
+          "last3": 0.388,
+          "last1": 0.371,
+          "home": 0.291,
+          "away": 0.345,
+          "prior_season": null,
+          "recent_delta": 0.068
+        },
+        "possessions_game": {
+          "season": 84.0,
+          "last3": 86.0,
+          "last1": 85.5,
+          "home": 83.3,
+          "away": 84.6,
+          "prior_season": null,
+          "recent_delta": 2.0
+        },
+        "opp_fastbreak_points": {
+          "season": 9.2,
+          "last3": 9.0,
+          "last1": 14.0,
+          "home": 9.9,
+          "away": 8.7,
+          "prior_season": null,
+          "recent_delta": -0.1999999999999993
+        }
+      }
+    },
+    "IND": {
+      "team": "Indiana",
+      "team_code": "IND",
+      "metrics": {
+        "opp_points_paint": {
+          "season": 43.1,
+          "last3": 38.7,
+          "last1": 36.0,
+          "home": 44.1,
+          "away": 42.0,
+          "prior_season": 38.8,
+          "recent_delta": -4.399999999999999
+        },
+        "def_efficiency": {
+          "season": 1.042,
+          "last3": 1.04,
+          "last1": 0.962,
+          "home": 1.03,
+          "away": 1.058,
+          "prior_season": 0.988,
+          "recent_delta": -0.0020000000000000018
+        },
+        "opp_efg_pct": {
+          "season": 0.513,
+          "last3": 0.47,
+          "last1": 0.402,
+          "home": 0.513,
+          "away": 0.512,
+          "prior_season": 0.504,
+          "recent_delta": -0.04300000000000004
+        },
+        "opp_two_pt_pct": {
+          "season": 0.517,
+          "last3": 0.519,
+          "last1": 0.42,
+          "home": 0.527,
+          "away": 0.506,
+          "prior_season": 0.508,
+          "recent_delta": 0.0020000000000000018
+        },
+        "opp_three_pt_pct": {
+          "season": 0.335,
+          "last3": 0.268,
+          "last1": 0.25,
+          "home": 0.32299999999999995,
+          "away": 0.35100000000000003,
+          "prior_season": 0.331,
+          "recent_delta": -0.067
+        },
+        "opp_two_pt_rate": {
+          "season": 0.675,
+          "last3": 0.578,
+          "last1": 0.61,
+          "home": 0.6759999999999999,
+          "away": 0.674,
+          "prior_season": 0.679,
+          "recent_delta": -0.09700000000000009
+        },
+        "opp_three_pt_rate": {
+          "season": 0.325,
+          "last3": 0.42200000000000004,
+          "last1": 0.39,
+          "home": 0.324,
+          "away": 0.326,
+          "prior_season": 0.321,
+          "recent_delta": 0.09700000000000003
+        },
+        "opp_off_reb_pct": {
+          "season": 0.24600000000000002,
+          "last3": 0.31,
+          "last1": 0.268,
+          "home": 0.244,
+          "away": 0.247,
+          "prior_season": 0.237,
+          "recent_delta": 0.06399999999999997
+        },
+        "opp_def_reb_pct": {
+          "season": 0.7390000000000001,
+          "last3": 0.765,
+          "last1": 0.7440000000000001,
+          "home": 0.7240000000000001,
+          "away": 0.7559999999999999,
+          "prior_season": 0.732,
+          "recent_delta": 0.025999999999999912
+        },
+        "opp_assists_game": {
+          "season": 20.4,
+          "last3": 20.7,
+          "last1": 21.0,
+          "home": 19.6,
+          "away": 21.4,
+          "prior_season": 19.5,
+          "recent_delta": 0.3000000000000007
+        },
+        "opp_assists_fgm": {
+          "season": 0.632,
+          "last3": 0.653,
+          "last1": 0.724,
+          "home": 0.598,
+          "away": 0.673,
+          "prior_season": 0.65,
+          "recent_delta": 0.02100000000000002
+        },
+        "opp_turnovers_poss": {
+          "season": 0.154,
+          "last3": 0.154,
+          "last1": 0.159,
+          "home": 0.162,
+          "away": 0.14400000000000002,
+          "prior_season": 0.18100000000000002,
+          "recent_delta": 0.0
+        },
+        "opp_personal_fouls_game": {
+          "season": 22.2,
+          "last3": 20.3,
+          "last1": 24.0,
+          "home": 23.3,
+          "away": 20.9,
+          "prior_season": 19.4,
+          "recent_delta": -1.8999999999999986
+        },
+        "opp_fta_fga": {
+          "season": 0.324,
+          "last3": 0.257,
+          "last1": 0.317,
+          "home": 0.327,
+          "away": 0.32,
+          "prior_season": 0.285,
+          "recent_delta": -0.067
+        },
+        "possessions_game": {
+          "season": 86.7,
+          "last3": 86.5,
+          "last1": 94.6,
+          "home": 88.5,
+          "away": 84.5,
+          "prior_season": 82.7,
+          "recent_delta": -0.20000000000000284
+        },
+        "opp_fastbreak_points": {
+          "season": 10.2,
+          "last3": 9.0,
+          "last1": 12.0,
+          "home": 10.4,
+          "away": 10.0,
+          "prior_season": 9.6,
+          "recent_delta": -1.1999999999999993
+        }
+      }
+    }
+  }
+}
