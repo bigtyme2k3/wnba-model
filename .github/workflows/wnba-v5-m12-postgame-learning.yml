@@ -2,13 +2,14 @@ name: WNBA V5 M12 Post-Game Learning
 on:
   workflow_dispatch:
   schedule:
-    - cron: '37 11 * * *'
+    - cron: '27 * * * *'
   push:
     branches: [main]
     paths:
       - 'wnba_v5_m12_postgame_learning.py'
       - 'data/dashboard/wnba_v5_live_inference.json'
       - 'data/dashboard/wnba_v5_historical_features.csv'
+      - 'data/warehouse/wnba_player_game_logs.json'
       - '.github/workflows/wnba-v5-m12-postgame-learning.yml'
 concurrency:
   group: v5-forward-learning-writer
@@ -52,5 +53,8 @@ jobs:
           git add data/history/wnba_v5_forward_predictions.jsonl data/dashboard/wnba_v5_forward_validation.csv data/dashboard/wnba_v5_forward_metrics.json data/dashboard/wnba_v5_learning_state.json data/dashboard/wnba_v5_m12_report.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Refresh WNBA V5 M12 forward learning outputs"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            echo "retry $attempt"; sleep $((attempt*3))
+          done
+          exit 1
