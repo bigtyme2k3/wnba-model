@@ -41,10 +41,14 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          from pathlib import Path
           p=json.load(open('data/dashboard/wnba_v5_m11_report.json'))
           m12=json.load(open('data/dashboard/wnba_v5_m12_report.json'))
+          ledger=Path('data/history/wnba_v5_forward_predictions.jsonl')
+          ledger_rows=sum(1 for line in ledger.open(encoding='utf-8') if line.strip()) if ledger.exists() else 0
           print(p)
           print(m12)
+          print({'ledger_rows': ledger_rows})
           assert p['module']=='V5-M11'
           assert p['status'] in {'READY_SHADOW','STANDBY_NO_SCORABLE_ROWS','BLOCKED_STALE_SLATE'}
           assert p['research_champion']=='KNN'
@@ -52,7 +56,8 @@ jobs:
           assert p['ranked_rows']==p['scored_rows']+p['unscored_rows']
           assert m12['module']=='V5-M12'
           if p['status']=='READY_SHADOW' and p['scored_rows'] > 0:
-              assert m12.get('ledger_rows', 0) > 0, m12
+              assert ledger_rows > 0, {'ledger_rows': ledger_rows, 'm12': m12}
+              assert (m12.get('metrics') or {}).get('forward_predictions', 0) == ledger_rows
           if p['status']=='BLOCKED_STALE_SLATE':
               assert p['scored_rows']==0
               assert p.get('freshness_guard_status')=='STALE_BLOCKED'
