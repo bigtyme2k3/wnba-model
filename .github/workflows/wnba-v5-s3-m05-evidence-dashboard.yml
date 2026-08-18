@@ -11,6 +11,8 @@ on:
       - 'data/dashboard/wnba_v5_s3_m04_report.json'
       - 'data/dashboard/wnba_v5_forward_metrics.json'
       - 'data/dashboard/wnba_v5_learning_state.json'
+      - 'data/dashboard/wnba_v5_forward_diagnostics.json'
+      - 'data/dashboard/wnba_v5_probability_recalibration.json'
       - 'data/dashboard/wnba_v5_production_status.json'
       - '.github/workflows/wnba-v5-s3-m05-evidence-dashboard.yml'
 jobs:
@@ -33,7 +35,7 @@ jobs:
         run: python -m py_compile wnba_v5_s3_m05_evidence_dashboard.py
       - name: Build evidence accumulation dashboard
         run: python wnba_v5_s3_m05_evidence_dashboard.py
-      - name: Verify Sprint 3 M05
+      - name: Verify Sprint 3 M05 canonical evidence contract
         run: |
           python - <<'PY'
           import json
@@ -43,9 +45,13 @@ jobs:
           assert p['module']=='S3-M05'
           assert p['status']=='READY'
           assert p['promotion_state'] in {'SHADOW','CANDIDATE','PRODUCTION_READY'}
-          assert p['progress']['graded_forward_predictions'] <= p['progress']['forward_predictions_total']
-          assert p['progress']['minimum_graded_forward_predictions']==300
-          assert p['progress']['minimum_explicit_clv_coverage_pct']==60.0
+          progress=p['progress']
+          assert progress['canonical_graded_forward_markets'] <= progress['canonical_forward_markets_total']
+          assert progress['minimum_canonical_graded_forward_markets']==300
+          assert progress['minimum_explicit_clv_coverage_pct']==60.0
+          assert p['performance']['evidence_unit']=='earliest_immutable_prediction_per_ranking_key'
+          assert 'canonical_forward_sample_gate' in p['gates']
+          assert p['production_ready'] == all(p['gates'].values())
           assert Path('data/dashboard/wnba_v5_evidence_dashboard.json').exists()
           assert Path('data/dashboard/wnba_v5_promotion_meter.json').exists()
           assert Path('data/dashboard/wnba_v5_evidence_history.csv').exists()
@@ -58,5 +64,8 @@ jobs:
           git add data/dashboard/wnba_v5_evidence_dashboard.json data/dashboard/wnba_v5_promotion_meter.json data/dashboard/wnba_v5_evidence_history.csv data/dashboard/wnba_v5_s3_m05_report.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Refresh WNBA V5 Sprint 3 M05 evidence dashboard"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            echo "retry $attempt"; sleep $((attempt*3))
+          done
+          exit 1
