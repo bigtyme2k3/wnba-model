@@ -1,0 +1,79 @@
+{
+  "version": "V5",
+  "module": "PROBABILITY_RECALIBRATION",
+  "stage": "SHADOW_MARKET_SHRINKAGE",
+  "status": "READY_SHADOW",
+  "generated_at_utc": "2026-08-18T01:08:36.775215+00:00",
+  "canonical_resolved_rows": 187,
+  "global_alpha": 0.0,
+  "interpretation": "alpha=0 means use market probability; alpha=1 means keep raw V5 probability.",
+  "global_in_sample": {
+    "n": 187,
+    "raw_v5_brier": 0.28532,
+    "market_brier": 0.25066,
+    "recalibrated_brier": 0.25066,
+    "raw_v5_log_loss": 0.771684,
+    "market_log_loss": 0.694699,
+    "recalibrated_log_loss": 0.694699
+  },
+  "by_side": {
+    "OVER": {
+      "alpha": 0.0,
+      "used_side_specific_fit": true,
+      "n": 94,
+      "raw_v5_brier": 0.296952,
+      "market_brier": 0.25063,
+      "recalibrated_brier": 0.25063,
+      "raw_v5_log_loss": 0.798593,
+      "market_log_loss": 0.694911,
+      "recalibrated_log_loss": 0.694911
+    },
+    "UNDER": {
+      "alpha": 0.08,
+      "used_side_specific_fit": true,
+      "n": 93,
+      "raw_v5_brier": 0.273563,
+      "market_brier": 0.25069,
+      "recalibrated_brier": 0.250508,
+      "raw_v5_log_loss": 0.744485,
+      "market_log_loss": 0.694484,
+      "recalibrated_log_loss": 0.694147
+    }
+  },
+  "chronological_expanding_date_evaluation": {
+    "n": 54,
+    "raw_v5_brier": 0.257907,
+    "market_brier": 0.243676,
+    "recalibrated_brier": 0.243676,
+    "dates": [
+      {
+        "date": "2026-08-13",
+        "train_n": 0,
+        "test_n": 38,
+        "status": "INSUFFICIENT_PRIOR_CANONICAL_ROWS"
+      },
+      {
+        "date": "2026-08-14",
+        "train_n": 38,
+        "test_n": 34,
+        "status": "INSUFFICIENT_PRIOR_CANONICAL_ROWS"
+      },
+      {
+        "date": "2026-08-15",
+        "train_n": 72,
+        "test_n": 61,
+        "status": "INSUFFICIENT_PRIOR_CANONICAL_ROWS"
+      },
+      {
+        "date": "2026-08-16",
+        "train_n": 133,
+        "test_n": 54,
+        "alpha": 0.0,
+        "status": "SCORED"
+      }
+    ]
+  },
+  "research_only": true,
+  "production_ready": false,
+  "promotion_policy": "Do not feed recalibrated probabilities into M10 until >=300 canonical resolved markets and chronological forward Brier is no worse than market."
+}
