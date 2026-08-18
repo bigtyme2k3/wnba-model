@@ -1,0 +1,56 @@
+name: WNBA V5 Forward Champion Challenger
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_forward_challenger.py'
+      - 'data/history/wnba_v5_forward_predictions.jsonl'
+      - '.github/workflows/wnba-v5-forward-challenger.yml'
+  schedule:
+    - cron: '52 11 * * *'
+concurrency:
+  group: v5-forward-challenger
+  cancel-in-progress: false
+jobs:
+  challenger:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest main
+        run: git pull --rebase origin main
+      - name: Compile challenger
+        run: python -m py_compile wnba_v5_forward_challenger.py
+      - name: Evaluate canonical forward challengers
+        run: python wnba_v5_forward_challenger.py
+      - name: Verify challenger report
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_forward_challenger.json'))
+          print(p)
+          assert p['module']=='FORWARD_CHAMPION_CHALLENGER'
+          assert p['research_only'] is True
+          assert p['production_ready'] is False
+          assert p['canonical_resolved_eligible_rows'] >= p['chronologically_scored_rows']
+          PY
+      - name: Publish challenger evidence safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 Challenger Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_forward_challenger.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 canonical forward challenger"
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            echo "retry $attempt"; sleep $((attempt*3))
+          done
+          exit 1
