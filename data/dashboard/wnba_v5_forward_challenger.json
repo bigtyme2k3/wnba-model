@@ -2,92 +2,171 @@
   "version": "V5",
   "module": "FORWARD_CHAMPION_CHALLENGER",
   "stage": "CANONICAL_CHRONOLOGICAL_SHADOW",
-  "generated_at_utc": "2026-08-18T12:06:29.015589+00:00",
-  "canonical_resolved_eligible_rows": 0,
+  "generated_at_utc": "2026-08-18T12:12:53.334697+00:00",
+  "canonical_resolved_rows": 195,
+  "canonical_resolved_eligible_rows": 195,
+  "canonical_rows_missing_issued_features": 0,
   "minimum_prior_canonical_rows": 60,
-  "chronologically_scored_rows": 0,
+  "chronologically_scored_rows": 135,
   "features": [
-    "market_implied_probability",
-    "line_minus_prior_mean",
-    "rolling3_actual_mean",
-    "rolling5_actual_mean",
-    "rolling5_actual_std",
-    "rolling5_trend_slope",
-    "historical_hit_rate_at_current_line",
-    "historical_hit_rate_l5_at_current_line",
-    "prior_games"
+    "market_probability",
+    "probability_edge",
+    "confidence_score",
+    "uncertainty_score",
+    "neighbor_count",
+    "neighbor_hit_rate",
+    "average_neighbor_distance",
+    "line",
+    "odds"
   ],
+  "feature_provenance": "immutable_fields_persisted_at_prediction_issuance",
+  "challenger_scope": "chronological recalibration of issued forward signal; no post-outcome feature reconstruction",
   "rankings": [
     {
-      "model": "MARKET",
-      "n": 0
-    },
-    {
-      "model": "RAW_KNN",
-      "n": 0
-    },
-    {
-      "model": "LOGISTIC_FORWARD",
-      "n": 0
+      "model": "CHALLENGER_ENSEMBLE",
+      "n": 135,
+      "brier": 0.242108,
+      "log_loss": 0.676926,
+      "accuracy": 0.585185,
+      "bets_at_0_5": 87,
+      "roi_at_0_5": 0.070275
     },
     {
       "model": "RIDGE_FORWARD",
-      "n": 0
+      "n": 135,
+      "brier": 0.245064,
+      "log_loss": 0.682397,
+      "accuracy": 0.518519,
+      "bets_at_0_5": 76,
+      "roi_at_0_5": -0.000998
     },
     {
-      "model": "CHALLENGER_ENSEMBLE",
-      "n": 0
+      "model": "MARKET",
+      "n": 135,
+      "brier": 0.245133,
+      "log_loss": 0.683576,
+      "accuracy": 0.57037,
+      "bets_at_0_5": 107,
+      "roi_at_0_5": -0.004555
+    },
+    {
+      "model": "LOGISTIC_FORWARD",
+      "n": 135,
+      "brier": 0.246985,
+      "log_loss": 0.685675,
+      "accuracy": 0.533333,
+      "bets_at_0_5": 76,
+      "roi_at_0_5": 0.020649
+    },
+    {
+      "model": "RAW_KNN",
+      "n": 135,
+      "brier": 0.279609,
+      "log_loss": 0.762836,
+      "accuracy": 0.518519,
+      "bets_at_0_5": 68,
+      "roi_at_0_5": -0.035065
     }
   ],
-  "forward_research_champion": "MARKET",
+  "forward_research_champion": "CHALLENGER_ENSEMBLE",
   "by_side": {
     "OVER": [
       {
         "model": "MARKET",
-        "n": 0
-      },
-      {
-        "model": "RAW_KNN",
-        "n": 0
-      },
-      {
-        "model": "LOGISTIC_FORWARD",
-        "n": 0
-      },
-      {
-        "model": "RIDGE_FORWARD",
-        "n": 0
+        "n": 68,
+        "brier": 0.245725,
+        "log_loss": 0.685078,
+        "accuracy": 0.544118,
+        "bets_at_0_5": 57,
+        "roi_at_0_5": -0.02639
       },
       {
         "model": "CHALLENGER_ENSEMBLE",
-        "n": 0
+        "n": 68,
+        "brier": 0.250098,
+        "log_loss": 0.693409,
+        "accuracy": 0.558824,
+        "bets_at_0_5": 40,
+        "roi_at_0_5": 0.064275
+      },
+      {
+        "model": "RIDGE_FORWARD",
+        "n": 68,
+        "brier": 0.253823,
+        "log_loss": 0.700665,
+        "accuracy": 0.5,
+        "bets_at_0_5": 34,
+        "roi_at_0_5": 0.000214
+      },
+      {
+        "model": "LOGISTIC_FORWARD",
+        "n": 68,
+        "brier": 0.261609,
+        "log_loss": 0.71713,
+        "accuracy": 0.5,
+        "bets_at_0_5": 34,
+        "roi_at_0_5": 0.000214
+      },
+      {
+        "model": "RAW_KNN",
+        "n": 68,
+        "brier": 0.294027,
+        "log_loss": 0.793731,
+        "accuracy": 0.5,
+        "bets_at_0_5": 40,
+        "roi_at_0_5": -0.052557
       }
     ],
     "UNDER": [
       {
-        "model": "MARKET",
-        "n": 0
-      },
-      {
-        "model": "RAW_KNN",
-        "n": 0
-      },
-      {
         "model": "LOGISTIC_FORWARD",
-        "n": 0
-      },
-      {
-        "model": "RIDGE_FORWARD",
-        "n": 0
+        "n": 67,
+        "brier": 0.232143,
+        "log_loss": 0.653751,
+        "accuracy": 0.567164,
+        "bets_at_0_5": 42,
+        "roi_at_0_5": 0.037192
       },
       {
         "model": "CHALLENGER_ENSEMBLE",
-        "n": 0
+        "n": 67,
+        "brier": 0.234,
+        "log_loss": 0.660197,
+        "accuracy": 0.61194,
+        "bets_at_0_5": 47,
+        "roi_at_0_5": 0.075382
+      },
+      {
+        "model": "RIDGE_FORWARD",
+        "n": 67,
+        "brier": 0.236174,
+        "log_loss": 0.663857,
+        "accuracy": 0.537313,
+        "bets_at_0_5": 42,
+        "roi_at_0_5": -0.001979
+      },
+      {
+        "model": "MARKET",
+        "n": 67,
+        "brier": 0.244533,
+        "log_loss": 0.682052,
+        "accuracy": 0.597015,
+        "bets_at_0_5": 50,
+        "roi_at_0_5": 0.020338
+      },
+      {
+        "model": "RAW_KNN",
+        "n": 67,
+        "brier": 0.264976,
+        "log_loss": 0.73148,
+        "accuracy": 0.537313,
+        "bets_at_0_5": 28,
+        "roi_at_0_5": -0.010077
       }
     ]
   },
   "production_ready": false,
   "research_only": true,
-  "policy": "Only earliest immutable prediction per ranking_key is eligible. Challenger fits use prior canonical resolved markets only. No production promotion from this module.",
+  "policy": "Only earliest immutable prediction per ranking_key is eligible. Fits use prior canonical resolved markets only. No production promotion from this module.",
   "promotion_note": "Require materially larger canonical sample and repeated chronological superiority before altering M10/M11."
 }
