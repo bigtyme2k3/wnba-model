@@ -1,41 +1,45 @@
 {
   "version": "V5",
   "module": "V5-M12",
-  "status": "WAITING_FOR_CERTIFIED_OUTCOMES",
-  "generated_at_utc": "2026-08-17T23:59:38.988560+00:00",
+  "status": "READY_FORWARD_LEARNING",
+  "generated_at_utc": "2026-08-18T00:32:27.154446+00:00",
   "research_champion": "KNN",
   "new_predictions_appended": 12,
-  "newly_graded": 0,
+  "newly_graded": 5872,
   "metrics": {
-    "forward_predictions": 6183,
-    "resolved_predictions": 0,
-    "binary_graded_predictions": 0,
+    "forward_predictions": 6195,
+    "resolved_predictions": 5872,
+    "binary_graded_predictions": 5872,
     "pushes": 0,
-    "pending_predictions": 6183,
-    "v5_brier": null,
-    "market_brier": null,
-    "v5_log_loss": null,
-    "market_log_loss": null,
-    "v5_ece_5bin": null,
-    "market_ece_5bin": null,
-    "v5_accuracy": null,
-    "market_accuracy": null,
-    "model_bets_at_0_5": 0,
-    "model_profit_units_at_0_5": 0.0,
-    "model_roi_at_0_5": null,
-    "positive_edge_bets": 0,
-    "positive_edge_profit_units": 0.0,
-    "positive_edge_roi": null
+    "pending_predictions": 323,
+    "v5_brier": 0.28989,
+    "market_brier": 0.249417,
+    "v5_log_loss": 0.783671,
+    "market_log_loss": 0.692124,
+    "v5_ece_5bin": 0.196053,
+    "market_ece_5bin": 0.01613,
+    "v5_accuracy": 0.484843,
+    "market_accuracy": 0.523161,
+    "model_bets_at_0_5": 2880,
+    "model_profit_units_at_0_5": -195.2187,
+    "model_roi_at_0_5": -0.067784,
+    "positive_edge_bets": 2446,
+    "positive_edge_profit_units": -318.8503,
+    "positive_edge_roi": -0.130356
   },
   "promotion_gate": {
     "production_ready": false,
     "minimum_forward_rows": 300,
-    "current_forward_rows": 0,
+    "current_forward_rows": 5872,
     "minimum_explicit_clv_coverage_pct": 60.0,
     "explicit_clv_coverage_pct": 0.0,
     "reason": "V4 remains production champion until >=300 graded forward predictions, >=60% explicit CLV coverage, and V5 beats market forward Brier."
   },
-  "learning_policy": "Append predictions before outcomes; grade only from later certified actuals; never rewrite issued probabilities.",
+  "learning_policy": "Append predictions before outcomes; grade only from later verified actuals; never rewrite issued probabilities.",
+  "actual_sources": [
+    "certified_v5_historical_feature_store",
+    "canonical_player_game_log_warehouse"
+  ],
   "next_module": "V5-M13 Production Readiness + Shadow Monitoring",
   "pending_examples": [
     {
@@ -81,21 +85,21 @@
       "side": "UNDER"
     },
     {
-      "date": "2026-08-13",
-      "player": "A'ja Wilson",
-      "stat": "RA",
+      "date": "2026-08-15",
+      "player": "Sabrina Ionescu",
+      "stat": "AST",
       "side": "OVER"
     },
     {
-      "date": "2026-08-13",
-      "player": "A'ja Wilson",
-      "stat": "RA",
+      "date": "2026-08-15",
+      "player": "Sabrina Ionescu",
+      "stat": "AST",
       "side": "OVER"
     },
     {
-      "date": "2026-08-13",
-      "player": "A'ja Wilson",
-      "stat": "RA",
+      "date": "2026-08-15",
+      "player": "Sabrina Ionescu",
+      "stat": "AST",
       "side": "OVER"
     }
   ]
