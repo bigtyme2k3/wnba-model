@@ -1,0 +1,53 @@
+name: WNBA V5 TeamRankings Historical Features
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'data/warehouse/teamrankings/historical/**'
+      - 'data/warehouse/teamrankings/historical_matchup_manifest.json'
+      - 'wnba_v5_teamrankings_historical_feature_parser.py'
+      - '.github/workflows/wnba-v5-teamrankings-historical-features.yml'
+permissions:
+  contents: write
+concurrency:
+  group: wnba-v5-teamrankings-historical-features
+  cancel-in-progress: false
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile parser
+        run: python -m py_compile wnba_v5_teamrankings_historical_feature_parser.py
+      - name: Parse frozen historical evidence
+        run: python wnba_v5_teamrankings_historical_feature_parser.py
+      - name: Verify leakage-safe feature evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_v5_teamrankings_historical_features.json').read_text())
+          assert p['research_only'] is True and p['production_ready'] is False and p['lookahead_safe'] is True
+          assert p['games_manifest']>=57
+          assert p['games_parsed']>0
+          print({'manifest':p['games_manifest'],'parsed':p['games_parsed'],'without_metrics':p['games_without_metrics']})
+          PY
+      - name: Publish parsed historical evidence
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 Historical Feature Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_v5_teamrankings_historical_features.json data/warehouse/teamrankings/historical_features
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Freeze V5 historical TeamRankings feature evidence'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*3))
+          done
+          exit 1
