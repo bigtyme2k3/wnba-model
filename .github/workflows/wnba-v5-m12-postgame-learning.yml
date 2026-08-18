@@ -10,6 +10,9 @@ on:
       - 'data/dashboard/wnba_v5_live_inference.json'
       - 'data/dashboard/wnba_v5_historical_features.csv'
       - '.github/workflows/wnba-v5-m12-postgame-learning.yml'
+concurrency:
+  group: v5-forward-learning-writer
+  cancel-in-progress: false
 jobs:
   build-v5-m12:
     runs-on: ubuntu-latest
