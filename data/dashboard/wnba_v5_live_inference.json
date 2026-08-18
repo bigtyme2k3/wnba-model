@@ -3,455 +3,22 @@
     "version": "V5",
     "module": "V5-M11",
     "stage": "LIVE_V5_INFERENCE",
-    "status": "READY_SHADOW",
-    "generated_at_utc": "2026-08-18T03:58:30.307128+00:00",
+    "status": "BLOCKED_STALE_SLATE",
+    "generated_at_utc": "2026-08-18T04:52:26.976011+00:00",
     "target_date": "2026-08-17",
     "ranked_rows": 210,
-    "scored_rows": 12,
-    "unscored_rows": 198,
-    "scoring_coverage_pct": 5.71,
+    "scored_rows": 0,
+    "unscored_rows": 210,
+    "scoring_coverage_pct": 0.0,
     "research_champion": "KNN",
-    "training_rows": 123,
-    "freshness_guard_status": "FRESH",
-    "leakage_policy": "Live rolling features use only certified player/stat games strictly before target_date.",
+    "training_rows": null,
+    "freshness_guard_status": "STALE_BLOCKED",
+    "freshness_reason": "Ranked board contains no exclusively current-date slate and must not be scored.",
     "research_only": true,
     "production_ready": false,
-    "next_module": "V5-M12 Post-Game Learning + Forward Validation"
+    "next_action": "REFRESH_CURRENT_OPPORTUNITY_BOARD"
   },
-  "scored": [
-    {
-      "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|3pm|over",
-      "date": "2026-08-17",
-      "player": "Janelle Salaun",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "3PM",
-      "side": "OVER",
-      "line": 1.5,
-      "odds": -152.0,
-      "best_book": "BetRivers",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.395173,
-      "v5_probability": 0.395173,
-      "market_implied_probability": 0.603175,
-      "probability_edge": -0.208002,
-      "probability_band": "<50%",
-      "confidence_score": 0.148888,
-      "uncertainty_score": 0.977776,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 1.755226,
-      "feature_snapshot": {
-        "market_implied_probability": 0.603175,
-        "line_minus_prior_mean": -0.75,
-        "rolling3_actual_mean": 2.333333,
-        "rolling5_actual_mean": 2.25,
-        "rolling5_actual_std": 1.089725,
-        "rolling5_trend_slope": 0.7,
-        "historical_hit_rate_at_current_line": 0.75,
-        "historical_hit_rate_l5_at_current_line": 0.75,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|3pm|under",
-      "date": "2026-08-17",
-      "player": "Janelle Salaun",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "3PM",
-      "side": "UNDER",
-      "line": 1.5,
-      "odds": 120.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.556564,
-      "v5_probability": 0.556564,
-      "market_implied_probability": 0.454545,
-      "probability_edge": 0.102018,
-      "probability_band": "55-59.9%",
-      "confidence_score": 0.119859,
-      "uncertainty_score": 0.99358,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 3.203318,
-      "feature_snapshot": {
-        "market_implied_probability": 0.454545,
-        "line_minus_prior_mean": -0.75,
-        "rolling3_actual_mean": 2.333333,
-        "rolling5_actual_mean": 2.25,
-        "rolling5_actual_std": 1.089725,
-        "rolling5_trend_slope": 0.7,
-        "historical_hit_rate_at_current_line": 0.25,
-        "historical_hit_rate_l5_at_current_line": 0.25,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ast|over",
-      "date": "2026-08-17",
-      "player": "Jessica Shepard",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "AST",
-      "side": "OVER",
-      "line": 3.5,
-      "odds": -152.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.642712,
-      "v5_probability": 0.642712,
-      "market_implied_probability": 0.603175,
-      "probability_edge": 0.039537,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.166188,
-      "uncertainty_score": 0.958402,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 1.535975,
-      "feature_snapshot": {
-        "market_implied_probability": 0.603175,
-        "line_minus_prior_mean": -2.5,
-        "rolling3_actual_mean": 6.0,
-        "rolling5_actual_mean": 6.0,
-        "rolling5_actual_std": 1.224745,
-        "rolling5_trend_slope": 0.6,
-        "historical_hit_rate_at_current_line": 1.0,
-        "historical_hit_rate_l5_at_current_line": 1.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ast|over",
-      "date": "2026-08-17",
-      "player": "Jessica Shepard",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "AST",
-      "side": "OVER",
-      "line": 4.5,
-      "odds": 128.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.536458,
-      "v5_probability": 0.536458,
-      "market_implied_probability": 0.438596,
-      "probability_edge": 0.097861,
-      "probability_band": "50-54.9%",
-      "confidence_score": 0.12478,
-      "uncertainty_score": 0.997338,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 2.484312,
-      "feature_snapshot": {
-        "market_implied_probability": 0.438596,
-        "line_minus_prior_mean": -1.5,
-        "rolling3_actual_mean": 6.0,
-        "rolling5_actual_mean": 6.0,
-        "rolling5_actual_std": 1.224745,
-        "rolling5_trend_slope": 0.6,
-        "historical_hit_rate_at_current_line": 1.0,
-        "historical_hit_rate_l5_at_current_line": 1.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ast|under",
-      "date": "2026-08-17",
-      "player": "Jessica Shepard",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 3.5,
-      "odds": 112.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.553957,
-      "v5_probability": 0.553957,
-      "market_implied_probability": 0.471698,
-      "probability_edge": 0.082259,
-      "probability_band": "55-59.9%",
-      "confidence_score": 0.1143,
-      "uncertainty_score": 0.99416,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 3.917298,
-      "feature_snapshot": {
-        "market_implied_probability": 0.471698,
-        "line_minus_prior_mean": -2.5,
-        "rolling3_actual_mean": 6.0,
-        "rolling5_actual_mean": 6.0,
-        "rolling5_actual_std": 1.224745,
-        "rolling5_trend_slope": 0.6,
-        "historical_hit_rate_at_current_line": 0.0,
-        "historical_hit_rate_l5_at_current_line": 0.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ast|under",
-      "date": "2026-08-17",
-      "player": "Jessica Shepard",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 4.5,
-      "odds": -148.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.605502,
-      "v5_probability": 0.605502,
-      "market_implied_probability": 0.596774,
-      "probability_edge": 0.008728,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.126955,
-      "uncertainty_score": 0.977485,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 3.641052,
-      "feature_snapshot": {
-        "market_implied_probability": 0.596774,
-        "line_minus_prior_mean": -1.5,
-        "rolling3_actual_mean": 6.0,
-        "rolling5_actual_mean": 6.0,
-        "rolling5_actual_std": 1.224745,
-        "rolling5_trend_slope": 0.6,
-        "historical_hit_rate_at_current_line": 0.0,
-        "historical_hit_rate_l5_at_current_line": 0.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pra|over",
-      "date": "2026-08-17",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 27.5,
-      "odds": -130.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.316611,
-      "v5_probability": 0.316611,
-      "market_implied_probability": 0.565217,
-      "probability_edge": -0.248607,
-      "probability_band": "<50%",
-      "confidence_score": 0.138167,
-      "uncertainty_score": 0.930308,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.333333,
-      "average_neighbor_distance": 3.563856,
-      "feature_snapshot": {
-        "market_implied_probability": 0.565217,
-        "line_minus_prior_mean": 4.5,
-        "rolling3_actual_mean": 23.0,
-        "rolling5_actual_mean": 23.0,
-        "rolling5_actual_std": 7.25718,
-        "rolling5_trend_slope": -6.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pra|over",
-      "date": "2026-08-17",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 28.5,
-      "odds": -108.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.313649,
-      "v5_probability": 0.313649,
-      "market_implied_probability": 0.519231,
-      "probability_edge": -0.205582,
-      "probability_band": "<50%",
-      "confidence_score": 0.139583,
-      "uncertainty_score": 0.927951,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.333333,
-      "average_neighbor_distance": 3.580006,
-      "feature_snapshot": {
-        "market_implied_probability": 0.519231,
-        "line_minus_prior_mean": 5.5,
-        "rolling3_actual_mean": 23.0,
-        "rolling5_actual_mean": 23.0,
-        "rolling5_actual_std": 7.25718,
-        "rolling5_trend_slope": -6.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pra|under",
-      "date": "2026-08-17",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 27.5,
-      "odds": -102.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.126495,
-      "v5_probability": 0.126495,
-      "market_implied_probability": 0.50495,
-      "probability_edge": -0.378456,
-      "probability_band": "<50%",
-      "confidence_score": 0.3156,
-      "uncertainty_score": 0.664813,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.133333,
-      "average_neighbor_distance": 2.975863,
-      "feature_snapshot": {
-        "market_implied_probability": 0.50495,
-        "line_minus_prior_mean": 4.5,
-        "rolling3_actual_mean": 23.0,
-        "rolling5_actual_mean": 23.0,
-        "rolling5_actual_std": 7.25718,
-        "rolling5_trend_slope": -6.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pra|under",
-      "date": "2026-08-17",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 28.5,
-      "odds": -110.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.125648,
-      "v5_probability": 0.125648,
-      "market_implied_probability": 0.52381,
-      "probability_edge": -0.398162,
-      "probability_band": "<50%",
-      "confidence_score": 0.316878,
-      "uncertainty_score": 0.662904,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.133333,
-      "average_neighbor_distance": 2.971847,
-      "feature_snapshot": {
-        "market_implied_probability": 0.52381,
-        "line_minus_prior_mean": 5.5,
-        "rolling3_actual_mean": 23.0,
-        "rolling5_actual_mean": 23.0,
-        "rolling5_actual_std": 7.25718,
-        "rolling5_trend_slope": -6.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|ra|over",
-      "date": "2026-08-17",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "RA",
-      "side": "OVER",
-      "line": 9.5,
-      "odds": 103.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.686546,
-      "v5_probability": 0.686546,
-      "market_implied_probability": 0.492611,
-      "probability_edge": 0.193935,
-      "probability_band": "65-69.9%",
-      "confidence_score": 0.15051,
-      "uncertainty_score": 0.927795,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 2.442182,
-      "feature_snapshot": {
-        "market_implied_probability": 0.492611,
-        "line_minus_prior_mean": 1.5,
-        "rolling3_actual_mean": 8.0,
-        "rolling5_actual_mean": 8.0,
-        "rolling5_actual_std": 1.414214,
-        "rolling5_trend_slope": -1.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|ra|under",
-      "date": "2026-08-17",
-      "player": "Paige Bueckers",
-      "game": "Dallas Wings @ Golden State Valkyries",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 9.5,
-      "odds": -132.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.426231,
-      "v5_probability": 0.426231,
-      "market_implied_probability": 0.568966,
-      "probability_edge": -0.142734,
-      "probability_band": "<50%",
-      "confidence_score": 0.126636,
-      "uncertainty_score": 0.989057,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 1.52005,
-      "feature_snapshot": {
-        "market_implied_probability": 0.568966,
-        "line_minus_prior_mean": 1.5,
-        "rolling3_actual_mean": 8.0,
-        "rolling5_actual_mean": 8.0,
-        "rolling5_actual_std": 1.414214,
-        "rolling5_trend_slope": -1.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    }
-  ],
+  "scored": [],
   "unscored": [
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|3pm|over",
@@ -463,9 +30,9 @@
       "line": 0.5,
       "odds": -240.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|3pm|over",
@@ -477,9 +44,9 @@
       "line": 1.5,
       "odds": 149.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|3pm|under",
@@ -491,9 +58,9 @@
       "line": 1.5,
       "odds": -196.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|ast|over",
@@ -505,9 +72,9 @@
       "line": 1.5,
       "odds": -141.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pa|over",
@@ -519,9 +86,9 @@
       "line": 12.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pa|under",
@@ -533,9 +100,9 @@
       "line": 12.5,
       "odds": -125.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pr|over",
@@ -547,9 +114,9 @@
       "line": 17.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pr|under",
@@ -561,9 +128,9 @@
       "line": 17.5,
       "odds": -122.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pra|over",
@@ -575,9 +142,9 @@
       "line": 18.5,
       "odds": -130.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pra|over",
@@ -589,9 +156,9 @@
       "line": 19.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pra|under",
@@ -603,9 +170,9 @@
       "line": 18.5,
       "odds": 101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pra|under",
@@ -617,9 +184,9 @@
       "line": 19.5,
       "odds": -124.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pts|over",
@@ -631,9 +198,9 @@
       "line": 10.5,
       "odds": -101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pts|over",
@@ -645,9 +212,9 @@
       "line": 11.5,
       "odds": 115.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|pts|under",
@@ -659,9 +226,9 @@
       "line": 10.5,
       "odds": -120.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|ra|over",
@@ -673,9 +240,9 @@
       "line": 8.5,
       "odds": -123.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|ra|under",
@@ -687,9 +254,9 @@
       "line": 8.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|reb|over",
@@ -701,9 +268,9 @@
       "line": 6.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|reb|over",
@@ -715,9 +282,9 @@
       "line": 7.5,
       "odds": 110.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|alanna smith|dallas wings @ golden state valkyries|reb|under",
@@ -729,9 +296,9 @@
       "line": 6.5,
       "odds": -105.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|3pm|over",
@@ -743,9 +310,9 @@
       "line": 1.5,
       "odds": -150.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|3pm|under",
@@ -757,9 +324,9 @@
       "line": 1.5,
       "odds": 122.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|ast|over",
@@ -771,9 +338,9 @@
       "line": 2.5,
       "odds": -138.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|ast|over",
@@ -785,9 +352,9 @@
       "line": 3.5,
       "odds": 139.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|ast|under",
@@ -799,9 +366,9 @@
       "line": 2.5,
       "odds": 116.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|ast|under",
@@ -813,9 +380,9 @@
       "line": 3.5,
       "odds": -182.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pa|over",
@@ -827,9 +394,9 @@
       "line": 18.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pa|under",
@@ -841,9 +408,9 @@
       "line": 18.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pr|over",
@@ -855,9 +422,9 @@
       "line": 18.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pr|under",
@@ -869,9 +436,9 @@
       "line": 18.5,
       "odds": -112.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pra|over",
@@ -883,9 +450,9 @@
       "line": 21.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pra|under",
@@ -897,9 +464,9 @@
       "line": 21.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pts|over",
@@ -911,9 +478,9 @@
       "line": 14.5,
       "odds": -134.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pts|over",
@@ -925,9 +492,9 @@
       "line": 15.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pts|over",
@@ -939,9 +506,9 @@
       "line": 16.5,
       "odds": 120.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|pts|under",
@@ -953,9 +520,9 @@
       "line": 15.5,
       "odds": -123.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|ra|over",
@@ -967,9 +534,9 @@
       "line": 5.5,
       "odds": -158.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|ra|over",
@@ -981,9 +548,9 @@
       "line": 6.5,
       "odds": 104.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|ra|under",
@@ -995,9 +562,9 @@
       "line": 5.5,
       "odds": 118.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|ra|under",
@@ -1009,9 +576,9 @@
       "line": 6.5,
       "odds": -142.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|reb|over",
@@ -1023,9 +590,9 @@
       "line": 3.5,
       "odds": 132.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|arike ogunbowale|dallas wings @ golden state valkyries|reb|under",
@@ -1037,9 +604,9 @@
       "line": 3.5,
       "odds": -159.0,
       "best_book": "Caesars",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|3pm|over",
@@ -1051,9 +618,9 @@
       "line": 1.5,
       "odds": 125.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|3pm|under",
@@ -1065,9 +632,9 @@
       "line": 1.5,
       "odds": -158.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pa|over",
@@ -1079,9 +646,9 @@
       "line": 11.5,
       "odds": -120.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pa|under",
@@ -1093,9 +660,9 @@
       "line": 11.5,
       "odds": -113.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pr|over",
@@ -1107,9 +674,9 @@
       "line": 11.5,
       "odds": -120.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pr|over",
@@ -1121,9 +688,9 @@
       "line": 12.5,
       "odds": -103.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pr|under",
@@ -1135,9 +702,9 @@
       "line": 11.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pr|under",
@@ -1149,9 +716,9 @@
       "line": 12.5,
       "odds": -132.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pra|over",
@@ -1163,9 +730,9 @@
       "line": 13.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pra|over",
@@ -1177,9 +744,9 @@
       "line": 14.5,
       "odds": 100.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pra|under",
@@ -1191,9 +758,9 @@
       "line": 13.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pra|under",
@@ -1205,9 +772,9 @@
       "line": 14.5,
       "odds": -130.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pts|over",
@@ -1219,9 +786,9 @@
       "line": 9.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|pts|under",
@@ -1233,9 +800,9 @@
       "line": 9.5,
       "odds": -112.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|reb|over",
@@ -1247,9 +814,9 @@
       "line": 2.5,
       "odds": 125.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|cecilia zandalasini|dallas wings @ golden state valkyries|reb|under",
@@ -1261,9 +828,9 @@
       "line": 2.5,
       "odds": -147.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|3pm|over",
@@ -1275,9 +842,9 @@
       "line": 1.5,
       "odds": 120.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|3pm|under",
@@ -1289,9 +856,9 @@
       "line": 1.5,
       "odds": -151.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|ast|over",
@@ -1303,9 +870,9 @@
       "line": 2.5,
       "odds": 111.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|ast|under",
@@ -1317,9 +884,9 @@
       "line": 2.5,
       "odds": -151.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pa|over",
@@ -1331,9 +898,9 @@
       "line": 15.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pa|under",
@@ -1345,9 +912,9 @@
       "line": 15.5,
       "odds": -119.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pr|over",
@@ -1359,9 +926,9 @@
       "line": 15.5,
       "odds": -120.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pr|under",
@@ -1373,9 +940,9 @@
       "line": 15.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pra|over",
@@ -1387,9 +954,9 @@
       "line": 17.5,
       "odds": -116.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pra|over",
@@ -1401,9 +968,9 @@
       "line": 18.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pra|under",
@@ -1415,9 +982,9 @@
       "line": 17.5,
       "odds": -111.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pra|under",
@@ -1429,9 +996,9 @@
       "line": 18.5,
       "odds": -122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pts|over",
@@ -1443,9 +1010,9 @@
       "line": 12.5,
       "odds": -129.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pts|over",
@@ -1457,9 +1024,9 @@
       "line": 13.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pts|under",
@@ -1471,9 +1038,9 @@
       "line": 12.5,
       "odds": -102.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|pts|under",
@@ -1485,9 +1052,9 @@
       "line": 13.5,
       "odds": -122.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|reb|over",
@@ -1499,9 +1066,9 @@
       "line": 2.5,
       "odds": -105.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|gabby williams|dallas wings @ golden state valkyries|reb|under",
@@ -1513,9 +1080,37 @@
       "line": 2.5,
       "odds": -121.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|3pm|over",
+      "date": "2026-08-17",
+      "player": "Janelle Salaun",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "3PM",
+      "side": "OVER",
+      "line": 1.5,
+      "odds": -152.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|3pm|under",
+      "date": "2026-08-17",
+      "player": "Janelle Salaun",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "3PM",
+      "side": "UNDER",
+      "line": 1.5,
+      "odds": 120.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|pr|over",
@@ -1527,9 +1122,9 @@
       "line": 14.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|pr|under",
@@ -1541,9 +1136,9 @@
       "line": 14.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|pra|over",
@@ -1555,9 +1150,9 @@
       "line": 15.5,
       "odds": -109.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|pra|under",
@@ -1569,9 +1164,9 @@
       "line": 15.5,
       "odds": -119.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|pts|over",
@@ -1583,9 +1178,9 @@
       "line": 10.5,
       "odds": -118.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|pts|over",
@@ -1597,9 +1192,9 @@
       "line": 11.5,
       "odds": 112.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|pts|under",
@@ -1611,9 +1206,9 @@
       "line": 10.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|reb|over",
@@ -1625,9 +1220,9 @@
       "line": 3.5,
       "odds": 115.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|janelle salaun|dallas wings @ golden state valkyries|reb|under",
@@ -1639,9 +1234,65 @@
       "line": 3.5,
       "odds": -139.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ast|over",
+      "date": "2026-08-17",
+      "player": "Jessica Shepard",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "AST",
+      "side": "OVER",
+      "line": 3.5,
+      "odds": -152.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ast|over",
+      "date": "2026-08-17",
+      "player": "Jessica Shepard",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "AST",
+      "side": "OVER",
+      "line": 4.5,
+      "odds": 128.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ast|under",
+      "date": "2026-08-17",
+      "player": "Jessica Shepard",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 3.5,
+      "odds": 112.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ast|under",
+      "date": "2026-08-17",
+      "player": "Jessica Shepard",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 4.5,
+      "odds": -148.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pa|over",
@@ -1653,9 +1304,9 @@
       "line": 15.5,
       "odds": -120.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pa|over",
@@ -1667,9 +1318,9 @@
       "line": 16.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pa|under",
@@ -1681,9 +1332,9 @@
       "line": 15.5,
       "odds": -113.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pa|under",
@@ -1695,9 +1346,9 @@
       "line": 16.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pr|over",
@@ -1709,9 +1360,9 @@
       "line": 21.5,
       "odds": -112.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pr|over",
@@ -1723,9 +1374,9 @@
       "line": 22.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pr|under",
@@ -1737,9 +1388,9 @@
       "line": 21.5,
       "odds": -121.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pr|under",
@@ -1751,9 +1402,9 @@
       "line": 22.5,
       "odds": -125.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pra|over",
@@ -1765,9 +1416,9 @@
       "line": 25.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pra|over",
@@ -1779,9 +1430,9 @@
       "line": 26.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pra|under",
@@ -1793,9 +1444,9 @@
       "line": 25.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pra|under",
@@ -1807,9 +1458,9 @@
       "line": 26.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pts|over",
@@ -1821,9 +1472,9 @@
       "line": 11.5,
       "odds": -110.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pts|over",
@@ -1835,9 +1486,9 @@
       "line": 12.5,
       "odds": 123.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|pts|under",
@@ -1849,9 +1500,9 @@
       "line": 11.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ra|over",
@@ -1863,9 +1514,9 @@
       "line": 13.5,
       "odds": -129.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ra|over",
@@ -1877,9 +1528,9 @@
       "line": 14.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ra|under",
@@ -1891,9 +1542,9 @@
       "line": 13.5,
       "odds": -105.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|ra|under",
@@ -1905,9 +1556,9 @@
       "line": 14.5,
       "odds": -120.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|reb|over",
@@ -1919,9 +1570,9 @@
       "line": 9.5,
       "odds": -124.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|reb|over",
@@ -1933,9 +1584,9 @@
       "line": 10.5,
       "odds": -104.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|jessica shepard|dallas wings @ golden state valkyries|reb|under",
@@ -1947,9 +1598,9 @@
       "line": 9.5,
       "odds": 108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|3pm|over",
@@ -1961,9 +1612,9 @@
       "line": 1.5,
       "odds": -117.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|3pm|under",
@@ -1975,9 +1626,9 @@
       "line": 1.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|pr|over",
@@ -1989,9 +1640,9 @@
       "line": 14.5,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|pr|under",
@@ -2003,9 +1654,9 @@
       "line": 14.5,
       "odds": -122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|pra|over",
@@ -2017,9 +1668,9 @@
       "line": 15.5,
       "odds": -108.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|pra|under",
@@ -2031,9 +1682,9 @@
       "line": 15.5,
       "odds": -120.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|pts|over",
@@ -2045,9 +1696,9 @@
       "line": 8.5,
       "odds": -110.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|pts|over",
@@ -2059,9 +1710,9 @@
       "line": 9.5,
       "odds": 108.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|pts|under",
@@ -2073,9 +1724,9 @@
       "line": 8.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|reb|over",
@@ -2087,9 +1738,9 @@
       "line": 5.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kayla thornton|dallas wings @ golden state valkyries|reb|under",
@@ -2101,9 +1752,9 @@
       "line": 5.5,
       "odds": -121.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|pr|over",
@@ -2115,9 +1766,9 @@
       "line": 11.5,
       "odds": 102.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|pr|under",
@@ -2129,9 +1780,9 @@
       "line": 11.5,
       "odds": -138.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|pra|over",
@@ -2143,9 +1794,9 @@
       "line": 12.5,
       "odds": -133.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|pra|under",
@@ -2157,9 +1808,9 @@
       "line": 12.5,
       "odds": 103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|pts|over",
@@ -2171,9 +1822,9 @@
       "line": 4.5,
       "odds": -145.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|pts|over",
@@ -2185,9 +1836,9 @@
       "line": 5.5,
       "odds": 109.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|pts|under",
@@ -2199,9 +1850,9 @@
       "line": 4.5,
       "odds": 109.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|pts|under",
@@ -2213,9 +1864,9 @@
       "line": 5.5,
       "odds": -141.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|reb|over",
@@ -2227,9 +1878,9 @@
       "line": 5.5,
       "odds": -132.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|kiah stokes|dallas wings @ golden state valkyries|reb|under",
@@ -2241,9 +1892,9 @@
       "line": 5.5,
       "odds": 108.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|ast|over",
@@ -2255,9 +1906,9 @@
       "line": 2.5,
       "odds": -149.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|ast|over",
@@ -2269,9 +1920,9 @@
       "line": 3.5,
       "odds": 128.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|ast|under",
@@ -2283,9 +1934,9 @@
       "line": 2.5,
       "odds": 110.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|ast|under",
@@ -2297,9 +1948,9 @@
       "line": 3.5,
       "odds": -154.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pa|over",
@@ -2311,9 +1962,9 @@
       "line": 12.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pa|under",
@@ -2325,9 +1976,9 @@
       "line": 12.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pr|over",
@@ -2339,9 +1990,9 @@
       "line": 11.5,
       "odds": -119.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pr|under",
@@ -2353,9 +2004,9 @@
       "line": 11.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pra|over",
@@ -2367,9 +2018,9 @@
       "line": 14.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pra|over",
@@ -2381,9 +2032,9 @@
       "line": 15.5,
       "odds": 106.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pra|under",
@@ -2395,9 +2046,9 @@
       "line": 14.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pra|under",
@@ -2409,9 +2060,9 @@
       "line": 15.5,
       "odds": -128.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pts|over",
@@ -2423,9 +2074,9 @@
       "line": 9.5,
       "odds": 105.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pts|over",
@@ -2437,9 +2088,9 @@
       "line": 10.5,
       "odds": 125.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|pts|under",
@@ -2451,9 +2102,9 @@
       "line": 9.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|ra|over",
@@ -2465,9 +2116,9 @@
       "line": 5.5,
       "odds": 111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|ra|under",
@@ -2479,9 +2130,9 @@
       "line": 5.5,
       "odds": -151.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|reb|over",
@@ -2493,9 +2144,9 @@
       "line": 2.5,
       "odds": 130.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|odyssey sims|dallas wings @ golden state valkyries|reb|under",
@@ -2507,9 +2158,9 @@
       "line": 2.5,
       "odds": -178.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|3pm|over",
@@ -2521,9 +2172,9 @@
       "line": 1.5,
       "odds": 103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|3pm|under",
@@ -2535,9 +2186,9 @@
       "line": 1.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|ast|over",
@@ -2549,9 +2200,9 @@
       "line": 5.5,
       "odds": 110.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|ast|under",
@@ -2563,9 +2214,9 @@
       "line": 5.5,
       "odds": -128.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pa|over",
@@ -2577,9 +2228,9 @@
       "line": 23.5,
       "odds": -128.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pa|over",
@@ -2591,9 +2242,9 @@
       "line": 24.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pa|under",
@@ -2605,9 +2256,9 @@
       "line": 23.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pa|under",
@@ -2619,9 +2270,9 @@
       "line": 24.5,
       "odds": -128.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pr|over",
@@ -2633,9 +2284,9 @@
       "line": 22.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pr|under",
@@ -2647,9 +2298,65 @@
       "line": 22.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pra|over",
+      "date": "2026-08-17",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 27.5,
+      "odds": -130.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pra|over",
+      "date": "2026-08-17",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 28.5,
+      "odds": -108.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pra|under",
+      "date": "2026-08-17",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 27.5,
+      "odds": -102.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pra|under",
+      "date": "2026-08-17",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 28.5,
+      "odds": -110.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pts|over",
@@ -2661,9 +2368,9 @@
       "line": 17.5,
       "odds": -162.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pts|over",
@@ -2675,9 +2382,9 @@
       "line": 18.5,
       "odds": -111.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pts|over",
@@ -2689,9 +2396,9 @@
       "line": 19.5,
       "odds": -103.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|pts|under",
@@ -2703,9 +2410,37 @@
       "line": 18.5,
       "odds": 103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|ra|over",
+      "date": "2026-08-17",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "RA",
+      "side": "OVER",
+      "line": 9.5,
+      "odds": 103.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|ra|under",
+      "date": "2026-08-17",
+      "player": "Paige Bueckers",
+      "game": "Dallas Wings @ Golden State Valkyries",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 9.5,
+      "odds": -132.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|reb|over",
@@ -2717,9 +2452,9 @@
       "line": 3.5,
       "odds": -143.0,
       "best_book": "Caesars",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|paige bueckers|dallas wings @ golden state valkyries|reb|under",
@@ -2731,9 +2466,9 @@
       "line": 3.5,
       "odds": 120.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|pr|over",
@@ -2745,9 +2480,9 @@
       "line": 12.5,
       "odds": -110.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|pr|under",
@@ -2759,9 +2494,9 @@
       "line": 12.5,
       "odds": -123.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|pra|over",
@@ -2773,9 +2508,9 @@
       "line": 15.5,
       "odds": -118.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|pra|under",
@@ -2787,9 +2522,9 @@
       "line": 15.5,
       "odds": -110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|pts|over",
@@ -2801,9 +2536,9 @@
       "line": 9.5,
       "odds": -120.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|pts|over",
@@ -2815,9 +2550,9 @@
       "line": 10.5,
       "odds": 108.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|pts|under",
@@ -2829,9 +2564,9 @@
       "line": 9.5,
       "odds": 105.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|pts|under",
@@ -2843,9 +2578,9 @@
       "line": 10.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|reb|over",
@@ -2857,9 +2592,9 @@
       "line": 2.5,
       "odds": 112.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|tiffany hayes|dallas wings @ golden state valkyries|reb|under",
@@ -2871,9 +2606,9 @@
       "line": 2.5,
       "odds": -145.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|3pm|over",
@@ -2885,9 +2620,9 @@
       "line": 1.5,
       "odds": 144.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|3pm|under",
@@ -2899,9 +2634,9 @@
       "line": 1.5,
       "odds": -182.0,
       "best_book": "Caesars",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|ast|over",
@@ -2913,9 +2648,9 @@
       "line": 5.5,
       "odds": -159.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|ast|over",
@@ -2927,9 +2662,9 @@
       "line": 6.5,
       "odds": 118.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|ast|under",
@@ -2941,9 +2676,9 @@
       "line": 6.5,
       "odds": -129.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pa|over",
@@ -2955,9 +2690,9 @@
       "line": 19.5,
       "odds": -128.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pa|over",
@@ -2969,9 +2704,9 @@
       "line": 20.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pa|under",
@@ -2983,9 +2718,9 @@
       "line": 19.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pa|under",
@@ -2997,9 +2732,9 @@
       "line": 20.5,
       "odds": -123.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pr|over",
@@ -3011,9 +2746,9 @@
       "line": 17.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pr|under",
@@ -3025,9 +2760,9 @@
       "line": 17.5,
       "odds": -119.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pra|over",
@@ -3039,9 +2774,9 @@
       "line": 22.5,
       "odds": -136.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pra|over",
@@ -3053,9 +2788,9 @@
       "line": 23.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pra|over",
@@ -3067,9 +2802,9 @@
       "line": 24.5,
       "odds": -103.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pra|under",
@@ -3081,9 +2816,9 @@
       "line": 23.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pra|under",
@@ -3095,9 +2830,9 @@
       "line": 24.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pts|over",
@@ -3109,9 +2844,9 @@
       "line": 12.5,
       "odds": -143.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pts|over",
@@ -3123,9 +2858,9 @@
       "line": 13.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|pts|under",
@@ -3137,9 +2872,9 @@
       "line": 13.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|ra|over",
@@ -3151,9 +2886,9 @@
       "line": 9.5,
       "odds": -138.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|ra|over",
@@ -3165,9 +2900,9 @@
       "line": 10.5,
       "odds": 102.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|ra|under",
@@ -3179,9 +2914,9 @@
       "line": 9.5,
       "odds": 104.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|ra|under",
@@ -3193,9 +2928,9 @@
       "line": 10.5,
       "odds": -139.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|reb|over",
@@ -3207,9 +2942,9 @@
       "line": 3.5,
       "odds": -112.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-17|veronica burton|dallas wings @ golden state valkyries|reb|under",
@@ -3221,9 +2956,9 @@
       "line": 3.5,
       "odds": -105.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     }
   ]
 }
