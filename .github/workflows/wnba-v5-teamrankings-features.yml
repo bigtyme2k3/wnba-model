@@ -1,0 +1,54 @@
+name: WNBA V5 TeamRankings Feature Layer
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'data/dashboard/wnba_v5_team_matchup_intelligence.json'
+      - 'wnba_v5_teamrankings_feature_layer.py'
+      - '.github/workflows/wnba-v5-teamrankings-features.yml'
+permissions:
+  contents: write
+concurrency:
+  group: wnba-v5-teamrankings-features
+  cancel-in-progress: false
+jobs:
+  features:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile feature layer
+        run: python -m py_compile wnba_v5_teamrankings_feature_layer.py
+      - name: Build shadow matchup features
+        run: python wnba_v5_teamrankings_feature_layer.py
+      - name: Verify feature contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_v5_team_matchup_features.json').read_text())
+          assert p['status']=='READY_SHADOW'
+          assert p['research_only'] is True and p['production_ready'] is False
+          assert len(p['teams'])>=10 and len(p['families'])>=8
+          required={'paint_advantage','perimeter_advantage','rebound_environment','assist_environment','pace_environment','foul_ft_environment','transition_environment','overall_scoring_environment'}
+          assert required <= set(p['families'])
+          print({'teams':len(p['teams']),'families':len(p['families']),'status':p['status']})
+          PY
+      - name: Publish immutable feature snapshot
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 Matchup Feature Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_v5_team_matchup_features.json data/warehouse/teamrankings/features
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Freeze V5 TeamRankings matchup features"
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*3))
+          done
+          exit 1
