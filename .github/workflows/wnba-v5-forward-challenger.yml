@@ -6,9 +6,11 @@ on:
     paths:
       - 'wnba_v5_forward_challenger.py'
       - 'data/history/wnba_v5_forward_predictions.jsonl'
+      - 'data/dashboard/wnba_v5_forward_metrics.json'
+      - 'data/dashboard/wnba_v5_forward_diagnostics.json'
       - '.github/workflows/wnba-v5-forward-challenger.yml'
   schedule:
-    - cron: '52 11 * * *'
+    - cron: '52 * * * *'
 concurrency:
   group: v5-forward-challenger
   cancel-in-progress: false
@@ -40,6 +42,7 @@ jobs:
           assert p['research_only'] is True
           assert p['production_ready'] is False
           assert p['canonical_resolved_eligible_rows'] >= p['chronologically_scored_rows']
+          assert p['forward_research_champion'] in {'MARKET','RAW_KNN','LOGISTIC_FORWARD','RIDGE_FORWARD','CHALLENGER_ENSEMBLE'}
           PY
       - name: Publish challenger evidence safely
         run: |
