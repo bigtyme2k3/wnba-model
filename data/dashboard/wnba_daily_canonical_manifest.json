@@ -1,6 +1,6 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-19T12:03:47.865807+00:00",
+  "generated_at_utc": "2026-08-19T12:48:08.399407+00:00",
   "target_date": "2026-08-19",
   "status": "PASS",
   "games": [
@@ -14,7 +14,7 @@
     "Washington Mystics"
   ],
   "game_count": 2,
-  "player_prop_rows": 175,
+  "player_prop_rows": 188,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -24,14 +24,14 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Repaired from published authoritative 2026-08-19 wnba_master.json",
+      "stdout": "{\n  \"target_date\": \"2026-08-19\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 2,\n  \"matchups\": [\n    \"Toronto Tempo @ Washington Mystics\",\n    \"Minnesota Lynx @ Golden State Valkyries\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Published authoritative 2026-08-19 player props: 175 verified rows, 0 unresolved",
+      "stdout": "{\n  \"target_date\": \"2026-08-19\",\n  \"events\": 2,\n  \"raw_rows\": 188,\n  \"verified_rows\": 188,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
