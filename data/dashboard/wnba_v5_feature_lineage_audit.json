@@ -1,0 +1,242 @@
+{
+  "version": "V5",
+  "module": "FEATURE_LINEAGE_AUDIT",
+  "status": "READY_AUDIT",
+  "generated_at_utc": "2026-08-19T01:09:06.262131+00:00",
+  "production_changed": false,
+  "live_path": {
+    "M11": "wnba_v5_m11_live_inference.py",
+    "M10": "wnba_v5_m10_live_decision_engine.py"
+  },
+  "m11_feature_names": [
+    "market_implied_probability",
+    "line_minus_prior_mean",
+    "rolling3_actual_mean",
+    "rolling5_actual_mean",
+    "rolling5_actual_std",
+    "rolling5_trend_slope",
+    "historical_hit_rate_at_current_line",
+    "historical_hit_rate_l5_at_current_line",
+    "prior_games"
+  ],
+  "summary": {
+    "critical_datasets": 13,
+    "active_live_inputs": [
+      "historical_features",
+      "opportunity_rankings",
+      "market_movement",
+      "injury_intelligence"
+    ],
+    "dormant_or_shadow_inputs": [
+      "minutes_projection_v2",
+      "player_intelligence",
+      "matchup_intelligence",
+      "s4_matchup_adjustments",
+      "s4_lineup_adjustments",
+      "s4_lineup_intelligence",
+      "teamrankings_live_features",
+      "teamrankings_history_join",
+      "teamrankings_challenger"
+    ]
+  },
+  "finding": "A dataset is classified active only when M11 or M10 directly references it. Repository presence alone does not imply live influence.",
+  "datasets": [
+    {
+      "key": "historical_features",
+      "path": "data/dashboard/wnba_v5_historical_features.csv",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_v5_historical_feature_engine.py",
+        "wnba_v5_m05_champion_challenger.py",
+        "wnba_v5_m07_context_similarity.py",
+        "wnba_v5_m11_live_inference.py",
+        "wnba_v5_m12_postgame_learning.py",
+        "wnba_v5_probability_learner.py",
+        "wnba_v5_s4_m01_team_defense_intelligence.py"
+      ],
+      "live_consumers": [
+        "M11"
+      ],
+      "feeds_live_path": true
+    },
+    {
+      "key": "opportunity_rankings",
+      "path": "data/warehouse/wnba_opportunity_rankings.json",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_market_movement_engine.py",
+        "wnba_opportunity_finder.py",
+        "wnba_opportunity_ranker.py",
+        "wnba_professional_dashboard.py",
+        "wnba_v5_current_opportunity_board.py",
+        "wnba_v5_m10_live_decision_engine.py",
+        "wnba_v5_m11_live_inference.py",
+        "wnba_v5_s3_m01_freshness_guard.py",
+        "wnba_v5_s4_m02_matchup_engine.py"
+      ],
+      "live_consumers": [
+        "M11",
+        "M10"
+      ],
+      "feeds_live_path": true
+    },
+    {
+      "key": "market_movement",
+      "path": "data/dashboard/market_movement.json",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_market_movement_engine.py",
+        "wnba_opportunity_finder.py",
+        "wnba_professional_dashboard.py",
+        "wnba_v5_m10_live_decision_engine.py"
+      ],
+      "live_consumers": [
+        "M10"
+      ],
+      "feeds_live_path": true
+    },
+    {
+      "key": "injury_intelligence",
+      "path": "data/dashboard/wnba_injury_intelligence.json",
+      "exists": true,
+      "repository_consumers": [
+        "patch_dashboard_v4_injuries.py",
+        "patch_dashboard_v5_injury_intelligence.py",
+        "qa_v4_foundation_acceptance.py",
+        "wnba_decision_engine_final.py",
+        "wnba_injury_intelligence.py",
+        "wnba_injury_rotation_guard.py",
+        "wnba_matchup_intelligence.py",
+        "wnba_minutes_projection_v2.py",
+        "wnba_monte_carlo_engine.py",
+        "wnba_player_intelligence.py",
+        "wnba_portfolio_dashboard.py",
+        "wnba_pregame_eligibility_guard.py",
+        "wnba_projection_ai.py",
+        "wnba_terminal_ui.py",
+        "wnba_v5_live_state_sync.py",
+        "wnba_v5_m10_live_decision_engine.py"
+      ],
+      "live_consumers": [
+        "M10"
+      ],
+      "feeds_live_path": true
+    },
+    {
+      "key": "minutes_projection_v2",
+      "path": "data/dashboard/wnba_minutes_projection_v2.json",
+      "exists": true,
+      "repository_consumers": [
+        "patch_dashboard_v4_minutes_projection.py",
+        "wnba_ancillary_projection_v2.py",
+        "wnba_minutes_projection_v2.py",
+        "wnba_model_explainability.py",
+        "wnba_points_projection_v2.py",
+        "wnba_rebounds_assists_projection_v2.py",
+        "wnba_unified_player_simulation_v2.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    },
+    {
+      "key": "player_intelligence",
+      "path": "data/dashboard/wnba_player_intelligence.json",
+      "exists": true,
+      "repository_consumers": [
+        "player_points.py",
+        "qa_v4_foundation_acceptance.py",
+        "wnba_alt_streaks.py",
+        "wnba_matchup_intelligence.py",
+        "wnba_monte_carlo_engine.py",
+        "wnba_player_intelligence.py",
+        "wnba_projection_ai.py",
+        "wnba_source_health.py",
+        "wnba_stats_quality.py",
+        "wnba_terminal_ui.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    },
+    {
+      "key": "matchup_intelligence",
+      "path": "data/dashboard/wnba_matchup_intelligence.json",
+      "exists": true,
+      "repository_consumers": [
+        "qa_v4_acceptance.py",
+        "qa_v4_foundation_acceptance.py",
+        "wnba_consensus_engine.py",
+        "wnba_game_market_model.py",
+        "wnba_matchup_intelligence.py",
+        "wnba_monte_carlo_engine.py",
+        "wnba_projection_ai.py",
+        "wnba_source_health.py",
+        "wnba_terminal_ui.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    },
+    {
+      "key": "s4_matchup_adjustments",
+      "path": "data/dashboard/wnba_v5_matchup_adjustments.csv",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_v5_s4_m02_matchup_engine.py",
+        "wnba_v5_s4_m03_lineup_intelligence.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    },
+    {
+      "key": "s4_lineup_adjustments",
+      "path": "data/dashboard/wnba_v5_lineup_adjustments.csv",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_v5_s4_m03_lineup_intelligence.py",
+        "wnba_v5_s4_m04_rotation_intelligence.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    },
+    {
+      "key": "s4_lineup_intelligence",
+      "path": "data/dashboard/wnba_v5_lineup_intelligence.json",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_v5_s4_m03_lineup_intelligence.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    },
+    {
+      "key": "teamrankings_live_features",
+      "path": "data/dashboard/wnba_v5_team_matchup_features.json",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_v5_teamrankings_feature_layer.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    },
+    {
+      "key": "teamrankings_history_join",
+      "path": "data/dashboard/wnba_v5_teamrankings_history_join.json",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_v5_teamrankings_challenger.py",
+        "wnba_v5_teamrankings_history_join.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    },
+    {
+      "key": "teamrankings_challenger",
+      "path": "data/dashboard/wnba_v5_teamrankings_challenger.json",
+      "exists": true,
+      "repository_consumers": [
+        "wnba_v5_teamrankings_challenger.py"
+      ],
+      "live_consumers": [],
+      "feeds_live_path": false
+    }
+  ]
+}
