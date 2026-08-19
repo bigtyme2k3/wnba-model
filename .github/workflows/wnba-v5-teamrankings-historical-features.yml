@@ -35,8 +35,10 @@ jobs:
           p=json.loads(Path('data/dashboard/wnba_v5_teamrankings_historical_features.json').read_text())
           assert p['research_only'] is True and p['production_ready'] is False and p['lookahead_safe'] is True
           assert p['games_manifest']>=57
-          assert p['games_parsed']>0
-          print({'manifest':p['games_manifest'],'parsed':p['games_parsed'],'without_metrics':p['games_without_metrics']})
+          assert p['valid_matchup_pages'] + p['invalid_fallback_pages'] + p['missing_frozen_evidence'] == p['games_manifest']
+          assert p['games_parsed'] > 0
+          assert p['games_parsed'] <= p['valid_matchup_pages']
+          print({'manifest':p['games_manifest'],'valid_matchup_pages':p['valid_matchup_pages'],'invalid_fallback_pages':p['invalid_fallback_pages'],'parsed':p['games_parsed'],'valid_without_metrics':p['valid_pages_without_metrics'],'missing_frozen':p['missing_frozen_evidence']})
           PY
       - name: Publish parsed historical evidence
         run: |
@@ -45,7 +47,7 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add data/dashboard/wnba_v5_teamrankings_historical_features.json data/warehouse/teamrankings/historical_features
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Freeze V5 historical TeamRankings feature evidence'
+          git commit -m 'Freeze audited V5 historical TeamRankings feature evidence'
           for attempt in 1 2 3 4; do
             if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
             sleep $((attempt*3))
