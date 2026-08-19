@@ -1,0 +1,50 @@
+name: WNBA V5 Feature Lineage Audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_feature_lineage_audit.py'
+      - 'wnba_v5_m11_live_inference.py'
+      - 'wnba_v5_m10_live_decision_engine.py'
+      - 'wnba_v5_s4_m02_matchup_engine.py'
+      - 'wnba_v5_s4_m03_lineup_intelligence.py'
+      - 'wnba_v5_s4_m04_rotation_intelligence.py'
+      - '.github/workflows/wnba-v5-feature-lineage-audit.yml'
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile audit
+        run: python -m py_compile wnba_v5_feature_lineage_audit.py
+      - name: Build V5 feature lineage report
+        run: python wnba_v5_feature_lineage_audit.py
+      - name: Verify audit contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_v5_feature_lineage_audit.json').read_text())
+          assert p['status']=='READY_AUDIT'
+          assert p['production_changed'] is False
+          assert len(p['m11_feature_names'])>=5
+          print(p['summary'])
+          PY
+      - name: Publish audit
+        run: |
+          set -euo pipefail
+          git config user.name 'WNBA V5 Lineage Audit Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/dashboard/wnba_v5_feature_lineage_audit.json data/warehouse/wnba_v5_feature_lineage_audit.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Publish V5 feature lineage audit'
+          git pull --rebase origin main
+          git push origin HEAD:main
