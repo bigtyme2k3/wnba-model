@@ -5,11 +5,14 @@
   "research_only": true,
   "production_ready": false,
   "lookahead_safe": true,
-  "generated_at_utc": "2026-08-18T23:49:04.999764+00:00",
+  "generated_at_utc": "2026-08-19T00:08:47.823928+00:00",
   "games_manifest": 57,
+  "valid_matchup_pages": 39,
+  "invalid_fallback_pages": 18,
   "games_parsed": 39,
-  "games_without_metrics": 18,
-  "policy": "Only frozen date-specific HTML is parsed; no current TeamRankings snapshot fallback. Numeric column semantics remain raw until audited before challenger use.",
+  "valid_pages_without_metrics": 0,
+  "missing_frozen_evidence": 0,
+  "policy": "Only frozen date-specific HTML with verified matchup-page identity is parsed. Schedule fallbacks and identity mismatches are quarantined. No current TeamRankings snapshot fallback. Numeric column semantics remain raw until audited before challenger use.",
   "rows": [
     {
       "date": "2026-08-04",
@@ -17,10 +20,12 @@
       "game_id": "401857113",
       "away_team": "Phoenix Mercury",
       "home_team": "Chicago Sky",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/mercury-sky-2026-08-04/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-08-04/phoenix-mercury-chicago-sky.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-08-03",
@@ -28,8 +33,97 @@
       "game_id": "401857112",
       "away_team": "Seattle Storm",
       "home_team": "New York Liberty",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/storm-liberty-2026-08-03/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-08-03/seattle-storm-new-york-liberty.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            37.7,
+            38.7,
+            36.0,
+            42.7,
+            38.9,
+            38.5
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            49.5,
+            54.6,
+            42.9,
+            51.6,
+            50.4,
+            52.7
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.5,
+            35.4,
+            33.3,
+            34.4,
+            30.5,
+            33.8
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.2,
+            54.0,
+            45.5,
+            51.6,
+            48.7,
+            51.9
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.651,
+            0.671,
+            0.693,
+            0.649,
+            0.637,
+            0.699
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            16.1,
+            14.8,
+            13.1,
+            16.3,
+            15.9
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            17.7,
+            20.6,
+            21.3,
+            18.0,
+            16.5,
+            19.6
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.1,
+            7.9,
+            8.7,
+            10.7,
+            9.2,
+            9.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -42,7 +136,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Storm Liberty Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -51,8 +147,97 @@
       "game_id": "401857111",
       "away_team": "Las Vegas Aces",
       "home_team": "Atlanta Dream",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/aces-dream-2026-08-03/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-08-03/las-vegas-aces-atlanta-dream.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            39.9,
+            43.4,
+            26.7,
+            36.0,
+            43.4,
+            43.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            55.0,
+            50.4,
+            48.4,
+            45.0,
+            55.4,
+            51.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.9,
+            31.7,
+            36.8,
+            40.0,
+            35.7,
+            33.5
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            54.6,
+            49.3,
+            51.0,
+            51.1,
+            54.8,
+            51.0
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.668,
+            0.674,
+            0.678,
+            0.734,
+            0.664,
+            0.696
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.5,
+            14.5,
+            12.6,
+            13.9,
+            13.6,
+            13.8
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            19.2,
+            21.7,
+            20.0,
+            22.0,
+            18.9,
+            21.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.2,
+            12.0,
+            8.7,
+            7.0,
+            10.0,
+            12.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -65,7 +250,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Aces Dream Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -74,8 +261,97 @@
       "game_id": "401857109",
       "away_team": "Connecticut Sun",
       "home_team": "Dallas Wings",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sun-wings-2026-08-02/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-08-02/connecticut-sun-dallas-wings.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.4,
+            37.8,
+            26.7,
+            34.7,
+            37.3,
+            37.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            47.7,
+            52.9,
+            39.2,
+            54.5,
+            48.3,
+            50.3
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            29.9,
+            33.4,
+            33.3,
+            27.3,
+            30.3,
+            33.6
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            46.9,
+            51.9,
+            43.0,
+            49.3,
+            47.5,
+            50.3
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.654,
+            0.657,
+            0.708,
+            0.648,
+            0.637,
+            0.658
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.8,
+            13.1,
+            14.8,
+            14.5,
+            16.9,
+            13.2
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.3,
+            18.3,
+            21.3,
+            19.3,
+            20.3,
+            19.0
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            7.9,
+            11.8,
+            5.0,
+            10.0,
+            8.4,
+            10.7
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -88,7 +364,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sun Wings Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -97,8 +375,97 @@
       "game_id": "401857108",
       "away_team": "Los Angeles Sparks",
       "home_team": "Portland Fire",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sparks-fire-2026-08-02/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-08-02/los-angeles-sparks-portland-fire.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            41.2,
+            38.5,
+            36.7,
+            40.0,
+            38.9,
+            37.0
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.7,
+            53.2,
+            53.9,
+            59.6,
+            53.6,
+            55.0
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            33.3,
+            34.9,
+            29.5,
+            28.6,
+            34.6,
+            37.2
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            52.9,
+            52.8,
+            49.8,
+            51.4,
+            52.9,
+            55.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.69,
+            0.671,
+            0.761,
+            0.611,
+            0.698,
+            0.689
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            16.5,
+            16.8,
+            14.1,
+            15.7,
+            17.1
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            21.2,
+            18.6,
+            19.3,
+            17.7,
+            21.3,
+            18.3
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.9,
+            8.1,
+            10.7,
+            6.7,
+            9.0,
+            8.3
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -111,7 +478,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sparks Fire Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -120,8 +489,97 @@
       "game_id": "401857107",
       "away_team": "Indiana Fever",
       "home_team": "Minnesota Lynx",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/fever-lynx-2026-08-02/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-08-02/indiana-fever-minnesota-lynx.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            40.6,
+            40.2,
+            44.0,
+            35.3,
+            38.3,
+            40.1
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.6,
+            52.9,
+            53.6,
+            57.8,
+            54.1,
+            55.1
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            39.0,
+            39.5,
+            42.5,
+            41.2,
+            37.6,
+            40.1
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            56.0,
+            55.0,
+            56.9,
+            59.5,
+            55.0,
+            56.9
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.61,
+            0.635,
+            0.482,
+            0.637,
+            0.622,
+            0.649
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.7,
+            14.1,
+            10.3,
+            14.4,
+            15.5,
+            13.7
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            22.2,
+            16.4,
+            20.3,
+            13.7,
+            20.9,
+            16.2
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.5,
+            9.9,
+            8.7,
+            9.0,
+            6.4,
+            11.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -134,7 +592,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Fever Lynx Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -143,8 +603,97 @@
       "game_id": "401857106",
       "away_team": "New York Liberty",
       "home_team": "Phoenix Mercury",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/liberty-mercury-2026-08-01/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-08-01/new-york-liberty-phoenix-mercury.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.7,
+            36.3,
+            42.7,
+            34.7,
+            38.8,
+            37.6
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.6,
+            51.4,
+            51.6,
+            51.3,
+            56.4,
+            50.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.4,
+            32.2,
+            34.4,
+            35.8,
+            36.8,
+            32.8
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            54.0,
+            50.3,
+            51.6,
+            52.3,
+            55.9,
+            50.0
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.671,
+            0.688,
+            0.649,
+            0.705,
+            0.647,
+            0.665
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            16.1,
+            15.3,
+            13.1,
+            19.3,
+            16.3,
+            15.1
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.6,
+            21.8,
+            18.0,
+            21.7,
+            21.5,
+            23.1
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            7.9,
+            10.5,
+            10.7,
+            7.3,
+            6.6,
+            10.6
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -157,7 +706,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Liberty Mercury Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -166,8 +717,97 @@
       "game_id": "401857105",
       "away_team": "Las Vegas Aces",
       "home_team": "Chicago Sky",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/aces-sky-2026-08-01/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-08-01/las-vegas-aces-chicago-sky.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            39.9,
+            41.9,
+            26.7,
+            40.0,
+            43.4,
+            42.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            55.0,
+            50.2,
+            48.4,
+            44.6,
+            55.4,
+            52.2
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.9,
+            32.3,
+            36.8,
+            29.0,
+            35.7,
+            35.1
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            54.6,
+            49.6,
+            51.0,
+            44.3,
+            54.8,
+            52.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.668,
+            0.691,
+            0.678,
+            0.643,
+            0.664,
+            0.734
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.5,
+            14.2,
+            12.6,
+            17.6,
+            13.6,
+            13.2
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            19.2,
+            20.0,
+            20.0,
+            17.3,
+            18.9,
+            19.9
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.2,
+            9.9,
+            8.7,
+            6.7,
+            10.0,
+            10.2
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -180,7 +820,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Aces Sky Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -189,8 +831,97 @@
       "game_id": "401857103",
       "away_team": "Dallas Wings",
       "home_team": "Washington Mystics",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/wings-mystics-2026-07-31/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-31/dallas-wings-washington-mystics.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            37.8,
+            42.8,
+            34.7,
+            50.7,
+            37.8,
+            44.9
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            52.9,
+            50.4,
+            54.5,
+            53.7,
+            55.1,
+            49.9
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            33.4,
+            29.8,
+            27.3,
+            27.8,
+            33.3,
+            29.7
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            51.9,
+            48.7,
+            49.3,
+            50.5,
+            53.2,
+            48.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.657,
+            0.667,
+            0.648,
+            0.628,
+            0.656,
+            0.681
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.1,
+            17.1,
+            14.5,
+            16.8,
+            13.1,
+            16.3
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            18.3,
+            23.2,
+            19.3,
+            18.0,
+            17.7,
+            24.6
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            11.8,
+            6.3,
+            10.0,
+            6.7,
+            12.6,
+            6.9
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -203,7 +934,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Wings Mystics Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -212,8 +945,97 @@
       "game_id": "401857102",
       "away_team": "Seattle Storm",
       "home_team": "Atlanta Dream",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/storm-dream-2026-07-31/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-31/seattle-storm-atlanta-dream.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            37.7,
+            43.4,
+            36.0,
+            36.0,
+            38.9,
+            43.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            49.5,
+            50.4,
+            42.9,
+            45.0,
+            50.4,
+            51.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.5,
+            31.7,
+            33.3,
+            40.0,
+            30.5,
+            33.5
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.2,
+            49.3,
+            45.5,
+            51.1,
+            48.7,
+            51.0
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.651,
+            0.674,
+            0.693,
+            0.734,
+            0.637,
+            0.696
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            14.5,
+            14.8,
+            13.9,
+            16.3,
+            13.8
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            17.7,
+            21.7,
+            21.3,
+            22.0,
+            16.5,
+            21.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.1,
+            12.0,
+            8.7,
+            7.0,
+            9.2,
+            12.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -226,7 +1048,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Storm Dream Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -235,10 +1059,12 @@
       "game_id": "401857098",
       "away_team": "Golden State Valkyries",
       "home_team": "Phoenix Mercury",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/valkyries-mercury-2026-07-30/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-30/golden-state-valkyries-phoenix-mercury.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-30",
@@ -246,10 +1072,12 @@
       "game_id": "401857097",
       "away_team": "Atlanta Dream",
       "home_team": "Dallas Wings",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/dream-wings-2026-07-30/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-30/atlanta-dream-dallas-wings.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-29",
@@ -257,10 +1085,12 @@
       "game_id": "401857096",
       "away_team": "New York Liberty",
       "home_team": "Los Angeles Sparks",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/liberty-sparks-2026-07-29/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-29/new-york-liberty-los-angeles-sparks.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-29",
@@ -268,10 +1098,12 @@
       "game_id": "401857095",
       "away_team": "Portland Fire",
       "home_team": "Las Vegas Aces",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/fire-aces-2026-07-29/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-29/portland-fire-las-vegas-aces.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-29",
@@ -279,10 +1111,12 @@
       "game_id": "401857094",
       "away_team": "Indiana Fever",
       "home_team": "Seattle Storm",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/fever-storm-2026-07-29/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-29/indiana-fever-seattle-storm.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-29",
@@ -290,10 +1124,12 @@
       "game_id": "401857093",
       "away_team": "Toronto Tempo",
       "home_team": "Minnesota Lynx",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/tempo-lynx-2026-07-29/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-29/toronto-tempo-minnesota-lynx.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-28",
@@ -301,8 +1137,97 @@
       "game_id": "401857092",
       "away_team": "Connecticut Sun",
       "home_team": "Washington Mystics",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sun-mystics-2026-07-28/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-28/connecticut-sun-washington-mystics.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.4,
+            42.8,
+            26.7,
+            50.7,
+            37.3,
+            44.9
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            47.7,
+            50.4,
+            39.2,
+            53.7,
+            48.3,
+            49.9
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            29.9,
+            29.8,
+            33.3,
+            27.8,
+            30.3,
+            29.7
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            46.9,
+            48.7,
+            43.0,
+            50.5,
+            47.5,
+            48.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.654,
+            0.667,
+            0.708,
+            0.628,
+            0.637,
+            0.681
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.8,
+            17.1,
+            14.8,
+            16.8,
+            16.9,
+            16.3
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.3,
+            23.2,
+            21.3,
+            18.0,
+            20.3,
+            24.6
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            7.9,
+            6.3,
+            5.0,
+            6.7,
+            8.4,
+            6.9
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -315,7 +1240,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sun Mystics Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -324,10 +1251,12 @@
       "game_id": "401857320",
       "away_team": "TEAM SPOON",
       "home_team": "TEAM COOP",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/spoon-coop-2026-07-26/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-26/team-spoon-team-coop.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-23",
@@ -335,10 +1264,12 @@
       "game_id": "401857091",
       "away_team": "Dallas Wings",
       "home_team": "Portland Fire",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/wings-fire-2026-07-23/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-23/dallas-wings-portland-fire.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-23",
@@ -346,10 +1277,12 @@
       "game_id": "401857090",
       "away_team": "Connecticut Sun",
       "home_team": "Indiana Fever",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sun-fever-2026-07-23/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-23/connecticut-sun-indiana-fever.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-22",
@@ -357,8 +1290,97 @@
       "game_id": "401857089",
       "away_team": "Las Vegas Aces",
       "home_team": "Washington Mystics",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/aces-mystics-2026-07-22/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-22/las-vegas-aces-washington-mystics.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            39.9,
+            42.8,
+            26.7,
+            50.7,
+            43.4,
+            44.9
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            55.0,
+            50.4,
+            48.4,
+            53.7,
+            55.4,
+            49.9
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.9,
+            29.8,
+            36.8,
+            27.8,
+            35.7,
+            29.7
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            54.6,
+            48.7,
+            51.0,
+            50.5,
+            54.8,
+            48.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.668,
+            0.667,
+            0.678,
+            0.628,
+            0.664,
+            0.681
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.5,
+            17.1,
+            12.6,
+            16.8,
+            13.6,
+            16.3
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            19.2,
+            23.2,
+            20.0,
+            18.0,
+            18.9,
+            24.6
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.2,
+            6.3,
+            8.7,
+            6.7,
+            10.0,
+            6.9
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -371,7 +1393,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Aces Mystics Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -380,8 +1404,97 @@
       "game_id": "401857088",
       "away_team": "Chicago Sky",
       "home_team": "New York Liberty",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sky-liberty-2026-07-22/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-22/chicago-sky-new-york-liberty.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            41.9,
+            38.7,
+            40.0,
+            42.7,
+            41.1,
+            38.5
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            50.2,
+            54.6,
+            44.6,
+            51.6,
+            48.3,
+            52.7
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.3,
+            35.4,
+            29.0,
+            34.4,
+            29.4,
+            33.8
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.6,
+            54.0,
+            44.3,
+            51.6,
+            47.0,
+            51.9
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.691,
+            0.671,
+            0.643,
+            0.649,
+            0.644,
+            0.699
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            14.2,
+            16.1,
+            17.6,
+            13.1,
+            15.2,
+            15.9
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.0,
+            20.6,
+            17.3,
+            18.0,
+            20.1,
+            19.6
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.9,
+            7.9,
+            6.7,
+            10.7,
+            9.6,
+            9.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -394,7 +1507,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sky Liberty Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -403,8 +1518,97 @@
       "game_id": "401857087",
       "away_team": "Minnesota Lynx",
       "home_team": "Seattle Storm",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/lynx-storm-2026-07-22/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-22/minnesota-lynx-seattle-storm.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            40.2,
+            37.7,
+            35.3,
+            36.0,
+            40.4,
+            36.4
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            52.9,
+            49.5,
+            57.8,
+            42.9,
+            50.5,
+            48.6
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            39.5,
+            32.5,
+            41.2,
+            33.3,
+            38.7,
+            34.5
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            55.0,
+            49.2,
+            59.5,
+            45.5,
+            52.9,
+            49.8
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.635,
+            0.651,
+            0.637,
+            0.693,
+            0.617,
+            0.665
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            14.1,
+            15.9,
+            14.4,
+            14.8,
+            14.4,
+            15.4
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            16.4,
+            17.7,
+            13.7,
+            21.3,
+            16.7,
+            18.9
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.9,
+            9.1,
+            9.0,
+            8.7,
+            7.8,
+            9.1
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -417,7 +1621,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Lynx Storm Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -426,8 +1632,97 @@
       "game_id": "401857086",
       "away_team": "Phoenix Mercury",
       "home_team": "Los Angeles Sparks",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/mercury-sparks-2026-07-22/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-22/phoenix-mercury-los-angeles-sparks.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            36.3,
+            41.2,
+            34.7,
+            36.7,
+            35.3,
+            43.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            51.4,
+            54.7,
+            51.3,
+            53.9,
+            52.2,
+            55.9
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.2,
+            33.3,
+            35.8,
+            29.5,
+            31.8,
+            31.9
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            50.3,
+            52.9,
+            52.3,
+            49.8,
+            50.5,
+            52.8
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.688,
+            0.69,
+            0.705,
+            0.761,
+            0.708,
+            0.681
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.3,
+            15.9,
+            19.3,
+            16.8,
+            15.5,
+            16.0
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            21.8,
+            21.2,
+            21.7,
+            19.3,
+            20.7,
+            21.1
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            10.5,
+            8.9,
+            7.3,
+            10.7,
+            10.4,
+            8.9
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -440,7 +1735,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Mercury Sparks Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -449,10 +1746,12 @@
       "game_id": "401892393",
       "away_team": "New York Liberty",
       "home_team": "Dallas Wings",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/liberty-wings-2026-07-21/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-21/new-york-liberty-dallas-wings.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-21",
@@ -460,10 +1759,12 @@
       "game_id": "401857085",
       "away_team": "Minnesota Lynx",
       "home_team": "Seattle Storm",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/lynx-storm-2026-07-21/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-21/minnesota-lynx-seattle-storm.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-21",
@@ -471,10 +1772,12 @@
       "game_id": "401857084",
       "away_team": "Washington Mystics",
       "home_team": "Golden State Valkyries",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/mystics-valkyries-2026-07-21/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-21/washington-mystics-golden-state-valkyries.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-21",
@@ -482,10 +1785,12 @@
       "game_id": "401857083",
       "away_team": "Las Vegas Aces",
       "home_team": "Toronto Tempo",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/aces-tempo-2026-07-21/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-21/las-vegas-aces-toronto-tempo.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-19",
@@ -493,8 +1798,97 @@
       "game_id": "401857082",
       "away_team": "Connecticut Sun",
       "home_team": "Phoenix Mercury",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sun-mercury-2026-07-19/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-19/connecticut-sun-phoenix-mercury.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.4,
+            36.3,
+            26.7,
+            34.7,
+            37.3,
+            37.6
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            47.7,
+            51.4,
+            39.2,
+            51.3,
+            48.3,
+            50.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            29.9,
+            32.2,
+            33.3,
+            35.8,
+            30.3,
+            32.8
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            46.9,
+            50.3,
+            43.0,
+            52.3,
+            47.5,
+            50.0
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.654,
+            0.688,
+            0.708,
+            0.705,
+            0.637,
+            0.665
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.8,
+            15.3,
+            14.8,
+            19.3,
+            16.9,
+            15.1
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.3,
+            21.8,
+            21.3,
+            21.7,
+            20.3,
+            23.1
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            7.9,
+            10.5,
+            5.0,
+            7.3,
+            8.4,
+            10.6
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -507,7 +1901,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sun Mercury Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -516,8 +1912,97 @@
       "game_id": "401857081",
       "away_team": "Chicago Sky",
       "home_team": "Atlanta Dream",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sky-dream-2026-07-19/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-19/chicago-sky-atlanta-dream.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            41.9,
+            43.4,
+            40.0,
+            36.0,
+            41.1,
+            43.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            50.2,
+            50.4,
+            44.6,
+            45.0,
+            48.3,
+            51.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.3,
+            31.7,
+            29.0,
+            40.0,
+            29.4,
+            33.5
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.6,
+            49.3,
+            44.3,
+            51.1,
+            47.0,
+            51.0
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.691,
+            0.674,
+            0.643,
+            0.734,
+            0.644,
+            0.696
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            14.2,
+            14.5,
+            17.6,
+            13.9,
+            15.2,
+            13.8
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.0,
+            21.7,
+            17.3,
+            22.0,
+            20.1,
+            21.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.9,
+            12.0,
+            6.7,
+            7.0,
+            9.6,
+            12.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -530,7 +2015,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sky Dream Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -539,8 +2026,97 @@
       "game_id": "401857080",
       "away_team": "Los Angeles Sparks",
       "home_team": "Dallas Wings",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sparks-wings-2026-07-19/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-19/los-angeles-sparks-dallas-wings.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            41.2,
+            37.8,
+            36.7,
+            34.7,
+            38.9,
+            37.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.7,
+            52.9,
+            53.9,
+            54.5,
+            53.6,
+            50.3
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            33.3,
+            33.4,
+            29.5,
+            27.3,
+            34.6,
+            33.6
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            52.9,
+            51.9,
+            49.8,
+            49.3,
+            52.9,
+            50.3
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.69,
+            0.657,
+            0.761,
+            0.648,
+            0.698,
+            0.658
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            13.1,
+            16.8,
+            14.5,
+            15.7,
+            13.2
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            21.2,
+            18.3,
+            19.3,
+            19.3,
+            21.3,
+            19.0
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.9,
+            11.8,
+            10.7,
+            10.0,
+            9.0,
+            10.7
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -553,7 +2129,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sparks Wings Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -562,10 +2140,12 @@
       "game_id": "401857076",
       "away_team": "Connecticut Sun",
       "home_team": "Phoenix Mercury",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sun-mercury-2026-07-18/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-18/connecticut-sun-phoenix-mercury.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-17",
@@ -573,8 +2153,97 @@
       "game_id": "401857075",
       "away_team": "Los Angeles Sparks",
       "home_team": "Chicago Sky",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sparks-sky-2026-07-17/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-17/los-angeles-sparks-chicago-sky.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            41.2,
+            41.9,
+            36.7,
+            40.0,
+            38.9,
+            42.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.7,
+            50.2,
+            53.9,
+            44.6,
+            53.6,
+            52.2
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            33.3,
+            32.3,
+            29.5,
+            29.0,
+            34.6,
+            35.1
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            52.9,
+            49.6,
+            49.8,
+            44.3,
+            52.9,
+            52.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.69,
+            0.691,
+            0.761,
+            0.643,
+            0.698,
+            0.734
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            14.2,
+            16.8,
+            17.6,
+            15.7,
+            13.2
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            21.2,
+            20.0,
+            19.3,
+            17.3,
+            21.3,
+            19.9
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.9,
+            9.9,
+            10.7,
+            6.7,
+            9.0,
+            10.2
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -587,7 +2256,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sparks Sky Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -596,8 +2267,97 @@
       "game_id": "401857074",
       "away_team": "Atlanta Dream",
       "home_team": "Toronto Tempo",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/dream-tempo-2026-07-17/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-17/atlanta-dream-toronto-tempo.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            43.4,
+            35.5,
+            36.0,
+            41.3,
+            43.0,
+            34.0
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            50.4,
+            51.5,
+            45.0,
+            53.9,
+            49.2,
+            49.4
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            31.7,
+            35.5,
+            40.0,
+            31.0,
+            29.5,
+            33.4
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.3,
+            52.2,
+            51.1,
+            50.9,
+            47.4,
+            49.7
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.674,
+            0.663,
+            0.734,
+            0.646,
+            0.648,
+            0.661
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            14.5,
+            15.8,
+            13.9,
+            15.9,
+            15.2,
+            15.9
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            21.7,
+            19.8,
+            22.0,
+            21.0,
+            21.6,
+            20.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            12.0,
+            10.3,
+            7.0,
+            7.0,
+            11.4,
+            10.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -610,7 +2370,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Dream Tempo Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -619,8 +2381,97 @@
       "game_id": "401857073",
       "away_team": "Seattle Storm",
       "home_team": "Indiana Fever",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/storm-fever-2026-07-17/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-17/seattle-storm-indiana-fever.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            37.7,
+            40.6,
+            36.0,
+            44.0,
+            38.9,
+            42.5
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            49.5,
+            54.6,
+            42.9,
+            53.6,
+            50.4,
+            54.9
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.5,
+            39.0,
+            33.3,
+            42.5,
+            30.5,
+            40.2
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.2,
+            56.0,
+            45.5,
+            56.9,
+            48.7,
+            56.9
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.651,
+            0.61,
+            0.693,
+            0.482,
+            0.637,
+            0.601
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            15.7,
+            14.8,
+            10.3,
+            16.3,
+            16.0
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            17.7,
+            22.2,
+            21.3,
+            20.3,
+            16.5,
+            23.3
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.1,
+            8.5,
+            8.7,
+            8.7,
+            9.2,
+            10.2
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -633,7 +2484,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Storm Fever Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -642,8 +2495,97 @@
       "game_id": "401857071",
       "away_team": "Portland Fire",
       "home_team": "Washington Mystics",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/fire-mystics-2026-07-16/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-16/portland-fire-washington-mystics.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.5,
+            42.8,
+            40.0,
+            50.7,
+            40.0,
+            44.9
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            53.2,
+            50.4,
+            59.6,
+            53.7,
+            51.5,
+            49.9
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            34.9,
+            29.8,
+            28.6,
+            27.8,
+            32.3,
+            29.7
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            52.8,
+            48.7,
+            51.4,
+            50.5,
+            50.2,
+            48.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.671,
+            0.667,
+            0.611,
+            0.628,
+            0.653,
+            0.681
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            16.5,
+            17.1,
+            14.1,
+            16.8,
+            15.9,
+            16.3
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            18.6,
+            23.2,
+            17.7,
+            18.0,
+            18.9,
+            24.6
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.1,
+            6.3,
+            6.7,
+            6.7,
+            7.9,
+            6.9
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -656,7 +2598,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Fire Mystics Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -665,8 +2609,97 @@
       "game_id": "401857069",
       "away_team": "Los Angeles Sparks",
       "home_team": "Minnesota Lynx",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sparks-lynx-2026-07-15/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-15/los-angeles-sparks-minnesota-lynx.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            41.2,
+            40.2,
+            36.7,
+            35.3,
+            38.9,
+            40.1
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.7,
+            52.9,
+            53.9,
+            57.8,
+            53.6,
+            55.1
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            33.3,
+            39.5,
+            29.5,
+            41.2,
+            34.6,
+            40.1
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            52.9,
+            55.0,
+            49.8,
+            59.5,
+            52.9,
+            56.9
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.69,
+            0.635,
+            0.761,
+            0.637,
+            0.698,
+            0.649
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            14.1,
+            16.8,
+            14.4,
+            15.7,
+            13.7
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            21.2,
+            16.4,
+            19.3,
+            13.7,
+            21.3,
+            16.2
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.9,
+            9.9,
+            10.7,
+            9.0,
+            9.0,
+            11.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -679,7 +2712,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sparks Lynx Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -688,8 +2723,97 @@
       "game_id": "401857068",
       "away_team": "Seattle Storm",
       "home_team": "Chicago Sky",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/storm-sky-2026-07-15/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-15/seattle-storm-chicago-sky.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            37.7,
+            41.9,
+            36.0,
+            40.0,
+            38.9,
+            42.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            49.5,
+            50.2,
+            42.9,
+            44.6,
+            50.4,
+            52.2
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.5,
+            32.3,
+            33.3,
+            29.0,
+            30.5,
+            35.1
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.2,
+            49.6,
+            45.5,
+            44.3,
+            48.7,
+            52.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.651,
+            0.691,
+            0.693,
+            0.643,
+            0.637,
+            0.734
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            14.2,
+            14.8,
+            17.6,
+            16.3,
+            13.2
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            17.7,
+            20.0,
+            21.3,
+            17.3,
+            16.5,
+            19.9
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.1,
+            9.9,
+            8.7,
+            6.7,
+            9.2,
+            10.2
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -702,7 +2826,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Storm Sky Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -711,8 +2837,97 @@
       "game_id": "401857067",
       "away_team": "Washington Mystics",
       "home_team": "Toronto Tempo",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/mystics-tempo-2026-07-14/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-14/washington-mystics-toronto-tempo.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            42.8,
+            35.5,
+            50.7,
+            41.3,
+            40.5,
+            34.0
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            50.4,
+            51.5,
+            53.7,
+            53.9,
+            50.9,
+            49.4
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            29.8,
+            35.5,
+            27.8,
+            31.0,
+            30.0,
+            33.4
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            48.7,
+            52.2,
+            50.5,
+            50.9,
+            49.0,
+            49.7
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.667,
+            0.663,
+            0.628,
+            0.646,
+            0.65,
+            0.661
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            17.1,
+            15.8,
+            16.8,
+            15.9,
+            18.0,
+            15.9
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            23.2,
+            19.8,
+            18.0,
+            21.0,
+            21.7,
+            20.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            6.3,
+            10.3,
+            6.7,
+            7.0,
+            5.6,
+            10.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -725,7 +2940,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Mystics Tempo Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -734,8 +2951,97 @@
       "game_id": "401857066",
       "away_team": "Portland Fire",
       "home_team": "Connecticut Sun",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/fire-sun-2026-07-14/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-14/portland-fire-connecticut-sun.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.5,
+            38.4,
+            40.0,
+            26.7,
+            40.0,
+            39.4
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            53.2,
+            47.7,
+            59.6,
+            39.2,
+            51.5,
+            47.2
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            34.9,
+            29.9,
+            28.6,
+            33.3,
+            32.3,
+            29.6
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            52.8,
+            46.9,
+            51.4,
+            43.0,
+            50.2,
+            46.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.671,
+            0.654,
+            0.611,
+            0.708,
+            0.653,
+            0.67
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            16.5,
+            15.8,
+            14.1,
+            14.8,
+            15.9,
+            14.7
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            18.6,
+            20.3,
+            17.7,
+            21.3,
+            18.9,
+            20.4
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.1,
+            7.9,
+            6.7,
+            5.0,
+            7.9,
+            7.5
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -748,7 +3054,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Fire Sun Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -757,8 +3065,97 @@
       "game_id": "401857064",
       "away_team": "Los Angeles Sparks",
       "home_team": "Atlanta Dream",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sparks-dream-2026-07-13/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-13/los-angeles-sparks-atlanta-dream.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            41.2,
+            43.4,
+            36.7,
+            36.0,
+            38.9,
+            43.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.7,
+            50.4,
+            53.9,
+            45.0,
+            53.6,
+            51.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            33.3,
+            31.7,
+            29.5,
+            40.0,
+            34.6,
+            33.5
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            52.9,
+            49.3,
+            49.8,
+            51.1,
+            52.9,
+            51.0
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.69,
+            0.674,
+            0.761,
+            0.734,
+            0.698,
+            0.696
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            14.5,
+            16.8,
+            13.9,
+            15.7,
+            13.8
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            21.2,
+            21.7,
+            19.3,
+            22.0,
+            21.3,
+            21.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.9,
+            12.0,
+            10.7,
+            7.0,
+            9.0,
+            12.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -771,7 +3168,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sparks Dream Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -780,8 +3179,97 @@
       "game_id": "401857062",
       "away_team": "Chicago Sky",
       "home_team": "Dallas Wings",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sky-wings-2026-07-12/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-12/chicago-sky-dallas-wings.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            41.9,
+            37.8,
+            40.0,
+            34.7,
+            41.1,
+            37.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            50.2,
+            52.9,
+            44.6,
+            54.5,
+            48.3,
+            50.3
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.3,
+            33.4,
+            29.0,
+            27.3,
+            29.4,
+            33.6
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.6,
+            51.9,
+            44.3,
+            49.3,
+            47.0,
+            50.3
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.691,
+            0.657,
+            0.643,
+            0.648,
+            0.644,
+            0.658
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            14.2,
+            13.1,
+            17.6,
+            14.5,
+            15.2,
+            13.2
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.0,
+            18.3,
+            17.3,
+            19.3,
+            20.1,
+            19.0
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.9,
+            11.8,
+            6.7,
+            10.0,
+            9.6,
+            10.7
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -794,7 +3282,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Sky Wings Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -803,8 +3293,97 @@
       "game_id": "401857061",
       "away_team": "Seattle Storm",
       "home_team": "Washington Mystics",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/storm-mystics-2026-07-12/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-12/seattle-storm-washington-mystics.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            37.7,
+            42.8,
+            36.0,
+            50.7,
+            38.9,
+            44.9
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            49.5,
+            50.4,
+            42.9,
+            53.7,
+            50.4,
+            49.9
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.5,
+            29.8,
+            33.3,
+            27.8,
+            30.5,
+            29.7
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            49.2,
+            48.7,
+            45.5,
+            50.5,
+            48.7,
+            48.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.651,
+            0.667,
+            0.693,
+            0.628,
+            0.637,
+            0.681
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.9,
+            17.1,
+            14.8,
+            16.8,
+            16.3,
+            16.3
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            17.7,
+            23.2,
+            21.3,
+            18.0,
+            16.5,
+            24.6
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.1,
+            6.3,
+            8.7,
+            6.7,
+            9.2,
+            6.9
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -817,7 +3396,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Storm Mystics Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -826,8 +3407,97 @@
       "game_id": "401857060",
       "away_team": "New York Liberty",
       "home_team": "Toronto Tempo",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/liberty-tempo-2026-07-12/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-12/new-york-liberty-toronto-tempo.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.7,
+            35.5,
+            42.7,
+            41.3,
+            38.8,
+            34.0
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.6,
+            51.5,
+            51.6,
+            53.9,
+            56.4,
+            49.4
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.4,
+            35.5,
+            34.4,
+            31.0,
+            36.8,
+            33.4
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            54.0,
+            52.2,
+            51.6,
+            50.9,
+            55.9,
+            49.7
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.671,
+            0.663,
+            0.649,
+            0.646,
+            0.647,
+            0.661
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            16.1,
+            15.8,
+            13.1,
+            15.9,
+            16.3,
+            15.9
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.6,
+            19.8,
+            18.0,
+            21.0,
+            21.5,
+            20.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            7.9,
+            10.3,
+            10.7,
+            7.0,
+            6.6,
+            10.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -840,7 +3510,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Liberty Tempo Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -849,8 +3521,97 @@
       "game_id": "401857059",
       "away_team": "Portland Fire",
       "home_team": "Atlanta Dream",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/fire-dream-2026-07-11/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-11/portland-fire-atlanta-dream.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.5,
+            43.4,
+            40.0,
+            36.0,
+            40.0,
+            43.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            53.2,
+            50.4,
+            59.6,
+            45.0,
+            51.5,
+            51.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            34.9,
+            31.7,
+            28.6,
+            40.0,
+            32.3,
+            33.5
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            52.8,
+            49.3,
+            51.4,
+            51.1,
+            50.2,
+            51.0
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.671,
+            0.674,
+            0.611,
+            0.734,
+            0.653,
+            0.696
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            16.5,
+            14.5,
+            14.1,
+            13.9,
+            15.9,
+            13.8
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            18.6,
+            21.7,
+            17.7,
+            22.0,
+            18.9,
+            21.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            8.1,
+            12.0,
+            6.7,
+            7.0,
+            7.9,
+            12.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -863,7 +3624,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Fire Dream Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -872,8 +3635,97 @@
       "game_id": "401857058",
       "away_team": "Phoenix Mercury",
       "home_team": "Las Vegas Aces",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/mercury-aces-2026-07-11/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-11/phoenix-mercury-las-vegas-aces.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            36.3,
+            39.9,
+            34.7,
+            26.7,
+            35.3,
+            36.0
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            51.4,
+            55.0,
+            51.3,
+            48.4,
+            52.2,
+            54.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            32.2,
+            35.9,
+            35.8,
+            36.8,
+            31.8,
+            36.0
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            50.3,
+            54.6,
+            52.3,
+            51.0,
+            50.5,
+            54.3
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.688,
+            0.668,
+            0.705,
+            0.678,
+            0.708,
+            0.674
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            15.3,
+            13.5,
+            19.3,
+            12.6,
+            15.5,
+            13.4
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            21.8,
+            19.2,
+            21.7,
+            20.0,
+            20.7,
+            19.5
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            10.5,
+            9.2,
+            7.3,
+            8.7,
+            10.4,
+            8.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -886,7 +3738,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Mercury Aces Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -895,8 +3749,97 @@
       "game_id": "401857057",
       "away_team": "New York Liberty",
       "home_team": "Minnesota Lynx",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/liberty-lynx-2026-07-11/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-11/new-york-liberty-minnesota-lynx.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            38.7,
+            40.2,
+            42.7,
+            35.3,
+            38.8,
+            40.1
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            54.6,
+            52.9,
+            51.6,
+            57.8,
+            56.4,
+            55.1
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.4,
+            39.5,
+            34.4,
+            41.2,
+            36.8,
+            40.1
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            54.0,
+            55.0,
+            51.6,
+            59.5,
+            55.9,
+            56.9
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.671,
+            0.635,
+            0.649,
+            0.637,
+            0.647,
+            0.649
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            16.1,
+            14.1,
+            13.1,
+            14.4,
+            16.3,
+            13.7
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            20.6,
+            16.4,
+            18.0,
+            13.7,
+            21.5,
+            16.2
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            7.9,
+            9.9,
+            10.7,
+            9.0,
+            6.6,
+            11.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -909,7 +3852,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Liberty Lynx Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -918,8 +3863,97 @@
       "game_id": "401857055",
       "away_team": "Dallas Wings",
       "home_team": "Toronto Tempo",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/wings-tempo-2026-07-10/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-10/dallas-wings-toronto-tempo.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            37.8,
+            35.5,
+            34.7,
+            41.3,
+            37.8,
+            34.0
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            52.9,
+            51.5,
+            54.5,
+            53.9,
+            55.1,
+            49.4
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            33.4,
+            35.5,
+            27.3,
+            31.0,
+            33.3,
+            33.4
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            51.9,
+            52.2,
+            49.3,
+            50.9,
+            53.2,
+            49.7
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.657,
+            0.663,
+            0.648,
+            0.646,
+            0.656,
+            0.661
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.1,
+            15.8,
+            14.5,
+            15.9,
+            13.1,
+            15.9
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            18.3,
+            19.8,
+            19.3,
+            21.0,
+            17.7,
+            20.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            11.8,
+            10.3,
+            10.0,
+            7.0,
+            12.6,
+            10.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -932,7 +3966,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Wings Tempo Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -941,8 +3977,97 @@
       "game_id": "401857054",
       "away_team": "Golden State Valkyries",
       "home_team": "Connecticut Sun",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/valkyries-sun-2026-07-10/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-10/golden-state-valkyries-connecticut-sun.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            30.8,
+            38.4,
+            32.7,
+            26.7,
+            31.1,
+            39.4
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            48.6,
+            47.7,
+            52.2,
+            39.2,
+            50.5,
+            47.2
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.2,
+            29.9,
+            35.2,
+            33.3,
+            32.7,
+            29.6
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            50.5,
+            46.9,
+            52.5,
+            43.0,
+            49.8,
+            46.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.66,
+            0.654,
+            0.615,
+            0.708,
+            0.628,
+            0.67
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.0,
+            15.8,
+            15.4,
+            14.8,
+            12.9,
+            14.7
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            19.3,
+            20.3,
+            17.0,
+            21.3,
+            19.5,
+            20.4
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            6.5,
+            7.9,
+            6.3,
+            5.0,
+            6.0,
+            7.5
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -955,7 +4080,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Valkyries Sun Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -964,10 +4091,12 @@
       "game_id": "401857050",
       "away_team": "Indiana Fever",
       "home_team": "Los Angeles Sparks",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/fever-sparks-2026-07-09/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-09/indiana-fever-los-angeles-sparks.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-08",
@@ -975,8 +4104,97 @@
       "game_id": "401857049",
       "away_team": "Minnesota Lynx",
       "home_team": "Connecticut Sun",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/lynx-sun-2026-07-08/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-08/minnesota-lynx-connecticut-sun.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            40.2,
+            38.4,
+            35.3,
+            26.7,
+            40.4,
+            39.4
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            52.9,
+            47.7,
+            57.8,
+            39.2,
+            50.5,
+            47.2
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            39.5,
+            29.9,
+            41.2,
+            33.3,
+            38.7,
+            29.6
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            55.0,
+            46.9,
+            59.5,
+            43.0,
+            52.9,
+            46.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.635,
+            0.654,
+            0.637,
+            0.708,
+            0.617,
+            0.67
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            14.1,
+            15.8,
+            14.4,
+            14.8,
+            14.4,
+            14.7
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            16.4,
+            20.3,
+            13.7,
+            21.3,
+            16.7,
+            20.4
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            9.9,
+            7.9,
+            9.0,
+            5.0,
+            7.8,
+            7.5
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -989,7 +4207,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Lynx Sun Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -998,8 +4218,97 @@
       "game_id": "401857048",
       "away_team": "Golden State Valkyries",
       "home_team": "Toronto Tempo",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/valkyries-tempo-2026-07-08/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-08/golden-state-valkyries-toronto-tempo.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            30.8,
+            35.5,
+            32.7,
+            41.3,
+            31.1,
+            34.0
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            48.6,
+            51.5,
+            52.2,
+            53.9,
+            50.5,
+            49.4
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.2,
+            35.5,
+            35.2,
+            31.0,
+            32.7,
+            33.4
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            50.5,
+            52.2,
+            52.5,
+            50.9,
+            49.8,
+            49.7
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.66,
+            0.663,
+            0.615,
+            0.646,
+            0.628,
+            0.661
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.0,
+            15.8,
+            15.4,
+            15.9,
+            12.9,
+            15.9
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            19.3,
+            19.8,
+            17.0,
+            21.0,
+            19.5,
+            20.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            6.5,
+            10.3,
+            6.3,
+            7.0,
+            6.0,
+            10.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -1012,7 +4321,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Valkyries Tempo Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -1021,10 +4332,12 @@
       "game_id": "401857045",
       "away_team": "Seattle Storm",
       "home_team": "Los Angeles Sparks",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/storm-sparks-2026-07-07/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-07/seattle-storm-los-angeles-sparks.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-07",
@@ -1032,10 +4345,12 @@
       "game_id": "401857044",
       "away_team": "Connecticut Sun",
       "home_team": "Minnesota Lynx",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/sun-lynx-2026-07-07/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-07/connecticut-sun-minnesota-lynx.html",
       "metrics": {},
-      "metric_groups_found": 0,
-      "status": "NO_METRICS_FOUND"
+      "page_title": "2026 WNBA Daily Schedule on TeamRankings.com",
+      "page_identity": "SCHEDULE_FALLBACK",
+      "status": "INVALID_PAGE_IDENTITY"
     },
     {
       "date": "2026-07-06",
@@ -1043,8 +4358,97 @@
       "game_id": "401857043",
       "away_team": "Golden State Valkyries",
       "home_team": "Washington Mystics",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/valkyries-mystics-2026-07-06/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-06/golden-state-valkyries-washington-mystics.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            30.8,
+            42.8,
+            32.7,
+            50.7,
+            31.1,
+            44.9
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            48.6,
+            50.4,
+            52.2,
+            53.7,
+            50.5,
+            49.9
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.2,
+            29.8,
+            35.2,
+            27.8,
+            32.7,
+            29.7
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            50.5,
+            48.7,
+            52.5,
+            50.5,
+            49.8,
+            48.4
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.66,
+            0.667,
+            0.615,
+            0.628,
+            0.628,
+            0.681
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.0,
+            17.1,
+            15.4,
+            16.8,
+            12.9,
+            16.3
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            19.3,
+            23.2,
+            17.0,
+            18.0,
+            19.5,
+            24.6
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            6.5,
+            6.3,
+            6.3,
+            6.7,
+            6.0,
+            6.9
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -1057,7 +4461,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Valkyries Mystics Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -1066,8 +4472,97 @@
       "game_id": "401857041",
       "away_team": "Dallas Wings",
       "home_team": "Toronto Tempo",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/wings-tempo-2026-07-05/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-05/dallas-wings-toronto-tempo.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            37.8,
+            35.5,
+            34.7,
+            41.3,
+            37.8,
+            34.0
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            52.9,
+            51.5,
+            54.5,
+            53.9,
+            55.1,
+            49.4
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            33.4,
+            35.5,
+            27.3,
+            31.0,
+            33.3,
+            33.4
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            51.9,
+            52.2,
+            49.3,
+            50.9,
+            53.2,
+            49.7
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.657,
+            0.663,
+            0.648,
+            0.646,
+            0.656,
+            0.661
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.1,
+            15.8,
+            14.5,
+            15.9,
+            13.1,
+            15.9
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            18.3,
+            19.8,
+            19.3,
+            21.0,
+            17.7,
+            20.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            11.8,
+            10.3,
+            10.0,
+            7.0,
+            12.6,
+            10.8
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -1080,7 +4575,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Wings Tempo Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     },
     {
@@ -1089,8 +4586,97 @@
       "game_id": "401857039",
       "away_team": "Golden State Valkyries",
       "home_team": "Atlanta Dream",
+      "teamrankings_url": "https://www.teamrankings.com/wnba/matchup/valkyries-dream-2026-07-04/splits",
       "raw_path": "data/warehouse/teamrankings/historical/2026-07-04/golden-state-valkyries-atlanta-dream.html",
       "metrics": {
+        "points_paint": {
+          "label": "Pts in Paint/Gm",
+          "values": [
+            30.8,
+            43.4,
+            32.7,
+            36.0,
+            31.1,
+            43.8
+          ]
+        },
+        "two_pt_pct": {
+          "label": "Two Point %",
+          "values": [
+            48.6,
+            50.4,
+            52.2,
+            45.0,
+            50.5,
+            51.5
+          ]
+        },
+        "three_pt_pct": {
+          "label": "Three Point %",
+          "values": [
+            35.2,
+            31.7,
+            35.2,
+            40.0,
+            32.7,
+            33.5
+          ]
+        },
+        "efg_pct": {
+          "label": "Effective FG %",
+          "values": [
+            50.5,
+            49.3,
+            52.5,
+            51.1,
+            49.8,
+            51.0
+          ]
+        },
+        "assists": {
+          "label": "Assists/FGM",
+          "values": [
+            0.66,
+            0.674,
+            0.615,
+            0.734,
+            0.628,
+            0.696
+          ]
+        },
+        "turnovers": {
+          "label": "Turnovers/Play",
+          "values": [
+            13.0,
+            14.5,
+            15.4,
+            13.9,
+            12.9,
+            13.8
+          ]
+        },
+        "fouls": {
+          "label": "Opp Personal Fouls/Gm",
+          "values": [
+            19.3,
+            21.7,
+            17.0,
+            22.0,
+            19.5,
+            21.7
+          ]
+        },
+        "fastbreak": {
+          "label": "Fastbreak Pts/Gm",
+          "values": [
+            6.5,
+            12.0,
+            6.3,
+            7.0,
+            6.0,
+            12.4
+          ]
+        },
         "def_efficiency": {
           "label": "Defensive Efficiency",
           "values": [
@@ -1103,7 +4689,9 @@
           ]
         }
       },
-      "metric_groups_found": 1,
+      "page_title": "2026 WNBA Games: Valkyries Dream Stat Splits - TeamRankings.com",
+      "page_identity": "VALID_MATCHUP",
+      "metric_groups_found": 9,
       "status": "PARSED"
     }
   ]
