@@ -1,0 +1,117 @@
+name: WNBA ALT Yesterday Results Refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      result_date:
+        description: Optional completed Eastern date (YYYY-MM-DD); defaults to yesterday
+        required: false
+        default: ''
+  schedule:
+    - cron: '35 10 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'data/alt_yesterday_results_refresh_request.txt'
+      - '.github/workflows/wnba-alt-yesterday-results-refresh.yml'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  grade-yesterday:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TZ: America/New_York
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Resolve completed result date
+        run: |
+          REQUESTED='${{ github.event.inputs.result_date }}'
+          if [ -n "$REQUESTED" ]; then
+            RESULT_DATE="$REQUESTED"
+          else
+            RESULT_DATE=$(date -d 'yesterday' +%F)
+          fi
+          python - <<PY
+          from datetime import date
+          value='$RESULT_DATE'
+          date.fromisoformat(value)
+          print('ALT result grading date:', value)
+          PY
+          echo "RESULT_DATE=$RESULT_DATE" >> "$GITHUB_ENV"
+      - name: Recover verified player actuals
+        run: |
+          python wnba_player_game_log_archive.py snapshot || true
+          python wnba_play_by_play_layer.py --date "$RESULT_DATE" || true
+          python wnba_player_game_log_warehouse.py --date "$RESULT_DATE" || true
+          python wnba_player_game_log_archive.py merge
+          python wnba_espn_boxscore_fallback.py --date "$RESULT_DATE" || true
+          python wnba_player_game_log_warehouse.py --date "$RESULT_DATE" || true
+          python wnba_player_game_log_archive.py merge
+          python wnba_player_game_log_archive.py snapshot
+      - name: Grade ALT archive and rebuild performance
+        run: |
+          python wnba_alt_recovery_handoff.py || true
+          python wnba_alt_performance_tracker.py --grade
+          python wnba_alt_strict_regrade.py
+          TARGET=$(python active_slate_date.py)
+          test -n "$TARGET"
+          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
+          python wnba_alt_pending_diagnostics.py
+      - name: Verify previous-day grading state
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          result_date=os.environ['RESULT_DATE']
+          p=json.loads(Path('data/dashboard/wnba_alt_performance.json').read_text())
+          y=p.get('yesterday_performance') or {}
+          print({'target_date':p.get('target_date'),'result_date':result_date,'yesterday_date':y.get('date'),'n':y.get('n'),'graded':y.get('graded'),'status':y.get('status')})
+          if str(y.get('date') or '') == result_date and int(y.get('n') or 0)>0 and int(y.get('graded') or 0)<=0:
+              raise SystemExit('Previous-day ALT BET rows exist but remain ungraded after verified actual recovery')
+          PY
+      - name: Publish graded ALT results
+        run: |
+          git config user.name 'WNBA ALT Results Bot'
+          git config user.email 'actions@github.com'
+          bash scripts/atomic_generated_push.sh \
+            "Grade WNBA ALT results for ${RESULT_DATE}" \
+            'data/raw/wnba_boxscores_*.json' \
+            'data/history/wnba_alt_streak_history.jsonl' \
+            'data/history/wnba_player_game_logs_before_build.json' \
+            'data/dashboard/wnba_player_game_logs.json' \
+            'data/warehouse/wnba_player_game_logs.json' \
+            'data/dashboard/wnba_alt_performance.json' \
+            'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_pending_diagnostics.json' \
+            'data/warehouse/wnba_alt_pending_diagnostics.json' \
+            'data/dashboard/wnba_alt_strict_regrade.json' \
+            'data/warehouse/wnba_alt_strict_regrade.json'
+      - name: Deploy refreshed dashboard
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch origin main
+          gh workflow run deploy_wnba_dashboard.yml --ref main
+          echo 'ALT result grading published and dashboard deployment dispatched.'
