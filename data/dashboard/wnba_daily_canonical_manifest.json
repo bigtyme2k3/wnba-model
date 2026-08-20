@@ -1,12 +1,12 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-20T10:51:03.218399+00:00",
+  "generated_at_utc": "2026-08-20T11:10:26.417568Z",
   "target_date": "2026-08-20",
   "status": "PASS",
   "games": [
-    "Indiana Fever @ Dallas Wings",
+    "Atlanta Dream @ Los Angeles Sparks",
     "Connecticut Sun @ Las Vegas Aces",
-    "Atlanta Dream @ Los Angeles Sparks"
+    "Indiana Fever @ Dallas Wings"
   ],
   "teams": [
     "Atlanta Dream",
@@ -17,7 +17,7 @@
     "Los Angeles Sparks"
   ],
   "game_count": 3,
-  "player_prop_rows": 316,
+  "player_prop_rows": 315,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -27,16 +27,17 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-20\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 3,\n  \"matchups\": [\n    \"Indiana Fever @ Dallas Wings\",\n    \"Connecticut Sun @ Las Vegas Aces\",\n    \"Atlanta Dream @ Los Angeles Sparks\"\n  ]\n}\n",
+      "stdout": "Authoritative current slate synchronized for 2026-08-20",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-20\",\n  \"events\": 3,\n  \"raw_rows\": 317,\n  \"verified_rows\": 316,\n  \"unresolved_rows\": 1,\n  \"unresolved_players\": [\n    \"Monique Akoa Makani\"\n  ],\n  \"canonical_manifest_synced\": true\n}\n",
+      "stdout": "Verified player props synchronized for 2026-08-20",
       "stderr": ""
     }
   ],
-  "failures": []
+  "failures": [],
+  "manifest_sync_source": "player_props_ingestion_same_run"
 }
