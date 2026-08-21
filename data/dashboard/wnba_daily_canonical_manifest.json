@@ -1,11 +1,11 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-21T13:57:05.654445Z",
+  "generated_at_utc": "2026-08-21T16:55:00.816648+00:00",
   "target_date": "2026-08-21",
   "status": "PASS",
   "games": [
-    "Golden State Valkyries @ Chicago Sky",
     "Minnesota Lynx @ Washington Mystics",
+    "Golden State Valkyries @ Chicago Sky",
     "Portland Fire @ Toronto Tempo"
   ],
   "teams": [
@@ -17,7 +17,7 @@
     "Washington Mystics"
   ],
   "game_count": 3,
-  "player_prop_rows": 254,
+  "player_prop_rows": 256,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -27,17 +27,16 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Authoritative current slate synchronized for 2026-08-21",
+      "stdout": "{\n  \"target_date\": \"2026-08-21\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 3,\n  \"matchups\": [\n    \"Minnesota Lynx @ Washington Mystics\",\n    \"Golden State Valkyries @ Chicago Sky\",\n    \"Portland Fire @ Toronto Tempo\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Verified player props synchronized for 2026-08-21",
+      "stdout": "{\n  \"target_date\": \"2026-08-21\",\n  \"events\": 3,\n  \"raw_rows\": 256,\n  \"verified_rows\": 256,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
-  "failures": [],
-  "manifest_sync_source": "player_props_ingestion_same_run"
+  "failures": []
 }
