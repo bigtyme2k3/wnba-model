@@ -1,0 +1,163 @@
+{
+  "version": "V5",
+  "module": "ADAPTIVE_CHALLENGER_V2",
+  "stage": "PROSPECTIVE_CONTEXT_ABLATION",
+  "status": "WAITING_FOR_CONTEXT_ROWS",
+  "generated_at_utc": "2026-08-22T18:05:21.624538+00:00",
+  "research_only": true,
+  "production_ready": false,
+  "canonical_resolved_rows": 389,
+  "rows_with_any_frozen_context": 0,
+  "minimum_context_train_rows": 60,
+  "context_fields_seen": [],
+  "results": [
+    {
+      "group": "MARKET",
+      "features": [
+        "market_probability"
+      ],
+      "eligible_rows": 389,
+      "chronologically_scored_rows": 329,
+      "model": {
+        "n": 329,
+        "brier": 0.251508,
+        "log_loss": 0.696173,
+        "accuracy": 0.50152,
+        "bets_at_0_5": 191,
+        "roi_at_0_5": -0.092634
+      },
+      "market_same_rows": {
+        "n": 329,
+        "brier": 0.249691,
+        "log_loss": 0.692622,
+        "accuracy": 0.525836,
+        "bets_at_0_5": 261,
+        "roi_at_0_5": -0.064618
+      },
+      "beats_market_brier": false,
+      "beats_previous_group_brier": null
+    },
+    {
+      "group": "FORM_SIGNAL",
+      "features": [
+        "market_probability",
+        "probability_edge",
+        "confidence_score",
+        "uncertainty_score",
+        "neighbor_hit_rate",
+        "average_neighbor_distance"
+      ],
+      "eligible_rows": 389,
+      "chronologically_scored_rows": 329,
+      "model": {
+        "n": 329,
+        "brier": 0.250433,
+        "log_loss": 0.693547,
+        "accuracy": 0.534954,
+        "bets_at_0_5": 176,
+        "roi_at_0_5": -0.018827
+      },
+      "market_same_rows": {
+        "n": 329,
+        "brier": 0.249691,
+        "log_loss": 0.692622,
+        "accuracy": 0.525836,
+        "bets_at_0_5": 261,
+        "roi_at_0_5": -0.064618
+      },
+      "beats_market_brier": false,
+      "beats_previous_group_brier": true
+    },
+    {
+      "group": "MINUTES_ROLE",
+      "features": [
+        "market_probability",
+        "probability_edge",
+        "confidence_score",
+        "uncertainty_score",
+        "neighbor_hit_rate",
+        "average_neighbor_distance",
+        "ctx_minutes_l5",
+        "ctx_minutes_l10",
+        "ctx_minutes_prior_mean",
+        "ctx_starter_rate_l5",
+        "ctx_starter_rate_l10",
+        "ctx_rotation_games_prior"
+      ],
+      "eligible_rows": 0,
+      "chronologically_scored_rows": 0,
+      "model": {
+        "n": 0
+      },
+      "market_same_rows": {
+        "n": 0
+      },
+      "beats_market_brier": false,
+      "beats_previous_group_brier": false
+    },
+    {
+      "group": "LINEUP_INJURY",
+      "features": [
+        "market_probability",
+        "probability_edge",
+        "confidence_score",
+        "uncertainty_score",
+        "neighbor_hit_rate",
+        "average_neighbor_distance",
+        "ctx_minutes_l5",
+        "ctx_minutes_l10",
+        "ctx_minutes_prior_mean",
+        "ctx_starter_rate_l5",
+        "ctx_starter_rate_l10",
+        "ctx_rotation_games_prior",
+        "ctx_lineup_confidence",
+        "ctx_rotation_multiplier"
+      ],
+      "eligible_rows": 0,
+      "chronologically_scored_rows": 0,
+      "model": {
+        "n": 0
+      },
+      "market_same_rows": {
+        "n": 0
+      },
+      "beats_market_brier": false,
+      "beats_previous_group_brier": false
+    },
+    {
+      "group": "MATCHUP",
+      "features": [
+        "market_probability",
+        "probability_edge",
+        "confidence_score",
+        "uncertainty_score",
+        "neighbor_hit_rate",
+        "average_neighbor_distance",
+        "ctx_minutes_l5",
+        "ctx_minutes_l10",
+        "ctx_minutes_prior_mean",
+        "ctx_starter_rate_l5",
+        "ctx_starter_rate_l10",
+        "ctx_rotation_games_prior",
+        "ctx_lineup_confidence",
+        "ctx_rotation_multiplier",
+        "ctx_matchup_defense_index",
+        "ctx_matchup_multiplier",
+        "ctx_matchup_last5_allowed",
+        "ctx_matchup_last10_allowed"
+      ],
+      "eligible_rows": 0,
+      "chronologically_scored_rows": 0,
+      "model": {
+        "n": 0
+      },
+      "market_same_rows": {
+        "n": 0
+      },
+      "beats_market_brier": false,
+      "beats_previous_group_brier": false
+    }
+  ],
+  "policy": "Only earliest immutable issued prediction per ranking_key is used. Context must already exist in the M12 ledger before outcome; no historical reconstruction/backfill is permitted.",
+  "promotion_policy": "No production use. Require repeated chronological superiority over MARKET and the previous surviving feature group on materially larger prospective context samples."
+}
