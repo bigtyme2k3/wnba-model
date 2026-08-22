@@ -10,6 +10,8 @@ on:
       - 'data/dashboard/wnba_v5_live_inference.json'
       - 'data/dashboard/wnba_v5_historical_features.csv'
       - 'data/warehouse/wnba_player_game_logs.json'
+      - 'data/dashboard/wnba_v5_matchup_adjustments.csv'
+      - 'data/dashboard/wnba_v5_lineup_adjustments.csv'
       - '.github/workflows/wnba-v5-m12-postgame-learning.yml'
 concurrency:
   group: v5-forward-learning-writer
@@ -44,6 +46,11 @@ jobs:
           assert p['status'] in {'READY_FORWARD_LEARNING','WAITING_FOR_CERTIFIED_OUTCOMES','WAITING_FOR_M11_PREDICTIONS'}
           assert p['promotion_gate']['minimum_forward_rows']==300
           assert p['promotion_gate']['minimum_explicit_clv_coverage_pct']==60.0
+          ctx=p.get('context_snapshot',{})
+          assert 'policy' in ctx
+          assert 'fields' in ctx
+          print('Frozen context fields:',ctx.get('fields'))
+          print('Rows with prospective context:',ctx.get('rows_with_frozen_context'))
           PY
       - name: Publish V5 M12 safely
         run: |
