@@ -1,0 +1,761 @@
+{
+  "schema_version": 1,
+  "target_date": "2026-08-22",
+  "generated_at_utc": "2026-08-22T22:34:15.100623+00:00",
+  "source": "data/dashboard/wnba_alt_market_warehouse.json",
+  "status": "ready",
+  "framework": {
+    "same_game_target_per_game": 3,
+    "minimum_same_game_target_per_game": 2,
+    "cross_game_cards_target": 3,
+    "legs_per_same_game_card": 3,
+    "cross_game_rule": "Prefer one leg per game; cap at four games per card.",
+    "player_duplication_rule": "No duplicate player within a parlay.",
+    "pricing_rule": "Exact sportsbook ALT lines only; no line averaging.",
+    "tiers": [
+      "SAFE",
+      "BALANCED",
+      "UPSIDE"
+    ],
+    "research_note": "Parlay probabilities are heuristic until prospective parlay grading accumulates."
+  },
+  "summary": {
+    "games": 3,
+    "same_game_parlays": 9,
+    "cross_game_parlays": 3,
+    "total_parlays": 12,
+    "per_game_counts": {
+      "Indiana Fever @ New York Liberty": 3,
+      "Atlanta Dream @ Phoenix Mercury": 3,
+      "Connecticut Sun @ Los Angeles Sparks": 3
+    }
+  },
+  "parlays": [
+    {
+      "parlay_id": "SAME_GAME_ALT|SAFE|Indiana Fever @ New York Liberty #1|a05ae0cd5516fbbcdd9fda35e698f70d|jonquel jones|AST|OVER|1.5|fanatics|a05ae0cd5516fbbcdd9fda35e698f70d|kelsey mitchell|PTS|OVER|19.5|fanatics|a05ae0cd5516fbbcdd9fda35e698f70d|caitlin clark|3PM|OVER|1.5|draftkings",
+      "kind": "SAME_GAME_ALT",
+      "tier": "SAFE",
+      "label": "Indiana Fever @ New York Liberty #1",
+      "games": [
+        "Indiana Fever @ New York Liberty"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 102,
+      "estimated_independent_hit_probability": 1.0,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Jonquel Jones",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -325.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.3077,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|jonquel jones|AST|OVER|1.5|fanatics"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Kelsey Mitchell",
+          "stat": "PTS",
+          "side": "OVER",
+          "threshold": 19.5,
+          "display_threshold": "19.5+",
+          "odds": -400.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.25,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|kelsey mitchell|PTS|OVER|19.5|fanatics"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Caitlin Clark",
+          "stat": "3PM",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -421.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2375,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|caitlin clark|3PM|OVER|1.5|draftkings"
+        }
+      ]
+    },
+    {
+      "parlay_id": "SAME_GAME_ALT|BALANCED|Indiana Fever @ New York Liberty #2|a05ae0cd5516fbbcdd9fda35e698f70d|jonquel jones|AST|OVER|1.5|fanduel|a05ae0cd5516fbbcdd9fda35e698f70d|kelsey mitchell|PTS|OVER|19.5|fanatics|a05ae0cd5516fbbcdd9fda35e698f70d|caitlin clark|3PM|OVER|1.5|draftkings",
+      "kind": "SAME_GAME_ALT",
+      "tier": "BALANCED",
+      "label": "Indiana Fever @ New York Liberty #2",
+      "games": [
+        "Indiana Fever @ New York Liberty"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 100,
+      "estimated_independent_hit_probability": 1.0,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Jonquel Jones",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -340.0,
+          "sportsbook": "FanDuel",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2941,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|jonquel jones|AST|OVER|1.5|fanduel"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Kelsey Mitchell",
+          "stat": "PTS",
+          "side": "OVER",
+          "threshold": 19.5,
+          "display_threshold": "19.5+",
+          "odds": -400.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.25,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|kelsey mitchell|PTS|OVER|19.5|fanatics"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Caitlin Clark",
+          "stat": "3PM",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -421.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2375,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|caitlin clark|3PM|OVER|1.5|draftkings"
+        }
+      ]
+    },
+    {
+      "parlay_id": "SAME_GAME_ALT|UPSIDE|Indiana Fever @ New York Liberty #3|a05ae0cd5516fbbcdd9fda35e698f70d|caitlin clark|PTS|OVER|17.5|draftkings|a05ae0cd5516fbbcdd9fda35e698f70d|kelsey mitchell|AST|OVER|1.5|fanduel|a05ae0cd5516fbbcdd9fda35e698f70d|han xu|PTS|OVER|5.5|draftkings",
+      "kind": "SAME_GAME_ALT",
+      "tier": "UPSIDE",
+      "label": "Indiana Fever @ New York Liberty #3",
+      "games": [
+        "Indiana Fever @ New York Liberty"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 240,
+      "estimated_independent_hit_probability": 0.648,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Caitlin Clark",
+          "stat": "PTS",
+          "side": "OVER",
+          "threshold": 17.5,
+          "display_threshold": "17.5+",
+          "odds": -248.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.9,
+          "l5_rate": 0.8,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.2629,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|caitlin clark|PTS|OVER|17.5|draftkings"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Kelsey Mitchell",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -260.0,
+          "sportsbook": "FanDuel",
+          "historical_probability": 0.9,
+          "l5_rate": 0.8,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.2462,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|kelsey mitchell|AST|OVER|1.5|fanduel"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Han Xu",
+          "stat": "PTS",
+          "side": "OVER",
+          "threshold": 5.5,
+          "display_threshold": "5.5+",
+          "odds": -133.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.8,
+          "l5_rate": 0.8,
+          "l10_rate": 0.8,
+          "expected_value_per_unit": 0.4015,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|han xu|PTS|OVER|5.5|draftkings"
+        }
+      ]
+    },
+    {
+      "parlay_id": "SAME_GAME_ALT|SAFE|Atlanta Dream @ Phoenix Mercury #1|c51758bb72914739b6e6cc2d16ed0882|allisha gray|AST|OVER|1.5|fanatics|c51758bb72914739b6e6cc2d16ed0882|angel reese|REB|OVER|9.5|fanatics|c51758bb72914739b6e6cc2d16ed0882|alyssa thomas|AST|OVER|4.5|draftkings",
+      "kind": "SAME_GAME_ALT",
+      "tier": "SAFE",
+      "label": "Atlanta Dream @ Phoenix Mercury #1",
+      "games": [
+        "Atlanta Dream @ Phoenix Mercury"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": -134,
+      "estimated_independent_hit_probability": 1.0,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Allisha Gray",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -375.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2667,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|allisha gray|AST|OVER|1.5|fanatics"
+        },
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Angel Reese",
+          "stat": "REB",
+          "side": "OVER",
+          "threshold": 9.5,
+          "display_threshold": "9.5+",
+          "odds": -475.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2105,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|angel reese|REB|OVER|9.5|fanatics"
+        },
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Alyssa Thomas",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 4.5,
+          "display_threshold": "4.5+",
+          "odds": -720.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.1389,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|alyssa thomas|AST|OVER|4.5|draftkings"
+        }
+      ]
+    },
+    {
+      "parlay_id": "SAME_GAME_ALT|BALANCED|Atlanta Dream @ Phoenix Mercury #2|c51758bb72914739b6e6cc2d16ed0882|allisha gray|AST|OVER|1.5|fanduel|c51758bb72914739b6e6cc2d16ed0882|dewanna bonner|REB|OVER|5.5|fanatics|c51758bb72914739b6e6cc2d16ed0882|alyssa thomas|AST|OVER|5.5|fanduel",
+      "kind": "SAME_GAME_ALT",
+      "tier": "BALANCED",
+      "label": "Atlanta Dream @ Phoenix Mercury #2",
+      "games": [
+        "Atlanta Dream @ Phoenix Mercury"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 136,
+      "estimated_independent_hit_probability": 0.81,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Allisha Gray",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -400.0,
+          "sportsbook": "FanDuel",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.25,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|allisha gray|AST|OVER|1.5|fanduel"
+        },
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "DeWanna Bonner",
+          "stat": "REB",
+          "side": "OVER",
+          "threshold": 5.5,
+          "display_threshold": "5.5+",
+          "odds": -190.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 0.9,
+          "l5_rate": 0.8,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.3737,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|dewanna bonner|REB|OVER|5.5|fanatics"
+        },
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Alyssa Thomas",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 5.5,
+          "display_threshold": "5.5+",
+          "odds": -420.0,
+          "sportsbook": "FanDuel",
+          "historical_probability": 0.9,
+          "l5_rate": 0.8,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.1143,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|alyssa thomas|AST|OVER|5.5|fanduel"
+        }
+      ]
+    },
+    {
+      "parlay_id": "SAME_GAME_ALT|UPSIDE|Atlanta Dream @ Phoenix Mercury #3|c51758bb72914739b6e6cc2d16ed0882|dewanna bonner|REB|OVER|5.5|draftkings|c51758bb72914739b6e6cc2d16ed0882|rhyne howard|PTS|OVER|16.5|fanatics|c51758bb72914739b6e6cc2d16ed0882|kelsey plum|PA|OVER|17.5|draftkings",
+      "kind": "SAME_GAME_ALT",
+      "tier": "UPSIDE",
+      "label": "Atlanta Dream @ Phoenix Mercury #3",
+      "games": [
+        "Atlanta Dream @ Phoenix Mercury"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 298,
+      "estimated_independent_hit_probability": 0.576,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "DeWanna Bonner",
+          "stat": "REB",
+          "side": "OVER",
+          "threshold": 5.5,
+          "display_threshold": "5.5+",
+          "odds": -211.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.9,
+          "l5_rate": 0.8,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.3265,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|dewanna bonner|REB|OVER|5.5|draftkings"
+        },
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Rhyne Howard",
+          "stat": "PTS",
+          "side": "OVER",
+          "threshold": 16.5,
+          "display_threshold": "16.5+",
+          "odds": -225.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 0.8,
+          "l5_rate": 1.0,
+          "l10_rate": 0.8,
+          "expected_value_per_unit": 0.1556,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|rhyne howard|PTS|OVER|16.5|fanatics"
+        },
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Kelsey Plum",
+          "stat": "PA",
+          "side": "OVER",
+          "threshold": 17.5,
+          "display_threshold": "17.5+",
+          "odds": -115.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.8,
+          "l5_rate": 0.8,
+          "l10_rate": 0.8,
+          "expected_value_per_unit": 0.4957,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|kelsey plum|PA|OVER|17.5|draftkings"
+        }
+      ]
+    },
+    {
+      "parlay_id": "SAME_GAME_ALT|SAFE|Connecticut Sun @ Los Angeles Sparks #1|d2c4b90e59812d0ba7bb21319e5c25a6|kennedy burke|3PM|OVER|0.5|draftkings|d2c4b90e59812d0ba7bb21319e5c25a6|nneka ogwumike|PRA|OVER|19.5|draftkings|d2c4b90e59812d0ba7bb21319e5c25a6|erica wheeler|PTS|OVER|4.5|fanatics",
+      "kind": "SAME_GAME_ALT",
+      "tier": "SAFE",
+      "label": "Connecticut Sun @ Los Angeles Sparks #1",
+      "games": [
+        "Connecticut Sun @ Los Angeles Sparks"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": -122,
+      "estimated_independent_hit_probability": 1.0,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Kennedy Burke",
+          "stat": "3PM",
+          "side": "OVER",
+          "threshold": 0.5,
+          "display_threshold": "0.5+",
+          "odds": -344.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2907,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|kennedy burke|3PM|OVER|0.5|draftkings"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Nneka Ogwumike",
+          "stat": "PRA",
+          "side": "OVER",
+          "threshold": 19.5,
+          "display_threshold": "19.5+",
+          "odds": -516.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.1938,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|nneka ogwumike|PRA|OVER|19.5|draftkings"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Erica Wheeler",
+          "stat": "PTS",
+          "side": "OVER",
+          "threshold": 4.5,
+          "display_threshold": "4.5+",
+          "odds": -550.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.1818,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|erica wheeler|PTS|OVER|4.5|fanatics"
+        }
+      ]
+    },
+    {
+      "parlay_id": "SAME_GAME_ALT|BALANCED|Connecticut Sun @ Los Angeles Sparks #2|d2c4b90e59812d0ba7bb21319e5c25a6|kennedy burke|3PM|OVER|0.5|fanatics|d2c4b90e59812d0ba7bb21319e5c25a6|dearica hamby|AST|OVER|1.5|fanatics|d2c4b90e59812d0ba7bb21319e5c25a6|nneka ogwumike|REB|OVER|5.5|draftkings",
+      "kind": "SAME_GAME_ALT",
+      "tier": "BALANCED",
+      "label": "Connecticut Sun @ Los Angeles Sparks #2",
+      "games": [
+        "Connecticut Sun @ Los Angeles Sparks"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 127,
+      "estimated_independent_hit_probability": 0.81,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Kennedy Burke",
+          "stat": "3PM",
+          "side": "OVER",
+          "threshold": 0.5,
+          "display_threshold": "0.5+",
+          "odds": -350.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2857,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|kennedy burke|3PM|OVER|0.5|fanatics"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Dearica Hamby",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -300.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 0.9,
+          "l5_rate": 1.0,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.2,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|dearica hamby|AST|OVER|1.5|fanatics"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Nneka Ogwumike",
+          "stat": "REB",
+          "side": "OVER",
+          "threshold": 5.5,
+          "display_threshold": "5.5+",
+          "odds": -307.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.9,
+          "l5_rate": 1.0,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.1932,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|nneka ogwumike|REB|OVER|5.5|draftkings"
+        }
+      ]
+    },
+    {
+      "parlay_id": "SAME_GAME_ALT|UPSIDE|Connecticut Sun @ Los Angeles Sparks #3|d2c4b90e59812d0ba7bb21319e5c25a6|erica wheeler|AST|OVER|3.5|fanduel|d2c4b90e59812d0ba7bb21319e5c25a6|nneka ogwumike|AST|OVER|2.5|draftkings|d2c4b90e59812d0ba7bb21319e5c25a6|rae burrell|AST|OVER|2.5|draftkings",
+      "kind": "SAME_GAME_ALT",
+      "tier": "UPSIDE",
+      "label": "Connecticut Sun @ Los Angeles Sparks #3",
+      "games": [
+        "Connecticut Sun @ Los Angeles Sparks"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 383,
+      "estimated_independent_hit_probability": 0.392,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Erica Wheeler",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 3.5,
+          "display_threshold": "3.5+",
+          "odds": -225.0,
+          "sportsbook": "FanDuel",
+          "historical_probability": 0.8,
+          "l5_rate": 0.6,
+          "l10_rate": 0.8,
+          "expected_value_per_unit": 0.1556,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|erica wheeler|AST|OVER|3.5|fanduel"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Nneka Ogwumike",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 2.5,
+          "display_threshold": "2.5+",
+          "odds": -105.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.7,
+          "l5_rate": 0.8,
+          "l10_rate": 0.7,
+          "expected_value_per_unit": 0.3667,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|nneka ogwumike|AST|OVER|2.5|draftkings"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Rae Burrell",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 2.5,
+          "display_threshold": "2.5+",
+          "odds": -140.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.7,
+          "l5_rate": 0.8,
+          "l10_rate": 0.7,
+          "expected_value_per_unit": 0.2,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|rae burrell|AST|OVER|2.5|draftkings"
+        }
+      ]
+    },
+    {
+      "parlay_id": "CROSS_GAME_ALT|SAFE|Mixed Slate #1|c51758bb72914739b6e6cc2d16ed0882|allisha gray|AST|OVER|1.5|fanatics|d2c4b90e59812d0ba7bb21319e5c25a6|kennedy burke|3PM|OVER|0.5|draftkings|a05ae0cd5516fbbcdd9fda35e698f70d|jonquel jones|AST|OVER|1.5|fanatics",
+      "kind": "CROSS_GAME_ALT",
+      "tier": "SAFE",
+      "label": "Mixed Slate #1",
+      "games": [
+        "Atlanta Dream @ Phoenix Mercury",
+        "Connecticut Sun @ Los Angeles Sparks",
+        "Indiana Fever @ New York Liberty"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 114,
+      "estimated_independent_hit_probability": 1.0,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Allisha Gray",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -375.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2667,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|allisha gray|AST|OVER|1.5|fanatics"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Kennedy Burke",
+          "stat": "3PM",
+          "side": "OVER",
+          "threshold": 0.5,
+          "display_threshold": "0.5+",
+          "odds": -344.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2907,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|kennedy burke|3PM|OVER|0.5|draftkings"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Jonquel Jones",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -325.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.3077,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|jonquel jones|AST|OVER|1.5|fanatics"
+        }
+      ]
+    },
+    {
+      "parlay_id": "CROSS_GAME_ALT|BALANCED|Mixed Slate #2|c51758bb72914739b6e6cc2d16ed0882|allisha gray|AST|OVER|1.5|fanduel|d2c4b90e59812d0ba7bb21319e5c25a6|kennedy burke|3PM|OVER|0.5|fanatics|a05ae0cd5516fbbcdd9fda35e698f70d|jonquel jones|AST|OVER|1.5|fanduel",
+      "kind": "CROSS_GAME_ALT",
+      "tier": "BALANCED",
+      "label": "Mixed Slate #2",
+      "games": [
+        "Atlanta Dream @ Phoenix Mercury",
+        "Connecticut Sun @ Los Angeles Sparks",
+        "Indiana Fever @ New York Liberty"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 108,
+      "estimated_independent_hit_probability": 1.0,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "Allisha Gray",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -400.0,
+          "sportsbook": "FanDuel",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.25,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|allisha gray|AST|OVER|1.5|fanduel"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Kennedy Burke",
+          "stat": "3PM",
+          "side": "OVER",
+          "threshold": 0.5,
+          "display_threshold": "0.5+",
+          "odds": -350.0,
+          "sportsbook": "Fanatics",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2857,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|kennedy burke|3PM|OVER|0.5|fanatics"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Jonquel Jones",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 1.5,
+          "display_threshold": "1.5+",
+          "odds": -340.0,
+          "sportsbook": "FanDuel",
+          "historical_probability": 1.0,
+          "l5_rate": 1.0,
+          "l10_rate": 1.0,
+          "expected_value_per_unit": 0.2941,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|jonquel jones|AST|OVER|1.5|fanduel"
+        }
+      ]
+    },
+    {
+      "parlay_id": "CROSS_GAME_ALT|UPSIDE|Mixed Slate #3|c51758bb72914739b6e6cc2d16ed0882|dewanna bonner|REB|OVER|5.5|draftkings|d2c4b90e59812d0ba7bb21319e5c25a6|erica wheeler|AST|OVER|3.5|fanduel|a05ae0cd5516fbbcdd9fda35e698f70d|caitlin clark|PTS|OVER|17.5|draftkings",
+      "kind": "CROSS_GAME_ALT",
+      "tier": "UPSIDE",
+      "label": "Mixed Slate #3",
+      "games": [
+        "Atlanta Dream @ Phoenix Mercury",
+        "Connecticut Sun @ Los Angeles Sparks",
+        "Indiana Fever @ New York Liberty"
+      ],
+      "leg_count": 3,
+      "estimated_independent_price": 199,
+      "estimated_independent_hit_probability": 0.648,
+      "note": "Estimated price/probability assumes independent legs; sportsbook parlay pricing and same-game correlation may differ.",
+      "legs": [
+        {
+          "game": "Atlanta Dream @ Phoenix Mercury",
+          "player": "DeWanna Bonner",
+          "stat": "REB",
+          "side": "OVER",
+          "threshold": 5.5,
+          "display_threshold": "5.5+",
+          "odds": -211.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.9,
+          "l5_rate": 0.8,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.3265,
+          "market_id": "c51758bb72914739b6e6cc2d16ed0882|dewanna bonner|REB|OVER|5.5|draftkings"
+        },
+        {
+          "game": "Connecticut Sun @ Los Angeles Sparks",
+          "player": "Erica Wheeler",
+          "stat": "AST",
+          "side": "OVER",
+          "threshold": 3.5,
+          "display_threshold": "3.5+",
+          "odds": -225.0,
+          "sportsbook": "FanDuel",
+          "historical_probability": 0.8,
+          "l5_rate": 0.6,
+          "l10_rate": 0.8,
+          "expected_value_per_unit": 0.1556,
+          "market_id": "d2c4b90e59812d0ba7bb21319e5c25a6|erica wheeler|AST|OVER|3.5|fanduel"
+        },
+        {
+          "game": "Indiana Fever @ New York Liberty",
+          "player": "Caitlin Clark",
+          "stat": "PTS",
+          "side": "OVER",
+          "threshold": 17.5,
+          "display_threshold": "17.5+",
+          "odds": -248.0,
+          "sportsbook": "DraftKings",
+          "historical_probability": 0.9,
+          "l5_rate": 0.8,
+          "l10_rate": 0.9,
+          "expected_value_per_unit": 0.2629,
+          "market_id": "a05ae0cd5516fbbcdd9fda35e698f70d|caitlin clark|PTS|OVER|17.5|draftkings"
+        }
+      ]
+    }
+  ]
+}
