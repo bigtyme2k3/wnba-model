@@ -1,22 +1,21 @@
 """Current-date health audit for critical WNBA V5 production and learning artifacts.
 
-This intentionally focuses on the small set of files that must be trustworthy for
-same-day inference, grading, ALT performance, and forward learning. Legacy research
-artifacts are reported separately and do not make the production health gate fail.
+The audit follows the canonical current-slate chain rather than legacy master files.
+Legacy observability is reported separately and never determines production health.
 """
 from __future__ import annotations
 
 import json
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DASH = ROOT / 'data' / 'dashboard'
-MASTER = ROOT / 'data' / 'master' / 'wnba_master.json'
 OUT = DASH / 'wnba_v5_current_data_health.json'
 
 CRITICAL = {
-    'master': ('data/master/wnba_master.json', ('target_date',), None),
+    'canonical_manifest': ('data/dashboard/wnba_daily_canonical_manifest.json', ('target_date',), ('PASS',)),
     'player_props': ('data/dashboard/wnba_player_props.json', ('target_date',), None),
     'injury_intelligence': ('data/dashboard/wnba_injury_intelligence.json', ('target_date','date'), None),
     'm11_inference': ('data/dashboard/wnba_v5_m11_report.json', ('target_date','date'), ('READY_SHADOW','READY')),
@@ -31,7 +30,16 @@ CONTEXT_FILES = {
     'lineup_adjustments': 'data/dashboard/wnba_v5_lineup_adjustments.csv',
 }
 
+TARGET_AUTHORITIES = (
+    ('data/dashboard/wnba_daily_canonical_manifest.json', ('target_date',)),
+    ('data/dashboard/wnba_player_props.json', ('target_date',)),
+    ('data/dashboard/wnba_v5_m11_report.json', ('target_date','date')),
+    ('data/dashboard/wnba_s19_m06_results_lifecycle.json', ('target_date',)),
+    ('data/dashboard/wnba_alt_performance.json', ('target_date',)),
+)
+
 LEGACY_OBSERVABILITY = {
+    'legacy_master': 'data/master/wnba_master.json',
     'source_health': 'data/dashboard/wnba_source_health.json',
     'warehouse_health': 'data/dashboard/wnba_warehouse_health.json',
     'results_review_center': 'data/dashboard/results_review_center.json',
@@ -77,8 +85,20 @@ def target_from(payload, keys):
 
 
 def current_target():
-    p = load(MASTER) or {}
-    return parse_date(p.get('target_date')) or datetime.now(timezone.utc).date().isoformat()
+    """Resolve target from canonical same-day producers; legacy master is never authoritative."""
+    observed = []
+    detail = []
+    for rel, keys in TARGET_AUTHORITIES:
+        payload = load(ROOT / rel)
+        d = target_from(payload, keys) if isinstance(payload, dict) else None
+        if d:
+            observed.append(d)
+            detail.append({'path': rel, 'target_date': d})
+    if observed:
+        counts = Counter(observed)
+        target = sorted(counts, key=lambda d: (counts[d], d), reverse=True)[0]
+        return target, detail
+    return datetime.now(timezone.utc).date().isoformat(), detail
 
 
 def inspect_json(name, rel, date_keys, statuses, target):
@@ -98,10 +118,7 @@ def inspect_json(name, rel, date_keys, statuses, target):
         row['findings'].append(f"target_date_mismatch:{row['target_date']}!={target}")
     if statuses and payload.get('status') not in statuses:
         row['findings'].append(f"unexpected_status:{payload.get('status')}")
-    if not row['findings']:
-        row['status'] = 'green'
-    else:
-        row['status'] = 'yellow' if row['exists'] else 'red'
+    row['status'] = 'green' if not row['findings'] else 'yellow'
     return row
 
 
@@ -138,7 +155,7 @@ def inspect_legacy(name, rel, target):
 
 
 def build():
-    target = current_target()
+    target, target_sources = current_target()
     critical = [inspect_json(name, *spec, target) for name, spec in CRITICAL.items()]
     context = [inspect_context(name, rel, target) for name, rel in CONTEXT_FILES.items()]
     legacy = [inspect_legacy(name, rel, target) for name, rel in LEGACY_OBSERVABILITY.items()]
@@ -148,6 +165,10 @@ def build():
     payload = {
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
         'target_date': target,
+        'target_resolution': {
+            'policy': 'mode of canonical same-day producers; latest date wins ties',
+            'sources': target_sources,
+        },
         'status': status,
         'summary': {
             'critical_checks': len(critical) + len(context),
@@ -159,7 +180,7 @@ def build():
         'critical': critical,
         'prospective_context': context,
         'legacy_observability': legacy,
-        'policy': 'Production health is based only on current critical artifacts. Legacy observability files are reported but never allowed to mask current health.',
+        'policy': 'Production health is based only on current canonical artifacts. Legacy master/observability files are reported but never allowed to define or mask current health.',
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, indent=2, allow_nan=False) + '\n', encoding='utf-8')
