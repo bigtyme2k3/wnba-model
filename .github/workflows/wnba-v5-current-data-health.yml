@@ -8,6 +8,7 @@ on:
     paths:
       - 'wnba_v5_current_data_health.py'
       - 'data/master/wnba_master.json'
+      - 'data/dashboard/wnba_daily_canonical_manifest.json'
       - 'data/dashboard/wnba_player_props.json'
       - 'data/dashboard/wnba_injury_intelligence.json'
       - 'data/dashboard/wnba_v5_m11_report.json'
@@ -44,10 +45,15 @@ jobs:
           python - <<'PY'
           import json
           p=json.load(open('data/dashboard/wnba_v5_current_data_health.json'))
+          props=json.load(open('data/dashboard/wnba_player_props.json'))
+          manifest=json.load(open('data/dashboard/wnba_daily_canonical_manifest.json'))
           print(p)
           assert p['status'] in {'GREEN','YELLOW','RED'}
           assert p['summary']['critical_checks'] >= 8
           assert p['target_date']
+          assert p['target_date'] == str(props.get('target_date') or '')[:10], (p['target_date'],props.get('target_date'))
+          assert p['target_date'] == str(manifest.get('target_date') or '')[:10], (p['target_date'],manifest.get('target_date'))
+          assert p['target_resolution']['sources']
           PY
       - name: Publish health report safely
         run: |
