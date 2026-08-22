@@ -4,6 +4,7 @@ import re
 import patch_dashboard_v4_ui_freeze as freeze
 import patch_dashboard_v5_current_data_health as current_health
 import patch_dashboard_v5_evidence_integrity as evidence_integrity
+import patch_dashboard_v5_promotion_readiness as promotion_readiness
 
 
 def safe_replace_element(html: str, tag: str, element_id: str, replacement: str) -> str:
@@ -17,6 +18,7 @@ def safe_replace_element(html: str, tag: str, element_id: str, replacement: str)
 
 freeze.replace_element = safe_replace_element
 freeze.main()
-# Install current canonical health first, then immutable-evidence integrity above it.
+# Build the Data Health stack from current canonical state through evidence and promotion gates.
 current_health.main()
 evidence_integrity.main()
+promotion_readiness.main()
