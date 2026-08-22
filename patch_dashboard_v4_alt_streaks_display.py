@@ -27,9 +27,6 @@ SCRIPT = r'''<script id="v4-alt-streaks-display-script">
   if(r.is_alternate===true||r.alternate===true)return 'alternate';
   const alt=Number(r.alt_line??r.threshold),std=Number(r.standard_line??r.main_line);
   if(Number.isFinite(alt)&&Number.isFinite(std))return Math.abs(alt-std)>1e-9?'alternate':'standard';
-  // This board is sourced from ALT-market rows. When upstream omitted the
-  // classification, treat the sportsbook threshold as alternate rather than
-  // hiding a valid current-slate streak from the default ALT-only view.
   return 'alternate';
  }
  function card(r){const vals=(r.recent_values||[]).slice(0,10).join(', ');return `<div class="altStreakCard"><div class="altStreakTop"><div><div class="altStreakLine">${esc(r.side)} ${esc(r.stat)} ${esc(r.alt_line)}</div><div class="altStreakBook">${esc(r.best_book||'Unknown book')} · ${odds(r.best_odds)}</div></div><b>${esc(r.streak)} straight</b></div><div class="altStreakMeta"><div class="altStreakMetric">L10<b>${esc(r.last10_hits??r.l10_hits??'—')}/${esc(r.last10_games??r.l10_games??'—')} · ${pct(r.last10_pct??r.l10_pct)}</b></div><div class="altStreakMetric">Season<b>${esc(r.season_hits??'—')}/${esc(r.season_games??'—')} · ${pct(r.season_pct)}</b></div><div class="altStreakMetric">Average<b>${esc(r.average??'—')}</b></div></div><div class="altStreakValues">Recent: ${esc(vals||'Unavailable')}</div></div>`}
@@ -97,7 +94,15 @@ def main() -> None:
         patch_daily_edges()
     except Exception as exc:
         raise RuntimeError(f"Daily Edges dashboard patch failed: {exc}") from exc
-    print({"alt_streaks": "filtered", "target_date": target, "active_games": active_games})
+    # This renderer is called near the end of the canonical deploy chain. Reapply
+    # exact ALT ladders/parlays here so later canonical/runtime overlays cannot
+    # silently remove the Best Bets ALT parlay section.
+    try:
+        from patch_dashboard_v4_alt_ladders import main as patch_alt_ladders
+        patch_alt_ladders()
+    except Exception as exc:
+        raise RuntimeError(f"ALT ladders/parlays dashboard patch failed: {exc}") from exc
+    print({"alt_streaks": "filtered", "target_date": target, "active_games": active_games, "alt_parlays_reasserted": True})
 
 
 if __name__ == "__main__":
