@@ -1,0 +1,159 @@
+{
+  "generated_at_utc": "2026-08-22T20:00:37.479291+00:00",
+  "target_date": "2026-08-04",
+  "status": "YELLOW",
+  "summary": {
+    "critical_checks": 10,
+    "green": 1,
+    "yellow": 9,
+    "red": 0,
+    "legacy_stale_observability_files": 1
+  },
+  "critical": [
+    {
+      "name": "master",
+      "path": "data/master/wnba_master.json",
+      "exists": true,
+      "status": "green",
+      "findings": [],
+      "target_date": "2026-08-04",
+      "generated_date": "2026-08-04",
+      "reported_status": null
+    },
+    {
+      "name": "player_props",
+      "path": "data/dashboard/wnba_player_props.json",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "target_date": "2026-08-22",
+      "generated_date": "2026-08-22",
+      "reported_status": null
+    },
+    {
+      "name": "injury_intelligence",
+      "path": "data/dashboard/wnba_injury_intelligence.json",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "target_date": "2026-08-22",
+      "generated_date": "2026-08-22",
+      "reported_status": null
+    },
+    {
+      "name": "m11_inference",
+      "path": "data/dashboard/wnba_v5_m11_report.json",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "target_date": "2026-08-22",
+      "generated_date": "2026-08-22",
+      "reported_status": "READY_SHADOW"
+    },
+    {
+      "name": "m12_learning",
+      "path": "data/dashboard/wnba_v5_m12_report.json",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "target_date": "2026-08-22",
+      "generated_date": "2026-08-22",
+      "reported_status": "READY_FORWARD_LEARNING"
+    },
+    {
+      "name": "adaptive_challenger",
+      "path": "data/dashboard/wnba_v5_adaptive_challenger_v2.json",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "target_date": "2026-08-22",
+      "generated_date": "2026-08-22",
+      "reported_status": "WAITING_FOR_RESOLVED_CONTEXT_ROWS"
+    },
+    {
+      "name": "results_lifecycle",
+      "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "target_date": "2026-08-22",
+      "generated_date": "2026-08-22",
+      "reported_status": "READY"
+    },
+    {
+      "name": "alt_performance",
+      "path": "data/dashboard/wnba_alt_performance.json",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "target_date": "2026-08-22",
+      "generated_date": "2026-08-22",
+      "reported_status": "ok"
+    }
+  ],
+  "prospective_context": [
+    {
+      "name": "matchup_adjustments",
+      "path": "data/dashboard/wnba_v5_matchup_adjustments.csv",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "modified_date": "2026-08-22"
+    },
+    {
+      "name": "lineup_adjustments",
+      "path": "data/dashboard/wnba_v5_lineup_adjustments.csv",
+      "exists": true,
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-08-22!=2026-08-04"
+      ],
+      "modified_date": "2026-08-22"
+    }
+  ],
+  "legacy_observability": [
+    {
+      "name": "source_health",
+      "path": "data/dashboard/wnba_source_health.json",
+      "exists": true,
+      "status": "current",
+      "findings": [],
+      "target_date": "2026-08-04"
+    },
+    {
+      "name": "warehouse_health",
+      "path": "data/dashboard/wnba_warehouse_health.json",
+      "exists": true,
+      "status": "current",
+      "findings": [],
+      "target_date": "2026-08-04"
+    },
+    {
+      "name": "results_review_center",
+      "path": "data/dashboard/results_review_center.json",
+      "exists": true,
+      "status": "legacy_stale",
+      "findings": [
+        "legacy_observability_stale:2026-07-08!=2026-08-04"
+      ],
+      "target_date": "2026-07-08"
+    }
+  ],
+  "policy": "Production health is based only on current critical artifacts. Legacy observability files are reported but never allowed to mask current health."
+}
