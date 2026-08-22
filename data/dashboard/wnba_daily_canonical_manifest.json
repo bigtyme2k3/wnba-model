@@ -1,12 +1,12 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-22T13:43:05.459563Z",
+  "generated_at_utc": "2026-08-22T16:42:25.450398+00:00",
   "target_date": "2026-08-22",
   "status": "PASS",
   "games": [
-    "Atlanta Dream @ Phoenix Mercury",
+    "Indiana Fever @ New York Liberty",
     "Connecticut Sun @ Los Angeles Sparks",
-    "Indiana Fever @ New York Liberty"
+    "Atlanta Dream @ Phoenix Mercury"
   ],
   "teams": [
     "Atlanta Dream",
@@ -27,17 +27,16 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Authoritative current slate synchronized for 2026-08-22",
+      "stdout": "{\n  \"target_date\": \"2026-08-22\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 3,\n  \"matchups\": [\n    \"Indiana Fever @ New York Liberty\",\n    \"Connecticut Sun @ Los Angeles Sparks\",\n    \"Atlanta Dream @ Phoenix Mercury\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Verified player props synchronized for 2026-08-22",
+      "stdout": "{\n  \"target_date\": \"2026-08-22\",\n  \"events\": 3,\n  \"raw_rows\": 304,\n  \"verified_rows\": 304,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
-  "failures": [],
-  "manifest_sync_source": "player_props_ingestion_same_run"
+  "failures": []
 }
