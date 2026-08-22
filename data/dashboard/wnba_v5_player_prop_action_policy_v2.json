@@ -1,0 +1,68 @@
+{
+  "version": "V5",
+  "module": "PLAYER_PROP_ACTION_POLICY_V2_SHADOW",
+  "generated_at_utc": "2026-08-22T20:59:24.964102+00:00",
+  "target_date": "2026-08-22",
+  "status": "READY_SHADOW",
+  "research_only": true,
+  "production_mutation": false,
+  "policy_version": "v5_player_prop_action_policy_v2_shadow_1",
+  "policy": {
+    "source_action": "WATCH only",
+    "candidate_eligible_required": true,
+    "confidence_min": 60.0,
+    "confidence_max_exclusive": 70.0,
+    "absolute_edge_min": 4.0,
+    "approved_books": [
+      "draftkings",
+      "fanatics",
+      "fanduel"
+    ],
+    "minimum_american_odds": -150,
+    "injury_blocked": [
+      "OUT",
+      "DOUBTFUL",
+      "QUESTIONABLE",
+      "UNKNOWN"
+    ]
+  },
+  "historical_support": {
+    "segment": "WATCH + confidence 60-69.9 + absolute edge 4.0+",
+    "decisions": 102,
+    "wins": 64,
+    "losses": 38,
+    "hit_rate": 0.6275,
+    "source_generated_at_utc": "2026-08-22T20:50:34.760725+00:00",
+    "note": "Historical diagnostic only; prospective shadow evidence controls any future promotion."
+  },
+  "current": {
+    "input_props": 258,
+    "shadow_bets": 0,
+    "shadow_bet_rows": [],
+    "exclusion_reasons": {
+      "unsupported_book": 21,
+      "edge_below_4": 2,
+      "confidence_outside_60_69_9": 163,
+      "candidate_ineligible": 29,
+      "not_watch": 43
+    }
+  },
+  "prospective": {
+    "rows": 0,
+    "resolved": 0,
+    "pending": 0,
+    "wins": 0,
+    "losses": 0,
+    "pushes": 0,
+    "voids": 0,
+    "decisions": 0,
+    "hit_rate": null,
+    "profit_units": 0.0,
+    "roi": null,
+    "newly_issued": 0,
+    "newly_graded": 0,
+    "minimum_resolved_for_review": 60,
+    "ready_for_human_review": false
+  },
+  "safety": "Shadow only. Does not modify Player Props, Best Bets, portfolio, or production BET/WATCH actions."
+}
