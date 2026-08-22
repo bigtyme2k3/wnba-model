@@ -1,0 +1,62 @@
+name: WNBA V5 Promotion Readiness
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '58 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_promotion_readiness.py'
+      - 'data/dashboard/wnba_v5_m12_report.json'
+      - 'data/dashboard/wnba_v5_adaptive_challenger_v2.json'
+      - 'data/dashboard/wnba_v5_forward_challenger.json'
+      - 'data/dashboard/wnba_v5_evidence_integrity.json'
+      - 'data/dashboard/wnba_v5_current_data_health.json'
+      - 'data/dashboard/wnba_v5_clv_summary.json'
+      - '.github/workflows/wnba-v5-promotion-readiness.yml'
+concurrency:
+  group: wnba-v5-promotion-readiness
+  cancel-in-progress: true
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile monitor
+        run: python -m py_compile wnba_v5_promotion_readiness.py
+      - name: Build promotion readiness
+        run: python wnba_v5_promotion_readiness.py
+      - name: Verify shadow-only contract
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_promotion_readiness.json'))
+          print(p)
+          assert p['module']=='PROMOTION_READINESS_MONITOR'
+          assert p['automatic_promotion_enabled'] is False
+          assert p['production_ready'] is False
+          assert p['decision'] in {'HOLD_SHADOW','READY_FOR_HUMAN_PROMOTION_REVIEW'}
+          assert len(p['gates']) >= 8
+          PY
+      - name: Publish promotion readiness safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 Promotion Readiness Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_promotion_readiness.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 promotion readiness"
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*3))
+          done
+          exit 1
