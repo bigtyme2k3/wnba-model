@@ -10,6 +10,7 @@ on:
       - 'wnba_v5_s3_m01_freshness_guard.py'
       - 'wnba_v5_m11_live_inference.py'
       - 'wnba_v5_m12_postgame_learning.py'
+      - 'wnba_v5_adaptive_challenger_v2.py'
       - 'wnba_v5_s3_m02_closing_capture.py'
       - 'data/dashboard/wnba_player_props.json'
       - 'data/dashboard/wnba_v5_s3_m01_freshness.json'
@@ -51,6 +52,7 @@ jobs:
           python -m py_compile wnba_v5_s3_m01_freshness_guard.py
           python -m py_compile wnba_v5_m11_live_inference.py
           python -m py_compile wnba_v5_m12_postgame_learning.py
+          python -m py_compile wnba_v5_adaptive_challenger_v2.py
           python -m py_compile wnba_v5_s3_m02_closing_capture.py
 
       - name: Refresh current-slate inference context
@@ -60,6 +62,7 @@ jobs:
           python wnba_v5_s3_m01_freshness_guard.py
           python wnba_v5_m11_live_inference.py
           python wnba_v5_m12_postgame_learning.py
+          python wnba_v5_adaptive_challenger_v2.py
           python - <<'PY'
           import json
           from pathlib import Path
@@ -68,16 +71,20 @@ jobs:
           props=json.load(open('data/dashboard/wnba_player_props.json'))
           m11=json.load(open('data/dashboard/wnba_v5_m11_report.json'))
           m12=json.load(open('data/dashboard/wnba_v5_m12_report.json'))
+          adaptive=json.load(open('data/dashboard/wnba_v5_adaptive_challenger_v2.json'))
           target=str(props.get('target_date') or '')[:10]
           assert target, 'canonical player-prop target date missing'
           assert str(board.get('target_date') or '')[:10] == target, (board.get('target_date'), target)
           assert fresh.get('current_date_et') == target, (fresh.get('current_date_et'), target)
           assert fresh.get('status') in {'FRESH','EMPTY_CURRENT_SLATE'}, fresh
           assert m12.get('module') == 'V5-M12', m12
+          assert adaptive.get('module') == 'ADAPTIVE_CHALLENGER_V2', adaptive
+          assert adaptive.get('research_only') is True and adaptive.get('production_ready') is False
+          assert adaptive.get('status') in {'WAITING_FOR_RESOLVED_CONTEXT_ROWS','READY_CONTEXTUAL_SHADOW'}
           if m11.get('status') == 'READY_SHADOW' and m11.get('scored_rows',0) > 0:
               ledger=Path('data/history/wnba_v5_forward_predictions.jsonl')
               assert ledger.exists() and ledger.stat().st_size > 0
-          print({'target':target,'freshness':fresh.get('status'),'ranked_rows':fresh.get('ranked_rows'),'m12_new':m12.get('new_predictions_appended'),'context_rows':(m12.get('context_snapshot') or {}).get('rows_with_frozen_context')})
+          print({'target':target,'freshness':fresh.get('status'),'ranked_rows':fresh.get('ranked_rows'),'m12_new':m12.get('new_predictions_appended'),'context_rows':(m12.get('context_snapshot') or {}).get('rows_with_frozen_context'),'adaptive_resolved_context':adaptive.get('resolved_context_rows'),'adaptive_pending_context':adaptive.get('pending_context_rows')})
           PY
 
       - name: Capture eligible explicit closing observations
@@ -129,6 +136,7 @@ jobs:
             data/dashboard/wnba_v5_forward_metrics.json \
             data/dashboard/wnba_v5_learning_state.json \
             data/dashboard/wnba_v5_m12_report.json \
+            data/dashboard/wnba_v5_adaptive_challenger_v2.json \
             data/dashboard/wnba_v5_closing_lines.csv \
             data/dashboard/wnba_v5_closing_snapshot.json \
             data/dashboard/wnba_v5_clv_queue.json \
