@@ -39,8 +39,10 @@ jobs:
           assert p['module']=='ADAPTIVE_CHALLENGER_V2'
           assert p['research_only'] is True
           assert p['production_ready'] is False
-          assert p['status'] in {'WAITING_FOR_CONTEXT_ROWS','READY_CONTEXTUAL_SHADOW'}
+          assert p['status'] in {'WAITING_FOR_RESOLVED_CONTEXT_ROWS','READY_CONTEXTUAL_SHADOW'}
           assert p['minimum_context_train_rows']==60
+          assert p['resolved_context_rows'] <= p['rows_with_any_frozen_context']
+          assert p['pending_context_rows'] == p['rows_with_any_frozen_context'] - p['resolved_context_rows']
           PY
       - name: Publish challenger report safely
         run: |
