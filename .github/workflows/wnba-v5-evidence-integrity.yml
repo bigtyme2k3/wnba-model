@@ -19,6 +19,7 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     permissions:
       contents: write
     steps:
@@ -51,6 +52,8 @@ jobs:
           assert p['status'] in {'GREEN','YELLOW','RED'}
           assert set(p['sections'])=={'forward_ledger','model_history','explicit_closing_evidence','clv_readiness'}
           assert p['summary']['hard_violation_count'] >= 0
+          clv=p['sections']['clv_readiness']
+          assert clv.get('minimum_promotion_clv_coverage_pct',60) >= 60
           PY
       - name: Publish integrity report safely
         run: |
