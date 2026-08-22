@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import patch_dashboard_v4_ui_freeze as freeze
+import patch_dashboard_v5_current_data_health as current_health
 
 
 def safe_replace_element(html: str, tag: str, element_id: str, replacement: str) -> str:
@@ -15,3 +16,5 @@ def safe_replace_element(html: str, tag: str, element_id: str, replacement: str)
 
 freeze.replace_element = safe_replace_element
 freeze.main()
+# Install the canonical current-data health renderer after the Data Health router exists.
+current_health.main()
