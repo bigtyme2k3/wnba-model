@@ -111,10 +111,15 @@ def evaluate_group(resolved,name,features):
   scored.append({'y':y,'odds':r.get('odds'),'MODEL':p,'MARKET':market,'side':str(r.get('side') or '').upper(),'stat':str(r.get('stat') or '').upper()})
  return {'group':name,'features':features,'eligible_rows':len(eligible),'chronologically_scored_rows':len(scored),'model':summarize(scored,'MODEL'),'market_same_rows':summarize(scored,'MARKET')}
 
+def has_context(r,context_fields):
+ return any(r.get(k) is not None for k in context_fields)
+
 def main():
  rows=earliest(load());resolved=[r for r in rows if r.get('target_win') in (0,1)]
  context_fields=sorted({k for r in rows for k in r.keys() if k.startswith('ctx_')})
- context_rows=sum(any(r.get(k) is not None for k in context_fields) for r in rows) if context_fields else 0
+ all_context_rows=sum(has_context(r,context_fields) for r in rows) if context_fields else 0
+ resolved_context_rows=sum(has_context(r,context_fields) for r in resolved) if context_fields else 0
+ pending_context_rows=max(0,all_context_rows-resolved_context_rows)
  results=[evaluate_group(resolved,name,features) for name,features in GROUPS.items()]
  for i,r in enumerate(results):
   mb=r['model'].get('brier');base=r['market_same_rows'].get('brier')
@@ -122,7 +127,7 @@ def main():
   if i:
    prev=results[i-1]['model'].get('brier');r['beats_previous_group_brier']=bool(mb is not None and prev is not None and mb<prev)
   else:r['beats_previous_group_brier']=None
- status='WAITING_FOR_CONTEXT_ROWS' if context_rows<MIN_TRAIN else 'READY_CONTEXTUAL_SHADOW'
- report={'version':'V5','module':'ADAPTIVE_CHALLENGER_V2','stage':'PROSPECTIVE_CONTEXT_ABLATION','status':status,'generated_at_utc':datetime.now(timezone.utc).isoformat(),'research_only':True,'production_ready':False,'canonical_resolved_rows':len(resolved),'rows_with_any_frozen_context':context_rows,'minimum_context_train_rows':MIN_TRAIN,'context_fields_seen':context_fields,'results':results,'policy':'Only earliest immutable issued prediction per ranking_key is used. Context must already exist in the M12 ledger before outcome; no historical reconstruction/backfill is permitted.','promotion_policy':'No production use. Require repeated chronological superiority over MARKET and the previous surviving feature group on materially larger prospective context samples.'}
+ status='WAITING_FOR_RESOLVED_CONTEXT_ROWS' if resolved_context_rows<MIN_TRAIN else 'READY_CONTEXTUAL_SHADOW'
+ report={'version':'V5','module':'ADAPTIVE_CHALLENGER_V2','stage':'PROSPECTIVE_CONTEXT_ABLATION','status':status,'generated_at_utc':datetime.now(timezone.utc).isoformat(),'research_only':True,'production_ready':False,'canonical_resolved_rows':len(resolved),'rows_with_any_frozen_context':all_context_rows,'resolved_context_rows':resolved_context_rows,'pending_context_rows':pending_context_rows,'minimum_context_train_rows':MIN_TRAIN,'context_fields_seen':context_fields,'results':results,'policy':'Only earliest immutable issued prediction per ranking_key is used. Context must already exist in the M12 ledger before outcome; no historical reconstruction/backfill is permitted.','promotion_policy':'No production use. Require repeated chronological superiority over MARKET and the previous surviving feature group on materially larger prospective context samples.'}
  OUT.parent.mkdir(parents=True,exist_ok=True);OUT.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n',encoding='utf-8');print(json.dumps(report,indent=2,allow_nan=False))
 if __name__=='__main__':main()
