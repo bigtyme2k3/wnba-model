@@ -1,0 +1,72 @@
+name: WNBA V5 Evidence Integrity
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '56 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_evidence_integrity_audit.py'
+      - 'data/history/wnba_v5_forward_predictions.jsonl'
+      - 'data/history/wnba_model_history.jsonl'
+      - 'data/dashboard/wnba_v5_closing_lines.csv'
+      - 'data/dashboard/wnba_v5_clv_queue.json'
+      - 'data/dashboard/wnba_v5_clv_summary.json'
+      - '.github/workflows/wnba-v5-evidence-integrity.yml'
+concurrency:
+  group: wnba-v5-evidence-integrity
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile integrity audit
+        run: python -m py_compile wnba_v5_evidence_integrity_audit.py
+      - name: Run integrity audit and preserve report on RED
+        run: |
+          set +e
+          python wnba_v5_evidence_integrity_audit.py
+          rc=$?
+          echo "EVIDENCE_AUDIT_RC=$rc" >> "$GITHUB_ENV"
+          exit 0
+      - name: Verify report contract
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_evidence_integrity.json'))
+          print(p)
+          assert p['module']=='EVIDENCE_INTEGRITY_AUDIT'
+          assert p['research_only'] is True
+          assert p['production_mutation'] is False
+          assert p['status'] in {'GREEN','YELLOW','RED'}
+          assert set(p['sections'])=={'forward_ledger','model_history','explicit_closing_evidence','clv_readiness'}
+          assert p['summary']['hard_violation_count'] >= 0
+          PY
+      - name: Publish integrity report safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 Evidence Integrity Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/dashboard/wnba_v5_evidence_integrity.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh WNBA V5 evidence integrity"
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*3))
+          done
+          exit 1
+      - name: Fail hard integrity violations after publishing
+        if: env.EVIDENCE_AUDIT_RC != '0'
+        run: |
+          echo 'V5 evidence integrity contains hard chronology/identity violations.'
+          exit 1
