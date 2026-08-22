@@ -18,8 +18,9 @@ SCRIPT = r'''<script id="best-bets-alt-parlays-script">
  function leg(l){const ev=Number(l.expected_value_per_unit);return `<div class="altLeg"><b>${esc(l.player||'')}</b> · ${esc(l.stat||'')} ${esc(l.side||'')} ${esc(l.display_threshold||l.threshold||'')}<div class="small mono">${esc(l.sportsbook||'')} ${odds(l.odds)} · L5 ${pct(l.l5_rate)} · L10 ${pct(l.l10_rate)}${Number.isFinite(ev)?` · EV ${(ev*100).toFixed(1)}%`:''}</div></div>`}
  function card(p){return `<div class="altParlayCard"><div class="row"><span class="altParlayTier ${esc(p.tier||'')}">${esc(p.tier||'')}</span><span class="altParlayPrice mono">${odds(p.estimated_independent_price)}</span></div><div class="small mono">${p.kind==='CROSS_GAME_ALT'?'Cross-game ALT':'Same-game ALT'} · ${esc(p.leg_count||0)} legs</div>${(p.legs||[]).map(leg).join('')}<div class="altParlayNote">Estimated independent price only; sportsbook SGP pricing/correlation may differ.</div></div>`}
  function section(){const src=(window.DATA&&DATA.best_bets_alt_parlays)||{},all=Array.isArray(src.parlays)?src.parlays:[];if(!all.length)return '<div class="section"><h2 class="mono">ALT Prop Parlays</h2><div class="empty mono">No current ALT parlay cards qualified.</div></div>';const same=all.filter(p=>p.kind==='SAME_GAME_ALT'),cross=all.filter(p=>p.kind==='CROSS_GAME_ALT'),groups={};same.forEach(p=>{const g=(p.games||[])[0]||'Game';(groups[g]||(groups[g]=[])).push(p)});let h=`<div class="section"><div class="row"><div><h2 class="mono">ALT Prop Parlays</h2><div class="small mono">2–3 cards per game plus mixed-game cards when the slate supports them.</div></div><div class="badge mono">${all.length} cards</div></div><div class="altParlayWrap">`;Object.entries(groups).forEach(([g,ps])=>{h+=`<div class="altParlayGame"><b class="mono">${esc(g)}</b><div class="altParlayGrid">${ps.map(card).join('')}</div></div>`});if(cross.length)h+=`<div class="altParlayGame"><b class="mono">Cross-Game Mix</b><div class="altParlayGrid">${cross.map(card).join('')}</div></div>`;return h+'</div></div>'}
- const prior=window.best;
- window.best=function(){const base=typeof prior==='function'?prior():'';return base+section()};
+ function append(){const root=document.getElementById('root');if(!root)return;const old=document.getElementById('best-bets-alt-parlays-live');if(old)old.remove();const box=document.createElement('div');box.id='best-bets-alt-parlays-live';box.innerHTML=section();root.appendChild(box)}
+ function install(){if(typeof window.render!=='function')return false;if(window.__BEST_BETS_ALT_RENDER_INSTALLED)return true;const prior=window.render;window.render=function(view){const out=prior.apply(this,arguments);if(view==='best')append();return out};window.__BEST_BETS_ALT_RENDER_INSTALLED=true;if((location.hash||'').replace('#','')==='best')append();return true}
+ if(!install()){let n=0;const t=setInterval(()=>{n++;if(install()||n>50)clearInterval(t)},100)}
 })();
 </script>'''
 
@@ -47,7 +48,7 @@ def main() -> None:
     html = replace_block(html, '<style id="best-bets-alt-parlays-style">', '</style>', STYLE) if 'id="best-bets-alt-parlays-style"' in html else html.replace('</head>', STYLE + '</head>')
     html = replace_block(html, '<script id="best-bets-alt-parlays-script">', '</script>', SCRIPT) if 'id="best-bets-alt-parlays-script"' in html else html.replace('</body>', SCRIPT + '</body>')
     HTML.write_text(html, encoding="utf-8")
-    print({"best_bets_alt_parlays": len(payload.get("parlays") or []), "target_date": payload.get("target_date")})
+    print({"best_bets_alt_parlays": len(payload.get("parlays") or []), "target_date": payload.get("target_date"), "canonical_render_integration": True})
 
 
 if __name__ == "__main__":
