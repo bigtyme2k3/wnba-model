@@ -1,0 +1,60 @@
+name: WNBA V5 Player Prop Action Policy V2
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '53 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'wnba_v5_player_prop_action_policy_v2.py'
+      - 'data/dashboard/wnba_s19_m02_predictions.json'
+      - 'data/dashboard/wnba_v5_player_prop_action_audit.json'
+      - 'data/history/wnba_model_history.jsonl'
+      - '.github/workflows/wnba-v5-player-prop-action-policy-v2.yml'
+concurrency:
+  group: v5-player-prop-action-policy-v2
+  cancel-in-progress: false
+jobs:
+  shadow-policy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Compile shadow action policy
+        run: python -m py_compile wnba_v5_player_prop_action_policy_v2.py
+      - name: Run shadow action policy
+        run: python wnba_v5_player_prop_action_policy_v2.py
+      - name: Verify research-only contract
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('data/dashboard/wnba_v5_player_prop_action_policy_v2.json'))
+          assert p['module']=='PLAYER_PROP_ACTION_POLICY_V2_SHADOW'
+          assert p['research_only'] is True
+          assert p['production_mutation'] is False
+          assert p['status']=='READY_SHADOW'
+          assert p['prospective']['minimum_resolved_for_review']==60
+          print('Current shadow bets:',p['current']['shadow_bets'])
+          print('Prospective performance:',p['prospective'])
+          PY
+      - name: Publish shadow policy evidence safely
+        run: |
+          set -euo pipefail
+          git config user.name "WNBA V5 Shadow Action Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/history/wnba_v5_player_prop_action_v2_shadow.jsonl data/dashboard/wnba_v5_player_prop_action_policy_v2.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Refresh V5 player prop shadow action policy"
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            echo "retry $attempt"; sleep $((attempt*3))
+          done
+          exit 1
