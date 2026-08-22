@@ -94,15 +94,14 @@ def main() -> None:
         patch_daily_edges()
     except Exception as exc:
         raise RuntimeError(f"Daily Edges dashboard patch failed: {exc}") from exc
-    # This renderer is called near the end of the canonical deploy chain. Reapply
-    # exact ALT ladders/parlays here so later canonical/runtime overlays cannot
-    # silently remove the Best Bets ALT parlay section.
+    # Apply only the Best Bets parlay overlay here. Re-running the full ALT ladder
+    # renderer late in the canonical chain can disturb unrelated ALT/runtime markers.
     try:
-        from patch_dashboard_v4_alt_ladders import main as patch_alt_ladders
-        patch_alt_ladders()
+        from patch_dashboard_best_bets_alt_parlays import main as patch_best_bets_alt_parlays
+        patch_best_bets_alt_parlays()
     except Exception as exc:
-        raise RuntimeError(f"ALT ladders/parlays dashboard patch failed: {exc}") from exc
-    print({"alt_streaks": "filtered", "target_date": target, "active_games": active_games, "alt_parlays_reasserted": True})
+        raise RuntimeError(f"Best Bets ALT parlay patch failed: {exc}") from exc
+    print({"alt_streaks": "filtered", "target_date": target, "active_games": active_games, "best_bets_alt_parlays_reasserted": True})
 
 
 if __name__ == "__main__":
