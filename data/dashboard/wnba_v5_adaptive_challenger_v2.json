@@ -3,15 +3,33 @@
   "module": "ADAPTIVE_CHALLENGER_V2",
   "stage": "PROSPECTIVE_CONTEXT_ABLATION",
   "status": "WAITING_FOR_RESOLVED_CONTEXT_ROWS",
-  "generated_at_utc": "2026-08-22T19:13:16.914561+00:00",
+  "generated_at_utc": "2026-08-22T19:20:17.221965+00:00",
   "research_only": true,
   "production_ready": false,
   "canonical_resolved_rows": 389,
-  "rows_with_any_frozen_context": 0,
+  "rows_with_any_frozen_context": 60,
   "resolved_context_rows": 0,
-  "pending_context_rows": 0,
+  "pending_context_rows": 60,
   "minimum_context_train_rows": 60,
-  "context_fields_seen": [],
+  "context_fields_seen": [
+    "ctx_injury_status",
+    "ctx_lineup_confidence",
+    "ctx_lineup_confirmation",
+    "ctx_matchup_defense_index",
+    "ctx_matchup_last10_allowed",
+    "ctx_matchup_last5_allowed",
+    "ctx_matchup_multiplier",
+    "ctx_minutes_l10",
+    "ctx_minutes_l5",
+    "ctx_minutes_prior_mean",
+    "ctx_projected_role",
+    "ctx_rotation_games_prior",
+    "ctx_rotation_multiplier",
+    "ctx_snapshot_lineup_generated_at_utc",
+    "ctx_snapshot_matchup_generated_at_utc",
+    "ctx_starter_rate_l10",
+    "ctx_starter_rate_l5"
+  ],
   "results": [
     {
       "group": "MARKET",
@@ -160,6 +178,6 @@
       "beats_previous_group_brier": false
     }
   ],
-  "policy": "Only earliest immutable issued prediction per ranking_key is used. Context must already exist in the M12 ledger before outcome; no historical reconstruction/backfill is permitted.",
+  "policy": "Baseline uses earliest immutable issuance per ranking key. Contextual groups use earliest issuance per ranking key that already carried prospectively frozen context; no historical reconstruction, enrichment, or backfill is permitted.",
   "promotion_policy": "No production use. Require repeated chronological superiority over MARKET and the previous surviving feature group on materially larger prospective context samples."
 }
