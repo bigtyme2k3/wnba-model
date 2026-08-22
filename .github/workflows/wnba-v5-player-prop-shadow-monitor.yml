@@ -1,0 +1,61 @@
+name: WNBA V5 Player Prop Shadow Monitor
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'data/dashboard/wnba_v5_player_prop_action_policy_v2.json'
+      - 'patch_dashboard_v5_player_prop_shadow_monitor.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-v5-player-prop-shadow-monitor
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Sync latest repository
+        run: git pull --rebase origin main
+      - name: Render shadow policy monitor
+        run: |
+          python -m py_compile patch_dashboard_v5_player_prop_shadow_monitor.py
+          python patch_dashboard_v5_player_prop_shadow_monitor.py
+      - name: Verify monitor contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          h=Path('docs/index.html').read_text(encoding='utf-8')
+          required=['v5-player-prop-shadow-monitor-style','v5-player-prop-shadow-monitor-script','Player Props · Shadow Action Policy v2','minimum_resolved_for_review']
+          missing=[x for x in required if x not in h]
+          if missing: raise SystemExit(f'shadow monitor verification failed: {missing}')
+          print({'status':'PASS','markers':len(required)})
+          PY
+      - name: Publish monitor safely
+        run: |
+          if git diff --quiet -- docs/index.html; then
+            echo 'No dashboard monitor change to publish.'
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/index.html
+          git commit -m 'Refresh V5 player prop shadow monitor'
+          for attempt in 1 2 3 4; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+            sleep $((attempt*2))
+          done
+          exit 1
