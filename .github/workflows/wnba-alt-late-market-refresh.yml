@@ -10,6 +10,7 @@ on:
     branches: [main]
     paths:
       - 'data/alt_late_refresh_request.txt'
+      - 'wnba_alt_parlay_builder.py'
       - '.github/workflows/wnba-alt-late-market-refresh.yml'
 
 permissions:
@@ -59,6 +60,7 @@ jobs:
           python wnba_alt_streaks.py --date "$TARGET"
           python wnba_alt_streak_confidence.py --date "$TARGET"
           python wnba_alt_apply_calibration.py --date "$TARGET"
+          python wnba_alt_parlay_builder.py --date "$TARGET"
 
       - name: Audit late ALT market availability
         run: |
@@ -68,12 +70,13 @@ jobs:
           target=os.environ['TARGET']
           market=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
           streak=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
-          if market.get('target_date') != target or streak.get('target_date') != target:
+          parlays=json.loads(Path('data/dashboard/wnba_alt_parlays.json').read_text())
+          if market.get('target_date') != target or streak.get('target_date') != target or parlays.get('target_date') != target:
               raise SystemExit('Late ALT target mismatch')
           summary=market.get('summary') or {}
           rows=int(summary.get('raw_rows') or summary.get('source_raw_rows') or len(market.get('rows') or []))
           markets=int(summary.get('markets') or 0)
-          print({'target':target,'raw_alt_rows':rows,'markets':markets,'players':summary.get('players',0),'sportsbooks':summary.get('sportsbooks',[])})
+          print({'target':target,'raw_alt_rows':rows,'markets':markets,'players':summary.get('players',0),'sportsbooks':summary.get('sportsbooks',[]),'alt_parlays':(parlays.get('summary') or {}).get('total_parlays',0)})
           # Empty is a real upstream state, but it must be visible as such rather
           # than silently masquerading as a healthy populated ALT snapshot.
           if rows <= 0 or markets <= 0:
@@ -105,4 +108,5 @@ jobs:
             'data/warehouse/wnba_alt_calibration.json' \
             'data/dashboard/wnba_alt_performance.json' \
             'data/warehouse/wnba_alt_performance.json' \
+            'data/dashboard/wnba_alt_parlays.json' \
             'data/history/wnba_alt_streak_history.jsonl'
