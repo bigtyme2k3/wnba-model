@@ -9,10 +9,12 @@ on:
       - 'wnba_v5_current_opportunity_board.py'
       - 'wnba_v5_s3_m01_freshness_guard.py'
       - 'wnba_v5_m11_live_inference.py'
+      - 'wnba_v5_m12_postgame_learning.py'
       - 'wnba_v5_s3_m02_closing_capture.py'
       - 'data/dashboard/wnba_player_props.json'
       - 'data/dashboard/wnba_v5_s3_m01_freshness.json'
-      - 'data/dashboard/wnba_v5_live_inference.json'
+      - 'data/dashboard/wnba_v5_matchup_adjustments.csv'
+      - 'data/dashboard/wnba_v5_lineup_adjustments.csv'
       - '.github/workflows/wnba-v5-s3-m02-closing-capture.yml'
 
 concurrency:
@@ -48,6 +50,7 @@ jobs:
           python -m py_compile wnba_v5_current_opportunity_board.py
           python -m py_compile wnba_v5_s3_m01_freshness_guard.py
           python -m py_compile wnba_v5_m11_live_inference.py
+          python -m py_compile wnba_v5_m12_postgame_learning.py
           python -m py_compile wnba_v5_s3_m02_closing_capture.py
 
       - name: Refresh current-slate inference context
@@ -56,17 +59,25 @@ jobs:
           python wnba_v5_current_opportunity_board.py
           python wnba_v5_s3_m01_freshness_guard.py
           python wnba_v5_m11_live_inference.py
+          python wnba_v5_m12_postgame_learning.py
           python - <<'PY'
           import json
+          from pathlib import Path
           board=json.load(open('data/warehouse/wnba_opportunity_rankings.json'))
           fresh=json.load(open('data/dashboard/wnba_v5_s3_m01_freshness.json'))
           props=json.load(open('data/dashboard/wnba_player_props.json'))
+          m11=json.load(open('data/dashboard/wnba_v5_m11_report.json'))
+          m12=json.load(open('data/dashboard/wnba_v5_m12_report.json'))
           target=str(props.get('target_date') or '')[:10]
           assert target, 'canonical player-prop target date missing'
           assert str(board.get('target_date') or '')[:10] == target, (board.get('target_date'), target)
           assert fresh.get('current_date_et') == target, (fresh.get('current_date_et'), target)
           assert fresh.get('status') in {'FRESH','EMPTY_CURRENT_SLATE'}, fresh
-          print({'target':target,'freshness':fresh.get('status'),'ranked_rows':fresh.get('ranked_rows')})
+          assert m12.get('module') == 'V5-M12', m12
+          if m11.get('status') == 'READY_SHADOW' and m11.get('scored_rows',0) > 0:
+              ledger=Path('data/history/wnba_v5_forward_predictions.jsonl')
+              assert ledger.exists() and ledger.stat().st_size > 0
+          print({'target':target,'freshness':fresh.get('status'),'ranked_rows':fresh.get('ranked_rows'),'m12_new':m12.get('new_predictions_appended'),'context_rows':(m12.get('context_snapshot') or {}).get('rows_with_frozen_context')})
           PY
 
       - name: Capture eligible explicit closing observations
@@ -84,7 +95,6 @@ jobs:
             'BLOCKED_STALE_SLATE','WAITING_FOR_M11_SCORES','WAITING_FOR_ODDS_API_KEY',
             'WAITING_FOR_CLOSE_WINDOW','NO_MATCHING_PROP_MARKETS','CAPTURED_EXPLICIT_CLOSES'
           }
-          # A freshly authorized slate must never publish the old stale-blocked state.
           if fresh.get('allow_live_inference'):
             assert p['status'] != 'BLOCKED_STALE_SLATE', (fresh,p)
           rows=list(csv.DictReader(open('data/dashboard/wnba_v5_closing_lines.csv',encoding='utf-8-sig')))
@@ -114,6 +124,11 @@ jobs:
             data/dashboard/wnba_v5_live_inference.json \
             data/dashboard/wnba_v5_live_inference.csv \
             data/dashboard/wnba_v5_m11_report.json \
+            data/history/wnba_v5_forward_predictions.jsonl \
+            data/dashboard/wnba_v5_forward_validation.csv \
+            data/dashboard/wnba_v5_forward_metrics.json \
+            data/dashboard/wnba_v5_learning_state.json \
+            data/dashboard/wnba_v5_m12_report.json \
             data/dashboard/wnba_v5_closing_lines.csv \
             data/dashboard/wnba_v5_closing_snapshot.json \
             data/dashboard/wnba_v5_clv_queue.json \
