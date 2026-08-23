@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-22T23:08:22.667649+00:00",
+  "generated_at_utc": "2026-08-23T00:05:29.011473+00:00",
   "target_date": "2026-08-22",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -26,11 +26,11 @@
       }
     ]
   },
-  "status": "GREEN",
+  "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 10,
-    "yellow": 0,
+    "green": 7,
+    "yellow": 3,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -89,10 +89,12 @@
       "name": "adaptive_challenger",
       "path": "data/dashboard/wnba_v5_adaptive_challenger_v2.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-22",
-      "generated_date": "2026-08-22",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-23!=2026-08-22"
+      ],
+      "target_date": "2026-08-23",
+      "generated_date": "2026-08-23",
       "reported_status": "WAITING_FOR_RESOLVED_CONTEXT_ROWS"
     },
     {
@@ -121,17 +123,21 @@
       "name": "matchup_adjustments",
       "path": "data/dashboard/wnba_v5_matchup_adjustments.csv",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "modified_date": "2026-08-22"
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-08-23!=2026-08-22"
+      ],
+      "modified_date": "2026-08-23"
     },
     {
       "name": "lineup_adjustments",
       "path": "data/dashboard/wnba_v5_lineup_adjustments.csv",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "modified_date": "2026-08-22"
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-08-23!=2026-08-22"
+      ],
+      "modified_date": "2026-08-23"
     }
   ],
   "legacy_observability": [
