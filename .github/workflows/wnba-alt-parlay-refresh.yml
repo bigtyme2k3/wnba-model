@@ -1,0 +1,79 @@
+name: WNBA ALT Parlay Refresh
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba-alt-parlay-refresh.yml'
+      - 'wnba_alt_parlay_builder.py'
+  schedule:
+    - cron: '15 13 * * *'
+    - cron: '15 17 * * *'
+    - cron: '15 20 * * *'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: wnba-main-writer
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Sync latest repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - name: Resolve active slate and verify ALT source
+        run: |
+          TARGET=$(python active_slate_date.py)
+          test -n "$TARGET"
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          target=os.environ['TARGET']
+          p=Path('data/dashboard/wnba_alt_market_warehouse.json')
+          if not p.exists(): raise SystemExit('ALT warehouse missing')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if str(d.get('target_date') or '') != target:
+              raise SystemExit(f'ALT warehouse stale: {d.get("target_date")} != {target}')
+          markets=int((d.get('summary') or {}).get('markets') or 0)
+          if markets <= 0: raise SystemExit('No current ALT markets available')
+          print({'target':target,'markets':markets,'players':(d.get('summary') or {}).get('players',0)})
+          PY
+      - name: Build current-slate ALT parlays
+        run: |
+          python -m py_compile wnba_alt_parlay_builder.py
+          python wnba_alt_parlay_builder.py --date "$TARGET"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          target=os.environ['TARGET']
+          d=json.loads(Path('data/dashboard/wnba_alt_parlays.json').read_text(encoding='utf-8'))
+          if str(d.get('target_date') or '') != target: raise SystemExit('ALT parlay target mismatch')
+          s=d.get('summary') or {}
+          if int(s.get('total_parlays') or 0) <= 0: raise SystemExit('No ALT parlays qualified')
+          print({'status':'PASS','target':target,'games':s.get('games'),'same_game':s.get('same_game_parlays'),'cross_game':s.get('cross_game_parlays'),'total':s.get('total_parlays')})
+          PY
+      - name: Publish current ALT parlays
+        run: |
+          git config user.name 'WNBA ALT Parlay Bot'
+          git config user.email 'actions@github.com'
+          bash scripts/atomic_generated_push.sh \
+            "Refresh WNBA ALT parlays for ${TARGET}" \
+            'data/dashboard/wnba_alt_parlays.json'
+      - name: Dispatch canonical dashboard deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy_wnba_dashboard.yml --ref main
