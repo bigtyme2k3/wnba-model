@@ -8,6 +8,7 @@ on:
       - '.github/workflows/wnba-alt-parlay-refresh.yml'
       - 'wnba_alt_parlay_builder.py'
   schedule:
+    # Three checkpoints before the existing 5:17 PM late-market final refresh.
     - cron: '15 13 * * *'
     - cron: '15 17 * * *'
     - cron: '15 20 * * *'
