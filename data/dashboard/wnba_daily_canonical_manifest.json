@@ -1,23 +1,26 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-22T13:43:05.459563Z",
-  "target_date": "2026-08-22",
+  "generated_at_utc": "2026-08-23T10:43:39.583848+00:00",
+  "target_date": "2026-08-23",
   "status": "PASS",
   "games": [
-    "Atlanta Dream @ Phoenix Mercury",
-    "Connecticut Sun @ Los Angeles Sparks",
-    "Indiana Fever @ New York Liberty"
+    "Seattle Storm @ Dallas Wings",
+    "Indiana Fever @ Chicago Sky",
+    "Washington Mystics @ Portland Fire",
+    "Las Vegas Aces @ Toronto Tempo"
   ],
   "teams": [
-    "Atlanta Dream",
-    "Connecticut Sun",
+    "Chicago Sky",
+    "Dallas Wings",
     "Indiana Fever",
-    "Los Angeles Sparks",
-    "New York Liberty",
-    "Phoenix Mercury"
+    "Las Vegas Aces",
+    "Portland Fire",
+    "Seattle Storm",
+    "Toronto Tempo",
+    "Washington Mystics"
   ],
-  "game_count": 3,
-  "player_prop_rows": 304,
+  "game_count": 4,
+  "player_prop_rows": 285,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -27,17 +30,16 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Authoritative current slate synchronized for 2026-08-22",
+      "stdout": "{\n  \"target_date\": \"2026-08-23\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 4,\n  \"matchups\": [\n    \"Seattle Storm @ Dallas Wings\",\n    \"Indiana Fever @ Chicago Sky\",\n    \"Washington Mystics @ Portland Fire\",\n    \"Las Vegas Aces @ Toronto Tempo\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Verified player props synchronized for 2026-08-22",
+      "stdout": "{\n  \"target_date\": \"2026-08-23\",\n  \"events\": 4,\n  \"raw_rows\": 285,\n  \"verified_rows\": 285,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
-  "failures": [],
-  "manifest_sync_source": "player_props_ingestion_same_run"
+  "failures": []
 }
