@@ -1,7 +1,7 @@
 {
   "version": "V5",
   "module": "EVIDENCE_INTEGRITY_AUDIT",
-  "generated_at_utc": "2026-08-23T00:04:47.931646+00:00",
+  "generated_at_utc": "2026-08-23T02:19:12.347396+00:00",
   "status": "YELLOW",
   "research_only": true,
   "production_mutation": false,
@@ -17,14 +17,14 @@
     "forward_ledger": {
       "status": "GREEN",
       "path": "data/history/wnba_v5_forward_predictions.jsonl",
-      "rows": 19646,
-      "unique_prediction_ids": 19646,
+      "rows": 19907,
+      "unique_prediction_ids": 19907,
       "unique_ranking_keys": 460,
       "ranking_keys_with_reissues": 453,
-      "resolved_rows": 16376,
-      "pending_rows": 3270,
-      "context_rows": 1914,
-      "resolved_context_rows": 0,
+      "resolved_rows": 17691,
+      "pending_rows": 2216,
+      "context_rows": 2175,
+      "resolved_context_rows": 800,
       "context_future_max_minutes": 0.0,
       "hard_violations": [],
       "warnings": [],
@@ -33,11 +33,11 @@
     "model_history": {
       "status": "GREEN",
       "path": "data/history/wnba_model_history.jsonl",
-      "all_history_rows": 10510,
-      "current_model_rows": 1926,
-      "current_model_resolved_rows": 1668,
+      "all_history_rows": 10522,
+      "current_model_rows": 1938,
+      "current_model_resolved_rows": 1752,
       "current_model_quarantined_rows": 0,
-      "unique_current_history_keys": 1926,
+      "unique_current_history_keys": 1938,
       "hard_violations": [],
       "warnings": [],
       "contract": "Current-model result history must be key-unique and resolved results must carry verified actuals after capture."
@@ -60,10 +60,10 @@
       "status": "YELLOW",
       "path": "data/dashboard/wnba_v5_clv_summary.json",
       "engine_status": "READY",
-      "forward_predictions": 19646,
+      "forward_predictions": 19907,
       "explicit_close_predictions": 4443,
-      "missing_explicit_close_predictions": 15203,
-      "explicit_clv_coverage_pct": 22.62,
+      "missing_explicit_close_predictions": 15464,
+      "explicit_clv_coverage_pct": 22.32,
       "minimum_promotion_clv_coverage_pct": 60.0,
       "same_book_close_rows": 2635,
       "same_line_close_rows": 3035,
@@ -73,7 +73,7 @@
       "positive_price_clv_pct": 57.03,
       "hard_violations": [],
       "warnings": [
-        "promotion_clv_coverage_not_met:22.6%<60.0%"
+        "promotion_clv_coverage_not_met:22.3%<60.0%"
       ],
       "contract": "Promotion requires explicit pre-tip close evidence; missing closes remain missing and are never inferred."
     }
