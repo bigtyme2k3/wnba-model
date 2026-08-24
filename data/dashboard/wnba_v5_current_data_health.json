@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-24T11:19:02.812733+00:00",
+  "generated_at_utc": "2026-08-24T12:21:47.949301+00:00",
   "target_date": "2026-08-24",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -14,7 +14,7 @@
       },
       {
         "path": "data/dashboard/wnba_v5_m11_report.json",
-        "target_date": "2026-08-23"
+        "target_date": "2026-08-24"
       },
       {
         "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
@@ -26,11 +26,11 @@
       }
     ]
   },
-  "status": "YELLOW",
+  "status": "GREEN",
   "summary": {
     "critical_checks": 10,
-    "green": 8,
-    "yellow": 2,
+    "green": 10,
+    "yellow": 0,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -59,11 +59,9 @@
       "name": "injury_intelligence",
       "path": "data/dashboard/wnba_injury_intelligence.json",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "target_date_mismatch:2026-08-23!=2026-08-24"
-      ],
-      "target_date": "2026-08-23",
+      "status": "green",
+      "findings": [],
+      "target_date": "2026-08-24",
       "generated_date": "2026-08-24",
       "reported_status": null
     },
@@ -71,14 +69,11 @@
       "name": "m11_inference",
       "path": "data/dashboard/wnba_v5_m11_report.json",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "target_date_mismatch:2026-08-23!=2026-08-24",
-        "unexpected_status:BLOCKED_STALE_SLATE"
-      ],
-      "target_date": "2026-08-23",
+      "status": "green",
+      "findings": [],
+      "target_date": "2026-08-24",
       "generated_date": "2026-08-24",
-      "reported_status": "BLOCKED_STALE_SLATE"
+      "reported_status": "READY_SHADOW"
     },
     {
       "name": "m12_learning",
