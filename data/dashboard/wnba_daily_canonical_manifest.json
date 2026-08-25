@@ -1,20 +1,23 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-24T16:58:47.456470+00:00",
-  "target_date": "2026-08-24",
+  "generated_at_utc": "2026-08-25T10:53:09.174885+00:00",
+  "target_date": "2026-08-25",
   "status": "PASS",
   "games": [
-    "Golden State Valkyries @ Minnesota Lynx",
-    "Atlanta Dream @ Los Angeles Sparks"
+    "Chicago Sky @ Connecticut Sun",
+    "Portland Fire @ Dallas Wings",
+    "Washington Mystics @ Phoenix Mercury"
   ],
   "teams": [
-    "Atlanta Dream",
-    "Golden State Valkyries",
-    "Los Angeles Sparks",
-    "Minnesota Lynx"
+    "Chicago Sky",
+    "Connecticut Sun",
+    "Dallas Wings",
+    "Phoenix Mercury",
+    "Portland Fire",
+    "Washington Mystics"
   ],
-  "game_count": 2,
-  "player_prop_rows": 227,
+  "game_count": 3,
+  "player_prop_rows": 255,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -24,14 +27,14 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-24\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 2,\n  \"matchups\": [\n    \"Golden State Valkyries @ Minnesota Lynx\",\n    \"Atlanta Dream @ Los Angeles Sparks\"\n  ]\n}\n",
+      "stdout": "{\n  \"target_date\": \"2026-08-25\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 3,\n  \"matchups\": [\n    \"Chicago Sky @ Connecticut Sun\",\n    \"Portland Fire @ Dallas Wings\",\n    \"Washington Mystics @ Phoenix Mercury\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-24\",\n  \"events\": 2,\n  \"raw_rows\": 227,\n  \"verified_rows\": 227,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
+      "stdout": "{\n  \"target_date\": \"2026-08-25\",\n  \"events\": 3,\n  \"raw_rows\": 255,\n  \"verified_rows\": 255,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
