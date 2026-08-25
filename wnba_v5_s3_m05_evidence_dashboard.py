@@ -49,9 +49,6 @@ def append_history(row):
     if HIST.exists():
         try:existing=list(csv.DictReader(HIST.open(encoding='utf-8-sig',newline='')))
         except Exception:existing=[]
-    # History schema evolves as evidence becomes more rigorous. Preserve legacy
-    # columns/rows while adding any new canonical fields instead of failing when
-    # old CSV rows contain fields absent from the newest snapshot.
     fields=[]
     for old in existing:
         for key in old.keys():
@@ -74,9 +71,15 @@ def main():
     diag=load(FORWARD_DIAG,{})
     recal=load(RECAL,{})
     m13=load(M13,{})
-    snapshot_forward=int(m03.get('ledger_rows',metrics.get('forward_predictions',0)) or 0)
-    snapshot_graded=int(m03.get('certified_rows',metrics.get('binary_graded_predictions',0)) or 0)
-    snapshot_pending=int(m03.get('pending_rows',metrics.get('pending_predictions',0)) or 0)
+
+    # Snapshot diagnostics must come from the same immutable ledger view that
+    # M12 and Forward Diagnostics just rebuilt. M03 can lag by one refresh, so
+    # it is retained as an independent grading product but is not authoritative
+    # for the current snapshot ledger count.
+    snapshot_forward=int(diag.get('ledger_rows',metrics.get('forward_predictions',0)) or 0)
+    snapshot_graded=int(metrics.get('binary_graded_predictions',m03.get('certified_rows',0)) or 0)
+    snapshot_pending=int(metrics.get('pending_predictions',m03.get('pending_rows',0)) or 0)
+
     canonical=diag.get('canonical_earliest_prediction_per_market',{}) if isinstance(diag,dict) else {}
     canonical_overall=canonical.get('overall',{}) if isinstance(canonical,dict) else {}
     canonical_total=int(diag.get('unique_ranking_keys',0) or 0) if isinstance(diag,dict) else 0
