@@ -24,6 +24,7 @@ REPORT=Path('data/dashboard/wnba_v5_m12_report.json')
 MATCHUP=Path('data/dashboard/wnba_v5_matchup_adjustments.csv')
 LINEUP=Path('data/dashboard/wnba_v5_lineup_adjustments.csv')
 TEAMRANKINGS=Path('data/dashboard/wnba_v5_team_matchup_features.json')
+CLV_REPORT=Path('data/dashboard/wnba_v5_s3_m04_report.json')
 EPS=1e-12
 
 def f(v,default=None):
@@ -65,31 +66,12 @@ def csv_index(path):
  return out
 
 def issuance_context():
- """Read only context that exists now; caller copies it only into newly issued rows."""
  mi=csv_index(MATCHUP);li=csv_index(LINEUP)
  return mi,li
 
 def frozen_context(key,mi,li):
  m=mi.get(key,{}) if key else {}; l=li.get(key,{}) if key else {}
- return {
-  'ctx_matchup_defense_index':f(m.get('defense_index')),
-  'ctx_matchup_multiplier':f(m.get('matchup_multiplier')),
-  'ctx_matchup_last5_allowed':f(m.get('last5_allowed_avg')),
-  'ctx_matchup_last10_allowed':f(m.get('last10_allowed_avg')),
-  'ctx_rotation_games_prior':f(l.get('rotation_games_prior')),
-  'ctx_minutes_l5':f(l.get('minutes_l5')),
-  'ctx_minutes_l10':f(l.get('minutes_l10')),
-  'ctx_minutes_prior_mean':f(l.get('minutes_prior_mean')),
-  'ctx_starter_rate_l5':f(l.get('starter_rate_l5')),
-  'ctx_starter_rate_l10':f(l.get('starter_rate_l10')),
-  'ctx_lineup_confidence':f(l.get('lineup_confidence')),
-  'ctx_rotation_multiplier':f(l.get('rotation_multiplier')),
-  'ctx_projected_role':l.get('projected_role'),
-  'ctx_injury_status':l.get('injury_status'),
-  'ctx_lineup_confirmation':l.get('lineup_confirmation'),
-  'ctx_snapshot_matchup_generated_at_utc':datetime.fromtimestamp(MATCHUP.stat().st_mtime,timezone.utc).isoformat() if MATCHUP.exists() else None,
-  'ctx_snapshot_lineup_generated_at_utc':datetime.fromtimestamp(LINEUP.stat().st_mtime,timezone.utc).isoformat() if LINEUP.exists() else None,
- }
+ return {'ctx_matchup_defense_index':f(m.get('defense_index')),'ctx_matchup_multiplier':f(m.get('matchup_multiplier')),'ctx_matchup_last5_allowed':f(m.get('last5_allowed_avg')),'ctx_matchup_last10_allowed':f(m.get('last10_allowed_avg')),'ctx_rotation_games_prior':f(l.get('rotation_games_prior')),'ctx_minutes_l5':f(l.get('minutes_l5')),'ctx_minutes_l10':f(l.get('minutes_l10')),'ctx_minutes_prior_mean':f(l.get('minutes_prior_mean')),'ctx_starter_rate_l5':f(l.get('starter_rate_l5')),'ctx_starter_rate_l10':f(l.get('starter_rate_l10')),'ctx_lineup_confidence':f(l.get('lineup_confidence')),'ctx_rotation_multiplier':f(l.get('rotation_multiplier')),'ctx_projected_role':l.get('projected_role'),'ctx_injury_status':l.get('injury_status'),'ctx_lineup_confirmation':l.get('lineup_confirmation'),'ctx_snapshot_matchup_generated_at_utc':datetime.fromtimestamp(MATCHUP.stat().st_mtime,timezone.utc).isoformat() if MATCHUP.exists() else None,'ctx_snapshot_lineup_generated_at_utc':datetime.fromtimestamp(LINEUP.stat().st_mtime,timezone.utc).isoformat() if LINEUP.exists() else None}
 
 def game_log_actual(record,stat):
  s=record.get('scoring') if isinstance(record.get('scoring'),dict) else {};b=record.get('boxscore') if isinstance(record.get('boxscore'),dict) else {};d=record.get('derived') if isinstance(record.get('derived'),dict) else {}
@@ -161,10 +143,13 @@ def main():
    u=unit_profit(o,int(r['target_win']));posedge.append(u) if u is not None else None
  metrics={'forward_predictions':len(ledger),'resolved_predictions':len(resolved),'binary_graded_predictions':len(binary),'pushes':sum(r.get('outcome')=='PUSH' for r in resolved),'pending_predictions':len(pending),'v5_brier':r6(metric(binary,'v5_probability','brier')),'market_brier':r6(metric(binary,'market_probability','brier')),'v5_log_loss':r6(metric(binary,'v5_probability','logloss')),'market_log_loss':r6(metric(binary,'market_probability','logloss')),'v5_ece_5bin':r6(ece(binary,'v5_probability')),'market_ece_5bin':r6(ece(binary,'market_probability')),'v5_accuracy':r6(metric(binary,'v5_probability','accuracy')),'market_accuracy':r6(metric(binary,'market_probability','accuracy')),'model_bets_at_0_5':len(bets),'model_profit_units_at_0_5':round(sum(bets),4) if bets else 0.0,'model_roi_at_0_5':r6(sum(bets)/len(bets)) if bets else None,'positive_edge_bets':len(posedge),'positive_edge_profit_units':round(sum(posedge),4) if posedge else 0.0,'positive_edge_roi':r6(sum(posedge)/len(posedge)) if posedge else None}
  context_fields=[k for k in (ledger[-1].keys() if ledger else []) if k.startswith('ctx_')];context_rows=sum(any(r.get(k) is not None for k in context_fields) for r in ledger)
- minimum_rows=300;minimum_clv=60.0;explicit_clv_coverage=0.0;promotion_ready=(len(binary)>=minimum_rows and explicit_clv_coverage>=minimum_clv and metrics['v5_brier'] is not None and metrics['market_brier'] is not None and metrics['v5_brier']<metrics['market_brier'])
+ minimum_rows=300;minimum_clv=60.0
+ clv_report=read_json(CLV_REPORT,{})
+ explicit_clv_coverage=f(clv_report.get('explicit_clv_coverage_pct'),0.0) if isinstance(clv_report,dict) else 0.0
+ promotion_ready=(len(binary)>=minimum_rows and explicit_clv_coverage>=minimum_clv and metrics['v5_brier'] is not None and metrics['market_brier'] is not None and metrics['v5_brier']<metrics['market_brier'])
  status='READY_FORWARD_LEARNING' if ledger else 'WAITING_FOR_M11_PREDICTIONS'
  if ledger and not binary:status='WAITING_FOR_CERTIFIED_OUTCOMES'
- state={'version':'V5','module':'V5-M12','status':status,'generated_at_utc':now,'research_champion':'KNN','new_predictions_appended':added,'newly_graded':newly_graded,'metrics':metrics,'context_snapshot':{'policy':'Context is copied only when a new prediction is issued; historical ledger rows are never backfilled.','fields':context_fields,'rows_with_frozen_context':context_rows,'matchup_source':str(MATCHUP),'lineup_source':str(LINEUP)},'promotion_gate':{'production_ready':promotion_ready,'minimum_forward_rows':minimum_rows,'current_forward_rows':len(binary),'minimum_explicit_clv_coverage_pct':minimum_clv,'explicit_clv_coverage_pct':explicit_clv_coverage,'reason':'V4 remains production champion until >=300 graded forward predictions, >=60% explicit CLV coverage, and V5 beats market forward Brier.'},'learning_policy':'Append predictions and available context before outcomes; grade only from later verified actuals; never rewrite issued probabilities or backfill context.','actual_sources':['certified_v5_historical_feature_store','canonical_player_game_log_warehouse'],'next_module':'V5-M13 Production Readiness + Shadow Monitoring'}
+ state={'version':'V5','module':'V5-M12','status':status,'generated_at_utc':now,'research_champion':'KNN','new_predictions_appended':added,'newly_graded':newly_graded,'metrics':metrics,'context_snapshot':{'policy':'Context is copied only when a new prediction is issued; historical ledger rows are never backfilled.','fields':context_fields,'rows_with_frozen_context':context_rows,'matchup_source':str(MATCHUP),'lineup_source':str(LINEUP)},'promotion_gate':{'production_ready':promotion_ready,'minimum_forward_rows':minimum_rows,'current_forward_rows':len(binary),'minimum_explicit_clv_coverage_pct':minimum_clv,'explicit_clv_coverage_pct':explicit_clv_coverage,'explicit_clv_source':str(CLV_REPORT),'reason':'V4 remains production champion until >=300 graded forward predictions, >=60% explicit CLV coverage, and V5 beats market forward Brier.'},'learning_policy':'Append predictions and available context before outcomes; grade only from later verified actuals; never rewrite issued probabilities or backfill context.','actual_sources':['certified_v5_historical_feature_store','canonical_player_game_log_warehouse'],'next_module':'V5-M13 Production Readiness + Shadow Monitoring'}
  report=dict(state);report['pending_examples']=[{'date':r.get('date'),'player':r.get('player'),'stat':r.get('stat'),'side':r.get('side')} for r in pending[:10]]
  OUT_CSV.parent.mkdir(parents=True,exist_ok=True);fields=['prediction_id','ranking_key','prediction_generated_at_utc','date','player','game','stat','side','line','odds','book','model','v5_probability','market_probability','probability_edge','confidence_score','uncertainty_score']+context_fields+['actual','outcome','target_win','graded_at_utc']
  with OUT_CSV.open('w',encoding='utf-8',newline='') as h:w=csv.DictWriter(h,fieldnames=fields);w.writeheader();w.writerows([{k:r.get(k) for k in fields} for r in ledger])
