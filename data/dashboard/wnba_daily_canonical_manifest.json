@@ -1,6 +1,6 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-25T10:53:09.174885+00:00",
+  "generated_at_utc": "2026-08-25T11:11:37.001391Z",
   "target_date": "2026-08-25",
   "status": "PASS",
   "games": [
@@ -17,7 +17,7 @@
     "Washington Mystics"
   ],
   "game_count": 3,
-  "player_prop_rows": 255,
+  "player_prop_rows": 252,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -27,16 +27,17 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-25\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 3,\n  \"matchups\": [\n    \"Chicago Sky @ Connecticut Sun\",\n    \"Portland Fire @ Dallas Wings\",\n    \"Washington Mystics @ Phoenix Mercury\"\n  ]\n}\n",
+      "stdout": "Authoritative current slate synchronized for 2026-08-25",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-25\",\n  \"events\": 3,\n  \"raw_rows\": 255,\n  \"verified_rows\": 255,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
+      "stdout": "Verified player props synchronized for 2026-08-25",
       "stderr": ""
     }
   ],
-  "failures": []
+  "failures": [],
+  "manifest_sync_source": "player_props_ingestion_same_run"
 }
