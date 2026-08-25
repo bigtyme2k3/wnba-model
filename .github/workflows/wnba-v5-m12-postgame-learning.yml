@@ -12,6 +12,7 @@ on:
       - 'data/warehouse/wnba_player_game_logs.json'
       - 'data/dashboard/wnba_v5_matchup_adjustments.csv'
       - 'data/dashboard/wnba_v5_lineup_adjustments.csv'
+      - 'data/dashboard/wnba_v5_s3_m04_report.json'
       - '.github/workflows/wnba-v5-m12-postgame-learning.yml'
 concurrency:
   group: v5-forward-learning-writer
@@ -32,36 +33,51 @@ jobs:
           python-version: '3.12'
       - name: Sync latest repository
         run: git pull --rebase origin main
-      - name: Compile V5 M12 engine
-        run: python -m py_compile wnba_v5_m12_postgame_learning.py
+      - name: Compile V5 learning chain
+        run: |
+          python -m py_compile wnba_v5_m12_postgame_learning.py
+          python -m py_compile wnba_v5_forward_diagnostics.py
+          python -m py_compile wnba_v5_s3_m05_evidence_dashboard.py
       - name: Capture and grade forward V5 predictions
         run: python wnba_v5_m12_postgame_learning.py
-      - name: Verify V5 M12
+      - name: Refresh canonical forward diagnostics
+        run: python wnba_v5_forward_diagnostics.py
+      - name: Refresh evidence dashboard
+        run: python wnba_v5_s3_m05_evidence_dashboard.py
+      - name: Verify synchronized V5 evidence
         run: |
           python - <<'PY'
           import json
-          p=json.load(open('data/dashboard/wnba_v5_m12_report.json'))
-          print(p)
-          assert p['module']=='V5-M12'
-          assert p['status'] in {'READY_FORWARD_LEARNING','WAITING_FOR_CERTIFIED_OUTCOMES','WAITING_FOR_M11_PREDICTIONS'}
-          assert p['promotion_gate']['minimum_forward_rows']==300
-          assert p['promotion_gate']['minimum_explicit_clv_coverage_pct']==60.0
-          ctx=p.get('context_snapshot',{})
-          assert 'policy' in ctx
-          assert 'fields' in ctx
-          print('Frozen context fields:',ctx.get('fields'))
-          print('Rows with prospective context:',ctx.get('rows_with_frozen_context'))
+          m12=json.load(open('data/dashboard/wnba_v5_m12_report.json'))
+          diag=json.load(open('data/dashboard/wnba_v5_forward_diagnostics.json'))
+          m05=json.load(open('data/dashboard/wnba_v5_s3_m05_report.json'))
+          clv=json.load(open('data/dashboard/wnba_v5_s3_m04_report.json'))
+          assert m12['module']=='V5-M12'
+          assert m12['status'] in {'READY_FORWARD_LEARNING','WAITING_FOR_CERTIFIED_OUTCOMES','WAITING_FOR_M11_PREDICTIONS'}
+          assert m12['promotion_gate']['minimum_forward_rows']==300
+          assert m12['promotion_gate']['minimum_explicit_clv_coverage_pct']==60.0
+          assert abs(float(m12['promotion_gate']['explicit_clv_coverage_pct'])-float(clv.get('explicit_clv_coverage_pct',0))) < 1e-9
+          assert diag['module']=='FORWARD_DIAGNOSTICS'
+          assert diag['ledger_rows']==m12['metrics']['forward_predictions']
+          assert m05['module']=='S3-M05'
+          assert m05['progress']['snapshot_ledger_rows_diagnostic_only']==diag['ledger_rows']
+          assert m05['progress']['canonical_forward_markets_total']==diag['unique_ranking_keys']
+          print('M12 snapshots:',m12['metrics']['forward_predictions'])
+          print('Canonical markets:',diag['unique_ranking_keys'])
+          print('Canonical graded:',m05['progress']['canonical_graded_forward_markets'])
+          print('CLV coverage:',m12['promotion_gate']['explicit_clv_coverage_pct'])
           PY
-      - name: Publish V5 M12 safely
+      - name: Publish synchronized V5 learning outputs
         run: |
-          set -euo pipefail
-          git config user.name "WNBA V5 M12 Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/history/wnba_v5_forward_predictions.jsonl data/dashboard/wnba_v5_forward_validation.csv data/dashboard/wnba_v5_forward_metrics.json data/dashboard/wnba_v5_learning_state.json data/dashboard/wnba_v5_m12_report.json
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Refresh WNBA V5 M12 forward learning outputs"
-          for attempt in 1 2 3 4; do
-            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
-            echo "retry $attempt"; sleep $((attempt*3))
-          done
-          exit 1
+          chmod +x scripts/atomic_generated_push.sh
+          scripts/atomic_generated_push.sh "Refresh synchronized V5 forward evidence" \
+            data/history/wnba_v5_forward_predictions.jsonl \
+            data/dashboard/wnba_v5_forward_validation.csv \
+            data/dashboard/wnba_v5_forward_metrics.json \
+            data/dashboard/wnba_v5_learning_state.json \
+            data/dashboard/wnba_v5_m12_report.json \
+            data/dashboard/wnba_v5_forward_diagnostics.json \
+            data/dashboard/wnba_v5_evidence_dashboard.json \
+            data/dashboard/wnba_v5_promotion_meter.json \
+            data/dashboard/wnba_v5_evidence_history.csv \
+            data/dashboard/wnba_v5_s3_m05_report.json
