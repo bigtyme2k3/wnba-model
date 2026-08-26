@@ -1,6 +1,6 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-26T10:56:33.085819+00:00",
+  "generated_at_utc": "2026-08-26T11:13:44.107893Z",
   "target_date": "2026-08-26",
   "status": "PASS",
   "games": [
@@ -24,16 +24,17 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-26\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 2,\n  \"matchups\": [\n    \"Golden State Valkyries @ Connecticut Sun\",\n    \"Toronto Tempo @ Seattle Storm\"\n  ]\n}\n",
+      "stdout": "Authoritative current slate synchronized for 2026-08-26",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-26\",\n  \"events\": 2,\n  \"raw_rows\": 154,\n  \"verified_rows\": 154,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
+      "stdout": "Verified player props synchronized for 2026-08-26",
       "stderr": ""
     }
   ],
-  "failures": []
+  "failures": [],
+  "manifest_sync_source": "player_props_ingestion_same_run"
 }
