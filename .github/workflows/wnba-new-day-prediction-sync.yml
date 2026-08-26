@@ -8,9 +8,15 @@ on:
         required: false
         default: ''
   schedule:
+    # Morning build attempts plus late safety retries. GitHub cron is UTC;
+    # during EDT these are 7:05, 8:05, 9:05 AM, 1:05 PM, and 3:05 PM ET.
+    # The later retries prevent an early injury/market-source failure from
+    # leaving game projections pinned to yesterday for the rest of the day.
     - cron: '5 11 * * *'
     - cron: '5 12 * * *'
     - cron: '5 13 * * *'
+    - cron: '5 17 * * *'
+    - cron: '5 19 * * *'
   push:
     branches: [main]
     paths:
@@ -155,20 +161,24 @@ jobs:
             'data/raw/player_points_today.csv' \
             "data/raw/player_points_${TARGET}.csv"
 
-      - name: Verify published M02 and deploy dashboard
+      - name: Verify published current-day stack and deploy dashboard
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           git fetch origin main
           git show origin/main:data/dashboard/wnba_s19_m02_predictions.json > /tmp/m02.json
           git show origin/main:data/dashboard/wnba_injury_intelligence.json > /tmp/injury.json
+          git show origin/main:data/dashboard/wnba_sprint2_phase2.json > /tmp/phase2.json
           python - <<'PY'
           import json,os
           target=os.environ['TARGET']
-          m02=json.load(open('/tmp/m02.json')); injury=json.load(open('/tmp/injury.json'))
+          m02=json.load(open('/tmp/m02.json'))
+          injury=json.load(open('/tmp/injury.json'))
+          phase2=json.load(open('/tmp/phase2.json'))
           assert m02.get('status')=='READY' and str(m02.get('target_date') or '')[:10]==target, m02
           assert str(injury.get('target_date') or '')[:10]==target, injury
-          print({'published_m02_target':m02.get('target_date'),'status':m02.get('status'),'injury_coverage':injury.get('source_coverage')})
+          assert phase2.get('status')=='PASS' and str(phase2.get('target_date') or '')[:10]==target, phase2
+          print({'published_m02_target':m02.get('target_date'),'phase2_target':phase2.get('target_date'),'phase2_games':len(phase2.get('games') or []),'injury_coverage':injury.get('source_coverage')})
           PY
           gh workflow run deploy_wnba_dashboard.yml --ref main
-          echo 'Verified current-day M02 and dispatched dashboard deployment.'
+          echo 'Verified current-day game/prop stack and dispatched dashboard deployment.'
