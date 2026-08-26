@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
@@ -67,9 +68,21 @@ def main() -> None:
     html = replace_element(html, 'style', STYLE_ID, STYLE)
     html = replace_element(html, 'script', SCRIPT_ID, SCRIPT)
     HTML.write_text(html, encoding='utf-8')
-    from patch_dashboard_alt_props_performance_panel import main as apply_alt_performance_panel
-    apply_alt_performance_panel()
-    print({'status':'PASS','alt_props_ui':'streak-table','filters':['stat','odds-tier'],'sorting':['player','team','stat','line','streak','l10','season','avg','opp','odds','books'],'performance_panel':'below-table','canonical_only':True})
+    # The ALT table owns only ALT presentation. The performance-panel helper has
+    # an optional legacy side effect that re-runs Sprint 19 M03. During a Pages
+    # build that can fail on a stale game artifact even when the canonical slate
+    # and current V5 inference are already healthy. Suppress that side effect here.
+    old_panel_only = os.environ.get('ALT_PANEL_ONLY')
+    os.environ['ALT_PANEL_ONLY'] = '1'
+    try:
+        from patch_dashboard_alt_props_performance_panel import main as apply_alt_performance_panel
+        apply_alt_performance_panel()
+    finally:
+        if old_panel_only is None:
+            os.environ.pop('ALT_PANEL_ONLY', None)
+        else:
+            os.environ['ALT_PANEL_ONLY'] = old_panel_only
+    print({'status':'PASS','alt_props_ui':'streak-table','filters':['stat','odds-tier'],'sorting':['player','team','stat','line','streak','l10','season','avg','opp','odds','books'],'performance_panel':'below-table','canonical_only':True,'m03_side_effect':False})
 
 
 if __name__ == '__main__':
