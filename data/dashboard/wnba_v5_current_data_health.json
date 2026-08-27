@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-27T02:18:43.314019+00:00",
+  "generated_at_utc": "2026-08-27T13:12:01.122376+00:00",
   "target_date": "2026-08-26",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -29,8 +29,8 @@
   "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 5,
-    "yellow": 5,
+    "green": 4,
+    "yellow": 6,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -71,11 +71,13 @@
       "name": "m11_inference",
       "path": "data/dashboard/wnba_v5_m11_report.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
+      "status": "yellow",
+      "findings": [
+        "unexpected_status:BLOCKED_STALE_SLATE"
+      ],
       "target_date": "2026-08-26",
       "generated_date": "2026-08-27",
-      "reported_status": "READY_SHADOW"
+      "reported_status": "BLOCKED_STALE_SLATE"
     },
     {
       "name": "m12_learning",
@@ -108,7 +110,7 @@
       "status": "green",
       "findings": [],
       "target_date": "2026-08-26",
-      "generated_date": "2026-08-26",
+      "generated_date": "2026-08-27",
       "reported_status": "READY"
     },
     {
