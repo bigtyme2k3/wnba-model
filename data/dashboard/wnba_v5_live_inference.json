@@ -3,1283 +3,22 @@
     "version": "V5",
     "module": "V5-M11",
     "stage": "LIVE_V5_INFERENCE",
-    "status": "READY_SHADOW",
-    "generated_at_utc": "2026-08-27T01:07:03.096381+00:00",
+    "status": "BLOCKED_STALE_SLATE",
+    "generated_at_utc": "2026-08-27T09:44:06.069167+00:00",
     "target_date": "2026-08-26",
     "ranked_rows": 297,
-    "scored_rows": 35,
-    "unscored_rows": 262,
-    "scoring_coverage_pct": 11.78,
+    "scored_rows": 0,
+    "unscored_rows": 297,
+    "scoring_coverage_pct": 0.0,
     "research_champion": "KNN",
-    "training_rows": 123,
-    "freshness_guard_status": "FRESH",
-    "leakage_policy": "Live rolling features use only certified player/stat games strictly before target_date.",
+    "training_rows": null,
+    "freshness_guard_status": "STALE_BLOCKED",
+    "freshness_reason": "Ranked board contains no exclusively current-date slate and must not be scored.",
     "research_only": true,
     "production_ready": false,
-    "next_module": "V5-M12 Post-Game Learning + Forward Validation"
+    "next_action": "REFRESH_CURRENT_OPPORTUNITY_BOARD"
   },
-  "scored": [
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|ast|over",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "AST",
-      "side": "OVER",
-      "line": 3.5,
-      "odds": -116.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.409514,
-      "v5_probability": 0.409514,
-      "market_implied_probability": 0.537037,
-      "probability_edge": -0.127523,
-      "probability_band": "<50%",
-      "confidence_score": 0.126294,
-      "uncertainty_score": 0.983488,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 1.699706,
-      "feature_snapshot": {
-        "market_implied_probability": 0.537037,
-        "line_minus_prior_mean": -1.833333,
-        "rolling3_actual_mean": 5.333333,
-        "rolling5_actual_mean": 5.333333,
-        "rolling5_actual_std": 2.357023,
-        "rolling5_trend_slope": -2.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|ast|under",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 3.5,
-      "odds": -106.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.674294,
-      "v5_probability": 0.674294,
-      "market_implied_probability": 0.514563,
-      "probability_edge": 0.159731,
-      "probability_band": "65-69.9%",
-      "confidence_score": 0.145029,
-      "uncertainty_score": 0.937276,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 2.389139,
-      "feature_snapshot": {
-        "market_implied_probability": 0.514563,
-        "line_minus_prior_mean": -1.833333,
-        "rolling3_actual_mean": 5.333333,
-        "rolling5_actual_mean": 5.333333,
-        "rolling5_actual_std": 2.357023,
-        "rolling5_trend_slope": -2.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pa|over",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PA",
-      "side": "OVER",
-      "line": 10.5,
-      "odds": -110.0,
-      "best_book": "DraftKings",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.35326,
-      "v5_probability": 0.35326,
-      "market_implied_probability": 0.52381,
-      "probability_edge": -0.17055,
-      "probability_band": "<50%",
-      "confidence_score": 0.168629,
-      "uncertainty_score": 0.955965,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.333333,
-      "average_neighbor_distance": 2.749393,
-      "feature_snapshot": {
-        "market_implied_probability": 0.52381,
-        "line_minus_prior_mean": 2.5,
-        "rolling3_actual_mean": 6.333333,
-        "rolling5_actual_mean": 8.0,
-        "rolling5_actual_std": 3.847077,
-        "rolling5_trend_slope": -1.6,
-        "historical_hit_rate_at_current_line": 0.4,
-        "historical_hit_rate_l5_at_current_line": 0.4,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pa|under",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 10.5,
-      "odds": 100.0,
-      "best_book": "FanDuel",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.313333,
-      "v5_probability": 0.313333,
-      "market_implied_probability": 0.5,
-      "probability_edge": -0.186667,
-      "probability_band": "<50%",
-      "confidence_score": 0.193194,
-      "uncertainty_score": 0.927697,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.333333,
-      "average_neighbor_distance": 2.246969,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": 2.5,
-        "rolling3_actual_mean": 6.333333,
-        "rolling5_actual_mean": 8.0,
-        "rolling5_actual_std": 3.847077,
-        "rolling5_trend_slope": -1.6,
-        "historical_hit_rate_at_current_line": 0.6,
-        "historical_hit_rate_l5_at_current_line": 0.6,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pr|over",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PR",
-      "side": "OVER",
-      "line": 9.5,
-      "odds": -121.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.614914,
-      "v5_probability": 0.614914,
-      "market_implied_probability": 0.547511,
-      "probability_edge": 0.067402,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.139885,
-      "uncertainty_score": 0.973231,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 2.530592,
-      "feature_snapshot": {
-        "market_implied_probability": 0.547511,
-        "line_minus_prior_mean": 2.0,
-        "rolling3_actual_mean": 7.333333,
-        "rolling5_actual_mean": 7.5,
-        "rolling5_actual_std": 2.872281,
-        "rolling5_trend_slope": 0.4,
-        "historical_hit_rate_at_current_line": 0.25,
-        "historical_hit_rate_l5_at_current_line": 0.25,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pr|over",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PR",
-      "side": "OVER",
-      "line": 10.5,
-      "odds": 100.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.624751,
-      "v5_probability": 0.624751,
-      "market_implied_probability": 0.5,
-      "probability_edge": 0.124751,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.140043,
-      "uncertainty_score": 0.968374,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 2.798792,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": 3.0,
-        "rolling3_actual_mean": 7.333333,
-        "rolling5_actual_mean": 7.5,
-        "rolling5_actual_std": 2.872281,
-        "rolling5_trend_slope": 0.4,
-        "historical_hit_rate_at_current_line": 0.25,
-        "historical_hit_rate_l5_at_current_line": 0.25,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pr|under",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 9.5,
-      "odds": -112.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.343484,
-      "v5_probability": 0.343484,
-      "market_implied_probability": 0.528302,
-      "probability_edge": -0.184818,
-      "probability_band": "<50%",
-      "confidence_score": 0.173719,
-      "uncertainty_score": 0.949743,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 1.456939,
-      "feature_snapshot": {
-        "market_implied_probability": 0.528302,
-        "line_minus_prior_mean": 2.0,
-        "rolling3_actual_mean": 7.333333,
-        "rolling5_actual_mean": 7.5,
-        "rolling5_actual_std": 2.872281,
-        "rolling5_trend_slope": 0.4,
-        "historical_hit_rate_at_current_line": 0.75,
-        "historical_hit_rate_l5_at_current_line": 0.75,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pr|under",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 10.5,
-      "odds": -132.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.367427,
-      "v5_probability": 0.367427,
-      "market_implied_probability": 0.568966,
-      "probability_edge": -0.201538,
-      "probability_band": "<50%",
-      "confidence_score": 0.163638,
-      "uncertainty_score": 0.964208,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 1.484516,
-      "feature_snapshot": {
-        "market_implied_probability": 0.568966,
-        "line_minus_prior_mean": 3.0,
-        "rolling3_actual_mean": 7.333333,
-        "rolling5_actual_mean": 7.5,
-        "rolling5_actual_std": 2.872281,
-        "rolling5_trend_slope": 0.4,
-        "historical_hit_rate_at_current_line": 0.75,
-        "historical_hit_rate_l5_at_current_line": 0.75,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pra|over",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 13.5,
-      "odds": -109.0,
-      "best_book": "DraftKings",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.415926,
-      "v5_probability": 0.415926,
-      "market_implied_probability": 0.521531,
-      "probability_edge": -0.105605,
-      "probability_band": "<50%",
-      "confidence_score": 0.141476,
-      "uncertainty_score": 0.985762,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 3.655312,
-      "feature_snapshot": {
-        "market_implied_probability": 0.521531,
-        "line_minus_prior_mean": 3.5,
-        "rolling3_actual_mean": 7.333333,
-        "rolling5_actual_mean": 10.0,
-        "rolling5_actual_std": 4.816638,
-        "rolling5_trend_slope": -2.6,
-        "historical_hit_rate_at_current_line": 0.2,
-        "historical_hit_rate_l5_at_current_line": 0.2,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pra|over",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 14.5,
-      "odds": -109.0,
-      "best_book": "BetRivers",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.414776,
-      "v5_probability": 0.414776,
-      "market_implied_probability": 0.521531,
-      "probability_edge": -0.106755,
-      "probability_band": "<50%",
-      "confidence_score": 0.141368,
-      "uncertainty_score": 0.985367,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 3.708585,
-      "feature_snapshot": {
-        "market_implied_probability": 0.521531,
-        "line_minus_prior_mean": 4.5,
-        "rolling3_actual_mean": 7.333333,
-        "rolling5_actual_mean": 10.0,
-        "rolling5_actual_std": 4.816638,
-        "rolling5_trend_slope": -2.6,
-        "historical_hit_rate_at_current_line": 0.2,
-        "historical_hit_rate_l5_at_current_line": 0.2,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pra|under",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 13.5,
-      "odds": 100.0,
-      "best_book": "FanDuel",
-      "prior_games": 5,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.479315,
-      "v5_probability": 0.479315,
-      "market_implied_probability": 0.5,
-      "probability_edge": -0.020685,
-      "probability_band": "<50%",
-      "confidence_score": 0.147892,
-      "uncertainty_score": 0.999144,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 2.16887,
-      "feature_snapshot": {
-        "market_implied_probability": 0.5,
-        "line_minus_prior_mean": 3.5,
-        "rolling3_actual_mean": 7.333333,
-        "rolling5_actual_mean": 10.0,
-        "rolling5_actual_std": 4.816638,
-        "rolling5_trend_slope": -2.6,
-        "historical_hit_rate_at_current_line": 0.8,
-        "historical_hit_rate_l5_at_current_line": 0.8,
-        "prior_games": 5.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pts|over",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 6.5,
-      "odds": -121.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.668926,
-      "v5_probability": 0.668926,
-      "market_implied_probability": 0.547511,
-      "probability_edge": 0.121414,
-      "probability_band": "65-69.9%",
-      "confidence_score": 0.142904,
-      "uncertainty_score": 0.941199,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 2.356925,
-      "feature_snapshot": {
-        "market_implied_probability": 0.547511,
-        "line_minus_prior_mean": 1.166667,
-        "rolling3_actual_mean": 5.333333,
-        "rolling5_actual_mean": 5.333333,
-        "rolling5_actual_std": 3.681787,
-        "rolling5_trend_slope": 2.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pts|over",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 7.5,
-      "odds": 106.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.624358,
-      "v5_probability": 0.624358,
-      "market_implied_probability": 0.485437,
-      "probability_edge": 0.138921,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.12048,
-      "uncertainty_score": 0.968576,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 2.744936,
-      "feature_snapshot": {
-        "market_implied_probability": 0.485437,
-        "line_minus_prior_mean": 2.166667,
-        "rolling3_actual_mean": 5.333333,
-        "rolling5_actual_mean": 5.333333,
-        "rolling5_actual_std": 3.681787,
-        "rolling5_trend_slope": 2.5,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pts|under",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 6.5,
-      "odds": -109.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.425151,
-      "v5_probability": 0.425151,
-      "market_implied_probability": 0.521531,
-      "probability_edge": -0.09638,
-      "probability_band": "<50%",
-      "confidence_score": 0.117699,
-      "uncertainty_score": 0.988732,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 1.977674,
-      "feature_snapshot": {
-        "market_implied_probability": 0.521531,
-        "line_minus_prior_mean": 1.166667,
-        "rolling3_actual_mean": 5.333333,
-        "rolling5_actual_mean": 5.333333,
-        "rolling5_actual_std": 3.681787,
-        "rolling5_trend_slope": 2.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pts|under",
-      "date": "2026-08-26",
-      "player": "Charlisse Leger-Walker",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 7.5,
-      "odds": -135.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.406675,
-      "v5_probability": 0.406675,
-      "market_implied_probability": 0.574468,
-      "probability_edge": -0.167793,
-      "probability_band": "<50%",
-      "confidence_score": 0.123487,
-      "uncertainty_score": 0.982426,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 1.881047,
-      "feature_snapshot": {
-        "market_implied_probability": 0.574468,
-        "line_minus_prior_mean": 2.166667,
-        "rolling3_actual_mean": 5.333333,
-        "rolling5_actual_mean": 5.333333,
-        "rolling5_actual_std": 3.681787,
-        "rolling5_trend_slope": 2.5,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|3pm|over",
-      "date": "2026-08-26",
-      "player": "Janelle Salaun",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "3PM",
-      "side": "OVER",
-      "line": 2.5,
-      "odds": 140.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.485653,
-      "v5_probability": 0.485653,
-      "market_implied_probability": 0.416667,
-      "probability_edge": 0.068986,
-      "probability_band": "<50%",
-      "confidence_score": 0.11312,
-      "uncertainty_score": 0.999588,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.466667,
-      "average_neighbor_distance": 3.56583,
-      "feature_snapshot": {
-        "market_implied_probability": 0.416667,
-        "line_minus_prior_mean": 0.25,
-        "rolling3_actual_mean": 2.333333,
-        "rolling5_actual_mean": 2.25,
-        "rolling5_actual_std": 1.089725,
-        "rolling5_trend_slope": 0.7,
-        "historical_hit_rate_at_current_line": 0.25,
-        "historical_hit_rate_l5_at_current_line": 0.25,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|3pm|under",
-      "date": "2026-08-26",
-      "player": "Janelle Salaun",
-      "game": "Golden State Valkyries @ Connecticut Sun",
-      "market": "3PM",
-      "side": "UNDER",
-      "line": 2.5,
-      "odds": -172.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.404169,
-      "v5_probability": 0.404169,
-      "market_implied_probability": 0.632353,
-      "probability_edge": -0.228184,
-      "probability_band": "<50%",
-      "confidence_score": 0.1463,
-      "uncertainty_score": 0.981461,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 1.764987,
-      "feature_snapshot": {
-        "market_implied_probability": 0.632353,
-        "line_minus_prior_mean": 0.25,
-        "rolling3_actual_mean": 2.333333,
-        "rolling5_actual_mean": 2.25,
-        "rolling5_actual_std": 1.089725,
-        "rolling5_trend_slope": 0.7,
-        "historical_hit_rate_at_current_line": 0.75,
-        "historical_hit_rate_l5_at_current_line": 0.75,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|over",
-      "date": "2026-08-26",
-      "player": "Awa Fam",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 10.5,
-      "odds": -130.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.265623,
-      "v5_probability": 0.265623,
-      "market_implied_probability": 0.565217,
-      "probability_edge": -0.299594,
-      "probability_band": "<50%",
-      "confidence_score": 0.17897,
-      "uncertainty_score": 0.883329,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 2.477525,
-      "feature_snapshot": {
-        "market_implied_probability": 0.565217,
-        "line_minus_prior_mean": 1.833333,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|over",
-      "date": "2026-08-26",
-      "player": "Awa Fam",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 11.5,
-      "odds": -106.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.261711,
-      "v5_probability": 0.261711,
-      "market_implied_probability": 0.514563,
-      "probability_edge": -0.252852,
-      "probability_band": "<50%",
-      "confidence_score": 0.18178,
-      "uncertainty_score": 0.879133,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 2.470939,
-      "feature_snapshot": {
-        "market_implied_probability": 0.514563,
-        "line_minus_prior_mean": 2.833333,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|over",
-      "date": "2026-08-26",
-      "player": "Awa Fam",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 12.5,
-      "odds": 116.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.25774,
-      "v5_probability": 0.25774,
-      "market_implied_probability": 0.462963,
-      "probability_edge": -0.205223,
-      "probability_band": "<50%",
-      "confidence_score": 0.181382,
-      "uncertainty_score": 0.87478,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 2.751094,
-      "feature_snapshot": {
-        "market_implied_probability": 0.462963,
-        "line_minus_prior_mean": 3.833333,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|under",
-      "date": "2026-08-26",
-      "player": "Awa Fam",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 10.5,
-      "odds": 104.0,
-      "best_book": "Caesars",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.132537,
-      "v5_probability": 0.132537,
-      "market_implied_probability": 0.490196,
-      "probability_edge": -0.357659,
-      "probability_band": "<50%",
-      "confidence_score": 0.332932,
-      "uncertainty_score": 0.678148,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.133333,
-      "average_neighbor_distance": 1.353744,
-      "feature_snapshot": {
-        "market_implied_probability": 0.490196,
-        "line_minus_prior_mean": 1.833333,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|under",
-      "date": "2026-08-26",
-      "player": "Awa Fam",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 11.5,
-      "odds": -125.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.16169,
-      "v5_probability": 0.16169,
-      "market_implied_probability": 0.555556,
-      "probability_edge": -0.393865,
-      "probability_band": "<50%",
-      "confidence_score": 0.300579,
-      "uncertainty_score": 0.736333,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.2,
-      "average_neighbor_distance": 1.167761,
-      "feature_snapshot": {
-        "market_implied_probability": 0.555556,
-        "line_minus_prior_mean": 2.833333,
-        "rolling3_actual_mean": 8.666667,
-        "rolling5_actual_mean": 8.666667,
-        "rolling5_actual_std": 4.109609,
-        "rolling5_trend_slope": -5.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|reb|over",
-      "date": "2026-08-26",
-      "player": "Awa Fam",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "OVER",
-      "line": 5.5,
-      "odds": -136.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.481813,
-      "v5_probability": 0.481813,
-      "market_implied_probability": 0.576271,
-      "probability_edge": -0.094458,
-      "probability_band": "<50%",
-      "confidence_score": 0.135099,
-      "uncertainty_score": 0.999338,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 1.743772,
-      "feature_snapshot": {
-        "market_implied_probability": 0.576271,
-        "line_minus_prior_mean": -1.0,
-        "rolling3_actual_mean": 7.0,
-        "rolling5_actual_mean": 6.5,
-        "rolling5_actual_std": 1.658312,
-        "rolling5_trend_slope": 1.0,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|reb|over",
-      "date": "2026-08-26",
-      "player": "Awa Fam",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "OVER",
-      "line": 6.5,
-      "odds": 115.0,
-      "best_book": "BetRivers",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.363273,
-      "v5_probability": 0.363273,
-      "market_implied_probability": 0.465116,
-      "probability_edge": -0.101843,
-      "probability_band": "<50%",
-      "confidence_score": 0.15012,
-      "uncertainty_score": 0.961885,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.333333,
-      "average_neighbor_distance": 2.307932,
-      "feature_snapshot": {
-        "market_implied_probability": 0.465116,
-        "line_minus_prior_mean": 0.0,
-        "rolling3_actual_mean": 7.0,
-        "rolling5_actual_mean": 6.5,
-        "rolling5_actual_std": 1.658312,
-        "rolling5_trend_slope": 1.0,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|reb|under",
-      "date": "2026-08-26",
-      "player": "Awa Fam",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 5.5,
-      "odds": 108.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.425939,
-      "v5_probability": 0.425939,
-      "market_implied_probability": 0.480769,
-      "probability_edge": -0.054831,
-      "probability_band": "<50%",
-      "confidence_score": 0.134139,
-      "uncertainty_score": 0.988969,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.4,
-      "average_neighbor_distance": 2.193596,
-      "feature_snapshot": {
-        "market_implied_probability": 0.480769,
-        "line_minus_prior_mean": -1.0,
-        "rolling3_actual_mean": 7.0,
-        "rolling5_actual_mean": 6.5,
-        "rolling5_actual_std": 1.658312,
-        "rolling5_trend_slope": 1.0,
-        "historical_hit_rate_at_current_line": 0.5,
-        "historical_hit_rate_l5_at_current_line": 0.5,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pts|over",
-      "date": "2026-08-26",
-      "player": "Dominique Malonga",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 18.5,
-      "odds": -139.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.689038,
-      "v5_probability": 0.689038,
-      "market_implied_probability": 0.58159,
-      "probability_edge": 0.107448,
-      "probability_band": "65-69.9%",
-      "confidence_score": 0.132154,
-      "uncertainty_score": 0.925774,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.666667,
-      "average_neighbor_distance": 5.274276,
-      "feature_snapshot": {
-        "market_implied_probability": 0.58159,
-        "line_minus_prior_mean": 2.5,
-        "rolling3_actual_mean": 16.0,
-        "rolling5_actual_mean": 16.0,
-        "rolling5_actual_std": 9.797959,
-        "rolling5_trend_slope": 12.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pts|over",
-      "date": "2026-08-26",
-      "player": "Dominique Malonga",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 19.5,
-      "odds": -106.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.631429,
-      "v5_probability": 0.631429,
-      "market_implied_probability": 0.514563,
-      "probability_edge": 0.116866,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.106825,
-      "uncertainty_score": 0.964834,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 5.258626,
-      "feature_snapshot": {
-        "market_implied_probability": 0.514563,
-        "line_minus_prior_mean": 3.5,
-        "rolling3_actual_mean": 16.0,
-        "rolling5_actual_mean": 16.0,
-        "rolling5_actual_std": 9.797959,
-        "rolling5_trend_slope": 12.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pts|over",
-      "date": "2026-08-26",
-      "player": "Dominique Malonga",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 20.5,
-      "odds": 105.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.632145,
-      "v5_probability": 0.632145,
-      "market_implied_probability": 0.487805,
-      "probability_edge": 0.14434,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.106813,
-      "uncertainty_score": 0.964443,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 5.328795,
-      "feature_snapshot": {
-        "market_implied_probability": 0.487805,
-        "line_minus_prior_mean": 4.5,
-        "rolling3_actual_mean": 16.0,
-        "rolling5_actual_mean": 16.0,
-        "rolling5_actual_std": 9.797959,
-        "rolling5_trend_slope": 12.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pts|under",
-      "date": "2026-08-26",
-      "player": "Dominique Malonga",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 19.5,
-      "odds": -113.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.83669,
-      "v5_probability": 0.83669,
-      "market_implied_probability": 0.530516,
-      "probability_edge": 0.306174,
-      "probability_band": "70%+",
-      "confidence_score": 0.256472,
-      "uncertainty_score": 0.739297,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.8,
-      "average_neighbor_distance": 4.552521,
-      "feature_snapshot": {
-        "market_implied_probability": 0.530516,
-        "line_minus_prior_mean": 3.5,
-        "rolling3_actual_mean": 16.0,
-        "rolling5_actual_mean": 16.0,
-        "rolling5_actual_std": 9.797959,
-        "rolling5_trend_slope": 12.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|reb|over",
-      "date": "2026-08-26",
-      "player": "Dominique Malonga",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "OVER",
-      "line": 9.5,
-      "odds": -120.0,
-      "best_book": "BetRivers",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.307774,
-      "v5_probability": 0.307774,
-      "market_implied_probability": 0.545455,
-      "probability_edge": -0.23768,
-      "probability_band": "<50%",
-      "confidence_score": 0.174446,
-      "uncertainty_score": 0.923145,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.266667,
-      "average_neighbor_distance": 1.325935,
-      "feature_snapshot": {
-        "market_implied_probability": 0.545455,
-        "line_minus_prior_mean": -0.833333,
-        "rolling3_actual_mean": 10.333333,
-        "rolling5_actual_mean": 10.333333,
-        "rolling5_actual_std": 3.091206,
-        "rolling5_trend_slope": -3.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|reb|over",
-      "date": "2026-08-26",
-      "player": "Dominique Malonga",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "OVER",
-      "line": 10.5,
-      "odds": 116.0,
-      "best_book": "FanDuel",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.217815,
-      "v5_probability": 0.217815,
-      "market_implied_probability": 0.462963,
-      "probability_edge": -0.245148,
-      "probability_band": "<50%",
-      "confidence_score": 0.229184,
-      "uncertainty_score": 0.825523,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.2,
-      "average_neighbor_distance": 1.689445,
-      "feature_snapshot": {
-        "market_implied_probability": 0.462963,
-        "line_minus_prior_mean": 0.166667,
-        "rolling3_actual_mean": 10.333333,
-        "rolling5_actual_mean": 10.333333,
-        "rolling5_actual_std": 3.091206,
-        "rolling5_trend_slope": -3.0,
-        "historical_hit_rate_at_current_line": 0.666667,
-        "historical_hit_rate_l5_at_current_line": 0.666667,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|reb|under",
-      "date": "2026-08-26",
-      "player": "Dominique Malonga",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 9.5,
-      "odds": 110.0,
-      "best_book": "Caesars",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.611719,
-      "v5_probability": 0.611719,
-      "market_implied_probability": 0.47619,
-      "probability_edge": 0.135529,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.118836,
-      "uncertainty_score": 0.974718,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 2.537515,
-      "feature_snapshot": {
-        "market_implied_probability": 0.47619,
-        "line_minus_prior_mean": -0.833333,
-        "rolling3_actual_mean": 10.333333,
-        "rolling5_actual_mean": 10.333333,
-        "rolling5_actual_std": 3.091206,
-        "rolling5_trend_slope": -3.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|reb|under",
-      "date": "2026-08-26",
-      "player": "Dominique Malonga",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 10.5,
-      "odds": -139.0,
-      "best_book": "DraftKings",
-      "prior_games": 3,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.608287,
-      "v5_probability": 0.608287,
-      "market_implied_probability": 0.58159,
-      "probability_edge": 0.026697,
-      "probability_band": "60-64.9%",
-      "confidence_score": 0.120844,
-      "uncertainty_score": 0.976266,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 2.302691,
-      "feature_snapshot": {
-        "market_implied_probability": 0.58159,
-        "line_minus_prior_mean": 0.166667,
-        "rolling3_actual_mean": 10.333333,
-        "rolling5_actual_mean": 10.333333,
-        "rolling5_actual_std": 3.091206,
-        "rolling5_trend_slope": -3.0,
-        "historical_hit_rate_at_current_line": 0.333333,
-        "historical_hit_rate_l5_at_current_line": 0.333333,
-        "prior_games": 3.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|reb|over",
-      "date": "2026-08-26",
-      "player": "Laura Juskaite",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "OVER",
-      "line": 5.5,
-      "odds": 118.0,
-      "best_book": "BetOnline.ag",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.550575,
-      "v5_probability": 0.550575,
-      "market_implied_probability": 0.458716,
-      "probability_edge": 0.09186,
-      "probability_band": "55-59.9%",
-      "confidence_score": 0.112525,
-      "uncertainty_score": 0.994871,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 4.138524,
-      "feature_snapshot": {
-        "market_implied_probability": 0.458716,
-        "line_minus_prior_mean": 1.75,
-        "rolling3_actual_mean": 3.666667,
-        "rolling5_actual_mean": 3.75,
-        "rolling5_actual_std": 0.433013,
-        "rolling5_trend_slope": -0.1,
-        "historical_hit_rate_at_current_line": 0.0,
-        "historical_hit_rate_l5_at_current_line": 0.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|reb|under",
-      "date": "2026-08-26",
-      "player": "Laura Juskaite",
-      "game": "Toronto Tempo @ Seattle Storm",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 5.5,
-      "odds": -152.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.50565,
-      "v5_probability": 0.50565,
-      "market_implied_probability": 0.603175,
-      "probability_edge": -0.097525,
-      "probability_band": "50-54.9%",
-      "confidence_score": 0.147581,
-      "uncertainty_score": 0.999936,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.6,
-      "average_neighbor_distance": 1.220923,
-      "feature_snapshot": {
-        "market_implied_probability": 0.603175,
-        "line_minus_prior_mean": 1.75,
-        "rolling3_actual_mean": 3.666667,
-        "rolling5_actual_mean": 3.75,
-        "rolling5_actual_std": 0.433013,
-        "rolling5_trend_slope": -0.1,
-        "historical_hit_rate_at_current_line": 1.0,
-        "historical_hit_rate_l5_at_current_line": 1.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    }
-  ],
+  "scored": [],
   "unscored": [
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|pr|over",
@@ -1291,9 +30,9 @@
       "line": 16.5,
       "odds": -128.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|pr|over",
@@ -1305,9 +44,9 @@
       "line": 17.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|pr|under",
@@ -1319,9 +58,9 @@
       "line": 16.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|pr|under",
@@ -1333,9 +72,9 @@
       "line": 17.5,
       "odds": -126.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|pts|over",
@@ -1347,9 +86,9 @@
       "line": 11.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|pts|over",
@@ -1361,9 +100,9 @@
       "line": 12.5,
       "odds": 104.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|pts|under",
@@ -1375,9 +114,9 @@
       "line": 11.5,
       "odds": -101.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|reb|over",
@@ -1389,9 +128,9 @@
       "line": 5.5,
       "odds": 122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|aaliyah edwards|golden state valkyries @ connecticut sun|reb|under",
@@ -1403,9 +142,9 @@
       "line": 5.5,
       "odds": -143.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|3pm|over",
@@ -1417,9 +156,9 @@
       "line": 1.5,
       "odds": 103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|3pm|under",
@@ -1431,9 +170,9 @@
       "line": 1.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|ast|over",
@@ -1445,9 +184,9 @@
       "line": 1.5,
       "odds": -175.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|ast|over",
@@ -1459,9 +198,9 @@
       "line": 2.5,
       "odds": 154.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|ast|under",
@@ -1473,9 +212,9 @@
       "line": 2.5,
       "odds": -185.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pa|over",
@@ -1487,9 +226,9 @@
       "line": 10.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pa|under",
@@ -1501,9 +240,9 @@
       "line": 10.5,
       "odds": -113.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pr|over",
@@ -1515,9 +254,9 @@
       "line": 10.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pr|under",
@@ -1529,9 +268,9 @@
       "line": 10.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pra|over",
@@ -1543,9 +282,9 @@
       "line": 12.5,
       "odds": -114.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pra|over",
@@ -1557,9 +296,9 @@
       "line": 13.5,
       "odds": 113.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pra|under",
@@ -1571,9 +310,9 @@
       "line": 12.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pra|under",
@@ -1585,9 +324,9 @@
       "line": 13.5,
       "odds": -147.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pts|over",
@@ -1599,9 +338,9 @@
       "line": 8.5,
       "odds": -101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pts|over",
@@ -1613,9 +352,9 @@
       "line": 9.5,
       "odds": 125.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|pts|under",
@@ -1627,9 +366,9 @@
       "line": 8.5,
       "odds": -122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|ra|over",
@@ -1641,9 +380,9 @@
       "line": 4.5,
       "odds": 116.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|ra|under",
@@ -1655,9 +394,9 @@
       "line": 4.5,
       "odds": -154.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|reb|over",
@@ -1669,9 +408,9 @@
       "line": 1.5,
       "odds": -167.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|reb|over",
@@ -1683,9 +422,9 @@
       "line": 2.5,
       "odds": 154.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|cecilia zandalasini|golden state valkyries @ connecticut sun|reb|under",
@@ -1697,9 +436,219 @@
       "line": 2.5,
       "odds": -182.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|ast|over",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "AST",
+      "side": "OVER",
+      "line": 3.5,
+      "odds": -116.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|ast|under",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 3.5,
+      "odds": -106.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pa|over",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PA",
+      "side": "OVER",
+      "line": 10.5,
+      "odds": -110.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pa|under",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 10.5,
+      "odds": 100.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pr|over",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PR",
+      "side": "OVER",
+      "line": 9.5,
+      "odds": -121.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pr|over",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PR",
+      "side": "OVER",
+      "line": 10.5,
+      "odds": 100.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pr|under",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 9.5,
+      "odds": -112.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pr|under",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 10.5,
+      "odds": -132.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pra|over",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 13.5,
+      "odds": -109.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pra|over",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 14.5,
+      "odds": -109.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pra|under",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 13.5,
+      "odds": 100.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pts|over",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 6.5,
+      "odds": -121.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pts|over",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 7.5,
+      "odds": 106.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pts|under",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 6.5,
+      "odds": -109.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|pts|under",
+      "date": "2026-08-26",
+      "player": "Charlisse Leger-Walker",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 7.5,
+      "odds": -135.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|ra|over",
@@ -1711,9 +660,9 @@
       "line": 6.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|ra|under",
@@ -1725,9 +674,9 @@
       "line": 6.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|reb|over",
@@ -1739,9 +688,9 @@
       "line": 2.5,
       "odds": -150.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|charlisse leger-walker|golden state valkyries @ connecticut sun|reb|under",
@@ -1753,9 +702,9 @@
       "line": 2.5,
       "odds": 124.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|3pm|over",
@@ -1767,9 +716,9 @@
       "line": 1.5,
       "odds": 170.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|3pm|under",
@@ -1781,9 +730,9 @@
       "line": 1.5,
       "odds": -185.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|pr|over",
@@ -1795,9 +744,9 @@
       "line": 12.5,
       "odds": -125.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|pr|under",
@@ -1809,9 +758,9 @@
       "line": 12.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|pts|over",
@@ -1823,9 +772,9 @@
       "line": 9.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|pts|over",
@@ -1837,9 +786,9 @@
       "line": 10.5,
       "odds": 128.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|pts|under",
@@ -1851,9 +800,9 @@
       "line": 9.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|reb|over",
@@ -1865,9 +814,9 @@
       "line": 2.5,
       "odds": -141.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|diamond miller|golden state valkyries @ connecticut sun|reb|under",
@@ -1879,9 +828,9 @@
       "line": 2.5,
       "odds": 110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|3pm|over",
@@ -1893,9 +842,9 @@
       "line": 1.5,
       "odds": 140.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|3pm|under",
@@ -1907,9 +856,9 @@
       "line": 1.5,
       "odds": -167.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|ast|over",
@@ -1921,9 +870,9 @@
       "line": 2.5,
       "odds": 164.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|ast|under",
@@ -1935,9 +884,9 @@
       "line": 2.5,
       "odds": -217.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pa|over",
@@ -1949,9 +898,9 @@
       "line": 14.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pa|under",
@@ -1963,9 +912,9 @@
       "line": 14.5,
       "odds": -128.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pr|over",
@@ -1977,9 +926,9 @@
       "line": 14.5,
       "odds": -129.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pr|under",
@@ -1991,9 +940,9 @@
       "line": 14.5,
       "odds": -105.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pra|over",
@@ -2005,9 +954,9 @@
       "line": 16.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pra|over",
@@ -2019,9 +968,9 @@
       "line": 17.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pra|under",
@@ -2033,9 +982,9 @@
       "line": 16.5,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pts|over",
@@ -2047,9 +996,9 @@
       "line": 11.5,
       "odds": -125.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pts|over",
@@ -2061,9 +1010,9 @@
       "line": 12.5,
       "odds": 101.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pts|over",
@@ -2075,9 +1024,9 @@
       "line": 13.5,
       "odds": 128.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pts|under",
@@ -2089,9 +1038,9 @@
       "line": 11.5,
       "odds": 110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|pts|under",
@@ -2103,9 +1052,9 @@
       "line": 12.5,
       "odds": -134.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|reb|over",
@@ -2117,9 +1066,9 @@
       "line": 2.5,
       "odds": -109.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|gabby williams|golden state valkyries @ connecticut sun|reb|under",
@@ -2131,9 +1080,37 @@
       "line": 2.5,
       "odds": -101.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|3pm|over",
+      "date": "2026-08-26",
+      "player": "Janelle Salaun",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "3PM",
+      "side": "OVER",
+      "line": 2.5,
+      "odds": 140.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|3pm|under",
+      "date": "2026-08-26",
+      "player": "Janelle Salaun",
+      "game": "Golden State Valkyries @ Connecticut Sun",
+      "market": "3PM",
+      "side": "UNDER",
+      "line": 2.5,
+      "odds": -172.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|pr|over",
@@ -2145,9 +1122,9 @@
       "line": 16.5,
       "odds": -120.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|pr|under",
@@ -2159,9 +1136,9 @@
       "line": 16.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|pts|over",
@@ -2173,9 +1150,9 @@
       "line": 12.5,
       "odds": -110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|pts|over",
@@ -2187,9 +1164,9 @@
       "line": 13.5,
       "odds": 110.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|pts|under",
@@ -2201,9 +1178,9 @@
       "line": 12.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|reb|over",
@@ -2215,9 +1192,9 @@
       "line": 4.5,
       "odds": 126.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|janelle salaun|golden state valkyries @ connecticut sun|reb|under",
@@ -2229,9 +1206,9 @@
       "line": 4.5,
       "odds": -157.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|3pm|over",
@@ -2243,9 +1220,9 @@
       "line": 1.5,
       "odds": 155.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|3pm|under",
@@ -2257,9 +1234,9 @@
       "line": 1.5,
       "odds": -182.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|pr|over",
@@ -2271,9 +1248,9 @@
       "line": 12.5,
       "odds": -128.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|pr|over",
@@ -2285,9 +1262,9 @@
       "line": 13.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|pr|under",
@@ -2299,9 +1276,9 @@
       "line": 12.5,
       "odds": -106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|pr|under",
@@ -2313,9 +1290,9 @@
       "line": 13.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|pts|over",
@@ -2327,9 +1304,9 @@
       "line": 9.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|pts|over",
@@ -2341,9 +1318,9 @@
       "line": 10.5,
       "odds": 104.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|pts|under",
@@ -2355,9 +1332,9 @@
       "line": 9.5,
       "odds": 100.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|reb|over",
@@ -2369,9 +1346,9 @@
       "line": 3.5,
       "odds": 107.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kennedy burke|golden state valkyries @ connecticut sun|reb|under",
@@ -2383,9 +1360,9 @@
       "line": 3.5,
       "odds": -125.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|ast|over",
@@ -2397,9 +1374,9 @@
       "line": 3.5,
       "odds": -103.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|ast|under",
@@ -2411,9 +1388,9 @@
       "line": 3.5,
       "odds": -115.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pa|over",
@@ -2425,9 +1402,9 @@
       "line": 13.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pa|under",
@@ -2439,9 +1416,9 @@
       "line": 13.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pr|over",
@@ -2453,9 +1430,9 @@
       "line": 12.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pr|under",
@@ -2467,9 +1444,9 @@
       "line": 12.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pra|over",
@@ -2481,9 +1458,9 @@
       "line": 16.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pra|under",
@@ -2495,9 +1472,9 @@
       "line": 16.5,
       "odds": -120.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pts|over",
@@ -2509,9 +1486,9 @@
       "line": 9.5,
       "odds": -102.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pts|over",
@@ -2523,9 +1500,9 @@
       "line": 10.5,
       "odds": 123.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|pts|under",
@@ -2537,9 +1514,9 @@
       "line": 9.5,
       "odds": -120.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|ra|over",
@@ -2551,9 +1528,9 @@
       "line": 6.5,
       "odds": -128.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|ra|under",
@@ -2565,9 +1542,9 @@
       "line": 6.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|reb|over",
@@ -2579,9 +1556,9 @@
       "line": 3.5,
       "odds": 132.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|saniya rivers|golden state valkyries @ connecticut sun|reb|under",
@@ -2593,9 +1570,9 @@
       "line": 3.5,
       "odds": -159.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|ast|over",
@@ -2607,9 +1584,9 @@
       "line": 2.5,
       "odds": -159.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|ast|over",
@@ -2621,9 +1598,9 @@
       "line": 3.5,
       "odds": 141.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|ast|under",
@@ -2635,9 +1612,9 @@
       "line": 3.5,
       "odds": -171.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pa|over",
@@ -2649,9 +1626,9 @@
       "line": 14.5,
       "odds": -112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pa|under",
@@ -2663,9 +1640,9 @@
       "line": 14.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pr|over",
@@ -2677,9 +1654,9 @@
       "line": 14.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pr|under",
@@ -2691,9 +1668,9 @@
       "line": 14.5,
       "odds": -110.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pra|over",
@@ -2705,9 +1682,9 @@
       "line": 17.5,
       "odds": -105.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pra|over",
@@ -2719,9 +1696,9 @@
       "line": 18.5,
       "odds": -104.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pra|under",
@@ -2733,9 +1710,9 @@
       "line": 17.5,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pts|over",
@@ -2747,9 +1724,9 @@
       "line": 10.5,
       "odds": -130.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pts|over",
@@ -2761,9 +1738,9 @@
       "line": 11.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|pts|under",
@@ -2775,9 +1752,9 @@
       "line": 11.5,
       "odds": -122.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|ra|over",
@@ -2789,9 +1766,9 @@
       "line": 6.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|ra|under",
@@ -2803,9 +1780,9 @@
       "line": 6.5,
       "odds": -125.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|reb|over",
@@ -2817,9 +1794,9 @@
       "line": 3.5,
       "odds": 116.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|tiffany hayes|golden state valkyries @ connecticut sun|reb|under",
@@ -2831,9 +1808,9 @@
       "line": 3.5,
       "odds": -144.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|3pm|over",
@@ -2845,9 +1822,9 @@
       "line": 1.5,
       "odds": 110.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|3pm|under",
@@ -2859,9 +1836,9 @@
       "line": 1.5,
       "odds": -135.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|ast|over",
@@ -2873,9 +1850,9 @@
       "line": 5.5,
       "odds": -155.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|ast|over",
@@ -2887,9 +1864,9 @@
       "line": 6.5,
       "odds": 134.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|ast|under",
@@ -2901,9 +1878,9 @@
       "line": 5.5,
       "odds": 118.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|ast|under",
@@ -2915,9 +1892,9 @@
       "line": 6.5,
       "odds": -166.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pa|over",
@@ -2929,9 +1906,9 @@
       "line": 18.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pa|under",
@@ -2943,9 +1920,9 @@
       "line": 18.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pr|over",
@@ -2957,9 +1934,9 @@
       "line": 16.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pr|under",
@@ -2971,9 +1948,9 @@
       "line": 16.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pra|over",
@@ -2985,9 +1962,9 @@
       "line": 22.5,
       "odds": -119.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pra|over",
@@ -2999,9 +1976,9 @@
       "line": 23.5,
       "odds": -118.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pra|under",
@@ -3013,9 +1990,9 @@
       "line": 22.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pts|over",
@@ -3027,9 +2004,9 @@
       "line": 12.5,
       "odds": -120.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pts|over",
@@ -3041,9 +2018,9 @@
       "line": 13.5,
       "odds": -112.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pts|over",
@@ -3055,9 +2032,9 @@
       "line": 14.5,
       "odds": 115.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|pts|under",
@@ -3069,9 +2046,9 @@
       "line": 12.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|ra|over",
@@ -3083,9 +2060,9 @@
       "line": 9.5,
       "odds": -136.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|ra|under",
@@ -3097,9 +2074,9 @@
       "line": 9.5,
       "odds": 102.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|reb|over",
@@ -3111,9 +2088,9 @@
       "line": 3.5,
       "odds": -116.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|veronica burton|golden state valkyries @ connecticut sun|reb|under",
@@ -3125,9 +2102,9 @@
       "line": 3.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|3pm|over",
@@ -3139,9 +2116,9 @@
       "line": 1.5,
       "odds": -111.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|3pm|under",
@@ -3153,9 +2130,9 @@
       "line": 1.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pr|over",
@@ -3167,9 +2144,9 @@
       "line": 17.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pr|under",
@@ -3181,9 +2158,121 @@
       "line": 17.5,
       "odds": -129.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|over",
+      "date": "2026-08-26",
+      "player": "Awa Fam",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 10.5,
+      "odds": -130.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|over",
+      "date": "2026-08-26",
+      "player": "Awa Fam",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 11.5,
+      "odds": -106.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|over",
+      "date": "2026-08-26",
+      "player": "Awa Fam",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 12.5,
+      "odds": 116.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|under",
+      "date": "2026-08-26",
+      "player": "Awa Fam",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 10.5,
+      "odds": 104.0,
+      "best_book": "Caesars",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|pts|under",
+      "date": "2026-08-26",
+      "player": "Awa Fam",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 11.5,
+      "odds": -125.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|reb|over",
+      "date": "2026-08-26",
+      "player": "Awa Fam",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "OVER",
+      "line": 5.5,
+      "odds": -136.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|reb|over",
+      "date": "2026-08-26",
+      "player": "Awa Fam",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "OVER",
+      "line": 6.5,
+      "odds": 115.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|awa fam|toronto tempo @ seattle storm|reb|under",
+      "date": "2026-08-26",
+      "player": "Awa Fam",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 5.5,
+      "odds": 108.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|3pm|over",
@@ -3195,9 +2284,9 @@
       "line": 0.5,
       "odds": -136.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|3pm|under",
@@ -3209,9 +2298,9 @@
       "line": 0.5,
       "odds": 104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|ast|over",
@@ -3223,9 +2312,9 @@
       "line": 1.5,
       "odds": -182.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|ast|over",
@@ -3237,9 +2326,9 @@
       "line": 2.5,
       "odds": 174.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|ast|under",
@@ -3251,9 +2340,9 @@
       "line": 2.5,
       "odds": -233.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pa|over",
@@ -3265,9 +2354,9 @@
       "line": 21.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pa|under",
@@ -3279,9 +2368,9 @@
       "line": 21.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pr|over",
@@ -3293,9 +2382,9 @@
       "line": 29.5,
       "odds": -121.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pr|under",
@@ -3307,9 +2396,9 @@
       "line": 29.5,
       "odds": -113.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pra|over",
@@ -3321,9 +2410,9 @@
       "line": 31.5,
       "odds": -118.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pra|under",
@@ -3335,9 +2424,65 @@
       "line": 31.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pts|over",
+      "date": "2026-08-26",
+      "player": "Dominique Malonga",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 18.5,
+      "odds": -139.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pts|over",
+      "date": "2026-08-26",
+      "player": "Dominique Malonga",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 19.5,
+      "odds": -106.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pts|over",
+      "date": "2026-08-26",
+      "player": "Dominique Malonga",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 20.5,
+      "odds": 105.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|pts|under",
+      "date": "2026-08-26",
+      "player": "Dominique Malonga",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 19.5,
+      "odds": -113.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|ra|over",
@@ -3349,9 +2494,9 @@
       "line": 11.5,
       "odds": -138.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|ra|over",
@@ -3363,9 +2508,9 @@
       "line": 12.5,
       "odds": -101.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|ra|under",
@@ -3377,9 +2522,9 @@
       "line": 11.5,
       "odds": 104.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|ra|under",
@@ -3391,9 +2536,65 @@
       "line": 12.5,
       "odds": -134.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|reb|over",
+      "date": "2026-08-26",
+      "player": "Dominique Malonga",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "OVER",
+      "line": 9.5,
+      "odds": -120.0,
+      "best_book": "BetRivers",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|reb|over",
+      "date": "2026-08-26",
+      "player": "Dominique Malonga",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "OVER",
+      "line": 10.5,
+      "odds": 116.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|reb|under",
+      "date": "2026-08-26",
+      "player": "Dominique Malonga",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 9.5,
+      "odds": 110.0,
+      "best_book": "Caesars",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|dominique malonga|toronto tempo @ seattle storm|reb|under",
+      "date": "2026-08-26",
+      "player": "Dominique Malonga",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 10.5,
+      "odds": -139.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|pr|over",
@@ -3405,9 +2606,9 @@
       "line": 13.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|pr|over",
@@ -3419,9 +2620,9 @@
       "line": 14.5,
       "odds": -110.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|pr|under",
@@ -3433,9 +2634,9 @@
       "line": 13.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|pr|under",
@@ -3447,9 +2648,9 @@
       "line": 14.5,
       "odds": -124.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|pts|over",
@@ -3461,9 +2662,9 @@
       "line": 8.5,
       "odds": -117.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|pts|over",
@@ -3475,9 +2676,9 @@
       "line": 9.5,
       "odds": 117.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|pts|under",
@@ -3489,9 +2690,9 @@
       "line": 8.5,
       "odds": 102.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|reb|over",
@@ -3503,9 +2704,9 @@
       "line": 5.5,
       "odds": 116.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|ezi magbegor|toronto tempo @ seattle storm|reb|under",
@@ -3517,9 +2718,9 @@
       "line": 5.5,
       "odds": -130.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|3pm|over",
@@ -3531,9 +2732,9 @@
       "line": 1.5,
       "odds": 138.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|3pm|under",
@@ -3545,9 +2746,9 @@
       "line": 1.5,
       "odds": -162.0,
       "best_book": "DraftKings",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|ast|over",
@@ -3559,9 +2760,9 @@
       "line": 3.5,
       "odds": 104.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|ast|under",
@@ -3573,9 +2774,9 @@
       "line": 3.5,
       "odds": -121.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pa|over",
@@ -3587,9 +2788,9 @@
       "line": 18.5,
       "odds": -122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pa|under",
@@ -3601,9 +2802,9 @@
       "line": 18.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pr|over",
@@ -3615,9 +2816,9 @@
       "line": 19.5,
       "odds": -110.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pr|under",
@@ -3629,9 +2830,9 @@
       "line": 19.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pra|over",
@@ -3643,9 +2844,9 @@
       "line": 22.5,
       "odds": -129.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pra|over",
@@ -3657,9 +2858,9 @@
       "line": 23.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pra|under",
@@ -3671,9 +2872,9 @@
       "line": 22.5,
       "odds": 100.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pra|under",
@@ -3685,9 +2886,9 @@
       "line": 23.5,
       "odds": -125.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pts|over",
@@ -3699,9 +2900,9 @@
       "line": 14.5,
       "odds": -127.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pts|over",
@@ -3713,9 +2914,9 @@
       "line": 15.5,
       "odds": -113.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pts|over",
@@ -3727,9 +2928,9 @@
       "line": 16.5,
       "odds": 110.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|pts|under",
@@ -3741,9 +2942,9 @@
       "line": 14.5,
       "odds": 102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|ra|over",
@@ -3755,9 +2956,9 @@
       "line": 7.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|ra|under",
@@ -3769,9 +2970,9 @@
       "line": 7.5,
       "odds": 102.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|reb|over",
@@ -3783,9 +2984,9 @@
       "line": 4.5,
       "odds": 114.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|flau'jae johnson|toronto tempo @ seattle storm|reb|under",
@@ -3797,9 +2998,9 @@
       "line": 4.5,
       "odds": -147.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|ast|over",
@@ -3811,9 +3012,9 @@
       "line": 1.5,
       "odds": -143.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|ast|under",
@@ -3825,9 +3026,9 @@
       "line": 1.5,
       "odds": 110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pa|over",
@@ -3839,9 +3040,9 @@
       "line": 16.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pa|under",
@@ -3853,9 +3054,9 @@
       "line": 16.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pr|over",
@@ -3867,9 +3068,9 @@
       "line": 22.5,
       "odds": -110.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pr|under",
@@ -3881,9 +3082,9 @@
       "line": 22.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pra|over",
@@ -3895,9 +3096,9 @@
       "line": 24.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pra|over",
@@ -3909,9 +3110,9 @@
       "line": 25.5,
       "odds": -112.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pra|under",
@@ -3923,9 +3124,9 @@
       "line": 24.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pts|over",
@@ -3937,9 +3138,9 @@
       "line": 14.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pts|over",
@@ -3951,9 +3152,9 @@
       "line": 15.5,
       "odds": 103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pts|over",
@@ -3965,9 +3166,9 @@
       "line": 16.5,
       "odds": 114.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pts|under",
@@ -3979,9 +3180,9 @@
       "line": 14.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|pts|under",
@@ -3993,9 +3194,9 @@
       "line": 15.5,
       "odds": -133.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|ra|over",
@@ -4007,9 +3208,9 @@
       "line": 9.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|ra|under",
@@ -4021,9 +3222,9 @@
       "line": 9.5,
       "odds": -122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|reb|over",
@@ -4035,9 +3236,9 @@
       "line": 7.5,
       "odds": -110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|isabelle harrison|toronto tempo @ seattle storm|reb|under",
@@ -4049,9 +3250,9 @@
       "line": 7.5,
       "odds": -117.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|3pm|over",
@@ -4063,9 +3264,9 @@
       "line": 1.5,
       "odds": 155.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|3pm|under",
@@ -4077,9 +3278,9 @@
       "line": 1.5,
       "odds": -200.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|ast|over",
@@ -4091,9 +3292,9 @@
       "line": 5.5,
       "odds": -136.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|ast|over",
@@ -4105,9 +3306,9 @@
       "line": 6.5,
       "odds": 117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|ast|under",
@@ -4119,9 +3320,9 @@
       "line": 5.5,
       "odds": 110.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|ast|under",
@@ -4133,9 +3334,9 @@
       "line": 6.5,
       "odds": -135.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|pa|over",
@@ -4147,9 +3348,9 @@
       "line": 18.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|pa|under",
@@ -4161,9 +3362,9 @@
       "line": 18.5,
       "odds": -127.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|pts|over",
@@ -4175,9 +3376,9 @@
       "line": 11.5,
       "odds": -127.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|pts|over",
@@ -4189,9 +3390,9 @@
       "line": 12.5,
       "odds": 102.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|jade melbourne|toronto tempo @ seattle storm|pts|under",
@@ -4203,9 +3404,9 @@
       "line": 11.5,
       "odds": 104.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|julie allemand|toronto tempo @ seattle storm|ast|over",
@@ -4217,9 +3418,9 @@
       "line": 5.5,
       "odds": -114.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|julie allemand|toronto tempo @ seattle storm|ast|under",
@@ -4231,9 +3432,9 @@
       "line": 5.5,
       "odds": -114.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|julie allemand|toronto tempo @ seattle storm|pra|over",
@@ -4245,9 +3446,9 @@
       "line": 16.5,
       "odds": -127.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|julie allemand|toronto tempo @ seattle storm|pra|under",
@@ -4259,9 +3460,9 @@
       "line": 16.5,
       "odds": -102.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|julie allemand|toronto tempo @ seattle storm|pts|over",
@@ -4273,9 +3474,9 @@
       "line": 6.5,
       "odds": -114.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|julie allemand|toronto tempo @ seattle storm|pts|under",
@@ -4287,9 +3488,9 @@
       "line": 6.5,
       "odds": -114.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|3pm|over",
@@ -4301,9 +3502,9 @@
       "line": 0.5,
       "odds": -220.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|3pm|over",
@@ -4315,9 +3516,9 @@
       "line": 1.5,
       "odds": 178.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|3pm|under",
@@ -4329,9 +3530,9 @@
       "line": 0.5,
       "odds": 173.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|3pm|under",
@@ -4343,9 +3544,9 @@
       "line": 1.5,
       "odds": -245.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|ast|over",
@@ -4357,9 +3558,9 @@
       "line": 5.5,
       "odds": -122.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|ast|under",
@@ -4371,9 +3572,9 @@
       "line": 5.5,
       "odds": 110.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pa|over",
@@ -4385,9 +3586,9 @@
       "line": 22.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pa|under",
@@ -4399,9 +3600,9 @@
       "line": 22.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pr|over",
@@ -4413,9 +3614,9 @@
       "line": 20.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pr|under",
@@ -4427,9 +3628,9 @@
       "line": 20.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pra|over",
@@ -4441,9 +3642,9 @@
       "line": 26.5,
       "odds": -116.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pra|over",
@@ -4455,9 +3656,9 @@
       "line": 27.5,
       "odds": 110.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pra|under",
@@ -4469,9 +3670,9 @@
       "line": 26.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pts|over",
@@ -4483,9 +3684,9 @@
       "line": 16.5,
       "odds": 102.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pts|over",
@@ -4497,9 +3698,9 @@
       "line": 17.5,
       "odds": 125.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|pts|under",
@@ -4511,9 +3712,9 @@
       "line": 16.5,
       "odds": -115.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|ra|over",
@@ -4525,9 +3726,9 @@
       "line": 9.5,
       "odds": -146.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|ra|over",
@@ -4539,9 +3740,9 @@
       "line": 10.5,
       "odds": -103.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|ra|under",
@@ -4553,9 +3754,9 @@
       "line": 9.5,
       "odds": 110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|ra|under",
@@ -4567,9 +3768,9 @@
       "line": 10.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|reb|over",
@@ -4581,9 +3782,9 @@
       "line": 4.5,
       "odds": 122.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|kiki rice|toronto tempo @ seattle storm|reb|under",
@@ -4595,9 +3796,9 @@
       "line": 4.5,
       "odds": -148.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|3pm|over",
@@ -4609,9 +3810,9 @@
       "line": 1.5,
       "odds": 165.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|3pm|under",
@@ -4623,9 +3824,9 @@
       "line": 1.5,
       "odds": -167.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|ast|over",
@@ -4637,9 +3838,9 @@
       "line": 2.5,
       "odds": 106.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|ast|under",
@@ -4651,9 +3852,9 @@
       "line": 2.5,
       "odds": -130.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pa|over",
@@ -4665,9 +3866,9 @@
       "line": 15.5,
       "odds": -104.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pa|under",
@@ -4679,9 +3880,9 @@
       "line": 15.5,
       "odds": -128.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pr|over",
@@ -4693,9 +3894,9 @@
       "line": 17.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pr|under",
@@ -4707,9 +3908,9 @@
       "line": 17.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pra|over",
@@ -4721,9 +3922,9 @@
       "line": 20.5,
       "odds": -105.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pra|under",
@@ -4735,9 +3936,9 @@
       "line": 20.5,
       "odds": -116.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pts|over",
@@ -4749,9 +3950,9 @@
       "line": 11.5,
       "odds": -129.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pts|over",
@@ -4763,9 +3964,9 @@
       "line": 12.5,
       "odds": 100.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|pts|under",
@@ -4777,9 +3978,9 @@
       "line": 12.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|ra|over",
@@ -4791,9 +3992,9 @@
       "line": 7.5,
       "odds": -120.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|ra|over",
@@ -4805,9 +4006,9 @@
       "line": 8.5,
       "odds": 112.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|ra|under",
@@ -4819,9 +4020,9 @@
       "line": 7.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|ra|under",
@@ -4833,9 +4034,37 @@
       "line": 8.5,
       "odds": -148.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|reb|over",
+      "date": "2026-08-26",
+      "player": "Laura Juskaite",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "OVER",
+      "line": 5.5,
+      "odds": 118.0,
+      "best_book": "BetOnline.ag",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-26|laura juskaite|toronto tempo @ seattle storm|reb|under",
+      "date": "2026-08-26",
+      "player": "Laura Juskaite",
+      "game": "Toronto Tempo @ Seattle Storm",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 5.5,
+      "odds": -152.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|temi fagbenle|toronto tempo @ seattle storm|pr|over",
@@ -4847,9 +4076,9 @@
       "line": 12.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|temi fagbenle|toronto tempo @ seattle storm|pr|under",
@@ -4861,9 +4090,9 @@
       "line": 12.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|temi fagbenle|toronto tempo @ seattle storm|pts|over",
@@ -4875,9 +4104,9 @@
       "line": 7.5,
       "odds": -130.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|temi fagbenle|toronto tempo @ seattle storm|pts|over",
@@ -4889,9 +4118,9 @@
       "line": 8.5,
       "odds": 106.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|temi fagbenle|toronto tempo @ seattle storm|pts|under",
@@ -4903,9 +4132,9 @@
       "line": 8.5,
       "odds": -121.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|temi fagbenle|toronto tempo @ seattle storm|reb|over",
@@ -4917,9 +4146,9 @@
       "line": 3.5,
       "odds": -154.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|temi fagbenle|toronto tempo @ seattle storm|reb|over",
@@ -4931,9 +4160,9 @@
       "line": 4.5,
       "odds": 105.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-26|temi fagbenle|toronto tempo @ seattle storm|reb|under",
@@ -4945,9 +4174,9 @@
       "line": 3.5,
       "odds": 118.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     }
   ]
 }
