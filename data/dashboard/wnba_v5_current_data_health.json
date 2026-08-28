@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-27T23:19:02.946457+00:00",
+  "generated_at_utc": "2026-08-28T07:11:25.106528+00:00",
   "target_date": "2026-08-27",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -29,8 +29,8 @@
   "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 9,
-    "yellow": 1,
+    "green": 4,
+    "yellow": 6,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -42,7 +42,7 @@
       "status": "green",
       "findings": [],
       "target_date": "2026-08-27",
-      "generated_date": "2026-08-27",
+      "generated_date": "2026-08-28",
       "reported_status": "PASS"
     },
     {
@@ -52,7 +52,7 @@
       "status": "green",
       "findings": [],
       "target_date": "2026-08-27",
-      "generated_date": "2026-08-27",
+      "generated_date": "2026-08-28",
       "reported_status": null
     },
     {
@@ -71,30 +71,36 @@
       "name": "m11_inference",
       "path": "data/dashboard/wnba_v5_m11_report.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
+      "status": "yellow",
+      "findings": [
+        "unexpected_status:BLOCKED_STALE_SLATE"
+      ],
       "target_date": "2026-08-27",
-      "generated_date": "2026-08-27",
-      "reported_status": "READY_SHADOW"
+      "generated_date": "2026-08-28",
+      "reported_status": "BLOCKED_STALE_SLATE"
     },
     {
       "name": "m12_learning",
       "path": "data/dashboard/wnba_v5_m12_report.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-27",
-      "generated_date": "2026-08-27",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-28!=2026-08-27"
+      ],
+      "target_date": "2026-08-28",
+      "generated_date": "2026-08-28",
       "reported_status": "READY_FORWARD_LEARNING"
     },
     {
       "name": "adaptive_challenger",
       "path": "data/dashboard/wnba_v5_adaptive_challenger_v2.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-27",
-      "generated_date": "2026-08-27",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-28!=2026-08-27"
+      ],
+      "target_date": "2026-08-28",
+      "generated_date": "2026-08-28",
       "reported_status": "READY_CONTEXTUAL_SHADOW"
     },
     {
@@ -123,17 +129,21 @@
       "name": "matchup_adjustments",
       "path": "data/dashboard/wnba_v5_matchup_adjustments.csv",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "modified_date": "2026-08-27"
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-08-28!=2026-08-27"
+      ],
+      "modified_date": "2026-08-28"
     },
     {
       "name": "lineup_adjustments",
       "path": "data/dashboard/wnba_v5_lineup_adjustments.csv",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "modified_date": "2026-08-27"
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-08-28!=2026-08-27"
+      ],
+      "modified_date": "2026-08-28"
     }
   ],
   "legacy_observability": [
