@@ -1,27 +1,27 @@
 {
-  "generated_at_utc": "2026-08-27T23:02:04.634468+00:00",
+  "generated_at_utc": "2026-08-28T23:08:01.973121+00:00",
   "version": "V5",
   "promotion_state": "SHADOW",
   "production_ready": false,
   "research_champion": "KNN",
   "progress": {
     "forward_graded": {
-      "current": 26469,
+      "current": 26482,
       "required": 300,
       "pct": 100.0
     },
     "explicit_clv_coverage": {
-      "current_pct": 16.16,
+      "current_pct": 16.15,
       "required_pct": 60.0,
-      "pct": 26.93
+      "pct": 26.92
     },
     "brier_vs_market": {
-      "v5": 0.286155,
-      "market": 0.249189,
+      "v5": 0.286144,
+      "market": 0.249191,
       "pass": false
     },
     "positive_edge_roi": {
-      "value": -0.146782,
+      "value": -0.146825,
       "pass": false
     },
     "archive_health": {
@@ -30,12 +30,13 @@
     },
     "pipeline_health": {
       "m10": "STANDBY_NO_LIVE_V5_SCORES",
-      "m11": "READY_SHADOW",
-      "pass": true
+      "m11": "BLOCKED_STALE_SLATE",
+      "pass": false
     }
   },
   "blockers": [
-    "explicit CLV coverage 16.16%/60%",
+    "explicit CLV coverage 16.15%/60%",
+    "live shadow pipeline not healthy",
     "forward V5 Brier has not yet beaten market",
     "positive-edge forward ROI is not positive"
   ],
