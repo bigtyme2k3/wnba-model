@@ -1,11 +1,11 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-28T21:15:09.723692+00:00",
+  "generated_at_utc": "2026-08-28T21:19:50.543728Z",
   "target_date": "2026-08-28",
   "status": "PASS",
   "games": [
-    "Portland Fire @ Atlanta Dream",
     "Connecticut Sun @ Indiana Fever",
+    "Portland Fire @ Atlanta Dream",
     "Toronto Tempo @ Las Vegas Aces",
     "Washington Mystics @ Los Angeles Sparks"
   ],
@@ -20,7 +20,7 @@
     "Washington Mystics"
   ],
   "game_count": 4,
-  "player_prop_rows": 317,
+  "player_prop_rows": 331,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -30,16 +30,17 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-28\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 4,\n  \"matchups\": [\n    \"Portland Fire @ Atlanta Dream\",\n    \"Connecticut Sun @ Indiana Fever\",\n    \"Toronto Tempo @ Las Vegas Aces\",\n    \"Washington Mystics @ Los Angeles Sparks\"\n  ]\n}\n",
+      "stdout": "Authoritative current slate synchronized for 2026-08-28",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-28\",\n  \"events\": 4,\n  \"raw_rows\": 317,\n  \"verified_rows\": 317,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
+      "stdout": "Verified player props synchronized for 2026-08-28",
       "stderr": ""
     }
   ],
-  "failures": []
+  "failures": [],
+  "manifest_sync_source": "player_props_ingestion_same_run"
 }
