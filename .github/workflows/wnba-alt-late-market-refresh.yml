@@ -51,10 +51,18 @@ jobs:
       - name: Refresh exact sportsbook ALT ladders
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          ODDS_API_MIN_REMAINING: '1500'
         run: |
           set -euo pipefail
           test -n "${ODDS_API_KEY:-}"
+          # One-day user-approved reserve bypass for the Aug. 29 ALT slate only.
+          # All other dates retain the normal 1,500-credit protection.
+          if [ "$TARGET" = "2026-08-29" ]; then
+            export ODDS_API_MIN_REMAINING=0
+            echo "ALT reserve bypass ACTIVE for ${TARGET}"
+          else
+            export ODDS_API_MIN_REMAINING=1500
+            echo "ALT reserve protection ACTIVE (${ODDS_API_MIN_REMAINING})"
+          fi
           python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw
           python wnba_alt_market_warehouse.py --date "$TARGET"
           python wnba_alt_streaks.py --date "$TARGET"
