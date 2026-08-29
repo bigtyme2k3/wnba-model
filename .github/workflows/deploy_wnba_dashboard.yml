@@ -117,9 +117,6 @@ jobs:
       - name: Validate persisted current ALT market and streak sources
         run: |
           set -e
-          # Pages is a read-only consumer. The authoritative market writer
-          # persists the sportsbook snapshot; deployment must never rebuild it
-          # from an empty runner cache and erase a valid same-day ALT slate.
           python - <<'PY'
           import json,os
           from pathlib import Path
@@ -128,20 +125,11 @@ jobs:
           s=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
           if w.get('target_date')!=target or s.get('target_date')!=target:
               raise SystemExit(f'ALT persisted source target mismatch: warehouse={w.get("target_date")} streaks={s.get("target_date")} target={target}')
-          print({
-              'status':'PASS',
-              'mode':'persisted-read-only',
-              'target':target,
-              'alt_markets':int((w.get('summary') or {}).get('markets') or 0),
-              'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0),
-          })
+          print({'status':'PASS','mode':'persisted-read-only','target':target,'alt_markets':int((w.get('summary') or {}).get('markets') or 0),'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0)})
           PY
 
       - name: Score current ALT props
         run: |
-          # Deployment is a read-only consumer of the persisted ALT performance
-          # archive. Snapshotting/grading belong to writer workflows so a Pages
-          # rebuild cannot create deploy-only archive rows or rewrite history.
           python wnba_alt_streak_confidence.py --date "$TARGET"
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python - <<'PY'
@@ -149,10 +137,7 @@ jobs:
           from pathlib import Path
           p=json.loads(Path('data/dashboard/wnba_alt_performance.json').read_text())
           assert 'live_performance' in p and 'research_archive' in p and 'calibration_training_set' in p
-          assert p['live_performance']['n'] == sum(
-              int(r.get('decisions') or 0) for r in p.get('by_action',[])
-              if str(r.get('group') or '').upper() == 'BET'
-          )
+          assert p['live_performance']['n'] == sum(int(r.get('decisions') or 0) for r in p.get('by_action',[]) if str(r.get('group') or '').upper() == 'BET')
           assert [r.get('group') for r in p['research_archive']['tiers']] == ['LEAN','WATCH','PASS']
           print({'status':'PASS','alt_performance_views':3,'live_bet_n':p['live_performance']['n']})
           PY
@@ -179,8 +164,6 @@ jobs:
           PY
           python patch_dashboard_v4_alt_streaks_display.py
           python patch_dashboard_v4_alt_ladders.py
-          # The canonical writer owns sportsbook ingestion. Deployment only
-          # validates and renders its persisted current-slate artifact.
           echo 'Using persisted canonical slate; deploy performs no sportsbook ingestion.'
           python - <<'PY'
           import json,os
@@ -192,9 +175,6 @@ jobs:
           if props.get('target_date')!=target: raise SystemExit(f"Canonical player props target mismatch after rebuild: {props.get('target_date')} != {target}")
           print({'status':'PASS','target':target,'canonical_manifest':manifest.get('target_date'),'canonical_player_props':props.get('row_count',len(props.get('rows') or []))})
           PY
-          # A legacy ALT overlay occasionally consumes the document shell when
-          # its old marker is malformed. Recover the committed valid shell;
-          # canonical/current renderers below will repopulate live data.
           if ! grep -qi '<body' docs/index.html; then
             echo 'Legacy overlay consumed dashboard shell; restoring committed shell.'
             git show HEAD:docs/index.html > docs/index.html
@@ -220,15 +200,8 @@ jobs:
           fi
           python patch_dashboard_alt_props_table.py
           python patch_dashboard_alt_props_scores.py
-          # Refresh the embedded performance panel from the persisted archive.
           python patch_dashboard_alt_props_performance_panel.py
-          # Canonical/runtime overlays can restore an older embedded DATA block.
-          # Re-embed the just-built ALT source last so Pages cannot publish a
-          # stale streak snapshot over the repaired warehouse output.
           python patch_dashboard_v4_alt_streaks_display.py
-          # Some legacy ALT patchers invoke the live M03-M06 chain as a side
-          # effect. Reassert the archived-results payload last on a closed
-          # slate so that chain cannot replace it with stale pregame inputs.
           if [ "${CLOSED_SLATE:-false}" = 'true' ]; then
             python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" --results-only
             python patch_dashboard_s19_m06.py
@@ -242,24 +215,16 @@ jobs:
           h=Path('docs/index.html').read_text(encoding='utf-8'); target=os.environ['TARGET']
           alt=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
           alt_stamp=str(alt.get('generated_at_utc') or '')
-          if not alt_stamp or f'"generated_at_utc":"{alt_stamp}"' not in h:
-              raise SystemExit(f'ALT embedded payload is stale: expected generated_at_utc={alt_stamp}')
-          if str(alt.get('target_date') or '') != target:
-              raise SystemExit(f'ALT source target mismatch: {alt.get("target_date")} != {target}')
+          if not alt_stamp or f'"generated_at_utc":"{alt_stamp}"' not in h: raise SystemExit(f'ALT embedded payload is stale: expected generated_at_utc={alt_stamp}')
+          if str(alt.get('target_date') or '') != target: raise SystemExit(f'ALT source target mismatch: {alt.get("target_date")} != {target}')
           eligible=[r for r in alt.get('rows',[]) if r.get('line_type')=='alternate' and int(r.get('streak') or 0)>=5 and str(r.get('best_book') or '').lower() in {'fanduel','draftkings','fanatics'}]
-          if alt.get('rows') and not eligible:
-              raise SystemExit('ALT source is nonempty but has zero renderer-eligible rows')
-          if eligible and "row_gate:'target-date-artifact'" not in h:
-              raise SystemExit('ALT renderer is not using the stable target-date artifact gate')
+          if alt.get('rows') and not eligible: raise SystemExit('ALT source is nonempty but has zero renderer-eligible rows')
+          if eligible and "row_gate:'target-date-artifact'" not in h: raise SystemExit('ALT renderer is not using the stable target-date artifact gate')
           build_marker=f'<!-- canonical-build-target-v1:{target} -->'
           if build_marker not in h: raise SystemExit(f'REFUSE DEPLOY: canonical build target marker missing for {target}')
-          visible=set(re.findall(r'Slate\s+(\d{4}-\d{2}-\d{2})',h))
-          stale=sorted(visible-{target})
+          visible=set(re.findall(r'Slate\s+(\d{4}-\d{2}-\d{2})',h)); stale=sorted(visible-{target})
           if stale: raise SystemExit(f'REFUSE DEPLOY: stale slate labels {stale}; target={target}')
-          canonical_target=f'"target_date": "{target}"'
-          canonical_target_compact=f'"target_date":"{target}"'
-          if canonical_target not in h and canonical_target_compact not in h:
-              raise SystemExit(f'REFUSE DEPLOY: canonical payload target {target} missing')
+          if f'"target_date": "{target}"' not in h and f'"target_date":"{target}"' not in h: raise SystemExit(f'REFUSE DEPLOY: canonical payload target {target} missing')
           required=['id="tabs"','canonical-daily-runtime-v1','v4-ui-freeze-script','s19-m02-script','WNBA_S19_M02','s19-m03-script','WNBA_S19_M03','s19-m04-contract-script','WNBA_CANONICAL_DASHBOARD_CONTRACT','s19-m05-health-script','WNBA_DASHBOARD_HEALTH','s19-m06-results-script','WNBA_RESULTS_LIFECYCLE','Player Props Results','alt-props-performance-panel-data']
           missing=[x for x in required if x not in h]
           if missing: raise SystemExit(f'Sprint 19 M02-M06 verification failed; missing markers: {missing}')
@@ -275,9 +240,18 @@ jobs:
               assert a3.get('status')=='READY' and a3.get('target_date')==target and a3.get('all_consumers_single_source') is True and a3.get('phase2_best_bets_fallback_enabled') is False and a3.get('phase2_portfolio_fallback_enabled') is False, a3
               assert a4.get('status')=='READY' and a4.get('target_date')==target and a4.get('all_rows_current_slate') is True and a4.get('actionable_unavailable_props')==0 and a4.get('legacy_fallback_enabled') is False and a4.get('single_dashboard_contract') is True, a4
               assert a5.get('status')=='READY' and a5.get('target_date')==target and a5.get('all_health_checks_pass') is True and a5.get('healthy_checks')==a5.get('total_checks') and float(a5.get('contract_age_minutes',9999))<=90 and a5.get('legacy_fallback_enabled') is False and a5.get('single_dashboard_contract') is True, a5
+              assert a6.get('target_history_records',0)>0, a6
           else:
-              assert a6.get('results_only') is True and a6.get('results_state')=='ALL_FINAL_RESULTS_GRADED', a6
-          assert a6.get('status')=='READY' and a6.get('target_date')==target and a6.get('duplicate_history_keys')==0 and a6.get('same_day_final_results_inferred') is False and a6.get('existing_grader_reused') is True and a6.get('existing_edge_database_reused') is True and a6.get('target_history_records',0)>0, a6
+              # A closed/no-open-props slate is deployable while completed actuals
+              # are still pending. Do not invent history rows or falsely require
+              # ALL_FINAL_RESULTS_GRADED before games have produced gradeable data.
+              assert a6.get('results_only') is True, a6
+              assert a6.get('results_state') in {'ALL_FINAL_RESULTS_GRADED','ARCHIVED_WAITING_FOR_COMPLETED_ACTUALS'}, a6
+              if a6.get('results_state')=='ALL_FINAL_RESULTS_GRADED':
+                  assert a6.get('target_history_records',0)>0, a6
+              else:
+                  assert a6.get('target_history_records',0)==0 and a6.get('history_persistence_required') is False, a6
+          assert a6.get('status')=='READY' and a6.get('target_date')==target and a6.get('duplicate_history_keys')==0 and a6.get('same_day_final_results_inferred') is False and a6.get('existing_grader_reused') is True and a6.get('existing_edge_database_reused') is True, a6
           print({'status':'PASS','sprint':19,'mode':'results-only' if closed else 'live','target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True,'alt_source_rows':len(alt.get('rows') or []),'alt_renderer_eligible_rows':len(eligible),'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
           PY
 
