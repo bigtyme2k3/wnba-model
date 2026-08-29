@@ -1,16 +1,16 @@
 {
-  "generated_at_utc": "2026-08-28T19:41:06.850412+00:00",
-  "target_date": "2026-08-27",
+  "generated_at_utc": "2026-08-29T02:32:28.697833+00:00",
+  "target_date": "2026-08-28",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
     "sources": [
       {
         "path": "data/dashboard/wnba_daily_canonical_manifest.json",
-        "target_date": "2026-08-27"
+        "target_date": "2026-08-28"
       },
       {
         "path": "data/dashboard/wnba_player_props.json",
-        "target_date": "2026-08-27"
+        "target_date": "2026-08-28"
       },
       {
         "path": "data/dashboard/wnba_v5_m11_report.json",
@@ -22,15 +22,15 @@
       },
       {
         "path": "data/dashboard/wnba_alt_performance.json",
-        "target_date": "2026-08-27"
+        "target_date": "2026-08-28"
       }
     ]
   },
   "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 3,
-    "yellow": 7,
+    "green": 5,
+    "yellow": 5,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -41,8 +41,8 @@
       "exists": true,
       "status": "green",
       "findings": [],
-      "target_date": "2026-08-27",
-      "generated_date": "2026-08-28",
+      "target_date": "2026-08-28",
+      "generated_date": "2026-08-29",
       "reported_status": "PASS"
     },
     {
@@ -51,8 +51,8 @@
       "exists": true,
       "status": "green",
       "findings": [],
-      "target_date": "2026-08-27",
-      "generated_date": "2026-08-28",
+      "target_date": "2026-08-28",
+      "generated_date": "2026-08-29",
       "reported_status": null
     },
     {
@@ -61,7 +61,7 @@
       "exists": true,
       "status": "yellow",
       "findings": [
-        "target_date_mismatch:2026-08-25!=2026-08-27"
+        "target_date_mismatch:2026-08-25!=2026-08-28"
       ],
       "target_date": "2026-08-25",
       "generated_date": "2026-08-26",
@@ -73,10 +73,11 @@
       "exists": true,
       "status": "yellow",
       "findings": [
+        "target_date_mismatch:2026-08-27!=2026-08-28",
         "unexpected_status:BLOCKED_STALE_SLATE"
       ],
       "target_date": "2026-08-27",
-      "generated_date": "2026-08-28",
+      "generated_date": "2026-08-29",
       "reported_status": "BLOCKED_STALE_SLATE"
     },
     {
@@ -85,20 +86,18 @@
       "exists": true,
       "status": "yellow",
       "findings": [
-        "target_date_mismatch:2026-08-28!=2026-08-27"
+        "target_date_mismatch:2026-08-29!=2026-08-28"
       ],
-      "target_date": "2026-08-28",
-      "generated_date": "2026-08-28",
+      "target_date": "2026-08-29",
+      "generated_date": "2026-08-29",
       "reported_status": "READY_FORWARD_LEARNING"
     },
     {
       "name": "adaptive_challenger",
       "path": "data/dashboard/wnba_v5_adaptive_challenger_v2.json",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "target_date_mismatch:2026-08-28!=2026-08-27"
-      ],
+      "status": "green",
+      "findings": [],
       "target_date": "2026-08-28",
       "generated_date": "2026-08-28",
       "reported_status": "READY_CONTEXTUAL_SHADOW"
@@ -107,10 +106,8 @@
       "name": "results_lifecycle",
       "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "target_date_mismatch:2026-08-28!=2026-08-27"
-      ],
+      "status": "green",
+      "findings": [],
       "target_date": "2026-08-28",
       "generated_date": "2026-08-28",
       "reported_status": "READY"
@@ -121,8 +118,8 @@
       "exists": true,
       "status": "green",
       "findings": [],
-      "target_date": "2026-08-27",
-      "generated_date": "2026-08-27",
+      "target_date": "2026-08-28",
+      "generated_date": "2026-08-28",
       "reported_status": "ok"
     }
   ],
@@ -133,9 +130,9 @@
       "exists": true,
       "status": "yellow",
       "findings": [
-        "modified_date_mismatch:2026-08-28!=2026-08-27"
+        "modified_date_mismatch:2026-08-29!=2026-08-28"
       ],
-      "modified_date": "2026-08-28"
+      "modified_date": "2026-08-29"
     },
     {
       "name": "lineup_adjustments",
@@ -143,9 +140,9 @@
       "exists": true,
       "status": "yellow",
       "findings": [
-        "modified_date_mismatch:2026-08-28!=2026-08-27"
+        "modified_date_mismatch:2026-08-29!=2026-08-28"
       ],
-      "modified_date": "2026-08-28"
+      "modified_date": "2026-08-29"
     }
   ],
   "legacy_observability": [
@@ -155,7 +152,7 @@
       "exists": true,
       "status": "legacy_stale",
       "findings": [
-        "legacy_observability_stale:2026-08-04!=2026-08-27"
+        "legacy_observability_stale:2026-08-04!=2026-08-28"
       ],
       "target_date": "2026-08-04"
     },
@@ -165,7 +162,7 @@
       "exists": true,
       "status": "legacy_stale",
       "findings": [
-        "legacy_observability_stale:2026-08-04!=2026-08-27"
+        "legacy_observability_stale:2026-08-04!=2026-08-28"
       ],
       "target_date": "2026-08-04"
     },
@@ -175,7 +172,7 @@
       "exists": true,
       "status": "legacy_stale",
       "findings": [
-        "legacy_observability_stale:2026-08-04!=2026-08-27"
+        "legacy_observability_stale:2026-08-04!=2026-08-28"
       ],
       "target_date": "2026-08-04"
     },
@@ -185,7 +182,7 @@
       "exists": true,
       "status": "legacy_stale",
       "findings": [
-        "legacy_observability_stale:2026-07-08!=2026-08-27"
+        "legacy_observability_stale:2026-07-08!=2026-08-28"
       ],
       "target_date": "2026-07-08"
     }
