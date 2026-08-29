@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-29T02:32:28.697833+00:00",
+  "generated_at_utc": "2026-08-29T09:28:54.376885+00:00",
   "target_date": "2026-08-28",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -14,7 +14,7 @@
       },
       {
         "path": "data/dashboard/wnba_v5_m11_report.json",
-        "target_date": "2026-08-27"
+        "target_date": "2026-08-28"
       },
       {
         "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
@@ -71,14 +71,11 @@
       "name": "m11_inference",
       "path": "data/dashboard/wnba_v5_m11_report.json",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "target_date_mismatch:2026-08-27!=2026-08-28",
-        "unexpected_status:BLOCKED_STALE_SLATE"
-      ],
-      "target_date": "2026-08-27",
+      "status": "green",
+      "findings": [],
+      "target_date": "2026-08-28",
       "generated_date": "2026-08-29",
-      "reported_status": "BLOCKED_STALE_SLATE"
+      "reported_status": "READY_SHADOW"
     },
     {
       "name": "m12_learning",
@@ -96,10 +93,12 @@
       "name": "adaptive_challenger",
       "path": "data/dashboard/wnba_v5_adaptive_challenger_v2.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-28",
-      "generated_date": "2026-08-28",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-29!=2026-08-28"
+      ],
+      "target_date": "2026-08-29",
+      "generated_date": "2026-08-29",
       "reported_status": "READY_CONTEXTUAL_SHADOW"
     },
     {
@@ -109,7 +108,7 @@
       "status": "green",
       "findings": [],
       "target_date": "2026-08-28",
-      "generated_date": "2026-08-28",
+      "generated_date": "2026-08-29",
       "reported_status": "READY"
     },
     {
