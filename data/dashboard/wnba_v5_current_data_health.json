@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-29T09:28:54.376885+00:00",
+  "generated_at_utc": "2026-08-29T14:46:43.441671+00:00",
   "target_date": "2026-08-28",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -18,7 +18,7 @@
       },
       {
         "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
-        "target_date": "2026-08-28"
+        "target_date": "2026-08-29"
       },
       {
         "path": "data/dashboard/wnba_alt_performance.json",
@@ -29,8 +29,8 @@
   "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 5,
-    "yellow": 5,
+    "green": 3,
+    "yellow": 7,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -71,11 +71,13 @@
       "name": "m11_inference",
       "path": "data/dashboard/wnba_v5_m11_report.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
+      "status": "yellow",
+      "findings": [
+        "unexpected_status:BLOCKED_STALE_SLATE"
+      ],
       "target_date": "2026-08-28",
       "generated_date": "2026-08-29",
-      "reported_status": "READY_SHADOW"
+      "reported_status": "BLOCKED_STALE_SLATE"
     },
     {
       "name": "m12_learning",
@@ -105,9 +107,11 @@
       "name": "results_lifecycle",
       "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-28",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-29!=2026-08-28"
+      ],
+      "target_date": "2026-08-29",
       "generated_date": "2026-08-29",
       "reported_status": "READY"
     },
