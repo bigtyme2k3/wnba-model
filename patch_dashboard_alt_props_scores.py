@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -19,7 +20,7 @@ def apply_calibration() -> None:
     """Make the public ALT action layer use verified historical calibration.
 
     Deployment may rebuild raw component scores, but it is not allowed to
-    restore the old static BET/LEAN thresholds.  Calibration is recomputed from
+    restore the old static BET/LEAN thresholds. Calibration is recomputed from
     frozen, verified history and applied before the table is embedded.
     """
     if not SCORES.exists():
@@ -203,11 +204,13 @@ def main() -> None:
 
 
 def refresh_performance_panel() -> None:
-    """Embed the latest ALT performance JSON into the same dashboard artifact."""
+    """Embed the latest ALT performance JSON without invoking M03 side effects."""
     panel = Path('patch_dashboard_alt_props_performance_panel.py')
     if not panel.exists():
         raise SystemExit('ALT performance panel renderer missing')
-    subprocess.run([sys.executable, str(panel)], check=True)
+    env = os.environ.copy()
+    env['ALT_PANEL_ONLY'] = '1'
+    subprocess.run([sys.executable, str(panel)], check=True, env=env)
 
 
 if __name__=='__main__':
