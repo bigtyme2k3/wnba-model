@@ -36,12 +36,6 @@ def replace_element(html: str, tag: str, element_id: str, replacement: str) -> s
 
 
 def load_payload() -> tuple[dict, str]:
-    """Load the newest valid ALT performance artifact.
-
-    A deployment rebuild may create the new three-view schema before it exists
-    on origin/main. Compare timestamps instead of blindly preferring the remote
-    copy, while still preventing an older queued checkout from winning.
-    """
     candidates = []
     try:
         payload = json.loads(DATA.read_text(encoding='utf-8')) if DATA.exists() else {}
@@ -50,18 +44,8 @@ def load_payload() -> tuple[dict, str]:
     except Exception:
         pass
     try:
-        subprocess.run(
-            ['git', 'fetch', '--quiet', 'origin', 'main'],
-            check=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        raw = subprocess.run(
-            ['git', 'show', 'origin/main:data/dashboard/wnba_alt_performance.json'],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout
+        subprocess.run(['git','fetch','--quiet','origin','main'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        raw = subprocess.run(['git','show','origin/main:data/dashboard/wnba_alt_performance.json'], check=True, capture_output=True, text=True).stdout
         payload = json.loads(raw)
         if isinstance(payload, dict):
             candidates.append((str(payload.get('generated_at_utc') or ''), payload, 'origin/main'))
@@ -77,7 +61,6 @@ def main() -> None:
     if not HTML.exists():
         raise SystemExit('docs/index.html missing')
     payload, payload_source = load_payload()
-
     data_script = f'<script id="{DATA_ID}">window.WNBA_ALT_PERFORMANCE_DATA={json.dumps(payload, separators=(",", ":"), ensure_ascii=False)};</script>'
     script = r'''<script id="alt-props-performance-panel-script">(function(){
 const esc=v=>typeof window.E==='function'?window.E(v):String(v??'');
@@ -93,7 +76,7 @@ function panel(){const raw=D(),p=raw.alt_performance||raw||{},s=p.summary||{},l=
 function append(){const root=document.getElementById('root');if(!root)return;if(document.getElementById('alt-props-performance-panel'))return;const host=root.querySelector('.altDesk')||root;host.insertAdjacentHTML('beforeend',panel());const p=D().alt_performance||D()||{},perf=document.getElementById('alt-props-performance-panel');if(perf){perf.insertAdjacentHTML('afterend',`<section class="altPerfPanel">${daily(p.yesterday_performance||{})}</section>`);installDailyFilters()}}
 const prevRender=window.render;window.render=function(view){if(typeof prevRender==='function')prevRender(view);if(view==='alt-props')setTimeout(append,10)};
 const prevFilter=window.altPropsSetFilter;window.altPropsSetFilter=function(kind,value){if(typeof prevFilter==='function')prevFilter(kind,value);setTimeout(append,10)};
-window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'2.0',location:'below-alt-props-table',separated_live_research_calibration:true,shows_pending:true,canonical_source:'origin/main'};
+window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'2.1',location:'below-alt-props-table',separated_live_research_calibration:true,shows_pending:true,presentation_only_default:true};
 })();</script>'''
 
     html = HTML.read_text(encoding='utf-8')
@@ -103,27 +86,18 @@ window.WNBA_ALT_PROPS_PERFORMANCE_PANEL={version:'2.0',location:'below-alt-props
     HTML.write_text(html, encoding='utf-8')
 
     summary = payload.get('summary') or {}
-    print({
-        'status': 'PASS',
-        'alt_props_performance': 'below-table',
-        'data': bool(payload),
-        'payload_source': payload_source,
-        'archived': summary.get('archived_candidates'),
-        'graded': summary.get('graded'),
-        'pending': summary.get('pending'),
-        'shows_pending': True,
-    })
+    print({'status':'PASS','alt_props_performance':'below-table','data':bool(payload),'payload_source':payload_source,'archived':summary.get('archived_candidates'),'graded':summary.get('graded'),'pending':summary.get('pending'),'shows_pending':True,'presentation_only':True})
 
-    if os.getenv('ALT_PANEL_ONLY') == '1':
+    # This file is a renderer. It must not mutate or re-run the canonical M03
+    # decision chain during a Pages build. A legacy explicit opt-in remains for
+    # controlled/manual recovery only.
+    if os.getenv('ALT_PANEL_RUN_M03') != '1':
         return
 
-    # Sprint 19 M03 is the final consumer layer. It runs after M02 has installed
-    # the injury-aware Games/Props routes, then takes ownership of Best Bets,
-    # Portfolio, and Results from one canonical synchronized payload.
-    target = subprocess.run([sys.executable, 'active_slate_date.py'], capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1].strip()
-    subprocess.run([sys.executable, 'scripts/wnba_s19_m03_dashboard_consumer.py', '--date', target], check=True)
-    subprocess.run([sys.executable, 'patch_dashboard_s19_m03.py'], check=True)
-    print({'status':'PASS','sprint':19,'module':'M03','canonical_consumer_installed':True,'target_date':target})
+    target = subprocess.run([sys.executable,'active_slate_date.py'], capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1].strip()
+    subprocess.run([sys.executable,'scripts/wnba_s19_m03_dashboard_consumer.py','--date',target], check=True)
+    subprocess.run([sys.executable,'patch_dashboard_s19_m03.py'], check=True)
+    print({'status':'PASS','sprint':19,'module':'M03','canonical_consumer_installed':True,'target_date':target,'explicit_opt_in':True})
 
 
 if __name__ == '__main__':
