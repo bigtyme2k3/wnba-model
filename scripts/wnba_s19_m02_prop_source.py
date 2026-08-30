@@ -21,6 +21,7 @@ import scrape_odds_props as odds_props
 RAW = ROOT / 'data/raw'
 DASH = ROOT / 'data/dashboard'
 GAMES = DASH / 'wnba_sprint2_phase2.json'
+CANONICAL_PROPS = DASH / 'wnba_player_props.json'
 AUDIT = DASH / 'wnba_s19_m02_prop_source_audit.json'
 
 
@@ -81,6 +82,75 @@ def read_existing(target: str, game_names: set[str]) -> tuple[pd.DataFrame, str 
     return pd.DataFrame(columns=odds_props.RAW_COLUMNS), None
 
 
+def read_canonical_props(target: str, game_names: set[str]) -> tuple[pd.DataFrame, str | None]:
+    """Convert the persisted canonical standard prop artifact into M02 raw rows.
+
+    This is an API-free fallback for days when the paid Odds API quota is
+    exhausted but a valid same-day canonical prop snapshot has already been
+    persisted. Only the three production sportsbooks are retained.
+    """
+    payload = load_json(CANONICAL_PROPS, {})
+    if str(payload.get('target_date') or '')[:10] != target:
+        return pd.DataFrame(columns=odds_props.RAW_COLUMNS), None
+    rows = []
+    allowed = odds_props.PLAYER_PROP_BOOKS
+    stat_to_raw = {v: k for k, v in odds_props.PROP_MARKETS.items()}
+    for r in payload.get('rows') or []:
+        if str(r.get('target_date') or '')[:10] != target:
+            continue
+        game = str(r.get('game') or '').strip()
+        if game not in game_names:
+            continue
+        books = []
+        over_prices = []
+        under_prices = []
+        for b in r.get('books') or []:
+            book = str(b.get('book') or '').strip().lower()
+            if book not in allowed:
+                continue
+            books.append(book)
+            side = str(b.get('side') or '').upper()
+            price = b.get('price')
+            if side == 'OVER' and price is not None:
+                over_prices.append(float(price))
+            elif side == 'UNDER' and price is not None:
+                under_prices.append(float(price))
+        books = sorted(set(books))
+        if not books:
+            continue
+        away = str(r.get('away_team') or '').strip()
+        home = str(r.get('home_team') or '').strip()
+        stat = str(r.get('stat') or '').strip().lower()
+        rows.append({
+            'game_date': target,
+            'event_id': r.get('event_id'),
+            'player': r.get('player'),
+            'team': r.get('team'),
+            'position': r.get('position') or '',
+            'opp_team': game,
+            'is_home': bool(r.get('team') and str(r.get('team')).strip() == home),
+            'stat_raw': stat_to_raw.get(stat, stat),
+            'stat': stat,
+            'line': r.get('line'),
+            'over_price': sum(over_prices)/len(over_prices) if over_prices else None,
+            'under_price': sum(under_prices)/len(under_prices) if under_prices else None,
+            'yes_price': None,
+            'no_price': None,
+            'num_books': len(books),
+            'sportsbooks': ','.join(books),
+            'odds_type': 'sportsbook',
+            'game_time': r.get('commence_time'),
+            'home_team': home,
+            'away_team': away,
+            'source': 'canonical-player-props-cache',
+            'scraped_at': payload.get('generated_at_utc'),
+        })
+    if not rows:
+        return pd.DataFrame(columns=odds_props.RAW_COLUMNS), None
+    frame = pd.DataFrame(rows, columns=odds_props.RAW_COLUMNS)
+    return exact_rows(frame, game_names, target), str(CANONICAL_PROPS.relative_to(ROOT))
+
+
 def fetch_live(target: str, game_names: set[str]) -> tuple[pd.DataFrame, int]:
     if not os.getenv('ODDS_API_KEY'):
         raise SystemExit('ODDS_API_KEY unavailable and no exact current-slate sportsbook prop cache exists')
@@ -127,6 +197,9 @@ def build(target: str):
     frame = cached
 
     if frame.empty:
+        frame, source = read_canonical_props(target, game_names)
+
+    if frame.empty:
         api_called = True
         frame, matched_events = fetch_live(target, game_names)
         source = 'the-odds-api-live-events'
@@ -153,7 +226,7 @@ def build(target: str):
         'sportsbooks': sorted(odds_props.PLAYER_PROP_BOOKS),
         'rows': int(len(frame)),
         'all_rows_exact_current_slate': all(g in game_names for g in rendered_games),
-        'policy': 'Use only DraftKings, FanDuel, and Fanatics. Reuse a verified three-book exact-slate cache when available; otherwise make one live standard-market refresh. Alternate markets are not requested here.',
+        'policy': 'Use only DraftKings, FanDuel, and Fanatics. Reuse a verified three-book raw cache or same-day canonical standard prop artifact before making any live Odds API request. Alternate markets are never requested here.',
     }
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     print('SPRINT19_M02_PROP_SOURCE_READY', json.dumps(audit))
