@@ -1,13 +1,13 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-30T17:22:17.134249Z",
+  "generated_at_utc": "2026-08-30T19:21:47.230139+00:00",
   "target_date": "2026-08-30",
   "status": "PASS",
   "games": [
-    "Connecticut Sun @ Dallas Wings",
-    "Golden State Valkyries @ Portland Fire",
+    "Minnesota Lynx @ Atlanta Dream",
     "Los Angeles Sparks @ Seattle Storm",
-    "Minnesota Lynx @ Atlanta Dream"
+    "Golden State Valkyries @ Portland Fire",
+    "Connecticut Sun @ Dallas Wings"
   ],
   "teams": [
     "Atlanta Dream",
@@ -20,7 +20,7 @@
     "Seattle Storm"
   ],
   "game_count": 4,
-  "player_prop_rows": 340,
+  "player_prop_rows": 333,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -30,17 +30,16 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Authoritative current slate synchronized for 2026-08-30",
+      "stdout": "{\n  \"target_date\": \"2026-08-30\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 4,\n  \"matchups\": [\n    \"Minnesota Lynx @ Atlanta Dream\",\n    \"Los Angeles Sparks @ Seattle Storm\",\n    \"Golden State Valkyries @ Portland Fire\",\n    \"Connecticut Sun @ Dallas Wings\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Verified player props synchronized for 2026-08-30",
+      "stdout": "{\n  \"target_date\": \"2026-08-30\",\n  \"events\": 4,\n  \"raw_rows\": 333,\n  \"verified_rows\": 333,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
-  "failures": [],
-  "manifest_sync_source": "player_props_ingestion_same_run"
+  "failures": []
 }
