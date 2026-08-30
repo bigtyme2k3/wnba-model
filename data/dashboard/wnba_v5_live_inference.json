@@ -3,95 +3,22 @@
     "version": "V5",
     "module": "V5-M11",
     "stage": "LIVE_V5_INFERENCE",
-    "status": "READY_SHADOW",
-    "generated_at_utc": "2026-08-30T01:42:37.830065+00:00",
+    "status": "BLOCKED_STALE_SLATE",
+    "generated_at_utc": "2026-08-30T06:40:57.425072+00:00",
     "target_date": "2026-08-29",
     "ranked_rows": 103,
-    "scored_rows": 2,
-    "unscored_rows": 101,
-    "scoring_coverage_pct": 1.94,
+    "scored_rows": 0,
+    "unscored_rows": 103,
+    "scoring_coverage_pct": 0.0,
     "research_champion": "KNN",
-    "training_rows": 123,
-    "freshness_guard_status": "FRESH",
-    "leakage_policy": "Live rolling features use only certified player/stat games strictly before target_date.",
+    "training_rows": null,
+    "freshness_guard_status": "STALE_BLOCKED",
+    "freshness_reason": "Ranked board contains no exclusively current-date slate and must not be scored.",
     "research_only": true,
     "production_ready": false,
-    "next_module": "V5-M12 Post-Game Learning + Forward Validation"
+    "next_action": "REFRESH_CURRENT_OPPORTUNITY_BOARD"
   },
-  "scored": [
-    {
-      "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|reb|over",
-      "date": "2026-08-29",
-      "player": "Laura Juskaite",
-      "game": "Toronto Tempo @ Phoenix Mercury",
-      "market": "REB",
-      "side": "OVER",
-      "line": 5.5,
-      "odds": -114.0,
-      "best_book": "FanDuel",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.556228,
-      "v5_probability": 0.556228,
-      "market_implied_probability": 0.53271,
-      "probability_edge": 0.023518,
-      "probability_band": "55-59.9%",
-      "confidence_score": 0.115243,
-      "uncertainty_score": 0.993657,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 3.82,
-      "feature_snapshot": {
-        "market_implied_probability": 0.53271,
-        "line_minus_prior_mean": 1.75,
-        "rolling3_actual_mean": 3.666667,
-        "rolling5_actual_mean": 3.75,
-        "rolling5_actual_std": 0.433013,
-        "rolling5_trend_slope": -0.1,
-        "historical_hit_rate_at_current_line": 0.0,
-        "historical_hit_rate_l5_at_current_line": 0.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    },
-    {
-      "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|reb|under",
-      "date": "2026-08-29",
-      "player": "Laura Juskaite",
-      "game": "Toronto Tempo @ Phoenix Mercury",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 5.5,
-      "odds": -107.0,
-      "best_book": "DraftKings",
-      "prior_games": 4,
-      "status": "SCORED",
-      "model": "KNN",
-      "knn_probability": 0.543465,
-      "v5_probability": 0.543465,
-      "market_implied_probability": 0.516908,
-      "probability_edge": 0.026557,
-      "probability_band": "50-54.9%",
-      "confidence_score": 0.138496,
-      "uncertainty_score": 0.996214,
-      "neighbor_count": 15,
-      "neighbor_hit_rate": 0.533333,
-      "average_neighbor_distance": 1.676871,
-      "feature_snapshot": {
-        "market_implied_probability": 0.516908,
-        "line_minus_prior_mean": 1.75,
-        "rolling3_actual_mean": 3.666667,
-        "rolling5_actual_mean": 3.75,
-        "rolling5_actual_std": 0.433013,
-        "rolling5_trend_slope": -0.1,
-        "historical_hit_rate_at_current_line": 1.0,
-        "historical_hit_rate_l5_at_current_line": 1.0,
-        "prior_games": 4.0
-      },
-      "research_only": true
-    }
-  ],
+  "scored": [],
   "unscored": [
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|ast|over",
@@ -103,9 +30,9 @@
       "line": 8.5,
       "odds": 108.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|ast|under",
@@ -117,9 +44,9 @@
       "line": 8.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pa|over",
@@ -131,9 +58,9 @@
       "line": 23.5,
       "odds": -132.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pa|over",
@@ -145,9 +72,9 @@
       "line": 24.5,
       "odds": -104.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pa|under",
@@ -159,9 +86,9 @@
       "line": 23.5,
       "odds": 100.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pa|under",
@@ -173,9 +100,9 @@
       "line": 24.5,
       "odds": -131.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pr|over",
@@ -187,9 +114,9 @@
       "line": 23.5,
       "odds": -118.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pr|under",
@@ -201,9 +128,9 @@
       "line": 23.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pra|over",
@@ -215,9 +142,9 @@
       "line": 31.5,
       "odds": -124.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pra|over",
@@ -229,9 +156,9 @@
       "line": 32.5,
       "odds": -110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pra|under",
@@ -243,9 +170,9 @@
       "line": 32.5,
       "odds": -116.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pts|over",
@@ -257,9 +184,9 @@
       "line": 14.5,
       "odds": -129.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pts|over",
@@ -271,9 +198,9 @@
       "line": 15.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pts|under",
@@ -285,9 +212,9 @@
       "line": 14.5,
       "odds": 110.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|pts|under",
@@ -299,9 +226,9 @@
       "line": 15.5,
       "odds": -117.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|ra|over",
@@ -313,9 +240,9 @@
       "line": 16.5,
       "odds": -128.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|ra|under",
@@ -327,9 +254,9 @@
       "line": 16.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|reb|over",
@@ -341,9 +268,9 @@
       "line": 8.5,
       "odds": 108.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|alyssa thomas|toronto tempo @ phoenix mercury|reb|under",
@@ -355,9 +282,9 @@
       "line": 8.5,
       "odds": -139.0,
       "best_book": "Caesars",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|ast|over",
@@ -369,9 +296,9 @@
       "line": 1.5,
       "odds": -195.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|ast|over",
@@ -383,9 +310,9 @@
       "line": 2.5,
       "odds": 124.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|ast|over",
@@ -397,9 +324,9 @@
       "line": 3.5,
       "odds": 330.0,
       "best_book": "Caesars",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|ast|under",
@@ -411,9 +338,9 @@
       "line": 2.5,
       "odds": -161.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|ast|under",
@@ -425,9 +352,9 @@
       "line": 3.5,
       "odds": -530.0,
       "best_book": "Caesars",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|pr|over",
@@ -439,9 +366,9 @@
       "line": 22.5,
       "odds": -109.0,
       "best_book": "DraftKings",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|pr|under",
@@ -453,9 +380,9 @@
       "line": 22.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|pra|over",
@@ -467,9 +394,9 @@
       "line": 24.5,
       "odds": -115.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|pra|under",
@@ -481,9 +408,9 @@
       "line": 24.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|pts|over",
@@ -495,9 +422,9 @@
       "line": 13.5,
       "odds": -143.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|pts|over",
@@ -509,9 +436,9 @@
       "line": 14.5,
       "odds": -110.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|pts|over",
@@ -523,9 +450,9 @@
       "line": 15.5,
       "odds": 116.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|pts|under",
@@ -537,9 +464,9 @@
       "line": 14.5,
       "odds": 100.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|reb|over",
@@ -551,9 +478,9 @@
       "line": 7.5,
       "odds": -119.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|isabelle harrison|toronto tempo @ phoenix mercury|reb|under",
@@ -565,9 +492,9 @@
       "line": 7.5,
       "odds": -105.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|3pm|over",
@@ -579,9 +506,9 @@
       "line": 1.5,
       "odds": -185.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|3pm|over",
@@ -593,9 +520,9 @@
       "line": 2.5,
       "odds": 130.0,
       "best_book": "BetRivers",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|3pm|under",
@@ -607,9 +534,9 @@
       "line": 1.5,
       "odds": 142.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|ast|over",
@@ -621,9 +548,9 @@
       "line": 1.5,
       "odds": -180.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|ast|over",
@@ -635,9 +562,9 @@
       "line": 2.5,
       "odds": 152.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|ast|under",
@@ -649,9 +576,9 @@
       "line": 2.5,
       "odds": -200.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pr|over",
@@ -663,9 +590,9 @@
       "line": 26.5,
       "odds": -106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pr|under",
@@ -677,9 +604,9 @@
       "line": 26.5,
       "odds": -122.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pra|over",
@@ -691,9 +618,9 @@
       "line": 27.5,
       "odds": -112.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pra|over",
@@ -705,9 +632,9 @@
       "line": 28.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pra|under",
@@ -719,9 +646,9 @@
       "line": 28.5,
       "odds": -120.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pts|over",
@@ -733,9 +660,9 @@
       "line": 21.5,
       "odds": -117.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pts|over",
@@ -747,9 +674,9 @@
       "line": 22.5,
       "odds": 105.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pts|under",
@@ -761,9 +688,9 @@
       "line": 21.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|pts|under",
@@ -775,9 +702,9 @@
       "line": 22.5,
       "odds": -118.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|reb|over",
@@ -789,9 +716,9 @@
       "line": 3.5,
       "odds": -117.0,
       "best_book": "BetRivers",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kahleah copper|toronto tempo @ phoenix mercury|reb|under",
@@ -803,9 +730,9 @@
       "line": 3.5,
       "odds": 104.0,
       "best_book": "FanDuel",
-      "prior_games": 1,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kia nurse|toronto tempo @ phoenix mercury|3pm|over",
@@ -817,9 +744,9 @@
       "line": 2.5,
       "odds": 111.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kia nurse|toronto tempo @ phoenix mercury|3pm|under",
@@ -831,9 +758,9 @@
       "line": 2.5,
       "odds": -138.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kia nurse|toronto tempo @ phoenix mercury|pts|over",
@@ -845,9 +772,9 @@
       "line": 10.5,
       "odds": -108.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kia nurse|toronto tempo @ phoenix mercury|pts|under",
@@ -859,9 +786,9 @@
       "line": 10.5,
       "odds": -119.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|3pm|over",
@@ -873,9 +800,9 @@
       "line": 1.5,
       "odds": 194.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|3pm|under",
@@ -887,9 +814,9 @@
       "line": 1.5,
       "odds": -217.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|ast|over",
@@ -901,9 +828,9 @@
       "line": 4.5,
       "odds": -135.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|ast|under",
@@ -915,9 +842,9 @@
       "line": 4.5,
       "odds": 106.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pa|over",
@@ -929,9 +856,9 @@
       "line": 20.5,
       "odds": -118.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pa|under",
@@ -943,9 +870,9 @@
       "line": 20.5,
       "odds": -108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pr|over",
@@ -957,9 +884,9 @@
       "line": 19.5,
       "odds": -123.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pr|under",
@@ -971,9 +898,9 @@
       "line": 19.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pra|over",
@@ -985,9 +912,9 @@
       "line": 24.5,
       "odds": -126.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pra|over",
@@ -999,9 +926,9 @@
       "line": 25.5,
       "odds": -102.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pra|under",
@@ -1013,9 +940,9 @@
       "line": 24.5,
       "odds": -101.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pra|under",
@@ -1027,9 +954,9 @@
       "line": 25.5,
       "odds": -130.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pts|over",
@@ -1041,9 +968,9 @@
       "line": 14.5,
       "odds": -148.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pts|over",
@@ -1055,9 +982,9 @@
       "line": 15.5,
       "odds": -114.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pts|over",
@@ -1069,9 +996,9 @@
       "line": 16.5,
       "odds": 110.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|pts|under",
@@ -1083,9 +1010,9 @@
       "line": 15.5,
       "odds": -108.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|ra|over",
@@ -1097,9 +1024,9 @@
       "line": 9.5,
       "odds": 108.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|ra|under",
@@ -1111,9 +1038,9 @@
       "line": 9.5,
       "odds": -135.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|reb|over",
@@ -1125,9 +1052,9 @@
       "line": 4.5,
       "odds": 122.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|kiki rice|toronto tempo @ phoenix mercury|reb|under",
@@ -1139,9 +1066,9 @@
       "line": 4.5,
       "odds": -148.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|3pm|over",
@@ -1153,9 +1080,9 @@
       "line": 1.5,
       "odds": 194.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|3pm|under",
@@ -1167,9 +1094,9 @@
       "line": 1.5,
       "odds": -233.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|ast|over",
@@ -1181,9 +1108,9 @@
       "line": 2.5,
       "odds": 133.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|ast|under",
@@ -1195,9 +1122,9 @@
       "line": 2.5,
       "odds": -172.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pa|over",
@@ -1209,9 +1136,9 @@
       "line": 14.5,
       "odds": -122.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pa|under",
@@ -1223,9 +1150,9 @@
       "line": 14.5,
       "odds": -111.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pr|over",
@@ -1237,9 +1164,9 @@
       "line": 18.5,
       "odds": -107.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pr|under",
@@ -1251,9 +1178,9 @@
       "line": 18.5,
       "odds": -127.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pra|over",
@@ -1265,9 +1192,9 @@
       "line": 20.5,
       "odds": -116.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pra|under",
@@ -1279,9 +1206,9 @@
       "line": 20.5,
       "odds": -110.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pts|over",
@@ -1293,9 +1220,9 @@
       "line": 12.5,
       "odds": -112.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pts|over",
@@ -1307,9 +1234,9 @@
       "line": 13.5,
       "odds": 112.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|pts|under",
@@ -1321,9 +1248,9 @@
       "line": 12.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|ra|over",
@@ -1335,9 +1262,9 @@
       "line": 7.5,
       "odds": -143.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|ra|under",
@@ -1349,9 +1276,37 @@
       "line": 7.5,
       "odds": 105.0,
       "best_book": "DraftKings",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|reb|over",
+      "date": "2026-08-29",
+      "player": "Laura Juskaite",
+      "game": "Toronto Tempo @ Phoenix Mercury",
+      "market": "REB",
+      "side": "OVER",
+      "line": 5.5,
+      "odds": -114.0,
+      "best_book": "FanDuel",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
+    },
+    {
+      "ranking_key": "2026-08-29|laura juskaite|toronto tempo @ phoenix mercury|reb|under",
+      "date": "2026-08-29",
+      "player": "Laura Juskaite",
+      "game": "Toronto Tempo @ Phoenix Mercury",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 5.5,
+      "odds": -107.0,
+      "best_book": "DraftKings",
+      "prior_games": null,
+      "status": "UNSCORED",
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|pr|over",
@@ -1363,9 +1318,9 @@
       "line": 18.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|pr|under",
@@ -1377,9 +1332,9 @@
       "line": 18.5,
       "odds": -114.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|pts|over",
@@ -1391,9 +1346,9 @@
       "line": 10.5,
       "odds": -103.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|pts|over",
@@ -1405,9 +1360,9 @@
       "line": 11.5,
       "odds": 105.0,
       "best_book": "BetRivers",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|pts|under",
@@ -1419,9 +1374,9 @@
       "line": 10.5,
       "odds": -120.0,
       "best_book": "Caesars",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|reb|over",
@@ -1433,9 +1388,9 @@
       "line": 7.5,
       "odds": -116.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|reb|over",
@@ -1447,9 +1402,9 @@
       "line": 8.5,
       "odds": 118.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|reb|under",
@@ -1461,9 +1416,9 @@
       "line": 7.5,
       "odds": 107.0,
       "best_book": "Caesars",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|natasha mack|toronto tempo @ phoenix mercury|reb|under",
@@ -1475,9 +1430,9 @@
       "line": 8.5,
       "odds": -158.0,
       "best_book": "FanDuel",
-      "prior_games": 2,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|noemie brochant|toronto tempo @ phoenix mercury|pts|over",
@@ -1489,9 +1444,9 @@
       "line": 8.5,
       "odds": -112.0,
       "best_book": "BetOnline.ag",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     },
     {
       "ranking_key": "2026-08-29|noemie brochant|toronto tempo @ phoenix mercury|pts|under",
@@ -1503,9 +1458,9 @@
       "line": 8.5,
       "odds": -113.0,
       "best_book": "FanDuel",
-      "prior_games": 0,
+      "prior_games": null,
       "status": "UNSCORED",
-      "reason": "INSUFFICIENT_PLAYER_STAT_HISTORY"
+      "reason": "BLOCKED_STALE_SLATE"
     }
   ]
 }
