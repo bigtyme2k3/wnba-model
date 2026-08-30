@@ -1,27 +1,29 @@
 {
-  "generated_at_utc": "2026-08-26T03:18:58.292741+00:00",
-  "target_date": "2026-08-25",
+  "generated_at_utc": "2026-08-30T17:39:49.188673+00:00",
+  "target_date": "2026-08-30",
   "status": "READY",
   "module": "SPRINT19-M02-PROP-SOURCE",
-  "source": "data/raw/props_raw_2026-08-25.csv",
+  "source": "data/dashboard/wnba_player_props.json",
   "api_called": false,
   "matched_live_events": 0,
   "canonical_games": [
-    "Chicago Sky @ Connecticut Sun",
-    "Portland Fire @ Dallas Wings",
-    "Washington Mystics @ Phoenix Mercury"
+    "Connecticut Sun @ Dallas Wings",
+    "Golden State Valkyries @ Portland Fire",
+    "Los Angeles Sparks @ Seattle Storm",
+    "Minnesota Lynx @ Atlanta Dream"
   ],
   "prop_games": [
-    "Chicago Sky @ Connecticut Sun",
-    "Portland Fire @ Dallas Wings",
-    "Washington Mystics @ Phoenix Mercury"
+    "Connecticut Sun @ Dallas Wings",
+    "Golden State Valkyries @ Portland Fire",
+    "Los Angeles Sparks @ Seattle Storm",
+    "Minnesota Lynx @ Atlanta Dream"
   ],
   "sportsbooks": [
     "draftkings",
     "fanatics",
     "fanduel"
   ],
-  "rows": 230,
+  "rows": 278,
   "all_rows_exact_current_slate": true,
-  "policy": "Use only DraftKings, FanDuel, and Fanatics. Reuse a verified three-book exact-slate cache when available; otherwise make one live standard-market refresh. Alternate markets are not requested here."
+  "policy": "Use only DraftKings, FanDuel, and Fanatics. Reuse a verified three-book raw cache or same-day canonical standard prop artifact before making any live Odds API request. Alternate markets are never requested here."
 }
