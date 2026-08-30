@@ -1,20 +1,26 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-29T19:27:23.156772+00:00",
-  "target_date": "2026-08-29",
+  "generated_at_utc": "2026-08-30T14:55:48.221911+00:00",
+  "target_date": "2026-08-30",
   "status": "PASS",
   "games": [
-    "Chicago Sky @ New York Liberty",
-    "Toronto Tempo @ Phoenix Mercury"
+    "Minnesota Lynx @ Atlanta Dream",
+    "Los Angeles Sparks @ Seattle Storm",
+    "Golden State Valkyries @ Portland Fire",
+    "Connecticut Sun @ Dallas Wings"
   ],
   "teams": [
-    "Chicago Sky",
-    "New York Liberty",
-    "Phoenix Mercury",
-    "Toronto Tempo"
+    "Atlanta Dream",
+    "Connecticut Sun",
+    "Dallas Wings",
+    "Golden State Valkyries",
+    "Los Angeles Sparks",
+    "Minnesota Lynx",
+    "Portland Fire",
+    "Seattle Storm"
   ],
-  "game_count": 2,
-  "player_prop_rows": 57,
+  "game_count": 4,
+  "player_prop_rows": 314,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -24,14 +30,14 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-29\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 2,\n  \"matchups\": [\n    \"Chicago Sky @ New York Liberty\",\n    \"Toronto Tempo @ Phoenix Mercury\"\n  ]\n}\n",
+      "stdout": "{\n  \"target_date\": \"2026-08-30\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 4,\n  \"matchups\": [\n    \"Minnesota Lynx @ Atlanta Dream\",\n    \"Los Angeles Sparks @ Seattle Storm\",\n    \"Golden State Valkyries @ Portland Fire\",\n    \"Connecticut Sun @ Dallas Wings\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-08-29\",\n  \"events\": 2,\n  \"raw_rows\": 57,\n  \"verified_rows\": 57,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
+      "stdout": "{\n  \"target_date\": \"2026-08-30\",\n  \"events\": 4,\n  \"raw_rows\": 314,\n  \"verified_rows\": 314,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
