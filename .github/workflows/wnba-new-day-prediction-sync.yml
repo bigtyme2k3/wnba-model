@@ -10,8 +10,6 @@ on:
   schedule:
     # Morning build attempts plus late safety retries. GitHub cron is UTC;
     # during EDT these are 7:05, 8:05, 9:05 AM, 1:05 PM, and 3:05 PM ET.
-    # The later retries prevent an early injury/market-source failure from
-    # leaving game projections pinned to yesterday for the rest of the day.
     - cron: '5 11 * * *'
     - cron: '5 12 * * *'
     - cron: '5 13 * * *'
@@ -22,6 +20,7 @@ on:
     paths:
       - 'data/new_day_prediction_sync_request.txt'
       - 'scripts/wnba_new_day_injury_refresh.py'
+      - 'scripts/wnba_s19_m02_prop_source.py'
       - '.github/workflows/wnba-new-day-prediction-sync.yml'
 
 permissions:
@@ -78,10 +77,27 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Prediction sync target: $TARGET"
 
-      - name: Reassert authoritative current slate and props
+      - name: Reassert authoritative current slate and standard props
         run: |
           python wnba_current_slate.py --date "$TARGET"
-          python wnba_player_props_ingestion.py --date "$TARGET"
+          python - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          target=os.environ['TARGET']
+          p=Path('data/dashboard/wnba_player_props.json')
+          reuse=False
+          if p.exists():
+              try:
+                  d=json.loads(p.read_text(encoding='utf-8'))
+                  reuse=str(d.get('target_date') or '')[:10]==target and int(d.get('row_count') or len(d.get('rows') or []))>0
+              except Exception:
+                  reuse=False
+          if reuse:
+              print({'status':'REUSE_CURRENT_STANDARD_PROPS','target':target,'rows':int(d.get('row_count') or len(d.get('rows') or [])),'source':d.get('source')})
+          else:
+              print({'status':'REFRESH_STANDARD_PROPS_REQUIRED','target':target})
+              subprocess.run([sys.executable,'wnba_player_props_ingestion.py','--date',target],check=True)
+          PY
 
       - name: Refresh injury evidence safely
         run: python scripts/wnba_new_day_injury_refresh.py --date "$TARGET"
@@ -123,17 +139,13 @@ jobs:
           injury=json.loads(Path(checks['injury']).read_text())
           m02=json.loads(Path(checks['m02']).read_text())
           audit=json.loads(Path(checks['m02_audit']).read_text())
-          if m02.get('status')!='READY' or audit.get('status')!='READY':
-            raise SystemExit({'m02_status':m02.get('status'),'audit_status':audit.get('status')})
-          if int(audit.get('player_prop_predictions') or 0)<=0:
-            raise SystemExit('M02 has zero current player prop predictions')
-          if int(audit.get('actionable_out_props') or 0)!=0:
-            raise SystemExit('M02 has actionable unavailable players')
+          if m02.get('status')!='READY' or audit.get('status')!='READY': raise SystemExit({'m02_status':m02.get('status'),'audit_status':audit.get('status')})
+          if int(audit.get('player_prop_predictions') or 0)<=0: raise SystemExit('M02 has zero current player prop predictions')
+          if int(audit.get('actionable_out_props') or 0)!=0: raise SystemExit('M02 has actionable unavailable players')
           injury_verified=injury.get('injury_source_verified') is True
           if not injury_verified:
             bets=[r for r in m02.get('player_props',[]) if str(r.get('final_action') or '').upper()=='BET']
-            if bets or (m02.get('best_bets') or []) or (m02.get('portfolio') or []):
-              raise SystemExit('Unverified injury coverage must never publish BET/portfolio rows')
+            if bets or (m02.get('best_bets') or []) or (m02.get('portfolio') or []): raise SystemExit('Unverified injury coverage must never publish BET/portfolio rows')
           print({'status':'NEW_DAY_CHAIN_READY','target':target,'dates':out,'injury_source_verified':injury_verified,'injury_coverage':injury.get('source_coverage'),'player_prop_predictions':audit.get('player_prop_predictions'),'best_bets':len(m02.get('best_bets') or [])})
           PY
 
@@ -172,9 +184,7 @@ jobs:
           python - <<'PY'
           import json,os
           target=os.environ['TARGET']
-          m02=json.load(open('/tmp/m02.json'))
-          injury=json.load(open('/tmp/injury.json'))
-          phase2=json.load(open('/tmp/phase2.json'))
+          m02=json.load(open('/tmp/m02.json')); injury=json.load(open('/tmp/injury.json')); phase2=json.load(open('/tmp/phase2.json'))
           assert m02.get('status')=='READY' and str(m02.get('target_date') or '')[:10]==target, m02
           assert str(injury.get('target_date') or '')[:10]==target, injury
           assert phase2.get('status')=='PASS' and str(phase2.get('target_date') or '')[:10]==target, phase2
