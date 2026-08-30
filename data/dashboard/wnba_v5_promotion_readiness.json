@@ -1,16 +1,16 @@
 {
   "version": "V5",
   "module": "PROMOTION_READINESS_MONITOR",
-  "generated_at_utc": "2026-08-30T18:54:35.704500+00:00",
-  "status": "ACCUMULATING_EVIDENCE",
-  "research_ready": false,
+  "generated_at_utc": "2026-08-30T21:43:47.475667+00:00",
+  "status": "CONTEXT_RESEARCH_READY",
+  "research_ready": true,
   "promotion_evidence_ready": false,
   "production_ready": false,
   "automatic_promotion_enabled": false,
   "context": {
-    "captured_context_rows": 314,
-    "resolved_context_rows": 296,
-    "pending_context_rows": 18,
+    "captured_context_rows": 378,
+    "resolved_context_rows": 332,
+    "pending_context_rows": 46,
     "minimum_research_rows": 60,
     "minimum_promotion_rows": 300
   },
@@ -31,9 +31,9 @@
   "gates": [
     {
       "name": "Current data health",
-      "current": "YELLOW",
+      "current": "GREEN",
       "required": "GREEN",
-      "pass": false,
+      "pass": true,
       "detail": "All current canonical critical feeds must be green."
     },
     {
@@ -45,23 +45,23 @@
     },
     {
       "name": "Forward graded sample",
-      "current": 26696,
+      "current": 26804,
       "required": 300,
       "pass": true,
       "detail": "Minimum immutable graded forward evidence."
     },
     {
       "name": "Resolved contextual research sample",
-      "current": 296,
+      "current": 332,
       "required": 60,
       "pass": true,
       "detail": "Minimum sample before contextual ablation is interpreted."
     },
     {
       "name": "Resolved contextual promotion sample",
-      "current": 296,
+      "current": 332,
       "required": 300,
-      "pass": false,
+      "pass": true,
       "detail": "Materially larger prospective context sample required before promotion can be considered."
     },
     {
@@ -87,8 +87,6 @@
     }
   ],
   "blockers": [
-    "Current data health",
-    "Resolved contextual promotion sample",
     "Explicit CLV coverage",
     "Context challenger beats MARKET",
     "Context challenger beats prior layer"
