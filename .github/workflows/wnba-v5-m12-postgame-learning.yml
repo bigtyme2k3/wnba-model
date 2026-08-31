@@ -1,8 +1,8 @@
 name: WNBA V5 M12 Post-Game Learning
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '27 * * * *'
+  # MAINTENANCE MODE: hourly learning is paused during the 2026 FIBA break.
+  # Manual QA remains available and push-triggered evidence repair is preserved.
   push:
     branches: [main]
     paths:
