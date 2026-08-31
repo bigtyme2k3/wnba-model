@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-31T01:46:05.458648+00:00",
+  "generated_at_utc": "2026-08-31T07:47:45.400056+00:00",
   "target_date": "2026-08-30",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -18,7 +18,7 @@
       },
       {
         "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
-        "target_date": "2026-08-30"
+        "target_date": "2026-08-31"
       },
       {
         "path": "data/dashboard/wnba_alt_performance.json",
@@ -29,8 +29,8 @@
   "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 8,
-    "yellow": 2,
+    "green": 4,
+    "yellow": 6,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -69,40 +69,48 @@
       "name": "m11_inference",
       "path": "data/dashboard/wnba_v5_m11_report.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
+      "status": "yellow",
+      "findings": [
+        "unexpected_status:BLOCKED_STALE_SLATE"
+      ],
       "target_date": "2026-08-30",
-      "generated_date": "2026-08-30",
-      "reported_status": "READY_SHADOW"
+      "generated_date": "2026-08-31",
+      "reported_status": "BLOCKED_STALE_SLATE"
     },
     {
       "name": "m12_learning",
       "path": "data/dashboard/wnba_v5_m12_report.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-30",
-      "generated_date": "2026-08-30",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-31!=2026-08-30"
+      ],
+      "target_date": "2026-08-31",
+      "generated_date": "2026-08-31",
       "reported_status": "READY_FORWARD_LEARNING"
     },
     {
       "name": "adaptive_challenger",
       "path": "data/dashboard/wnba_v5_adaptive_challenger_v2.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-30",
-      "generated_date": "2026-08-30",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-31!=2026-08-30"
+      ],
+      "target_date": "2026-08-31",
+      "generated_date": "2026-08-31",
       "reported_status": "READY_CONTEXTUAL_SHADOW"
     },
     {
       "name": "results_lifecycle",
       "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-30",
-      "generated_date": "2026-08-30",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-31!=2026-08-30"
+      ],
+      "target_date": "2026-08-31",
+      "generated_date": "2026-08-31",
       "reported_status": "READY"
     },
     {
