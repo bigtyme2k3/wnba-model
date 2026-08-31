@@ -1,24 +1,26 @@
 {
   "sprint": 11,
   "phase": "restart-readiness",
-  "generated_at_utc": "2026-08-30T17:22:23.891463+00:00",
-  "target_date": "2026-08-30",
-  "status": "READY",
+  "generated_at_utc": "2026-08-31T17:52:00.722062+00:00",
+  "target_date": "2026-08-31",
+  "status": "WAIT",
   "counts": {
-    "today_games": 4,
+    "today_games": 0,
     "props": 60,
     "sportsbook_markets": 300,
-    "player_logs": 6117
+    "player_logs": 6203
   },
   "checks": {
-    "regular_season_slate": true,
+    "regular_season_slate": false,
     "current_props": true,
     "sportsbook_markets": true,
     "player_history": true,
     "dashboard_writable": true
   },
-  "blockers": [],
-  "reason": "Pipeline ready for live model execution.",
-  "preserve_last_valid_reports": false,
+  "blockers": [
+    "regular_season_slate"
+  ],
+  "reason": "Awaiting live regular-season market data.",
+  "preserve_last_valid_reports": true,
   "historical_reconstruction_required": false
 }
