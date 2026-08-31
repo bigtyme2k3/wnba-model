@@ -1,8 +1,8 @@
 name: WNBA V5 M11 Live Inference
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '12 * * * *'
+  # MAINTENANCE MODE: scheduled live execution paused during the 2026 FIBA break.
+  # Keep workflow_dispatch available for controlled QA runs.
   push:
     branches: [main]
     paths:
