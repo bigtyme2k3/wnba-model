@@ -1,9 +1,9 @@
 {
   "version": "V5",
   "module": "PROMOTION_READINESS_MONITOR",
-  "generated_at_utc": "2026-08-31T00:00:44.366721+00:00",
-  "status": "CONTEXT_RESEARCH_READY",
-  "research_ready": true,
+  "generated_at_utc": "2026-08-31T02:18:17.851741+00:00",
+  "status": "ACCUMULATING_EVIDENCE",
+  "research_ready": false,
   "promotion_evidence_ready": false,
   "production_ready": false,
   "automatic_promotion_enabled": false,
@@ -15,10 +15,10 @@
     "minimum_promotion_rows": 300
   },
   "clv": {
-    "coverage_pct": 15.99,
+    "coverage_pct": 15.91,
     "required_pct": 60.0,
     "explicit_close_predictions": 4473,
-    "forward_predictions": 27973
+    "forward_predictions": 28121
   },
   "challenger": {
     "best_contextual_group": null,
@@ -31,9 +31,9 @@
   "gates": [
     {
       "name": "Current data health",
-      "current": "GREEN",
+      "current": "YELLOW",
       "required": "GREEN",
-      "pass": true,
+      "pass": false,
       "detail": "All current canonical critical feeds must be green."
     },
     {
@@ -45,7 +45,7 @@
     },
     {
       "name": "Forward graded sample",
-      "current": 26950,
+      "current": 27004,
       "required": 300,
       "pass": true,
       "detail": "Minimum immutable graded forward evidence."
@@ -66,7 +66,7 @@
     },
     {
       "name": "Explicit CLV coverage",
-      "current": 15.99,
+      "current": 15.91,
       "required": 60.0,
       "pass": false,
       "detail": "Only explicit pre-tip closes count; missing closes remain missing."
@@ -87,6 +87,7 @@
     }
   ],
   "blockers": [
+    "Current data health",
     "Explicit CLV coverage",
     "Context challenger beats MARKET",
     "Context challenger beats prior layer"
