@@ -1,11 +1,8 @@
 name: WNBA V5 S3 M02 Explicit Closing Capture
 on:
   workflow_dispatch:
-  schedule:
-    # Ten-minute cadence balances closing-window reliability with workflow cost.
-    # The capture remains strict: only observations inside the final 15 minutes
-    # before tip qualify, and the script makes zero Odds API calls otherwise.
-    - cron: '*/10 * * * *'
+  # MAINTENANCE MODE: ten-minute live closing capture paused during the 2026 FIBA break.
+  # workflow_dispatch remains available for controlled QA.
   push:
     branches: [main]
     paths:
