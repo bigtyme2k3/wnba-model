@@ -1,20 +1,20 @@
 {
-  "generated_at_utc": "2026-08-31T15:36:22.645992+00:00",
-  "target_date": "2026-08-30",
+  "generated_at_utc": "2026-08-31T21:13:16.352625+00:00",
+  "target_date": "2026-08-31",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
     "sources": [
       {
         "path": "data/dashboard/wnba_daily_canonical_manifest.json",
-        "target_date": "2026-08-30"
+        "target_date": "2026-08-31"
       },
       {
         "path": "data/dashboard/wnba_player_props.json",
-        "target_date": "2026-08-30"
+        "target_date": "2026-08-31"
       },
       {
         "path": "data/dashboard/wnba_v5_m11_report.json",
-        "target_date": "2026-08-30"
+        "target_date": "2026-08-31"
       },
       {
         "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
@@ -22,15 +22,15 @@
       },
       {
         "path": "data/dashboard/wnba_alt_performance.json",
-        "target_date": "2026-08-30"
+        "target_date": "2026-08-31"
       }
     ]
   },
   "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 4,
-    "yellow": 6,
+    "green": 8,
+    "yellow": 2,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -41,8 +41,8 @@
       "exists": true,
       "status": "green",
       "findings": [],
-      "target_date": "2026-08-30",
-      "generated_date": "2026-08-30",
+      "target_date": "2026-08-31",
+      "generated_date": "2026-08-31",
       "reported_status": "PASS"
     },
     {
@@ -51,16 +51,18 @@
       "exists": true,
       "status": "green",
       "findings": [],
-      "target_date": "2026-08-30",
-      "generated_date": "2026-08-30",
+      "target_date": "2026-08-31",
+      "generated_date": "2026-08-31",
       "reported_status": null
     },
     {
       "name": "injury_intelligence",
       "path": "data/dashboard/wnba_injury_intelligence.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-08-30!=2026-08-31"
+      ],
       "target_date": "2026-08-30",
       "generated_date": "2026-08-31",
       "reported_status": null
@@ -71,20 +73,18 @@
       "exists": true,
       "status": "yellow",
       "findings": [
-        "unexpected_status:BLOCKED_STALE_SLATE"
+        "unexpected_status:STANDBY_NO_SCORABLE_ROWS"
       ],
-      "target_date": "2026-08-30",
+      "target_date": "2026-08-31",
       "generated_date": "2026-08-31",
-      "reported_status": "BLOCKED_STALE_SLATE"
+      "reported_status": "STANDBY_NO_SCORABLE_ROWS"
     },
     {
       "name": "m12_learning",
       "path": "data/dashboard/wnba_v5_m12_report.json",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "target_date_mismatch:2026-08-31!=2026-08-30"
-      ],
+      "status": "green",
+      "findings": [],
       "target_date": "2026-08-31",
       "generated_date": "2026-08-31",
       "reported_status": "READY_FORWARD_LEARNING"
@@ -93,10 +93,8 @@
       "name": "adaptive_challenger",
       "path": "data/dashboard/wnba_v5_adaptive_challenger_v2.json",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "target_date_mismatch:2026-08-31!=2026-08-30"
-      ],
+      "status": "green",
+      "findings": [],
       "target_date": "2026-08-31",
       "generated_date": "2026-08-31",
       "reported_status": "READY_CONTEXTUAL_SHADOW"
@@ -105,10 +103,8 @@
       "name": "results_lifecycle",
       "path": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "target_date_mismatch:2026-08-31!=2026-08-30"
-      ],
+      "status": "green",
+      "findings": [],
       "target_date": "2026-08-31",
       "generated_date": "2026-08-31",
       "reported_status": "READY"
@@ -119,8 +115,8 @@
       "exists": true,
       "status": "green",
       "findings": [],
-      "target_date": "2026-08-30",
-      "generated_date": "2026-08-30",
+      "target_date": "2026-08-31",
+      "generated_date": "2026-08-31",
       "reported_status": "ok"
     }
   ],
@@ -129,20 +125,16 @@
       "name": "matchup_adjustments",
       "path": "data/dashboard/wnba_v5_matchup_adjustments.csv",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "modified_date_mismatch:2026-08-31!=2026-08-30"
-      ],
+      "status": "green",
+      "findings": [],
       "modified_date": "2026-08-31"
     },
     {
       "name": "lineup_adjustments",
       "path": "data/dashboard/wnba_v5_lineup_adjustments.csv",
       "exists": true,
-      "status": "yellow",
-      "findings": [
-        "modified_date_mismatch:2026-08-31!=2026-08-30"
-      ],
+      "status": "green",
+      "findings": [],
       "modified_date": "2026-08-31"
     }
   ],
@@ -153,7 +145,7 @@
       "exists": true,
       "status": "legacy_stale",
       "findings": [
-        "legacy_observability_stale:2026-08-04!=2026-08-30"
+        "legacy_observability_stale:2026-08-04!=2026-08-31"
       ],
       "target_date": "2026-08-04"
     },
@@ -163,7 +155,7 @@
       "exists": true,
       "status": "legacy_stale",
       "findings": [
-        "legacy_observability_stale:2026-08-04!=2026-08-30"
+        "legacy_observability_stale:2026-08-04!=2026-08-31"
       ],
       "target_date": "2026-08-04"
     },
@@ -173,7 +165,7 @@
       "exists": true,
       "status": "legacy_stale",
       "findings": [
-        "legacy_observability_stale:2026-08-04!=2026-08-30"
+        "legacy_observability_stale:2026-08-04!=2026-08-31"
       ],
       "target_date": "2026-08-04"
     },
@@ -183,7 +175,7 @@
       "exists": true,
       "status": "legacy_stale",
       "findings": [
-        "legacy_observability_stale:2026-07-08!=2026-08-30"
+        "legacy_observability_stale:2026-07-08!=2026-08-31"
       ],
       "target_date": "2026-07-08"
     }
