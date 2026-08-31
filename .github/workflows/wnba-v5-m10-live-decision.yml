@@ -1,8 +1,8 @@
 name: WNBA V5 M10 Live Adaptive Decision Engine
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '17 * * * *'
+  # MAINTENANCE MODE: scheduled live execution paused during the 2026 FIBA break.
+  # Keep workflow_dispatch available for controlled QA runs.
   push:
     branches: [main]
     paths:
