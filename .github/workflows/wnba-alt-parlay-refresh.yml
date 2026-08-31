@@ -7,11 +7,8 @@ on:
     paths:
       - '.github/workflows/wnba-alt-parlay-refresh.yml'
       - 'wnba_alt_parlay_builder.py'
-  schedule:
-    # Three checkpoints before the existing 5:17 PM late-market final refresh.
-    - cron: '15 13 * * *'
-    - cron: '15 17 * * *'
-    - cron: '15 20 * * *'
+  # MAINTENANCE MODE: scheduled ALT refresh paused during the 2026 FIBA break.
+  # workflow_dispatch remains available for controlled QA.
 
 permissions:
   contents: write
