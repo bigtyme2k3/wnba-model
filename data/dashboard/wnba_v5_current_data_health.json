@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-30T23:01:24.807897+00:00",
+  "generated_at_utc": "2026-08-31T01:46:05.458648+00:00",
   "target_date": "2026-08-30",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -26,11 +26,11 @@
       }
     ]
   },
-  "status": "GREEN",
+  "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 10,
-    "yellow": 0,
+    "green": 8,
+    "yellow": 2,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -62,7 +62,7 @@
       "status": "green",
       "findings": [],
       "target_date": "2026-08-30",
-      "generated_date": "2026-08-30",
+      "generated_date": "2026-08-31",
       "reported_status": null
     },
     {
@@ -121,17 +121,21 @@
       "name": "matchup_adjustments",
       "path": "data/dashboard/wnba_v5_matchup_adjustments.csv",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "modified_date": "2026-08-30"
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-08-31!=2026-08-30"
+      ],
+      "modified_date": "2026-08-31"
     },
     {
       "name": "lineup_adjustments",
       "path": "data/dashboard/wnba_v5_lineup_adjustments.csv",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "modified_date": "2026-08-30"
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-08-31!=2026-08-30"
+      ],
+      "modified_date": "2026-08-31"
     }
   ],
   "legacy_observability": [
