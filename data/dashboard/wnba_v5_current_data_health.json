@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-31T21:13:16.352625+00:00",
+  "generated_at_utc": "2026-09-01T00:32:41.026409+00:00",
   "target_date": "2026-08-31",
   "target_resolution": {
     "policy": "mode of canonical same-day producers; latest date wins ties",
@@ -29,8 +29,8 @@
   "status": "YELLOW",
   "summary": {
     "critical_checks": 10,
-    "green": 8,
-    "yellow": 2,
+    "green": 4,
+    "yellow": 6,
     "red": 0,
     "legacy_stale_observability_files": 4
   },
@@ -76,27 +76,31 @@
         "unexpected_status:STANDBY_NO_SCORABLE_ROWS"
       ],
       "target_date": "2026-08-31",
-      "generated_date": "2026-08-31",
+      "generated_date": "2026-09-01",
       "reported_status": "STANDBY_NO_SCORABLE_ROWS"
     },
     {
       "name": "m12_learning",
       "path": "data/dashboard/wnba_v5_m12_report.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-31",
-      "generated_date": "2026-08-31",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-09-01!=2026-08-31"
+      ],
+      "target_date": "2026-09-01",
+      "generated_date": "2026-09-01",
       "reported_status": "READY_FORWARD_LEARNING"
     },
     {
       "name": "adaptive_challenger",
       "path": "data/dashboard/wnba_v5_adaptive_challenger_v2.json",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "target_date": "2026-08-31",
-      "generated_date": "2026-08-31",
+      "status": "yellow",
+      "findings": [
+        "target_date_mismatch:2026-09-01!=2026-08-31"
+      ],
+      "target_date": "2026-09-01",
+      "generated_date": "2026-09-01",
       "reported_status": "READY_CONTEXTUAL_SHADOW"
     },
     {
@@ -125,17 +129,21 @@
       "name": "matchup_adjustments",
       "path": "data/dashboard/wnba_v5_matchup_adjustments.csv",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "modified_date": "2026-08-31"
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-09-01!=2026-08-31"
+      ],
+      "modified_date": "2026-09-01"
     },
     {
       "name": "lineup_adjustments",
       "path": "data/dashboard/wnba_v5_lineup_adjustments.csv",
       "exists": true,
-      "status": "green",
-      "findings": [],
-      "modified_date": "2026-08-31"
+      "status": "yellow",
+      "findings": [
+        "modified_date_mismatch:2026-09-01!=2026-08-31"
+      ],
+      "modified_date": "2026-09-01"
     }
   ],
   "legacy_observability": [
