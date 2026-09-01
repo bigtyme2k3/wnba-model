@@ -1,8 +1,7 @@
 name: WNBA V5 S3 M01 Current Slate Freshness Guard
+# Maintenance mode: hourly freshness polling is paused during the FIBA break.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '5 * * * *'
   push:
     branches: [main]
     paths:
