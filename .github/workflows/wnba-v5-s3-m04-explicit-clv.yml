@@ -1,8 +1,7 @@
 name: WNBA V5 S3 M04 Explicit CLV Engine
+# Maintenance mode: hourly CLV recomputation is paused; manual/push QA remains.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '33 * * * *'
   push:
     branches: [main]
     paths:
