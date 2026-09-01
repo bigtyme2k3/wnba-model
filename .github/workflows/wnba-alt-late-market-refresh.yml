@@ -1,11 +1,10 @@
 name: WNBA ALT Late Market Refresh
 
+# Maintenance mode: WNBA is on the FIBA break. Scheduled ALT ingestion is
+# paused so an empty league slate cannot spend API calls or create red runs.
+# Manual dispatch and controlled code/data triggers remain available for QA.
 on:
   workflow_dispatch:
-  schedule:
-    # Late-day refresh after books are more likely to publish alternate ladders.
-    # 21:17 UTC = 5:17 PM Eastern during EDT.
-    - cron: '17 21 * * *'
   push:
     branches: [main]
     paths:
@@ -85,8 +84,6 @@ jobs:
           rows=int(summary.get('raw_rows') or summary.get('source_raw_rows') or len(market.get('rows') or []))
           markets=int(summary.get('markets') or 0)
           print({'target':target,'raw_alt_rows':rows,'markets':markets,'players':summary.get('players',0),'sportsbooks':summary.get('sportsbooks',[]),'alt_parlays':(parlays.get('summary') or {}).get('total_parlays',0)})
-          # Empty is a real upstream state, but it must be visible as such rather
-          # than silently masquerading as a healthy populated ALT snapshot.
           if rows <= 0 or markets <= 0:
               raise SystemExit('NO_LATE_ALT_MARKETS_AVAILABLE')
           scored=int((streak.get('summary') or {}).get('rows') or 0)
