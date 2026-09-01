@@ -1,8 +1,8 @@
 name: WNBA V5 S2 M03 Drift Detection
+# Maintenance mode: drift is recomputed when forward-validation evidence or
+# code changes, plus manual QA. Daily clock-only execution is paused.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '15 6 * * *'
   push:
     branches: [main]
     paths:
