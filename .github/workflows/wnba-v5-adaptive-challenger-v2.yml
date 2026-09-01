@@ -1,8 +1,9 @@
 name: WNBA V5 Adaptive Challenger V2
+# Maintenance mode: no new forward evidence arrives during the WNBA/FIBA
+# break, so hourly research recomputation is paused. Manual dispatch and
+# forward-ledger/code change triggers remain available for controlled QA.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '41 * * * *'
   push:
     branches: [main]
     paths:
