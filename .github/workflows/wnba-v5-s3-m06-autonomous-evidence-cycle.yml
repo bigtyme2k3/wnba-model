@@ -1,8 +1,8 @@
 name: WNBA V5 S3 M06 Autonomous Evidence Cycle
+# Maintenance mode: autonomous hourly execution is paused. Keep manual and
+# code/data-triggered execution available while the evidence stack is audited.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '45 * * * *'
   push:
     branches: [main]
     paths:
