@@ -1,4 +1,6 @@
 name: WNBA V5 Forward Champion Challenger
+# Maintenance mode: evaluate when forward evidence/code changes or by manual
+# dispatch. Hourly recomputation is unnecessary while league play is paused.
 on:
   workflow_dispatch:
   push:
@@ -9,8 +11,6 @@ on:
       - 'data/dashboard/wnba_v5_forward_metrics.json'
       - 'data/dashboard/wnba_v5_forward_diagnostics.json'
       - '.github/workflows/wnba-v5-forward-challenger.yml'
-  schedule:
-    - cron: '52 * * * *'
 concurrency:
   group: v5-forward-challenger
   cancel-in-progress: false
