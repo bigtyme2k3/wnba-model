@@ -1,13 +1,13 @@
 name: WNBA Daily Slate Rollover
 
+# Maintenance mode: scheduled rollover is paused during the WNBA/FIBA break.
+# Manual dispatch and the explicit dashboard-refresh request trigger remain
+# available for controlled end-to-end QA while pipeline ownership is repaired.
 on:
   workflow_dispatch:
   push:
     paths:
       - 'data/dashboard_refresh_request.txt'
-  schedule:
-    - cron: '45 10 * * *'
-    - cron: '45 11 * * *'
 
 permissions:
   contents: write
@@ -119,15 +119,7 @@ jobs:
         run: |
           YESTERDAY=$(date -d yesterday +%F)
           DAY_BEFORE=$(date -d '2 days ago' +%F)
-          # Recheck a rolling ten-day window so a transient provider failure
-          # cannot leave a permanent hole in player history. Merge and snapshot
-          # after every date because the daily builder intentionally emits only
-          # one date at a time.
           python wnba_player_game_log_archive.py snapshot
-          # Grade completed games from the active slate without waiting for the
-          # next-day rollover. The ESPN fallback admits only final/post events,
-          # so unfinished same-day games remain pending rather than receiving
-          # partial box-score totals.
           python wnba_espn_boxscore_fallback.py --date "$TARGET" || true
           python wnba_player_game_log_warehouse.py --date "$TARGET" || true
           python wnba_player_game_log_archive.py merge
@@ -140,9 +132,6 @@ jobs:
             python wnba_player_game_log_archive.py merge
             python wnba_player_game_log_archive.py snapshot
           done
-          # Results grader is date-scoped, so resolve every archived date that can
-          # now be matched to verified player-game actuals. This is intentionally
-          # oldest-first and never fabricates missing actuals.
           if [ -f wnba_results_grader.py ] && [ -f data/history/wnba_model_history.jsonl ]; then
             python - <<'PY' > /tmp/wnba_grade_dates.txt
           import json
@@ -161,8 +150,6 @@ jobs:
           elif [ -f wnba_results_grader.py ]; then
             python wnba_results_grader.py --date "$YESTERDAY"
           fi
-          # ALT grader already indexes the complete player-game warehouse and
-          # grades every unresolved canonical observation across all dates.
           if [ -f wnba_alt_performance_tracker.py ]; then
             python wnba_alt_performance_tracker.py --date "$TARGET" --grade
             python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
@@ -262,7 +249,5 @@ jobs:
           CHANGED=$(git diff-tree --no-commit-id --name-only -r "$PUBLISHED_SHA")
           echo "$CHANGED"
           if ! grep -q '^data/dashboard/' <<< "$CHANGED"; then echo 'Published commit did not contain dashboard data; refusing deployment dispatch.' >&2; exit 1; fi
-          # Commits created with GITHUB_TOKEN do not trigger other push
-          # workflows. Dispatch Pages explicitly after the verified publish.
           gh workflow run deploy_wnba_dashboard.yml --ref main
           echo 'Dashboard data is committed to main and deployment was explicitly dispatched.'
