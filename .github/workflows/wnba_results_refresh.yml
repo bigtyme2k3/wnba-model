@@ -1,9 +1,9 @@
 name: WNBA Results Refresh
 
+# Maintenance mode: hourly grading is paused during the FIBA break. Manual
+# dispatch and explicit maintenance triggers remain available for backlog QA.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '17 * * * *'
   push:
     branches: [main]
     paths:
@@ -55,9 +55,6 @@ jobs:
       - name: Refresh verified completed-game actuals
         run: |
           set -e
-          # Preserve the canonical archive, then recheck today plus the prior
-          # three dates. Same-day grading remains safe because the ESPN fallback
-          # and game-log warehouse admit completed/final games only.
           [ ! -f wnba_player_game_log_archive.py ] || python wnba_player_game_log_archive.py snapshot
           for OFFSET in 3 2 1 0; do
             DAY=$(TZ=America/New_York date -d "$OFFSET days ago" +%F)
@@ -79,8 +76,6 @@ jobs:
               python wnba_results_grader.py --date "$DAY" || true
             fi
           done
-          # Rebuild the Results-tab lifecycle from the now-graded immutable
-          # history. This does not create new predictions or infer finals.
           if [ -f scripts/wnba_s19_m06_results_lifecycle.py ]; then
             python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" --results-only
           fi
@@ -100,15 +95,7 @@ jobs:
               raise SystemExit(f'Results lifecycle is stale: status={data.get("status")} target={data.get("target_date")} expected={target}')
           current=(data.get('current_model') or {}).get('performance') or {}
           recent=(data.get('current_model') or {}).get('recent_results') or []
-          print({
-              'target':target,
-              'graded_decisions':current.get('decisions'),
-              'wins':current.get('wins'),
-              'losses':current.get('losses'),
-              'pushes':current.get('pushes'),
-              'pending':current.get('pending'),
-              'latest_result_date':str(recent[0].get('date') or '')[:10] if recent else None,
-          })
+          print({'target':target,'graded_decisions':current.get('decisions'),'wins':current.get('wins'),'losses':current.get('losses'),'pushes':current.get('pushes'),'pending':current.get('pending'),'latest_result_date':str(recent[0].get('date') or '')[:10] if recent else None})
           PY
 
       - name: Publish graded Results state
@@ -129,7 +116,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # Commits made by GITHUB_TOKEN do not recursively trigger push
-          # workflows, so explicitly dispatch the sole Pages builder.
           gh workflow run deploy_wnba_dashboard.yml --ref main
           echo 'Deploy WNBA Dashboard dispatched after Results publish.'
