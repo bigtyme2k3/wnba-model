@@ -1,8 +1,8 @@
 name: WNBA V5 Current Data Health
+# Maintenance mode: hourly audit polling is paused; manual and data-triggered
+# audits remain available while the pipeline is repaired.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '52 * * * *'
   push:
     branches: [main]
     paths:
