@@ -1,9 +1,10 @@
 name: WNBA Consolidated Hourly Intelligence
 
+# Maintenance mode: scheduled execution is intentionally paused while the
+# overlapping live-data writers are consolidated. Manual dispatch remains
+# available for controlled QA.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '17 * * * *'
 
 permissions:
   contents: write
