@@ -1,8 +1,8 @@
 name: WNBA V5 Evidence Integrity
+# Maintenance mode: hourly integrity polling is paused; manual and evidence-
+# triggered audits remain available while the forward stack is repaired.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '56 * * * *'
   push:
     branches: [main]
     paths:
