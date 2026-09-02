@@ -1,5 +1,8 @@
 name: WNBA ALT Yesterday Results Refresh
 
+# Maintenance mode: automatic previous-day recovery is paused while no new
+# WNBA games are completing. Manual date-specific grading and the explicit
+# refresh-request trigger remain available for archive QA and repairs.
 on:
   workflow_dispatch:
     inputs:
@@ -7,8 +10,6 @@ on:
         description: Optional completed Eastern date (YYYY-MM-DD); defaults to yesterday
         required: false
         default: ''
-  schedule:
-    - cron: '35 10 * * *'
   push:
     branches: [main]
     paths:
