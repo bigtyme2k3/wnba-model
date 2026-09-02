@@ -1,7 +1,5 @@
 name: WNBA Daily Canonical Build
 
-# Maintenance mode: scheduled execution is paused during the FIBA break.
-# Manual dispatch and controlled source-change triggers remain available.
 on:
   workflow_dispatch:
     inputs:
@@ -48,7 +46,11 @@ jobs:
       - name: Resolve Eastern target date
         run: |
           MANUAL='${{ inputs.target_date }}'
-          if [ -n "$MANUAL" ]; then TARGET="$MANUAL"; else TARGET=$(python active_slate_date.py); fi
+          if [ -n "$MANUAL" ]; then
+            TARGET="$MANUAL"
+          else
+            TARGET=$(python active_slate_date.py)
+          fi
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Canonical target date: $TARGET"
       - name: Build canonical slate and player props
@@ -86,10 +88,24 @@ jobs:
         run: |
           git config user.name 'WNBA Canonical Daily Build Bot'
           git config user.email 'actions@github.com'
-          git add data/wnba/scores.json data/dashboard/wnba_master.json data/dashboard/wnba_player_props.json data/dashboard/wnba_daily_canonical_manifest.json data/dashboard/wnba_team_ratings.json data/dashboard/wnba_sprint2_predictions.json data/raw/wnba_player_props_${TARGET}.json 2>/dev/null || true
-          if git diff --cached --quiet; then echo 'No canonical base source changes to publish'; else
+          git add data/wnba/scores.json \
+                  data/dashboard/wnba_master.json \
+                  data/dashboard/wnba_player_props.json \
+                  data/dashboard/wnba_daily_canonical_manifest.json \
+                  data/dashboard/wnba_team_ratings.json \
+                  data/dashboard/wnba_sprint2_predictions.json \
+                  data/raw/wnba_player_props_${TARGET}.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No canonical base source changes to publish'
+          else
             git commit -m "Refresh canonical WNBA sources for ${TARGET}"
-            for attempt in 1 2 3 4; do git fetch origin main; git rebase origin/main && git push origin HEAD:main && break; git rebase --abort || true; if [ "$attempt" -eq 4 ]; then exit 1; fi; sleep $((attempt*3)); done
+            for attempt in 1 2 3 4; do
+              git fetch origin main
+              git rebase origin/main && git push origin HEAD:main && break
+              git rebase --abort || true
+              if [ "$attempt" -eq 4 ]; then exit 1; fi
+              sleep $((attempt*3))
+            done
           fi
       - name: Build Sprint 2 Phase 2 intelligence when injury feed is current
         run: |
@@ -114,10 +130,21 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
-          target=os.environ['TARGET']; d=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text()); games=set(d.get('games') or [])
+          target=os.environ['TARGET']
+          d=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
+          games=set(d.get('games') or [])
           phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
           assert phase2.get('target_date')==target and phase2.get('status')=='PASS'
-          assert {g.get('game') for g in phase2.get('games') or []}==games
+          phase2_games={g.get('game') for g in phase2.get('games') or []}
+          assert games==phase2_games, {'canonical':sorted(games),'phase2':sorted(phase2_games)}
+          for game in phase2.get('games') or []:
+            projection=game.get('projection') or {}
+            assert projection.get('away_score') is not None and projection.get('home_score') is not None
+            assert 0 <= float(projection.get('home_win_probability')) <= 1
+            assert 35 <= float(game.get('confidence')) <= 88
+            assert game.get('model_grade')
+            assert game.get('pace_label') in {'FAST','NEUTRAL','SLOW'}
+            assert isinstance(game.get('teams'),dict)
           print({'target':target,'phase2_games':len(phase2.get('games') or [])})
           PY
       - name: Freeze versioned game predictions when Phase 2 is built
@@ -126,9 +153,18 @@ jobs:
       - name: Publish Phase 2 when built
         if: env.PHASE2_BUILT == '1'
         run: |
-          git config user.name 'WNBA Canonical Daily Build Bot'; git config user.email 'actions@github.com'
+          git config user.name 'WNBA Canonical Daily Build Bot'
+          git config user.email 'actions@github.com'
           git add data/dashboard/wnba_sprint2_phase2.json data/history/wnba_game_predictions.jsonl data/dashboard/wnba_game_predictions_ledger.json data/warehouse/wnba_game_predictions_ledger.json
-          if git diff --cached --quiet; then echo 'No Phase 2 changes to publish'; exit 0; fi
+          if git diff --cached --quiet; then
+            echo 'No Phase 2 changes to publish'
+            exit 0
+          fi
           git commit -m "Refresh Sprint 2 Phase 2 for ${TARGET}"
-          for attempt in 1 2 3 4; do git fetch origin main; git rebase origin/main && git push origin HEAD:main && exit 0; git rebase --abort || true; sleep $((attempt*3)); done
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main && git push origin HEAD:main && exit 0
+            git rebase --abort || true
+            sleep $((attempt*3))
+          done
           exit 1
