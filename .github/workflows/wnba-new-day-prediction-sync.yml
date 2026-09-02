@@ -1,7 +1,5 @@
 name: WNBA New Day Prediction Sync
 
-# Maintenance mode: scheduled new-day retries are paused during the FIBA break.
-# Manual dispatch and controlled source-change triggers remain available.
 on:
   workflow_dispatch:
     inputs:
@@ -36,63 +34,103 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Sync latest main
         run: |
           git fetch origin main
           git reset --hard origin/main
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install prediction sync dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pandas requests pdfplumber
+
       - name: Compile new-day stack
         run: |
-          python -m py_compile scripts/wnba_new_day_injury_refresh.py wnba_current_slate.py wnba_player_props_ingestion.py wnba_injury_intelligence.py wnba_injury_rotation_guard.py wnba_sprint2_prediction_engine.py scripts/wnba_sprint2_phase2.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py
+          python -m py_compile \
+            scripts/wnba_new_day_injury_refresh.py \
+            wnba_current_slate.py \
+            wnba_player_props_ingestion.py \
+            wnba_injury_intelligence.py \
+            wnba_injury_rotation_guard.py \
+            wnba_sprint2_prediction_engine.py \
+            scripts/wnba_sprint2_phase2.py \
+            scripts/wnba_s19_m02_prop_source.py \
+            scripts/wnba_s19_m02_predictions.py
+
       - name: Resolve Eastern target date
         run: |
           REQUESTED='${{ github.event.inputs.date }}'
           if [ -n "$REQUESTED" ]; then TARGET="$REQUESTED"; else TARGET=$(date +%F); fi
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Prediction sync target: $TARGET"
+
       - name: Reassert authoritative current slate and standard props
         run: |
           python wnba_current_slate.py --date "$TARGET"
           python - <<'PY'
           import json, os, subprocess, sys
           from pathlib import Path
-          target=os.environ['TARGET']; p=Path('data/dashboard/wnba_player_props.json'); reuse=False
+          target=os.environ['TARGET']
+          p=Path('data/dashboard/wnba_player_props.json')
+          reuse=False
           if p.exists():
               try:
-                  d=json.loads(p.read_text(encoding='utf-8')); reuse=str(d.get('target_date') or '')[:10]==target and int(d.get('row_count') or len(d.get('rows') or []))>0
-              except Exception: reuse=False
-          if reuse: print({'status':'REUSE_CURRENT_STANDARD_PROPS','target':target,'rows':int(d.get('row_count') or len(d.get('rows') or [])),'source':d.get('source')})
+                  d=json.loads(p.read_text(encoding='utf-8'))
+                  reuse=str(d.get('target_date') or '')[:10]==target and int(d.get('row_count') or len(d.get('rows') or []))>0
+              except Exception:
+                  reuse=False
+          if reuse:
+              print({'status':'REUSE_CURRENT_STANDARD_PROPS','target':target,'rows':int(d.get('row_count') or len(d.get('rows') or [])),'source':d.get('source')})
           else:
-              print({'status':'REFRESH_STANDARD_PROPS_REQUIRED','target':target}); subprocess.run([sys.executable,'wnba_player_props_ingestion.py','--date',target],check=True)
+              print({'status':'REFRESH_STANDARD_PROPS_REQUIRED','target':target})
+              subprocess.run([sys.executable,'wnba_player_props_ingestion.py','--date',target],check=True)
           PY
+
       - name: Refresh injury evidence safely
         run: python scripts/wnba_new_day_injury_refresh.py --date "$TARGET"
+
       - name: Rebuild injury-aware game projections
         run: |
           python wnba_sprint2_prediction_engine.py --date "$TARGET"
           python scripts/wnba_sprint2_phase2.py --date "$TARGET"
+
       - name: Prepare exact current sportsbook prop source
         run: python scripts/wnba_s19_m02_prop_source.py --date "$TARGET"
+
       - name: Build current Sprint 19 M02 predictions
         run: python scripts/wnba_s19_m02_predictions.py --date "$TARGET"
+
       - name: Verify complete new-day dependency chain
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
-          target=os.environ['TARGET']; checks={'master':'data/dashboard/wnba_master.json','props':'data/dashboard/wnba_player_props.json','manifest':'data/dashboard/wnba_daily_canonical_manifest.json','injury':'data/dashboard/wnba_injury_intelligence.json','phase2':'data/dashboard/wnba_sprint2_phase2.json','m02':'data/dashboard/wnba_s19_m02_predictions.json','m02_audit':'data/dashboard/wnba_s19_m02_prediction_audit.json'}; out={}
+          target=os.environ['TARGET']
+          checks={
+            'master':'data/dashboard/wnba_master.json',
+            'props':'data/dashboard/wnba_player_props.json',
+            'manifest':'data/dashboard/wnba_daily_canonical_manifest.json',
+            'injury':'data/dashboard/wnba_injury_intelligence.json',
+            'phase2':'data/dashboard/wnba_sprint2_phase2.json',
+            'm02':'data/dashboard/wnba_s19_m02_predictions.json',
+            'm02_audit':'data/dashboard/wnba_s19_m02_prediction_audit.json',
+          }
+          out={}
           for name,path in checks.items():
             p=Path(path)
             if not p.exists(): raise SystemExit(f'Missing required new-day artifact: {path}')
-            d=json.loads(p.read_text(encoding='utf-8')); actual=str(d.get('target_date') or '')[:10]; out[name]=actual
+            d=json.loads(p.read_text(encoding='utf-8'))
+            actual=str(d.get('target_date') or '')[:10]
+            out[name]=actual
             if actual!=target: raise SystemExit(f'{name} stale: {actual} != {target}')
-          injury=json.loads(Path(checks['injury']).read_text()); m02=json.loads(Path(checks['m02']).read_text()); audit=json.loads(Path(checks['m02_audit']).read_text())
+          injury=json.loads(Path(checks['injury']).read_text())
+          m02=json.loads(Path(checks['m02']).read_text())
+          audit=json.loads(Path(checks['m02_audit']).read_text())
           if m02.get('status')!='READY' or audit.get('status')!='READY': raise SystemExit({'m02_status':m02.get('status'),'audit_status':audit.get('status')})
           if int(audit.get('player_prop_predictions') or 0)<=0: raise SystemExit('M02 has zero current player prop predictions')
           if int(audit.get('actionable_out_props') or 0)!=0: raise SystemExit('M02 has actionable unavailable players')
@@ -102,10 +140,31 @@ jobs:
             if bets or (m02.get('best_bets') or []) or (m02.get('portfolio') or []): raise SystemExit('Unverified injury coverage must never publish BET/portfolio rows')
           print({'status':'NEW_DAY_CHAIN_READY','target':target,'dates':out,'injury_source_verified':injury_verified,'injury_coverage':injury.get('source_coverage'),'player_prop_predictions':audit.get('player_prop_predictions'),'best_bets':len(m02.get('best_bets') or [])})
           PY
+
       - name: Publish synchronized new-day prediction stack
         run: |
-          git config user.name 'WNBA New Day Prediction Sync Bot'; git config user.email 'actions@github.com'
-          bash scripts/atomic_generated_push.sh "Synchronize WNBA new-day prediction stack for ${TARGET}" 'data/dashboard/wnba_master.json' 'data/dashboard/wnba_player_props.json' 'data/dashboard/wnba_daily_canonical_manifest.json' 'data/dashboard/wnba_injury_intelligence.json' 'data/warehouse/wnba_injury_intelligence.json' 'data/dashboard/wnba_sprint2_predictions.json' 'data/dashboard/wnba_sprint2_phase2.json' 'data/dashboard/wnba_s19_m01_game_injury_audit.json' 'data/dashboard/wnba_s19_m02_prop_source_audit.json' 'data/dashboard/wnba_s19_m02_predictions.json' 'data/dashboard/wnba_s19_m02_prediction_audit.json' 'data/raw/injuries_today.csv' "data/raw/injuries_${TARGET}.csv" 'data/raw/injuries_status.json' "data/raw/props_raw_${TARGET}.csv" 'data/raw/player_points_today.csv' "data/raw/player_points_${TARGET}.csv"
+          git config user.name 'WNBA New Day Prediction Sync Bot'
+          git config user.email 'actions@github.com'
+          bash scripts/atomic_generated_push.sh \
+            "Synchronize WNBA new-day prediction stack for ${TARGET}" \
+            'data/dashboard/wnba_master.json' \
+            'data/dashboard/wnba_player_props.json' \
+            'data/dashboard/wnba_daily_canonical_manifest.json' \
+            'data/dashboard/wnba_injury_intelligence.json' \
+            'data/warehouse/wnba_injury_intelligence.json' \
+            'data/dashboard/wnba_sprint2_predictions.json' \
+            'data/dashboard/wnba_sprint2_phase2.json' \
+            'data/dashboard/wnba_s19_m01_game_injury_audit.json' \
+            'data/dashboard/wnba_s19_m02_prop_source_audit.json' \
+            'data/dashboard/wnba_s19_m02_predictions.json' \
+            'data/dashboard/wnba_s19_m02_prediction_audit.json' \
+            'data/raw/injuries_today.csv' \
+            "data/raw/injuries_${TARGET}.csv" \
+            'data/raw/injuries_status.json' \
+            "data/raw/props_raw_${TARGET}.csv" \
+            'data/raw/player_points_today.csv' \
+            "data/raw/player_points_${TARGET}.csv"
+
       - name: Verify published current-day stack and deploy dashboard
         env:
           GH_TOKEN: ${{ github.token }}
@@ -116,7 +175,8 @@ jobs:
           git show origin/main:data/dashboard/wnba_sprint2_phase2.json > /tmp/phase2.json
           python - <<'PY'
           import json,os
-          target=os.environ['TARGET']; m02=json.load(open('/tmp/m02.json')); injury=json.load(open('/tmp/injury.json')); phase2=json.load(open('/tmp/phase2.json'))
+          target=os.environ['TARGET']
+          m02=json.load(open('/tmp/m02.json')); injury=json.load(open('/tmp/injury.json')); phase2=json.load(open('/tmp/phase2.json'))
           assert m02.get('status')=='READY' and str(m02.get('target_date') or '')[:10]==target, m02
           assert str(injury.get('target_date') or '')[:10]==target, injury
           assert phase2.get('status')=='PASS' and str(phase2.get('target_date') or '')[:10]==target, phase2
