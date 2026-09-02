@@ -1,8 +1,9 @@
 name: WNBA V5 S2 M08 Autonomous Daily Cycle
+# Maintenance mode: the monolithic Sprint 2 cycle is paused from clock-based
+# execution during the WNBA/FIBA break. Manual dispatch and research-lab/code
+# change triggers remain available while ownership is consolidated.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '55 7 * * *'
   push:
     branches: [main]
     paths:
