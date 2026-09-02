@@ -1,9 +1,10 @@
 name: WNBA ALT Phase 13 Archive Guard
 
+# Maintenance mode: the certified archive baseline is immutable unless its
+# evidence or guard code changes. Daily clock-only validation is paused; push
+# triggers and manual dispatch continue to protect archive quality.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '17 7 * * *'
   push:
     branches: [main]
     paths:
