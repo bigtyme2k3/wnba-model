@@ -1,8 +1,9 @@
 name: WNBA V5 TeamRankings Matchup Intelligence
+# Maintenance mode: scheduled TeamRankings snapshots are paused during the
+# WNBA/FIBA break. Manual dispatch and collector/workflow change triggers stay
+# available for controlled research QA.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '35 12 * * *'
   push:
     branches: [main]
     paths:
