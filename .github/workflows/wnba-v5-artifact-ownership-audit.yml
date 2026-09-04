@@ -7,6 +7,7 @@ on:
     paths:
       - 'config/v5_artifact_ownership.json'
       - 'scripts/wnba_v5_artifact_ownership_audit.py'
+      - 'scripts/wnba_v5_core_entrypoint_audit.py'
       - 'docs/V5_ARTIFACT_OWNERSHIP.md'
       - '.github/workflows/*.yml'
       - '.github/workflows/*.yaml'
@@ -28,8 +29,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Compile audit
-        run: python -m py_compile scripts/wnba_v5_artifact_ownership_audit.py
+      - name: Compile architecture audits
+        run: |
+          python -m py_compile \
+            scripts/wnba_v5_artifact_ownership_audit.py \
+            scripts/wnba_v5_core_entrypoint_audit.py
+      - name: Enforce core production entrypoints
+        run: python scripts/wnba_v5_core_entrypoint_audit.py
       - name: Build ownership contract report
         run: python scripts/wnba_v5_artifact_ownership_audit.py
       - name: Show ownership contract status
@@ -61,6 +67,7 @@ jobs:
             # than rebasing two generated reports.
             git fetch origin main
             git reset --hard origin/main
+            python scripts/wnba_v5_core_entrypoint_audit.py
             python scripts/wnba_v5_artifact_ownership_audit.py
             git add data/dashboard/wnba_v5_artifact_ownership_audit.json data/dashboard/wnba_v5_artifact_ownership_audit.csv
             if git diff --cached --quiet; then
@@ -90,7 +97,7 @@ jobs:
               assert p['scheduled_live_pipeline_risk_count']==0
           print({
               'status':'PASS',
-              'contract':'V5_ARTIFACT_OWNERSHIP',
+              'contract':'V5_ARTIFACT_OWNERSHIP_AND_ENTRYPOINTS',
               'protected_artifacts':p['protected_artifact_count'],
               'scheduled_workflows':p['scheduled_workflow_count'],
           })
