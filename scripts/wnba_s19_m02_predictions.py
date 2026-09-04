@@ -131,6 +131,72 @@ def validate_prepared_prop_source(target: str, game_names: set[str]) -> int:
     return len(exact)
 
 
+def write_empty_state(target: str, injury_stamp: str, game_stamp: str):
+    now = datetime.now(timezone.utc).isoformat()
+    payload = {
+        'generated_at_utc': now,
+        'target_date': target,
+        'schema_version': 'sprint19-m02-unified-predictions-v5',
+        'status': 'READY',
+        'empty_slate': True,
+        'source_policy': {
+            'games': 'data/dashboard/wnba_sprint2_phase2.json',
+            'player_props': 'confirmed empty slate; no sportsbook prop request and no player_points execution',
+            'best_bets': 'empty on confirmed empty slate',
+            'portfolio': 'empty on confirmed empty slate',
+        },
+        'injury_generated_at_utc': injury_stamp,
+        'games_generated_at_utc': game_stamp,
+        'games': [],
+        'player_props': [],
+        'best_bets': [],
+        'portfolio': [],
+        'summary': {
+            'games': 0,
+            'sportsbook_prop_input_rows': 0,
+            'player_prop_predictions': 0,
+            'player_props_injury_adjusted': 0,
+            'candidate_player_props': 0,
+            'bet_player_props': 0,
+            'v5_best_bets': 0,
+            'v5_portfolio_rows': 0,
+            'research_buy_signals_excluded': 0,
+            'off_slate_prop_rows_rejected': 0,
+            'missing_projection_rows_skipped': 0,
+            'negative_projection_rows_clamped': 0,
+        },
+    }
+    OUT.write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
+    audit = {
+        'generated_at_utc': now,
+        'target_date': target,
+        'module': 'SPRINT19-M02',
+        'status': 'READY',
+        'empty_slate': True,
+        'game_projection_after_injury_refresh': True,
+        'games': 0,
+        'sportsbook_prop_input_rows': 0,
+        'player_prop_predictions': 0,
+        'player_props_with_model_projection': 0,
+        'player_props_injury_adjusted': 0,
+        'actionable_out_props': 0,
+        'off_slate_prop_rows_rejected': 0,
+        'all_rendered_props_exact_current_slate': True,
+        'best_bets_source': 'confirmed_empty_slate',
+        'best_bets_current_rows': 0,
+        'research_buy_signals_excluded': 0,
+        'phase2_best_bets_fallback_enabled': False,
+        'portfolio_source': 'confirmed_empty_slate',
+        'portfolio_current_rows': 0,
+        'phase2_portfolio_fallback_enabled': False,
+        'missing_projection_rows_skipped': 0,
+        'negative_projection_rows_clamped': 0,
+    }
+    AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
+    print(json.dumps(audit))
+    return payload
+
+
 def build(target: str):
     master = load(MASTER, {})
     games = load(GAMES, {})
@@ -161,8 +227,9 @@ def build(target: str):
         current_games.append(item)
         if item.get('game'):
             game_names.add(str(item['game']))
+
     if not game_names:
-        raise SystemExit('No canonical current-slate games available')
+        return write_empty_state(target, injury_stamp, game_stamp)
 
     sportsbook_input_rows = validate_prepared_prop_source(target, game_names)
     subprocess.run(['python', 'player_points.py', '--date', target, '--out', 'data/raw'], check=True)
@@ -221,8 +288,6 @@ def build(target: str):
         edge = round(projection - line, 2)
         raw_signal = str(row.get('signal') or '').upper()
         recommendation = raw_signal if raw_signal in {'OVER', 'UNDER', 'PASS'} else ('OVER' if edge >= 0.35 else 'UNDER' if edge <= -0.35 else 'PASS')
-        # Recompute impossible-row recommendations from the sanitized projection,
-        # instead of carrying a signal derived from a negative upstream value.
         if f(first(row, 'pred', 'projection', 'proj', 'model_projection', 'projected_value')) is not None and f(first(row, 'pred', 'projection', 'proj', 'model_projection', 'projected_value')) < 0:
             recommendation = 'OVER' if edge >= 0.35 else 'UNDER' if edge <= -0.35 else 'PASS'
         eligible = boolish(row.get('is_active'), recommendation != 'PASS') and recommendation != 'PASS'
@@ -303,6 +368,7 @@ def build(target: str):
         'target_date': target,
         'schema_version': 'sprint19-m02-unified-predictions-v5',
         'status': 'READY',
+        'empty_slate': False,
         'source_policy': {
             'games': 'data/dashboard/wnba_sprint2_phase2.json',
             'player_props': 'exact current-slate sportsbook props prepared by wnba_s19_m02_prop_source.py -> player_points.py -> current injury intelligence',
@@ -337,6 +403,7 @@ def build(target: str):
         'target_date': target,
         'module': 'SPRINT19-M02',
         'status': 'READY',
+        'empty_slate': False,
         'game_projection_after_injury_refresh': True,
         'games': len(current_games),
         'sportsbook_prop_input_rows': sportsbook_input_rows,
