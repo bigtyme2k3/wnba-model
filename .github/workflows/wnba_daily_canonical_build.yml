@@ -4,6 +4,15 @@ name: WNBA Daily Canonical Build
 # This workflow owns the canonical slate, standard props, team ratings, and
 # base Sprint 2 predictions only. Injury-aware Phase 2 is a downstream consumer.
 on:
+  workflow_call:
+    inputs:
+      target_date:
+        description: Optional Eastern slate date (YYYY-MM-DD)
+        required: false
+        type: string
+    secrets:
+      ODDS_API_KEY:
+        required: false
   workflow_dispatch:
     inputs:
       target_date:
