@@ -3,7 +3,8 @@
 
 This is intentionally read-only. It scans only .github/workflows (never the
 archive) and records workflows that reference protected canonical artifacts,
-with stronger evidence when the reference appears in a publish/write context.
+with stronger evidence when the reference appears in an actual publish/write
+context. Read-only verification must not be classified as ownership.
 """
 from __future__ import annotations
 
@@ -58,25 +59,45 @@ PROTECTED = {
     ],
 }
 
-PUBLISH_HINTS = (
+# These are strong shell-level signals that an artifact path appearing on a
+# nearby continuation line belongs to a publish command.
+WINDOW_PUBLISH_HINTS = (
     "git add",
     "atomic_generated_push.sh",
-    "write_text(",
-    "json.dump",
-    "to_csv(",
-    "open(",
     "cp ",
     "mv ",
+    "install ",
+)
+
+# Direct write APIs may contain the artifact path on the same line. Generic
+# ``open(...)`` is deliberately excluded because verification code commonly
+# uses json.load(open(...)) and must remain a read-only reference.
+DIRECT_WRITE_PATTERNS = (
+    re.compile(r"\.write_text\s*\("),
+    re.compile(r"json\.dump\s*\("),
+    re.compile(r"\.to_csv\s*\("),
+    re.compile(r"open\s*\([^\n]*,\s*['\"](?:w|a|x)[^'\"]*['\"]"),
+    re.compile(r"\.open\s*\([^\n]*['\"](?:w|a|x)[^'\"]*['\"]"),
+    re.compile(r"(?:^|\s)(?:tee)(?:\s+-a)?\s+"),
+    re.compile(r">{1,2}\s*[^\s]+"),
 )
 
 
 def line_is_publish_context(lines: list[str], idx: int) -> bool:
-    # Multi-line shell publish commands commonly place the artifact path on a
-    # continuation line, so inspect a small local window rather than one line.
-    lo = max(0, idx - 6)
-    hi = min(len(lines), idx + 2)
-    window = "\n".join(lines[lo:hi]).lower()
-    return any(hint in window for hint in PUBLISH_HINTS)
+    """Return True only when the artifact reference is tied to a write/publish.
+
+    Multi-line shell commands put paths on continuation lines, so look backward
+    for a small number of lines for git-add/atomic-push style commands. Direct
+    Python write APIs are evaluated on the artifact line itself to avoid
+    classifying json.load(open(...)) verification as a publisher.
+    """
+    line = lines[idx].lower()
+    if any(pattern.search(line) for pattern in DIRECT_WRITE_PATTERNS):
+        return True
+
+    lo = max(0, idx - 8)
+    backward = "\n".join(lines[lo : idx + 1]).lower()
+    return any(hint in backward for hint in WINDOW_PUBLISH_HINTS)
 
 
 def main() -> int:
@@ -136,6 +157,7 @@ def main() -> int:
         "evidence": rows,
         "notes": [
             "This audit is static and intentionally conservative.",
+            "Read-only open/json.load references are not publisher evidence.",
             "A MULTIPLE_PUBLISHERS result is a consolidation target, not proof of runtime corruption.",
             "Do not convert this inventory into a blocking gate until authoritative writers are finalized.",
         ],
