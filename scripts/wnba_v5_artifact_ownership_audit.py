@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Static inventory of production artifact ownership and workflow schedules.
+"""Static WNBA V5 artifact-ownership and schedule contract audit.
 
-This is intentionally read-only. It scans only .github/workflows (never the
-archive) and records workflows that reference protected canonical artifacts,
-with stronger evidence when the reference appears in an actual publish/write
-context. Read-only verification must not be classified as ownership.
+The authoritative contract lives in config/v5_artifact_ownership.json. This
+scanner inspects active workflows only (.github/workflows, never the archive),
+records references and publish evidence, and reports any ownership or
+maintenance-schedule contract violation.
+
+The workflow that runs this script is responsible for turning a non-PASS report
+into a blocking CI failure after publishing the diagnostic artifact.
 """
 from __future__ import annotations
 
@@ -17,39 +20,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
+CONTRACT_PATH = ROOT / "config" / "v5_artifact_ownership.json"
 OUT_JSON = ROOT / "data" / "dashboard" / "wnba_v5_artifact_ownership_audit.json"
 OUT_CSV = ROOT / "data" / "dashboard" / "wnba_v5_artifact_ownership_audit.csv"
-
-PROTECTED = {
-    "current_slate": ["data/dashboard/wnba_master.json"],
-    "standard_props": ["data/dashboard/wnba_player_props.json"],
-    "injury_context": [
-        "data/dashboard/wnba_injury_intelligence.json",
-        "data/warehouse/wnba_injury_intelligence.json",
-    ],
-    "game_predictions": [
-        "data/dashboard/wnba_sprint2_predictions.json",
-        "data/dashboard/wnba_sprint2_phase2.json",
-    ],
-    "m02_predictions": [
-        "data/dashboard/wnba_s19_m02_predictions.json",
-        "data/dashboard/wnba_s19_m02_prediction_audit.json",
-    ],
-    "forward_ledger": ["data/history/wnba_v5_forward_predictions.jsonl"],
-    "closing_lines": [
-        "data/dashboard/wnba_v5_explicit_clv.json",
-        "data/history/wnba_v5_closing_lines.jsonl",
-    ],
-    "results": [
-        "data/dashboard/wnba_results_grading.json",
-        "data/history/wnba_model_history.jsonl",
-    ],
-    "alt_market": [
-        "data/dashboard/wnba_alt_market_warehouse.json",
-        "data/warehouse/wnba_alt_market_warehouse.json",
-    ],
-    "dashboard_freshness": ["data/dashboard/wnba_tab_freshness.json"],
-}
 
 # Shell commands that publish a list of artifacts. A command may continue for
 # dozens of lines, so fixed look-back windows are not reliable.
@@ -73,8 +46,30 @@ CRON_RE = re.compile(r"^\s*(?:-\s*)?cron:\s*['\"]?([^'\"#]+?)['\"]?\s*(?:#.*)?$"
 NAME_RE = re.compile(r"^\s*name:\s*['\"]?(.+?)['\"]?\s*$")
 
 
+def load_contract() -> dict:
+    if not CONTRACT_PATH.exists():
+        raise SystemExit(f"Missing ownership contract: {CONTRACT_PATH.relative_to(ROOT)}")
+    payload = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
+    if int(payload.get("schema_version") or 0) != 1:
+        raise SystemExit("Unsupported V5 ownership contract schema")
+    artifacts = payload.get("artifacts") or []
+    if not artifacts:
+        raise SystemExit("V5 ownership contract contains no protected artifacts")
+    seen: set[str] = set()
+    for item in artifacts:
+        artifact = str(item.get("artifact") or "")
+        writer = str(item.get("writer_workflow") or "")
+        domain = str(item.get("domain") or "")
+        if not artifact or not writer or not domain:
+            raise SystemExit(f"Invalid ownership contract row: {item}")
+        if artifact in seen:
+            raise SystemExit(f"Duplicate protected artifact in ownership contract: {artifact}")
+        seen.add(artifact)
+    return payload
+
+
 def shell_publish_line_indexes(lines: list[str]) -> set[int]:
-    """Return all line indexes belonging to git-add/atomic-push commands."""
+    """Return line indexes belonging to git-add/atomic-push commands."""
     indexes: set[int] = set()
     active = False
     for idx, raw in enumerate(lines):
@@ -84,8 +79,6 @@ def shell_publish_line_indexes(lines: list[str]) -> set[int]:
             active = True
         if active:
             indexes.add(idx)
-            # YAML block-shell continuation commands use a trailing backslash.
-            # The first non-continuation line terminates the artifact list.
             if not text.endswith("\\"):
                 active = False
     return indexes
@@ -146,11 +139,15 @@ def scheduled_entry(wf: Path, lines: list[str], text: str) -> dict | None:
 
 
 def main() -> int:
+    contract = load_contract()
+    protected = contract["artifacts"]
     rows: list[dict] = []
     by_artifact: dict[str, list[dict]] = defaultdict(list)
     scheduled_workflows: list[dict] = []
 
     files = sorted([*WORKFLOWS.glob("*.yml"), *WORKFLOWS.glob("*.yaml")])
+    workflow_paths = {str(path.relative_to(ROOT)) for path in files}
+
     for wf in files:
         text = wf.read_text(encoding="utf-8", errors="replace")
         lines = text.splitlines()
@@ -159,53 +156,98 @@ def main() -> int:
         if scheduled:
             scheduled_workflows.append(scheduled)
 
-        for domain, artifacts in PROTECTED.items():
-            for artifact in artifacts:
-                for i, line in enumerate(lines):
-                    if artifact not in line:
-                        continue
-                    evidence = {
-                        "domain": domain,
-                        "artifact": artifact,
-                        "workflow": str(wf.relative_to(ROOT)),
-                        "line": i + 1,
-                        "publish_context": line_is_publish_context(lines, i, shell_lines),
-                        "snippet": line.strip()[:240],
-                    }
-                    rows.append(evidence)
-                    by_artifact[artifact].append(evidence)
+        for contract_row in protected:
+            domain = contract_row["domain"]
+            artifact = contract_row["artifact"]
+            for i, line in enumerate(lines):
+                if artifact not in line:
+                    continue
+                evidence = {
+                    "domain": domain,
+                    "artifact": artifact,
+                    "workflow": str(wf.relative_to(ROOT)),
+                    "line": i + 1,
+                    "publish_context": line_is_publish_context(lines, i, shell_lines),
+                    "snippet": line.strip()[:240],
+                }
+                rows.append(evidence)
+                by_artifact[artifact].append(evidence)
 
-    summary = []
-    conflicts = []
-    for domain, artifacts in PROTECTED.items():
-        for artifact in artifacts:
-            refs = by_artifact.get(artifact, [])
-            workflows = sorted({r["workflow"] for r in refs})
-            publishers = sorted({r["workflow"] for r in refs if r["publish_context"]})
-            item = {
+    summary: list[dict] = []
+    violations: list[dict] = []
+
+    for contract_row in protected:
+        domain = contract_row["domain"]
+        artifact = contract_row["artifact"]
+        expected_writer = contract_row["writer_workflow"]
+        refs = by_artifact.get(artifact, [])
+        workflows = sorted({r["workflow"] for r in refs})
+        publishers = sorted({r["workflow"] for r in refs if r["publish_context"]})
+        unexpected_publishers = [wf for wf in publishers if wf != expected_writer]
+        checks = {
+            "writer_workflow_exists": expected_writer in workflow_paths,
+            "writer_references_artifact": expected_writer in workflows,
+            "no_unexpected_publishers": not unexpected_publishers,
+            "no_multiple_observed_publishers": len(publishers) <= 1,
+        }
+        item = {
+            "domain": domain,
+            "artifact": artifact,
+            "expected_writer": expected_writer,
+            "workflow_references": workflows,
+            "observed_publish_workflows": publishers,
+            "unexpected_publish_workflows": unexpected_publishers,
+            "reference_count": len(refs),
+            "observed_publish_workflow_count": len(publishers),
+            "checks": checks,
+            "status": "PASS" if all(checks.values()) else "VIOLATION",
+        }
+        summary.append(item)
+        if item["status"] != "PASS":
+            violations.append({
+                "type": "ARTIFACT_OWNERSHIP",
                 "domain": domain,
                 "artifact": artifact,
-                "workflow_references": workflows,
-                "publish_workflows": publishers,
-                "reference_count": len(refs),
-                "publish_workflow_count": len(publishers),
-                "status": "MULTIPLE_PUBLISHERS" if len(publishers) > 1 else "SINGLE_OR_NO_PUBLISHER",
-            }
-            summary.append(item)
-            if len(publishers) > 1:
-                conflicts.append(item)
+                "expected_writer": expected_writer,
+                "failed_checks": [name for name, ok in checks.items() if not ok],
+                "unexpected_publish_workflows": unexpected_publishers,
+            })
 
     paid_scheduled = [item for item in scheduled_workflows if item["paid_api_risk"]]
     live_scheduled = [item for item in scheduled_workflows if item["live_pipeline_risk"]]
+
+    maintenance = contract.get("maintenance_contract") or {}
+    if str(contract.get("mode") or "").lower() == "maintenance":
+        observed = {
+            "scheduled_workflow_count": len(scheduled_workflows),
+            "scheduled_paid_api_risk_count": len(paid_scheduled),
+            "scheduled_live_pipeline_risk_count": len(live_scheduled),
+        }
+        for key, expected in maintenance.items():
+            if key not in observed:
+                continue
+            if int(observed[key]) != int(expected):
+                violations.append({
+                    "type": "MAINTENANCE_SCHEDULE",
+                    "metric": key,
+                    "expected": int(expected),
+                    "observed": int(observed[key]),
+                })
+
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "status": "REVIEW_REQUIRED" if conflicts else "PASS",
-        "mode": "inventory_only",
+        "status": "PASS" if not violations else "FAIL",
+        "mode": "contract_enforced",
+        "contract_mode": contract.get("mode"),
+        "contract_schema_version": contract.get("schema_version"),
+        "contract_path": str(CONTRACT_PATH.relative_to(ROOT)),
         "scope": ".github/workflows only; .github/workflows-archive excluded",
-        "protected_artifact_count": sum(len(v) for v in PROTECTED.values()),
+        "protected_artifact_count": len(protected),
         "active_workflow_count": len(files),
-        "multiple_publisher_count": len(conflicts),
-        "multiple_publishers": conflicts,
+        "ownership_violation_count": sum(v["type"] == "ARTIFACT_OWNERSHIP" for v in violations),
+        "schedule_violation_count": sum(v["type"] == "MAINTENANCE_SCHEDULE" for v in violations),
+        "violation_count": len(violations),
+        "violations": violations,
         "scheduled_workflow_count": len(scheduled_workflows),
         "scheduled_paid_api_risk_count": len(paid_scheduled),
         "scheduled_live_pipeline_risk_count": len(live_scheduled),
@@ -213,13 +255,13 @@ def main() -> int:
         "artifacts": summary,
         "evidence": rows,
         "notes": [
-            "This audit is static and intentionally conservative.",
-            "Read-only open/json.load references are not publisher evidence.",
+            "The machine-readable ownership contract is authoritative.",
+            "Every expected writer must exist and reference its protected artifact.",
+            "Any observed publish path from a workflow other than the declared writer is blocking.",
+            "Read-only references are allowed for consumers.",
             "Multi-line git-add and atomic-push artifact lists are parsed through their full continuation block.",
-            "Cron inventory includes only uncommented cron entries in active workflow files.",
-            "paid_api_risk/live_pipeline_risk are keyword-based triage hints, not blocking findings.",
-            "A MULTIPLE_PUBLISHERS result is a consolidation target, not proof of runtime corruption.",
-            "Do not convert this inventory into a blocking gate until authoritative writers are finalized.",
+            "Some broad-directory publishers are not inferable statically; the declared writer plus explicit protected-path checks are the enforcement boundary.",
+            "Maintenance mode requires the configured schedule counts, currently zero active crons.",
         ],
     }
 
@@ -237,7 +279,8 @@ def main() -> int:
         "status": payload["status"],
         "active_workflows": payload["active_workflow_count"],
         "protected_artifacts": payload["protected_artifact_count"],
-        "multiple_publisher_count": payload["multiple_publisher_count"],
+        "ownership_violation_count": payload["ownership_violation_count"],
+        "schedule_violation_count": payload["schedule_violation_count"],
         "scheduled_workflow_count": payload["scheduled_workflow_count"],
         "scheduled_paid_api_risk_count": payload["scheduled_paid_api_risk_count"],
         "scheduled_live_pipeline_risk_count": payload["scheduled_live_pipeline_risk_count"],
