@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "mode": "maintenance",
+  "description": "Authoritative production artifact ownership for WNBA V5. Exactly one workflow owns each protected artifact. Consumers may read/validate/render but may not publish a competing canonical copy.",
+  "maintenance_contract": {
+    "scheduled_workflow_count": 0,
+    "scheduled_paid_api_risk_count": 0,
+    "scheduled_live_pipeline_risk_count": 0
+  },
+  "artifacts": [
+    {
+      "domain": "current_slate",
+      "artifact": "data/dashboard/wnba_master.json",
+      "writer_workflow": ".github/workflows/wnba_daily_canonical_build.yml"
+    },
+    {
+      "domain": "standard_props",
+      "artifact": "data/dashboard/wnba_player_props.json",
+      "writer_workflow": ".github/workflows/wnba_daily_canonical_build.yml"
+    },
+    {
+      "domain": "injury_context",
+      "artifact": "data/dashboard/wnba_injury_intelligence.json",
+      "writer_workflow": ".github/workflows/wnba_v5_injury_dashboard.yml"
+    },
+    {
+      "domain": "injury_context",
+      "artifact": "data/warehouse/wnba_injury_intelligence.json",
+      "writer_workflow": ".github/workflows/wnba_v5_injury_dashboard.yml"
+    },
+    {
+      "domain": "game_predictions",
+      "artifact": "data/dashboard/wnba_sprint2_predictions.json",
+      "writer_workflow": ".github/workflows/wnba_daily_canonical_build.yml"
+    },
+    {
+      "domain": "game_predictions",
+      "artifact": "data/dashboard/wnba_sprint2_phase2.json",
+      "writer_workflow": ".github/workflows/wnba-new-day-prediction-sync.yml"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
+      "writer_workflow": ".github/workflows/wnba-new-day-prediction-sync.yml"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_prediction_audit.json",
+      "writer_workflow": ".github/workflows/wnba-new-day-prediction-sync.yml"
+    },
+    {
+      "domain": "forward_ledger",
+      "artifact": "data/history/wnba_v5_forward_predictions.jsonl",
+      "writer_workflow": ".github/workflows/wnba-v5-m12-postgame-learning.yml"
+    },
+    {
+      "domain": "closing_lines",
+      "artifact": "data/dashboard/wnba_v5_closing_lines.csv",
+      "writer_workflow": ".github/workflows/wnba-v5-s3-m02-closing-capture.yml"
+    },
+    {
+      "domain": "closing_lines",
+      "artifact": "data/dashboard/wnba_v5_closing_snapshot.json",
+      "writer_workflow": ".github/workflows/wnba-v5-s3-m02-closing-capture.yml"
+    },
+    {
+      "domain": "closing_lines",
+      "artifact": "data/dashboard/wnba_v5_clv_queue.json",
+      "writer_workflow": ".github/workflows/wnba-v5-s3-m02-closing-capture.yml"
+    },
+    {
+      "domain": "results",
+      "artifact": "data/history/wnba_model_history.jsonl",
+      "writer_workflow": ".github/workflows/wnba_results_refresh.yml"
+    },
+    {
+      "domain": "results",
+      "artifact": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
+      "writer_workflow": ".github/workflows/wnba_results_refresh.yml"
+    },
+    {
+      "domain": "alt_market",
+      "artifact": "data/dashboard/wnba_alt_market_warehouse.json",
+      "writer_workflow": ".github/workflows/wnba_alt_pregame_snapshot.yml"
+    },
+    {
+      "domain": "alt_market",
+      "artifact": "data/warehouse/wnba_alt_market_warehouse.json",
+      "writer_workflow": ".github/workflows/wnba_alt_pregame_snapshot.yml"
+    },
+    {
+      "domain": "dashboard_freshness",
+      "artifact": "data/dashboard/wnba_tab_freshness.json",
+      "writer_workflow": ".github/workflows/wnba_daily_slate_rollover.yml"
+    }
+  ]
+}
