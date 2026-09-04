@@ -8,6 +8,8 @@ on:
     paths:
       - 'data/dashboard/wnba_master.json'
       - 'data/master/wnba_master.json'
+      - 'wnba_v5_live_state_sync.py'
+      - '.github/workflows/wnba_live_state_sync.yml'
 
 permissions:
   contents: write
@@ -34,11 +36,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Synchronize authoritative game state
+      - name: Synchronize derived game state
         run: |
           python wnba_v5_live_state_sync.py
 
-      - name: Verify state matches active master slate
+      - name: Verify state matches active master slate without mutating sources
         run: |
           python - <<'PY'
           import json
@@ -46,28 +48,37 @@ jobs:
 
           master = json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8'))
           state = json.loads(Path('data/dashboard/wnba_game_state.json').read_text(encoding='utf-8'))
-          target = str(master.get('target_date') or '')
-          today = [g for g in master.get('games', []) if str(g.get('game_date') or '') == target]
+          target = str(master.get('target_date') or '')[:10]
+          games = master.get('games', []) or master.get('today_games', []) or []
+          today = [
+              g for g in games
+              if not str(g.get('game_date') or g.get('date') or '')[:10]
+              or str(g.get('game_date') or g.get('date') or '')[:10] == target
+          ]
           state_matchups = {str(g.get('matchup') or '') for g in state.get('games', [])}
           missing = [str(g.get('game') or g.get('matchup') or '') for g in today if str(g.get('game') or g.get('matchup') or '') not in state_matchups]
           if not target:
               raise SystemExit('Master target_date is missing')
-          if not today:
-              raise SystemExit(f'Master contains no games for target date {target}')
           if missing:
               raise SystemExit(f'Live-state file is missing active slate games: {missing}')
-          print({'target_date': target, 'today_games': len(today), 'state_games': len(state.get('games', []))})
+          assert state.get('consumer_only') is True
+          assert state.get('canonical_master_mutated') is False
+          assert state.get('canonical_injury_context_mutated') is False
+          print({'target_date': target, 'today_games': len(today), 'state_games': len(state.get('games', [])), 'empty_slate_valid': len(today) == 0})
           PY
+          if ! git diff --quiet -- data/dashboard/wnba_master.json data/master/wnba_master.json data/dashboard/wnba_injury_intelligence.json data/warehouse/wnba_injury_intelligence.json; then
+            echo 'Live-state sync mutated an upstream canonical source; refusing publish.' >&2
+            git diff -- data/dashboard/wnba_master.json data/master/wnba_master.json data/dashboard/wnba_injury_intelligence.json data/warehouse/wnba_injury_intelligence.json
+            exit 1
+          fi
 
-      - name: Publish synchronized state
+      - name: Publish derived synchronized state
         run: |
           git config user.name 'WNBA Live State Bot'
           git config user.email 'actions@github.com'
           git add \
             data/dashboard/wnba_game_state.json \
             data/warehouse/wnba_game_state.json \
-            data/dashboard/wnba_master.json \
-            data/master/wnba_master.json \
             data/dashboard/wnba_decision_engine_final.json \
             data/warehouse/wnba_decision_engine_final.json \
             data/dashboard/wnba_portfolio_optimizer_v2.json \
@@ -76,13 +87,17 @@ jobs:
             data/warehouse/wnba_risk_allocation.json \
             data/dashboard/wnba_portfolio_dashboard.json \
             data/warehouse/wnba_portfolio_dashboard.json \
-            data/dashboard/wnba_injury_intelligence.json \
-            data/warehouse/wnba_injury_intelligence.json \
             data/dashboard/wnba_v5_phase_status.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo 'Live-state artifacts already match the current master slate.'
             exit 0
           fi
-          git commit -m 'Synchronize dashboard game state with current slate'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          git commit -m 'Synchronize derived dashboard game state with current slate'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            sleep $((attempt*3))
+          done
+          exit 1
