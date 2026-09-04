@@ -8,6 +8,8 @@ on:
       - 'config/v5_artifact_ownership.json'
       - 'scripts/wnba_v5_artifact_ownership_audit.py'
       - 'scripts/wnba_v5_core_entrypoint_audit.py'
+      - 'scripts/atomic_generated_push.sh'
+      - 'scripts/test_atomic_generated_push.sh'
       - 'docs/V5_ARTIFACT_OWNERSHIP.md'
       - '.github/workflows/*.yml'
       - '.github/workflows/*.yaml'
@@ -29,6 +31,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Validate atomic publish scope guard
+        run: |
+          bash -n scripts/atomic_generated_push.sh
+          bash -n scripts/test_atomic_generated_push.sh
+          bash scripts/test_atomic_generated_push.sh
       - name: Compile architecture audits
         run: |
           python -m py_compile \
@@ -97,7 +104,7 @@ jobs:
               assert p['scheduled_live_pipeline_risk_count']==0
           print({
               'status':'PASS',
-              'contract':'V5_ARTIFACT_OWNERSHIP_AND_ENTRYPOINTS',
+              'contract':'V5_ARTIFACT_OWNERSHIP_ENTRYPOINTS_AND_PUBLISH_SCOPE',
               'protected_artifacts':p['protected_artifact_count'],
               'scheduled_workflows':p['scheduled_workflow_count'],
           })
