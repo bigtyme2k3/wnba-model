@@ -1,0 +1,35 @@
+name: WNBA V5 Core Entrypoint Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wnba_daily_canonical_build.yml'
+      - '.github/workflows/wnba_v5_injury_dashboard.yml'
+      - '.github/workflows/wnba-new-day-prediction-sync.yml'
+      - '.github/workflows/wnba_daily_slate_rollover.yml'
+      - '.github/workflows/wnba-v5-daily-orchestrator.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wnba-v5-core-entrypoint-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile entrypoint audit
+        run: python -m py_compile scripts/wnba_v5_core_entrypoint_audit.py
+      - name: Enforce maintenance-mode entrypoints
+        run: python scripts/wnba_v5_core_entrypoint_audit.py
