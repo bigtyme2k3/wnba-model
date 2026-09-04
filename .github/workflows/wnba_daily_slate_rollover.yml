@@ -5,7 +5,20 @@ name: WNBA Daily Slate Rollover
 # artifacts are owned by their dedicated workflows. This workflow consumes
 # those sources and refreshes only derived dashboard intelligence.
 on:
+  workflow_call:
+    inputs:
+      target_date:
+        description: Optional authoritative slate date (YYYY-MM-DD)
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
+    inputs:
+      target_date:
+        description: Optional authoritative slate date (YYYY-MM-DD)
+        required: false
+        type: string
+        default: ''
   push:
     paths:
       - 'data/dashboard_refresh_request.txt'
@@ -46,7 +59,12 @@ jobs:
 
       - name: Resolve authoritative slate date
         run: |
-          TARGET=$(python active_slate_date.py)
+          REQUESTED='${{ inputs.target_date }}'
+          if [ -n "$REQUESTED" ]; then
+            TARGET="$REQUESTED"
+          else
+            TARGET=$(python active_slate_date.py)
+          fi
           test -n "$TARGET"
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Derived rollover target: $TARGET"
