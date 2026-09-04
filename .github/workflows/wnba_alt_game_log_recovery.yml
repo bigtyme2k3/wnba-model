@@ -1,4 +1,4 @@
-# Recovery refresh: grade all currently pending historical ALT observations.
+# Recovery refresh: grade pending historical ALT observations only.
 name: WNBA ALT Game Log Recovery
 
 on:
@@ -23,7 +23,6 @@ on:
       - 'wnba_alt_performance_tracker.py'
       - 'active_slate_date.py'
       - 'scripts/check_production_architecture.py'
-      - '.github/workflows/wnba_alt_game_log_recovery.yml'
 
 permissions:
   contents: write
@@ -146,41 +145,24 @@ jobs:
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
           python wnba_alt_pending_diagnostics.py
           python wnba_alt_game_log_recovery.py
-          # Remove temporary date aliases from canonical rolling history after
-          # the grader has consumed them, then persist the cleaned archive.
           python wnba_player_game_log_archive.py merge
           python wnba_player_game_log_archive.py snapshot
 
-      - name: Rebuild current ALT display from repaired history
-        if: env.RECOVERY_DATES != ''
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      - name: Verify recovery never mutates current ALT market sources
         run: |
-          export TARGET=$(python active_slate_date.py)
-          test -n "$TARGET"
-          if [ -n "${ODDS_API_KEY:-}" ]; then
-            python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw
-          else
-            echo 'ODDS_API_KEY unavailable; refusing to replace the current ALT market with an empty rebuild.' >&2
+          PROTECTED=(
+            data/dashboard/wnba_alt_market_warehouse.json
+            data/warehouse/wnba_alt_market_warehouse.json
+            data/dashboard/wnba_alt_streaks.json
+            data/warehouse/wnba_alt_streaks.json
+            data/dashboard/wnba_opponent_stat_rankings.json
+            data/warehouse/wnba_opponent_stat_rankings.json
+          )
+          if ! git diff --quiet -- "${PROTECTED[@]}"; then
+            echo 'Historical ALT recovery mutated current market/display sources; refusing publish.' >&2
+            git diff -- "${PROTECTED[@]}"
             exit 1
           fi
-          python wnba_alt_market_warehouse.py --date "$TARGET"
-          python wnba_alt_streaks.py --date "$TARGET"
-          python wnba_opponent_stat_rankings.py --date "$TARGET"
-          python wnba_alt_streaks_opponent_context.py
-          python wnba_alt_streak_confidence.py --date "$TARGET"
-          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          target = os.environ.get('TARGET') or ''
-          streaks = json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
-          assert streaks.get('target_date') == target, (streaks.get('target_date'), target)
-          assert int((streaks.get('summary') or {}).get('active_streak_minimum') or 0) == 5
-          stamp = str(streaks.get('generated_at_utc') or '')
-          assert stamp
-          print({'status': 'PASS', 'target': target, 'rows': len(streaks.get('rows') or []), 'stamp': stamp})
-          PY
 
       - name: Verify grading accounting
         run: |
@@ -233,13 +215,7 @@ jobs:
             'data/dashboard/wnba_alt_game_log_recovery.json' \
             'data/warehouse/wnba_alt_game_log_recovery.json' \
             'data/dashboard/wnba_alt_strict_regrade.json' \
-            'data/warehouse/wnba_alt_strict_regrade.json' \
-            'data/dashboard/wnba_alt_market_warehouse.json' \
-            'data/warehouse/wnba_alt_market_warehouse.json' \
-            'data/dashboard/wnba_alt_streaks.json' \
-            'data/warehouse/wnba_alt_streaks.json' \
-            'data/dashboard/wnba_opponent_stat_rankings.json' \
-            'data/warehouse/wnba_opponent_stat_rankings.json'
+            'data/warehouse/wnba_alt_strict_regrade.json'
 
       - name: Dispatch canonical dashboard rebuild
         env:
@@ -247,4 +223,4 @@ jobs:
         run: |
           git fetch origin main
           gh workflow run deploy_wnba_dashboard.yml --ref main
-          echo 'Repaired ALT data published; canonical dashboard rebuild dispatched.'
+          echo 'Recovered ALT history published; canonical dashboard rebuild dispatched.'
