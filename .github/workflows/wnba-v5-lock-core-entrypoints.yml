@@ -82,12 +82,14 @@ jobs:
             .github/workflows/wnba-new-day-prediction-sync.yml \
             .github/workflows/wnba_daily_slate_rollover.yml
           git commit -m 'Lock V5 core production entrypoints'
+          echo "LOCAL_LOCK_COMMIT=$(git rev-parse HEAD)"
           for attempt in 1 2 3 4; do
             if git push origin HEAD:main; then
               exit 0
             fi
             git fetch origin main
             git rebase origin/main || { git rebase --abort || true; }
+            echo "LOCAL_LOCK_COMMIT=$(git rev-parse HEAD)"
             sleep $((attempt*3))
           done
           exit 1
