@@ -4,12 +4,32 @@ name: WNBA New Day Prediction Sync
 # This workflow consumes canonical base + injury context and owns only the
 # downstream injury-aware Phase 2 and Sprint 19 M02 prediction artifacts.
 on:
+  workflow_call:
+    inputs:
+      date:
+        description: Optional Eastern target date (YYYY-MM-DD)
+        required: false
+        type: string
+        default: ''
+      deploy_dashboard:
+        description: Dispatch the dashboard after this stage
+        required: false
+        type: boolean
+        default: true
+    secrets:
+      ODDS_API_KEY:
+        required: false
   workflow_dispatch:
     inputs:
       date:
         description: Optional Eastern target date (YYYY-MM-DD)
         required: false
         default: ''
+      deploy_dashboard:
+        description: Dispatch dashboard after prediction publish
+        required: false
+        type: boolean
+        default: true
   push:
     branches: [main]
     paths:
@@ -64,7 +84,7 @@ jobs:
 
       - name: Resolve Eastern target date
         run: |
-          REQUESTED='${{ github.event.inputs.date }}'
+          REQUESTED='${{ inputs.date }}'
           if [ -n "$REQUESTED" ]; then
             TARGET="$REQUESTED"
           else
@@ -254,9 +274,7 @@ jobs:
             'data/raw/player_points_today.csv' \
             "data/raw/player_points_${TARGET}.csv"
 
-      - name: Verify published downstream stack and deploy dashboard
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Verify published downstream stack
         run: |
           git fetch origin main
           git show origin/main:data/dashboard/wnba_s19_m02_predictions.json > /tmp/m02.json
@@ -270,5 +288,11 @@ jobs:
           assert phase2.get('status')=='PASS' and str(phase2.get('target_date') or '')[:10]==target, phase2
           print({'published_m02_target':m02.get('target_date'),'phase2_target':phase2.get('target_date'),'phase2_games':len(phase2.get('games') or [])})
           PY
+
+      - name: Deploy dashboard after standalone prediction sync
+        if: ${{ inputs.deploy_dashboard }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           gh workflow run deploy_wnba_dashboard.yml --ref main
           echo 'Verified downstream game/prop stack and dispatched dashboard deployment.'
