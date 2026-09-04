@@ -21,12 +21,8 @@ OUT_JSON = ROOT / "data" / "dashboard" / "wnba_v5_artifact_ownership_audit.json"
 OUT_CSV = ROOT / "data" / "dashboard" / "wnba_v5_artifact_ownership_audit.csv"
 
 PROTECTED = {
-    "current_slate": [
-        "data/dashboard/wnba_master.json",
-    ],
-    "standard_props": [
-        "data/dashboard/wnba_player_props.json",
-    ],
+    "current_slate": ["data/dashboard/wnba_master.json"],
+    "standard_props": ["data/dashboard/wnba_player_props.json"],
     "injury_context": [
         "data/dashboard/wnba_injury_intelligence.json",
         "data/warehouse/wnba_injury_intelligence.json",
@@ -39,9 +35,7 @@ PROTECTED = {
         "data/dashboard/wnba_s19_m02_predictions.json",
         "data/dashboard/wnba_s19_m02_prediction_audit.json",
     ],
-    "forward_ledger": [
-        "data/history/wnba_v5_forward_predictions.jsonl",
-    ],
+    "forward_ledger": ["data/history/wnba_v5_forward_predictions.jsonl"],
     "closing_lines": [
         "data/dashboard/wnba_v5_explicit_clv.json",
         "data/history/wnba_v5_closing_lines.jsonl",
@@ -54,50 +48,51 @@ PROTECTED = {
         "data/dashboard/wnba_alt_market_warehouse.json",
         "data/warehouse/wnba_alt_market_warehouse.json",
     ],
-    "dashboard_freshness": [
-        "data/dashboard/wnba_tab_freshness.json",
-    ],
+    "dashboard_freshness": ["data/dashboard/wnba_tab_freshness.json"],
 }
 
-# These are strong shell-level signals that an artifact path appearing on a
-# nearby continuation line belongs to a publish command.
-WINDOW_PUBLISH_HINTS = (
+# Shell commands that publish a list of artifacts. A command may continue for
+# dozens of lines, so fixed look-back windows are not reliable.
+SHELL_PUBLISH_START = (
     "git add",
     "atomic_generated_push.sh",
-    "cp ",
-    "mv ",
-    "install ",
 )
 
-# Direct write APIs may contain the artifact path on the same line. Generic
-# ``open(...)`` is deliberately excluded because verification code commonly
-# uses json.load(open(...)) and must remain a read-only reference.
 DIRECT_WRITE_PATTERNS = (
     re.compile(r"\.write_text\s*\("),
     re.compile(r"json\.dump\s*\("),
     re.compile(r"\.to_csv\s*\("),
     re.compile(r"open\s*\([^\n]*,\s*['\"](?:w|a|x)[^'\"]*['\"]"),
     re.compile(r"\.open\s*\([^\n]*['\"](?:w|a|x)[^'\"]*['\"]"),
-    re.compile(r"(?:^|\s)(?:tee)(?:\s+-a)?\s+"),
+    re.compile(r"(?:^|\s)tee(?:\s+-a)?\s+"),
     re.compile(r">{1,2}\s*[^\s]+"),
+    re.compile(r"(?:^|\s)(?:cp|mv|install)\s+"),
 )
 
 
-def line_is_publish_context(lines: list[str], idx: int) -> bool:
-    """Return True only when the artifact reference is tied to a write/publish.
+def shell_publish_line_indexes(lines: list[str]) -> set[int]:
+    """Return all line indexes belonging to git-add/atomic-push commands."""
+    indexes: set[int] = set()
+    active = False
+    for idx, raw in enumerate(lines):
+        text = raw.strip()
+        lower = text.lower()
+        if not active and any(hint in lower for hint in SHELL_PUBLISH_START):
+            active = True
+        if active:
+            indexes.add(idx)
+            # YAML block-shell continuation commands use a trailing backslash.
+            # The first non-continuation line terminates the artifact list.
+            if not text.endswith("\\"):
+                active = False
+    return indexes
 
-    Multi-line shell commands put paths on continuation lines, so look backward
-    for a small number of lines for git-add/atomic-push style commands. Direct
-    Python write APIs are evaluated on the artifact line itself to avoid
-    classifying json.load(open(...)) verification as a publisher.
-    """
-    line = lines[idx].lower()
-    if any(pattern.search(line) for pattern in DIRECT_WRITE_PATTERNS):
+
+def line_is_publish_context(lines: list[str], idx: int, shell_publish_lines: set[int]) -> bool:
+    if idx in shell_publish_lines:
         return True
-
-    lo = max(0, idx - 8)
-    backward = "\n".join(lines[lo : idx + 1]).lower()
-    return any(hint in backward for hint in WINDOW_PUBLISH_HINTS)
+    line = lines[idx].lower()
+    return any(pattern.search(line) for pattern in DIRECT_WRITE_PATTERNS)
 
 
 def main() -> int:
@@ -108,6 +103,7 @@ def main() -> int:
     for wf in files:
         text = wf.read_text(encoding="utf-8", errors="replace")
         lines = text.splitlines()
+        shell_lines = shell_publish_line_indexes(lines)
         for domain, artifacts in PROTECTED.items():
             for artifact in artifacts:
                 for i, line in enumerate(lines):
@@ -118,7 +114,7 @@ def main() -> int:
                         "artifact": artifact,
                         "workflow": str(wf.relative_to(ROOT)),
                         "line": i + 1,
-                        "publish_context": line_is_publish_context(lines, i),
+                        "publish_context": line_is_publish_context(lines, i, shell_lines),
                         "snippet": line.strip()[:240],
                     }
                     rows.append(evidence)
@@ -158,6 +154,7 @@ def main() -> int:
         "notes": [
             "This audit is static and intentionally conservative.",
             "Read-only open/json.load references are not publisher evidence.",
+            "Multi-line git-add and atomic-push artifact lists are parsed through their full continuation block.",
             "A MULTIPLE_PUBLISHERS result is a consolidation target, not proof of runtime corruption.",
             "Do not convert this inventory into a blocking gate until authoritative writers are finalized.",
         ],
