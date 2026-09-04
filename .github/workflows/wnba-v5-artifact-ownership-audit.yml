@@ -5,6 +5,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'config/v5_artifact_ownership.json'
       - 'scripts/wnba_v5_artifact_ownership_audit.py'
       - 'docs/V5_ARTIFACT_OWNERSHIP.md'
       - '.github/workflows/*.yml'
@@ -29,41 +30,68 @@ jobs:
           python-version: '3.11'
       - name: Compile audit
         run: python -m py_compile scripts/wnba_v5_artifact_ownership_audit.py
-      - name: Inventory active workflow ownership
+      - name: Build ownership contract report
         run: python scripts/wnba_v5_artifact_ownership_audit.py
-      - name: Show consolidation targets
+      - name: Show ownership contract status
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           p=json.loads(Path('data/dashboard/wnba_v5_artifact_ownership_audit.json').read_text())
-          print({'status':p['status'],'multiple_publisher_count':p['multiple_publisher_count'],'active_workflows':p['active_workflow_count']})
-          for item in p.get('multiple_publishers') or []:
-              print(item['domain'], item['artifact'])
-              for wf in item['publish_workflows']:
-                  print('  -', wf)
+          print({
+              'status':p['status'],
+              'contract_mode':p['contract_mode'],
+              'protected_artifacts':p['protected_artifact_count'],
+              'ownership_violations':p['ownership_violation_count'],
+              'schedule_violations':p['schedule_violation_count'],
+              'scheduled_workflows':p['scheduled_workflow_count'],
+              'active_workflows':p['active_workflow_count'],
+          })
+          for violation in p.get('violations') or []:
+              print('VIOLATION', violation)
           PY
-      - name: Publish inventory report safely
+      - name: Publish contract report safely
         run: |
           set -euo pipefail
           git config user.name 'WNBA V5 Ownership Audit Bot'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            # Generated audit files are intentionally replaceable. If another
-            # workflow edit lands while this job is running, rebuild from the
-            # newest main instead of trying to rebase two generated reports.
+            # Generated audit files are replaceable. If another workflow edit
+            # lands while this job is running, rebuild from newest main rather
+            # than rebasing two generated reports.
             git fetch origin main
             git reset --hard origin/main
             python scripts/wnba_v5_artifact_ownership_audit.py
             git add data/dashboard/wnba_v5_artifact_ownership_audit.json data/dashboard/wnba_v5_artifact_ownership_audit.csv
             if git diff --cached --quiet; then
-              echo 'Artifact ownership inventory already current'
-              exit 0
+              echo 'Artifact ownership contract report already current'
+              break
             fi
             git commit -m 'Refresh V5 artifact ownership inventory'
             if git push origin HEAD:main; then
-              exit 0
+              break
             fi
+            if [ "$attempt" -eq 4 ]; then exit 1; fi
             sleep $((attempt*3))
           done
-          exit 1
+      - name: Enforce V5 ownership contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_v5_artifact_ownership_audit.json').read_text())
+          assert p['mode']=='contract_enforced', p.get('mode')
+          assert p['status']=='PASS', p.get('violations')
+          assert p['ownership_violation_count']==0, p.get('violations')
+          if p.get('contract_mode')=='maintenance':
+              assert p['schedule_violation_count']==0, p.get('violations')
+              assert p['scheduled_workflow_count']==0, p.get('scheduled_workflows')
+              assert p['scheduled_paid_api_risk_count']==0
+              assert p['scheduled_live_pipeline_risk_count']==0
+          print({
+              'status':'PASS',
+              'contract':'V5_ARTIFACT_OWNERSHIP',
+              'protected_artifacts':p['protected_artifact_count'],
+              'scheduled_workflows':p['scheduled_workflow_count'],
+          })
+          PY
