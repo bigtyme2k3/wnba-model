@@ -81,7 +81,7 @@ m02_predictions,data/dashboard/wnba_s19_m02_prediction_audit.json,.github/workfl
 current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba_daily_slate_rollover.yml,78,False,"'master':'data/dashboard/wnba_master.json',"
 current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba_daily_slate_rollover.yml,168,False,target=os.environ['TARGET']; master=Path('data/dashboard/wnba_master.json')
 current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba_daily_slate_rollover.yml,180,False,data/dashboard/wnba_master.json
-current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba_daily_slate_rollover.yml,228,False,"PUBLISHED_TARGET=$(git show ""origin/main:data/dashboard/wnba_master.json"" | python -c ""import json,sys; print(str(json.load(sys.stdin).get('target_date') or '')[:10])"")"
+current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba_daily_slate_rollover.yml,249,False,"PUBLISHED_TARGET=$(git show ""origin/main:data/dashboard/wnba_master.json"" | python -c ""import json,sys; print(str(json.load(sys.stdin).get('target_date') or '')[:10])"")"
 standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba_daily_slate_rollover.yml,79,False,"'standard_props':'data/dashboard/wnba_player_props.json',"
 standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba_daily_slate_rollover.yml,181,False,data/dashboard/wnba_player_props.json
 injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba_daily_slate_rollover.yml,82,False,"'injury':'data/dashboard/wnba_injury_intelligence.json',"
