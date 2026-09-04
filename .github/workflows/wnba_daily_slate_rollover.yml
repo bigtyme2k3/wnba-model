@@ -199,23 +199,44 @@ jobs:
             exit 1
           fi
 
-          if git diff --quiet -- data/dashboard data/warehouse data/market data/forecast; then
+          ALLOWLIST=config/v5_rollover_derived_outputs.txt
+          mapfile -t DERIVED_OUTPUTS < <(grep -Ev '^[[:space:]]*(#|$)' "$ALLOWLIST")
+          if [ ${#DERIVED_OUTPUTS[@]} -eq 0 ]; then
+            echo 'Derived rollover allowlist is empty; refusing publish.' >&2
+            exit 1
+          fi
+          declare -A ALLOWED=()
+          for file in "${DERIVED_OUTPUTS[@]}"; do ALLOWED["$file"]=1; done
+          mapfile -t CHANGED < <(
+            {
+              git diff --name-only -- data/dashboard data/warehouse data/market data/forecast
+              git ls-files --others --exclude-standard -- data/dashboard data/warehouse data/market data/forecast
+            } | sort -u
+          )
+          if [ ${#CHANGED[@]} -eq 0 ]; then
             echo 'Derived rollover generated no publishable changes; refusing false-success completion.' >&2
             exit 1
           fi
-          echo 'Derived publishable changes:'
-          git status --short -- data/dashboard data/warehouse data/market data/forecast
+          UNEXPECTED=()
+          for file in "${CHANGED[@]}"; do
+            if [ -z "${ALLOWED[$file]+x}" ]; then UNEXPECTED+=("$file"); fi
+          done
+          if [ ${#UNEXPECTED[@]} -gt 0 ]; then
+            echo 'Derived rollover changed files outside its explicit publish allowlist:' >&2
+            printf '  %s\n' "${UNEXPECTED[@]}" >&2
+            exit 1
+          fi
+          echo "Derived allowlist validated: ${#CHANGED[@]} changed file(s)."
+          printf '  %s\n' "${CHANGED[@]}"
 
       - name: Publish derived dashboard intelligence
         run: |
           git config user.name 'WNBA Derived Rollover Bot'
           git config user.email 'actions@github.com'
+          mapfile -t DERIVED_OUTPUTS < <(grep -Ev '^[[:space:]]*(#|$)' config/v5_rollover_derived_outputs.txt)
           bash scripts/atomic_generated_push.sh \
             "Refresh derived WNBA dashboard intelligence for ${TARGET}" \
-            'data/dashboard' \
-            'data/warehouse' \
-            'data/market' \
-            'data/forecast'
+            "${DERIVED_OUTPUTS[@]}"
 
       - name: Verify published target and dispatch deployment
         env:
