@@ -1,8 +1,8 @@
 name: WNBA New Day Prediction Sync
 
 # Maintenance mode: scheduled retries remain paused during the FIBA break.
-# This workflow consumes canonical base + injury context and owns only the
-# downstream injury-aware Phase 2 and Sprint 19 M02 prediction artifacts.
+# Production execution is allowed only through workflow_call or manual dispatch;
+# code/data pushes may validate the workflow definition but never run the writer.
 on:
   workflow_call:
     inputs:
@@ -45,10 +45,11 @@ permissions:
 
 concurrency:
   group: wnba-main-writer
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   sync:
+    if: ${{ github.event_name != 'push' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
