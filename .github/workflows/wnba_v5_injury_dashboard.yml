@@ -2,7 +2,8 @@ name: WNBA V5 Injury Intelligence
 
 # Maintenance mode: scheduled polling is paused during the FIBA break.
 # This workflow owns injury context only; downstream prediction workflows
-# consume the published context and own their own artifacts.
+# consume the published context and own their own artifacts. Production
+# execution is workflow_call from the V5 orchestrator or manual dispatch only.
 on:
   workflow_call:
     inputs:
@@ -17,17 +18,6 @@ on:
         description: 'Target slate date (YYYY-MM-DD); blank uses active slate'
         required: false
         default: ''
-  push:
-    branches: [main]
-    paths:
-      - 'scrape_official_wnba_injuries.py'
-      - 'scrape_injuries.py'
-      - 'wnba_injury_intelligence.py'
-      - 'wnba_injury_rotation_guard.py'
-      - 'scripts/wnba_new_day_injury_refresh.py'
-      - 'active_slate_date.py'
-      - 'scripts/check_production_architecture.py'
-      - '.github/workflows/wnba_v5_injury_dashboard.yml'
 
 concurrency:
   group: wnba-main-writer

@@ -3,7 +3,8 @@ name: WNBA Daily Slate Rollover
 # Maintenance mode: scheduled rollover remains paused during the WNBA/FIBA
 # break. Canonical slate, injury, prediction, ALT, grading, and forward-evidence
 # artifacts are owned by their dedicated workflows. This workflow consumes
-# those sources and refreshes only derived dashboard intelligence.
+# those sources and refreshes only derived dashboard intelligence. Production
+# execution is workflow_call from the V5 orchestrator or manual dispatch only.
 on:
   workflow_call:
     inputs:
@@ -19,9 +20,6 @@ on:
         required: false
         type: string
         default: ''
-  push:
-    paths:
-      - 'data/dashboard_refresh_request.txt'
 
 permissions:
   contents: write

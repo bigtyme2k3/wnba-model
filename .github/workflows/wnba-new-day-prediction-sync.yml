@@ -1,8 +1,9 @@
 name: WNBA New Day Prediction Sync
 
 # Maintenance mode: scheduled retries remain paused during the FIBA break.
-# Production execution is allowed only through workflow_call or manual dispatch;
-# code/data pushes may validate the workflow definition but never run the writer.
+# Production execution is allowed only through workflow_call from the V5
+# orchestrator or explicit operator workflow_dispatch. No push event can start
+# this writer.
 on:
   workflow_call:
     inputs:
@@ -30,14 +31,6 @@ on:
         required: false
         type: boolean
         default: true
-  push:
-    branches: [main]
-    paths:
-      - 'data/new_day_prediction_sync_request.txt'
-      - 'scripts/wnba_sprint2_phase2.py'
-      - 'scripts/wnba_s19_m02_prop_source.py'
-      - 'scripts/wnba_s19_m02_predictions.py'
-      - 'wnba_game_predictions_ledger.py'
 
 permissions:
   contents: write
@@ -49,7 +42,6 @@ concurrency:
 
 jobs:
   sync:
-    if: ${{ github.event_name != 'push' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:

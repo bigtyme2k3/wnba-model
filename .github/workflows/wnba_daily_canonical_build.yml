@@ -2,7 +2,8 @@ name: WNBA Daily Canonical Build
 
 # Maintenance mode: scheduled execution remains paused during the FIBA break.
 # This workflow owns the canonical slate, standard props, team ratings, and
-# base Sprint 2 predictions only. Injury-aware Phase 2 is a downstream consumer.
+# base Sprint 2 predictions only. Production execution is explicit: reusable
+# workflow_call from the V5 orchestrator or operator workflow_dispatch only.
 on:
   workflow_call:
     inputs:
@@ -19,12 +20,6 @@ on:
         description: Optional Eastern slate date (YYYY-MM-DD)
         required: false
         type: string
-  push:
-    paths:
-      - 'data/daily_canonical_build_request.txt'
-      - 'scripts/build_daily_canonical_slate.py'
-      - 'wnba_player_props_ingestion.py'
-      - 'wnba_sprint2_prediction_engine.py'
 
 permissions:
   contents: write
