@@ -6,8 +6,10 @@ on:
     branches: [main]
     paths:
       - 'config/v5_artifact_ownership.json'
+      - 'config/v5_rollover_derived_outputs.txt'
       - 'scripts/wnba_v5_artifact_ownership_audit.py'
       - 'scripts/wnba_v5_core_entrypoint_audit.py'
+      - 'scripts/wnba_v5_rollover_publish_scope_audit.py'
       - 'scripts/atomic_generated_push.sh'
       - 'scripts/test_atomic_generated_push.sh'
       - 'docs/V5_ARTIFACT_OWNERSHIP.md'
@@ -40,9 +42,12 @@ jobs:
         run: |
           python -m py_compile \
             scripts/wnba_v5_artifact_ownership_audit.py \
-            scripts/wnba_v5_core_entrypoint_audit.py
+            scripts/wnba_v5_core_entrypoint_audit.py \
+            scripts/wnba_v5_rollover_publish_scope_audit.py
       - name: Enforce core production entrypoints
         run: python scripts/wnba_v5_core_entrypoint_audit.py
+      - name: Enforce rollover explicit publish scope
+        run: python scripts/wnba_v5_rollover_publish_scope_audit.py
       - name: Build ownership contract report
         run: python scripts/wnba_v5_artifact_ownership_audit.py
       - name: Show ownership contract status
@@ -75,6 +80,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             python scripts/wnba_v5_core_entrypoint_audit.py
+            python scripts/wnba_v5_rollover_publish_scope_audit.py
             python scripts/wnba_v5_artifact_ownership_audit.py
             git add data/dashboard/wnba_v5_artifact_ownership_audit.json data/dashboard/wnba_v5_artifact_ownership_audit.csv
             if git diff --cached --quiet; then
