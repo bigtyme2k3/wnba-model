@@ -1,10 +1,12 @@
 # WNBA V5 Artifact Ownership
 
-Status: architecture contract for maintenance-mode consolidation.
+Status: **enforced maintenance-mode production contract**.
+
+The machine-readable source of truth is `config/v5_artifact_ownership.json`. The blocking workflow `.github/workflows/wnba-v5-artifact-ownership-audit.yml` scans all active workflows and fails when the declared ownership or maintenance schedule contract is violated.
 
 ## Core rule
 
-Every production artifact has exactly one authoritative writer. Other modules may consume it, validate it, archive immutable snapshots, or render it, but they must not independently regenerate or overwrite the same canonical artifact.
+Every protected production artifact has exactly one authoritative workflow writer. Other modules may consume it, validate it, archive immutable snapshots, or render it, but they must not independently publish a competing canonical copy.
 
 Clock schedules are orchestration triggers, not ownership. Research jobs should normally run when their evidence changes. Dashboard/deploy jobs are presentation consumers and must not regenerate upstream model evidence.
 
@@ -12,63 +14,94 @@ Clock schedules are orchestration triggers, not ownership. Research jobs should 
 
 `SCHEDULE -> ODDS -> PROPS -> CONTEXT -> PREDICTIONS -> FORWARD LEDGER -> CLOSE -> RESULTS -> LEARNING -> DASHBOARD`
 
-| Domain | Canonical artifact / evidence | Authoritative writer | Allowed downstream behavior |
+The current production ownership is declared artifact-by-artifact in `config/v5_artifact_ownership.json`. The key workflow owners are:
+
+| Domain | Canonical artifact / evidence | Authoritative workflow writer | Allowed downstream behavior |
 | --- | --- | --- | --- |
-| Schedule / slate | `data/dashboard/wnba_master.json` and current-slate representation | `wnba_current_slate.py` | Read, validate target date, derive views |
-| Game odds | canonical current sportsbook/game-market artifacts | `wnba_odds_ingestion.py` | Normalize, compare, derive market intelligence |
-| Standard player props | `data/dashboard/wnba_player_props.json` | `wnba_player_props_ingestion.py` | Score/model; M02 may reuse current canonical props but must not create a competing canonical feed |
-| ALT props | exact ALT market warehouse | `wnba_alt_market_warehouse.py` after authenticated ALT ingestion | Streaks, parlay builder, performance consume warehouse |
-| Injury / rotation context | `data/dashboard/wnba_v5_injury_intelligence.json` plus frozen issuance context | injury/context refresh pipeline | Prediction issuance freezes a snapshot; old issuance rows are never backfilled |
-| Current predictions | M11/current prediction artifact | canonical V5 inference path | Dashboard renders; M12 records immutable issuance evidence |
-| Forward evidence | `data/history/wnba_v5_forward_predictions.jsonl` | M12 postgame/forward-ledger writer | Append/finalize only under immutable-ledger rules; challengers consume only |
-| Closing lines | explicit-close artifacts | S3 M02 closing capture | Only verified explicit close in valid pre-tip window; never infer a close |
-| Results / actuals | verified game/player actual warehouse and grading outputs | results/actual recovery + grader | Learning consumes resolved outcomes; dashboard renders |
-| Learning / evaluation | M12 reports, forward diagnostics, champion/challenger reports | evidence-specific evaluator | Research-only until promotion gates pass; never mutate historical issued probabilities |
-| Dashboard | generated dashboard/UI artifacts | deploy/dashboard builder | Presentation only; must not rerun M03/M12 or reconstruct upstream evidence |
+| Schedule / slate | `data/dashboard/wnba_master.json` | `wnba_daily_canonical_build.yml` | Read, validate target date, derive views |
+| Standard player props | `data/dashboard/wnba_player_props.json` | `wnba_daily_canonical_build.yml` | Score/model; downstream M02 may reuse the current canonical snapshot |
+| Injury context | dashboard + warehouse injury intelligence | `wnba_v5_injury_dashboard.yml` | Prediction issuance consumes current source-only context; old issuance is never backfilled |
+| Base game predictions | `wnba_sprint2_predictions.json` | `wnba_daily_canonical_build.yml` | Injury-aware Phase 2 consumes it |
+| Injury-aware game / M02 predictions | Phase 2 + M02 prediction artifacts | `wnba-new-day-prediction-sync.yml` | Dashboard, M12 and evidence consumers read them |
+| Forward evidence | `data/history/wnba_v5_forward_predictions.jsonl` | `wnba-v5-m12-postgame-learning.yml` | Immutable issuance/finalization rules; challengers consume only |
+| Closing lines | explicit close CSV/snapshot/CLV queue | `wnba-v5-s3-m02-closing-capture.yml` | Only verified explicit close in the valid pre-tip window |
+| Results | model history + results lifecycle | `wnba_results_refresh.yml` | Learning consumes resolved outcomes; dashboard renders |
+| ALT market | dashboard + warehouse ALT market state | `wnba_alt_pregame_snapshot.yml` | Streaks, parlays and performance consume it |
+| Dashboard freshness | `data/dashboard/wnba_tab_freshness.json` | `wnba_daily_slate_rollover.yml` | Deploy/render consumes it |
 
-## Orchestration ownership
+## Daily orchestration
 
-### Daily orchestration
+There is now one dependency-order production entry point:
 
-Long-term there should be one active daily orchestrator. Its job is to call source owners in dependency order and verify their outputs. It must not contain alternate implementations of those owners.
+`.github/workflows/wnba-v5-daily-orchestrator.yml`
 
-During the 2026 FIBA break, the overlapping scheduled writers (`wnba_daily_canonical_build.yml`, `wnba-new-day-prediction-sync.yml`, and `wnba_daily_slate_rollover.yml`) remain maintenance/manual only while consolidation is performed.
+It does not own upstream artifacts. It calls reusable authoritative stages in order:
 
-### Live market capture
+`OWNERSHIP PREFLIGHT -> CANONICAL BASE -> INJURY CONTEXT -> PHASE 2 / M02 -> DERIVED DASHBOARD -> DEPLOY`
 
-Live workflows may run frequently only when the source can materially change. They should publish only the artifacts in their domain. A closing-line capture workflow should not become a broad dashboard rebuild.
+The four core stage workflows support `workflow_call` and remain directly manually dispatchable for targeted QA. The orchestrator requires explicit `live_mode=true` before any production stage runs. During maintenance mode it has no clock schedule.
 
-### Results and grading
+Closing capture, results/grading, ALT ingestion, M12 forward evidence and research evaluation remain domain-specific workflows because they run on different evidence timing and should not be forced into morning slate creation.
+
+## Maintenance-mode certification
+
+The enforced ownership report currently requires:
+
+- zero ownership violations;
+- zero scheduled workflows;
+- zero scheduled paid-API risks;
+- zero scheduled live-pipeline risks.
+
+The contract is intentionally stricter during the 2026 FIBA break. Automatic clocks must not be reintroduced by an unrelated workflow edit.
+
+## Slate QA gates
+
+`.github/workflows/wnba-v5-empty-slate-contract.yml` is an offline, read-only slate contract suite. It runs both scenarios entirely in temporary directories:
+
+1. **Confirmed empty slate** — zero games, zero props, zero bets/portfolio, no Odds API call and no `player_points.py` execution.
+2. **Controlled active slate** — one synthetic game using a persisted three-book canonical prop fixture, no live Odds API call, one deterministic M02 projection, and no mutation of repository production data.
+
+Both tests must leave `git diff` clean. These tests are the pre-live structural gate; a real active-slate production run is still a separate operator-controlled step.
+
+## Live market capture
+
+Live workflows may run frequently only when the source can materially change. They should publish only artifacts in their domain. A closing-line capture workflow must not become a broad dashboard rebuild.
+
+## Results and grading
 
 Results recovery owns completed actuals and grading. It is separate from current-slate generation. Regrading may update derived performance but may not rewrite immutable prediction issuance.
 
-### Research
+## Research
 
 Drift, feature lineage, champion/challenger, adaptive challenger, calibration and promotion-readiness modules consume evidence. They should trigger on evidence/code changes or manual QA rather than repeatedly rewriting unchanged reports on a clock.
 
-### Dashboard / deploy
+## Dashboard / deploy
 
 Deployment is a terminal consumer. Renderer patches are presentation-only by default. A dashboard build failure must never be "fixed" by silently rerunning an upstream evidence producer inside a renderer.
 
 ## Invariants
 
-1. One canonical writer per production artifact.
+1. One canonical workflow writer per protected production artifact.
 2. Immutable forward issuance: earliest valid issuance remains historical truth.
 3. No lookahead: contextual features must exist at issuance time.
 4. Explicit close only: no inferred closing prices.
 5. Target-date validation at every production boundary.
-6. Empty slate is a valid state, not automatically a pipeline failure.
+6. Empty slate is a valid READY state and must clear stale current-slate rows.
 7. No-op publish is success when the workflow contract permits unchanged output.
 8. Research cannot promote itself into production; promotion requires explicit evidence gates.
 9. Paid APIs are called only by source owners and only when cached/current canonical evidence cannot satisfy the contract.
 10. Dashboard code reads canonical artifacts; it does not own them.
+11. The orchestrator owns dependency order, not the artifacts produced by its called stages.
+12. Maintenance mode contains no automatic cron execution.
 
-## Consolidation order
+## Re-enable sequence
 
-1. Restore/preserve all validation checks in maintenance-mode daily workflows.
-2. Inventory every writer of the schedule, props, prediction, forward-ledger, close, result and dashboard artifacts.
-3. Mark non-authoritative writers as consumers or retire them.
-4. Replace overlapping daily workflows with one orchestrator that calls authoritative stages.
-5. Narrow publish scopes by domain to reduce Git races.
-6. Add an automated ownership audit that fails when a protected canonical artifact gains multiple production writers.
-7. Re-enable schedules only after an empty-slate QA run and a controlled active-slate simulation both pass.
+Before live schedules return:
+
+1. Ownership contract must remain PASS.
+2. Offline empty-slate contract must pass.
+3. Offline active-slate simulation must pass without paid API access.
+4. Run one operator-controlled real active slate through the V5 orchestrator with `live_mode=true`.
+5. Verify target-date consistency, source immutability, forward issuance, explicit-close readiness, grading handoff and terminal dashboard deployment.
+6. Change `config/v5_artifact_ownership.json` from maintenance to the approved live schedule contract.
+7. Re-enable only the minimum required source/evidence schedules, then let the blocking audit enforce the new live contract.
