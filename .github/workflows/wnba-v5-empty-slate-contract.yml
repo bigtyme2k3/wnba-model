@@ -1,4 +1,4 @@
-name: WNBA V5 Empty Slate Contract
+name: WNBA V5 Slate Contract QA
 
 on:
   workflow_dispatch:
@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'tests/test_v5_empty_slate_contract.py'
+      - 'tests/test_v5_active_slate_contract.py'
       - 'scripts/wnba_s19_m02_prop_source.py'
       - 'scripts/wnba_s19_m02_predictions.py'
       - '.github/workflows/wnba-v5-empty-slate-contract.yml'
@@ -14,11 +15,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: wnba-v5-empty-slate-contract
+  group: wnba-v5-slate-contract-qa
   cancel-in-progress: true
 
 jobs:
-  empty-slate-contract:
+  slate-contract:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -30,20 +31,23 @@ jobs:
           python-version: '3.11'
       - name: Install isolated test dependencies
         run: python -m pip install --disable-pip-version-check pandas requests
-      - name: Compile empty-slate path
+      - name: Compile slate contract paths
         run: |
           python -m py_compile \
             scripts/wnba_s19_m02_prop_source.py \
             scripts/wnba_s19_m02_predictions.py \
-            tests/test_v5_empty_slate_contract.py
+            tests/test_v5_empty_slate_contract.py \
+            tests/test_v5_active_slate_contract.py
       - name: Prove confirmed empty slate is side-effect safe
         run: python tests/test_v5_empty_slate_contract.py
+      - name: Simulate active slate without paid API
+        run: python tests/test_v5_active_slate_contract.py
       - name: Enforce repository immutability
         run: |
           if ! git diff --quiet; then
-            echo 'Empty-slate contract test mutated repository files.' >&2
+            echo 'V5 slate contract QA mutated repository files.' >&2
             git status --short
             git diff
             exit 1
           fi
-          echo 'PASS: isolated empty-slate QA left repository production data untouched.'
+          echo 'PASS: empty and active-slate simulations left repository production data untouched.'
