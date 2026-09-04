@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static inventory of production artifact ownership across active workflows.
+"""Static inventory of production artifact ownership and workflow schedules.
 
 This is intentionally read-only. It scans only .github/workflows (never the
 archive) and records workflows that reference protected canonical artifacts,
@@ -69,6 +69,9 @@ DIRECT_WRITE_PATTERNS = (
     re.compile(r"(?:^|\s)(?:cp|mv|install)\s+"),
 )
 
+CRON_RE = re.compile(r"^\s*(?:-\s*)?cron:\s*['\"]?([^'\"#]+?)['\"]?\s*(?:#.*)?$")
+NAME_RE = re.compile(r"^\s*name:\s*['\"]?(.+?)['\"]?\s*$")
+
 
 def shell_publish_line_indexes(lines: list[str]) -> set[int]:
     """Return all line indexes belonging to git-add/atomic-push commands."""
@@ -95,15 +98,67 @@ def line_is_publish_context(lines: list[str], idx: int, shell_publish_lines: set
     return any(pattern.search(line) for pattern in DIRECT_WRITE_PATTERNS)
 
 
+def workflow_name(lines: list[str], fallback: str) -> str:
+    for raw in lines[:20]:
+        match = NAME_RE.match(raw)
+        if match:
+            return match.group(1).strip()
+    return fallback
+
+
+def scheduled_entry(wf: Path, lines: list[str], text: str) -> dict | None:
+    crons: list[str] = []
+    for raw in lines:
+        if raw.lstrip().startswith("#"):
+            continue
+        match = CRON_RE.match(raw)
+        if match:
+            cron = match.group(1).strip()
+            if cron and cron not in crons:
+                crons.append(cron)
+    if not crons:
+        return None
+
+    lower = text.lower()
+    paid_markers = (
+        "odds_api_key",
+        "scrape_odds_props_consensus.py",
+        "the odds api",
+        "paid request",
+    )
+    live_markers = (
+        "live inference",
+        "closing capture",
+        "current slate",
+        "injury",
+        "results refresh",
+        "market refresh",
+        "rollover",
+    )
+    return {
+        "workflow": str(wf.relative_to(ROOT)),
+        "name": workflow_name(lines, wf.stem),
+        "crons": crons,
+        "cron_count": len(crons),
+        "paid_api_risk": any(marker in lower for marker in paid_markers),
+        "live_pipeline_risk": any(marker in lower for marker in live_markers),
+    }
+
+
 def main() -> int:
     rows: list[dict] = []
     by_artifact: dict[str, list[dict]] = defaultdict(list)
+    scheduled_workflows: list[dict] = []
 
     files = sorted([*WORKFLOWS.glob("*.yml"), *WORKFLOWS.glob("*.yaml")])
     for wf in files:
         text = wf.read_text(encoding="utf-8", errors="replace")
         lines = text.splitlines()
         shell_lines = shell_publish_line_indexes(lines)
+        scheduled = scheduled_entry(wf, lines, text)
+        if scheduled:
+            scheduled_workflows.append(scheduled)
+
         for domain, artifacts in PROTECTED.items():
             for artifact in artifacts:
                 for i, line in enumerate(lines):
@@ -140,6 +195,8 @@ def main() -> int:
             if len(publishers) > 1:
                 conflicts.append(item)
 
+    paid_scheduled = [item for item in scheduled_workflows if item["paid_api_risk"]]
+    live_scheduled = [item for item in scheduled_workflows if item["live_pipeline_risk"]]
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "status": "REVIEW_REQUIRED" if conflicts else "PASS",
@@ -149,12 +206,18 @@ def main() -> int:
         "active_workflow_count": len(files),
         "multiple_publisher_count": len(conflicts),
         "multiple_publishers": conflicts,
+        "scheduled_workflow_count": len(scheduled_workflows),
+        "scheduled_paid_api_risk_count": len(paid_scheduled),
+        "scheduled_live_pipeline_risk_count": len(live_scheduled),
+        "scheduled_workflows": scheduled_workflows,
         "artifacts": summary,
         "evidence": rows,
         "notes": [
             "This audit is static and intentionally conservative.",
             "Read-only open/json.load references are not publisher evidence.",
             "Multi-line git-add and atomic-push artifact lists are parsed through their full continuation block.",
+            "Cron inventory includes only uncommented cron entries in active workflow files.",
+            "paid_api_risk/live_pipeline_risk are keyword-based triage hints, not blocking findings.",
             "A MULTIPLE_PUBLISHERS result is a consolidation target, not proof of runtime corruption.",
             "Do not convert this inventory into a blocking gate until authoritative writers are finalized.",
         ],
@@ -175,6 +238,9 @@ def main() -> int:
         "active_workflows": payload["active_workflow_count"],
         "protected_artifacts": payload["protected_artifact_count"],
         "multiple_publisher_count": payload["multiple_publisher_count"],
+        "scheduled_workflow_count": payload["scheduled_workflow_count"],
+        "scheduled_paid_api_risk_count": payload["scheduled_paid_api_risk_count"],
+        "scheduled_live_pipeline_risk_count": payload["scheduled_live_pipeline_risk_count"],
         "output": str(OUT_JSON.relative_to(ROOT)),
     }, indent=2))
     return 0
