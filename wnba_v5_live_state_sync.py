@@ -1,4 +1,4 @@
-"""V5 Phase 1: synchronize one authoritative WNBA game state across all decision artifacts."""
+"""V5 Phase 1: derive live game state without rewriting canonical source artifacts."""
 from __future__ import annotations
 
 import json
@@ -16,7 +16,6 @@ ACTION_PATHS = [
     DASH / "wnba_risk_allocation.json", WH / "wnba_risk_allocation.json",
     DASH / "wnba_portfolio_dashboard.json", WH / "wnba_portfolio_dashboard.json",
 ]
-INJURY_PATHS = [DASH / "wnba_injury_intelligence.json", WH / "wnba_injury_intelligence.json"]
 ROW_KEYS = (
     "rows", "props", "decisions", "top_decisions", "qualified_bets", "final_decisions",
     "recommended_card", "candidates", "bets", "portfolio", "allocations", "best_bets",
@@ -33,7 +32,8 @@ def load(path: Path, default: Any):
 
 def dump(path: Path, value: Any):
     path.parent.mkdir(parents=True, exist_ok=True)
-    json.dump(value, path.open("w", encoding="utf-8"), indent=2, allow_nan=False)
+    with path.open("w", encoding="utf-8") as handle:
+        json.dump(value, handle, indent=2, allow_nan=False)
 
 
 def norm(value: Any) -> str:
@@ -108,8 +108,10 @@ def synchronize_rows(rows: list, locked_teams: set[str], locked_ids: set[str]) -
 
 def main():
     now = datetime.now(timezone.utc)
-    source_master = next((load(path, {}) for path in MASTER_PATHS if path.exists()), {})
+    source_path = next((path for path in MASTER_PATHS if path.exists()), None)
+    source_master = load(source_path, {}) if source_path else {}
     games = source_master.get("games", []) or source_master.get("today_games", []) or []
+    target_date = str(source_master.get("target_date") or "")[:10]
 
     records = []
     locked_teams: set[str] = set()
@@ -121,15 +123,13 @@ def main():
         actionable = state == "PREGAME"
         record = {
             "game_id": game_id,
-            "matchup": game.get("matchup") or " @ ".join(teams),
+            "matchup": game.get("game") or game.get("matchup") or " @ ".join(teams),
             "teams": teams,
             "state": state,
             "actionable": actionable,
             "start_time": game.get("commence_time") or game.get("start_time") or game.get("game_time"),
         }
         records.append(record)
-        game["game_state"] = state
-        game["pregame_eligible"] = actionable
         if not actionable:
             locked_teams.update(teams)
             if game_id:
@@ -137,7 +137,11 @@ def main():
 
     payload = {
         "generated_at_utc": now.isoformat(),
-        "source_of_truth": "wnba_v5_live_state_sync",
+        "target_date": target_date,
+        "source_of_truth": str(source_path) if source_path else None,
+        "consumer_only": True,
+        "canonical_master_mutated": False,
+        "canonical_injury_context_mutated": False,
         "games": records,
         "summary": {
             "pregame": sum(r["state"] == "PREGAME" for r in records),
@@ -149,20 +153,9 @@ def main():
     for path in STATE_PATHS:
         dump(path, payload)
 
-    for path in MASTER_PATHS:
-        data = load(path, None)
-        if data is None:
-            continue
-        target_games = data.get("games", []) or data.get("today_games", []) or []
-        for game in target_games:
-            game["game_state"] = state_for(game, now)
-            game["pregame_eligible"] = game["game_state"] == "PREGAME"
-        for key in ROW_KEYS:
-            if isinstance(data.get(key), list):
-                data[key] = synchronize_rows(data[key], locked_teams, locked_ids)
-        data["game_state_sync"] = payload
-        dump(path, data)
-
+    # Decision/portfolio artifacts are downstream overlays, not source evidence.
+    # They may be locked when a game starts, while master and injury artifacts
+    # remain byte-for-byte owned by their upstream source workflows.
     for path in ACTION_PATHS:
         data = load(path, None)
         if data is None:
@@ -176,23 +169,6 @@ def main():
             data["game_state_sync"] = payload
         dump(path, data)
 
-    for path in INJURY_PATHS:
-        data = load(path, None)
-        if data is None:
-            continue
-        rows = []
-        for source in data.get("adjustments", []) or []:
-            row = dict(source)
-            locked = str(row.get("team") or "").strip() in locked_teams
-            row["pregame_eligible"] = not locked
-            row["game_locked"] = locked
-            if locked:
-                row["headline_eligible"] = False
-            rows.append(row)
-        data["adjustments"] = rows
-        data["game_state_sync"] = payload
-        dump(path, data)
-
     phase = {
         "phase": 1,
         "name": "Live State Synchronization",
@@ -200,6 +176,7 @@ def main():
         "generated_at_utc": now.isoformat(),
         "qa_gate": "pending_workflow_verification",
         "artifact": "data/dashboard/wnba_game_state.json",
+        "consumer_only": True,
     }
     dump(DASH / "wnba_v5_phase_status.json", phase)
     print(json.dumps(payload["summary"], indent=2))
