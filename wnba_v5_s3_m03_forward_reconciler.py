@@ -1,14 +1,13 @@
 """WNBA V5 Operations Sprint 3 M03 — Forward Outcome Reconciler.
 
-Runs the immutable M12 grader, then publishes reconciliation-specific artifacts
-for pending and newly certified forward predictions. No issued probability,
-line, price, or timestamp is ever rewritten by this module.
+Consumes the canonical immutable M12 forward ledger and publishes reconciliation-
+specific views for pending and certified forward predictions. This module never
+runs M12 and never rewrites the ledger.
 """
 from __future__ import annotations
 
 import csv
 import json
-import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -17,12 +16,6 @@ M12_REPORT = Path('data/dashboard/wnba_v5_m12_report.json')
 OUT_REPORT = Path('data/dashboard/wnba_v5_s3_m03_forward_grade.json')
 OUT_PENDING = Path('data/dashboard/wnba_v5_pending_predictions.json')
 OUT_CERTIFIED = Path('data/dashboard/wnba_v5_certified_results.csv')
-
-IMMUTABLE_FIELDS = [
-    'prediction_id','ranking_key','prediction_generated_at_utc','date','player','game','stat','side',
-    'line','odds','book','model','v5_probability','knn_probability','market_probability',
-    'probability_edge','confidence_score','uncertainty_score'
-]
 
 
 def read_ledger():
@@ -39,28 +32,11 @@ def read_ledger():
     return rows
 
 
-def freeze_signature(row):
-    return {k: row.get(k) for k in IMMUTABLE_FIELDS}
-
-
 def main():
-    before = read_ledger()
-    before_sig = {r.get('prediction_id'): freeze_signature(r) for r in before if r.get('prediction_id')}
-
-    subprocess.run(['python','wnba_v5_m12_postgame_learning.py'], check=True)
-
-    after = read_ledger()
-    for r in after:
-        pid=r.get('prediction_id')
-        if pid in before_sig and freeze_signature(r) != before_sig[pid]:
-            raise SystemExit(f'S3_M03_BLOCKED: immutable prediction fields changed for {pid}')
-
+    rows = read_ledger()
     m12=json.loads(M12_REPORT.read_text(encoding='utf-8')) if M12_REPORT.exists() else {}
-    pending=[r for r in after if r.get('outcome') in (None,'','PENDING')]
-    certified=[r for r in after if r.get('outcome') in {'WIN','LOSS','PUSH'}]
-    newly=[r for r in certified if r.get('graded_at_utc') and not any(
-        b.get('prediction_id')==r.get('prediction_id') and b.get('outcome') in {'WIN','LOSS','PUSH'} for b in before
-    )]
+    pending=[r for r in rows if r.get('outcome') in (None,'','PENDING')]
+    certified=[r for r in rows if r.get('outcome') in {'WIN','LOSS','PUSH'}]
 
     now=datetime.now(timezone.utc).isoformat()
     report={
@@ -68,16 +44,18 @@ def main():
         'sprint':'OPERATIONS_SPRINT_3',
         'module':'S3-M03',
         'stage':'FORWARD_OUTCOME_RECONCILER',
-        'status':'READY' if after else 'WAITING_FOR_FORWARD_PREDICTIONS',
+        'status':'READY' if rows else 'WAITING_FOR_FORWARD_PREDICTIONS',
         'generated_at_utc':now,
-        'ledger_rows':len(after),
+        'ledger_rows':len(rows),
         'certified_rows':len(certified),
         'pending_rows':len(pending),
-        'newly_graded':len(newly),
+        'newly_graded':int(m12.get('newly_graded') or 0),
         'm12_status':m12.get('status'),
         'immutable_prediction_fields_preserved':True,
-        'grading_source':'V5 certified historical feature store via M12 exact date/player/stat reconciliation',
-        'policy':'Only later certified actuals may resolve forward predictions; issued probabilities and market terms remain immutable.',
+        'consumer_only':True,
+        'canonical_ledger_owner':'V5-M12',
+        'grading_source':'Canonical M12 forward ledger; S3-M03 performs no grading mutation.',
+        'policy':'Only M12 may append or resolve canonical forward ledger rows; S3-M03 publishes read-only reconciliation views.',
         'next_module':'S3-M04 Explicit CLV Engine'
     }
 
