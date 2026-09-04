@@ -1,32 +1,12 @@
 {
-  "generated_at": "2026-09-04T19:06:54.667614+00:00",
+  "generated_at": "2026-09-04T19:10:20.262568+00:00",
   "status": "REVIEW_REQUIRED",
   "mode": "inventory_only",
   "scope": ".github/workflows only; .github/workflows-archive excluded",
   "protected_artifact_count": 16,
   "active_workflow_count": 70,
-  "multiple_publisher_count": 3,
+  "multiple_publisher_count": 2,
   "multiple_publishers": [
-    {
-      "domain": "current_slate",
-      "artifact": "data/dashboard/wnba_master.json",
-      "workflow_references": [
-        ".github/workflows/wnba-new-day-prediction-sync.yml",
-        ".github/workflows/wnba_daily_canonical_build.yml",
-        ".github/workflows/wnba_daily_slate_rollover.yml",
-        ".github/workflows/wnba_live_state_sync.yml",
-        ".github/workflows/wnba_phase2_all_tabs_v3.yml",
-        ".github/workflows/wnba_repair_missing_outputs.yml",
-        ".github/workflows/wnba_v5_injury_dashboard.yml"
-      ],
-      "publish_workflows": [
-        ".github/workflows/wnba_daily_canonical_build.yml",
-        ".github/workflows/wnba_daily_slate_rollover.yml"
-      ],
-      "reference_count": 15,
-      "publish_workflow_count": 2,
-      "status": "MULTIPLE_PUBLISHERS"
-    },
     {
       "domain": "alt_market",
       "artifact": "data/dashboard/wnba_alt_market_warehouse.json",
@@ -54,14 +34,15 @@
       "workflow_references": [
         ".github/workflows/wnba-alt-late-market-refresh.yml",
         ".github/workflows/wnba_alt_game_log_recovery.yml",
-        ".github/workflows/wnba_alt_pregame_snapshot.yml"
+        ".github/workflows/wnba_alt_pregame_snapshot.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml"
       ],
       "publish_workflows": [
         ".github/workflows/wnba-alt-late-market-refresh.yml",
         ".github/workflows/wnba_alt_game_log_recovery.yml",
         ".github/workflows/wnba_alt_pregame_snapshot.yml"
       ],
-      "reference_count": 3,
+      "reference_count": 4,
       "publish_workflow_count": 3,
       "status": "MULTIPLE_PUBLISHERS"
     }
@@ -80,12 +61,11 @@
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
       "publish_workflows": [
-        ".github/workflows/wnba_daily_canonical_build.yml",
-        ".github/workflows/wnba_daily_slate_rollover.yml"
+        ".github/workflows/wnba_daily_canonical_build.yml"
       ],
-      "reference_count": 15,
-      "publish_workflow_count": 2,
-      "status": "MULTIPLE_PUBLISHERS"
+      "reference_count": 16,
+      "publish_workflow_count": 1,
+      "status": "SINGLE_OR_NO_PUBLISHER"
     },
     {
       "domain": "standard_props",
@@ -95,12 +75,13 @@
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba-v5-current-data-health.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
       "publish_workflows": [
         ".github/workflows/wnba_daily_canonical_build.yml"
       ],
-      "reference_count": 10,
+      "reference_count": 12,
       "publish_workflow_count": 1,
       "status": "SINGLE_OR_NO_PUBLISHER"
     },
@@ -113,13 +94,14 @@
         ".github/workflows/wnba-v5-current-data-health.yml",
         ".github/workflows/wnba-v5-m10-live-decision.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml",
         ".github/workflows/wnba_live_state_sync.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
       "publish_workflows": [
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
-      "reference_count": 15,
+      "reference_count": 17,
       "publish_workflow_count": 1,
       "status": "SINGLE_OR_NO_PUBLISHER"
     },
@@ -129,13 +111,14 @@
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml",
         ".github/workflows/wnba_live_state_sync.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
       "publish_workflows": [
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
-      "reference_count": 8,
+      "reference_count": 9,
       "publish_workflow_count": 1,
       "status": "SINGLE_OR_NO_PUBLISHER"
     },
@@ -145,12 +128,13 @@
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
       "publish_workflows": [
         ".github/workflows/wnba_daily_canonical_build.yml"
       ],
-      "reference_count": 7,
+      "reference_count": 9,
       "publish_workflow_count": 1,
       "status": "SINGLE_OR_NO_PUBLISHER"
     },
@@ -161,6 +145,24 @@
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba-v5-s3-m02-closing-capture.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml",
+        ".github/workflows/wnba_v5_injury_dashboard.yml"
+      ],
+      "publish_workflows": [
+        ".github/workflows/wnba-new-day-prediction-sync.yml"
+      ],
+      "reference_count": 12,
+      "publish_workflow_count": 1,
+      "status": "SINGLE_OR_NO_PUBLISHER"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
+      "workflow_references": [
+        ".github/workflows/wnba-new-day-prediction-sync.yml",
+        ".github/workflows/wnba-v5-player-prop-action-policy-v2.yml",
+        ".github/workflows/wnba_daily_canonical_build.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
       "publish_workflows": [
@@ -172,32 +174,17 @@
     },
     {
       "domain": "m02_predictions",
-      "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
+      "artifact": "data/dashboard/wnba_s19_m02_prediction_audit.json",
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
-        ".github/workflows/wnba-v5-player-prop-action-policy-v2.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
       "publish_workflows": [
         ".github/workflows/wnba-new-day-prediction-sync.yml"
       ],
       "reference_count": 8,
-      "publish_workflow_count": 1,
-      "status": "SINGLE_OR_NO_PUBLISHER"
-    },
-    {
-      "domain": "m02_predictions",
-      "artifact": "data/dashboard/wnba_s19_m02_prediction_audit.json",
-      "workflow_references": [
-        ".github/workflows/wnba-new-day-prediction-sync.yml",
-        ".github/workflows/wnba_daily_canonical_build.yml",
-        ".github/workflows/wnba_v5_injury_dashboard.yml"
-      ],
-      "publish_workflows": [
-        ".github/workflows/wnba-new-day-prediction-sync.yml"
-      ],
-      "reference_count": 6,
       "publish_workflow_count": 1,
       "status": "SINGLE_OR_NO_PUBLISHER"
     },
@@ -212,12 +199,13 @@
         ".github/workflows/wnba-v5-m12-postgame-learning.yml",
         ".github/workflows/wnba-v5-probability-recalibration.yml",
         ".github/workflows/wnba-v5-s3-m03-forward-reconciler.yml",
-        ".github/workflows/wnba-v5-s3-m04-explicit-clv.yml"
+        ".github/workflows/wnba-v5-s3-m04-explicit-clv.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml"
       ],
       "publish_workflows": [
         ".github/workflows/wnba-v5-m12-postgame-learning.yml"
       ],
-      "reference_count": 8,
+      "reference_count": 9,
       "publish_workflow_count": 1,
       "status": "SINGLE_OR_NO_PUBLISHER"
     },
@@ -262,7 +250,7 @@
       "publish_workflows": [
         ".github/workflows/wnba_results_refresh.yml"
       ],
-      "reference_count": 7,
+      "reference_count": 6,
       "publish_workflow_count": 1,
       "status": "SINGLE_OR_NO_PUBLISHER"
     },
@@ -293,14 +281,15 @@
       "workflow_references": [
         ".github/workflows/wnba-alt-late-market-refresh.yml",
         ".github/workflows/wnba_alt_game_log_recovery.yml",
-        ".github/workflows/wnba_alt_pregame_snapshot.yml"
+        ".github/workflows/wnba_alt_pregame_snapshot.yml",
+        ".github/workflows/wnba_daily_slate_rollover.yml"
       ],
       "publish_workflows": [
         ".github/workflows/wnba-alt-late-market-refresh.yml",
         ".github/workflows/wnba_alt_game_log_recovery.yml",
         ".github/workflows/wnba_alt_pregame_snapshot.yml"
       ],
-      "reference_count": 3,
+      "reference_count": 4,
       "publish_workflow_count": 3,
       "status": "MULTIPLE_PUBLISHERS"
     },
@@ -905,15 +894,15 @@
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 184,
+      "line": 62,
       "publish_context": false,
-      "snippet": "target=os.environ['TARGET']; data=json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8')); actual=str(data.get('target_date') or '')"
+      "snippet": "'master':'data/dashboard/wnba_master.json',"
     },
     {
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 212,
+      "line": 152,
       "publish_context": false,
       "snippet": "target=os.environ['TARGET']; master=Path('data/dashboard/wnba_master.json')"
     },
@@ -921,39 +910,159 @@
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 251,
-      "publish_context": true,
-      "snippet": "git show \"origin/main:data/dashboard/wnba_master.json\" > /tmp/published_wnba_master.json"
+      "line": 164,
+      "publish_context": false,
+      "snippet": "data/dashboard/wnba_master.json"
+    },
+    {
+      "domain": "current_slate",
+      "artifact": "data/dashboard/wnba_master.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 212,
+      "publish_context": false,
+      "snippet": "PUBLISHED_TARGET=$(git show \"origin/main:data/dashboard/wnba_master.json\" | python -c \"import json,sys; print(str(json.load(sys.stdin).get('target_date') or '')[:10])\")"
+    },
+    {
+      "domain": "standard_props",
+      "artifact": "data/dashboard/wnba_player_props.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 63,
+      "publish_context": false,
+      "snippet": "'standard_props':'data/dashboard/wnba_player_props.json',"
+    },
+    {
+      "domain": "standard_props",
+      "artifact": "data/dashboard/wnba_player_props.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 165,
+      "publish_context": false,
+      "snippet": "data/dashboard/wnba_player_props.json"
+    },
+    {
+      "domain": "injury_context",
+      "artifact": "data/dashboard/wnba_injury_intelligence.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 66,
+      "publish_context": false,
+      "snippet": "'injury':'data/dashboard/wnba_injury_intelligence.json',"
+    },
+    {
+      "domain": "injury_context",
+      "artifact": "data/dashboard/wnba_injury_intelligence.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 169,
+      "publish_context": false,
+      "snippet": "data/dashboard/wnba_injury_intelligence.json"
+    },
+    {
+      "domain": "injury_context",
+      "artifact": "data/warehouse/wnba_injury_intelligence.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 170,
+      "publish_context": false,
+      "snippet": "data/warehouse/wnba_injury_intelligence.json"
+    },
+    {
+      "domain": "game_predictions",
+      "artifact": "data/dashboard/wnba_sprint2_predictions.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 65,
+      "publish_context": false,
+      "snippet": "'base_predictions':'data/dashboard/wnba_sprint2_predictions.json',"
+    },
+    {
+      "domain": "game_predictions",
+      "artifact": "data/dashboard/wnba_sprint2_predictions.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 168,
+      "publish_context": false,
+      "snippet": "data/dashboard/wnba_sprint2_predictions.json"
+    },
+    {
+      "domain": "game_predictions",
+      "artifact": "data/dashboard/wnba_sprint2_phase2.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 67,
+      "publish_context": false,
+      "snippet": "'phase2':'data/dashboard/wnba_sprint2_phase2.json',"
+    },
+    {
+      "domain": "game_predictions",
+      "artifact": "data/dashboard/wnba_sprint2_phase2.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 171,
+      "publish_context": false,
+      "snippet": "data/dashboard/wnba_sprint2_phase2.json"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 68,
+      "publish_context": false,
+      "snippet": "'m02':'data/dashboard/wnba_s19_m02_predictions.json',"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 172,
+      "publish_context": false,
+      "snippet": "data/dashboard/wnba_s19_m02_predictions.json"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_prediction_audit.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 69,
+      "publish_context": false,
+      "snippet": "'m02_audit':'data/dashboard/wnba_s19_m02_prediction_audit.json',"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_prediction_audit.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 173,
+      "publish_context": false,
+      "snippet": "data/dashboard/wnba_s19_m02_prediction_audit.json"
+    },
+    {
+      "domain": "forward_ledger",
+      "artifact": "data/history/wnba_v5_forward_predictions.jsonl",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 175,
+      "publish_context": false,
+      "snippet": "data/history/wnba_v5_forward_predictions.jsonl"
     },
     {
       "domain": "results",
       "artifact": "data/history/wnba_model_history.jsonl",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 143,
+      "line": 176,
       "publish_context": false,
-      "snippet": "if [ -f wnba_results_grader.py ] && [ -f data/history/wnba_model_history.jsonl ]; then"
-    },
-    {
-      "domain": "results",
-      "artifact": "data/history/wnba_model_history.jsonl",
-      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 147,
-      "publish_context": false,
-      "snippet": "with open('data/history/wnba_model_history.jsonl',encoding='utf-8') as f:"
+      "snippet": "data/history/wnba_model_history.jsonl"
     },
     {
       "domain": "alt_market",
       "artifact": "data/dashboard/wnba_alt_market_warehouse.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 102,
+      "line": 177,
       "publish_context": false,
-      "snippet": "p=Path('data/dashboard/wnba_alt_market_warehouse.json')"
+      "snippet": "data/dashboard/wnba_alt_market_warehouse.json"
+    },
+    {
+      "domain": "alt_market",
+      "artifact": "data/warehouse/wnba_alt_market_warehouse.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 178,
+      "publish_context": false,
+      "snippet": "data/warehouse/wnba_alt_market_warehouse.json"
     },
     {
       "domain": "dashboard_freshness",
       "artifact": "data/dashboard/wnba_tab_freshness.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 216,
+      "line": 156,
       "publish_context": false,
       "snippet": "payload=json.loads(Path('data/dashboard/wnba_tab_freshness.json').read_text(encoding='utf-8'))"
     },
