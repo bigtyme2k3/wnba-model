@@ -9,6 +9,8 @@ from pathlib import Path
 
 import pandas as pd
 
+# Maintenance note: code pushes are validation-only; production execution is
+# permitted only through the V5 orchestrator or an explicit manual dispatch.
 # This script runs as `python scripts/...`, which makes `scripts/` the first
 # import location. Add the repository root explicitly so existing root-level
 # collectors such as scrape_odds_props.py can be reused instead of duplicated.
