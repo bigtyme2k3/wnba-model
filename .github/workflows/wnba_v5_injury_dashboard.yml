@@ -4,6 +4,13 @@ name: WNBA V5 Injury Intelligence
 # This workflow owns injury context only; downstream prediction workflows
 # consume the published context and own their own artifacts.
 on:
+  workflow_call:
+    inputs:
+      date:
+        description: 'Target slate date (YYYY-MM-DD); blank uses active slate'
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       date:
@@ -52,7 +59,7 @@ jobs:
 
       - name: Resolve target date
         run: |
-          REQUESTED="${{ github.event.inputs.date }}"
+          REQUESTED="${{ inputs.date }}"
           if [ -n "$REQUESTED" ]; then
             TARGET="$REQUESTED"
           else
