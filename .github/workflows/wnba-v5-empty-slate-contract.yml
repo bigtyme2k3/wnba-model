@@ -1,0 +1,49 @@
+name: WNBA V5 Empty Slate Contract
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/test_v5_empty_slate_contract.py'
+      - 'scripts/wnba_s19_m02_prop_source.py'
+      - 'scripts/wnba_s19_m02_predictions.py'
+      - '.github/workflows/wnba-v5-empty-slate-contract.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wnba-v5-empty-slate-contract
+  cancel-in-progress: true
+
+jobs:
+  empty-slate-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install isolated test dependencies
+        run: python -m pip install --disable-pip-version-check pandas requests
+      - name: Compile empty-slate path
+        run: |
+          python -m py_compile \
+            scripts/wnba_s19_m02_prop_source.py \
+            scripts/wnba_s19_m02_predictions.py \
+            tests/test_v5_empty_slate_contract.py
+      - name: Prove confirmed empty slate is side-effect safe
+        run: python tests/test_v5_empty_slate_contract.py
+      - name: Enforce repository immutability
+        run: |
+          if ! git diff --quiet; then
+            echo 'Empty-slate contract test mutated repository files.' >&2
+            git status --short
+            git diff
+            exit 1
+          fi
+          echo 'PASS: isolated empty-slate QA left repository production data untouched.'
