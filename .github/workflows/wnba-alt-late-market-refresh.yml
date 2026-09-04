@@ -1,117 +1,18 @@
 name: WNBA ALT Late Market Refresh
 
-# Maintenance mode: WNBA is on the FIBA break. Scheduled ALT ingestion is
-# paused so an empty league slate cannot spend API calls or create red runs.
-# Manual dispatch and controlled code/data triggers remain available for QA.
+# Maintenance mode: this is now only a controlled entry point to the single
+# canonical ALT market writer. It owns no market artifacts itself.
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
       - 'data/alt_late_refresh_request.txt'
-      - 'wnba_alt_parlay_builder.py'
-      - '.github/workflows/wnba-alt-late-market-refresh.yml'
 
 permissions:
   contents: write
 
-concurrency:
-  group: wnba-main-writer
-  cancel-in-progress: false
-
 jobs:
   refresh-alt:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Sync latest repository
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install ALT dependencies
-        run: python -m pip install --disable-pip-version-check pandas requests
-
-      - name: Resolve active slate
-        run: |
-          TARGET=$(python active_slate_date.py)
-          test -n "$TARGET"
-          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "Late ALT target: $TARGET"
-
-      - name: Refresh exact sportsbook ALT ladders
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: |
-          set -euo pipefail
-          test -n "${ODDS_API_KEY:-}"
-          # One-day user-approved reserve bypass for the Aug. 29 ALT slate only.
-          # All other dates retain the normal 1,500-credit protection.
-          if [ "$TARGET" = "2026-08-29" ]; then
-            export ODDS_API_MIN_REMAINING=0
-            echo "ALT reserve bypass ACTIVE for ${TARGET}"
-          else
-            export ODDS_API_MIN_REMAINING=1500
-            echo "ALT reserve protection ACTIVE (${ODDS_API_MIN_REMAINING})"
-          fi
-          python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw
-          python wnba_alt_market_warehouse.py --date "$TARGET"
-          python wnba_alt_streaks.py --date "$TARGET"
-          python wnba_alt_streak_confidence.py --date "$TARGET"
-          python wnba_alt_apply_calibration.py --date "$TARGET"
-          python wnba_alt_parlay_builder.py --date "$TARGET"
-
-      - name: Audit late ALT market availability
-        run: |
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          target=os.environ['TARGET']
-          market=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
-          streak=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
-          parlays=json.loads(Path('data/dashboard/wnba_alt_parlays.json').read_text())
-          if market.get('target_date') != target or streak.get('target_date') != target or parlays.get('target_date') != target:
-              raise SystemExit('Late ALT target mismatch')
-          summary=market.get('summary') or {}
-          rows=int(summary.get('raw_rows') or summary.get('source_raw_rows') or len(market.get('rows') or []))
-          markets=int(summary.get('markets') or 0)
-          print({'target':target,'raw_alt_rows':rows,'markets':markets,'players':summary.get('players',0),'sportsbooks':summary.get('sportsbooks',[]),'alt_parlays':(parlays.get('summary') or {}).get('total_parlays',0)})
-          if rows <= 0 or markets <= 0:
-              raise SystemExit('NO_LATE_ALT_MARKETS_AVAILABLE')
-          scored=int((streak.get('summary') or {}).get('rows') or 0)
-          if scored <= 0:
-              raise SystemExit('ALT markets arrived but zero streak rows were scored')
-          PY
-
-      - name: Refresh ALT performance state
-        run: |
-          python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot
-          python wnba_alt_performance_tracker.py --grade
-          python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
-
-      - name: Publish late ALT state
-        run: |
-          git config user.name 'WNBA ALT Late Refresh Bot'
-          git config user.email 'actions@github.com'
-          bash scripts/atomic_generated_push.sh \
-            "Refresh late-day WNBA ALT markets for ${TARGET}" \
-            "data/raw/alt_props_bookmakers_${TARGET}.csv" \
-            'data/raw/alt_props_bookmakers_today.csv' \
-            'data/dashboard/wnba_alt_market_warehouse.json' \
-            'data/warehouse/wnba_alt_market_warehouse.json' \
-            'data/dashboard/wnba_alt_streaks.json' \
-            'data/warehouse/wnba_alt_streaks.json' \
-            'data/dashboard/wnba_alt_calibration.json' \
-            'data/warehouse/wnba_alt_calibration.json' \
-            'data/dashboard/wnba_alt_performance.json' \
-            'data/warehouse/wnba_alt_performance.json' \
-            'data/dashboard/wnba_alt_parlays.json' \
-            'data/history/wnba_alt_streak_history.jsonl'
+    uses: ./.github/workflows/wnba_alt_pregame_snapshot.yml
+    secrets: inherit
