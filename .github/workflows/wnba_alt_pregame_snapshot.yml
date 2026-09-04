@@ -1,24 +1,11 @@
-name: WNBA ALT Pregame Snapshot Writer
+name: WNBA ALT Canonical Market Writer
 
+# Maintenance mode: paid ALT polling is manual-only during the WNBA/FIBA break.
+# This workflow is the sole owner of the current exact ALT market warehouse.
+# Other ALT workflows may call it, but they must not publish the warehouse.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'wnba_alt_calibration.py'
-      - 'wnba_alt_apply_calibration.py'
-      - 'wnba_alt_performance_tracker.py'
-      - 'wnba_alt_market_warehouse.py'
-      - 'wnba_alt_streaks.py'
-      - 'wnba_alt_streak_confidence.py'
-      - 'scripts/scrape_odds_props_consensus.py'
-      - '.github/workflows/wnba_alt_pregame_snapshot.yml'
-  schedule:
-    # Emergency credit-control cadence through the monthly reset: one complete
-    # ALT snapshot at 8:07 AM Eastern (12:07 UTC during EDT), plus the separate
-    # tip-window close. This keeps one full paid ALT refresh per day while making
-    # the dashboard useful during the morning session.
-    - cron: '7 12 * * *'
+  workflow_call:
 
 permissions:
   contents: write
@@ -53,9 +40,9 @@ jobs:
           TARGET=$(python active_slate_date.py)
           test -n "$TARGET"
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "ALT snapshot target: $TARGET"
+          echo "Canonical ALT market target: $TARGET"
 
-      - name: Compile canonical ALT snapshot chain
+      - name: Compile canonical ALT market chain
         run: |
           python -m py_compile \
             scripts/scrape_odds_props_consensus.py \
@@ -64,14 +51,15 @@ jobs:
             wnba_alt_streak_confidence.py \
             wnba_alt_calibration.py \
             wnba_alt_apply_calibration.py \
-            wnba_alt_performance_tracker.py
+            wnba_alt_performance_tracker.py \
+            wnba_alt_parlay_builder.py
 
       - name: Refresh exact ALT markets and scores
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ODDS_API_MIN_REMAINING: '1500'
         run: |
-          set -e
+          set -euo pipefail
           if [ -n "${ODDS_API_KEY:-}" ]; then
             python scripts/scrape_odds_props_consensus.py --date "$TARGET" --out data/raw
           else
@@ -81,42 +69,60 @@ jobs:
           python wnba_alt_streaks.py --date "$TARGET"
           python wnba_alt_streak_confidence.py --date "$TARGET"
           python wnba_alt_apply_calibration.py --date "$TARGET"
+          python wnba_alt_parlay_builder.py --date "$TARGET"
 
-      - name: Verify calibrated current side coverage
+      - name: Verify exact current ALT market coverage
         run: |
           python - <<'PY'
           import json, os
           from collections import Counter
           from pathlib import Path
+
           target=os.environ['TARGET']
           market=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
           scores=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
           calibration=json.loads(Path('data/dashboard/wnba_alt_calibration.json').read_text())
+          parlays=json.loads(Path('data/dashboard/wnba_alt_parlays.json').read_text())
+
+          if market.get('target_date') != target or scores.get('target_date') != target or parlays.get('target_date') != target:
+              raise SystemExit('Canonical ALT target mismatch')
+
+          summary=market.get('summary') or {}
+          raw_rows=int(summary.get('raw_rows') or summary.get('source_raw_rows') or len(market.get('rows') or []))
+          markets=int(summary.get('markets') or 0)
+          if raw_rows <= 0 or markets <= 0:
+              raise SystemExit('NO_CANONICAL_ALT_MARKETS_AVAILABLE')
+
           market_sides=Counter(str(r.get('side') or 'UNKNOWN').upper() for r in market.get('rows',[]) if isinstance(r,dict))
           score_rows=[r for r in scores.get('rows',[]) if isinstance(r,dict) and r.get('line_type')=='alternate']
           score_sides=Counter(str(r.get('side') or 'UNKNOWN').upper() for r in score_rows)
           action_counts=Counter(str(r.get('calibrated_action') or '').upper() for r in score_rows)
-          if market.get('target_date') != target or scores.get('target_date') != target:
-              raise SystemExit('ALT side coverage target mismatch')
           for side in ('OVER','UNDER'):
               if market_sides.get(side,0) > 0 and score_sides.get(side,0) == 0:
                   raise SystemExit(f'ALT side coverage lost between market warehouse and scoring source: {side}')
+          if not score_rows:
+              raise SystemExit('Exact ALT markets arrived but zero scoring rows were generated')
           if any(not r.get('calibration_schema_version') for r in score_rows):
               raise SystemExit('Uncalibrated ALT rows detected after calibration step')
           if (calibration.get('policy') or {}).get('cross_side_fallback_allowed') is not False:
               raise SystemExit('ALT calibration must prohibit cross-side evidence fallback')
+
           print({
-              'status':'PASS','target':target,
-              'market_sides':dict(market_sides),'scored_sides':dict(score_sides),
+              'status':'PASS',
+              'target':target,
+              'raw_alt_rows':raw_rows,
+              'markets':markets,
+              'market_sides':dict(market_sides),
+              'scored_sides':dict(score_sides),
               'calibrated_actions':dict(action_counts),
-              'historical_side_coverage':calibration.get('side_coverage'),
+              'alt_parlays':(parlays.get('summary') or {}).get('total_parlays',0),
               'cross_side_fallback_allowed':False,
           })
           PY
 
       - name: Freeze canonical pregame observations
         run: |
-          set -e
+          set -euo pipefail
           python wnba_alt_performance_tracker.py --date "$TARGET" --snapshot
           python wnba_alt_performance_tracker.py --grade
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
@@ -159,10 +165,10 @@ jobs:
 
       - name: Persist authoritative calibrated ALT state
         run: |
-          git config user.name 'WNBA ALT Snapshot Bot'
+          git config user.name 'WNBA ALT Market Owner Bot'
           git config user.email 'actions@github.com'
           bash scripts/atomic_generated_push.sh \
-            "Freeze calibrated WNBA ALT pregame snapshot for ${TARGET}" \
+            "Refresh canonical WNBA ALT market state for ${TARGET}" \
             'data/history/wnba_alt_streak_history.jsonl' \
             'data/dashboard/wnba_alt_market_warehouse.json' \
             'data/warehouse/wnba_alt_market_warehouse.json' \
@@ -171,4 +177,5 @@ jobs:
             'data/dashboard/wnba_alt_performance.json' \
             'data/warehouse/wnba_alt_performance.json' \
             'data/dashboard/wnba_alt_calibration.json' \
-            'data/warehouse/wnba_alt_calibration.json'
+            'data/warehouse/wnba_alt_calibration.json' \
+            'data/dashboard/wnba_alt_parlays.json'
