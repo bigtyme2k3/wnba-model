@@ -2,9 +2,11 @@
   "version": "V5",
   "sprint": "OPERATIONS_SPRINT_3",
   "module": "S3-M06",
-  "stage": "AUTONOMOUS_EVIDENCE_CYCLE",
-  "generated_at_utc": "2026-09-01T00:08:16.548898+00:00",
+  "stage": "EVIDENCE_CYCLE_AGGREGATOR",
+  "generated_at_utc": "2026-09-04T18:52:44.951793+00:00",
   "status": "READY",
+  "consumer_only": true,
+  "canonical_forward_ledger_owner": "V5-M12",
   "module_outputs_present": {
     "M01": true,
     "M02": true,
@@ -24,13 +26,14 @@
   "api_policy": {
     "m06_api_calls": 0,
     "closing_capture_owner": "S3-M02 dedicated pre-tip watcher",
-    "reason": "M06 never duplicates live odds polling; it consumes the latest M02 explicit-close evidence."
+    "reason": "M06 is an aggregator only and never invokes source or evidence producers."
   },
   "safety": {
     "stale_slate_blocked": false,
     "stale_rows_scored": null,
     "inferred_closes_allowed": false,
-    "issued_predictions_mutable": false
+    "issued_predictions_mutable": false,
+    "upstream_artifacts_republished": false
   },
   "progress": {
     "canonical_graded_forward_markets": 187,
@@ -64,5 +67,5 @@
     "Positive canonical forward ROI not yet demonstrated"
   ],
   "next_focus": "ACCUMULATE_FORWARD_EVIDENCE_AND_EXPLICIT_CLV",
-  "policy": "Sprint 3 automates trustworthy evidence accumulation while keeping odds polling centralized in M02 and promotion locked to established gates."
+  "policy": "M06 summarizes independently-owned evidence modules; it does not execute or publish their canonical artifacts."
 }
