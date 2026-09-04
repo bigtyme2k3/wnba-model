@@ -1,0 +1,92 @@
+name: WNBA V5 Daily Orchestrator
+
+# Permanent dependency-order entry point for the live V5 daily pipeline.
+# Maintenance mode remains explicit: there is no schedule, and live source
+# execution requires the operator to opt in with live_mode=true.
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: Optional Eastern slate date (YYYY-MM-DD); blank uses active slate
+        required: false
+        type: string
+        default: ''
+      live_mode:
+        description: Explicitly run live source owners and publish production artifacts
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: wnba-v5-daily-orchestrator
+  cancel-in-progress: false
+
+jobs:
+  ownership-contract:
+    name: Verify V5 ownership contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify contract before orchestration
+        run: |
+          python scripts/wnba_v5_artifact_ownership_audit.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_v5_artifact_ownership_audit.json').read_text())
+          assert p['status']=='PASS', p.get('violations')
+          assert p['ownership_violation_count']==0, p.get('violations')
+          assert p['scheduled_workflow_count']==0, p.get('scheduled_workflows')
+          print({
+              'status':'PASS',
+              'contract_mode':p['contract_mode'],
+              'protected_artifacts':p['protected_artifact_count'],
+              'live_mode_requested':${{ inputs.live_mode }},
+          })
+          PY
+
+  canonical-base:
+    name: Canonical slate + standard props
+    needs: ownership-contract
+    if: ${{ inputs.live_mode == true }}
+    uses: ./.github/workflows/wnba_daily_canonical_build.yml
+    with:
+      target_date: ${{ inputs.target_date }}
+    secrets: inherit
+
+  injury-context:
+    name: Injury context
+    needs: canonical-base
+    if: ${{ inputs.live_mode == true }}
+    uses: ./.github/workflows/wnba_v5_injury_dashboard.yml
+    with:
+      date: ${{ inputs.target_date }}
+    secrets: inherit
+
+  downstream-predictions:
+    name: Phase 2 + M02 predictions
+    needs: injury-context
+    if: ${{ inputs.live_mode == true }}
+    uses: ./.github/workflows/wnba-new-day-prediction-sync.yml
+    with:
+      date: ${{ inputs.target_date }}
+      deploy_dashboard: false
+    secrets: inherit
+
+  derived-dashboard:
+    name: Derived intelligence + terminal deploy
+    needs: downstream-predictions
+    if: ${{ inputs.live_mode == true }}
+    uses: ./.github/workflows/wnba_daily_slate_rollover.yml
+    with:
+      target_date: ${{ inputs.target_date }}
+    secrets: inherit
