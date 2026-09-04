@@ -121,6 +121,9 @@ def main() -> int:
         write_json(dash / "wnba_v5_buy_signals.json", {"target_date": TARGET, "rows": []})
         write_json(dash / "wnba_v5_live_portfolio.json", {"target_date": TARGET, "rows": []})
 
+        # Point the module root at the isolated fixture so relative source-path
+        # reporting remains valid without referencing repository production data.
+        source.ROOT = base
         source.RAW = raw
         source.DASH = dash
         source.GAMES = dash / "wnba_sprint2_phase2.json"
