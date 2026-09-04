@@ -188,7 +188,27 @@ def build(target: str):
 
     game_names = {str(r.get('game') or '').strip() for r in (games.get('games') or []) if str(r.get('game') or '').strip()}
     if not game_names:
-        raise SystemExit('No canonical current-slate games available for sportsbook prop source')
+        frame = pd.DataFrame(columns=odds_props.RAW_COLUMNS)
+        save(frame, target)
+        audit = {
+            'generated_at_utc': datetime.now(timezone.utc).isoformat(),
+            'target_date': target,
+            'status': 'READY',
+            'module': 'SPRINT19-M02-PROP-SOURCE',
+            'source': 'confirmed_empty_slate',
+            'api_called': False,
+            'matched_live_events': 0,
+            'canonical_games': [],
+            'prop_games': [],
+            'sportsbooks': sorted(odds_props.PLAYER_PROP_BOOKS),
+            'rows': 0,
+            'all_rows_exact_current_slate': True,
+            'empty_slate': True,
+            'policy': 'Confirmed empty slate: persist an empty exact-date prop source and make no Odds API request.',
+        }
+        AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
+        print('SPRINT19_M02_PROP_SOURCE_READY_EMPTY_SLATE', json.dumps(audit))
+        return audit
 
     cached, cache_path = read_existing(target, game_names)
     api_called = False
@@ -226,6 +246,7 @@ def build(target: str):
         'sportsbooks': sorted(odds_props.PLAYER_PROP_BOOKS),
         'rows': int(len(frame)),
         'all_rows_exact_current_slate': all(g in game_names for g in rendered_games),
+        'empty_slate': False,
         'policy': 'Use only DraftKings, FanDuel, and Fanatics. Reuse a verified three-book raw cache or same-day canonical standard prop artifact before making any live Odds API request. Alternate markets are never requested here.',
     }
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
