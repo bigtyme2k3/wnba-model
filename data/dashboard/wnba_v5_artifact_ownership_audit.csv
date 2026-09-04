@@ -3,32 +3,32 @@ standard_props,data/dashboard/wnba_player_props.json,.github/workflows/deploy_wn
 injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/deploy_wnba_dashboard.yml,150,False,if [ -f data/dashboard/wnba_injury_intelligence.json ]; then python patch_dashboard_v5_injury_intelligence.py || true; python patch_dashboard_v5_player_prop_injury_context.py || true; fi
 alt_market,data/dashboard/wnba_alt_market_warehouse.json,.github/workflows/deploy_wnba_dashboard.yml,124,False,w=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
 alt_market,data/dashboard/wnba_alt_market_warehouse.json,.github/workflows/wnba-alt-parlay-refresh.yml,44,False,p=Path('data/dashboard/wnba_alt_market_warehouse.json')
-current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba-new-day-prediction-sync.yml,105,False,"'master':'data/dashboard/wnba_master.json',"
-current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba-new-day-prediction-sync.yml,273,False,data/dashboard/wnba_master.json \
-current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba-new-day-prediction-sync.yml,282,False,data/dashboard/wnba_master.json \
-standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba-new-day-prediction-sync.yml,106,False,"'props':'data/dashboard/wnba_player_props.json',"
-standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba-new-day-prediction-sync.yml,274,False,data/dashboard/wnba_player_props.json \
-standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba-new-day-prediction-sync.yml,283,False,data/dashboard/wnba_player_props.json \
-injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,110,False,"'injury':'data/dashboard/wnba_injury_intelligence.json',"
-injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,162,False,injury=json.loads(Path('data/dashboard/wnba_injury_intelligence.json').read_text())
-injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,223,False,injury=json.loads(Path('data/dashboard/wnba_injury_intelligence.json').read_text())
-injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,278,False,data/dashboard/wnba_injury_intelligence.json \
-injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,287,False,data/dashboard/wnba_injury_intelligence.json \
-injury_context,data/warehouse/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,279,False,data/warehouse/wnba_injury_intelligence.json; then
-injury_context,data/warehouse/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,288,False,data/warehouse/wnba_injury_intelligence.json
-game_predictions,data/dashboard/wnba_sprint2_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,109,False,"'base_predictions':'data/dashboard/wnba_sprint2_predictions.json',"
-game_predictions,data/dashboard/wnba_sprint2_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,277,False,data/dashboard/wnba_sprint2_predictions.json \
-game_predictions,data/dashboard/wnba_sprint2_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,286,False,data/dashboard/wnba_sprint2_predictions.json \
-game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,163,False,phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
-game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,201,False,p=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
-game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,224,False,phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
-game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,298,True,'data/dashboard/wnba_sprint2_phase2.json' \
-game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,315,True,git show origin/main:data/dashboard/wnba_sprint2_phase2.json > /tmp/phase2.json
-m02_predictions,data/dashboard/wnba_s19_m02_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,226,False,m02=json.loads(Path('data/dashboard/wnba_s19_m02_predictions.json').read_text())
-m02_predictions,data/dashboard/wnba_s19_m02_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,304,True,'data/dashboard/wnba_s19_m02_predictions.json' \
-m02_predictions,data/dashboard/wnba_s19_m02_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,314,True,git show origin/main:data/dashboard/wnba_s19_m02_predictions.json > /tmp/m02.json
-m02_predictions,data/dashboard/wnba_s19_m02_prediction_audit.json,.github/workflows/wnba-new-day-prediction-sync.yml,227,False,audit=json.loads(Path('data/dashboard/wnba_s19_m02_prediction_audit.json').read_text())
-m02_predictions,data/dashboard/wnba_s19_m02_prediction_audit.json,.github/workflows/wnba-new-day-prediction-sync.yml,305,True,'data/dashboard/wnba_s19_m02_prediction_audit.json' \
+current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba-new-day-prediction-sync.yml,106,False,"'master':'data/dashboard/wnba_master.json',"
+current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba-new-day-prediction-sync.yml,274,False,data/dashboard/wnba_master.json \
+current_slate,data/dashboard/wnba_master.json,.github/workflows/wnba-new-day-prediction-sync.yml,283,False,data/dashboard/wnba_master.json \
+standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba-new-day-prediction-sync.yml,107,False,"'props':'data/dashboard/wnba_player_props.json',"
+standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba-new-day-prediction-sync.yml,275,False,data/dashboard/wnba_player_props.json \
+standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba-new-day-prediction-sync.yml,284,False,data/dashboard/wnba_player_props.json \
+injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,111,False,"'injury':'data/dashboard/wnba_injury_intelligence.json',"
+injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,163,False,injury=json.loads(Path('data/dashboard/wnba_injury_intelligence.json').read_text())
+injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,224,False,injury=json.loads(Path('data/dashboard/wnba_injury_intelligence.json').read_text())
+injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,279,False,data/dashboard/wnba_injury_intelligence.json \
+injury_context,data/dashboard/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,288,False,data/dashboard/wnba_injury_intelligence.json \
+injury_context,data/warehouse/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,280,False,data/warehouse/wnba_injury_intelligence.json; then
+injury_context,data/warehouse/wnba_injury_intelligence.json,.github/workflows/wnba-new-day-prediction-sync.yml,289,False,data/warehouse/wnba_injury_intelligence.json
+game_predictions,data/dashboard/wnba_sprint2_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,110,False,"'base_predictions':'data/dashboard/wnba_sprint2_predictions.json',"
+game_predictions,data/dashboard/wnba_sprint2_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,278,False,data/dashboard/wnba_sprint2_predictions.json \
+game_predictions,data/dashboard/wnba_sprint2_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,287,False,data/dashboard/wnba_sprint2_predictions.json \
+game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,164,False,phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
+game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,202,False,p=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
+game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,225,False,phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
+game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,299,True,'data/dashboard/wnba_sprint2_phase2.json' \
+game_predictions,data/dashboard/wnba_sprint2_phase2.json,.github/workflows/wnba-new-day-prediction-sync.yml,316,True,git show origin/main:data/dashboard/wnba_sprint2_phase2.json > /tmp/phase2.json
+m02_predictions,data/dashboard/wnba_s19_m02_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,227,False,m02=json.loads(Path('data/dashboard/wnba_s19_m02_predictions.json').read_text())
+m02_predictions,data/dashboard/wnba_s19_m02_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,305,True,'data/dashboard/wnba_s19_m02_predictions.json' \
+m02_predictions,data/dashboard/wnba_s19_m02_predictions.json,.github/workflows/wnba-new-day-prediction-sync.yml,315,True,git show origin/main:data/dashboard/wnba_s19_m02_predictions.json > /tmp/m02.json
+m02_predictions,data/dashboard/wnba_s19_m02_prediction_audit.json,.github/workflows/wnba-new-day-prediction-sync.yml,228,False,audit=json.loads(Path('data/dashboard/wnba_s19_m02_prediction_audit.json').read_text())
+m02_predictions,data/dashboard/wnba_s19_m02_prediction_audit.json,.github/workflows/wnba-new-day-prediction-sync.yml,306,True,'data/dashboard/wnba_s19_m02_prediction_audit.json' \
 forward_ledger,data/history/wnba_v5_forward_predictions.jsonl,.github/workflows/wnba-v5-adaptive-challenger-v2.yml,11,False,- 'data/history/wnba_v5_forward_predictions.jsonl'
 standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba-v5-current-data-health.yml,12,False,- 'data/dashboard/wnba_player_props.json'
 standard_props,data/dashboard/wnba_player_props.json,.github/workflows/wnba-v5-current-data-health.yml,48,False,props=json.load(open('data/dashboard/wnba_player_props.json'))
