@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-04T18:52:16.957892+00:00",
+  "generated_at": "2026-09-04T18:54:02.193733+00:00",
   "status": "REVIEW_REQUIRED",
   "mode": "inventory_only",
   "scope": ".github/workflows only; .github/workflows-archive excluded",
@@ -23,11 +23,10 @@
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
         ".github/workflows/wnba_daily_slate_rollover.yml",
-        ".github/workflows/wnba_live_state_sync.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
-      "reference_count": 13,
-      "publish_workflow_count": 5,
+      "reference_count": 14,
+      "publish_workflow_count": 4,
       "status": "MULTIPLE_PUBLISHERS"
     },
     {
@@ -61,11 +60,10 @@
       ],
       "publish_workflows": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
-        ".github/workflows/wnba_live_state_sync.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
-      "reference_count": 12,
-      "publish_workflow_count": 3,
+      "reference_count": 13,
+      "publish_workflow_count": 2,
       "status": "MULTIPLE_PUBLISHERS"
     },
     {
@@ -78,11 +76,10 @@
       ],
       "publish_workflows": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
-        ".github/workflows/wnba_live_state_sync.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
-      "reference_count": 3,
-      "publish_workflow_count": 3,
+      "reference_count": 4,
+      "publish_workflow_count": 2,
       "status": "MULTIPLE_PUBLISHERS"
     },
     {
@@ -205,11 +202,10 @@
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
         ".github/workflows/wnba_daily_slate_rollover.yml",
-        ".github/workflows/wnba_live_state_sync.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
-      "reference_count": 13,
-      "publish_workflow_count": 5,
+      "reference_count": 14,
+      "publish_workflow_count": 4,
       "status": "MULTIPLE_PUBLISHERS"
     },
     {
@@ -243,11 +239,10 @@
       ],
       "publish_workflows": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
-        ".github/workflows/wnba_live_state_sync.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
-      "reference_count": 12,
-      "publish_workflow_count": 3,
+      "reference_count": 13,
+      "publish_workflow_count": 2,
       "status": "MULTIPLE_PUBLISHERS"
     },
     {
@@ -260,11 +255,10 @@
       ],
       "publish_workflows": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
-        ".github/workflows/wnba_live_state_sync.yml",
         ".github/workflows/wnba_v5_injury_dashboard.yml"
       ],
-      "reference_count": 3,
-      "publish_workflow_count": 3,
+      "reference_count": 4,
+      "publish_workflow_count": 2,
       "status": "MULTIPLE_PUBLISHERS"
     },
     {
@@ -987,7 +981,7 @@
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_live_state_sync.yml",
-      "line": 47,
+      "line": 49,
       "publish_context": false,
       "snippet": "master = json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8'))"
     },
@@ -996,24 +990,48 @@
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_live_state_sync.yml",
       "line": 69,
-      "publish_context": true,
-      "snippet": "data/dashboard/wnba_master.json \\"
+      "publish_context": false,
+      "snippet": "if ! git diff --quiet -- data/dashboard/wnba_master.json data/master/wnba_master.json data/dashboard/wnba_injury_intelligence.json data/warehouse/wnba_injury_intelligence.json; then"
+    },
+    {
+      "domain": "current_slate",
+      "artifact": "data/dashboard/wnba_master.json",
+      "workflow": ".github/workflows/wnba_live_state_sync.yml",
+      "line": 71,
+      "publish_context": false,
+      "snippet": "git diff -- data/dashboard/wnba_master.json data/master/wnba_master.json data/dashboard/wnba_injury_intelligence.json data/warehouse/wnba_injury_intelligence.json"
     },
     {
       "domain": "injury_context",
       "artifact": "data/dashboard/wnba_injury_intelligence.json",
       "workflow": ".github/workflows/wnba_live_state_sync.yml",
-      "line": 79,
-      "publish_context": true,
-      "snippet": "data/dashboard/wnba_injury_intelligence.json \\"
+      "line": 69,
+      "publish_context": false,
+      "snippet": "if ! git diff --quiet -- data/dashboard/wnba_master.json data/master/wnba_master.json data/dashboard/wnba_injury_intelligence.json data/warehouse/wnba_injury_intelligence.json; then"
+    },
+    {
+      "domain": "injury_context",
+      "artifact": "data/dashboard/wnba_injury_intelligence.json",
+      "workflow": ".github/workflows/wnba_live_state_sync.yml",
+      "line": 71,
+      "publish_context": false,
+      "snippet": "git diff -- data/dashboard/wnba_master.json data/master/wnba_master.json data/dashboard/wnba_injury_intelligence.json data/warehouse/wnba_injury_intelligence.json"
     },
     {
       "domain": "injury_context",
       "artifact": "data/warehouse/wnba_injury_intelligence.json",
       "workflow": ".github/workflows/wnba_live_state_sync.yml",
-      "line": 80,
-      "publish_context": true,
-      "snippet": "data/warehouse/wnba_injury_intelligence.json \\"
+      "line": 69,
+      "publish_context": false,
+      "snippet": "if ! git diff --quiet -- data/dashboard/wnba_master.json data/master/wnba_master.json data/dashboard/wnba_injury_intelligence.json data/warehouse/wnba_injury_intelligence.json; then"
+    },
+    {
+      "domain": "injury_context",
+      "artifact": "data/warehouse/wnba_injury_intelligence.json",
+      "workflow": ".github/workflows/wnba_live_state_sync.yml",
+      "line": 71,
+      "publish_context": false,
+      "snippet": "git diff -- data/dashboard/wnba_master.json data/master/wnba_master.json data/dashboard/wnba_injury_intelligence.json data/warehouse/wnba_injury_intelligence.json"
     },
     {
       "domain": "current_slate",
