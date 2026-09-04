@@ -64,5 +64,11 @@ jobs:
                   data/dashboard/wnba_v5_sprint3_status.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Refresh WNBA V5 Sprint 3 evidence aggregate"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            sleep $((attempt*3))
+          done
+          exit 1
