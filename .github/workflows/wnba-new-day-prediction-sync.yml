@@ -132,12 +132,17 @@ jobs:
           games=set(manifest.get('games') or [])
           predicted_games={g.get('game') for g in predictions.get('games') or []}
           assert predicted_games == games, {'canonical':sorted(games),'predicted':sorted(predicted_games)}
-          assert int(props.get('row_count') or len(props.get('rows') or [])) > 0, 'Canonical standard props are empty'
+          prop_count=int(props.get('row_count') or len(props.get('rows') or []))
+          if games:
+              assert prop_count > 0, 'Active canonical slate has no standard props'
+          else:
+              assert prop_count == 0, 'Confirmed empty slate must not retain standard props'
           print({
               'status':'SOURCE_DEPENDENCIES_READY',
               'target':target,
               'games':len(games),
-              'standard_props':int(props.get('row_count') or len(props.get('rows') or [])),
+              'standard_props':prop_count,
+              'empty_slate':not bool(games),
               'injury_source_verified':injury.get('injury_source_verified'),
               'injury_coverage':injury.get('source_coverage'),
           })
@@ -156,10 +161,13 @@ jobs:
           target=os.environ['TARGET']
           injury=json.loads(Path('data/dashboard/wnba_injury_intelligence.json').read_text())
           phase2=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
+          manifest=json.loads(Path('data/dashboard/wnba_daily_canonical_manifest.json').read_text())
           assert phase2.get('target_date') == target and phase2.get('status') == 'PASS', phase2
           assert phase2.get('schema_version') == 'sprint19-m01-injury-aware-games-v1'
           rows=phase2.get('games') or []
-          assert rows, 'No current-slate Phase 2 game cards generated'
+          expected=set(manifest.get('games') or [])
+          actual={str(row.get('game') or '') for row in rows if row.get('game')}
+          assert actual == expected, {'canonical':sorted(expected),'phase2':sorted(actual)}
           assert all((row.get('injury_context') or {}).get('fresh') is True for row in rows)
           assert all((row.get('injury_context') or {}).get('target_date') == target for row in rows)
 
@@ -175,6 +183,7 @@ jobs:
               'status':'READY',
               'module':'SPRINT19-M01',
               'games':len(rows),
+              'empty_slate':not bool(rows),
               'injury_context_games':summary.get('injury_context_games',0),
               'injury_adjusted_games':summary.get('injury_adjusted_games',0),
               'listed_injuries_on_slate':summary.get('listed_injuries_on_slate',0),
@@ -184,9 +193,19 @@ jobs:
               'source':'canonical_base_plus_source_only_injury_context',
           }
           Path('data/dashboard/wnba_s19_m01_game_injury_audit.json').write_text(json.dumps(audit,indent=2)+'\n')
-          print({'status':'PHASE2_READY','target':target,'games':len(rows),'injury_adjusted_games':summary.get('injury_adjusted_games',0)})
+          print({'status':'PHASE2_READY','target':target,'games':len(rows),'empty_slate':not bool(rows),'injury_adjusted_games':summary.get('injury_adjusted_games',0)})
           PY
-          python wnba_game_predictions_ledger.py archive --date "$TARGET"
+          if python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_sprint2_phase2.json').read_text())
+          raise SystemExit(0 if (p.get('games') or []) else 1)
+          PY
+          then
+            python wnba_game_predictions_ledger.py archive --date "$TARGET"
+          else
+            echo 'Confirmed empty slate; no versioned game prediction rows to archive.'
+          fi
 
       - name: Prepare exact current sportsbook prop source
         run: python scripts/wnba_s19_m02_prop_source.py --date "$TARGET"
@@ -209,16 +228,30 @@ jobs:
 
           assert phase2.get('status') == 'PASS' and str(phase2.get('target_date') or '')[:10] == target
           assert source.get('status') == 'READY' and str(source.get('target_date') or '')[:10] == target, source
-          assert source.get('all_rows_exact_current_slate') is True and int(source.get('rows') or 0) > 0, source
           assert m02.get('status') == 'READY' and str(m02.get('target_date') or '')[:10] == target, m02
           assert audit.get('status') == 'READY' and str(audit.get('target_date') or '')[:10] == target, audit
           assert audit.get('game_projection_after_injury_refresh') is True, audit
           assert int(audit.get('actionable_out_props') or 0) == 0, audit
           assert audit.get('phase2_best_bets_fallback_enabled') is False, audit
-          assert int(audit.get('player_prop_predictions') or 0) > 0, audit
-          assert audit.get('player_props_with_model_projection') == audit.get('player_prop_predictions'), audit
           assert int(audit.get('off_slate_prop_rows_rejected') or 0) == 0, audit
           assert audit.get('all_rendered_props_exact_current_slate') is True, audit
+
+          empty_slate=not bool(phase2.get('games') or [])
+          if empty_slate:
+              assert source.get('empty_slate') is True, source
+              assert int(source.get('rows') or 0) == 0, source
+              assert source.get('api_called') is False, source
+              assert m02.get('empty_slate') is True, m02
+              assert audit.get('empty_slate') is True, audit
+              assert int(audit.get('player_prop_predictions') or 0) == 0, audit
+              assert int(audit.get('player_props_with_model_projection') or 0) == 0, audit
+              assert not (m02.get('best_bets') or []), m02
+              assert not (m02.get('portfolio') or []), m02
+          else:
+              assert source.get('all_rows_exact_current_slate') is True and int(source.get('rows') or 0) > 0, source
+              assert m02.get('empty_slate') is not True, m02
+              assert int(audit.get('player_prop_predictions') or 0) > 0, audit
+              assert audit.get('player_props_with_model_projection') == audit.get('player_prop_predictions'), audit
 
           if injury.get('injury_source_verified') is not True:
               bets=[row for row in m02.get('player_props',[]) if str(row.get('final_action') or '').upper()=='BET']
@@ -229,6 +262,7 @@ jobs:
               'status':'NEW_DAY_DOWNSTREAM_READY',
               'target':target,
               'phase2_games':len(phase2.get('games') or []),
+              'empty_slate':empty_slate,
               'player_prop_predictions':audit.get('player_prop_predictions'),
               'best_bets':len(m02.get('best_bets') or []),
               'injury_source_verified':injury.get('injury_source_verified'),
@@ -286,7 +320,8 @@ jobs:
           phase2=json.load(open('/tmp/phase2.json'))
           assert m02.get('status')=='READY' and str(m02.get('target_date') or '')[:10]==target, m02
           assert phase2.get('status')=='PASS' and str(phase2.get('target_date') or '')[:10]==target, phase2
-          print({'published_m02_target':m02.get('target_date'),'phase2_target':phase2.get('target_date'),'phase2_games':len(phase2.get('games') or [])})
+          assert bool(m02.get('empty_slate')) == (len(phase2.get('games') or []) == 0), (m02.get('empty_slate'),len(phase2.get('games') or []))
+          print({'published_m02_target':m02.get('target_date'),'phase2_target':phase2.get('target_date'),'phase2_games':len(phase2.get('games') or []),'empty_slate':m02.get('empty_slate')})
           PY
 
       - name: Deploy dashboard after standalone prediction sync
