@@ -48,15 +48,22 @@ jobs:
           set -euo pipefail
           git config user.name 'WNBA V5 Ownership Audit Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/dashboard/wnba_v5_artifact_ownership_audit.json data/dashboard/wnba_v5_artifact_ownership_audit.csv
-          if git diff --cached --quiet; then
-            echo 'Artifact ownership inventory already current'
-            exit 0
-          fi
-          git commit -m 'Refresh V5 artifact ownership inventory'
           for attempt in 1 2 3 4; do
-            git pull --rebase origin main && git push origin HEAD:main && exit 0
-            git rebase --abort || true
+            # Generated audit files are intentionally replaceable. If another
+            # workflow edit lands while this job is running, rebuild from the
+            # newest main instead of trying to rebase two generated reports.
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/wnba_v5_artifact_ownership_audit.py
+            git add data/dashboard/wnba_v5_artifact_ownership_audit.json data/dashboard/wnba_v5_artifact_ownership_audit.csv
+            if git diff --cached --quiet; then
+              echo 'Artifact ownership inventory already current'
+              exit 0
+            fi
+            git commit -m 'Refresh V5 artifact ownership inventory'
+            if git push origin HEAD:main; then
+              exit 0
+            fi
             sleep $((attempt*3))
           done
           exit 1
