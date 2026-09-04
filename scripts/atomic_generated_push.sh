@@ -7,19 +7,58 @@ FILES=("$@")
 
 DASHBOARD_DEPLOY_WORKFLOW="Deploy WNBA Dashboard"
 CURRENT_WORKFLOW=${GITHUB_WORKFLOW:-local}
+CONTRACT_PATH="config/v5_artifact_ownership.json"
+CURRENT_WORKFLOW_PATH=""
+if [ -n "${GITHUB_WORKFLOW_REF:-}" ]; then
+  CURRENT_WORKFLOW_PATH="${GITHUB_WORKFLOW_REF%@*}"
+  if [ -n "${GITHUB_REPOSITORY:-}" ]; then
+    CURRENT_WORKFLOW_PATH="${CURRENT_WORKFLOW_PATH#${GITHUB_REPOSITORY}/}"
+  fi
+fi
+
+declare -A PROTECTED_WRITERS=()
+if [ -f "$CONTRACT_PATH" ]; then
+  while IFS=$'\t' read -r artifact writer; do
+    [ -n "$artifact" ] || continue
+    PROTECTED_WRITERS["$artifact"]="$writer"
+  done < <(python - "$CONTRACT_PATH" <<'PY'
+import json, sys
+from pathlib import Path
+p = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+for row in p.get('artifacts') or []:
+    artifact = str(row.get('artifact') or '').strip()
+    writer = str(row.get('writer_workflow') or '').strip()
+    if artifact and writer:
+        print(f"{artifact}\t{writer}")
+PY
+  )
+fi
 
 is_protected_dashboard_file() {
   local file=$1
   [ "$file" = "docs/index.html" ] && [ "$CURRENT_WORKFLOW" != "$DASHBOARD_DEPLOY_WORKFLOW" ]
 }
 
-# Fast-path guard for callers that explicitly supply docs/index.html. A second
-# guard inside copy_file() enforces the rule after directory/glob expansion so
-# supplying "docs" cannot bypass single-writer ownership.
+is_foreign_owned_artifact() {
+  local file=$1
+  local owner="${PROTECTED_WRITERS[$file]-}"
+  [ -n "$owner" ] || return 1
+  if [ -n "$CURRENT_WORKFLOW_PATH" ] && [ "$CURRENT_WORKFLOW_PATH" = "$owner" ]; then
+    return 1
+  fi
+  echo "Skipping protected artifact owned by $owner from ${CURRENT_WORKFLOW_PATH:-local/unresolved}: $file"
+  return 0
+}
+
+# Fast-path guards for explicitly supplied protected files. A second guard in
+# copy_file() enforces both rules after directory/glob expansion.
 FILTERED_FILES=()
 for supplied in "${FILES[@]}"; do
   if is_protected_dashboard_file "$supplied"; then
     echo "Skipping protected dashboard output from non-deploy workflow: $CURRENT_WORKFLOW"
+    continue
+  fi
+  if is_foreign_owned_artifact "$supplied"; then
     continue
   fi
   FILTERED_FILES+=("$supplied")
@@ -76,24 +115,38 @@ copy_file() {
     echo "Skipping protected dashboard file after path expansion: $file ($CURRENT_WORKFLOW)"
     return 0
   fi
+  if is_foreign_owned_artifact "$file"; then
+    return 0
+  fi
   EXPANDED_FILES+=("$file")
   mkdir -p "$TMP/$(dirname "$file")"
   cp -p "$file" "$TMP/$file"
 }
 
+copy_changed_under() {
+  local path=$1
+  while IFS= read -r -d '' file; do
+    copy_file "$file"
+  done < <(
+    {
+      git diff --name-only -z -- "$path"
+      git diff --cached --name-only -z -- "$path"
+      git ls-files --others --exclude-standard -z -- "$path"
+    }
+  )
+}
+
 for path in "${FILES[@]}"; do
   if [ -d "$path" ]; then
-    while IFS= read -r -d '' file; do
-      copy_file "$file"
-    done < <(find "$path" -type f -print0)
+    # Broad directory publishers now preserve only files actually changed by
+    # the current job instead of snapshotting the entire directory tree.
+    copy_changed_under "$path"
   elif [ -f "$path" ]; then
     copy_file "$path"
   elif compgen -G "$path" > /dev/null; then
     while IFS= read -r match; do
       if [ -d "$match" ]; then
-        while IFS= read -r -d '' file; do
-          copy_file "$file"
-        done < <(find "$match" -type f -print0)
+        copy_changed_under "$match"
       else
         copy_file "$match"
       fi
