@@ -1,5 +1,8 @@
 name: WNBA V5 Injury Intelligence
 
+# Maintenance mode: scheduled polling is paused during the FIBA break.
+# This workflow owns injury context only; downstream prediction workflows
+# consume the published context and own their own artifacts.
 on:
   workflow_dispatch:
     inputs:
@@ -7,8 +10,6 @@ on:
         description: 'Target slate date (YYYY-MM-DD); blank uses active slate'
         required: false
         default: ''
-  schedule:
-    - cron: '12,42 * * * *'
   push:
     branches: [main]
     paths:
@@ -16,10 +17,7 @@ on:
       - 'scrape_injuries.py'
       - 'wnba_injury_intelligence.py'
       - 'wnba_injury_rotation_guard.py'
-      - 'wnba_sprint2_prediction_engine.py'
-      - 'scripts/wnba_sprint2_phase2.py'
-      - 'scripts/wnba_s19_m02_prop_source.py'
-      - 'scripts/wnba_s19_m02_predictions.py'
+      - 'scripts/wnba_new_day_injury_refresh.py'
       - 'active_slate_date.py'
       - 'scripts/check_production_architecture.py'
       - '.github/workflows/wnba_v5_injury_dashboard.yml'
@@ -34,15 +32,11 @@ permissions:
 jobs:
   injury-intelligence:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
-      - name: Sync latest repository
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
+          fetch-depth: 1
 
       - uses: actions/setup-python@v5
         with:
@@ -68,7 +62,7 @@ jobs:
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "Injury target: $TARGET"
 
-      - name: Compile injury-aware prediction stack
+      - name: Compile source-only injury stack
         run: |
           python -m py_compile \
             active_slate_date.py \
@@ -76,174 +70,88 @@ jobs:
             scrape_official_wnba_injuries.py \
             wnba_injury_intelligence.py \
             wnba_injury_rotation_guard.py \
-            wnba_sprint2_prediction_engine.py \
-            wnba_game_predictions_ledger.py \
-            scripts/wnba_sprint2_phase2.py \
-            scripts/wnba_s19_m02_prop_source.py \
-            scripts/wnba_s19_m02_predictions.py
+            scripts/wnba_new_day_injury_refresh.py
 
-      - name: Refresh official WNBA injury report
-        run: python scrape_official_wnba_injuries.py --date "$TARGET" --out data/raw
+      - name: Refresh source-only injury intelligence
+        run: python scripts/wnba_new_day_injury_refresh.py --date "$TARGET"
 
-      - name: Verify official injury source freshness
+      - name: Verify injury ownership and freshness
         run: |
           python - <<'PY'
           import json, os
           from datetime import datetime, timezone
           from pathlib import Path
-          import pandas as pd
-          status=json.load(open('data/raw/injuries_status.json'))
-          assert status.get('target_date') == os.environ['TARGET'], status
+
+          target=os.environ['TARGET']
+          status=json.loads(Path('data/raw/injuries_status.json').read_text(encoding='utf-8'))
+          dash=json.loads(Path('data/dashboard/wnba_injury_intelligence.json').read_text(encoding='utf-8'))
+          ware=json.loads(Path('data/warehouse/wnba_injury_intelligence.json').read_text(encoding='utf-8'))
+
+          assert str(status.get('target_date') or '')[:10] == target, status
+          assert str(dash.get('target_date') or '')[:10] == target, dash.get('target_date')
+          assert str(ware.get('target_date') or '')[:10] == target, ware.get('target_date')
+          assert dash.get('source_only') is True
+          assert dash.get('canonical_master_mutated') is False
+          assert dash.get('canonical_player_props_mutated') is False
+          assert dash.get('downstream_prediction_artifacts_mutated') is False
+          assert dash.get('downstream_decision_artifacts_mutated') is False
+          assert ware.get('source_only') is True
+
           stamp=status.get('completed_at_utc') or status.get('generated_at_utc')
           assert stamp, status
-          age=(datetime.now(timezone.utc)-datetime.fromisoformat(stamp.replace('Z','+00:00'))).total_seconds()
+          age=(datetime.now(timezone.utc)-datetime.fromisoformat(str(stamp).replace('Z','+00:00'))).total_seconds()
           assert 0 <= age < 1800, {'age_seconds':age, **status}
-          assert status.get('primary_source') in {'official_wnba_pdf','espn_fallback'}, status
-          path=Path('data/raw/injuries_today.csv')
-          assert path.exists(), path
-          frame=pd.read_csv(path)
-          assert {'player','team','severity','source'}.issubset(frame.columns), frame.columns.tolist()
-          print('INJURY FEED FRESH', status)
+
+          verified=dash.get('injury_source_verified') is True
+          coverage=dash.get('source_coverage')
+          if verified:
+              assert status.get('primary_source') in {'official_wnba_pdf','espn_fallback'}, status
+              assert coverage == 'VERIFIED', coverage
+          else:
+              assert coverage == 'UNVERIFIED_NO_REPORT_YET', coverage
+
+          assert Path('data/raw/minute_projections.csv').exists()
+          print({
+              'status':'PASS',
+              'target':target,
+              'source_only':True,
+              'injury_source_verified':verified,
+              'source_coverage':coverage,
+              'adjustments':len(dash.get('adjustments') or []),
+          })
           PY
 
-      - name: Apply injury intelligence to current slate
-        run: |
-          python wnba_injury_intelligence.py --date "$TARGET"
-          python wnba_injury_rotation_guard.py
+          if ! git diff --quiet -- \
+            data/dashboard/wnba_master.json \
+            data/master/wnba_master.json \
+            data/dashboard/wnba_player_props.json \
+            data/dashboard/wnba_sprint2_predictions.json \
+            data/dashboard/wnba_sprint2_phase2.json \
+            data/dashboard/wnba_s19_m02_predictions.json \
+            data/dashboard/wnba_s19_m02_prediction_audit.json \
+            data/history/wnba_game_predictions.jsonl; then
+            echo 'Injury source workflow mutated a downstream canonical artifact; refusing publish.' >&2
+            git diff -- \
+              data/dashboard/wnba_master.json \
+              data/master/wnba_master.json \
+              data/dashboard/wnba_player_props.json \
+              data/dashboard/wnba_sprint2_predictions.json \
+              data/dashboard/wnba_sprint2_phase2.json \
+              data/dashboard/wnba_s19_m02_predictions.json \
+              data/dashboard/wnba_s19_m02_prediction_audit.json \
+              data/history/wnba_game_predictions.jsonl
+            exit 1
+          fi
 
-      - name: Rebuild injury-aware game projections
-        run: |
-          python wnba_sprint2_prediction_engine.py --date "$TARGET"
-          python scripts/wnba_sprint2_phase2.py --date "$TARGET"
-
-      - name: Verify current-slate game projection freshness
-        run: |
-          python - <<'PY'
-          import json, os
-          from datetime import datetime, timezone
-          from pathlib import Path
-          def dt(value): return datetime.fromisoformat(str(value).replace('Z','+00:00'))
-          target=os.environ['TARGET']
-          injury=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
-          games=json.load(open('data/dashboard/wnba_sprint2_phase2.json'))
-          assert injury.get('target_date') == target, injury.get('target_date')
-          assert games.get('target_date') == target, games.get('target_date')
-          assert games.get('schema_version') == 'sprint19-m01-injury-aware-games-v1', games.get('schema_version')
-          injury_stamp=injury.get('generated_at_utc') or injury.get('generated_at')
-          game_stamp=games.get('generated_at_utc')
-          assert injury_stamp and game_stamp
-          assert dt(game_stamp) >= dt(injury_stamp)
-          rows=games.get('games',[]) or []
-          assert rows, 'No current-slate game cards generated'
-          assert all((r.get('injury_context') or {}).get('fresh') is True for r in rows)
-          assert all((r.get('injury_context') or {}).get('target_date') == target for r in rows)
-          summary=games.get('summary',{}) or {}
-          audit={
-              'generated_at_utc':datetime.now(timezone.utc).isoformat(),
-              'target_date':target,
-              'status':'READY',
-              'module':'SPRINT19-M01',
-              'games':len(rows),
-              'injury_context_games':summary.get('injury_context_games',0),
-              'injury_adjusted_games':summary.get('injury_adjusted_games',0),
-              'listed_injuries_on_slate':summary.get('listed_injuries_on_slate',0),
-              'injury_generated_at_utc':injury_stamp,
-              'game_projection_generated_at_utc':game_stamp,
-              'projection_after_injury_refresh':True,
-              'source':'current_injury_intelligence_plus_phase2_game_engine'
-          }
-          Path('data/dashboard/wnba_s19_m01_game_injury_audit.json').write_text(json.dumps(audit,indent=2)+'\n')
-          print('SPRINT 19 M01 VERIFIED', audit)
-          PY
-
-      - name: Freeze versioned current game predictions
-        run: |
-          python wnba_game_predictions_ledger.py archive --date "$TARGET"
-          python - <<'PY'
-          import json,os
-          target=os.environ['TARGET']; rows=[json.loads(x) for x in open('data/history/wnba_game_predictions.jsonl') if x.strip()]
-          current=[r for r in rows if str(r.get('target_date') or '')[:10]==target]
-          assert current and all(r.get('model_version')=='game_score_l10_market_42_58_v1' for r in current), current
-          print({'status':'PASS','target':target,'versioned_game_rows':len(current)})
-          PY
-
-      - name: Prepare exact current sportsbook prop source
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: python scripts/wnba_s19_m02_prop_source.py --date "$TARGET"
-
-      - name: Build unified injury-aware predictions
-        run: python scripts/wnba_s19_m02_predictions.py --date "$TARGET"
-
-      - name: Verify prediction synchronization and injury blocks
-        run: |
-          python - <<'PY'
-          import json, os
-          from datetime import datetime, timezone
-          from pathlib import Path
-          target=os.environ['TARGET']
-          source=json.load(open('data/dashboard/wnba_s19_m02_prop_source_audit.json'))
-          p=json.load(open('data/dashboard/wnba_s19_m02_predictions.json'))
-          a=json.load(open('data/dashboard/wnba_s19_m02_prediction_audit.json'))
-          master=json.load(open('data/dashboard/wnba_master.json'))
-          injury=json.load(open('data/dashboard/wnba_injury_intelligence.json'))
-          assert source.get('status') == 'READY' and source.get('target_date') == target, source
-          assert source.get('all_rows_exact_current_slate') is True and source.get('rows',0) > 0, source
-          assert p.get('status') == 'READY' and p.get('target_date') == target, p
-          assert a.get('status') == 'READY' and a.get('target_date') == target, a
-          assert a.get('game_projection_after_injury_refresh') is True, a
-          assert a.get('actionable_out_props') == 0, a
-          assert a.get('phase2_best_bets_fallback_enabled') is False, a
-          assert a.get('player_prop_predictions',0) > 0, a
-          assert a.get('player_props_with_model_projection') == a.get('player_prop_predictions'), a
-          assert a.get('off_slate_prop_rows_rejected') == 0, a
-          assert a.get('all_rendered_props_exact_current_slate') is True, a
-          assert injury.get('target_date') == target
-          assert str(master.get('target_date',''))[:10] == target
-          adjustments=injury.get('adjustments',[]) or []
-          props=master.get('props',[]) or []
-          out_names={str(x.get('player','')).strip().lower() for x in adjustments if x.get('is_out')}
-          out_props=[r for r in props if str(r.get('player','')).strip().lower() in out_names]
-          actionable=[r for r in out_props if r.get('eligible',r.get('eligible_for_bet',True)) and str(r.get('final_action') or r.get('recommendation') or '').upper() not in {'PASS','BLOCK','SKIP'}]
-          assert not actionable, {'actionable_out_players':[r.get('player') for r in actionable]}
-          audit={
-              'generated_at_utc':datetime.now(timezone.utc).isoformat(),
-              'target_date':target,
-              'status':'READY',
-              'injury_adjustments':len(adjustments),
-              'props_total':len(props),
-              'out_players_on_report':len(out_names),
-              'out_player_prop_rows':len(out_props),
-              'actionable_out_prop_rows':len(actionable),
-              'player_props_master_persisted':True,
-          }
-          Path('data/dashboard/wnba_injury_integration_audit.json').write_text(json.dumps(audit,indent=2)+'\n')
-          print('SPRINT 19 M02 VERIFIED', a)
-          print('PLAYER PROPS INJURY INTEGRATION VERIFIED', audit)
-          PY
-
-      - name: Publish injury-aware data only
+      - name: Publish injury context only
         run: |
           git config user.name "WNBA Injury Intelligence Bot"
           git config user.email "actions@github.com"
           bash scripts/atomic_generated_push.sh \
-            "Refresh unified injury-aware predictions for ${TARGET}" \
+            "Refresh source-only WNBA injury intelligence for ${TARGET}" \
             'data/raw/injuries_today.csv' \
+            "data/raw/injuries_${TARGET}.csv" \
             'data/raw/injuries_status.json' \
             'data/raw/minute_projections.csv' \
-            'data/raw/props_today.csv' \
-            "data/raw/props_raw_${TARGET}.csv" \
-            'data/raw/player_points_today.csv' \
-            "data/raw/player_points_${TARGET}.csv" \
             'data/dashboard/wnba_injury_intelligence.json' \
-            'data/warehouse/wnba_injury_intelligence.json' \
-            'data/dashboard/wnba_injury_integration_audit.json' \
-            'data/dashboard/wnba_master.json' \
-            'data/dashboard/wnba_sprint2_phase2.json' \
-            'data/history/wnba_game_predictions.jsonl' \
-            'data/dashboard/wnba_game_predictions_ledger.json' \
-            'data/warehouse/wnba_game_predictions_ledger.json' \
-            'data/dashboard/wnba_s19_m01_game_injury_audit.json' \
-            'data/dashboard/wnba_s19_m02_prop_source_audit.json' \
-            'data/dashboard/wnba_s19_m02_predictions.json' \
-            'data/dashboard/wnba_s19_m02_prediction_audit.json'
+            'data/warehouse/wnba_injury_intelligence.json'
