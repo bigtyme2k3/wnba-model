@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ACTIVE = ROOT / ".github" / "workflows"
 DEPLOY = ACTIVE / "deploy_wnba_dashboard.yml"
 ATOMIC = ROOT / "scripts" / "atomic_generated_push.sh"
+ALT_RECOVERY = ROOT / "wnba_alt_game_log_recovery.py"
 
 RETIRED_DASHBOARD_BUILDERS = {
     "build_dashboard_v4.py",
@@ -40,6 +41,8 @@ def main() -> None:
         fail("canonical Deploy WNBA Dashboard workflow is missing")
     if not ATOMIC.exists():
         fail("atomic generated publisher is missing")
+    if not ALT_RECOVERY.exists():
+        fail("ALT historical recovery planner is missing")
 
     # Block hardcoded dates only where they are being used as execution state.
     # Documentation/comments may legitimately mention historical dates.
@@ -114,6 +117,20 @@ def main() -> None:
     if "uses: actions/upload-pages-artifact@" not in deploy_text or "uses: actions/deploy-pages@" not in deploy_text:
         fail("deploy is missing the Pages artifact/deploy chain")
 
+    recovery_text = ALT_RECOVERY.read_text(encoding="utf-8")
+    recovery_contract = {
+        "resolve_slate_context": "schedule-state resolution",
+        "automatic_break_pause": "automatic break pause",
+        '"paused_schedule_break"': "machine-readable paused status",
+        '"external_feed_calls_allowed": not automatic_break_pause': "external-feed fail-closed evidence",
+        "--allow-break-recovery": "explicit operator override",
+    }
+    missing_recovery_contract = [
+        label for marker, label in recovery_contract.items() if marker not in recovery_text
+    ]
+    if missing_recovery_contract:
+        fail(f"ALT recovery is missing break-aware contracts: {missing_recovery_contract}")
+
     atomic_text = ATOMIC.read_text(encoding="utf-8")
     if 'DASHBOARD_DEPLOY_WORKFLOW="Deploy WNBA Dashboard"' not in atomic_text:
         fail("atomic publisher does not recognize the canonical deploy workflow")
@@ -136,6 +153,7 @@ def main() -> None:
             "utc_rollover_fallback_blocked_globally": True,
             "break_aware_deployment_required": True,
             "stale_current_markets_blocked_during_break": True,
+            "automatic_external_recovery_paused_during_break": True,
         }
     )
 

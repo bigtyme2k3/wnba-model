@@ -7,6 +7,8 @@ import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
+from types import SimpleNamespace
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -15,6 +17,7 @@ from zoneinfo import ZoneInfo
 
 import active_slate_date as slate
 import patch_dashboard_break_state as dashboard_break
+import wnba_alt_game_log_recovery as alt_recovery
 
 
 def write_schedule(path: Path, dates: list[str]) -> None:
@@ -133,6 +136,36 @@ class BreakAwareSlateTests(unittest.TestCase):
         self.assertIn("BREAK_MODE_DEPLOY_SAFE", workflow)
         self.assertIn("patch_dashboard_break_state.py", workflow)
         self.assertIn("if: env.MAINTENANCE_BREAK != 'true'", workflow)
+
+    def test_automatic_alt_recovery_pauses_external_feeds_during_break(self) -> None:
+        diagnostics = {
+            "inspector": [
+                {
+                    "category": "missing_verified_game_log",
+                    "date": "2026-08-29",
+                    "player": "Example Player",
+                    "game": "Example Game",
+                }
+            ]
+        }
+
+        def fake_load(path: Path) -> dict:
+            if path == alt_recovery.DIAGNOSTICS:
+                return diagnostics
+            if path == alt_recovery.PLAYER_LOGS:
+                return {"records": []}
+            return {}
+
+        context = SimpleNamespace(target_date="2026-09-12", mode="break")
+        with mock.patch.object(alt_recovery, "load", side_effect=fake_load), mock.patch.object(
+            alt_recovery, "resolve_slate_context", return_value=context
+        ):
+            payload = alt_recovery.build_payload()
+
+        self.assertEqual(payload["status"], "paused_schedule_break")
+        self.assertEqual(payload["targets"]["dates"], [])
+        self.assertEqual(payload["recovery_commands"], [])
+        self.assertFalse(payload["automatic_recovery"]["external_feed_calls_allowed"])
 
 
 if __name__ == "__main__":

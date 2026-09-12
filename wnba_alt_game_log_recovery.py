@@ -18,7 +18,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-from active_slate_date import resolve_target_date
+from active_slate_date import resolve_slate_context
 
 DIAGNOSTICS = Path("data/dashboard/wnba_alt_pending_diagnostics.json")
 ALT_REPORT = Path("data/dashboard/wnba_alt_performance.json")
@@ -58,13 +58,19 @@ def row_date(row: dict) -> str:
     return str(row.get("date") or "")[:10]
 
 
-def build_payload(requested_date: str | None = None) -> dict:
+def build_payload(requested_date: str | None = None, *, allow_break_recovery: bool = False) -> dict:
     diagnostics = load(DIAGNOSTICS)
     alt = load(ALT_REPORT)
     rows = inspector_rows(diagnostics)
     missing = [r for r in rows if str(r.get("category") or "missing_verified_game_log") == "missing_verified_game_log"]
 
-    active_date = resolve_target_date()
+    slate_context = resolve_slate_context()
+    active_date = slate_context.target_date
+    automatic_break_pause = (
+        not requested_date
+        and not allow_break_recovery
+        and slate_context.mode in {"break", "offseason"}
+    )
     player_logs = load(PLAYER_LOGS)
     games_by_date: dict[str, set[str]] = {}
     for row in player_logs.get("records", []):
@@ -87,7 +93,10 @@ def build_payload(requested_date: str | None = None) -> dict:
         if coverage["warehouse_games"] < coverage["expected_games"]
     )
     deferred: list[dict] = []
-    if requested_date:
+    if automatic_break_pause:
+        targeted = []
+        deferred = missing
+    elif requested_date:
         targeted = [r for r in missing if row_date(r) == requested_date]
     else:
         targeted = [r for r in missing if row_date(r) and row_date(r) < active_date]
@@ -95,7 +104,11 @@ def build_payload(requested_date: str | None = None) -> dict:
 
     dates = sorted(
         {row_date(r) for r in targeted if row_date(r)}
-        | (set(schedule_coverage_gaps) if requested_date is None else set())
+        | (
+            set(schedule_coverage_gaps)
+            if requested_date is None and not automatic_break_pause
+            else set()
+        )
     )
     games = sorted({str(r.get("expected_game_id") or r.get("game")) for r in targeted if r.get("expected_game_id") or r.get("game")})
     players = sorted({str(r.get("player")) for r in targeted if r.get("player")})
@@ -103,19 +116,37 @@ def build_payload(requested_date: str | None = None) -> dict:
     deferred_by_date = Counter(row_date(r) or "unknown" for r in deferred)
     summary = alt.get("summary") or {}
     commands = []
-    for d in dates:
-        commands += [
-            f"python wnba_play_by_play_layer.py --date {d}",
-            f"python wnba_player_game_log_warehouse.py --date {d}",
-            f"python wnba_alt_performance_tracker.py --date {d} --grade",
-        ]
-    commands.append("python wnba_player_game_log_archive.py merge")
+    if not automatic_break_pause:
+        for d in dates:
+            commands += [
+                f"python wnba_play_by_play_layer.py --date {d}",
+                f"python wnba_player_game_log_warehouse.py --date {d}",
+                f"python wnba_alt_performance_tracker.py --date {d} --grade",
+            ]
+        commands.append("python wnba_player_game_log_archive.py merge")
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "requested_date": requested_date,
         "active_slate_date": active_date,
-        "scope_policy": "explicit_single_date" if requested_date else "completed_history_only_oldest_first",
-        "status": "ready" if dates else "nothing_to_recover",
+        "scope_policy": (
+            "explicit_single_date"
+            if requested_date
+            else "automatic_break_pause"
+            if automatic_break_pause
+            else "completed_history_only_oldest_first"
+        ),
+        "status": "paused_schedule_break" if automatic_break_pause else "ready" if dates else "nothing_to_recover",
+        "automatic_recovery": {
+            "allowed": not automatic_break_pause,
+            "slate_mode": slate_context.mode,
+            "allow_break_recovery": allow_break_recovery,
+            "external_feed_calls_allowed": not automatic_break_pause,
+            "reason": (
+                "automatic historical feed recovery is paused while the league has no current slate"
+                if automatic_break_pause
+                else "explicit operator scope" if requested_date or allow_break_recovery else "active schedule"
+            ),
+        },
         "before": {
             "archived": int(summary.get("archived_candidates") or summary.get("archived") or 0),
             "graded": int(summary.get("graded") or 0),
@@ -134,7 +165,11 @@ def build_payload(requested_date: str | None = None) -> dict:
             "records": len(deferred),
             "dates": sorted(d for d in deferred_by_date if d != "unknown"),
             "by_date": [{"date": d, "records": deferred_by_date[d]} for d in sorted(deferred_by_date) if d != "unknown"],
-            "reason": "automatic backlog recovery only processes dates before the active Eastern slate date",
+            "reason": (
+                "automatic historical feed recovery is paused during the schedule break"
+                if automatic_break_pause
+                else "automatic backlog recovery only processes dates before the active Eastern slate date"
+            ),
         },
         "recovery_commands": commands,
     }
@@ -152,8 +187,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--print-dates", action="store_true")
     parser.add_argument("--date", help="Recover only one YYYY-MM-DD date")
+    parser.add_argument(
+        "--allow-break-recovery",
+        action="store_true",
+        help="Explicitly allow automatic historical feed recovery during a confirmed schedule break",
+    )
     args = parser.parse_args()
-    payload = build_payload(args.date)
+    payload = build_payload(args.date, allow_break_recovery=args.allow_break_recovery)
     write(payload)
     print(" ".join(payload["targets"]["dates"]) if args.print_dates else json.dumps(payload, indent=2))
 
