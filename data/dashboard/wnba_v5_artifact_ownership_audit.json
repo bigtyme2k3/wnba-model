@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-12T16:31:24.156783+00:00",
+  "generated_at": "2026-09-12T17:20:18.801372+00:00",
   "status": "PASS",
   "mode": "contract_enforced",
   "contract_mode": "maintenance",
@@ -455,7 +455,7 @@
       "domain": "standard_props",
       "artifact": "data/dashboard/wnba_player_props.json",
       "workflow": ".github/workflows/deploy_wnba_dashboard.yml",
-      "line": 173,
+      "line": 224,
       "publish_context": false,
       "snippet": "props=json.loads(Path('data/dashboard/wnba_player_props.json').read_text())"
     },
@@ -463,7 +463,7 @@
       "domain": "injury_context",
       "artifact": "data/dashboard/wnba_injury_intelligence.json",
       "workflow": ".github/workflows/deploy_wnba_dashboard.yml",
-      "line": 150,
+      "line": 201,
       "publish_context": false,
       "snippet": "if [ -f data/dashboard/wnba_injury_intelligence.json ]; then python patch_dashboard_v5_injury_intelligence.py || true; python patch_dashboard_v5_player_prop_injury_context.py || true; fi"
     },
@@ -471,7 +471,7 @@
       "domain": "alt_market",
       "artifact": "data/dashboard/wnba_alt_market_warehouse.json",
       "workflow": ".github/workflows/deploy_wnba_dashboard.yml",
-      "line": 124,
+      "line": 146,
       "publish_context": false,
       "snippet": "w=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())"
     },
