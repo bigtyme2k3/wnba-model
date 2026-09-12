@@ -122,8 +122,6 @@ jobs:
           run_if_present wnba_sportsbook_leader_normalization.py
           run_if_present wnba_opportunity_scanner.py
           run_if_present wnba_active_slate_scanner.py
-          run_if_present wnba_minutes_projection.py --date "$TARGET"
-          run_if_present wnba_unified_simulation.py --date "$TARGET"
           run_if_present wnba_best_bets.py --date "$TARGET"
 
       - name: Rebuild derived dashboard tab data
@@ -132,13 +130,10 @@ jobs:
           run_if_present wnba_daily_edge_engine.py --date "$TARGET"
           run_if_present wnba_ensemble_intelligence_engine.py --date "$TARGET"
           run_if_present wnba_monte_carlo_scenario_engine.py --date "$TARGET"
-          run_if_present wnba_portfolio_engine.py --date "$TARGET"
           run_if_present wnba_player_prop_intelligence.py --date "$TARGET"
           run_if_present wnba_game_prop_intelligence.py --date "$TARGET"
           run_if_present wnba_readiness_engine.py
           run_if_present wnba_production_readiness.py
-          run_if_present wnba_alt_market_watch.py --date "$TARGET"
-          run_if_present wnba_alt_streak_engine.py --date "$TARGET"
           run_if_present wnba_remaining_season_intelligence.py
           run_if_present wnba_game_performance.py
           run_if_present wnba_alt_pending_diagnostics.py
