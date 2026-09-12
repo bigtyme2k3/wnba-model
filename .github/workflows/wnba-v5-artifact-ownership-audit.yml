@@ -10,6 +10,7 @@ on:
       - 'scripts/wnba_v5_artifact_ownership_audit.py'
       - 'scripts/wnba_v5_core_entrypoint_audit.py'
       - 'scripts/wnba_v5_rollover_publish_scope_audit.py'
+      - 'scripts/wnba_v5_tab_freshness.py'
       - 'scripts/atomic_generated_push.sh'
       - 'scripts/test_atomic_generated_push.sh'
       - 'wnba_player_prop_intelligence.py'
@@ -39,12 +40,13 @@ jobs:
           bash -n scripts/atomic_generated_push.sh
           bash -n scripts/test_atomic_generated_push.sh
           bash scripts/test_atomic_generated_push.sh
-      - name: Compile architecture audits and derived consumer
+      - name: Compile architecture audits and derived consumers
         run: |
           python -m py_compile \
             scripts/wnba_v5_artifact_ownership_audit.py \
             scripts/wnba_v5_core_entrypoint_audit.py \
             scripts/wnba_v5_rollover_publish_scope_audit.py \
+            scripts/wnba_v5_tab_freshness.py \
             wnba_player_prop_intelligence.py
       - name: Enforce core production entrypoints
         run: python scripts/wnba_v5_core_entrypoint_audit.py
