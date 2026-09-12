@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: wnba-main-writer
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   strict-regrade:
@@ -111,11 +111,15 @@ jobs:
               if not actual_date or not str(r.get('actual_record_id') or '').strip():
                   bad.append(r.get('candidate_id'))
                   continue
-              if mode == 'same_date_exact' and actual_date != str(r.get('date') or '')[:10]:
+              consensus_ids=r.get('consensus_record_ids') or []
+              consensus_count=int(r.get('consensus_record_count') or 0)
+              if mode in {'same_date_exact','same_date_stat_consensus'} and actual_date != str(r.get('date') or '')[:10]:
                   bad.append(r.get('candidate_id'))
-              elif mode == 'frozen_game_time_exact' and actual_date != game_date(r.get('game_time')):
+              elif mode in {'frozen_game_time_exact','frozen_game_time_stat_consensus'} and actual_date != game_date(r.get('game_time')):
                   bad.append(r.get('candidate_id'))
-              elif mode not in {'same_date_exact','frozen_game_time_exact','unique_matchup_date_shift','unique_player_date_fallback','legacy_strict'}:
+              elif mode in {'same_date_stat_consensus','frozen_game_time_stat_consensus'} and (len(consensus_ids) < 2 or consensus_count != len(consensus_ids)):
+                  bad.append(r.get('candidate_id'))
+              elif mode not in {'same_date_exact','same_date_stat_consensus','frozen_game_time_exact','frozen_game_time_stat_consensus','unique_matchup_date_shift','unique_player_date_fallback','legacy_strict'}:
                   bad.append(r.get('candidate_id'))
 
           perf=json.load(open('data/dashboard/wnba_alt_performance.json'))
