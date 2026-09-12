@@ -1,16 +1,16 @@
 {
-  "generated_at_utc": "2026-08-16T18:43:58.535153+00:00",
+  "generated_at_utc": "2026-09-12T17:25:18.960424+00:00",
   "requested_date": null,
-  "active_slate_date": "2026-08-16",
+  "active_slate_date": "2026-09-12",
   "scope_policy": "completed_history_only_oldest_first",
   "status": "ready",
   "before": {
-    "archived": 25292,
-    "graded": 24311,
-    "pending": 981
+    "archived": 27521,
+    "graded": 26750,
+    "pending": 771
   },
   "targets": {
-    "records": 794,
+    "records": 859,
     "dates": [
       "2026-07-15",
       "2026-07-16",
@@ -27,7 +27,12 @@
       "2026-08-11",
       "2026-08-12",
       "2026-08-14",
-      "2026-08-15"
+      "2026-08-15",
+      "2026-08-16",
+      "2026-08-19",
+      "2026-08-23",
+      "2026-08-24",
+      "2026-08-29"
     ],
     "games": [
       "2026-07-15|new-york-liberty-@-dallas-wings",
@@ -56,16 +61,25 @@
       "2026-08-12|minnesota-lynx-@-portland-fire",
       "2026-08-12|toronto-tempo-@-dallas-wings",
       "2026-08-14|portland-fire-@-seattle-storm",
-      "2026-08-15|new-york-liberty-@-connecticut-sun"
+      "2026-08-15|new-york-liberty-@-connecticut-sun",
+      "2026-08-16|chicago-sky-@-seattle-storm",
+      "2026-08-16|indiana-fever-@-atlanta-dream",
+      "2026-08-19|toronto-tempo-@-washington-mystics",
+      "2026-08-23|indiana-fever-@-chicago-sky",
+      "2026-08-23|seattle-storm-@-dallas-wings",
+      "2026-08-24|atlanta-dream-@-los-angeles-sparks",
+      "2026-08-29|toronto-tempo-@-phoenix-mercury"
     ],
     "players": [
       "A'ja Wilson",
+      "Aliyah Boston",
       "Ariel Atkins",
       "Arike Ogunbowale",
       "Azura Stevens",
       "Azzi Fudd",
       "Breanna Stewart",
       "Brittney Griner",
+      "Brittney Sykes",
       "Cameron Brink",
       "Carla Leite",
       "Charlisse Leger-Walker",
@@ -93,6 +107,7 @@
       "Nneka Ogwumike",
       "Olivia Miles",
       "Paige Bueckers",
+      "Rae Burrell",
       "Rhyne Howard",
       "Shakira Austin",
       "Veronica Burton"
@@ -161,6 +176,26 @@
       {
         "date": "2026-08-15",
         "records": 83
+      },
+      {
+        "date": "2026-08-16",
+        "records": 8
+      },
+      {
+        "date": "2026-08-19",
+        "records": 8
+      },
+      {
+        "date": "2026-08-23",
+        "records": 16
+      },
+      {
+        "date": "2026-08-24",
+        "records": 18
+      },
+      {
+        "date": "2026-08-29",
+        "records": 15
       }
     ],
     "schedule_coverage_gaps": [],
@@ -184,16 +219,9 @@
     }
   },
   "deferred_active_or_future": {
-    "records": 275,
-    "dates": [
-      "2026-08-16"
-    ],
-    "by_date": [
-      {
-        "date": "2026-08-16",
-        "records": 275
-      }
-    ],
+    "records": 0,
+    "dates": [],
+    "by_date": [],
     "reason": "automatic backlog recovery only processes dates before the active Eastern slate date"
   },
   "recovery_commands": [
@@ -245,6 +273,21 @@
     "python wnba_play_by_play_layer.py --date 2026-08-15",
     "python wnba_player_game_log_warehouse.py --date 2026-08-15",
     "python wnba_alt_performance_tracker.py --date 2026-08-15 --grade",
+    "python wnba_play_by_play_layer.py --date 2026-08-16",
+    "python wnba_player_game_log_warehouse.py --date 2026-08-16",
+    "python wnba_alt_performance_tracker.py --date 2026-08-16 --grade",
+    "python wnba_play_by_play_layer.py --date 2026-08-19",
+    "python wnba_player_game_log_warehouse.py --date 2026-08-19",
+    "python wnba_alt_performance_tracker.py --date 2026-08-19 --grade",
+    "python wnba_play_by_play_layer.py --date 2026-08-23",
+    "python wnba_player_game_log_warehouse.py --date 2026-08-23",
+    "python wnba_alt_performance_tracker.py --date 2026-08-23 --grade",
+    "python wnba_play_by_play_layer.py --date 2026-08-24",
+    "python wnba_player_game_log_warehouse.py --date 2026-08-24",
+    "python wnba_alt_performance_tracker.py --date 2026-08-24 --grade",
+    "python wnba_play_by_play_layer.py --date 2026-08-29",
+    "python wnba_player_game_log_warehouse.py --date 2026-08-29",
+    "python wnba_alt_performance_tracker.py --date 2026-08-29 --grade",
     "python wnba_player_game_log_archive.py merge"
   ]
 }

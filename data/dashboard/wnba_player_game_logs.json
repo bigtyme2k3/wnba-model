@@ -1,20 +1,26 @@
 {
-  "generated_at_utc": "2026-09-02T00:08:42.194257+00:00",
-  "target_date": "2026-08-31",
+  "generated_at_utc": "2026-09-12T17:24:44.717858+00:00",
+  "target_date": "2026-08-29",
   "status": "ok",
-  "schema_version": "1.0",
+  "schema_version": "1.2",
   "summary": {
     "records": 6203,
     "players": 264,
     "games": 468,
-    "quarter_complete": 0,
-    "quarter_partial": 0,
-    "quarter_unavailable": 0,
-    "records_with_free_throw_points": 0,
-    "records_with_fouls": 0,
-    "validation_flags": 0,
+    "seasons": [
+      2026
+    ],
+    "source_rows": 5081,
+    "added": 4201,
+    "replaced": 0,
+    "skipped_dnp": 880,
+    "quarter_complete": 4506,
+    "quarter_unavailable": 5860,
+    "records_with_free_throw_points": 3241,
+    "records_with_fouls": 4989,
+    "historical_backfill": true,
     "archive_previous_records": 6203,
-    "archive_new_records": 0,
+    "archive_new_records": 6203,
     "archive_recovered_game_dates": 0,
     "archive_identity_version": "player-game-v2",
     "archive_identity_rule": "game_date+normalized matchup+player; else game_id+player_id/player",
@@ -500246,5 +500252,13 @@
     "free_throw_points_definition": "made free throws; equal to FTM",
     "foul_detail_source": "play-by-play description; full-game PF fallback from boxscore",
     "validation_rule": "Q1 + Q2 + Q3 + Q4 + OT must equal event-derived total points"
+  },
+  "backfill": {
+    "files": [
+      "data/raw/wehoop_player_box_2026.csv"
+    ],
+    "requested_season": 2026,
+    "boxscore_only_quarter_policy": "unavailable",
+    "record_identity": "game_id + player_id preferred"
   }
 }
