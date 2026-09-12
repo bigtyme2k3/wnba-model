@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github/workflows/wnba_daily_slate_rollover.yml"
 ALLOWLIST = ROOT / "config/v5_rollover_derived_outputs.txt"
 OWNERSHIP = ROOT / "config/v5_artifact_ownership.json"
+FRESHNESS = ROOT / "scripts/wnba_v5_tab_freshness.py"
 ROLLOVER = ".github/workflows/wnba_daily_slate_rollover.yml"
 ALLOWED_ROOTS = ("data/dashboard/", "data/warehouse/", "data/market/", "data/forecast/")
 BROAD_ROOTS = {"data/dashboard", "data/warehouse", "data/market", "data/forecast"}
@@ -19,6 +20,12 @@ CRITICAL = {
     "data/dashboard/wnba_daily_edges.json",
     "data/dashboard/wnba_ensemble_intelligence.json",
     "data/dashboard/wnba_remaining_season_intelligence.json",
+}
+RETIRED_FRESHNESS_ARTIFACTS = {
+    "wnba_unified_simulation.json",
+    "wnba_portfolio.json",
+    "wnba_portfolio_intelligence.json",
+    "wnba_alt_market_watch.json",
 }
 
 
@@ -90,12 +97,28 @@ def main() -> None:
     if "UNEXPECTED" not in verify_block or "v5_rollover_derived_outputs.txt" not in verify_block:
         raise SystemExit("Rollover does not fail closed on changed files outside the allowlist")
 
+    freshness_cmd = 'python scripts/wnba_v5_tab_freshness.py --date "$TARGET"'
+    if freshness_cmd not in workflow:
+        raise SystemExit("Rollover does not use the semantic V5 freshness builder")
+    if not FRESHNESS.is_file():
+        raise SystemExit("Semantic V5 freshness builder is missing")
+
+    freshness_source = FRESHNESS.read_text(encoding="utf-8")
+    stale_refs = sorted(name for name in RETIRED_FRESHNESS_ARTIFACTS if name in freshness_source or name in workflow)
+    if stale_refs:
+        raise SystemExit(f"Retired artifacts remain in freshness resolution: {stale_refs}")
+    for required in ("artifact_metadata", "git_commit", "target_mismatch"):
+        if required not in freshness_source:
+            raise SystemExit(f"Semantic freshness guard missing required evidence path: {required}")
+
     print({
         "status": "PASS",
         "contract": "V5_ROLLOVER_EXPLICIT_PUBLISH_SCOPE",
         "allowlisted_files": len(rows),
         "declared_stage_scripts": len(stage_scripts),
         "missing_stage_scripts": 0,
+        "semantic_freshness": True,
+        "retired_freshness_artifacts": 0,
         "broad_directory_args": 0,
         "foreign_protected_artifacts": 0,
     })
