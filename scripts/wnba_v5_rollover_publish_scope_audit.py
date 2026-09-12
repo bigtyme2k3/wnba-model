@@ -21,11 +21,23 @@ CRITICAL = {
     "data/dashboard/wnba_ensemble_intelligence.json",
     "data/dashboard/wnba_remaining_season_intelligence.json",
 }
-RETIRED_FRESHNESS_ARTIFACTS = {
+# These files are retired, alternate-purpose, or superseded fallbacks. They may
+# remain in repository history, but cannot be used to prove a current tab fresh.
+FORBIDDEN_FRESHNESS_FALLBACKS = {
+    "wnba_current_slate.json",
+    "wnba_daily_report.json",
+    "wnba_games.json",
     "wnba_unified_simulation.json",
     "wnba_portfolio.json",
     "wnba_portfolio_intelligence.json",
     "wnba_alt_market_watch.json",
+    "wnba_alt_pending_diagnostics.json",
+    "wnba_daily_edge_engine.json",
+    "wnba_ensemble.json",
+    "wnba_results.json",
+    "wnba_live_results.json",
+    "wnba_model_performance.json",
+    "wnba_explainability.json",
 }
 
 
@@ -104,10 +116,21 @@ def main() -> None:
         raise SystemExit("Semantic V5 freshness builder is missing")
 
     freshness_source = FRESHNESS.read_text(encoding="utf-8")
-    stale_refs = sorted(name for name in RETIRED_FRESHNESS_ARTIFACTS if name in freshness_source or name in workflow)
+    stale_refs = sorted(
+        name for name in FORBIDDEN_FRESHNESS_FALLBACKS
+        if name in freshness_source or name in workflow
+    )
     if stale_refs:
-        raise SystemExit(f"Retired artifacts remain in freshness resolution: {stale_refs}")
-    for required in ("artifact_metadata", "git_commit", "target_mismatch"):
+        raise SystemExit(f"Forbidden artifacts remain in freshness resolution: {stale_refs}")
+    for required in (
+        "artifact_metadata",
+        "git_commit",
+        "target_mismatch",
+        "missing_required_target_date",
+        "BAD_ARTIFACT_STATUSES",
+        "failed_or_standby_artifact",
+        "retired_no_active_producer",
+    ):
         if required not in freshness_source:
             raise SystemExit(f"Semantic freshness guard missing required evidence path: {required}")
 
@@ -118,7 +141,9 @@ def main() -> None:
         "declared_stage_scripts": len(stage_scripts),
         "missing_stage_scripts": 0,
         "semantic_freshness": True,
-        "retired_freshness_artifacts": 0,
+        "forbidden_freshness_fallbacks": 0,
+        "current_slate_target_required": True,
+        "producer_failure_states_rejected": True,
         "broad_directory_args": 0,
         "foreign_protected_artifacts": 0,
     })
