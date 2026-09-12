@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -63,6 +64,15 @@ def main() -> None:
         raise SystemExit(f"Rollover allowlist contains foreign-owned protected artifacts: {foreign}")
 
     workflow = WORKFLOW.read_text(encoding="utf-8")
+
+    # Every declared rollover stage must exist. run_if_present is only a runtime
+    # convenience for optional execution, not permission to accumulate dead
+    # legacy stage names that silently skip forever.
+    stage_scripts = sorted(set(re.findall(r"run_if_present\s+([A-Za-z0-9_./-]+\.py)", workflow)))
+    missing_stage_scripts = [script for script in stage_scripts if not (ROOT / script).is_file()]
+    if missing_stage_scripts:
+        raise SystemExit(f"Rollover references missing stage scripts: {missing_stage_scripts}")
+
     marker = "- name: Publish derived dashboard intelligence"
     if marker not in workflow:
         raise SystemExit("Rollover publish step missing")
@@ -84,6 +94,8 @@ def main() -> None:
         "status": "PASS",
         "contract": "V5_ROLLOVER_EXPLICIT_PUBLISH_SCOPE",
         "allowlisted_files": len(rows),
+        "declared_stage_scripts": len(stage_scripts),
+        "missing_stage_scripts": 0,
         "broad_directory_args": 0,
         "foreign_protected_artifacts": 0,
     })
