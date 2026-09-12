@@ -58,6 +58,7 @@ BAD_ARTIFACT_STATUSES = {
     "error",
     "failed",
     "failure",
+    "fetch_failed",
     "invalid",
     "missing",
     "stale",

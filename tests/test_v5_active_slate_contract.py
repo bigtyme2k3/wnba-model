@@ -177,6 +177,21 @@ def main() -> int:
                     "best_under_book": "draftkings",
                     "under_price": -105,
                 })
+                writer.writerow({
+                    "player": "Compounded Projection",
+                    "team": "Test Home",
+                    "opp_team": GAME,
+                    "stat": "PTS",
+                    "line": 12.5,
+                    "pred": 55_600_000_000,
+                    "signal": "OVER",
+                    "is_active": "true",
+                    "conf": "HIGH",
+                    "best_over_book": "fanduel",
+                    "over_price": -110,
+                    "best_under_book": "draftkings",
+                    "under_price": -105,
+                })
             class Result:
                 returncode = 0
             return Result()
@@ -199,6 +214,8 @@ def main() -> int:
         assert prediction_audit["empty_slate"] is False
         assert prediction_audit["player_prop_predictions"] == 1
         assert prediction_audit["player_props_with_model_projection"] == 1
+        assert prediction_audit["invalid_projection_rows_rejected"] == 1
+        assert prediction_audit["invalid_projection_sample"][0]["player"] == "Compounded Projection"
         assert prediction_audit["off_slate_prop_rows_rejected"] == 0
         assert prediction_audit["all_rendered_props_exact_current_slate"] is True
         assert prediction_audit["phase2_best_bets_fallback_enabled"] is False

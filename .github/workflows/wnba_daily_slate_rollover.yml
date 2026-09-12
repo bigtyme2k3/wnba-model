@@ -138,6 +138,9 @@ jobs:
           run_if_present wnba_game_performance.py
           run_if_present wnba_alt_pending_diagnostics.py
 
+      - name: Enforce projection integrity before publish
+        run: python scripts/wnba_v5_projection_integrity_audit.py --date "$TARGET"
+
       - name: Build dashboard tab freshness manifest
         run: python scripts/wnba_v5_tab_freshness.py --date "$TARGET"
 
@@ -152,8 +155,11 @@ jobs:
           if actual!=target: raise SystemExit(f'Canonical source target mismatch: expected {target}, found {actual or "missing"}')
           payload=json.loads(Path('data/dashboard/wnba_tab_freshness.json').read_text(encoding='utf-8'))
           if str(payload.get('target_date') or '')[:10]!=target: raise SystemExit('Freshness manifest target mismatch')
+          integrity=json.loads(Path('data/dashboard/wnba_projection_integrity_audit.json').read_text(encoding='utf-8'))
+          if integrity.get('status')!='PASS' or int(integrity.get('violation_count') or 0)!=0:
+              raise SystemExit(f"Projection integrity failed: {integrity.get('violations')}")
           critical=['games','daily_edges','ensemble','simulation','best_bets','results','performance','remaining_season']; missing=[name for name in critical if payload['tabs'].get(name,{}).get('status')=='missing']
-          print({'target':target,'master_target_date':actual,'today_games':data.get('summary',{}).get('today_games'),'critical_missing':missing})
+          print({'target':target,'master_target_date':actual,'today_games':data.get('summary',{}).get('today_games'),'projection_integrity':integrity.get('status'),'critical_missing':missing})
           if missing: print('WARNING: critical tabs missing data:',', '.join(missing))
           PY
 

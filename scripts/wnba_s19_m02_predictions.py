@@ -5,8 +5,15 @@ import csv
 import json
 import math
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from wnba_projection_contract import canonical_stat, projection_ceiling, validate_projection
 
 DASH = Path('data/dashboard')
 RAW = Path('data/raw')
@@ -164,6 +171,7 @@ def write_empty_state(target: str, injury_stamp: str, game_stamp: str):
             'off_slate_prop_rows_rejected': 0,
             'missing_projection_rows_skipped': 0,
             'negative_projection_rows_clamped': 0,
+            'invalid_projection_rows_rejected': 0,
         },
     }
     OUT.write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
@@ -191,6 +199,8 @@ def write_empty_state(target: str, injury_stamp: str, game_stamp: str):
         'phase2_portfolio_fallback_enabled': False,
         'missing_projection_rows_skipped': 0,
         'negative_projection_rows_clamped': 0,
+        'invalid_projection_rows_rejected': 0,
+        'invalid_projection_sample': [],
     }
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(audit))
@@ -242,6 +252,7 @@ def build(target: str):
     prop_rows = []
     off_slate = []
     missing_projection = []
+    invalid_projection = []
     out_actionable = []
     negative_projection_rows_clamped = 0
 
@@ -252,16 +263,37 @@ def build(target: str):
             continue
 
         player = str(row.get('player') or '')
-        stat = str(first(row, 'stat', 'market', 'prop_type') or '').upper()
+        stat = canonical_stat(first(row, 'stat', 'market', 'prop_type'))
         line = f(first(row, 'line', 'market_line', 'consensus_line', 'best_line'))
-        projection = f(first(row, 'pred', 'projection', 'proj', 'model_projection', 'projected_value'))
+        projection_fields = ('pred', 'projection', 'proj', 'model_projection', 'projected_value')
+        projection_source_field = next((key for key in projection_fields if row.get(key) not in (None, '')), None)
+        projection = f(row.get(projection_source_field)) if projection_source_field else None
         if projection is None or line is None:
             missing_projection.append({'player': player, 'stat': stat, 'line': line, 'projection': projection})
             continue
 
+        source_projection_was_negative = projection < 0
+        if source_projection_was_negative:
+            negative_projection_rows_clamped += 1
+            projection = 0.0
+        projection_pre_injury = projection
+        checked, invalid_reason = validate_projection(stat, projection_pre_injury)
+        if checked is None:
+            invalid_projection.append({
+                'player': player,
+                'game': game,
+                'stat': stat,
+                'stage': 'pre_injury',
+                'field': projection_source_field,
+                'value': projection_pre_injury,
+                'ceiling': projection_ceiling(stat),
+                'reason': invalid_reason,
+            })
+            continue
+        projection = projection_pre_injury = checked
+
         adj = adjustments.get(norm(player))
         injury_status = str((adj or {}).get('severity') or row.get('injury_status') or 'CLEAR').upper()
-        projection_pre_injury = projection
         projected_minutes = None
         minutes_delta = None
         injury_adjusted = False
@@ -276,19 +308,29 @@ def build(target: str):
             if injury_status == 'BENEFICIARY' and injury_factor is not None:
                 projection = round(projection * injury_factor, 2)
 
-        # Counting-stat props cannot have physically negative projections. Some
-        # low-volume rows can be pushed below zero by trend/role adjustments in
-        # player_points.py; clamp them here before edge, pick, and downstream
-        # contract generation so every consumer receives a valid count forecast.
-        if projection < 0 or projection_pre_injury < 0:
-            negative_projection_rows_clamped += 1
-        projection = max(0.0, projection)
-        projection_pre_injury = max(0.0, projection_pre_injury)
+        # Negative low-volume estimates remain clamped to zero. Upper-bound
+        # violations are quarantined instead of clamped because they indicate a
+        # unit/lineage defect and must not become probability or EV evidence.
+        checked, invalid_reason = validate_projection(stat, projection)
+        if checked is None:
+            invalid_projection.append({
+                'player': player,
+                'game': game,
+                'stat': stat,
+                'stage': 'post_injury',
+                'field': projection_source_field,
+                'value': projection,
+                'ceiling': projection_ceiling(stat),
+                'reason': invalid_reason,
+                'injury_projection_factor': injury_factor,
+            })
+            continue
+        projection = checked
 
         edge = round(projection - line, 2)
         raw_signal = str(row.get('signal') or '').upper()
         recommendation = raw_signal if raw_signal in {'OVER', 'UNDER', 'PASS'} else ('OVER' if edge >= 0.35 else 'UNDER' if edge <= -0.35 else 'PASS')
-        if f(first(row, 'pred', 'projection', 'proj', 'model_projection', 'projected_value')) is not None and f(first(row, 'pred', 'projection', 'proj', 'model_projection', 'projected_value')) < 0:
+        if source_projection_was_negative:
             recommendation = 'OVER' if edge >= 0.35 else 'UNDER' if edge <= -0.35 else 'PASS'
         eligible = boolish(row.get('is_active'), recommendation != 'PASS') and recommendation != 'PASS'
         if injury_status in {'OUT', 'DOUBTFUL'}:
@@ -308,6 +350,9 @@ def build(target: str):
             'line': line,
             'model_projection': round(projection, 2),
             'projection_pre_injury': round(projection_pre_injury, 2),
+            'projection_source_field': projection_source_field,
+            'projection_validated': True,
+            'projection_ceiling': projection_ceiling(stat),
             'edge': edge,
             'recommendation': recommendation,
             'confidence': confidence_pct(row),
@@ -394,6 +439,7 @@ def build(target: str):
             'off_slate_prop_rows_rejected': len(off_slate),
             'missing_projection_rows_skipped': len(missing_projection),
             'negative_projection_rows_clamped': negative_projection_rows_clamped,
+            'invalid_projection_rows_rejected': len(invalid_projection),
         },
     }
     OUT.write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
@@ -422,6 +468,8 @@ def build(target: str):
         'phase2_portfolio_fallback_enabled': False,
         'missing_projection_rows_skipped': len(missing_projection),
         'negative_projection_rows_clamped': negative_projection_rows_clamped,
+        'invalid_projection_rows_rejected': len(invalid_projection),
+        'invalid_projection_sample': invalid_projection[:20],
     }
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(audit))

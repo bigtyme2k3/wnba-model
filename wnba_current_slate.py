@@ -3,8 +3,9 @@
 ESPN is attempted first. If ESPN blocks GitHub Actions (for example HTTP 403),
 The Odds API becomes the authoritative fallback. The script writes
 ``data/wnba/scores.json`` and replaces only the current-date game rows in
-``data/dashboard/wnba_master.json``. Historical/player/prop sections are
-preserved.
+``data/dashboard/wnba_master.json``. Historical and player sections are
+preserved. Legacy embedded betting views are cleared because their canonical
+V5 owners publish separate target-dated artifacts.
 """
 from __future__ import annotations
 
@@ -39,6 +40,26 @@ def load(path: Path, default: Any) -> Any:
 def dump(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def retire_legacy_betting_views(master: dict[str, Any]) -> dict[str, int]:
+    """Clear non-canonical embedded slate views before changing the date.
+
+    Reusing ``master.props`` across dates previously let an in-place injury
+    adjustment compound the same projection on every workflow retry. Standard
+    props, best bets, and portfolio rows now have separate V5 artifacts, so the
+    schedule owner must not carry those rows into a new slate.
+    """
+    removed: dict[str, int] = {}
+    for key in ("props", "best_bets", "portfolio"):
+        value = master.get(key)
+        removed[key] = len(value) if isinstance(value, list) else 0
+        master[key] = []
+    summary = master.setdefault("summary", {})
+    summary["props"] = 0
+    summary["best_bets"] = 0
+    summary["portfolio"] = 0
+    return removed
 
 
 def team_name(competitor: dict[str, Any]) -> str:
@@ -183,8 +204,30 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=datetime.now(ET).date().isoformat())
     parser.add_argument("--api-key", default=os.getenv("ODDS_API_KEY"))
+    parser.add_argument(
+        "--retire-legacy-betting-views-only",
+        action="store_true",
+        help="Clear embedded props/bets/portfolio without fetching or changing slate freshness.",
+    )
     args = parser.parse_args()
     target = args.date
+
+    if args.retire_legacy_betting_views_only:
+        master = load(MASTER, None)
+        if not isinstance(master, dict):
+            raise SystemExit(f"Cannot repair missing or invalid canonical master: {MASTER}")
+        retired_counts = retire_legacy_betting_views(master)
+        master["legacy_embedded_betting_views"] = {
+            "status": "retired",
+            "active_producer": False,
+            "rows_removed": retired_counts,
+            "canonical_standard_props": "data/dashboard/wnba_player_props.json",
+            "canonical_predictions": "data/dashboard/wnba_s19_m02_predictions.json",
+            "canonical_best_bets": "data/dashboard/wnba_best_bets.json",
+        }
+        dump(MASTER, master)
+        print(json.dumps({"status": "retired", "rows_removed": retired_counts}, indent=2))
+        return
 
     errors: list[str] = []
     raw: Any = None
@@ -215,6 +258,7 @@ def main() -> None:
         row for row in existing_games
         if row.get("bucket") != "today" and row.get("game_date") != target
     ]
+    retired_counts = retire_legacy_betting_views(master)
     master["generated_at_utc"] = now
     master["target_date"] = target
     master["schema_version"] = master.get("schema_version") or "master-v5-active-slate"
@@ -231,6 +275,18 @@ def main() -> None:
         "fallback_errors": errors,
         "game_count": len(games),
         "status": "fresh" if games else "confirmed_empty_slate",
+        "legacy_embedded_views_retired": True,
+        "legacy_rows_removed": retired_counts,
+        "canonical_standard_props": "data/dashboard/wnba_player_props.json",
+        "canonical_predictions": "data/dashboard/wnba_s19_m02_predictions.json",
+    }
+    master["legacy_embedded_betting_views"] = {
+        "status": "retired",
+        "active_producer": False,
+        "rows_removed": retired_counts,
+        "canonical_standard_props": "data/dashboard/wnba_player_props.json",
+        "canonical_predictions": "data/dashboard/wnba_s19_m02_predictions.json",
+        "canonical_best_bets": "data/dashboard/wnba_best_bets.json",
     }
     dump(MASTER, master)
     print(json.dumps({

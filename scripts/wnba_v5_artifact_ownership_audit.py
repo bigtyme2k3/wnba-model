@@ -271,6 +271,7 @@ def main() -> int:
         writer = csv.DictWriter(
             f,
             fieldnames=["domain", "artifact", "workflow", "line", "publish_context", "snippet"],
+            lineterminator="\n",
         )
         writer.writeheader()
         writer.writerows(rows)

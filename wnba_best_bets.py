@@ -6,6 +6,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from wnba_projection_contract import (
+    canonical_stat,
+    projection_ceiling,
+    projection_evidence,
+    projection_field_violations,
+)
+
 ROOT = Path('data/dashboard')
 MASTER = ROOT / 'wnba_master.json'
 V5_BUY = ROOT / 'wnba_v5_buy_signals.json'
@@ -30,6 +37,7 @@ def main() -> None:
     signals = [x for x in source.get('signals', []) if isinstance(x, dict)]
 
     selected: list[dict[str, Any]] = []
+    rejected_projections: list[dict[str, Any]] = []
     seen: set[str] = set()
     for item in signals:
         item_date = str(item.get('date') or target)
@@ -41,6 +49,19 @@ def main() -> None:
         injury_status = str(item.get('injury_status') or 'ACTIVE').upper()
         if injury_status in {'OUT', 'DOUBTFUL'}:
             continue
+        evidence = projection_evidence(item)
+        stat = canonical_stat(item.get('market') or item.get('stat') or item.get('prop_type'))
+        violations = projection_field_violations(item, stat)
+        if evidence is not None and not stat:
+            violations.append({'field': evidence[0], 'value': evidence[1], 'reason': 'missing_stat_for_projection'})
+        if violations:
+            rejected_projections.append({
+                'player': item.get('player'),
+                'game': item.get('game'),
+                'stat': stat,
+                'violations': violations,
+            })
+            continue
         identity = str(item.get('ranking_key') or '|'.join(str(item.get(k) or '') for k in ('date','player','game','market','side','line')))
         if identity in seen:
             continue
@@ -48,6 +69,10 @@ def main() -> None:
         selected.append({
             **item,
             'target_date': target,
+            **({
+                'projection_validated': True,
+                'projection_ceiling': projection_ceiling(stat),
+            } if evidence is not None else {}),
             'status': 'BET',
             'recommendation': state,
             'qualification': 'v5_live_buy_signal',
@@ -62,10 +87,21 @@ def main() -> None:
         'source_generated_at_utc': source.get('generated_at_utc'),
         'source': 'data/dashboard/wnba_v5_buy_signals.json',
         'research_only': bool(source.get('research_only', True)),
-        'status': 'ready' if selected else 'no_qualified_bets',
+        'status': 'invalid' if rejected_projections else 'ready' if selected else 'no_qualified_bets',
         'bet_count': len(selected),
         'best_bets': selected,
-        'message': None if selected else 'No current V5 live buy signals qualified for the active slate.',
+        'projection_integrity': {
+            'contract': 'wnba_projection_contract.py',
+            'invalid_rows_rejected': len(rejected_projections),
+            'rejection_sample': rejected_projections[:20],
+            'all_published_projection_fields_validated': not rejected_projections,
+        },
+        'message': (
+            'Projection integrity rejected one or more otherwise actionable V5 buy signals.'
+            if rejected_projections else
+            None if selected else
+            'No current V5 live buy signals qualified for the active slate.'
+        ),
     }
     ROOT.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, indent=2), encoding='utf-8')

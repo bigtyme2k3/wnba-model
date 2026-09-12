@@ -28,6 +28,7 @@ The current production ownership is declared artifact-by-artifact in `config/v5_
 | Results | model history + results lifecycle | `wnba_results_refresh.yml` | Learning consumes resolved outcomes; dashboard renders |
 | ALT market | dashboard + warehouse ALT market state | `wnba_alt_pregame_snapshot.yml` | Streaks, parlays and performance consume it |
 | Dashboard freshness | `data/dashboard/wnba_tab_freshness.json` | `wnba_daily_slate_rollover.yml` | Deploy/render consumes it |
+| Projection integrity | `data/dashboard/wnba_projection_integrity_audit.json` | `wnba_daily_slate_rollover.yml` | Blocks publish when active decision artifacts contain an implausible projection |
 
 ## Daily orchestration
 
@@ -56,12 +57,13 @@ The contract is intentionally stricter during the 2026 FIBA break. Automatic clo
 
 ## Slate QA gates
 
-`.github/workflows/wnba-v5-empty-slate-contract.yml` is an offline, read-only slate contract suite. It runs both scenarios entirely in temporary directories:
+`.github/workflows/wnba-v5-empty-slate-contract.yml` is an offline, read-only slate contract suite. It runs three scenarios entirely in temporary directories:
 
 1. **Confirmed empty slate** — zero games, zero props, zero bets/portfolio, no Odds API call and no `player_points.py` execution.
 2. **Controlled active slate** — one synthetic game using a persisted three-book canonical prop fixture, no live Odds API call, one deterministic M02 projection, and no mutation of repository production data.
+3. **Projection corruption** — a 55.6-billion synthetic projection is quarantined at issuance/edge boundaries, excluded from ensemble and simulation, and detected by the repository-wide publish gate.
 
-Both tests must leave `git diff` clean. These tests are the pre-live structural gate; a real active-slate production run is still a separate operator-controlled step.
+All tests must leave `git diff` clean. These tests are the pre-live structural gate; a real active-slate production run is still a separate operator-controlled step.
 
 ## Live market capture
 
@@ -93,6 +95,7 @@ Deployment is a terminal consumer. Renderer patches are presentation-only by def
 10. Dashboard code reads canonical artifacts; it does not own them.
 11. The orchestrator owns dependency order, not the artifacts produced by its called stages.
 12. Maintenance mode contains no automatic cron execution.
+13. Implausible projections are quarantined, never clamped into plausibility or used for ranking, simulation, EV, or bet selection.
 
 ## Re-enable sequence
 

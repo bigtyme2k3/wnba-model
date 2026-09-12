@@ -130,6 +130,7 @@ def main() -> int:
         assert prediction_audit["empty_slate"] is True
         assert prediction_audit["player_prop_predictions"] == 0
         assert prediction_audit["actionable_out_props"] == 0
+        assert prediction_audit["invalid_projection_rows_rejected"] == 0
         assert prediction_audit["all_rendered_props_exact_current_slate"] is True
 
         print(json.dumps({

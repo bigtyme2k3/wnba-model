@@ -9,12 +9,14 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from wnba_projection_contract import canonical_stat, projection_ceiling, validate_projection
+
 DASH = Path('data/dashboard')
 WARE = Path('data/warehouse')
 ENSEMBLE = DASH / 'wnba_ensemble_intelligence.json'
-EDGES = DASH / 'wnba_daily_edges.json'
 LOGS = WARE / 'wnba_player_game_logs.json'
 OUTS = [DASH / 'wnba_monte_carlo_scenarios.json', WARE / 'wnba_monte_carlo_scenarios.json']
+BAD_SOURCE_STATUSES = {'error', 'failed', 'failure', 'fetch_failed', 'invalid', 'missing', 'stale', 'standby', 'unavailable'}
 
 STAT_KEYS = {
     'PTS': ('pts', 'total_pts'), 'REB': ('reb',), 'AST': ('ast',), '3PM': ('threes', 'three_pm'),
@@ -96,6 +98,7 @@ def history_map() -> dict[tuple[str, str], list[float]]:
             continue
         for stat in DEFAULT_SD:
             value = stat_value(row, stat)
+            value, _ = validate_projection(stat, value)
             if value is not None:
                 groups[(player, stat)].append((str(row.get('game_date') or ''), value))
     out = {}
@@ -113,14 +116,34 @@ def sample_sd(values: list[float], fallback: float) -> float:
     return clamp(math.sqrt(variance), fallback * 0.65, fallback * 1.8)
 
 
-def source_candidates() -> tuple[list[dict[str, Any]], str, str | None]:
+def source_candidates(target: str | None) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     ensemble = load(ENSEMBLE, {})
+    source_date = str(ensemble.get('target_date') or '')[:10] if isinstance(ensemble, dict) else ''
+    requested_target = target or source_date or str(date.today())
+    status = str(ensemble.get('status') or 'missing').strip().lower() if isinstance(ensemble, dict) else 'missing'
     rows = ensemble.get('ranked_edges', []) if isinstance(ensemble, dict) else []
-    if rows:
-        return [r for r in rows if isinstance(r, dict)], 'ensemble', ensemble.get('target_date')
-    edges = load(EDGES, {})
-    rows = edges.get('top_edges', []) if isinstance(edges, dict) else []
-    return [r for r in rows if isinstance(r, dict)], 'daily_edges', edges.get('target_date') if isinstance(edges, dict) else None
+    state = 'ready'
+    reason = None
+    if source_date != requested_target:
+        state = 'stale'
+        reason = f'ensemble_target_mismatch:{source_date or "missing"}!={requested_target}'
+    elif status in BAD_SOURCE_STATUSES:
+        state = status if status in {'stale', 'invalid'} else 'stale'
+        reason = f'ensemble_status:{status}'
+    elif status == 'confirmed_empty_slate':
+        state = 'confirmed_empty_slate'
+    elif status != 'ok':
+        state = 'invalid'
+        reason = f'ensemble_unrecognized_status:{status}'
+    return ([r for r in rows if isinstance(r, dict)] if state == 'ready' else []), {
+        'source': str(ENSEMBLE),
+        'source_target_date': source_date or None,
+        'source_status': status,
+        'target_date': requested_target,
+        'state': state,
+        'reason': reason,
+        'fallback_used': False,
+    }
 
 
 def scenario_specs(row: dict[str, Any]) -> list[dict[str, Any]]:
@@ -144,16 +167,14 @@ def scenario_specs(row: dict[str, Any]) -> list[dict[str, Any]]:
 
 def simulate_candidate(row: dict[str, Any], history: dict[tuple[str, str], list[float]], sims: int) -> dict[str, Any] | None:
     player = str(row.get('player') or '')
-    stat = str(row.get('market') or row.get('stat') or '').upper().replace('PLAYER_', '')
-    side = str(row.get('side') or row.get('signal') or 'OVER').upper()
+    stat = canonical_stat(row.get('market') or row.get('stat'))
+    side = str(row.get('side') or row.get('signal') or '').upper()
     line = num(row.get('line'))
-    projection = num(row.get('projection'))
-    if line is None:
+    projection, _ = validate_projection(stat, row.get('projection'))
+    if line is None or projection is None or side not in {'OVER', 'UNDER'}:
         return None
     values = history.get((norm(player), stat), [])
     hist_mean = sum(values[:10]) / len(values[:10]) if values else None
-    if projection is None:
-        projection = hist_mean if hist_mean is not None else line
     if hist_mean is not None and len(values) >= 5:
         mean = 0.72 * projection + 0.28 * hist_mean
     else:
@@ -168,7 +189,8 @@ def simulate_candidate(row: dict[str, Any], history: dict[tuple[str, str], list[
     for index, spec in enumerate(specs):
         count = remaining if index == len(specs) - 1 else max(1, round(max(1000, sims) * spec['weight']))
         remaining -= count
-        vals = [max(0.0, rng.gauss(mean * spec['mean_factor'], base_sd * spec['sd_factor'])) for _ in range(count)]
+        ceiling = projection_ceiling(stat)
+        vals = [clamp(rng.gauss(mean * spec['mean_factor'], base_sd * spec['sd_factor']), 0.0, ceiling) for _ in range(count)]
         all_values.extend(vals)
         over = sum(v > line for v in vals) / len(vals)
         under = sum(v < line for v in vals) / len(vals)
@@ -194,6 +216,7 @@ def simulate_candidate(row: dict[str, Any], history: dict[tuple[str, str], list[
     if row.get('calibration_extrapolated'):
         risk = 'HIGH'
     return {
+        'target_date': row.get('target_date'),
         'player': player, 'team': row.get('team'), 'game': row.get('game'), 'stat': stat, 'side': side,
         'line': line, 'sportsbook': row.get('sportsbook'), 'odds': odds, 'market_type': row.get('market_type', 'standard'),
         'ensemble_score': row.get('ensemble_score'), 'ensemble_grade': row.get('grade'),
@@ -204,6 +227,8 @@ def simulate_candidate(row: dict[str, Any], history: dict[tuple[str, str], list[
         'probability_edge': round(signal_prob - implied, 4) if implied is not None else None,
         'expected_value_per_unit': round(ev, 4), 'expected_value_percent': round(ev * 100, 2),
         'projection_mean': round(mean, 2), 'projection_sd': round(base_sd, 2), 'median': round(median, 2),
+        'projection_source_field': row.get('projection_source_field') or 'projection',
+        'projection_validated': True, 'projection_ceiling': projection_ceiling(stat),
         'p10': round(downside, 2), 'p25': round(percentile(all_values, .25), 2),
         'p75': round(percentile(all_values, .75), 2), 'p90': round(upside, 2),
         'history_games': len(values), 'simulations': len(all_values), 'risk_band': risk,
@@ -219,13 +244,28 @@ def simulate_candidate(row: dict[str, Any], history: dict[tuple[str, str], list[
 
 
 def build(target: str | None, sims: int) -> dict[str, Any]:
-    rows, source, source_date = source_candidates()
+    rows, source_contract = source_candidates(target)
+    requested_target = source_contract['target_date']
     history = history_map()
     simulations = []
     skipped = 0
+    rejected = []
     for row in rows:
+        stat = canonical_stat(row.get('market') or row.get('stat'))
+        side = str(row.get('side') or row.get('signal') or '').upper()
+        projection, reason = validate_projection(stat, row.get('projection'))
+        row_target = str(row.get('target_date') or source_contract.get('source_target_date') or '')[:10]
+        if row_target != requested_target:
+            rejected.append({'player': row.get('player'), 'stat': stat, 'value': row.get('projection'), 'reason': 'off_target_row'})
+            continue
+        if projection is None:
+            rejected.append({'player': row.get('player'), 'stat': stat, 'value': row.get('projection'), 'reason': reason})
+            continue
+        if side not in {'OVER', 'UNDER'}:
+            rejected.append({'player': row.get('player'), 'stat': stat, 'value': row.get('projection'), 'reason': 'non_directional_signal'})
+            continue
         try:
-            result = simulate_candidate(row, history, sims)
+            result = simulate_candidate({**row, 'market': stat, 'projection': projection}, history, sims)
             if result:
                 simulations.append(result)
             else:
@@ -233,14 +273,30 @@ def build(target: str | None, sims: int) -> dict[str, Any]:
         except Exception as exc:
             skipped += 1
             print(f'WARN Sprint 10 candidate skipped: {exc}')
+    projection_rejections = [
+        row for row in rejected
+        if row.get('reason') not in {'off_target_row', 'non_directional_signal'}
+    ]
     simulations.sort(key=lambda r: (r['expected_value_per_unit'], r['simulation_probability'], -(r['projection_sd'] or 0)), reverse=True)
+    if source_contract['state'] == 'confirmed_empty_slate':
+        status = 'confirmed_empty_slate'
+    elif source_contract['state'] != 'ready':
+        status = source_contract['state']
+    elif simulations:
+        status = 'ok'
+    else:
+        status = 'invalid'
     report = {
         'sprint': 10, 'phase': 'monte-carlo-scenario-engine',
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
-        'target_date': target or source_date or str(date.today()),
-        'status': 'ok' if simulations else 'awaiting_live_slate',
+        'target_date': requested_target,
+        'status': status,
+        'source_contract': source_contract,
         'summary': {
-            'source': source, 'candidates_loaded': len(rows), 'candidates_simulated': len(simulations),
+            'source': 'ensemble', 'candidates_loaded': len(rows), 'candidates_simulated': len(simulations),
+            'invalid_projection_rows_rejected': len(projection_rejections),
+            'non_directional_rows_excluded': sum(r.get('reason') == 'non_directional_signal' for r in rejected),
+            'off_target_rows_rejected': sum(r.get('reason') == 'off_target_row' for r in rejected),
             'skipped': skipped, 'simulations_per_candidate': max(1000, sims),
             'positive_ev': sum(r['expected_value_per_unit'] > 0 for r in simulations),
             'probability_60_plus': sum(r['simulation_probability'] >= .60 for r in simulations),
@@ -248,11 +304,22 @@ def build(target: str | None, sims: int) -> dict[str, Any]:
             'top_probability': simulations[0]['simulation_probability'] if simulations else None,
             'top_ev_percent': simulations[0]['expected_value_percent'] if simulations else None,
         },
+        'qa': {'projection_integrity': {
+            'contract': 'wnba_projection_contract.py',
+            'invalid_rows_rejected': len(projection_rejections),
+            'rejection_sample': projection_rejections[:20],
+            'all_published_projections_validated': all(r.get('projection_validated') is True for r in simulations),
+        }},
         'top_scenarios': simulations[:20], 'all_simulations': simulations[:100],
+        'ranked_simulations': simulations[:100],
         'methodology': {
             'distribution': 'scenario-weighted Gaussian with empirical player/stat volatility when available',
             'scenarios': ['baseline', 'minutes_up', 'minutes_down', 'blowout', 'foul_trouble', 'injury_limit when applicable'],
             'chronology_safe': True,
+            'canonical_source': str(ENSEMBLE),
+            'daily_edges_fallback_used': False,
+            'invalid_projection_policy': 'quarantine; never substitute line/history or simulate',
+            'non_directional_signal_policy': 'PASS rows are not simulated as an implicit OVER',
             'warning': 'Simulation probabilities are model estimates, not guarantees. Live minutes, injuries, and lineup news can materially change outcomes.',
         },
     }

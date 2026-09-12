@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-09-12T01:48:22.077252+00:00",
+  "target_date": null,
+  "status": "PASS",
+  "contract": {
+    "module": "wnba_projection_contract.py",
+    "policy": "Every published single-player counting-stat projection must be finite, non-negative, and below its generous stat ceiling.",
+    "failure_action": "quarantine and block publish; never clamp or simulate an implausible high value"
+  },
+  "artifact_count": 11,
+  "rows_checked": 451,
+  "projection_fields_checked": 451,
+  "violation_count": 0,
+  "violations": [],
+  "artifacts": [
+    {
+      "artifact": "data/dashboard/wnba_master.json",
+      "field": "props",
+      "target_date": "2026-08-31",
+      "status": "PASS",
+      "rows": 0,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
+      "field": "player_props",
+      "target_date": "2026-08-30",
+      "status": "PASS",
+      "rows": 251,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/dashboard/wnba_daily_edges.json",
+      "field": "top_edges",
+      "target_date": "2026-08-31",
+      "status": "PASS",
+      "rows": 0,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/warehouse/wnba_daily_edges.json",
+      "field": "top_edges",
+      "target_date": "2026-08-31",
+      "status": "PASS",
+      "rows": 0,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/dashboard/wnba_ensemble_intelligence.json",
+      "field": "ranked_edges",
+      "target_date": "2026-08-31",
+      "status": "PASS",
+      "rows": 0,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/warehouse/wnba_ensemble_intelligence.json",
+      "field": "ranked_edges",
+      "target_date": "2026-08-31",
+      "status": "PASS",
+      "rows": 0,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/dashboard/wnba_monte_carlo_scenarios.json",
+      "field": "all_simulations",
+      "target_date": "2026-08-31",
+      "status": "PASS",
+      "rows": 0,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/warehouse/wnba_monte_carlo_scenarios.json",
+      "field": "all_simulations",
+      "target_date": "2026-08-31",
+      "status": "PASS",
+      "rows": 0,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/dashboard/wnba_best_bets.json",
+      "field": "best_bets",
+      "target_date": "2026-08-31",
+      "status": "PASS",
+      "rows": 0,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/dashboard/wnba_forward_validation.json",
+      "field": "recent_predictions",
+      "target_date": null,
+      "status": "PASS",
+      "rows": 100,
+      "violation_count": 0
+    },
+    {
+      "artifact": "data/warehouse/wnba_forward_validation.json",
+      "field": "recent_predictions",
+      "target_date": null,
+      "status": "PASS",
+      "rows": 100,
+      "violation_count": 0
+    }
+  ]
+}

@@ -11,6 +11,13 @@ WORKFLOW = ROOT / ".github/workflows/wnba_daily_slate_rollover.yml"
 ALLOWLIST = ROOT / "config/v5_rollover_derived_outputs.txt"
 OWNERSHIP = ROOT / "config/v5_artifact_ownership.json"
 FRESHNESS = ROOT / "scripts/wnba_v5_tab_freshness.py"
+PROJECTION_AUDIT = ROOT / "scripts/wnba_v5_projection_integrity_audit.py"
+PROJECTION_CONTRACT = ROOT / "wnba_projection_contract.py"
+M02_PREDICTIONS = ROOT / "scripts/wnba_s19_m02_predictions.py"
+DAILY_EDGE = ROOT / "wnba_daily_edge_engine.py"
+ENSEMBLE = ROOT / "wnba_ensemble_intelligence_engine.py"
+MONTE_CARLO = ROOT / "wnba_monte_carlo_scenario_engine.py"
+CURRENT_SLATE = ROOT / "wnba_current_slate.py"
 ROLLOVER = ".github/workflows/wnba_daily_slate_rollover.yml"
 ALLOWED_ROOTS = ("data/dashboard/", "data/warehouse/", "data/market/", "data/forecast/")
 BROAD_ROOTS = {"data/dashboard", "data/warehouse", "data/market", "data/forecast"}
@@ -19,6 +26,7 @@ CRITICAL = {
     "data/dashboard/wnba_best_bets.json",
     "data/dashboard/wnba_daily_edges.json",
     "data/dashboard/wnba_ensemble_intelligence.json",
+    "data/dashboard/wnba_projection_integrity_audit.json",
     "data/dashboard/wnba_remaining_season_intelligence.json",
 }
 # These files are retired, alternate-purpose, or superseded fallbacks. They may
@@ -115,6 +123,46 @@ def main() -> None:
     if not FRESHNESS.is_file():
         raise SystemExit("Semantic V5 freshness builder is missing")
 
+    projection_cmd = 'python scripts/wnba_v5_projection_integrity_audit.py --date "$TARGET"'
+    if projection_cmd not in workflow:
+        raise SystemExit("Rollover does not enforce projection integrity before publish")
+    if not PROJECTION_AUDIT.is_file() or not PROJECTION_CONTRACT.is_file():
+        raise SystemExit("Projection integrity audit or shared contract is missing")
+    if "data/dashboard/wnba_projection_integrity_audit.json" not in verify_block:
+        raise SystemExit("Rollover does not verify the persisted projection-integrity result")
+    projection_source = PROJECTION_AUDIT.read_text(encoding="utf-8")
+    for required in ("projection_field_violations", "violation_count", "failure_action", "return 0 if"):
+        if required not in projection_source:
+            raise SystemExit(f"Projection integrity audit missing required gate behavior: {required}")
+
+    chain_sources = (M02_PREDICTIONS, DAILY_EDGE, ENSEMBLE, MONTE_CARLO, CURRENT_SLATE)
+    if not all(path.is_file() for path in chain_sources):
+        raise SystemExit("Projection-integrity chain is missing a required producer or consumer")
+    m02_source = M02_PREDICTIONS.read_text(encoding="utf-8")
+    daily_source = DAILY_EDGE.read_text(encoding="utf-8")
+    ensemble_source = ENSEMBLE.read_text(encoding="utf-8")
+    monte_source = MONTE_CARLO.read_text(encoding="utf-8")
+    current_slate_source = CURRENT_SLATE.read_text(encoding="utf-8")
+    if m02_source.count("validate_projection(") < 2:
+        raise SystemExit("M02 issuance does not validate projection bounds")
+    if (
+        "wnba_s19_m02_predictions.json" not in daily_source
+        or not re.search(r"['\"]legacy_master_props_used['\"]\s*:\s*False", daily_source)
+    ):
+        raise SystemExit("Daily edges are not pinned to canonical M02 projections")
+    if "wnba_master.json" in daily_source:
+        raise SystemExit("Daily edges reintroduced the retired embedded master-props path")
+    if "validate_projection" not in ensemble_source:
+        raise SystemExit("Ensemble does not revalidate projection bounds")
+    if (
+        "validate_projection" not in monte_source
+        or not re.search(r"['\"]daily_edges_fallback_used['\"]\s*:\s*False", monte_source)
+        or "wnba_daily_edges.json" in monte_source
+    ):
+        raise SystemExit("Monte Carlo does not enforce its canonical validated ensemble source")
+    if current_slate_source.count("retire_legacy_betting_views(") < 3:
+        raise SystemExit("Current-slate refresh no longer clears retired embedded betting views")
+
     freshness_source = FRESHNESS.read_text(encoding="utf-8")
     stale_refs = sorted(
         name for name in FORBIDDEN_FRESHNESS_FALLBACKS
@@ -129,6 +177,7 @@ def main() -> None:
         "missing_required_target_date",
         "BAD_ARTIFACT_STATUSES",
         "failed_or_standby_artifact",
+        "fetch_failed",
         "retired_no_active_producer",
     ):
         if required not in freshness_source:
@@ -141,6 +190,8 @@ def main() -> None:
         "declared_stage_scripts": len(stage_scripts),
         "missing_stage_scripts": 0,
         "semantic_freshness": True,
+        "projection_integrity_gate": True,
+        "projection_chain_fail_closed": True,
         "forbidden_freshness_fallbacks": 0,
         "current_slate_target_required": True,
         "producer_failure_states_rejected": True,
