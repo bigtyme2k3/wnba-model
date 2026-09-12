@@ -19,6 +19,8 @@ on:
       - 'wnba_player_props_ingestion.py'
       - 'wnba_alt_market_warehouse.py'
       - 'wnba_alt_streaks.py'
+      - 'active_slate_date.py'
+      - 'patch_dashboard_break_state.py'
       - 'patch_dashboard_canonical_runtime.py'
       - 'patch_dashboard_games_focus.py'
       - 'patch_dashboard_v4_ui_freeze.py'
@@ -84,15 +86,34 @@ jobs:
       - name: Verify production architecture invariants
         run: python scripts/check_production_architecture.py
 
-      - name: Install ALT pipeline dependencies
-        run: python -m pip install --disable-pip-version-check pandas requests
-
-      - name: Resolve dashboard date
+      - name: Resolve dashboard slate context
         run: |
           TARGET=$(python active_slate_date.py)
+          CURRENT_DATE=$(python active_slate_date.py --field current_date)
+          SLATE_MODE=$(python active_slate_date.py --field mode)
+          NEXT_SLATE_DATE=$(python active_slate_date.py --field next_slate_date)
+          DAYS_UNTIL_SLATE=$(python active_slate_date.py --field days_until_slate)
+          SCHEDULE_SOURCE=$(python active_slate_date.py --field schedule_source)
           test -n "$TARGET"
+          test -n "$CURRENT_DATE"
+          test -n "$SLATE_MODE"
+          MAINTENANCE_BREAK=false
+          if [ "$SLATE_MODE" = 'break' ] || [ "$SLATE_MODE" = 'offseason' ]; then
+            MAINTENANCE_BREAK=true
+          fi
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "Dashboard target date: $TARGET"
+          echo "CURRENT_DATE=$CURRENT_DATE" >> "$GITHUB_ENV"
+          echo "SLATE_MODE=$SLATE_MODE" >> "$GITHUB_ENV"
+          echo "NEXT_SLATE_DATE=$NEXT_SLATE_DATE" >> "$GITHUB_ENV"
+          echo "DAYS_UNTIL_SLATE=$DAYS_UNTIL_SLATE" >> "$GITHUB_ENV"
+          echo "SCHEDULE_SOURCE=$SCHEDULE_SOURCE" >> "$GITHUB_ENV"
+          echo "MAINTENANCE_BREAK=$MAINTENANCE_BREAK" >> "$GITHUB_ENV"
+          echo "Dashboard observation date: $TARGET"
+          echo "Slate mode: $SLATE_MODE; next slate: ${NEXT_SLATE_DATE:-not scheduled}"
+
+      - name: Install ALT pipeline dependencies
+        if: env.MAINTENANCE_BREAK != 'true'
+        run: python -m pip install --disable-pip-version-check pandas requests
 
       - name: Compile dashboard build chain
         run: |
@@ -106,6 +127,7 @@ jobs:
             patch_dashboard_sprint2_phase2.py patch_dashboard_build_verification.py patch_dashboard_alt_grading_status.py wnba_alt_pending_diagnostics.py \
             patch_dashboard_alt_recovery_progress.py patch_dashboard_game_performance.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_alt_ladders.py \
             wnba_results_grader.py wnba_edge_database.py
+          python -m py_compile active_slate_date.py patch_dashboard_break_state.py
 
       - name: Compile optional data renderers
         continue-on-error: true
@@ -123,12 +145,25 @@ jobs:
           target=os.environ['TARGET']
           w=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())
           s=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
+          if os.environ.get('MAINTENANCE_BREAK') == 'true':
+              print({
+                  'status':'BREAK_MODE_DEPLOY_SAFE',
+                  'mode':os.environ.get('SLATE_MODE'),
+                  'observation_date':target,
+                  'next_slate_date':os.environ.get('NEXT_SLATE_DATE') or None,
+                  'warehouse_target':w.get('target_date'),
+                  'streaks_target':s.get('target_date'),
+                  'stale_alt_actionable':False,
+                  'paid_api_called':False,
+              })
+              raise SystemExit(0)
           if w.get('target_date')!=target or s.get('target_date')!=target:
               raise SystemExit(f'ALT persisted source target mismatch: warehouse={w.get("target_date")} streaks={s.get("target_date")} target={target}')
           print({'status':'PASS','mode':'persisted-read-only','target':target,'alt_markets':int((w.get('summary') or {}).get('markets') or 0),'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0)})
           PY
 
       - name: Score current ALT props
+        if: env.MAINTENANCE_BREAK != 'true'
         run: |
           python wnba_alt_streak_confidence.py --date "$TARGET"
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
@@ -145,6 +180,22 @@ jobs:
       - name: Build complete dashboard artifact
         run: |
           set -e
+          if [ "${MAINTENANCE_BREAK:-false}" = 'true' ]; then
+            BREAK_ARGS=(
+              --mode "$SLATE_MODE"
+              --current-date "$CURRENT_DATE"
+              --schedule-source "$SCHEDULE_SOURCE"
+            )
+            if [ -n "${NEXT_SLATE_DATE:-}" ]; then
+              BREAK_ARGS+=(--next-slate-date "$NEXT_SLATE_DATE")
+            fi
+            if [ -n "${DAYS_UNTIL_SLATE:-}" ]; then
+              BREAK_ARGS+=(--days-until-slate "$DAYS_UNTIL_SLATE")
+            fi
+            python patch_dashboard_break_state.py "${BREAK_ARGS[@]}"
+            echo 'BREAK_MODE_DEPLOY_SAFE: current betting views are paused; archive and health views remain available.'
+            exit 0
+          fi
           python wnba_terminal_ui.py --date "$TARGET"
           python patch_terminal_ui.py
           if [ -f data/dashboard/wnba_injury_intelligence.json ]; then python patch_dashboard_v5_injury_intelligence.py || true; python patch_dashboard_v5_player_prop_injury_context.py || true; fi
@@ -207,7 +258,38 @@ jobs:
             python patch_dashboard_s19_m06.py
           fi
 
+      - name: Verify maintenance break artifact
+        if: env.MAINTENANCE_BREAK == 'true'
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          html=Path('docs/index.html').read_text(encoding='utf-8')
+          required=[
+              'id="wnba-break-state-script"',
+              'WNBA_SLATE_CONTEXT',
+              '"maintenance_deploy_safe":true',
+              '"current_market_data_allowed":false',
+              '"paid_api_called":false',
+              '"stale_predictions_actionable":false',
+              'Results, Game Performance, Remaining Season, and Data Health',
+          ]
+          missing=[marker for marker in required if marker not in html]
+          if missing: raise SystemExit(f'BREAK_MODE_DEPLOY_UNSAFE: missing {missing}')
+          if html.count('id="wnba-break-state-script"') != 1:
+              raise SystemExit('BREAK_MODE_DEPLOY_UNSAFE: break runtime duplicated')
+          print({
+              'status':'BREAK_MODE_DEPLOY_SAFE',
+              'observation_date':os.environ['CURRENT_DATE'],
+              'next_slate_date':os.environ.get('NEXT_SLATE_DATE') or None,
+              'paid_api_called':False,
+              'stale_predictions_actionable':False,
+              'archive_views_available':True,
+          })
+          PY
+
       - name: Verify Sprint 19 M02-M06 dashboard routing and current slate artifact
+        if: env.MAINTENANCE_BREAK != 'true'
         run: |
           python - <<'PY'
           import json,os,re
@@ -256,6 +338,7 @@ jobs:
           PY
 
       - name: Persist Sprint 19 M06 prediction history
+        if: env.MAINTENANCE_BREAK != 'true'
         run: |
           set -e
           if git diff --quiet -- data/history; then echo 'M06 history already persisted; no commit needed.'; exit 0; fi

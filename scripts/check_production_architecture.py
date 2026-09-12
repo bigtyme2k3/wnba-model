@@ -26,6 +26,15 @@ def active_workflows() -> list[Path]:
     return sorted([*ACTIVE.glob("*.yml"), *ACTIVE.glob("*.yaml")])
 
 
+def workflow_step(text: str, name: str) -> str:
+    match = re.search(
+        rf"^      - name: {re.escape(name)}\n(.*?)(?=^      - (?:name:|uses:)|\Z)",
+        text,
+        flags=re.M | re.S,
+    )
+    return match.group(1) if match else ""
+
+
 def main() -> None:
     if not DEPLOY.exists():
         fail("canonical Deploy WNBA Dashboard workflow is missing")
@@ -74,6 +83,34 @@ def main() -> None:
     deploy_text = DEPLOY.read_text(encoding="utf-8")
     if "python active_slate_date.py" not in deploy_text:
         fail("deploy does not resolve the slate through active_slate_date.py")
+    break_contract = {
+        "SLATE_MODE=$(python active_slate_date.py --field mode)": "slate-mode resolution",
+        "NEXT_SLATE_DATE=$(python active_slate_date.py --field next_slate_date)": "next-slate resolution",
+        "MAINTENANCE_BREAK": "maintenance break gate",
+        "patch_dashboard_break_state.py": "fail-closed break dashboard",
+        "BREAK_MODE_DEPLOY_SAFE": "break deployment verification",
+        "if: env.MAINTENANCE_BREAK != 'true'": "live-only current-market steps",
+    }
+    missing_break_contract = [label for marker, label in break_contract.items() if marker not in deploy_text]
+    if missing_break_contract:
+        fail(f"deploy is missing break-aware contracts: {missing_break_contract}")
+    for name in (
+        "Install ALT pipeline dependencies",
+        "Score current ALT props",
+        "Verify Sprint 19 M02-M06 dashboard routing and current slate artifact",
+        "Persist Sprint 19 M06 prediction history",
+    ):
+        block = workflow_step(deploy_text, name)
+        if not block or "if: env.MAINTENANCE_BREAK != 'true'" not in block:
+            fail(f"deploy live-only step is not break-gated: {name}")
+    build_block = workflow_step(deploy_text, "Build complete dashboard artifact")
+    if not build_block or "patch_dashboard_break_state.py" not in build_block or "wnba_terminal_ui.py" not in build_block:
+        fail("deploy build step is missing its maintenance/live branches")
+    if build_block.index("patch_dashboard_break_state.py") > build_block.index("wnba_terminal_ui.py"):
+        fail("deploy can enter the live dashboard build before installing break state")
+    verify_break = workflow_step(deploy_text, "Verify maintenance break artifact")
+    if "if: env.MAINTENANCE_BREAK == 'true'" not in verify_break or "BREAK_MODE_DEPLOY_SAFE" not in verify_break:
+        fail("deploy does not independently verify the maintenance artifact")
     if "uses: actions/upload-pages-artifact@" not in deploy_text or "uses: actions/deploy-pages@" not in deploy_text:
         fail("deploy is missing the Pages artifact/deploy chain")
 
@@ -97,6 +134,8 @@ def main() -> None:
             "hardcoded_executable_slate_dates_blocked": True,
             "workflow_identity_spoofing_blocked": True,
             "utc_rollover_fallback_blocked_globally": True,
+            "break_aware_deployment_required": True,
+            "stale_current_markets_blocked_during_break": True,
         }
     )
 

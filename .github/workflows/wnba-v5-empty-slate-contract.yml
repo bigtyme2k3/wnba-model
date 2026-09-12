@@ -8,6 +8,9 @@ on:
       - 'tests/test_v5_empty_slate_contract.py'
       - 'tests/test_v5_active_slate_contract.py'
       - 'tests/test_v5_projection_integrity.py'
+      - 'tests/test_break_aware_slate.py'
+      - 'active_slate_date.py'
+      - 'patch_dashboard_break_state.py'
       - 'scripts/wnba_s19_m02_prop_source.py'
       - 'scripts/wnba_s19_m02_predictions.py'
       - 'scripts/wnba_v5_projection_integrity_audit.py'
@@ -53,15 +56,20 @@ jobs:
             wnba_current_slate.py \
             wnba_forward_validation_engine.py \
             wnba_best_bets.py \
+            active_slate_date.py \
+            patch_dashboard_break_state.py \
             tests/test_v5_empty_slate_contract.py \
             tests/test_v5_active_slate_contract.py \
-            tests/test_v5_projection_integrity.py
+            tests/test_v5_projection_integrity.py \
+            tests/test_break_aware_slate.py
       - name: Prove confirmed empty slate is side-effect safe
         run: python tests/test_v5_empty_slate_contract.py
       - name: Simulate active slate without paid API
         run: python tests/test_v5_active_slate_contract.py
       - name: Prove corrupted projections fail closed
         run: python tests/test_v5_projection_integrity.py
+      - name: Prove schedule breaks deploy safely without current markets
+        run: python tests/test_break_aware_slate.py
       - name: Enforce repository immutability
         run: |
           if ! git diff --quiet; then
