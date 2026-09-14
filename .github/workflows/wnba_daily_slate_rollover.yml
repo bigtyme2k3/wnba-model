@@ -217,6 +217,8 @@ jobs:
           printf '  %s\n' "${CHANGED[@]}"
 
       - name: Publish derived dashboard intelligence
+        env:
+          V5_WRITER_WORKFLOW_PATH: .github/workflows/wnba_daily_slate_rollover.yml
         run: |
           git config user.name 'WNBA Derived Rollover Bot'
           git config user.email 'actions@github.com'

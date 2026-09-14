@@ -9,12 +9,15 @@ DASHBOARD_DEPLOY_WORKFLOW="Deploy WNBA Dashboard"
 CURRENT_WORKFLOW=${GITHUB_WORKFLOW:-local}
 CONTRACT_PATH="config/v5_artifact_ownership.json"
 CURRENT_WORKFLOW_PATH=""
+CALLER_WORKFLOW_PATH=""
 if [ -n "${GITHUB_WORKFLOW_REF:-}" ]; then
-  CURRENT_WORKFLOW_PATH="${GITHUB_WORKFLOW_REF%@*}"
+  CALLER_WORKFLOW_PATH="${GITHUB_WORKFLOW_REF%@*}"
   if [ -n "${GITHUB_REPOSITORY:-}" ]; then
-    CURRENT_WORKFLOW_PATH="${CURRENT_WORKFLOW_PATH#${GITHUB_REPOSITORY}/}"
+    CALLER_WORKFLOW_PATH="${CALLER_WORKFLOW_PATH#${GITHUB_REPOSITORY}/}"
   fi
 fi
+CURRENT_WORKFLOW_PATH="$CALLER_WORKFLOW_PATH"
+REQUESTED_WRITER_WORKFLOW_PATH=${V5_WRITER_WORKFLOW_PATH:-}
 
 declare -A PROTECTED_WRITERS=()
 if [ -f "$CONTRACT_PATH" ]; then
@@ -32,6 +35,32 @@ for row in p.get('artifacts') or []:
         print(f"{artifact}\t{writer}")
 PY
   )
+fi
+
+# GITHUB_WORKFLOW_REF resolves to the outer caller when a reusable workflow is
+# invoked with workflow_call. Allow the called writer to bind its own literal
+# workflow path, but only when that path is a declared owner in the contract.
+if [ -n "$REQUESTED_WRITER_WORKFLOW_PATH" ]; then
+  case "$REQUESTED_WRITER_WORKFLOW_PATH" in
+    .github/workflows/*.yml|.github/workflows/*.yaml) ;;
+    *)
+      echo "Invalid V5 writer workflow override: $REQUESTED_WRITER_WORKFLOW_PATH" >&2
+      exit 1
+      ;;
+  esac
+  writer_known=false
+  for owner in "${PROTECTED_WRITERS[@]}"; do
+    if [ "$owner" = "$REQUESTED_WRITER_WORKFLOW_PATH" ]; then
+      writer_known=true
+      break
+    fi
+  done
+  if [ "$writer_known" != true ]; then
+    echo "Unknown V5 writer workflow override: $REQUESTED_WRITER_WORKFLOW_PATH" >&2
+    exit 1
+  fi
+  CURRENT_WORKFLOW_PATH="$REQUESTED_WRITER_WORKFLOW_PATH"
+  echo "Reusable writer identity: $CURRENT_WORKFLOW_PATH (caller: ${CALLER_WORKFLOW_PATH:-unresolved})"
 fi
 
 is_protected_dashboard_file() {

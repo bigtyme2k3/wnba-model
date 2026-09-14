@@ -17,6 +17,11 @@ RETIRED_DASHBOARD_BUILDERS = {
     "patch_dashboard_v4_portfolio_ai.py",
     "patch_dashboard_navigation_v2.py",
 }
+REUSABLE_WRITER_OVERRIDES = {
+    "wnba_v5_injury_dashboard.yml": ".github/workflows/wnba_v5_injury_dashboard.yml",
+    "wnba-new-day-prediction-sync.yml": ".github/workflows/wnba-new-day-prediction-sync.yml",
+    "wnba_daily_slate_rollover.yml": ".github/workflows/wnba_daily_slate_rollover.yml",
+}
 
 
 def fail(message: str) -> None:
@@ -75,6 +80,11 @@ def main() -> None:
 
         if "GITHUB_WORKFLOW=" in text:
             fail(f"{name} spoofs GITHUB_WORKFLOW")
+        override_marker = "V5_WRITER_WORKFLOW_PATH:"
+        if override_marker in text:
+            expected = REUSABLE_WRITER_OVERRIDES.get(name)
+            if not expected or f"{override_marker} {expected}" not in text:
+                fail(f"{name} contains an unauthorized reusable-writer identity override")
         if "ALLOW_DASHBOARD_WRITE" in text:
             fail(f"{name} contains a dashboard-write bypass")
         if "date -u +%F" in text:
@@ -140,6 +150,12 @@ def main() -> None:
         fail("atomic publisher still contains retired dashboard workflow ownership")
     if "is_protected_dashboard_file" not in atomic_text or "Skipping protected dashboard file after path expansion" not in atomic_text:
         fail("atomic publisher does not enforce dashboard protection after path expansion")
+    if "V5_WRITER_WORKFLOW_PATH" not in atomic_text or "Unknown V5 writer workflow override" not in atomic_text:
+        fail("atomic publisher does not validate reusable-writer identity overrides against the ownership contract")
+    for workflow_name, workflow_path in REUSABLE_WRITER_OVERRIDES.items():
+        workflow_text = (ACTIVE / workflow_name).read_text(encoding="utf-8")
+        if f"V5_WRITER_WORKFLOW_PATH: {workflow_path}" not in workflow_text:
+            fail(f"{workflow_name} does not bind its reusable-writer identity")
 
     print(
         {
@@ -150,6 +166,7 @@ def main() -> None:
             "retired_dashboard_builders_blocked": True,
             "hardcoded_executable_slate_dates_blocked": True,
             "workflow_identity_spoofing_blocked": True,
+            "reusable_writer_identity_bound": True,
             "utc_rollover_fallback_blocked_globally": True,
             "break_aware_deployment_required": True,
             "stale_current_markets_blocked_during_break": True,

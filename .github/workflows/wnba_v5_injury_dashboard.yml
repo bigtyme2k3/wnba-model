@@ -141,6 +141,8 @@ jobs:
           fi
 
       - name: Publish injury context only
+        env:
+          V5_WRITER_WORKFLOW_PATH: .github/workflows/wnba_v5_injury_dashboard.yml
         run: |
           git config user.name "WNBA Injury Intelligence Bot"
           git config user.email "actions@github.com"

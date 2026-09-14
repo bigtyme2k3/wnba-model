@@ -46,8 +46,16 @@ printf 'new-freshness\n' > data/dashboard/freshness.json
 printf 'new-derived\n' > data/dashboard/derived.json
 
 export GITHUB_REPOSITORY='bigtyme2k3/wnba-model'
-export GITHUB_WORKFLOW='WNBA Daily Slate Rollover'
-export GITHUB_WORKFLOW_REF='bigtyme2k3/wnba-model/.github/workflows/wnba_daily_slate_rollover.yml@refs/heads/main'
+export GITHUB_WORKFLOW='WNBA V5 Daily Orchestrator'
+export GITHUB_WORKFLOW_REF='bigtyme2k3/wnba-model/.github/workflows/wnba-v5-daily-orchestrator.yml@refs/heads/main'
+
+export V5_WRITER_WORKFLOW_PATH='.github/workflows/not_a_declared_owner.yml'
+if bash scripts/atomic_generated_push.sh 'invalid identity must fail' data/dashboard >/dev/null 2>&1; then
+  echo 'Undeclared reusable-writer identity was accepted' >&2
+  exit 1
+fi
+
+export V5_WRITER_WORKFLOW_PATH='.github/workflows/wnba_daily_slate_rollover.yml'
 
 bash scripts/atomic_generated_push.sh 'scope guard integration test' data/dashboard
 
@@ -82,4 +90,4 @@ if ! grep -Fxq 'data/dashboard/derived.json' <<< "$changed"; then
   exit 1
 fi
 
-echo "{'status':'PASS','scope':'atomic_generated_push','foreign_protected_skipped':true,'owner_protected_published':true,'derived_published':true}"
+echo "{'status':'PASS','scope':'atomic_generated_push','unknown_writer_rejected':true,'reusable_writer_identity_bound':true,'foreign_protected_skipped':true,'owner_protected_published':true,'derived_published':true}"

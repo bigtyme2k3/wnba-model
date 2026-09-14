@@ -284,6 +284,8 @@ jobs:
           fi
 
       - name: Publish downstream prediction artifacts only
+        env:
+          V5_WRITER_WORKFLOW_PATH: .github/workflows/wnba-new-day-prediction-sync.yml
         run: |
           git config user.name 'WNBA New Day Prediction Sync Bot'
           git config user.email 'actions@github.com'
