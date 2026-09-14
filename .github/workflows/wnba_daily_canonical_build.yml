@@ -82,12 +82,19 @@ jobs:
 
           props=json.loads(Path('data/dashboard/wnba_player_props.json').read_text())
           assert props.get('target_date')==target
+          allowed_books={'draftkings','fanduel','fanatics'}
+          normalize_book=lambda value: ''.join(ch for ch in str(value or '').lower() if ch.isalnum())
           games=set(manifest.get('games') or [])
           for row in props.get('rows') or []:
             assert row.get('target_date')==target
             assert row.get('team')
             assert row.get('team') in {row.get('away_team'), row.get('home_team')}
             assert not games or row.get('game') in games
+            books=row.get('books') or []
+            assert books, f"Player-prop row missing sportsbook quotes: {row.get('player')} {row.get('stat')} {row.get('line')}"
+            assert all(normalize_book(b.get('book')) in allowed_books for b in books), row
+            assert normalize_book(row.get('best_over_book')) in allowed_books or not row.get('best_over_book'), row
+            assert normalize_book(row.get('best_under_book')) in allowed_books or not row.get('best_under_book'), row
           unresolved=props.get('unresolved_rows') or []
           assert all(not row.get('team') for row in unresolved)
 

@@ -6,11 +6,9 @@ import os
 import re
 import unicodedata
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
-
-import requests
 
 SPORT = "basketball_wnba"
 BASE = "https://api.the-odds-api.com/v4"
@@ -22,12 +20,47 @@ MARKETS = [
     "player_points_rebounds_assists", "player_points_rebounds",
     "player_points_assists", "player_rebounds_assists",
 ]
+PRODUCTION_BOOKS = {
+    "draftkings": "DraftKings",
+    "fanduel": "FanDuel",
+    "fanatics": "Fanatics",
+}
+PRODUCTION_BOOKMAKERS = ",".join(sorted(PRODUCTION_BOOKS))
 STAT_MAP = {
     "player_points": "PTS", "player_rebounds": "REB", "player_assists": "AST",
     "player_threes": "3PM", "player_points_rebounds_assists": "PRA",
     "player_points_rebounds": "PR", "player_points_assists": "PA",
     "player_rebounds_assists": "RA",
 }
+
+
+def normalize_book_key(book: dict) -> str:
+    """Return the exact supported Odds API bookmaker key, or an empty string."""
+    key = re.sub(r"[^a-z0-9]+", "", str(book.get("key") or "").casefold())
+    return key if key in PRODUCTION_BOOKS else ""
+
+
+def filter_supported_bookmakers(payload: dict) -> tuple[dict, set[str], set[str]]:
+    """Quarantine unsupported books before any canonical price is calculated."""
+    clean = dict(payload)
+    kept = []
+    observed: set[str] = set()
+    rejected: set[str] = set()
+    for raw_book in payload.get("bookmakers", []) or []:
+        if not isinstance(raw_book, dict):
+            continue
+        raw_label = str(raw_book.get("key") or raw_book.get("title") or "unknown").strip()
+        key = normalize_book_key(raw_book)
+        if not key:
+            rejected.add(raw_label)
+            continue
+        book = dict(raw_book)
+        book["key"] = key
+        book["title"] = PRODUCTION_BOOKS[key]
+        kept.append(book)
+        observed.add(key)
+    clean["bookmakers"] = kept
+    return clean, observed, rejected
 
 
 def load_json(path: Path, default):
@@ -121,6 +154,11 @@ def sync_canonical_manifest(target: str, props_output: dict) -> None:
         "teams": teams,
         "game_count": len(games),
         "player_prop_rows": int(props_output.get("row_count") or 0),
+        "player_props_source": props_output.get("source"),
+        "player_props_api_called": props_output.get("api_called"),
+        "sportsbooks_allowed": props_output.get("sportsbooks_allowed") or sorted(PRODUCTION_BOOKS),
+        "sportsbooks_observed": props_output.get("sportsbooks_observed") or [],
+        "unsupported_bookmakers_rejected": props_output.get("unsupported_bookmakers_rejected") or [],
         "sources": {
             "slate": "data/dashboard/wnba_master.json",
             "player_props": "data/dashboard/wnba_player_props.json",
@@ -152,45 +190,77 @@ def sync_canonical_manifest(target: str, props_output: dict) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", required=True)
+    ap.add_argument(
+        "--from-raw-cache",
+        action="store_true",
+        help="Rebuild from the exact-date persisted Odds API response without a live request",
+    )
     args = ap.parse_args()
     target = args.date
     api_key = os.getenv("ODDS_API_KEY", "").strip()
-    if not api_key:
+    if not api_key and not args.from_raw_cache:
         raise SystemExit("ODDS_API_KEY is required")
 
     DASH.mkdir(parents=True, exist_ok=True)
     RAW.mkdir(parents=True, exist_ok=True)
-    session = requests.Session()
-    events_resp = session.get(f"{BASE}/sports/{SPORT}/events", params={"apiKey": api_key}, timeout=30)
-    events_resp.raise_for_status()
-    events = [e for e in events_resp.json() if event_date(e.get("commence_time")) == target]
+    raw_path = RAW / f"wnba_player_props_{target}.json"
+    if args.from_raw_cache:
+        cached = load_json(raw_path, [])
+        if not isinstance(cached, list) or not cached:
+            raise SystemExit(f"Exact-date raw player-prop cache is missing or empty: {raw_path}")
+        cached_dates = {event_date(e.get("commence_time")) for e in cached if isinstance(e, dict)}
+        if cached_dates != {target}:
+            raise SystemExit(
+                f"Raw player-prop cache date mismatch: expected {target}, found {sorted(cached_dates)}"
+            )
+        events = [e for e in cached if isinstance(e, dict)]
+        api_called = False
+    else:
+        import requests
+
+        session = requests.Session()
+        events_resp = session.get(f"{BASE}/sports/{SPORT}/events", params={"apiKey": api_key}, timeout=30)
+        events_resp.raise_for_status()
+        events = [e for e in events_resp.json() if event_date(e.get("commence_time")) == target]
+        api_called = True
     teams_by_player = roster_map()
     grouped: dict[tuple, dict] = {}
     raw_events = []
+    observed_books: set[str] = set()
+    rejected_books: set[str] = set()
 
     for event in events:
         event_id = event["id"]
         away = str(event.get("away_team") or "").strip()
         home = str(event.get("home_team") or "").strip()
         game = f"{away} @ {home}"
-        resp = session.get(
-            f"{BASE}/sports/{SPORT}/events/{event_id}/odds",
-            params={
-                "apiKey": api_key,
-                "regions": "us",
-                "markets": ",".join(MARKETS),
-                "oddsFormat": "american",
-                "dateFormat": "iso",
-            },
-            timeout=45,
-        )
-        if resp.status_code == 404:
-            continue
-        resp.raise_for_status()
-        payload = resp.json()
+        if args.from_raw_cache:
+            payload = event
+        else:
+            resp = session.get(
+                f"{BASE}/sports/{SPORT}/events/{event_id}/odds",
+                params={
+                    "apiKey": api_key,
+                    "bookmakers": PRODUCTION_BOOKMAKERS,
+                    "markets": ",".join(MARKETS),
+                    "oddsFormat": "american",
+                    "dateFormat": "iso",
+                },
+                timeout=45,
+            )
+            if resp.status_code == 404:
+                continue
+            resp.raise_for_status()
+            payload = resp.json()
+        payload, payload_books, payload_rejected = filter_supported_bookmakers(payload)
+        observed_books.update(payload_books)
+        rejected_books.update(payload_rejected)
         raw_events.append(payload)
         for book in payload.get("bookmakers", []):
-            book_name = book.get("title") or book.get("key")
+            book_key = normalize_book_key(book)
+            if not book_key:
+                continue
+            book_name = PRODUCTION_BOOKS[book_key]
             for market in book.get("markets", []):
                 stat = STAT_MAP.get(market.get("key"))
                 if not stat:
@@ -223,6 +293,11 @@ def main() -> None:
                         row["team_source"] = team_source
                     row["books"].append({"book": book_name, "side": side, "price": price})
 
+    if events and not grouped:
+        raise SystemExit(
+            "No supported DraftKings, FanDuel, or Fanatics standard player props were available"
+        )
+
     verified_rows = []
     unresolved_rows = []
     for row in grouped.values():
@@ -244,9 +319,13 @@ def main() -> None:
 
     sort_key = lambda r: (r["game"], r["player"], r["stat"], r["line"])
     output = {
-        "generated_at_utc": datetime.utcnow().isoformat() + "Z",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target,
-        "source": "the_odds_api_event_markets",
+        "source": "the_odds_api_raw_cache" if args.from_raw_cache else "the_odds_api_event_markets",
+        "api_called": api_called,
+        "sportsbooks_allowed": sorted(PRODUCTION_BOOKS),
+        "sportsbooks_observed": sorted(observed_books),
+        "unsupported_bookmakers_rejected": sorted(rejected_books),
         "event_count": len(events),
         "raw_row_count": len(grouped),
         "row_count": len(verified_rows),
@@ -255,7 +334,7 @@ def main() -> None:
         "unresolved_rows": sorted(unresolved_rows, key=sort_key),
     }
     (DASH / "wnba_player_props.json").write_text(json.dumps(output, indent=2), encoding="utf-8")
-    (RAW / f"wnba_player_props_{target}.json").write_text(json.dumps(raw_events, indent=2), encoding="utf-8")
+    raw_path.write_text(json.dumps(raw_events, indent=2), encoding="utf-8")
     sync_canonical_manifest(target, output)
     print(json.dumps({
         "target_date": target,
@@ -264,6 +343,10 @@ def main() -> None:
         "verified_rows": len(verified_rows),
         "unresolved_rows": len(unresolved_rows),
         "unresolved_players": sorted({r["player"] for r in unresolved_rows}),
+        "api_called": api_called,
+        "sportsbooks_allowed": sorted(PRODUCTION_BOOKS),
+        "sportsbooks_observed": sorted(observed_books),
+        "unsupported_bookmakers_rejected": sorted(rejected_books),
         "canonical_manifest_synced": True,
     }, indent=2))
 

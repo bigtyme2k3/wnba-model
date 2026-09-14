@@ -12,6 +12,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DASH = ROOT / "data" / "dashboard"
 MANIFEST = DASH / "wnba_daily_canonical_manifest.json"
+ALLOWED_BOOKS = {"draftkings", "fanduel", "fanatics"}
+
+
+def book_key(value: Any) -> str:
+    return "".join(ch for ch in str(value or "").casefold() if ch.isalnum())
 
 
 def load(path: Path, default: Any) -> Any:
@@ -103,6 +108,24 @@ def main() -> None:
     stale_props = [r for r in prop_rows if str(r.get("target_date") or props.get("target_date") or "") != target]
     off_slate = [r for r in prop_rows if games and str(r.get("game") or "") not in games]
     missing_team = [r for r in prop_rows if not str(r.get("team") or "").strip()]
+    unsupported_books = sorted({
+        str(book.get("book") or "").strip()
+        for row in prop_rows
+        for book in (row.get("books") or [])
+        if isinstance(book, dict) and book_key(book.get("book")) not in ALLOWED_BOOKS
+    })
+    unsupported_best_books = sorted({
+        str(row.get(field) or "").strip()
+        for row in prop_rows
+        for field in ("best_over_book", "best_under_book")
+        if row.get(field) and book_key(row.get(field)) not in ALLOWED_BOOKS
+    })
+    observed_books = sorted({
+        book_key(book.get("book"))
+        for row in prop_rows
+        for book in (row.get("books") or [])
+        if isinstance(book, dict) and book_key(book.get("book"))
+    })
 
     failures: list[str] = []
     if master.get("target_date") != target:
@@ -115,6 +138,10 @@ def main() -> None:
         failures.append(f"{len(off_slate)} off-slate player-prop rows")
     if missing_team:
         failures.append(f"{len(missing_team)} player-prop rows missing team")
+    if unsupported_books:
+        failures.append(f"unsupported player-prop books: {', '.join(unsupported_books)}")
+    if unsupported_best_books:
+        failures.append(f"unsupported best-price books: {', '.join(unsupported_best_books)}")
     if not games and prop_rows:
         failures.append("confirmed empty slate still contains player props")
 
@@ -127,6 +154,8 @@ def main() -> None:
         "teams": teams,
         "game_count": len(games),
         "player_prop_rows": len(prop_rows),
+        "sportsbooks_allowed": sorted(ALLOWED_BOOKS),
+        "sportsbooks_observed": observed_books,
         "sources": {
             "slate": "data/dashboard/wnba_master.json",
             "player_props": "data/dashboard/wnba_player_props.json",

@@ -9,6 +9,7 @@ on:
       - 'tests/test_v5_active_slate_contract.py'
       - 'tests/test_v5_projection_integrity.py'
       - 'tests/test_break_aware_slate.py'
+      - 'tests/test_standard_prop_book_contract.py'
       - 'active_slate_date.py'
       - 'patch_dashboard_break_state.py'
       - 'scripts/wnba_s19_m02_prop_source.py'
@@ -19,6 +20,8 @@ on:
       - 'wnba_ensemble_intelligence_engine.py'
       - 'wnba_monte_carlo_scenario_engine.py'
       - 'wnba_current_slate.py'
+      - 'wnba_player_props_ingestion.py'
+      - 'scripts/build_daily_canonical_slate.py'
       - 'wnba_forward_validation_engine.py'
       - 'wnba_best_bets.py'
       - '.github/workflows/wnba-v5-empty-slate-contract.yml'
@@ -61,7 +64,10 @@ jobs:
             tests/test_v5_empty_slate_contract.py \
             tests/test_v5_active_slate_contract.py \
             tests/test_v5_projection_integrity.py \
-            tests/test_break_aware_slate.py
+            tests/test_break_aware_slate.py \
+            tests/test_standard_prop_book_contract.py \
+            wnba_player_props_ingestion.py \
+            scripts/build_daily_canonical_slate.py
       - name: Prove confirmed empty slate is side-effect safe
         run: python tests/test_v5_empty_slate_contract.py
       - name: Simulate active slate without paid API
@@ -70,6 +76,8 @@ jobs:
         run: python tests/test_v5_projection_integrity.py
       - name: Prove schedule breaks deploy safely without current markets
         run: python tests/test_break_aware_slate.py
+      - name: Enforce canonical standard-prop sportsbook allowlist
+        run: python tests/test_standard_prop_book_contract.py
       - name: Enforce repository immutability
         run: |
           if ! git diff --quiet; then
