@@ -1,12 +1,29 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-08-31T18:13:25.209800Z",
-  "target_date": "2026-08-31",
+  "generated_at_utc": "2026-09-14T20:48:16.200122+00:00",
+  "target_date": "2026-09-17",
   "status": "PASS",
-  "games": [],
-  "teams": [],
-  "game_count": 0,
-  "player_prop_rows": 0,
+  "games": [
+    "Connecticut Sun @ Atlanta Dream",
+    "Washington Mystics @ Chicago Sky",
+    "Los Angeles Sparks @ Dallas Wings",
+    "Phoenix Mercury @ Portland Fire",
+    "Las Vegas Aces @ Seattle Storm"
+  ],
+  "teams": [
+    "Atlanta Dream",
+    "Chicago Sky",
+    "Connecticut Sun",
+    "Dallas Wings",
+    "Las Vegas Aces",
+    "Los Angeles Sparks",
+    "Phoenix Mercury",
+    "Portland Fire",
+    "Seattle Storm",
+    "Washington Mystics"
+  ],
+  "game_count": 5,
+  "player_prop_rows": 149,
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -16,17 +33,16 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Authoritative current slate synchronized for 2026-08-31",
+      "stdout": "{\n  \"target_date\": \"2026-09-17\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 5,\n  \"matchups\": [\n    \"Connecticut Sun @ Atlanta Dream\",\n    \"Washington Mystics @ Chicago Sky\",\n    \"Los Angeles Sparks @ Dallas Wings\",\n    \"Phoenix Mercury @ Portland Fire\",\n    \"Las Vegas Aces @ Seattle Storm\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "Verified player props synchronized for 2026-08-31",
+      "stdout": "{\n  \"target_date\": \"2026-09-17\",\n  \"events\": 5,\n  \"raw_rows\": 149,\n  \"verified_rows\": 149,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
-  "failures": [],
-  "manifest_sync_source": "player_props_ingestion_same_run"
+  "failures": []
 }
