@@ -60,12 +60,21 @@ jobs:
           REQUESTED='${{ inputs.target_date }}'
           if [ -n "$REQUESTED" ]; then
             TARGET="$REQUESTED"
+            MODE="manual"
           else
-            TARGET=$(python active_slate_date.py)
+            MODE=$(python active_slate_date.py --field mode)
+            TARGET=$(python active_slate_date.py --field active_slate_date)
+            if [ -z "$TARGET" ] && [ "$MODE" = "break" ]; then
+              TARGET=$(python active_slate_date.py --field next_slate_date)
+            fi
+            if [ -z "$TARGET" ]; then
+              TARGET=$(python active_slate_date.py)
+            fi
           fi
           test -n "$TARGET"
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "Derived rollover target: $TARGET"
+          echo "SLATE_MODE=$MODE" >> "$GITHUB_ENV"
+          echo "Derived rollover target: $TARGET (mode=$MODE)"
 
       - name: Verify source-owned current slate stack
         run: |
