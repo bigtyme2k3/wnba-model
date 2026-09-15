@@ -1,7 +1,7 @@
 {
   "sprint": 6,
   "phase": "6.1-edge-qa-dashboard",
-  "generated_at_utc": "2026-09-15T20:21:07.483256+00:00",
+  "generated_at_utc": "2026-09-15T20:33:38.219934+00:00",
   "target_date": "2026-09-17",
   "status": "ok",
   "source_contract": {
@@ -11,7 +11,7 @@
     "source_target_date": "2026-09-17",
     "source_status": "ready",
     "empty_slate": false,
-    "standard_rows": 137,
+    "standard_rows": 142,
     "off_target_rows": 0,
     "alt_source": "data/dashboard/wnba_alt_market_warehouse.json",
     "alt_target_date": "2026-08-31",
@@ -20,62 +20,62 @@
     "alt_off_target_rows": 0
   },
   "summary": {
-    "source_props": 137,
+    "source_props": 142,
     "source_alt_markets": 0,
-    "candidates_loaded": 137,
-    "candidates_scored": 137,
+    "candidates_loaded": 142,
+    "candidates_scored": 142,
     "invalid_projection_rows_rejected": 0,
     "high_confidence": 0,
-    "moderate_confidence": 2,
-    "low_confidence": 135,
+    "moderate_confidence": 1,
+    "low_confidence": 141,
     "top_score": 68.13,
-    "standard_candidates": 137,
+    "standard_candidates": 142,
     "alternate_candidates": 0
   },
   "qa": {
     "score_distribution": {
-      "68-74.99": 2,
-      "60-67.99": 41,
-      "below-60": 94
+      "68-74.99": 1,
+      "60-67.99": 49,
+      "below-60": 92
     },
     "confidence_distribution": {
-      "MODERATE": 2,
-      "LOW": 135
+      "MODERATE": 1,
+      "LOW": 141
     },
     "market_type_distribution": {
-      "standard": 137
+      "standard": 142
     },
     "evidence_coverage_counts": {
-      "projection": 105,
+      "projection": 112,
       "recent_form": 0,
       "season_history": 0,
       "clv": 0,
       "roi": 0,
-      "market_value": 105
+      "market_value": 112
     },
     "evidence_coverage_rates": {
-      "projection": 0.7664,
+      "projection": 0.7887,
       "recent_form": 0.0,
       "season_history": 0.0,
       "clv": 0.0,
       "roi": 0.0,
-      "market_value": 0.7664
+      "market_value": 0.7887
     },
     "missing_evidence_counts": {
-      "recent_form": 137,
-      "season_history": 137,
-      "clv": 137,
-      "roi": 137,
-      "projection": 32,
-      "market_value": 32
+      "recent_form": 142,
+      "season_history": 142,
+      "clv": 142,
+      "roi": 142,
+      "projection": 30,
+      "market_value": 30
     },
     "component_averages": {
-      "projection": 72.34,
+      "projection": 73.72,
       "recent_form": 50.0,
       "season_history": 50.0,
       "clv": 50.0,
       "roi": 50.0,
-      "market_value": 64.76,
+      "market_value": 65.9,
       "sample_strength": 20.0
     },
     "projection_integrity": {
@@ -145,21 +145,21 @@
       "side": "OVER",
       "line": 8.5,
       "sportsbook": null,
-      "odds": 100.0,
+      "odds": -102.0,
       "projection": 10.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 68.13,
-      "confidence": "MODERATE",
+      "edge_score": 67.98,
+      "confidence": "LOW",
       "components": {
         "projection": 100.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 99.5,
+        "market_value": 98.41,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -180,7 +180,56 @@
       ],
       "evidence": [
         "Projection edge +1.50 versus line",
-        "Model probability edge +22.5%"
+        "Model probability edge +22.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Alanna Smith",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -104.0,
+      "projection": 3.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 67.83,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 97.34,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.40 versus line",
+        "Model probability edge +21.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -194,13 +243,13 @@
       "side": "OVER",
       "line": 11.5,
       "sportsbook": null,
-      "odds": -107.0,
+      "odds": -108.0,
       "projection": 14.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 67.61,
+      "edge_score": 67.54,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -208,7 +257,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 95.78,
+        "market_value": 95.27,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -229,7 +278,7 @@
       ],
       "evidence": [
         "Projection edge +3.10 versus line",
-        "Model probability edge +20.8%"
+        "Model probability edge +20.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -243,13 +292,13 @@
       "side": "UNDER",
       "line": 6.5,
       "sportsbook": null,
-      "odds": -115.0,
+      "odds": -110.5,
       "projection": 2.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.725,
-      "edge_score": 67.06,
+      "edge_score": 67.36,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -257,7 +306,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 91.83,
+        "market_value": 94.01,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -278,7 +327,154 @@
       ],
       "evidence": [
         "Projection edge +4.30 versus line",
-        "Model probability edge +19.0%"
+        "Model probability edge +20.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Alanna Smith",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 12.5,
+      "sportsbook": null,
+      "odds": -111.0,
+      "projection": 6.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 67.33,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 93.77,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +6.30 versus line",
+        "Model probability edge +19.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Alanna Smith",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 4.5,
+      "sportsbook": null,
+      "odds": -111.0,
+      "projection": 2.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 67.33,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 93.77,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.00 versus line",
+        "Model probability edge +19.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 17.5,
+      "sportsbook": null,
+      "odds": -104.0,
+      "projection": 14.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.7175,
+      "edge_score": 67.16,
+      "confidence": "LOW",
+      "components": {
+        "projection": 98.33,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 95.69,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.90 versus line",
+        "Model probability edge +20.8%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -341,13 +537,13 @@
       "side": "OVER",
       "line": 2.5,
       "sportsbook": null,
-      "odds": -116.5,
+      "odds": -118.5,
       "projection": 4.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.725,
-      "edge_score": 66.96,
+      "edge_score": 66.83,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -355,7 +551,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 91.12,
+        "market_value": 90.19,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -376,7 +572,7 @@
       ],
       "evidence": [
         "Projection edge +1.70 versus line",
-        "Model probability edge +18.7%"
+        "Model probability edge +18.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -390,13 +586,13 @@
       "side": "OVER",
       "line": 14.5,
       "sportsbook": null,
-      "odds": -117.0,
-      "projection": 17.3,
+      "odds": -120.0,
+      "projection": 17.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.725,
-      "edge_score": 66.92,
+      "edge_score": 66.73,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -404,7 +600,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 90.88,
+        "market_value": 89.5,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -424,253 +620,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.80 versus line",
-        "Model probability edge +18.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Georgia Amoore",
-      "team": "Washington Mystics",
-      "game": "Washington Mystics @ Chicago Sky",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 9.5,
-      "sportsbook": null,
-      "odds": -114.0,
-      "projection": 7.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.7211,
-      "edge_score": 66.77,
-      "confidence": "LOW",
-      "components": {
-        "projection": 99.12,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 91.44,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.60 versus line",
-        "Model probability edge +18.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Naz Hillmon",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 7.5,
-      "sportsbook": null,
-      "odds": -123.0,
-      "projection": 10.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 66.54,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.60 versus line",
-        "Model probability edge +17.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Arike Ogunbowale",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PR",
-      "side": "OVER",
-      "line": 19.5,
-      "sportsbook": null,
-      "odds": -127.0,
-      "projection": 23.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 66.3,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 86.42,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +4.00 versus line",
-        "Model probability edge +16.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Awak Kuier",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 9.5,
-      "sportsbook": null,
-      "odds": -127.5,
-      "projection": 3.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 66.27,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 86.2,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +6.00 versus line",
-        "Model probability edge +16.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 18.5,
-      "sportsbook": null,
-      "odds": -128.5,
-      "projection": 14.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 66.21,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.78,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +4.00 versus line",
-        "Model probability edge +16.3%"
+        "Projection edge +2.90 versus line",
+        "Model probability edge +18.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -684,13 +635,13 @@
       "side": "UNDER",
       "line": 16.5,
       "sportsbook": null,
-      "odds": -129.0,
+      "odds": -121.0,
       "projection": 6.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.725,
-      "edge_score": 66.18,
+      "edge_score": 66.67,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -698,7 +649,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 85.57,
+        "market_value": 89.05,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -719,7 +670,105 @@
       ],
       "evidence": [
         "Projection edge +10.20 versus line",
-        "Model probability edge +16.2%"
+        "Model probability edge +17.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Washington Mystics @ Chicago Sky",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": -115.5,
+      "projection": 7.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.7211,
+      "edge_score": 66.67,
+      "confidence": "LOW",
+      "components": {
+        "projection": 99.12,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 90.72,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.60 versus line",
+        "Model probability edge +18.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Awak Kuier",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": -123.5,
+      "projection": 3.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.51,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 87.93,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +6.00 versus line",
+        "Model probability edge +17.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -733,13 +782,13 @@
       "side": "OVER",
       "line": 17.5,
       "sportsbook": null,
-      "odds": -131.0,
+      "odds": -128.0,
       "projection": 21.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.725,
-      "edge_score": 66.06,
+      "edge_score": 66.24,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -747,7 +796,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 84.74,
+        "market_value": 85.99,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -768,7 +817,154 @@
       ],
       "evidence": [
         "Projection edge +3.80 versus line",
-        "Model probability edge +15.8%"
+        "Model probability edge +16.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Arike Ogunbowale",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PR",
+      "side": "OVER",
+      "line": 19.5,
+      "sportsbook": null,
+      "odds": -130.0,
+      "projection": 23.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 66.12,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 85.15,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.00 versus line",
+        "Model probability edge +16.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 18.5,
+      "sportsbook": null,
+      "odds": -130.0,
+      "projection": 14.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.12,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 85.15,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.00 versus line",
+        "Model probability edge +16.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Naz Hillmon",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -134.0,
+      "projection": 10.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 65.89,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 83.52,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.70 versus line",
+        "Model probability edge +15.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -782,13 +978,13 @@
       "side": "UNDER",
       "line": 21.5,
       "sportsbook": null,
-      "odds": -110.0,
+      "odds": -110.5,
       "projection": 18.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.7076,
-      "edge_score": 65.85,
+      "edge_score": 65.82,
       "confidence": "LOW",
       "components": {
         "projection": 96.12,
@@ -796,7 +992,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 90.42,
+        "market_value": 90.18,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -817,105 +1013,7 @@
       ],
       "evidence": [
         "Projection edge +3.40 versus line",
-        "Model probability edge +18.4%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Arike Ogunbowale",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 23.5,
-      "sportsbook": null,
-      "odds": -111.0,
-      "projection": 27.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.7066,
-      "edge_score": 65.7,
-      "confidence": "LOW",
-      "components": {
-        "projection": 95.92,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 89.73,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.70 versus line",
-        "Model probability edge +18.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Arike Ogunbowale",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "RA",
-      "side": "OVER",
-      "line": 5.5,
-      "sportsbook": null,
-      "odds": -138.0,
-      "projection": 8.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.725,
-      "edge_score": 65.67,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 81.94,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +14.5%"
+        "Model probability edge +18.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -929,13 +1027,13 @@
       "side": "UNDER",
       "line": 20.5,
       "sportsbook": null,
-      "odds": -118.0,
+      "odds": -115.5,
       "projection": 17.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.7113,
-      "edge_score": 65.64,
+      "edge_score": 65.81,
       "confidence": "LOW",
       "components": {
         "projection": 96.95,
@@ -943,7 +1041,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 87.4,
+        "market_value": 88.57,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -964,7 +1062,7 @@
       ],
       "evidence": [
         "Projection edge +3.30 versus line",
-        "Model probability edge +17.0%"
+        "Model probability edge +17.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -978,13 +1076,13 @@
       "side": "OVER",
       "line": 6.5,
       "sportsbook": null,
-      "odds": -139.0,
+      "odds": -140.0,
       "projection": 8.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
       "model_probability": 0.725,
-      "edge_score": 65.62,
+      "edge_score": 65.56,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -992,7 +1090,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 81.55,
+        "market_value": 81.17,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1013,56 +1111,7 @@
       ],
       "evidence": [
         "Projection edge +2.10 versus line",
-        "Model probability edge +14.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Jessica Shepard",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "AST",
-      "side": "OVER",
-      "line": 4.5,
-      "sportsbook": null,
-      "odds": -143.0,
-      "projection": 6.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.725,
-      "edge_score": 65.4,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 80.03,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.50 versus line",
-        "Model probability edge +13.7%"
+        "Model probability edge +14.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1072,25 +1121,25 @@
       "player": "Arike Ogunbowale",
       "team": "Dallas Wings",
       "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PA",
+      "market": "RA",
       "side": "OVER",
-      "line": 20.5,
+      "line": 5.5,
       "sportsbook": null,
-      "odds": -118.5,
-      "projection": 23.7,
+      "odds": -144.0,
+      "projection": 8.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.7049,
-      "edge_score": 65.04,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.725,
+      "edge_score": 65.35,
       "confidence": "LOW",
       "components": {
-        "projection": 95.53,
+        "projection": 100.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 85.76,
+        "market_value": 79.66,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1110,8 +1159,106 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.20 versus line",
-        "Model probability edge +16.3%"
+        "Projection edge +2.60 versus line",
+        "Model probability edge +13.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Arike Ogunbowale",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 23.5,
+      "sportsbook": null,
+      "odds": -118.0,
+      "projection": 27.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.7066,
+      "edge_score": 65.23,
+      "confidence": "LOW",
+      "components": {
+        "projection": 95.92,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 86.38,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.70 versus line",
+        "Model probability edge +16.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Paige Bueckers",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 28.5,
+      "sportsbook": null,
+      "odds": -125.0,
+      "projection": 24.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.7072,
+      "edge_score": 64.84,
+      "confidence": "LOW",
+      "components": {
+        "projection": 96.05,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 83.37,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.50 versus line",
+        "Model probability edge +15.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1167,28 +1314,28 @@
     },
     {
       "target_date": "2026-09-17",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
+      "player": "Arike Ogunbowale",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
       "market": "PA",
-      "side": "UNDER",
-      "line": 21.5,
+      "side": "OVER",
+      "line": 20.5,
       "sportsbook": null,
-      "odds": -113.0,
-      "projection": 18.3,
+      "odds": -125.0,
+      "projection": 23.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
-      "model_probability": 0.6953,
-      "edge_score": 64.56,
+      "model_probability": 0.7049,
+      "edge_score": 64.64,
       "confidence": "LOW",
       "components": {
-        "projection": 93.41,
+        "projection": 95.53,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 86.26,
+        "market_value": 82.85,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1209,7 +1356,56 @@
       ],
       "evidence": [
         "Projection edge +3.20 versus line",
-        "Model probability edge +16.5%"
+        "Model probability edge +14.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 21.5,
+      "sportsbook": null,
+      "odds": -113.5,
+      "projection": 18.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.6953,
+      "edge_score": 64.53,
+      "confidence": "LOW",
+      "components": {
+        "projection": 93.41,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 86.02,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.20 versus line",
+        "Model probability edge +16.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1223,13 +1419,13 @@
       "side": "OVER",
       "line": 16.5,
       "sportsbook": null,
-      "odds": -122.5,
+      "odds": -121.0,
       "projection": 19.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.6989,
-      "edge_score": 64.26,
+      "edge_score": 64.35,
       "confidence": "LOW",
       "components": {
         "projection": 94.19,
@@ -1237,7 +1433,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 82.63,
+        "market_value": 83.3,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1258,7 +1454,7 @@
       ],
       "evidence": [
         "Projection edge +2.50 versus line",
-        "Model probability edge +14.8%"
+        "Model probability edge +15.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1272,13 +1468,13 @@
       "side": "UNDER",
       "line": 18.5,
       "sportsbook": null,
-      "odds": -115.5,
+      "odds": -114.5,
       "projection": 15.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.6916,
-      "edge_score": 64.06,
+      "edge_score": 64.13,
       "confidence": "LOW",
       "components": {
         "projection": 92.57,
@@ -1286,7 +1482,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 84.23,
+        "market_value": 84.71,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1307,56 +1503,7 @@
       ],
       "evidence": [
         "Projection edge +2.70 versus line",
-        "Model probability edge +15.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Angel Reese",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 15.5,
-      "sportsbook": null,
-      "odds": -121.0,
-      "projection": 13.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6948,
-      "edge_score": 63.99,
-      "confidence": "LOW",
-      "components": {
-        "projection": 93.28,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 82.39,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.30 versus line",
-        "Model probability edge +14.7%"
+        "Model probability edge +15.8%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1370,13 +1517,13 @@
       "side": "UNDER",
       "line": 25.5,
       "sportsbook": null,
-      "odds": -122.5,
+      "odds": -121.5,
       "projection": 21.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.6956,
-      "edge_score": 63.97,
+      "edge_score": 64.03,
       "confidence": "LOW",
       "components": {
         "projection": 93.46,
@@ -1384,7 +1531,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 81.91,
+        "market_value": 82.35,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1405,105 +1552,7 @@
       ],
       "evidence": [
         "Projection edge +3.80 versus line",
-        "Model probability edge +14.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Georgia Amoore",
-      "team": "Washington Mystics",
-      "game": "Washington Mystics @ Chicago Sky",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 13.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 11.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6847,
-      "edge_score": 63.83,
-      "confidence": "LOW",
-      "components": {
-        "projection": 91.05,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.4,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.90 versus line",
-        "Model probability edge +16.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Sonia Citron",
-      "team": "Washington Mystics",
-      "game": "Washington Mystics @ Chicago Sky",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 5.5,
-      "sportsbook": null,
-      "odds": -168.0,
-      "projection": 4.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.7205,
-      "edge_score": 63.82,
-      "confidence": "LOW",
-      "components": {
-        "projection": 99.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 70.6,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.40 versus line",
-        "Model probability edge +9.4%"
+        "Model probability edge +14.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1513,74 +1562,25 @@
       "player": "Angel Reese",
       "team": "Atlanta Dream",
       "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "REB",
+      "market": "RA",
       "side": "UNDER",
-      "line": 12.5,
+      "line": 15.5,
       "sportsbook": null,
-      "odds": -110.0,
-      "projection": 10.8,
+      "odds": -122.0,
+      "projection": 13.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.6785,
-      "edge_score": 63.28,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.6948,
+      "edge_score": 63.93,
       "confidence": "LOW",
       "components": {
-        "projection": 89.67,
+        "projection": 93.28,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 84.03,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +15.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Arike Ogunbowale",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 17.5,
-      "sportsbook": null,
-      "odds": -103.5,
-      "projection": 19.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6725,
-      "edge_score": 63.21,
-      "confidence": "LOW",
-      "components": {
-        "projection": 88.33,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 86.06,
+        "market_value": 81.95,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1601,7 +1601,301 @@
       ],
       "evidence": [
         "Projection edge +2.30 versus line",
-        "Model probability edge +16.4%"
+        "Model probability edge +14.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Arike Ogunbowale",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PR",
+      "side": "OVER",
+      "line": 20.5,
+      "sportsbook": null,
+      "odds": -110.0,
+      "projection": 23.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.6857,
+      "edge_score": 63.91,
+      "confidence": "LOW",
+      "components": {
+        "projection": 91.26,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 85.61,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.90 versus line",
+        "Model probability edge +16.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Paige Bueckers",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 32.5,
+      "sportsbook": null,
+      "odds": -122.0,
+      "projection": 27.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6938,
+      "edge_score": 63.85,
+      "confidence": "LOW",
+      "components": {
+        "projection": 93.08,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 81.75,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.80 versus line",
+        "Model probability edge +14.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Washington Mystics @ Chicago Sky",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 13.5,
+      "sportsbook": null,
+      "odds": -111.0,
+      "projection": 11.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6847,
+      "edge_score": 63.76,
+      "confidence": "LOW",
+      "components": {
+        "projection": 91.05,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 84.9,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.90 versus line",
+        "Model probability edge +15.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 12.5,
+      "sportsbook": null,
+      "odds": -104.5,
+      "projection": 10.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.6785,
+      "edge_score": 63.67,
+      "confidence": "LOW",
+      "components": {
+        "projection": 89.67,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 86.85,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.70 versus line",
+        "Model probability edge +16.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Washington Mystics @ Chicago Sky",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 5.5,
+      "sportsbook": null,
+      "odds": -172.0,
+      "projection": 4.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.7205,
+      "edge_score": 63.65,
+      "confidence": "LOW",
+      "components": {
+        "projection": 99.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 69.39,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +8.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Arike Ogunbowale",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 17.5,
+      "sportsbook": null,
+      "odds": -110.0,
+      "projection": 19.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.68,
+      "edge_score": 63.41,
+      "confidence": "LOW",
+      "components": {
+        "projection": 90.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 84.36,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.40 versus line",
+        "Model probability edge +15.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1664,21 +1958,21 @@
       "side": "UNDER",
       "line": 21.5,
       "sportsbook": null,
-      "odds": -118.0,
-      "projection": 18.5,
+      "odds": -114.0,
+      "projection": 18.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
-      "model_probability": 0.6831,
-      "edge_score": 63.15,
+      "model_probability": 0.677,
+      "edge_score": 62.87,
       "confidence": "LOW",
       "components": {
-        "projection": 90.7,
+        "projection": 89.34,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 81.21,
+        "market_value": 81.75,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1698,8 +1992,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.00 versus line",
-        "Model probability edge +14.2%"
+        "Projection edge +2.90 versus line",
+        "Model probability edge +14.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1713,13 +2007,13 @@
       "side": "UNDER",
       "line": 25.5,
       "sportsbook": null,
-      "odds": -114.0,
+      "odds": -111.5,
       "projection": 22.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.6699,
-      "edge_score": 62.24,
+      "edge_score": 62.41,
       "confidence": "LOW",
       "components": {
         "projection": 87.75,
@@ -1727,7 +2021,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 80.17,
+        "market_value": 81.39,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1748,7 +2042,56 @@
       ],
       "evidence": [
         "Projection edge +3.30 versus line",
-        "Model probability edge +13.7%"
+        "Model probability edge +14.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Dominique Malonga",
+      "team": "Seattle Storm",
+      "game": "Las Vegas Aces @ Seattle Storm",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 30.5,
+      "sportsbook": null,
+      "odds": -120.0,
+      "projection": 26.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6721,
+      "edge_score": 62.05,
+      "confidence": "LOW",
+      "components": {
+        "projection": 88.25,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 77.87,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.00 versus line",
+        "Model probability edge +12.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1804,55 +2147,6 @@
     },
     {
       "target_date": "2026-09-17",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "RA",
-      "side": "OVER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": -152.0,
-      "projection": 7.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.689,
-      "edge_score": 61.76,
-      "confidence": "LOW",
-      "components": {
-        "projection": 92.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 68.88,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +8.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
       "player": "Paige Bueckers",
       "team": "Dallas Wings",
       "game": "Los Angeles Sparks @ Dallas Wings",
@@ -1860,13 +2154,13 @@
       "side": "UNDER",
       "line": 27.5,
       "sportsbook": null,
-      "odds": -113.0,
+      "odds": -112.0,
       "projection": 24.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.6623,
-      "edge_score": 61.63,
+      "edge_score": 61.7,
       "confidence": "LOW",
       "components": {
         "projection": 86.06,
@@ -1874,7 +2168,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 78.99,
+        "market_value": 79.47,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1895,7 +2189,56 @@
       ],
       "evidence": [
         "Projection edge +3.40 versus line",
-        "Model probability edge +13.2%"
+        "Model probability edge +13.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "RA",
+      "side": "OVER",
+      "line": 6.5,
+      "sportsbook": null,
+      "odds": -154.0,
+      "projection": 7.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.689,
+      "edge_score": 61.67,
+      "confidence": "LOW",
+      "components": {
+        "projection": 92.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 68.19,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.20 versus line",
+        "Model probability edge +8.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1958,21 +2301,21 @@
       "side": "UNDER",
       "line": 31.5,
       "sportsbook": null,
-      "odds": -111.5,
-      "projection": 27.7,
+      "odds": -106.0,
+      "projection": 27.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
-      "model_probability": 0.6583,
-      "edge_score": 61.39,
+      "model_probability": 0.6542,
+      "edge_score": 61.41,
       "confidence": "LOW",
       "components": {
-        "projection": 85.19,
+        "projection": 84.26,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 78.85,
+        "market_value": 80.71,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1992,8 +2335,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.80 versus line",
-        "Model probability edge +13.1%"
+        "Projection edge +3.70 versus line",
+        "Model probability edge +14.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2007,21 +2350,21 @@
       "side": "OVER",
       "line": 2.5,
       "sportsbook": null,
-      "odds": -140.0,
-      "projection": 3.6,
+      "odds": -163.0,
+      "projection": 3.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
-      "model_probability": 0.6733,
-      "edge_score": 60.98,
+      "model_probability": 0.689,
+      "edge_score": 61.25,
       "confidence": "LOW",
       "components": {
-        "projection": 88.5,
+        "projection": 92.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 69.78,
+        "market_value": 65.23,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2041,8 +2384,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.10 versus line",
-        "Model probability edge +9.0%"
+        "Projection edge +1.20 versus line",
+        "Model probability edge +6.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2105,13 +2448,13 @@
       "side": "UNDER",
       "line": 28.5,
       "sportsbook": null,
-      "odds": -126.0,
+      "odds": -124.0,
       "projection": 25.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.6566,
-      "edge_score": 60.3,
+      "edge_score": 60.42,
       "confidence": "LOW",
       "components": {
         "projection": 84.8,
@@ -2119,7 +2462,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 71.79,
+        "market_value": 72.66,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2140,7 +2483,7 @@
       ],
       "evidence": [
         "Projection edge +3.40 versus line",
-        "Model probability edge +9.9%"
+        "Model probability edge +10.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2154,13 +2497,13 @@
       "side": "OVER",
       "line": 21.5,
       "sportsbook": null,
-      "odds": -112.5,
+      "odds": -112.0,
       "projection": 23.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.6465,
-      "edge_score": 60.27,
+      "edge_score": 60.31,
       "confidence": "LOW",
       "components": {
         "projection": 82.56,
@@ -2168,7 +2511,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 75.76,
+        "market_value": 76.01,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2189,7 +2532,56 @@
       ],
       "evidence": [
         "Projection edge +2.40 versus line",
-        "Model probability edge +11.7%"
+        "Model probability edge +11.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Arike Ogunbowale",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "AST",
+      "side": "OVER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": 105.5,
+      "projection": 4.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.626,
+      "edge_score": 59.77,
+      "confidence": "LOW",
+      "components": {
+        "projection": 78.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 80.66,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.80 versus line",
+        "Model probability edge +13.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2245,28 +2637,28 @@
     },
     {
       "target_date": "2026-09-17",
-      "player": "Dominique Malonga",
-      "team": "Seattle Storm",
-      "game": "Las Vegas Aces @ Seattle Storm",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 29.5,
+      "player": "Arike Ogunbowale",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PA",
+      "side": "OVER",
+      "line": 21.5,
       "sportsbook": null,
-      "odds": -106.0,
-      "projection": 26.6,
+      "odds": -105.0,
+      "projection": 23.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.629,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.6282,
       "edge_score": 59.18,
       "confidence": "LOW",
       "components": {
-        "projection": 78.67,
+        "projection": 78.49,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 75.18,
+        "market_value": 75.52,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2286,8 +2678,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.90 versus line",
-        "Model probability edge +11.4%"
+        "Projection edge +2.10 versus line",
+        "Model probability edge +11.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2301,13 +2693,13 @@
       "side": "OVER",
       "line": 17.5,
       "sportsbook": null,
-      "odds": -114.0,
+      "odds": -113.5,
       "projection": 19.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.635,
-      "edge_score": 59.15,
+      "edge_score": 59.18,
       "confidence": "LOW",
       "components": {
         "projection": 80.0,
@@ -2315,7 +2707,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 72.5,
+        "market_value": 72.74,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2336,7 +2728,56 @@
       ],
       "evidence": [
         "Projection edge +1.80 versus line",
-        "Model probability edge +10.2%"
+        "Model probability edge +10.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Dominique Malonga",
+      "team": "Seattle Storm",
+      "game": "Las Vegas Aces @ Seattle Storm",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 29.5,
+      "sportsbook": null,
+      "odds": -108.0,
+      "projection": 26.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.629,
+      "edge_score": 59.04,
+      "confidence": "LOW",
+      "components": {
+        "projection": 78.67,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 74.15,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.90 versus line",
+        "Model probability edge +11.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2350,13 +2791,13 @@
       "side": "UNDER",
       "line": 28.5,
       "sportsbook": null,
-      "odds": -120.0,
+      "odds": -124.5,
       "projection": 25.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.6382,
-      "edge_score": 59.04,
+      "edge_score": 58.76,
       "confidence": "LOW",
       "components": {
         "projection": 80.7,
@@ -2364,7 +2805,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 70.39,
+        "market_value": 68.39,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2385,105 +2826,7 @@
       ],
       "evidence": [
         "Projection edge +3.00 versus line",
-        "Model probability edge +9.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Paige Bueckers",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 20.5,
-      "sportsbook": null,
-      "odds": -104.0,
-      "projection": 18.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6216,
-      "edge_score": 58.67,
-      "confidence": "LOW",
-      "components": {
-        "projection": 77.03,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 74.61,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.90 versus line",
-        "Model probability edge +11.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Arike Ogunbowale",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "AST",
-      "side": "OVER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": 107.5,
-      "projection": 4.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.6102,
-      "edge_score": 58.52,
-      "confidence": "LOW",
-      "components": {
-        "projection": 74.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 78.23,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.70 versus line",
-        "Model probability edge +12.8%"
+        "Model probability edge +8.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2533,55 +2876,6 @@
       "evidence": [
         "Projection edge +1.80 versus line",
         "Model probability edge +10.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Paige Bueckers",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 24.5,
-      "sportsbook": null,
-      "odds": -106.0,
-      "projection": 22.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.6179,
-      "edge_score": 58.19,
-      "confidence": "LOW",
-      "components": {
-        "projection": 76.19,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 72.72,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +10.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2644,13 +2938,13 @@
       "side": "OVER",
       "line": 28.5,
       "sportsbook": null,
-      "odds": -129.0,
+      "odds": -125.0,
       "projection": 31.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.6289,
-      "edge_score": 57.67,
+      "edge_score": 57.91,
       "confidence": "LOW",
       "components": {
         "projection": 78.65,
@@ -2658,7 +2952,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 64.44,
+        "market_value": 66.15,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2679,7 +2973,7 @@
       ],
       "evidence": [
         "Projection edge +2.80 versus line",
-        "Model probability edge +6.6%"
+        "Model probability edge +7.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2693,13 +2987,13 @@
       "side": "OVER",
       "line": 26.5,
       "sportsbook": null,
-      "odds": -111.0,
+      "odds": -112.0,
       "projection": 28.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.6139,
-      "edge_score": 57.49,
+      "edge_score": 57.42,
       "confidence": "LOW",
       "components": {
         "projection": 75.31,
@@ -2707,7 +3001,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 69.33,
+        "market_value": 68.83,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2728,56 +3022,7 @@
       ],
       "evidence": [
         "Projection edge +2.30 versus line",
-        "Model probability edge +8.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Paige Bueckers",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": -130.0,
-      "projection": 9.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.625,
-      "edge_score": 57.26,
-      "confidence": "LOW",
-      "components": {
-        "projection": 77.78,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 63.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.00 versus line",
-        "Model probability edge +6.0%"
+        "Model probability edge +8.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2836,25 +3081,25 @@
       "player": "Nneka Ogwumike",
       "team": "Los Angeles Sparks",
       "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "REB",
+      "market": "RA",
       "side": "OVER",
-      "line": 8.5,
+      "line": 11.5,
       "sportsbook": null,
-      "odds": -108.0,
-      "projection": 9.2,
+      "odds": -115.5,
+      "projection": 12.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.6081,
-      "edge_score": 57.18,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.6141,
+      "edge_score": 57.2,
       "confidence": "LOW",
       "components": {
-        "projection": 74.02,
+        "projection": 75.36,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 69.55,
+        "market_value": 67.2,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2874,8 +3119,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.70 versus line",
-        "Model probability edge +8.9%"
+        "Projection edge +1.00 versus line",
+        "Model probability edge +7.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Washington Mystics @ Chicago Sky",
+      "market": "REB",
+      "side": "OVER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": -112.5,
+      "projection": 10.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.6105,
+      "edge_score": 57.08,
+      "confidence": "LOW",
+      "components": {
+        "projection": 74.56,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 67.85,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.80 versus line",
+        "Model probability edge +8.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2931,77 +3225,28 @@
     },
     {
       "target_date": "2026-09-17",
-      "player": "Shakira Austin",
-      "team": "Washington Mystics",
-      "game": "Washington Mystics @ Chicago Sky",
-      "market": "REB",
-      "side": "OVER",
-      "line": 9.5,
-      "sportsbook": null,
-      "odds": -113.5,
-      "projection": 10.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.6105,
-      "edge_score": 57.02,
-      "confidence": "LOW",
-      "components": {
-        "projection": 74.56,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 67.36,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge +7.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
       "player": "Nneka Ogwumike",
       "team": "Los Angeles Sparks",
       "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "RA",
+      "market": "REB",
       "side": "OVER",
-      "line": 11.5,
+      "line": 8.5,
       "sportsbook": null,
-      "odds": -108.0,
-      "projection": 12.4,
+      "odds": -111.0,
+      "projection": 9.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6027,
-      "edge_score": 56.71,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.6081,
+      "edge_score": 56.97,
       "confidence": "LOW",
       "components": {
-        "projection": 72.83,
+        "projection": 74.02,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 68.37,
+        "market_value": 68.04,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3021,36 +3266,36 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge +8.3%"
+        "Projection edge +0.70 versus line",
+        "Model probability edge +8.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-17",
-      "player": "Jackie Young",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Seattle Storm",
-      "market": "PA",
+      "player": "Paige Bueckers",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "RA",
       "side": "UNDER",
-      "line": 27.5,
+      "line": 10.5,
       "sportsbook": null,
-      "odds": -112.5,
-      "projection": 25.3,
+      "odds": -136.0,
+      "projection": 9.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.605,
-      "edge_score": 56.59,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.625,
+      "edge_score": 56.92,
       "confidence": "LOW",
       "components": {
-        "projection": 73.33,
+        "projection": 77.78,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 66.63,
+        "market_value": 60.72,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3070,8 +3315,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +7.6%"
+        "Projection edge +1.00 versus line",
+        "Model probability edge +4.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3130,25 +3375,25 @@
       "player": "Jackie Young",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Seattle Storm",
-      "market": "PTS",
+      "market": "PA",
       "side": "UNDER",
-      "line": 20.5,
+      "line": 27.5,
       "sportsbook": null,
-      "odds": -104.0,
-      "projection": 19.1,
+      "odds": -113.5,
+      "projection": 25.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.5896,
-      "edge_score": 55.84,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.605,
+      "edge_score": 56.53,
       "confidence": "LOW",
       "components": {
-        "projection": 69.92,
+        "projection": 73.33,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 67.56,
+        "market_value": 66.14,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3168,8 +3413,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.40 versus line",
-        "Model probability edge +8.0%"
+        "Projection edge +2.20 versus line",
+        "Model probability edge +7.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Jackie Young",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Seattle Storm",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 25.5,
+      "sportsbook": null,
+      "odds": -108.0,
+      "projection": 23.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5926,
+      "edge_score": 55.81,
+      "confidence": "LOW",
+      "components": {
+        "projection": 70.59,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 66.15,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.80 versus line",
+        "Model probability edge +7.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3183,13 +3477,13 @@
       "side": "OVER",
       "line": 6.5,
       "sportsbook": null,
-      "odds": -113.0,
+      "odds": -112.0,
       "projection": 7.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
       "model_probability": 0.5945,
-      "edge_score": 55.63,
+      "edge_score": 55.7,
       "confidence": "LOW",
       "components": {
         "projection": 71.0,
@@ -3197,7 +3491,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 64.08,
+        "market_value": 64.56,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3218,7 +3512,7 @@
       ],
       "evidence": [
         "Projection edge +0.60 versus line",
-        "Model probability edge +6.4%"
+        "Model probability edge +6.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3228,25 +3522,25 @@
       "player": "Jackie Young",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Seattle Storm",
-      "market": "PR",
+      "market": "PTS",
       "side": "UNDER",
-      "line": 25.5,
+      "line": 20.5,
       "sportsbook": null,
-      "odds": -106.0,
-      "projection": 23.8,
+      "odds": -106.5,
+      "projection": 19.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.5875,
-      "edge_score": 55.5,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.5896,
+      "edge_score": 55.66,
       "confidence": "LOW",
       "components": {
-        "projection": 69.44,
+        "projection": 69.92,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 66.05,
+        "market_value": 66.26,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3266,106 +3560,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +7.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Jessica Shepard",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "RA",
-      "side": "OVER",
-      "line": 15.5,
-      "sportsbook": null,
-      "odds": -127.0,
-      "projection": 16.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6016,
-      "edge_score": 55.37,
-      "confidence": "LOW",
-      "components": {
-        "projection": 72.58,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 59.27,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +4.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Nneka Ogwumike",
-      "team": "Los Angeles Sparks",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PA",
-      "side": "OVER",
-      "line": 19.5,
-      "sportsbook": null,
-      "odds": -108.0,
-      "projection": 20.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.5875,
-      "edge_score": 55.36,
-      "confidence": "LOW",
-      "components": {
-        "projection": 69.44,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 65.02,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.30 versus line",
-        "Model probability edge +6.8%"
+        "Projection edge +1.40 versus line",
+        "Model probability edge +7.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3379,13 +3575,13 @@
       "side": "OVER",
       "line": 10.5,
       "sportsbook": null,
-      "odds": -110.0,
+      "odds": -107.0,
       "projection": 11.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.5875,
-      "edge_score": 55.22,
+      "edge_score": 55.43,
       "confidence": "LOW",
       "components": {
         "projection": 69.44,
@@ -3393,7 +3589,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 64.01,
+        "market_value": 65.53,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3414,7 +3610,56 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge +6.4%"
+        "Model probability edge +7.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Paige Bueckers",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 6.5,
+      "sportsbook": null,
+      "odds": -146.5,
+      "projection": 5.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.6102,
+      "edge_score": 55.06,
+      "confidence": "LOW",
+      "components": {
+        "projection": 74.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 53.5,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +1.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3428,13 +3673,13 @@
       "side": "OVER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": -144.0,
+      "odds": -148.0,
       "projection": 4.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.6102,
-      "edge_score": 55.19,
+      "edge_score": 54.98,
       "confidence": "LOW",
       "components": {
         "projection": 74.5,
@@ -3442,7 +3687,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 54.42,
+        "market_value": 52.96,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3463,7 +3708,56 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge +2.0%"
+        "Model probability edge +1.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Jordin Canada",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "PR",
+      "side": "OVER",
+      "line": 13.5,
+      "sportsbook": null,
+      "odds": -128.5,
+      "projection": 14.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5972,
+      "edge_score": 54.89,
+      "confidence": "LOW",
+      "components": {
+        "projection": 71.6,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 57.67,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge +3.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3477,13 +3771,13 @@
       "side": "OVER",
       "line": 12.5,
       "sportsbook": null,
-      "odds": -108.0,
+      "odds": -114.0,
       "projection": 13.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.584,
-      "edge_score": 55.05,
+      "edge_score": 54.63,
       "confidence": "LOW",
       "components": {
         "projection": 68.67,
@@ -3491,7 +3785,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 64.25,
+        "market_value": 61.28,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3512,133 +3806,35 @@
       ],
       "evidence": [
         "Projection edge +0.80 versus line",
-        "Model probability edge +6.5%"
+        "Model probability edge +5.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-17",
-      "player": "Dominique Malonga",
-      "team": "Seattle Storm",
-      "game": "Las Vegas Aces @ Seattle Storm",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -138.0,
-      "projection": 10.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6027,
-      "edge_score": 54.84,
-      "confidence": "LOW",
-      "components": {
-        "projection": 72.83,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 55.03,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge +2.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Jessica Shepard",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 15.5,
-      "sportsbook": null,
-      "odds": -124.0,
-      "projection": 14.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.5931,
-      "edge_score": 54.8,
-      "confidence": "LOW",
-      "components": {
-        "projection": 70.7,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 58.71,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.10 versus line",
-        "Model probability edge +4.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "PR",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Washington Mystics @ Chicago Sky",
+      "market": "PRA",
       "side": "OVER",
-      "line": 13.5,
+      "line": 29.5,
       "sportsbook": null,
-      "odds": -130.0,
-      "projection": 14.5,
+      "odds": -105.0,
+      "projection": 31.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.5972,
-      "edge_score": 54.8,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5756,
+      "edge_score": 54.52,
       "confidence": "LOW",
       "components": {
-        "projection": 71.6,
+        "projection": 66.81,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 57.04,
+        "market_value": 63.96,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3658,8 +3854,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.00 versus line",
-        "Model probability edge +3.2%"
+        "Projection edge +1.70 versus line",
+        "Model probability edge +6.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3669,25 +3865,25 @@
       "player": "Nneka Ogwumike",
       "team": "Los Angeles Sparks",
       "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PTS",
+      "market": "PA",
       "side": "OVER",
-      "line": 16.5,
+      "line": 19.5,
       "sportsbook": null,
-      "odds": -110.0,
-      "projection": 17.5,
+      "odds": -120.5,
+      "projection": 20.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.5795,
-      "edge_score": 54.51,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5875,
+      "edge_score": 54.52,
       "confidence": "LOW",
       "components": {
-        "projection": 67.68,
+        "projection": 69.44,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 62.26,
+        "market_value": 59.02,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3707,8 +3903,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.00 versus line",
-        "Model probability edge +5.6%"
+        "Projection edge +1.30 versus line",
+        "Model probability edge +4.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3764,6 +3960,55 @@
     },
     {
       "target_date": "2026-09-17",
+      "player": "Dominique Malonga",
+      "team": "Seattle Storm",
+      "game": "Las Vegas Aces @ Seattle Storm",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -130.0,
+      "projection": 10.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.5913,
+      "edge_score": 54.28,
+      "confidence": "LOW",
+      "components": {
+        "projection": 70.29,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 55.74,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.80 versus line",
+        "Model probability edge +2.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
       "player": "Angel Reese",
       "team": "Atlanta Dream",
       "game": "Connecticut Sun @ Atlanta Dream",
@@ -3771,13 +4016,13 @@
       "side": "UNDER",
       "line": 18.5,
       "sportsbook": null,
-      "odds": -129.5,
+      "odds": -132.5,
       "projection": 17.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.5922,
-      "edge_score": 54.39,
+      "edge_score": 54.22,
       "confidence": "LOW",
       "components": {
         "projection": 70.5,
@@ -3785,7 +4030,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 56.15,
+        "market_value": 54.91,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3806,7 +4051,7 @@
       ],
       "evidence": [
         "Projection edge +1.30 versus line",
-        "Model probability edge +2.8%"
+        "Model probability edge +2.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3820,13 +4065,13 @@
       "side": "UNDER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": -167.0,
+      "odds": -166.0,
       "projection": 2.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.6102,
-      "edge_score": 54.1,
+      "edge_score": 54.14,
       "confidence": "LOW",
       "components": {
         "projection": 74.5,
@@ -3834,7 +4079,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 46.65,
+        "market_value": 46.96,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3855,35 +4100,35 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge -1.5%"
+        "Model probability edge -1.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-17",
-      "player": "Paige Bueckers",
-      "team": "Dallas Wings",
+      "player": "Nneka Ogwumike",
+      "team": "Los Angeles Sparks",
       "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 6.5,
+      "market": "PTS",
+      "side": "OVER",
+      "line": 16.5,
       "sportsbook": null,
-      "odds": -140.0,
-      "projection": 5.9,
+      "odds": -118.0,
+      "projection": 17.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.5945,
-      "edge_score": 54.0,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.5795,
+      "edge_score": 53.98,
       "confidence": "LOW",
       "components": {
-        "projection": 71.0,
+        "projection": 67.68,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 52.46,
+        "market_value": 58.42,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3903,8 +4148,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.60 versus line",
-        "Model probability edge +1.1%"
+        "Projection edge +1.00 versus line",
+        "Model probability edge +3.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Jessica Shepard",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "REB",
+      "side": "OVER",
+      "line": 10.5,
+      "sportsbook": null,
+      "odds": -139.0,
+      "projection": 11.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.5875,
+      "edge_score": 53.44,
+      "confidence": "LOW",
+      "components": {
+        "projection": 69.44,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 51.3,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +0.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3960,6 +4254,55 @@
     },
     {
       "target_date": "2026-09-17",
+      "player": "Jordin Canada",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 21.5,
+      "sportsbook": null,
+      "odds": -104.0,
+      "projection": 22.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.561,
+      "edge_score": 53.31,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.57,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 61.27,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge +5.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
       "player": "A'ja Wilson",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Seattle Storm",
@@ -3967,13 +4310,13 @@
       "side": "OVER",
       "line": 28.5,
       "sportsbook": null,
-      "odds": -123.0,
+      "odds": -124.0,
       "projection": 30.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.5737,
-      "edge_score": 53.14,
+      "edge_score": 53.08,
       "confidence": "LOW",
       "components": {
         "projection": 66.37,
@@ -3981,7 +4324,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 54.87,
+        "market_value": 54.42,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4002,76 +4345,27 @@
       ],
       "evidence": [
         "Projection edge +1.60 versus line",
-        "Model probability edge +2.2%"
+        "Model probability edge +2.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-17",
-      "player": "Nneka Ogwumike",
-      "team": "Los Angeles Sparks",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 28.5,
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Washington Mystics @ Chicago Sky",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 5.5,
       "sportsbook": null,
-      "odds": -102.0,
-      "projection": 29.7,
+      "odds": -110.0,
+      "projection": 5.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.5553,
-      "edge_score": 52.94,
-      "confidence": "LOW",
-      "components": {
-        "projection": 62.28,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 61.07,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +5.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "REB",
-      "side": "OVER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -113.0,
-      "projection": 3.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
+      "projection_ceiling": 70.0,
       "model_probability": 0.563,
-      "edge_score": 52.84,
+      "edge_score": 53.05,
       "confidence": "LOW",
       "components": {
         "projection": 64.0,
@@ -4079,7 +4373,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 57.15,
+        "market_value": 58.62,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4100,35 +4394,35 @@
       ],
       "evidence": [
         "Projection edge +0.40 versus line",
-        "Model probability edge +3.2%"
+        "Model probability edge +3.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-17",
-      "player": "Jessica Shepard",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
       "market": "REB",
       "side": "OVER",
-      "line": 10.5,
+      "line": 3.5,
       "sportsbook": null,
-      "odds": -132.0,
-      "projection": 11.1,
+      "odds": -114.0,
+      "projection": 3.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
-      "model_probability": 0.575,
-      "edge_score": 52.72,
+      "model_probability": 0.563,
+      "edge_score": 52.77,
       "confidence": "LOW",
       "components": {
-        "projection": 66.67,
+        "projection": 64.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 51.33,
+        "market_value": 56.66,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4148,106 +4442,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.60 versus line",
-        "Model probability edge +0.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Jessica Shepard",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 26.5,
-      "sportsbook": null,
-      "odds": -126.0,
-      "projection": 25.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.5693,
-      "edge_score": 52.57,
-      "confidence": "LOW",
-      "components": {
-        "projection": 65.41,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 52.6,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.40 versus line",
-        "Model probability edge +1.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Jackie Young",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Seattle Storm",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -126.0,
-      "projection": 10.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.5685,
-      "edge_score": 52.49,
-      "confidence": "LOW",
-      "components": {
-        "projection": 65.22,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 52.41,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.60 versus line",
-        "Model probability edge +1.1%"
+        "Projection edge +0.40 versus line",
+        "Model probability edge +3.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4261,13 +4457,13 @@
       "side": "UNDER",
       "line": 25.5,
       "sportsbook": null,
-      "odds": -110.0,
+      "odds": -109.0,
       "projection": 24.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.5566,
-      "edge_score": 52.48,
+      "edge_score": 52.55,
       "confidence": "LOW",
       "components": {
         "projection": 62.58,
@@ -4275,7 +4471,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 57.22,
+        "market_value": 57.72,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4296,7 +4492,105 @@
       ],
       "evidence": [
         "Projection edge +1.10 versus line",
-        "Model probability edge +3.3%"
+        "Model probability edge +3.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Jackie Young",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Seattle Storm",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -125.5,
+      "projection": 10.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.5685,
+      "edge_score": 52.53,
+      "confidence": "LOW",
+      "components": {
+        "projection": 65.22,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 52.63,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.60 versus line",
+        "Model probability edge +1.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Jessica Shepard",
+      "team": "Dallas Wings",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 26.5,
+      "sportsbook": null,
+      "odds": -127.0,
+      "projection": 25.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5693,
+      "edge_score": 52.51,
+      "confidence": "LOW",
+      "components": {
+        "projection": 65.41,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 52.17,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +1.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4352,104 +4646,6 @@
     },
     {
       "target_date": "2026-09-17",
-      "player": "Angel Reese",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 15.5,
-      "sportsbook": null,
-      "odds": -116.0,
-      "projection": 14.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.5593,
-      "edge_score": 52.31,
-      "confidence": "LOW",
-      "components": {
-        "projection": 63.17,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 54.89,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.70 versus line",
-        "Model probability edge +2.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 18.5,
-      "sportsbook": null,
-      "odds": -115.0,
-      "projection": 19.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.5568,
-      "edge_score": 52.15,
-      "confidence": "LOW",
-      "components": {
-        "projection": 62.61,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 54.81,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge +2.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
       "player": "A'ja Wilson",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Seattle Storm",
@@ -4457,13 +4653,13 @@
       "side": "OVER",
       "line": 25.5,
       "sportsbook": null,
-      "odds": -122.0,
+      "odds": -118.5,
       "projection": 26.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.5618,
-      "edge_score": 52.15,
+      "edge_score": 52.37,
       "confidence": "LOW",
       "components": {
         "projection": 63.73,
@@ -4471,7 +4667,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 52.69,
+        "market_value": 54.27,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4492,35 +4688,84 @@
       ],
       "evidence": [
         "Projection edge +1.20 versus line",
-        "Model probability edge +1.2%"
+        "Model probability edge +1.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-17",
-      "player": "Allisha Gray",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "PTS",
+      "player": "Nneka Ogwumike",
+      "team": "Los Angeles Sparks",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PRA",
       "side": "OVER",
-      "line": 18.5,
+      "line": 28.5,
       "sportsbook": null,
-      "odds": -107.5,
-      "projection": 19.2,
+      "odds": -112.5,
+      "projection": 29.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.5497,
-      "edge_score": 52.04,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5553,
+      "edge_score": 52.19,
       "confidence": "LOW",
       "components": {
-        "projection": 61.04,
+        "projection": 62.28,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 56.95,
+        "market_value": 55.69,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.20 versus line",
+        "Model probability edge +2.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
+      "game": "Connecticut Sun @ Atlanta Dream",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 15.5,
+      "sportsbook": null,
+      "odds": -118.5,
+      "projection": 14.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.5593,
+      "edge_score": 52.15,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.17,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 53.73,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4541,7 +4786,7 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge +3.2%"
+        "Model probability edge +1.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4597,322 +4842,28 @@
     },
     {
       "target_date": "2026-09-17",
-      "player": "Kamilla Cardoso",
-      "team": "Chicago Sky",
-      "game": "Washington Mystics @ Chicago Sky",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 23.5,
-      "sportsbook": null,
-      "odds": -125.0,
-      "projection": 22.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.5614,
-      "edge_score": 51.93,
-      "confidence": "LOW",
-      "components": {
-        "projection": 63.65,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 51.29,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.10 versus line",
-        "Model probability edge +0.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Chelsea Gray",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Seattle Storm",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -163.5,
-      "projection": 3.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.5787,
-      "edge_score": 51.46,
-      "confidence": "LOW",
-      "components": {
-        "projection": 67.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 40.82,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.50 versus line",
-        "Model probability edge -4.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
       "player": "Allisha Gray",
       "team": "Atlanta Dream",
       "game": "Connecticut Sun @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 20.5,
-      "sportsbook": null,
-      "odds": -127.5,
-      "projection": 21.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.5576,
-      "edge_score": 51.44,
-      "confidence": "LOW",
-      "components": {
-        "projection": 62.8,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 49.38,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge -0.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Chelsea Gray",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Seattle Storm",
-      "market": "RA",
-      "side": "OVER",
-      "line": 9.5,
-      "sportsbook": null,
-      "odds": -134.0,
-      "projection": 9.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.5553,
-      "edge_score": 50.86,
-      "confidence": "LOW",
-      "components": {
-        "projection": 62.28,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 46.17,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.40 versus line",
-        "Model probability edge -1.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "Connecticut Sun @ Atlanta Dream",
       "market": "PTS",
-      "side": "UNDER",
-      "line": 11.5,
+      "side": "OVER",
+      "line": 18.5,
       "sportsbook": null,
-      "odds": -126.0,
-      "projection": 11.1,
+      "odds": -110.0,
+      "projection": 19.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
-      "model_probability": 0.5457,
-      "edge_score": 50.47,
+      "model_probability": 0.5497,
+      "edge_score": 51.87,
       "confidence": "LOW",
       "components": {
-        "projection": 60.14,
+        "projection": 61.04,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 47.39,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.40 versus line",
-        "Model probability edge -1.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Sonia Citron",
-      "team": "Washington Mystics",
-      "game": "Washington Mystics @ Chicago Sky",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 21.5,
-      "sportsbook": null,
-      "odds": -108.0,
-      "projection": 21.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.5305,
-      "edge_score": 50.31,
-      "confidence": "LOW",
-      "components": {
-        "projection": 56.78,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 52.48,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.50 versus line",
-        "Model probability edge +1.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-17",
-      "player": "Kiki Iriafen",
-      "team": "Washington Mystics",
-      "game": "Washington Mystics @ Chicago Sky",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 27.5,
-      "sportsbook": null,
-      "odds": -112.0,
-      "projection": 26.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.5334,
-      "edge_score": 50.29,
-      "confidence": "LOW",
-      "components": {
-        "projection": 57.42,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 51.12,
+        "market_value": 55.69,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4933,35 +4884,35 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge +0.5%"
+        "Model probability edge +2.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-17",
-      "player": "Jessica Shepard",
-      "team": "Dallas Wings",
-      "game": "Los Angeles Sparks @ Dallas Wings",
-      "market": "PRA",
+      "player": "Kamilla Cardoso",
+      "team": "Chicago Sky",
+      "game": "Washington Mystics @ Chicago Sky",
+      "market": "PR",
       "side": "UNDER",
-      "line": 31.5,
+      "line": 23.5,
       "sportsbook": null,
-      "odds": -120.5,
-      "projection": 30.7,
+      "odds": -127.0,
+      "projection": 22.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.5333,
-      "edge_score": 49.72,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5614,
+      "edge_score": 51.81,
       "confidence": "LOW",
       "components": {
-        "projection": 57.41,
+        "projection": 63.65,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 47.11,
+        "market_value": 50.43,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4981,8 +4932,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge -1.3%"
+        "Projection edge +1.10 versus line",
+        "Model probability edge +0.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-17",
+      "player": "Nneka Ogwumike",
+      "team": "Los Angeles Sparks",
+      "game": "Los Angeles Sparks @ Dallas Wings",
+      "market": "PR",
+      "side": "OVER",
+      "line": 25.5,
+      "sportsbook": null,
+      "odds": -118.0,
+      "projection": 26.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5515,
+      "edge_score": 51.49,
+      "confidence": "LOW",
+      "components": {
+        "projection": 61.44,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 52.24,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge +1.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
