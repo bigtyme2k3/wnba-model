@@ -6,6 +6,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ACTIVE = ROOT / ".github" / "workflows"
 DEPLOY = ACTIVE / "deploy_wnba_dashboard.yml"
+ALT_MARKET_OWNER = ACTIVE / "wnba_alt_pregame_snapshot.yml"
+ALT_LATE_MARKET_ENTRY = ACTIVE / "wnba-alt-late-market-refresh.yml"
 ATOMIC = ROOT / "scripts" / "atomic_generated_push.sh"
 ALT_RECOVERY = ROOT / "wnba_alt_game_log_recovery.py"
 UPCOMING_RESOLVER = ROOT / "scripts" / "wnba_dashboard_slate_context.py"
@@ -48,6 +50,10 @@ def main() -> None:
         fail("canonical Deploy WNBA Dashboard workflow is missing")
     if not ATOMIC.exists():
         fail("atomic generated publisher is missing")
+    if not ALT_MARKET_OWNER.exists():
+        fail("canonical ALT market owner workflow is missing")
+    if not ALT_LATE_MARKET_ENTRY.exists():
+        fail("controlled ALT late-market entry workflow is missing")
     if not ALT_RECOVERY.exists():
         fail("ALT historical recovery planner is missing")
     if not UPCOMING_RESOLVER.exists():
@@ -124,6 +130,33 @@ def main() -> None:
     missing_upcoming_contract = [label for marker, label in upcoming_contract.items() if marker not in deploy_text]
     if missing_upcoming_contract:
         fail(f"deploy is missing prepared-upcoming contracts: {missing_upcoming_contract}")
+
+    alt_owner_text = ALT_MARKET_OWNER.read_text(encoding="utf-8")
+    alt_owner_header = alt_owner_text.split("\npermissions:", 1)[0]
+    alt_owner_contract = {
+        "scripts/wnba_dashboard_slate_context.py --field target_date": "prepared-upcoming target resolution",
+        "ALT_TARGET_MODE": "active/upcoming target-mode gate",
+        "SOURCE_STACK_READY": "prepared source-stack gate",
+        "ODDS_API_MIN_REMAINING: '1500'": "paid API credit reserve",
+        "actions: write": "dashboard dispatch permission",
+        "gh workflow run deploy_wnba_dashboard.yml --ref main": "canonical dashboard deployment dispatch",
+    }
+    missing_alt_owner_contract = [
+        label for marker, label in alt_owner_contract.items() if marker not in alt_owner_text
+    ]
+    if missing_alt_owner_contract:
+        fail(f"ALT market owner is missing contracts: {missing_alt_owner_contract}")
+    if "\n  push:" in alt_owner_header or "\n  schedule:" in alt_owner_header:
+        fail("ALT market owner must remain manual/reusable during maintenance mode")
+
+    alt_entry_text = ALT_LATE_MARKET_ENTRY.read_text(encoding="utf-8")
+    for marker, label in {
+        "data/alt_late_refresh_request.txt": "controlled request marker",
+        "uses: ./.github/workflows/wnba_alt_pregame_snapshot.yml": "canonical ALT owner delegation",
+        "actions: write": "reusable workflow dispatch permission",
+    }.items():
+        if marker not in alt_entry_text:
+            fail(f"ALT late-market entry is missing {label}")
     for name in (
         "Install ALT pipeline dependencies",
         "Score current ALT props",
