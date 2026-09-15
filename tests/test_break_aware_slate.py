@@ -136,6 +136,9 @@ class BreakAwareSlateTests(unittest.TestCase):
         self.assertIn("BREAK_MODE_DEPLOY_SAFE", workflow)
         self.assertIn("patch_dashboard_break_state.py", workflow)
         self.assertIn("if: env.MAINTENANCE_BREAK != 'true'", workflow)
+        self.assertIn("scripts/wnba_dashboard_slate_context.py --field target_date", workflow)
+        self.assertIn("PREPARED_UPCOMING", workflow)
+        self.assertIn("UPCOMING_STANDARD_PROPS_ONLY", workflow)
 
     def test_automatic_alt_recovery_pauses_external_feeds_during_break(self) -> None:
         diagnostics = {

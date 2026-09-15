@@ -29,6 +29,7 @@ on:
       - 'patch_dashboard_s19_m03.py'
       - 'patch_dashboard_s19_m06.py'
       - 'scripts/build_daily_canonical_slate.py'
+      - 'scripts/wnba_dashboard_slate_context.py'
       - 'scripts/scrape_odds_props_consensus.py'
       - 'scripts/wnba_game_archive_backfill.py'
       - 'scripts/atomic_generated_push.sh'
@@ -88,28 +89,33 @@ jobs:
 
       - name: Resolve dashboard slate context
         run: |
-          TARGET=$(python active_slate_date.py)
           CURRENT_DATE=$(python active_slate_date.py --field current_date)
           SLATE_MODE=$(python active_slate_date.py --field mode)
           NEXT_SLATE_DATE=$(python active_slate_date.py --field next_slate_date)
           DAYS_UNTIL_SLATE=$(python active_slate_date.py --field days_until_slate)
           SCHEDULE_SOURCE=$(python active_slate_date.py --field schedule_source)
+          DASHBOARD_CONTEXT=$(python scripts/wnba_dashboard_slate_context.py --context)
+          TARGET=$(python scripts/wnba_dashboard_slate_context.py --field target_date)
+          DASHBOARD_MODE=$(python scripts/wnba_dashboard_slate_context.py --field deployment_mode)
+          PREPARED_UPCOMING=$(python scripts/wnba_dashboard_slate_context.py --field prepared_upcoming)
+          MAINTENANCE_BREAK=$(python scripts/wnba_dashboard_slate_context.py --field maintenance_break)
+          ALT_CURRENT_SOURCE=$(python scripts/wnba_dashboard_slate_context.py --field alt_current_source)
           test -n "$TARGET"
           test -n "$CURRENT_DATE"
           test -n "$SLATE_MODE"
-          MAINTENANCE_BREAK=false
-          if [ "$SLATE_MODE" = 'break' ] || [ "$SLATE_MODE" = 'offseason' ]; then
-            MAINTENANCE_BREAK=true
-          fi
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "CURRENT_DATE=$CURRENT_DATE" >> "$GITHUB_ENV"
           echo "SLATE_MODE=$SLATE_MODE" >> "$GITHUB_ENV"
+          echo "DASHBOARD_MODE=$DASHBOARD_MODE" >> "$GITHUB_ENV"
           echo "NEXT_SLATE_DATE=$NEXT_SLATE_DATE" >> "$GITHUB_ENV"
           echo "DAYS_UNTIL_SLATE=$DAYS_UNTIL_SLATE" >> "$GITHUB_ENV"
           echo "SCHEDULE_SOURCE=$SCHEDULE_SOURCE" >> "$GITHUB_ENV"
           echo "MAINTENANCE_BREAK=$MAINTENANCE_BREAK" >> "$GITHUB_ENV"
+          echo "PREPARED_UPCOMING=$PREPARED_UPCOMING" >> "$GITHUB_ENV"
+          echo "ALT_CURRENT_SOURCE=$ALT_CURRENT_SOURCE" >> "$GITHUB_ENV"
           echo "Dashboard observation date: $TARGET"
-          echo "Slate mode: $SLATE_MODE; next slate: ${NEXT_SLATE_DATE:-not scheduled}"
+          echo "Slate mode: $SLATE_MODE; dashboard mode: $DASHBOARD_MODE; next slate: ${NEXT_SLATE_DATE:-not scheduled}"
+          echo "Dashboard slate context: $DASHBOARD_CONTEXT"
 
       - name: Install ALT pipeline dependencies
         if: env.MAINTENANCE_BREAK != 'true'
@@ -123,6 +129,7 @@ jobs:
             patch_dashboard_canonical_runtime.py patch_dashboard_games_focus.py patch_dashboard_v4_ui_freeze.py patch_dashboard_v4_ui_freeze_safe.py \
             patch_dashboard_s19_m02.py patch_dashboard_s19_m03.py patch_dashboard_s19_m06.py scripts/build_daily_canonical_slate.py \
             scripts/scrape_odds_props_consensus.py scripts/wnba_game_archive_backfill.py scripts/wnba_s19_m02_prop_source.py scripts/wnba_s19_m02_predictions.py scripts/wnba_s19_m03_dashboard_consumer.py scripts/wnba_s19_m06_results_lifecycle.py \
+            scripts/wnba_dashboard_slate_context.py \
             patch_dashboard_alt_props_table.py patch_dashboard_alt_props_scores.py patch_dashboard_alt_props_performance_panel.py wnba_alt_streak_confidence.py wnba_alt_performance_tracker.py \
             patch_dashboard_sprint2_phase2.py patch_dashboard_build_verification.py patch_dashboard_alt_grading_status.py wnba_alt_pending_diagnostics.py \
             patch_dashboard_alt_recovery_progress.py patch_dashboard_game_performance.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_alt_ladders.py \
@@ -157,13 +164,22 @@ jobs:
                   'paid_api_called':False,
               })
               raise SystemExit(0)
-          if w.get('target_date')!=target or s.get('target_date')!=target:
+          current = w.get('target_date')==target and s.get('target_date')==target
+          if not current and os.environ.get('PREPARED_UPCOMING') != 'true':
               raise SystemExit(f'ALT persisted source target mismatch: warehouse={w.get("target_date")} streaks={s.get("target_date")} target={target}')
-          print({'status':'PASS','mode':'persisted-read-only','target':target,'alt_markets':int((w.get('summary') or {}).get('markets') or 0),'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0)})
+          print({
+              'status':'PASS' if current else 'UPCOMING_STANDARD_PROPS_ONLY',
+              'mode':'persisted-read-only',
+              'target':target,
+              'alt_current_source':current,
+              'stale_alt_actionable':False,
+              'alt_markets':int((w.get('summary') or {}).get('markets') or 0) if current else 0,
+              'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0) if current else 0,
+          })
           PY
 
       - name: Score current ALT props
-        if: env.MAINTENANCE_BREAK != 'true'
+        if: env.MAINTENANCE_BREAK != 'true' && env.ALT_CURRENT_SOURCE == 'true'
         run: |
           python wnba_alt_streak_confidence.py --date "$TARGET"
           python wnba_alt_performance_tracker.py --date "$TARGET" --analyze
@@ -298,9 +314,10 @@ jobs:
           alt=json.loads(Path('data/dashboard/wnba_alt_streaks.json').read_text())
           alt_stamp=str(alt.get('generated_at_utc') or '')
           if not alt_stamp or f'"generated_at_utc":"{alt_stamp}"' not in h: raise SystemExit(f'ALT embedded payload is stale: expected generated_at_utc={alt_stamp}')
-          if str(alt.get('target_date') or '') != target: raise SystemExit(f'ALT source target mismatch: {alt.get("target_date")} != {target}')
-          eligible=[r for r in alt.get('rows',[]) if r.get('line_type')=='alternate' and int(r.get('streak') or 0)>=5 and str(r.get('best_book') or '').lower() in {'fanduel','draftkings','fanatics'}]
-          if alt.get('rows') and not eligible: raise SystemExit('ALT source is nonempty but has zero renderer-eligible rows')
+          alt_current=str(alt.get('target_date') or '') == target
+          if not alt_current and os.environ.get('PREPARED_UPCOMING') != 'true': raise SystemExit(f'ALT source target mismatch: {alt.get("target_date")} != {target}')
+          eligible=[r for r in alt.get('rows',[]) if alt_current and r.get('line_type')=='alternate' and int(r.get('streak') or 0)>=5 and str(r.get('best_book') or '').lower() in {'fanduel','draftkings','fanatics'}]
+          if alt_current and alt.get('rows') and not eligible: raise SystemExit('ALT source is nonempty but has zero renderer-eligible rows')
           if eligible and "row_gate:'target-date-artifact'" not in h: raise SystemExit('ALT renderer is not using the stable target-date artifact gate')
           build_marker=f'<!-- canonical-build-target-v1:{target} -->'
           if build_marker not in h: raise SystemExit(f'REFUSE DEPLOY: canonical build target marker missing for {target}')
@@ -319,6 +336,8 @@ jobs:
           if not closed:
               a2=j('wnba_s19_m02_prediction_audit.json'); a3=j('wnba_s19_m03_dashboard_consumer_audit.json'); a4=j('wnba_s19_m04_decision_contract_audit.json'); a5=j('wnba_s19_m05_dashboard_health_audit.json')
               assert a2.get('status')=='READY' and a2.get('target_date')==target and a2.get('actionable_out_props')==0 and a2.get('player_prop_predictions',0)>0 and a2.get('all_rendered_props_exact_current_slate') is True, a2
+              if a2.get('injury_source_verified') is not True:
+                  assert a2.get('recommendations_actionable') is False and a2.get('actionable_injury_unverified_props')==0 and a2.get('best_bets_current_rows')==0 and a2.get('portfolio_current_rows')==0, a2
               assert a3.get('status')=='READY' and a3.get('target_date')==target and a3.get('all_consumers_single_source') is True and a3.get('phase2_best_bets_fallback_enabled') is False and a3.get('phase2_portfolio_fallback_enabled') is False, a3
               assert a4.get('status')=='READY' and a4.get('target_date')==target and a4.get('all_rows_current_slate') is True and a4.get('actionable_unavailable_props')==0 and a4.get('legacy_fallback_enabled') is False and a4.get('single_dashboard_contract') is True, a4
               assert a5.get('status')=='READY' and a5.get('target_date')==target and a5.get('all_health_checks_pass') is True and a5.get('healthy_checks')==a5.get('total_checks') and float(a5.get('contract_age_minutes',9999))<=90 and a5.get('legacy_fallback_enabled') is False and a5.get('single_dashboard_contract') is True, a5
@@ -334,7 +353,10 @@ jobs:
               else:
                   assert a6.get('target_history_records',0)==0 and a6.get('history_persistence_required') is False, a6
           assert a6.get('status')=='READY' and a6.get('target_date')==target and a6.get('duplicate_history_keys')==0 and a6.get('same_day_final_results_inferred') is False and a6.get('existing_grader_reused') is True and a6.get('existing_edge_database_reused') is True, a6
-          print({'status':'PASS','sprint':19,'mode':'results-only' if closed else 'live','target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True,'alt_source_rows':len(alt.get('rows') or []),'alt_renderer_eligible_rows':len(eligible),'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
+          if os.environ.get('PREPARED_UPCOMING') == 'true':
+              assert os.environ.get('DASHBOARD_MODE') == 'upcoming'
+              assert 'id="wnba-break-state-script"' not in h
+          print({'status':'PASS','sprint':19,'mode':'results-only' if closed else 'live','dashboard_mode':os.environ.get('DASHBOARD_MODE'),'target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True,'alt_source_current':alt_current,'alt_source_rows':len(alt.get('rows') or []) if alt_current else 0,'alt_renderer_eligible_rows':len(eligible),'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
           PY
 
       - name: Persist Sprint 19 M06 prediction history

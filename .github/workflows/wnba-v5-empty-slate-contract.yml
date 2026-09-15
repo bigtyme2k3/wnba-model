@@ -9,9 +9,13 @@ on:
       - 'tests/test_v5_active_slate_contract.py'
       - 'tests/test_v5_projection_integrity.py'
       - 'tests/test_break_aware_slate.py'
+      - 'tests/test_dashboard_upcoming_slate.py'
       - 'tests/test_standard_prop_book_contract.py'
       - 'active_slate_date.py'
       - 'patch_dashboard_break_state.py'
+      - 'patch_dashboard_s19_m02.py'
+      - 'patch_dashboard_v4_alt_streaks_display.py'
+      - 'scripts/wnba_dashboard_slate_context.py'
       - 'scripts/wnba_s19_m02_prop_source.py'
       - 'scripts/wnba_s19_m02_predictions.py'
       - 'scripts/wnba_v5_projection_integrity_audit.py'
@@ -51,6 +55,7 @@ jobs:
           python -m py_compile \
             scripts/wnba_s19_m02_prop_source.py \
             scripts/wnba_s19_m02_predictions.py \
+            scripts/wnba_dashboard_slate_context.py \
             scripts/wnba_v5_projection_integrity_audit.py \
             wnba_projection_contract.py \
             wnba_daily_edge_engine.py \
@@ -61,10 +66,13 @@ jobs:
             wnba_best_bets.py \
             active_slate_date.py \
             patch_dashboard_break_state.py \
+            patch_dashboard_s19_m02.py \
+            patch_dashboard_v4_alt_streaks_display.py \
             tests/test_v5_empty_slate_contract.py \
             tests/test_v5_active_slate_contract.py \
             tests/test_v5_projection_integrity.py \
             tests/test_break_aware_slate.py \
+            tests/test_dashboard_upcoming_slate.py \
             tests/test_standard_prop_book_contract.py \
             wnba_player_props_ingestion.py \
             scripts/build_daily_canonical_slate.py
@@ -76,6 +84,8 @@ jobs:
         run: python tests/test_v5_projection_integrity.py
       - name: Prove schedule breaks deploy safely without current markets
         run: python tests/test_break_aware_slate.py
+      - name: Prove prepared upcoming slate deployment is fail closed
+        run: python tests/test_dashboard_upcoming_slate.py
       - name: Enforce canonical standard-prop sportsbook allowlist
         run: python tests/test_standard_prop_book_contract.py
       - name: Enforce repository immutability

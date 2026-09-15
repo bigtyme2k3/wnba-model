@@ -124,6 +124,12 @@ def explicit_supported_bet(row):
     return action == 'BET' and row.get('research_only') is not True and book in ALLOWED_BOOKS
 
 
+def approved_supported_bets(payload, target, injury_source_verified):
+    current = current_rows(payload, target)
+    supported = [row for row in current if explicit_supported_bet(row)]
+    return current, supported if injury_source_verified else []
+
+
 def validate_prepared_prop_source(target: str, game_names: set[str]) -> int:
     path = RAW / f'props_raw_{target}.csv'
     rows = read_csv(path)
@@ -138,7 +144,12 @@ def validate_prepared_prop_source(target: str, game_names: set[str]) -> int:
     return len(exact)
 
 
-def write_empty_state(target: str, injury_stamp: str, game_stamp: str):
+def write_empty_state(
+    target: str,
+    injury_stamp: str,
+    game_stamp: str,
+    injury_source_verified: bool,
+):
     now = datetime.now(timezone.utc).isoformat()
     payload = {
         'generated_at_utc': now,
@@ -153,6 +164,8 @@ def write_empty_state(target: str, injury_stamp: str, game_stamp: str):
             'portfolio': 'empty on confirmed empty slate',
         },
         'injury_generated_at_utc': injury_stamp,
+        'injury_source_verified': injury_source_verified,
+        'recommendations_actionable': False,
         'games_generated_at_utc': game_stamp,
         'games': [],
         'player_props': [],
@@ -182,6 +195,9 @@ def write_empty_state(target: str, injury_stamp: str, game_stamp: str):
         'status': 'READY',
         'empty_slate': True,
         'game_projection_after_injury_refresh': True,
+        'injury_source_verified': injury_source_verified,
+        'recommendations_actionable': False,
+        'actionable_injury_unverified_props': 0,
         'games': 0,
         'sportsbook_prop_input_rows': 0,
         'player_prop_predictions': 0,
@@ -220,6 +236,7 @@ def build(target: str):
             raise SystemExit(f'{name} target mismatch: {actual} != {target}')
 
     injury_stamp = injury.get('generated_at_utc')
+    injury_source_verified = injury.get('injury_source_verified') is True
     game_stamp = games.get('generated_at_utc')
     if not injury_stamp or not game_stamp:
         raise SystemExit('Missing injury/game freshness timestamps')
@@ -230,16 +247,22 @@ def build(target: str):
     game_names = set()
     for row in games.get('games', []) or []:
         item = dict(row)
-        context = item.get('injury_context') or {}
+        context = dict(item.get('injury_context') or {})
         if context.get('fresh') is not True or str(context.get('target_date') or '') != target:
             raise SystemExit(f"Stale injury context on game {item.get('game')}")
+        context['source_verified'] = injury_source_verified
+        item['injury_context'] = context
+        if not injury_source_verified:
+            item['model_recommendation_unverified'] = dict(item.get('recommendation') or {})
+            item['recommendation'] = {'spread': 'PASS', 'total': 'PASS'}
+            item['recommendation_gate'] = 'INJURY_SOURCE_UNVERIFIED'
         item['prediction_source'] = 'sprint19_m01_injury_aware_game_projection'
         current_games.append(item)
         if item.get('game'):
             game_names.add(str(item['game']))
 
     if not game_names:
-        return write_empty_state(target, injury_stamp, game_stamp)
+        return write_empty_state(target, injury_stamp, game_stamp, injury_source_verified)
 
     sportsbook_input_rows = validate_prepared_prop_source(target, game_names)
     subprocess.run(['python', 'player_points.py', '--date', target, '--out', 'data/raw'], check=True)
@@ -365,6 +388,7 @@ def build(target: str):
             'projected_minutes': projected_minutes,
             'minutes_delta': minutes_delta,
             'injury_status': injury_status,
+            'injury_source_verified': injury_source_verified,
             'injury_adjusted': injury_adjusted,
             'injury_projection_factor': injury_factor,
             'injury_detail': injury_detail,
@@ -383,10 +407,8 @@ def build(target: str):
     if off_slate:
         raise SystemExit(f'Fresh sportsbook prop build emitted off-slate rows: {len(off_slate)}')
 
-    current_buy = current_rows(buy, target)
-    current_portfolio = current_rows(portfolio, target)
-    approved_buy = [row for row in current_buy if explicit_supported_bet(row)]
-    approved_portfolio = [row for row in current_portfolio if explicit_supported_bet(row)]
+    current_buy, approved_buy = approved_supported_bets(buy, target, injury_source_verified)
+    current_portfolio, approved_portfolio = approved_supported_bets(portfolio, target, injury_source_verified)
     finalized_bets = {decision_key(row): row for row in approved_buy if decision_key(row)[0] and decision_key(row)[2]}
     for row in prop_rows:
         finalized = finalized_bets.get(decision_key(row))
@@ -421,6 +443,8 @@ def build(target: str):
             'portfolio': 'data/dashboard/wnba_v5_live_portfolio.json only; no Phase 2 fallback',
         },
         'injury_generated_at_utc': injury_stamp,
+        'injury_source_verified': injury_source_verified,
+        'recommendations_actionable': injury_source_verified,
         'games_generated_at_utc': game_stamp,
         'games': current_games,
         'player_props': prop_rows,
@@ -435,6 +459,9 @@ def build(target: str):
             'bet_player_props': sum(r.get('final_action') == 'BET' for r in prop_rows),
             'v5_best_bets': len(explicit_best_bets),
             'v5_portfolio_rows': len(approved_portfolio),
+            'game_recommendations_withheld_unverified_injury': sum(
+                bool(item.get('model_recommendation_unverified')) for item in current_games
+            ),
             'research_buy_signals_excluded': len(current_buy) - len(approved_buy),
             'off_slate_prop_rows_rejected': len(off_slate),
             'missing_projection_rows_skipped': len(missing_projection),
@@ -451,6 +478,11 @@ def build(target: str):
         'status': 'READY',
         'empty_slate': False,
         'game_projection_after_injury_refresh': True,
+        'injury_source_verified': injury_source_verified,
+        'recommendations_actionable': injury_source_verified,
+        'actionable_injury_unverified_props': sum(
+            row.get('final_action') == 'BET' for row in prop_rows
+        ) if not injury_source_verified else 0,
         'games': len(current_games),
         'sportsbook_prop_input_rows': sportsbook_input_rows,
         'player_prop_predictions': len(prop_rows),
@@ -471,6 +503,12 @@ def build(target: str):
         'invalid_projection_rows_rejected': len(invalid_projection),
         'invalid_projection_sample': invalid_projection[:20],
     }
+    if not injury_source_verified and (
+        audit['actionable_injury_unverified_props']
+        or audit['best_bets_current_rows']
+        or audit['portfolio_current_rows']
+    ):
+        raise SystemExit('Unverified injury source produced actionable M02 recommendations')
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(audit))
     return payload

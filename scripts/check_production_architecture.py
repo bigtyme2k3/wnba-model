@@ -8,6 +8,8 @@ ACTIVE = ROOT / ".github" / "workflows"
 DEPLOY = ACTIVE / "deploy_wnba_dashboard.yml"
 ATOMIC = ROOT / "scripts" / "atomic_generated_push.sh"
 ALT_RECOVERY = ROOT / "wnba_alt_game_log_recovery.py"
+UPCOMING_RESOLVER = ROOT / "scripts" / "wnba_dashboard_slate_context.py"
+M02_RENDERER = ROOT / "patch_dashboard_s19_m02.py"
 
 RETIRED_DASHBOARD_BUILDERS = {
     "build_dashboard_v4.py",
@@ -48,6 +50,10 @@ def main() -> None:
         fail("atomic generated publisher is missing")
     if not ALT_RECOVERY.exists():
         fail("ALT historical recovery planner is missing")
+    if not UPCOMING_RESOLVER.exists():
+        fail("prepared-upcoming dashboard resolver is missing")
+    if not M02_RENDERER.exists():
+        fail("Sprint 19 M02 dashboard renderer is missing")
 
     # Block hardcoded dates only where they are being used as execution state.
     # Documentation/comments may legitimately mention historical dates.
@@ -107,6 +113,17 @@ def main() -> None:
     missing_break_contract = [label for marker, label in break_contract.items() if marker not in deploy_text]
     if missing_break_contract:
         fail(f"deploy is missing break-aware contracts: {missing_break_contract}")
+    upcoming_contract = {
+        "scripts/wnba_dashboard_slate_context.py --field target_date": "prepared-upcoming target resolution",
+        "PREPARED_UPCOMING": "prepared-upcoming deployment gate",
+        "DASHBOARD_MODE": "dashboard mode evidence",
+        "ALT_CURRENT_SOURCE": "current ALT source gate",
+        "UPCOMING_STANDARD_PROPS_ONLY": "standard-props-only upcoming state",
+        "actionable_injury_unverified_props": "unverified injury actionability assertion",
+    }
+    missing_upcoming_contract = [label for marker, label in upcoming_contract.items() if marker not in deploy_text]
+    if missing_upcoming_contract:
+        fail(f"deploy is missing prepared-upcoming contracts: {missing_upcoming_contract}")
     for name in (
         "Install ALT pipeline dependencies",
         "Score current ALT props",
@@ -126,6 +143,25 @@ def main() -> None:
         fail("deploy does not independently verify the maintenance artifact")
     if "uses: actions/upload-pages-artifact@" not in deploy_text or "uses: actions/deploy-pages@" not in deploy_text:
         fail("deploy is missing the Pages artifact/deploy chain")
+
+    resolver_text = UPCOMING_RESOLVER.read_text(encoding="utf-8")
+    for marker in (
+        "next_slate_source_stack_ready",
+        "projection_integrity:not_clean",
+        "sportsbooks:unsupported_book_observed",
+        "injury_unverified:actionable_rows_present",
+        "paid_api_called=False",
+    ):
+        if marker not in resolver_text:
+            fail(f"prepared-upcoming resolver is missing {marker}")
+
+    renderer_text = M02_RENDERER.read_text(encoding="utf-8")
+    if "r.eligible_for_bet===true" not in renderer_text:
+        fail("M02 renderer does not use final bet eligibility for actionable counts")
+    if "if(r.eligible)counts.ACTIONABLE++" in renderer_text:
+        fail("M02 renderer still labels research candidates as actionable")
+    if "Official injury report unverified" not in renderer_text:
+        fail("M02 renderer does not disclose unverified injury state")
 
     recovery_text = ALT_RECOVERY.read_text(encoding="utf-8")
     recovery_contract = {

@@ -202,6 +202,8 @@ def main() -> int:
 
         assert prediction_result["status"] == "READY"
         assert prediction_result["empty_slate"] is False
+        assert prediction_result["injury_source_verified"] is True
+        assert prediction_result["recommendations_actionable"] is True
         assert len(prediction_result["games"]) == 1
         assert len(prediction_result["player_props"]) == 1
         assert prediction_result["player_props"][0]["player"] == PLAYER
@@ -211,6 +213,8 @@ def main() -> int:
         assert prediction_result["best_bets"] == []
         assert prediction_result["portfolio"] == []
         assert prediction_audit["status"] == "READY"
+        assert prediction_audit["injury_source_verified"] is True
+        assert prediction_audit["actionable_injury_unverified_props"] == 0
         assert prediction_audit["empty_slate"] is False
         assert prediction_audit["player_prop_predictions"] == 1
         assert prediction_audit["player_props_with_model_projection"] == 1
