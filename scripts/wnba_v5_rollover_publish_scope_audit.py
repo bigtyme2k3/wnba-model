@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+GITIGNORE = ROOT / ".gitignore"
 WORKFLOW = ROOT / ".github/workflows/wnba_daily_slate_rollover.yml"
 ALLOWLIST = ROOT / "config/v5_rollover_derived_outputs.txt"
 OWNERSHIP = ROOT / "config/v5_artifact_ownership.json"
@@ -62,6 +63,18 @@ def load_allowlist() -> list[str]:
 
 
 def main() -> None:
+    if not GITIGNORE.is_file():
+        raise SystemExit("Root .gitignore is missing")
+    ignored_runtime_files = {
+        line.strip()
+        for line in GITIGNORE.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    }
+    required_sqlite_sidecars = {"*.sqlite-wal", "*.sqlite-shm"}
+    missing_sidecars = sorted(required_sqlite_sidecars - ignored_runtime_files)
+    if missing_sidecars:
+        raise SystemExit(f"SQLite runtime sidecars are not ignored: {missing_sidecars}")
+
     rows = load_allowlist()
     if not rows:
         raise SystemExit("Rollover derived-output allowlist is empty")
@@ -193,6 +206,7 @@ def main() -> None:
         "projection_integrity_gate": True,
         "projection_chain_fail_closed": True,
         "forbidden_freshness_fallbacks": 0,
+        "sqlite_runtime_sidecars_ignored": True,
         "current_slate_target_required": True,
         "producer_failure_states_rejected": True,
         "broad_directory_args": 0,
