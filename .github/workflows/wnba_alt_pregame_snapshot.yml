@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: wnba-main-writer
@@ -35,16 +36,37 @@ jobs:
       - name: Install ALT dependencies
         run: python -m pip install --disable-pip-version-check pandas requests
 
-      - name: Resolve active slate
+      - name: Resolve active or prepared upcoming slate
         run: |
-          TARGET=$(python active_slate_date.py)
+          DASHBOARD_CONTEXT=$(python scripts/wnba_dashboard_slate_context.py --context)
+          TARGET=$(python scripts/wnba_dashboard_slate_context.py --field target_date)
+          ALT_TARGET_MODE=$(python scripts/wnba_dashboard_slate_context.py --field deployment_mode)
+          SOURCE_STACK_READY=$(python scripts/wnba_dashboard_slate_context.py --field source_stack_ready)
           test -n "$TARGET"
+          case "$ALT_TARGET_MODE" in
+            active|manual)
+              ;;
+            upcoming)
+              if [ "$SOURCE_STACK_READY" != "true" ]; then
+                echo "Prepared-upcoming ALT refresh requires a complete current source stack."
+                exit 1
+              fi
+              ;;
+            *)
+              echo "No active or prepared-upcoming slate is eligible for a paid ALT refresh: $DASHBOARD_CONTEXT"
+              exit 1
+              ;;
+          esac
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "Canonical ALT market target: $TARGET"
+          echo "ALT_TARGET_MODE=$ALT_TARGET_MODE" >> "$GITHUB_ENV"
+          echo "Canonical ALT market target: $TARGET (mode=$ALT_TARGET_MODE)"
+          echo "Dashboard slate context: $DASHBOARD_CONTEXT"
 
       - name: Compile canonical ALT market chain
         run: |
           python -m py_compile \
+            active_slate_date.py \
+            scripts/wnba_dashboard_slate_context.py \
             scripts/scrape_odds_props_consensus.py \
             wnba_alt_market_warehouse.py \
             wnba_alt_streaks.py \
@@ -179,3 +201,8 @@ jobs:
             'data/dashboard/wnba_alt_calibration.json' \
             'data/warehouse/wnba_alt_calibration.json' \
             'data/dashboard/wnba_alt_parlays.json'
+
+      - name: Dispatch canonical dashboard deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy_wnba_dashboard.yml --ref main
