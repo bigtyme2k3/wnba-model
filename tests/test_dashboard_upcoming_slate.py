@@ -7,11 +7,15 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest import mock
+
+import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from scripts.wnba_dashboard_slate_context import resolve_dashboard_slate_context
+from scripts import wnba_s19_m02_prop_source as prop_source
 from scripts.wnba_s19_m02_predictions import approved_supported_bets
 
 TARGET = "2026-09-17"
@@ -194,6 +198,82 @@ class DashboardUpcomingSlateTests(unittest.TestCase):
         self.assertIn("r.eligible_for_bet===true", renderer)
         self.assertNotIn("if(r.eligible)counts.ACTIONABLE++", renderer)
         self.assertIn("Official injury report unverified", renderer)
+
+    def test_m02_prefers_fresh_canonical_props_over_same_date_raw_cache(self) -> None:
+        dash = self.root / "data" / "dashboard"
+        raw = self.root / "data" / "raw"
+        dash.mkdir(parents=True, exist_ok=True)
+        raw.mkdir(parents=True, exist_ok=True)
+
+        write_json(self.root, "data/dashboard/wnba_sprint2_phase2.json", {
+            "target_date": TARGET,
+            "games": [{"game": GAME}],
+        })
+        write_json(self.root, "data/dashboard/wnba_player_props.json", {
+            "generated_at_utc": "2026-09-15T20:12:28+00:00",
+            "target_date": TARGET,
+            "rows": [{
+                "target_date": TARGET,
+                "event_id": "fresh-event",
+                "commence_time": "2026-09-17T23:30:00Z",
+                "game": GAME,
+                "away_team": "Test Away",
+                "home_team": "Test Home",
+                "player": "Fresh Player",
+                "team": "Test Away",
+                "stat": "PTS",
+                "line": 18.5,
+                "books": [
+                    {"book": "DraftKings", "side": "OVER", "price": -110},
+                    {"book": "FanDuel", "side": "UNDER", "price": -105},
+                ],
+            }],
+        })
+        stale = {column: None for column in prop_source.odds_props.RAW_COLUMNS}
+        stale.update({
+            "game_date": TARGET,
+            "event_id": "stale-event",
+            "player": "Stale Player",
+            "opp_team": GAME,
+            "stat_raw": "player_points",
+            "stat": "pts",
+            "line": 16.5,
+            "over_price": -110,
+            "under_price": -110,
+            "num_books": 1,
+            "sportsbooks": "draftkings",
+            "odds_type": "sportsbook",
+            "game_time": "2026-09-17T23:30:00Z",
+            "home_team": "Test Home",
+            "away_team": "Test Away",
+            "source": "older-m02-cache",
+            "scraped_at": "2026-09-15T01:10:00+00:00",
+        })
+        pd.DataFrame([stale], columns=prop_source.odds_props.RAW_COLUMNS).to_csv(
+            raw / f"props_raw_{TARGET}.csv", index=False
+        )
+
+        with mock.patch.multiple(
+            prop_source,
+            ROOT=self.root,
+            RAW=raw,
+            DASH=dash,
+            GAMES=dash / "wnba_sprint2_phase2.json",
+            CANONICAL_PROPS=dash / "wnba_player_props.json",
+            AUDIT=dash / "wnba_s19_m02_prop_source_audit.json",
+        ), mock.patch.object(
+            prop_source,
+            "fetch_live",
+            side_effect=AssertionError("canonical source should prevent a paid fallback"),
+        ):
+            audit = prop_source.build(TARGET)
+
+        saved = pd.read_csv(raw / f"props_raw_{TARGET}.csv")
+        self.assertEqual(audit["source"], "data/dashboard/wnba_player_props.json")
+        self.assertFalse(audit["api_called"])
+        self.assertEqual(audit["rows"], 1)
+        self.assertEqual(saved.iloc[0]["player"], "Fresh Player")
+        self.assertEqual(float(saved.iloc[0]["line"]), 18.5)
 
 
 if __name__ == "__main__":

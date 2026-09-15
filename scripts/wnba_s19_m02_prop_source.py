@@ -212,14 +212,20 @@ def build(target: str):
         print('SPRINT19_M02_PROP_SOURCE_READY_EMPTY_SLATE', json.dumps(audit))
         return audit
 
+    # The canonical artifact is owned by the paid daily fetch and may be newer
+    # than a same-date M02 CSV left by an earlier run.  Prefer it so a market
+    # refresh cannot be silently shadowed by stale intraday lines.  The raw CSV
+    # remains a safe fallback when the canonical artifact is unavailable.
+    canonical, canonical_path = read_canonical_props(target, game_names)
     cached, cache_path = read_existing(target, game_names)
     api_called = False
     matched_events = 0
-    source = cache_path
-    frame = cached
-
-    if frame.empty:
-        frame, source = read_canonical_props(target, game_names)
+    if not canonical.empty:
+        frame = canonical
+        source = canonical_path
+    else:
+        frame = cached
+        source = cache_path
 
     if frame.empty:
         api_called = True
@@ -249,7 +255,7 @@ def build(target: str):
         'rows': int(len(frame)),
         'all_rows_exact_current_slate': all(g in game_names for g in rendered_games),
         'empty_slate': False,
-        'policy': 'Use only DraftKings, FanDuel, and Fanatics. Reuse a verified three-book raw cache or same-day canonical standard prop artifact before making any live Odds API request. Alternate markets are never requested here.',
+        'policy': 'Use only DraftKings, FanDuel, and Fanatics. Prefer the same-day canonical standard prop artifact, then fall back to a verified three-book raw cache before making any live Odds API request. Alternate markets are never requested here.',
     }
     AUDIT.write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     print('SPRINT19_M02_PROP_SOURCE_READY', json.dumps(audit))
