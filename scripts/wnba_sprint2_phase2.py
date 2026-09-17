@@ -14,6 +14,14 @@ PREDS = DASH / 'wnba_sprint2_predictions.json'
 INJURY = DASH / 'wnba_injury_intelligence.json'
 OUT = DASH / 'wnba_sprint2_phase2.json'
 
+# Prospective-only probability contract. These scales are fixed assumptions,
+# not fitted from the existing performance ledger. They convert model-vs-market
+# point edges into a probability for the selected side so future frozen
+# forecasts can be calibrated without rewriting historical predictions.
+SPREAD_ERROR_SCALE = 12.0
+TOTAL_ERROR_SCALE = 14.0
+PROBABILITY_METHOD = 'fixed_normal_edge_v1'
+
 
 def load(path, default):
     try:
@@ -39,6 +47,15 @@ def parse_day(s):
         return date.fromisoformat(str(s)[:10])
     except Exception:
         return None
+
+
+def selected_side_probability(edge, scale):
+    """Probability that the model-selected side beats the frozen market line."""
+    x=f(edge)
+    if x is None or not scale or scale <= 0:
+        return None
+    z=abs(x)/float(scale)
+    return round(clamp(0.5*(1.0+math.erf(z/math.sqrt(2.0))),0.5,0.9999),4)
 
 
 def team_history(perf, team):
@@ -72,8 +89,7 @@ def injury_map(injury, target):
         if not team: continue
         d=out.setdefault(team,{'players':0,'out':0,'questionable':0,'probable':0,'minutes_lost':0.0,'confidence_penalty':0.0,'impact':0.0})
         sev=str(row.get('severity') or row.get('status') or '').upper()
-        if sev=='BENEFICIARY':
-            continue
+        if sev=='BENEFICIARY': continue
         d['players']+=1
         if bool(row.get('is_out')) or sev=='OUT': d['out']+=1
         if sev in {'QUESTIONABLE','DOUBTFUL'}: d['questionable']+=1
@@ -82,7 +98,6 @@ def injury_map(injury, target):
         d['minutes_lost'] += max(0.0,-delta)
         d['confidence_penalty'] += f(row.get('confidence_penalty'),0.0) or 0.0
     for d in out.values():
-        # Transparent injury impact proxy, bounded to avoid overwhelming the model.
         d['impact']=round(clamp(d['minutes_lost']*0.055 + d['out']*0.65 + d['questionable']*0.25,0,4.5),2)
         d['minutes_lost']=round(d['minutes_lost'],1)
         d['confidence_penalty']=round(clamp(d['confidence_penalty'],0,100),1)
@@ -109,130 +124,51 @@ def main():
     if str(master.get('target_date') or '') != target: raise SystemExit('master date mismatch')
     if str(preds.get('target_date') or '') != target: raise SystemExit('predictions date mismatch')
     if str(injury.get('target_date') or '') != target: raise SystemExit('injury intelligence date mismatch')
-
     injury_generated_at=str(injury.get('generated_at_utc') or injury.get('generated_at') or '')
-    if not injury_generated_at:
-        raise SystemExit('injury intelligence generation timestamp missing')
-
-    inj=injury_map(injury,target)
-    by_team=ratings.get('by_team') or {}
-    target_day=parse_day(target)
+    if not injury_generated_at: raise SystemExit('injury intelligence generation timestamp missing')
+    inj=injury_map(injury,target); by_team=ratings.get('by_team') or {}; target_day=parse_day(target)
 
     enriched_ratings={}
     for team, base in by_team.items():
-        hist=team_history(perf,team)
-        l5=hist[:5]; l10=hist[:10]
-        last_day=parse_day(hist[0]['date']) if hist else None
+        hist=team_history(perf,team); l5=hist[:5]; l10=hist[:10]; last_day=parse_day(hist[0]['date']) if hist else None
         rest_days=(target_day-last_day).days if target_day and last_day else None
         home=[r for r in hist[:12] if r['home']]; away=[r for r in hist[:12] if not r['home']]
         pace_proxy=avg([r['total'] for r in l10],164.0)/164.0*100.0
         item=dict(base)
-        item.update({
-            'last5_net_margin':round(avg([r['margin'] for r in l5],0),2),
-            'last10_net_margin':round(avg([r['margin'] for r in l10],0),2),
-            'home_net_margin':round(avg([r['margin'] for r in home],0),2),
-            'away_net_margin':round(avg([r['margin'] for r in away],0),2),
-            'pace_index':round(pace_proxy,2),
-            'pace_label':'FAST' if pace_proxy>=103 else ('SLOW' if pace_proxy<=97 else 'NEUTRAL'),
-            'rest_days':rest_days,
-            'back_to_back':bool(rest_days is not None and rest_days<=1),
-            'injury':inj.get(team,{'players':0,'out':0,'questionable':0,'probable':0,'minutes_lost':0.0,'confidence_penalty':0.0,'impact':0.0}),
-        })
+        item.update({'last5_net_margin':round(avg([r['margin'] for r in l5],0),2),'last10_net_margin':round(avg([r['margin'] for r in l10],0),2),'home_net_margin':round(avg([r['margin'] for r in home],0),2),'away_net_margin':round(avg([r['margin'] for r in away],0),2),'pace_index':round(pace_proxy,2),'pace_label':'FAST' if pace_proxy>=103 else ('SLOW' if pace_proxy<=97 else 'NEUTRAL'),'rest_days':rest_days,'back_to_back':bool(rest_days is not None and rest_days<=1),'injury':inj.get(team,{'players':0,'out':0,'questionable':0,'probable':0,'minutes_lost':0.0,'confidence_penalty':0.0,'impact':0.0})})
         enriched_ratings[team]=item
 
     cards=[]
     for p in preds.get('games') or []:
-        away=p.get('away_team'); home=p.get('home_team')
-        ar=enriched_ratings.get(away,{}); hr=enriched_ratings.get(home,{})
-        projection=dict(p.get('projection') or {})
-        edge=dict(p.get('edge') or {})
-        market=dict(p.get('market') or {})
-        a_injury=ar.get('injury') or {}
-        h_injury=hr.get('injury') or {}
-        # Apply only current-date injury adjustments. Positive impact weakens that team.
-        a_imp=f(a_injury.get('impact'),0) or 0
-        h_imp=f(h_injury.get('impact'),0) or 0
+        away=p.get('away_team'); home=p.get('home_team'); ar=enriched_ratings.get(away,{}); hr=enriched_ratings.get(home,{})
+        projection=dict(p.get('projection') or {}); edge=dict(p.get('edge') or {}); market=dict(p.get('market') or {})
+        a_injury=ar.get('injury') or {}; h_injury=hr.get('injury') or {}; a_imp=f(a_injury.get('impact'),0) or 0; h_imp=f(h_injury.get('impact'),0) or 0
         a_score=f(projection.get('away_score')); h_score=f(projection.get('home_score'))
         if a_score is not None and h_score is not None:
             a_score -= a_imp*0.55; h_score -= h_imp*0.55
             projection['away_score']=round(a_score,1); projection['home_score']=round(h_score,1)
             margin=h_score-a_score; total=a_score+h_score
             projection['home_margin']=round(margin,2); projection['model_home_spread']=round(-margin,2); projection['total']=round(total,1)
-            projection['home_win_probability']=round(1/(1+math.exp(-margin/6.5)),4)
-            projection['away_win_probability']=round(1-projection['home_win_probability'],4)
+            projection['home_win_probability']=round(1/(1+math.exp(-margin/6.5)),4); projection['away_win_probability']=round(1-projection['home_win_probability'],4)
             if f(market.get('home_spread')) is not None: edge['spread']=round(f(market.get('home_spread'))-projection['model_home_spread'],2)
             if f(market.get('total')) is not None: edge['total']=round(projection['total']-f(market.get('total')),2)
         conf=f(p.get('confidence'),35) or 35
         penalty=((f(a_injury.get('confidence_penalty'),0) or 0)+(f(h_injury.get('confidence_penalty'),0) or 0))*0.05
-        conf=round(clamp(conf-penalty,35,88),1)
-        spread_edge=f(edge.get('spread')); total_edge=f(edge.get('total'))
+        conf=round(clamp(conf-penalty,35,88),1); spread_edge=f(edge.get('spread')); total_edge=f(edge.get('total'))
         spread_pick='PASS'
         if spread_edge is not None and abs(spread_edge)>=2: spread_pick=home if spread_edge>0 else away
         total_pick='PASS'
         if total_edge is not None and abs(total_edge)>=3: total_pick='OVER' if total_edge>0 else 'UNDER'
+        spread_probability=selected_side_probability(spread_edge,SPREAD_ERROR_SCALE)
+        total_probability=selected_side_probability(total_edge,TOTAL_ERROR_SCALE)
         rest_adv=None
         if ar.get('rest_days') is not None and hr.get('rest_days') is not None: rest_adv=hr['rest_days']-ar['rest_days']
-        pace=round(avg([ar.get('pace_index'),hr.get('pace_index')],100),1)
-        card_injury_count=sum(int(x or 0) for x in [a_injury.get('players'),h_injury.get('players')])
-        cards.append({
-            'model_version':p.get('model_version') or preds.get('model_version'),
-            'game':p.get('game'),'away_team':away,'home_team':home,'start_time':p.get('start_time'),
-            'market_source':p.get('market_source'),'sportsbook':p.get('sportsbook'),
-            'market':market,'projection':projection,'edge':edge,'confidence':conf,
-            'blend_weights':p.get('blend_weights') or {'market':0.58,'statistical':0.42},
-            'model_grade':grade(conf,spread_edge,total_edge),
-            'recommendation':{'spread':spread_pick,'total':total_pick},
-            'pace_index':pace,'pace_label':'FAST' if pace>=103 else ('SLOW' if pace<=97 else 'NEUTRAL'),
-            'rest_advantage_home':rest_adv,
-            'teams':{'away':ar,'home':hr},
-            'injury_adjusted':bool(a_imp or h_imp),
-            'injury_context':{
-                'source':'wnba_injury_intelligence.json',
-                'target_date':target,
-                'generated_at_utc':injury_generated_at,
-                'fresh':True,
-                'listed_players':card_injury_count,
-                'out':int(a_injury.get('out') or 0)+int(h_injury.get('out') or 0),
-                'questionable':int(a_injury.get('questionable') or 0)+int(h_injury.get('questionable') or 0),
-                'probable':int(a_injury.get('probable') or 0)+int(h_injury.get('probable') or 0),
-                'away_impact':a_imp,
-                'home_impact':h_imp,
-            },
-            'edge_value_pct':{
-                'spread':round(abs(spread_edge or 0)/max(1,abs(f(market.get('home_spread'),1) or 1))*100,1) if spread_edge is not None else None,
-                'total':round(abs(total_edge or 0)/max(1,f(market.get('total'),1) or 1)*100,1) if total_edge is not None else None,
-            }
-        })
+        pace=round(avg([ar.get('pace_index'),hr.get('pace_index')],100),1); card_injury_count=sum(int(x or 0) for x in [a_injury.get('players'),h_injury.get('players')])
+        cards.append({'model_version':p.get('model_version') or preds.get('model_version'),'game':p.get('game'),'away_team':away,'home_team':home,'start_time':p.get('start_time'),'market_source':p.get('market_source'),'sportsbook':p.get('sportsbook'),'market':market,'projection':projection,'edge':edge,'confidence':conf,'blend_weights':p.get('blend_weights') or {'market':0.58,'statistical':0.42},'model_grade':grade(conf,spread_edge,total_edge),'recommendation':{'spread':spread_pick,'total':total_pick},'forecast_probability':{'spread':spread_probability,'total':total_probability,'method':PROBABILITY_METHOD,'spread_error_scale':SPREAD_ERROR_SCALE,'total_error_scale':TOTAL_ERROR_SCALE,'prospective_only':True},'pace_index':pace,'pace_label':'FAST' if pace>=103 else ('SLOW' if pace<=97 else 'NEUTRAL'),'rest_advantage_home':rest_adv,'teams':{'away':ar,'home':hr},'injury_adjusted':bool(a_imp or h_imp),'injury_context':{'source':'wnba_injury_intelligence.json','target_date':target,'generated_at_utc':injury_generated_at,'fresh':True,'listed_players':card_injury_count,'out':int(a_injury.get('out') or 0)+int(h_injury.get('out') or 0),'questionable':int(a_injury.get('questionable') or 0)+int(h_injury.get('questionable') or 0),'probable':int(a_injury.get('probable') or 0)+int(h_injury.get('probable') or 0),'away_impact':a_imp,'home_impact':h_imp},'edge_value_pct':{'spread':round(abs(spread_edge or 0)/max(1,abs(f(market.get('home_spread'),1) or 1))*100,1) if spread_edge is not None else None,'total':round(abs(total_edge or 0)/max(1,f(market.get('total'),1) or 1)*100,1) if total_edge is not None else None}})
 
     generated_at=datetime.now(timezone.utc).isoformat()
-    payload={
-        'generated_at_utc':generated_at,
-        'target_date':target,
-        'schema_version':'sprint19-m01-injury-aware-games-v1',
-        'status':'PASS',
-        'injury_source':{
-            'path':'data/dashboard/wnba_injury_intelligence.json',
-            'target_date':target,
-            'generated_at_utc':injury_generated_at,
-            'consumed_before_projection_generated':True,
-        },
-        'method_notes':{
-            'pace_index':'score-tempo proxy centered near 100; not possessions per 40',
-            'offense_defense':'score-based model indices; not official ORtg/DRtg',
-            'injury_adjustment':'current-date official injury intelligence only; bounded impact proxy',
-            'edge_value_pct':'relative model-vs-market gap; not expected ROI'
-        },
-        'team_ratings':enriched_ratings,
-        'games':cards,
-        'summary':{
-            'games':len(cards),
-            'injury_context_games':sum(1 for x in cards if (x.get('injury_context') or {}).get('listed_players',0)>0),
-            'injury_adjusted_games':sum(1 for x in cards if x['injury_adjusted']),
-            'listed_injuries_on_slate':sum((x.get('injury_context') or {}).get('listed_players',0) for x in cards),
-            'graded_A_range':sum(1 for x in cards if str(x['model_grade']).startswith('A'))
-        }
-    }
+    payload={'generated_at_utc':generated_at,'target_date':target,'schema_version':'sprint19-m01-injury-aware-games-v1','status':'PASS','injury_source':{'path':'data/dashboard/wnba_injury_intelligence.json','target_date':target,'generated_at_utc':injury_generated_at,'consumed_before_projection_generated':True},'method_notes':{'pace_index':'score-tempo proxy centered near 100; not possessions per 40','offense_defense':'score-based model indices; not official ORtg/DRtg','injury_adjustment':'current-date official injury intelligence only; bounded impact proxy','edge_value_pct':'relative model-vs-market gap; not expected ROI','forecast_probability':'Prospective selected-side probability from fixed normal edge assumptions; not fitted to historical ledger.'},'probability_contract':{'method':PROBABILITY_METHOD,'spread_error_scale':SPREAD_ERROR_SCALE,'total_error_scale':TOTAL_ERROR_SCALE,'historical_backfill':False,'calibration_use':'future frozen forecasts only'},'team_ratings':enriched_ratings,'games':cards,'summary':{'games':len(cards),'injury_context_games':sum(1 for x in cards if (x.get('injury_context') or {}).get('listed_players',0)>0),'injury_adjusted_games':sum(1 for x in cards if x['injury_adjusted']),'listed_injuries_on_slate':sum((x.get('injury_context') or {}).get('listed_players',0) for x in cards),'graded_A_range':sum(1 for x in cards if str(x['model_grade']).startswith('A'))}}
     OUT.write_text(json.dumps(payload,indent=2),encoding='utf-8')
-    print(json.dumps({'target_date':target,'games':len(cards),'injury_adjusted_games':payload['summary']['injury_adjusted_games'],'status':'PASS'}))
+    print(json.dumps({'target_date':target,'games':len(cards),'injury_adjusted_games':payload['summary']['injury_adjusted_games'],'status':'PASS','probability_method':PROBABILITY_METHOD}))
 
 if __name__=='__main__': main()
