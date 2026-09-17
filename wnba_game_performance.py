@@ -50,225 +50,145 @@ def rows() -> list[dict[str, Any]]:
         for line in LEDGER.read_text(encoding="utf-8").splitlines():
             try:
                 row = json.loads(line)
-                if isinstance(row, dict):
-                    out.append(row)
-            except Exception:
-                pass
+                if isinstance(row, dict): out.append(row)
+            except Exception: pass
     return out
 
 
 def canonicalize(data: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Return chronology-safe pregame snapshots and excluded audit rows."""
-    eligible: list[dict[str, Any]] = []
-    excluded: list[dict[str, Any]] = []
+    eligible=[]; excluded=[]
     for row in data:
-        captured = parse_time(row.get("captured_at_utc"))
-        start = parse_time(row.get("start_time"))
+        captured=parse_time(row.get("captured_at_utc")); start=parse_time(row.get("start_time"))
         if start is None:
-            excluded.append({"prediction_id": row.get("prediction_id"), "target_date": row.get("target_date"), "game": row.get("game"), "reason": "missing_start_time"})
-            continue
+            excluded.append({"prediction_id":row.get("prediction_id"),"target_date":row.get("target_date"),"game":row.get("game"),"reason":"missing_start_time"}); continue
         if captured is None:
-            excluded.append({"prediction_id": row.get("prediction_id"), "target_date": row.get("target_date"), "game": row.get("game"), "reason": "missing_capture_time"})
-            continue
+            excluded.append({"prediction_id":row.get("prediction_id"),"target_date":row.get("target_date"),"game":row.get("game"),"reason":"missing_capture_time"}); continue
         if captured >= start:
-            excluded.append({"prediction_id": row.get("prediction_id"), "target_date": row.get("target_date"), "game": row.get("game"), "reason": "captured_at_or_after_tipoff"})
-            continue
+            excluded.append({"prediction_id":row.get("prediction_id"),"target_date":row.get("target_date"),"game":row.get("game"),"reason":"captured_at_or_after_tipoff"}); continue
         eligible.append(row)
-
-    # Same matchup/start time can appear under more than one stale slate date.
-    # Preserve only the latest genuinely pregame snapshot for that event.
-    groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
-    for row in eligible:
-        groups[(norm(row.get("game")), str(row.get("start_time") or ""))].append(row)
-    canonical: list[dict[str, Any]] = []
+    groups=defaultdict(list)
+    for row in eligible: groups[(norm(row.get("game")),str(row.get("start_time") or ""))].append(row)
+    canonical=[]
     for group in groups.values():
-        group.sort(key=lambda r: parse_time(r.get("captured_at_utc")) or datetime.min.replace(tzinfo=timezone.utc))
-        keep = group[-1]
-        canonical.append(keep)
-        for row in group[:-1]:
-            excluded.append({"prediction_id": row.get("prediction_id"), "target_date": row.get("target_date"), "game": row.get("game"), "reason": "superseded_pregame_snapshot"})
-    return canonical, excluded
+        group.sort(key=lambda r:parse_time(r.get("captured_at_utc")) or datetime.min.replace(tzinfo=timezone.utc)); keep=group[-1]; canonical.append(keep)
+        for row in group[:-1]: excluded.append({"prediction_id":row.get("prediction_id"),"target_date":row.get("target_date"),"game":row.get("game"),"reason":"superseded_pregame_snapshot"})
+    return canonical,excluded
 
 
-def rate(wins: int, losses: int) -> float | None:
-    decisions = wins + losses
-    return round(wins / decisions, 4) if decisions else None
+def rate(wins:int,losses:int)->float|None:
+    n=wins+losses; return round(wins/n,4) if n else None
 
 
-def wilson_interval(wins: int, n: int, z: float = 1.96) -> tuple[float | None, float | None]:
-    if n <= 0: return None, None
-    p=wins/n;denom=1+z*z/n;center=(p+z*z/(2*n))/denom
-    spread=z*math.sqrt((p*(1-p)+z*z/(4*n))/n)/denom
+def wilson_interval(wins:int,n:int,z:float=1.96):
+    if n<=0:return None,None
+    p=wins/n;denom=1+z*z/n;center=(p+z*z/(2*n))/denom;spread=z*math.sqrt((p*(1-p)+z*z/(4*n))/n)/denom
     return max(0.0,center-spread),min(1.0,center+spread)
 
 
-def market_summary(data: list[dict[str, Any]], result_key: str, rec_key: str) -> dict[str, Any]:
-    graded = [r for r in data if r.get("graded") and r.get(result_key) not in {None, "PASS", "VOID"}]
-    wins = sum(r.get(result_key) == "WIN" for r in graded)
-    losses = sum(r.get(result_key) == "LOSS" for r in graded)
-    pushes = sum(r.get(result_key) == "PUSH" for r in graded)
-    sides: dict[str, dict[str, int]] = defaultdict(lambda: {"wins": 0, "losses": 0, "pushes": 0})
+def market_summary(data,result_key,rec_key):
+    graded=[r for r in data if r.get("graded") and r.get(result_key) not in {None,"PASS","VOID"}]
+    wins=sum(r.get(result_key)=="WIN" for r in graded);losses=sum(r.get(result_key)=="LOSS" for r in graded);pushes=sum(r.get(result_key)=="PUSH" for r in graded)
+    sides=defaultdict(lambda:{"wins":0,"losses":0,"pushes":0})
     for row in graded:
-        side = str(row.get(rec_key) or "UNKNOWN")
-        result = str(row.get(result_key))
-        if result == "WIN": sides[side]["wins"] += 1
-        elif result == "LOSS": sides[side]["losses"] += 1
-        elif result == "PUSH": sides[side]["pushes"] += 1
+        side=str(row.get(rec_key) or "UNKNOWN"); result=str(row.get(result_key))
+        if result=="WIN":sides[side]["wins"]+=1
+        elif result=="LOSS":sides[side]["losses"]+=1
+        elif result=="PUSH":sides[side]["pushes"]+=1
     decisions=wins+losses;low,high=wilson_interval(wins,decisions)
-    return {
-        "scope":"RECOMMENDED_WAGERS_ONLY","record":{"wins":wins,"losses":losses,"pushes":pushes},
-        "decisions":decisions,"hit_rate":rate(wins,losses),
-        "wilson_low_95":round(low,4) if low is not None else None,
-        "wilson_high_95":round(high,4) if high is not None else None,
-        "sample_sufficient":decisions>=MIN_LIVE_DECISIONS,"minimum_sample":MIN_LIVE_DECISIONS,
-        "display_status":"TRACKING" if decisions>=MIN_LIVE_DECISIONS else "PRELIMINARY",
-        "by_side":[{"side":key,**value,"hit_rate":rate(value["wins"],value["losses"])} for key,value in sorted(sides.items())],
-    }
+    return {"scope":"RECOMMENDED_WAGERS_ONLY","record":{"wins":wins,"losses":losses,"pushes":pushes},"decisions":decisions,"hit_rate":rate(wins,losses),"wilson_low_95":round(low,4) if low is not None else None,"wilson_high_95":round(high,4) if high is not None else None,"sample_sufficient":decisions>=MIN_LIVE_DECISIONS,"minimum_sample":MIN_LIVE_DECISIONS,"display_status":"TRACKING" if decisions>=MIN_LIVE_DECISIONS else "PRELIMINARY","by_side":[{"side":k,**v,"hit_rate":rate(v["wins"],v["losses"])} for k,v in sorted(sides.items())]}
 
 
-def spread_pick_outcome(row: dict[str, Any]) -> str | None:
-    pick = str(row.get("spread_pick") or "").strip()
-    spread = num(row.get("market_spread")); away = num(row.get("actual_away_score")); home = num(row.get("actual_home_score"))
-    if not pick or pick.upper() == "PASS" or spread is None or away is None or home is None: return None
-    home_cover = (home + spread) - away
-    if abs(home_cover) < 1e-9: return "PUSH"
-    picked_home = norm(pick) == norm(row.get("home_team"))
-    return "WIN" if (home_cover > 0) == picked_home else "LOSS"
+def spread_pick_outcome(row):
+    pick=str(row.get("spread_pick") or "").strip();spread=num(row.get("market_spread"));away=num(row.get("actual_away_score"));home=num(row.get("actual_home_score"))
+    if not pick or pick.upper()=="PASS" or spread is None or away is None or home is None:return None
+    home_cover=(home+spread)-away
+    if abs(home_cover)<1e-9:return "PUSH"
+    return "WIN" if (home_cover>0)==(norm(pick)==norm(row.get("home_team"))) else "LOSS"
 
 
-def total_pick_outcome(row: dict[str, Any]) -> str | None:
-    pick = str(row.get("total_pick") or "").upper().strip(); line = num(row.get("market_total")); actual = num(row.get("actual_total"))
-    if pick not in {"OVER", "UNDER"} or line is None or actual is None: return None
-    if abs(actual - line) < 1e-9: return "PUSH"
-    return "WIN" if (pick == "OVER" and actual > line) or (pick == "UNDER" and actual < line) else "LOSS"
+def total_pick_outcome(row):
+    pick=str(row.get("total_pick") or "").upper().strip();line=num(row.get("market_total"));actual=num(row.get("actual_total"))
+    if pick not in {"OVER","UNDER"} or line is None or actual is None:return None
+    if abs(actual-line)<1e-9:return "PUSH"
+    return "WIN" if (pick=="OVER" and actual>line) or (pick=="UNDER" and actual<line) else "LOSS"
 
 
-def calibration(data: list[dict[str, Any]], probability_key: str, outcome_fn) -> dict[str, Any]:
-    observations: list[tuple[float, int]] = []
+def calibration(data,probability_key,outcome_fn):
+    observations=[]
     for row in data:
-        if not row.get("graded"): continue
-        probability = num(row.get(probability_key)); outcome = outcome_fn(row)
-        if probability is None or outcome not in {"WIN", "LOSS"}: continue
-        observations.append((max(0.0, min(1.0, probability)), 1 if outcome == "WIN" else 0))
-    brier = round(sum((p-y)**2 for p,y in observations)/len(observations), 4) if observations else None
-    baseline=sum(y for _,y in observations)/len(observations) if observations else None
-    baseline_brier=round(sum((baseline-y)**2 for _,y in observations)/len(observations),4) if observations else None
-    buckets = []
-    for low, high in ((0.50,0.55),(0.55,0.60),(0.60,0.65),(0.65,0.70),(0.70,0.80),(0.80,1.01)):
-        values=[(p,y) for p,y in observations if low <= p < high]
-        if not values: continue
-        n=len(values);wins=sum(y for _,y in values);avg=sum(p for p,_ in values)/n;hit=wins/n
-        lo,hi=wilson_interval(wins,n);shrunk=(wins+2)/(n+4)
-        buckets.append({
-            "label":f"{int(low*100)}-{int(min(high,1.0)*100)}%","samples":n,"wins":wins,
-            "avg_probability":round(avg,4),"hit_rate":round(hit,4),"calibration_gap":round(hit-avg,4),
-            "wilson_low_95":round(lo,4) if lo is not None else None,"wilson_high_95":round(hi,4) if hi is not None else None,
-            "shrunk_empirical_probability":round(shrunk,4),"bucket_ready":n>=MIN_CALIBRATION_BUCKET,
-        })
-    ece=round(sum(b["samples"]*abs(b["calibration_gap"]) for b in buckets)/len(observations),4) if observations else None
-    weighted_gap=round(sum(b["samples"]*b["calibration_gap"] for b in buckets)/len(observations),4) if observations else None
-    ready=len(observations)>=MIN_CALIBRATION_OBSERVATIONS and bool(buckets) and all(b["bucket_ready"] for b in buckets)
-    direction="OVERCONFIDENT" if weighted_gap is not None and weighted_gap < -0.05 else "UNDERCONFIDENT" if weighted_gap is not None and weighted_gap > 0.05 else "WELL_ALIGNED"
-    return {
-        "scope":"ALL_FROZEN_PROBABILITY_FORECASTS","samples":len(observations),"brier_score":brier,
-        "baseline_brier_score":baseline_brier,"brier_skill_vs_constant":round(baseline_brier-brier,4) if brier is not None and baseline_brier is not None else None,
-        "expected_calibration_error":ece,"weighted_calibration_gap":weighted_gap,"diagnosis":direction,
-        "calibration_ready":ready,"status":"READY" if ready else "COLLECTING",
-        "minimum_observations":MIN_CALIBRATION_OBSERVATIONS,"minimum_bucket_sample":MIN_CALIBRATION_BUCKET,
-        "recalibration_policy":"Shrunk empirical bucket probabilities are research-only until readiness gates pass.",
-        "buckets":buckets,
-    }
+        if not row.get("graded"):continue
+        p=num(row.get(probability_key));outcome=outcome_fn(row)
+        if p is None or outcome not in {"WIN","LOSS"}:continue
+        observations.append((max(0.0,min(1.0,p)),1 if outcome=="WIN" else 0))
+    brier=round(sum((p-y)**2 for p,y in observations)/len(observations),4) if observations else None;baseline=sum(y for _,y in observations)/len(observations) if observations else None;baseline_brier=round(sum((baseline-y)**2 for _,y in observations)/len(observations),4) if observations else None
+    buckets=[]
+    for low,high in ((.50,.55),(.55,.60),(.60,.65),(.65,.70),(.70,.80),(.80,1.01)):
+        values=[(p,y) for p,y in observations if low<=p<high]
+        if not values:continue
+        n=len(values);wins=sum(y for _,y in values);avg=sum(p for p,_ in values)/n;hit=wins/n;lo,hi=wilson_interval(wins,n)
+        buckets.append({"label":f"{int(low*100)}-{int(min(high,1.0)*100)}%","samples":n,"wins":wins,"avg_probability":round(avg,4),"hit_rate":round(hit,4),"calibration_gap":round(hit-avg,4),"wilson_low_95":round(lo,4) if lo is not None else None,"wilson_high_95":round(hi,4) if hi is not None else None,"shrunk_empirical_probability":round((wins+2)/(n+4),4),"bucket_ready":n>=MIN_CALIBRATION_BUCKET})
+    ece=round(sum(b["samples"]*abs(b["calibration_gap"]) for b in buckets)/len(observations),4) if observations else None;wg=round(sum(b["samples"]*b["calibration_gap"] for b in buckets)/len(observations),4) if observations else None;ready=len(observations)>=MIN_CALIBRATION_OBSERVATIONS and bool(buckets) and all(b["bucket_ready"] for b in buckets);direction="OVERCONFIDENT" if wg is not None and wg<-.05 else "UNDERCONFIDENT" if wg is not None and wg>.05 else "WELL_ALIGNED"
+    return {"scope":"ALL_FROZEN_PROBABILITY_FORECASTS","samples":len(observations),"brier_score":brier,"baseline_brier_score":baseline_brier,"brier_skill_vs_constant":round(baseline_brier-brier,4) if brier is not None and baseline_brier is not None else None,"expected_calibration_error":ece,"weighted_calibration_gap":wg,"diagnosis":direction,"calibration_ready":ready,"status":"READY" if ready else "COLLECTING","minimum_observations":MIN_CALIBRATION_OBSERVATIONS,"minimum_bucket_sample":MIN_CALIBRATION_BUCKET,"recalibration_policy":"Shrunk empirical bucket probabilities are research-only until readiness gates pass.","buckets":buckets}
 
 
-def edge_buckets(data: list[dict[str, Any]], edge_key: str, outcome_fn) -> list[dict[str, Any]]:
+def edge_buckets(data,edge_key,outcome_fn):
     out=[]
     for low,high in ((0,2.5),(2.5,5),(5,8),(8,12),(12,float("inf"))):
         decisions=[]
         for row in data:
-            if not row.get("graded"): continue
-            edge=num(row.get(edge_key)); result=outcome_fn(row)
-            if edge is None or result not in {"WIN","LOSS","PUSH"}: continue
-            if low <= abs(edge) < high: decisions.append(result)
+            if not row.get("graded"):continue
+            edge=num(row.get(edge_key));result=outcome_fn(row)
+            if edge is None or result not in {"WIN","LOSS","PUSH"}:continue
+            if low<=abs(edge)<high:decisions.append(result)
         if decisions:
-            wins=decisions.count("WIN"); losses=decisions.count("LOSS"); pushes=decisions.count("PUSH")
-            n=wins+losses;lo,hi_ci=wilson_interval(wins,n)
-            out.append({"label":f"{low:g}-{high:g}" if math.isfinite(high) else f"{low:g}+","samples":len(decisions),"wins":wins,"losses":losses,"pushes":pushes,"hit_rate":rate(wins,losses),"wilson_low_95":round(lo,4) if lo is not None else None,"wilson_high_95":round(hi_ci,4) if hi_ci is not None else None,"sample_sufficient":n>=MIN_CALIBRATION_BUCKET})
+            wins=decisions.count("WIN");losses=decisions.count("LOSS");pushes=decisions.count("PUSH");n=wins+losses;lo,hi=wilson_interval(wins,n)
+            out.append({"label":f"{low:g}-{high:g}" if math.isfinite(high) else f"{low:g}+","samples":len(decisions),"wins":wins,"losses":losses,"pushes":pushes,"hit_rate":rate(wins,losses),"wilson_low_95":round(lo,4) if lo is not None else None,"wilson_high_95":round(hi,4) if hi is not None else None,"sample_sufficient":n>=MIN_CALIBRATION_BUCKET})
     return out
 
 
-def mean(values: list[float]) -> float | None:
-    return round(sum(values)/len(values),2) if values else None
+def mean(values):return round(sum(values)/len(values),2) if values else None
 
-
-def row_model_version(row: dict[str, Any]) -> str:
+def row_model_version(row):
     stamped=str(row.get("model_version") or "").strip()
-    if stamped: return stamped
+    if stamped:return stamped
     source=str(row.get("total_source") or row.get("spread_source") or "").lower()
-    if "standings_strength" in source: return LEGACY_MODEL_VERSION
+    if "standings_strength" in source:return LEGACY_MODEL_VERSION
     return "legacy_unversioned"
 
 
-def performance_slice(data: list[dict[str, Any]]) -> dict[str, Any]:
+def performance_slice(data):
     graded=[r for r in data if r.get("graded")]
-    margin_abs=[]; total_abs=[]; margin_signed=[]; total_signed=[]; away_score_abs=[]; home_score_abs=[]; winner_correct=0; winner_decisions=0; enriched=[]
+    now=datetime.now(timezone.utc)
+    awaiting=[r for r in data if not r.get("graded") and (parse_time(r.get("start_time")) is None or parse_time(r.get("start_time"))>now)]
+    overdue=[r for r in data if not r.get("graded") and parse_time(r.get("start_time")) is not None and parse_time(r.get("start_time"))<=now]
+    grade_eligible=len(graded)+len(overdue)
+    margin_abs=[];total_abs=[];margin_signed=[];total_signed=[];away_score_abs=[];home_score_abs=[];winner_correct=0;winner_decisions=0;enriched=[]
     for row in graded:
-        item=dict(row)
-        pm=num(row.get("projected_margin")); am=num(row.get("actual_margin")); pt=num(row.get("projected_total")); at=num(row.get("actual_total")); pa=num(row.get("projected_away_score")); ph=num(row.get("projected_home_score")); aa=num(row.get("actual_away_score")); ah=num(row.get("actual_home_score"))
-        if pm is not None and am is not None:
-            signed=pm-am; margin_signed.append(signed); margin_abs.append(abs(signed)); item["margin_bias"]=round(signed,2)
-        if pt is not None and at is not None:
-            signed=pt-at; total_signed.append(signed); total_abs.append(abs(signed)); item["total_bias"]=round(signed,2)
-        if pa is not None and aa is not None: away_score_abs.append(abs(pa-aa))
-        if ph is not None and ah is not None: home_score_abs.append(abs(ph-ah))
-        predicted_winner=row.get("home_team") if pm is not None and pm>0 else row.get("away_team") if pm is not None and pm<0 else None
-        actual_winner=row.get("home_team") if am is not None and am>0 else row.get("away_team") if am is not None and am<0 else None
-        if predicted_winner and actual_winner:
-            winner_decisions+=1; correct=norm(predicted_winner)==norm(actual_winner); winner_correct+=int(correct); item.update({"predicted_winner":predicted_winner,"actual_winner":actual_winner,"winner_result":"WIN" if correct else "LOSS"})
-        item["spread_pick_result"]=spread_pick_outcome(row); item["total_pick_result"]=total_pick_outcome(row); enriched.append(item)
-    spread=market_summary(data,"spread_result","spread_recommendation"); total=market_summary(data,"total_result","total_recommendation")
-    over_games=under_games=0
+        item=dict(row);pm=num(row.get("projected_margin"));am=num(row.get("actual_margin"));pt=num(row.get("projected_total"));at=num(row.get("actual_total"));pa=num(row.get("projected_away_score"));ph=num(row.get("projected_home_score"));aa=num(row.get("actual_away_score"));ah=num(row.get("actual_home_score"))
+        if pm is not None and am is not None:signed=pm-am;margin_signed.append(signed);margin_abs.append(abs(signed));item["margin_bias"]=round(signed,2)
+        if pt is not None and at is not None:signed=pt-at;total_signed.append(signed);total_abs.append(abs(signed));item["total_bias"]=round(signed,2)
+        if pa is not None and aa is not None:away_score_abs.append(abs(pa-aa))
+        if ph is not None and ah is not None:home_score_abs.append(abs(ph-ah))
+        predicted=row.get("home_team") if pm is not None and pm>0 else row.get("away_team") if pm is not None and pm<0 else None;actual=row.get("home_team") if am is not None and am>0 else row.get("away_team") if am is not None and am<0 else None
+        if predicted and actual:winner_decisions+=1;correct=norm(predicted)==norm(actual);winner_correct+=int(correct);item.update({"predicted_winner":predicted,"actual_winner":actual,"winner_result":"WIN" if correct else "LOSS"})
+        item["spread_pick_result"]=spread_pick_outcome(row);item["total_pick_result"]=total_pick_outcome(row);enriched.append(item)
+    spread=market_summary(data,"spread_result","spread_recommendation");total=market_summary(data,"total_result","total_recommendation");over_games=under_games=0
     for row in graded:
-        actual=num(row.get("actual_total")); market=num(row.get("market_total"))
-        if actual is None or market is None: continue
-        over_games += actual>market; under_games += actual<market
-    return {
-        "summary":{
-            "archived_games":len(data),"graded_games":len(graded),"pending_games":sum(not r.get("graded") for r in data),"grade_coverage":round(len(graded)/len(data),4) if data else None,
-            "winner_accuracy":round(winner_correct/winner_decisions,4) if winner_decisions else None,"winner_correct":winner_correct,"winner_decisions":winner_decisions,
-            "avg_margin_error":mean(margin_abs),"avg_total_error":mean(total_abs),"margin_bias":mean(margin_signed),"total_bias":mean(total_signed),"away_score_mae":mean(away_score_abs),"home_score_mae":mean(home_score_abs),"market_totals_over":over_games,"market_totals_under":under_games,
-        },
-        "spread":{**spread,"calibration":calibration(data,"spread_probability",spread_pick_outcome),"edge_buckets":edge_buckets(data,"spread_edge",spread_pick_outcome)},
-        "total":{**total,"calibration":calibration(data,"total_probability",total_pick_outcome),"edge_buckets":edge_buckets(data,"total_edge",total_pick_outcome)},
-        "recent_games":sorted(enriched,key=lambda r:str(r.get("start_time") or r.get("target_date") or ""),reverse=True)[:100],
-        "largest_total_misses":sorted(enriched,key=lambda r:num(r.get("total_error")) or -1,reverse=True)[:20],
-        "largest_margin_misses":sorted(enriched,key=lambda r:num(r.get("margin_error")) or -1,reverse=True)[:20],
-    }
+        actual=num(row.get("actual_total"));market=num(row.get("market_total"))
+        if actual is None or market is None:continue
+        over_games+=actual>market;under_games+=actual<market
+    return {"summary":{"archived_games":len(data),"graded_games":len(graded),"pending_games":len(awaiting)+len(overdue),"awaiting_results_games":len(awaiting),"overdue_ungraded_games":len(overdue),"grade_eligible_games":grade_eligible,"grade_coverage":round(len(graded)/grade_eligible,4) if grade_eligible else None,"coverage_semantics":"graded / games whose scheduled start time has passed; future games are Awaiting Results and do not reduce coverage","winner_accuracy":round(winner_correct/winner_decisions,4) if winner_decisions else None,"winner_correct":winner_correct,"winner_decisions":winner_decisions,"avg_margin_error":mean(margin_abs),"avg_total_error":mean(total_abs),"margin_bias":mean(margin_signed),"total_bias":mean(total_signed),"away_score_mae":mean(away_score_abs),"home_score_mae":mean(home_score_abs),"market_totals_over":over_games,"market_totals_under":under_games},"spread":{**spread,"calibration":calibration(data,"spread_probability",spread_pick_outcome),"edge_buckets":edge_buckets(data,"spread_edge",spread_pick_outcome)},"total":{**total,"calibration":calibration(data,"total_probability",total_pick_outcome),"edge_buckets":edge_buckets(data,"total_edge",total_pick_outcome)},"recent_games":sorted(enriched,key=lambda r:str(r.get("start_time") or r.get("target_date") or ""),reverse=True)[:100],"largest_total_misses":sorted(enriched,key=lambda r:num(r.get("total_error")) or -1,reverse=True)[:20],"largest_margin_misses":sorted(enriched,key=lambda r:num(r.get("margin_error")) or -1,reverse=True)[:20]}
 
 
-def build() -> dict[str, Any]:
-    raw = rows(); data, excluded = canonicalize(raw)
-    for row in data: row["model_version"] = row_model_version(row)
-    current=[r for r in data if r["model_version"]==CURRENT_MODEL_VERSION]
-    legacy=[r for r in data if r["model_version"]!=CURRENT_MODEL_VERSION]
-    current_metrics=performance_slice(current); legacy_metrics=performance_slice(legacy); all_metrics=performance_slice(data)
-    excluded_counts=defaultdict(int)
-    for row in excluded: excluded_counts[row["reason"]]+=1
+def build():
+    raw=rows();data,excluded=canonicalize(raw)
+    for row in data:row["model_version"]=row_model_version(row)
+    current=[r for r in data if r["model_version"]==CURRENT_MODEL_VERSION];legacy=[r for r in data if r["model_version"]!=CURRENT_MODEL_VERSION];current_metrics=performance_slice(current);legacy_metrics=performance_slice(legacy);all_metrics=performance_slice(data);excluded_counts=defaultdict(int)
+    for row in excluded:excluded_counts[row["reason"]]+=1
     versions=defaultdict(lambda:{"archived":0,"graded":0})
-    for row in data:
-        version=versions[row["model_version"]];version["archived"]+=1;version["graded"]+=int(bool(row.get("graded")))
-    report={
-        "schema_version":"game-performance-calibration-v4","generated_at_utc":datetime.now(timezone.utc).isoformat(),"status":"ok",
-        "current_model_version":CURRENT_MODEL_VERSION,
-        **current_metrics,
-        "result_history":all_metrics["recent_games"],
-        "archive_summary":{"raw_ledger_rows":len(raw),"canonical_rows":len(data),"excluded_rows":len(excluded),"excluded_by_reason":dict(sorted(excluded_counts.items())),"by_model_version":[{"model_version":k,**v} for k,v in sorted(versions.items())]},
-        "legacy_reference":{"label":"Legacy model — historical reference only","included_in_current_calibration":False,"model_versions":sorted({r["model_version"] for r in legacy}),**legacy_metrics},
-        "excluded_snapshots":excluded[:200],
-        "policy":{"source":"frozen pregame game prediction ledger","chronology_required":True,"model_version_required_for_future_rows":True,"current_calibration_model_version":CURRENT_MODEL_VERSION,"legacy_rows_excluded_from_current_metrics":True,"missing_start_time_excluded":True,"post_tipoff_snapshots_excluded":True,"duplicate_event_snapshots_keep_latest_pregame":True,"recommended_performance_scope":"stored non-PASS recommendation results only within current model version","forecast_calibration_scope":"current-model frozen probability forecasts only","pass_rows_retained":True,"pass_rows_not_counted_as_betting_wins":True,"calibration_uses_frozen_pick_probability":True,"shrunk_empirical_probabilities_research_only":True,"closing_line_value":"not reported because verified closing lines are not frozen in this ledger","auto_model_changes":False},
-    }
-    for path in OUTPUTS:
-        path.parent.mkdir(parents=True,exist_ok=True); json.dump(report,path.open("w",encoding="utf-8"),indent=2,allow_nan=False)
-    print(json.dumps({"current_model":report["summary"],"legacy_reference":legacy_metrics["summary"]},indent=2)); return report
+    for row in data:version=versions[row["model_version"]];version["archived"]+=1;version["graded"]+=int(bool(row.get("graded")))
+    report={"schema_version":"game-performance-calibration-v5","generated_at_utc":datetime.now(timezone.utc).isoformat(),"status":"ok","current_model_version":CURRENT_MODEL_VERSION,**current_metrics,"result_history":all_metrics["recent_games"],"archive_summary":{"raw_ledger_rows":len(raw),"canonical_rows":len(data),"excluded_rows":len(excluded),"excluded_by_reason":dict(sorted(excluded_counts.items())),"by_model_version":[{"model_version":k,**v} for k,v in sorted(versions.items())]},"legacy_reference":{"label":"Legacy model — historical reference only","included_in_current_calibration":False,"model_versions":sorted({r["model_version"] for r in legacy}),**legacy_metrics},"excluded_snapshots":excluded[:200],"policy":{"source":"frozen pregame game prediction ledger","chronology_required":True,"model_version_required_for_future_rows":True,"current_calibration_model_version":CURRENT_MODEL_VERSION,"legacy_rows_excluded_from_current_metrics":True,"missing_start_time_excluded":True,"post_tipoff_snapshots_excluded":True,"duplicate_event_snapshots_keep_latest_pregame":True,"grade_coverage_excludes_future_games":True,"future_ungraded_status":"AWAITING_RESULTS","overdue_ungraded_games_reduce_coverage":True,"recommended_performance_scope":"stored non-PASS recommendation results only within current model version","forecast_calibration_scope":"current-model frozen probability forecasts only","pass_rows_retained":True,"pass_rows_not_counted_as_betting_wins":True,"calibration_uses_frozen_pick_probability":True,"shrunk_empirical_probabilities_research_only":True,"closing_line_value":"not reported because verified closing lines are not frozen in this ledger","auto_model_changes":False}}
+    for path in OUTPUTS:path.parent.mkdir(parents=True,exist_ok=True);json.dump(report,path.open("w",encoding="utf-8"),indent=2,allow_nan=False)
+    print(json.dumps({"current_model":report["summary"],"legacy_reference":legacy_metrics["summary"]},indent=2));return report
 
-
-if __name__=="__main__": build()
+if __name__=="__main__":build()
