@@ -32,14 +32,26 @@ STATUS_VALUES = {"OUT", "DOUBTFUL", "QUESTIONABLE", "PROBABLE"}
 
 
 def candidate_urls(target_date: str) -> list[str]:
+    """Return newest plausible official reports for a target slate.
+
+    The WNBA publishes tomorrow's injury report on the prior calendar day.  For
+    a future slate we therefore start at *now* instead of trying only report
+    filenames stamped with the future game date.  Keep a one-day lookback so a
+    late-night/overnight run can still discover the pregame report.
+    """
     day = datetime.strptime(target_date, "%Y-%m-%d").date()
     now_et = datetime.now(ET)
-    if day == now_et.date():
+    if day > now_et.date():
         minute = (now_et.minute // 15) * 15
         cursor = now_et.replace(minute=minute, second=0, microsecond=0)
+        floor = datetime.combine(day - timedelta(days=1), datetime.min.time(), tzinfo=ET)
+    elif day == now_et.date():
+        minute = (now_et.minute // 15) * 15
+        cursor = now_et.replace(minute=minute, second=0, microsecond=0)
+        floor = datetime.combine(day - timedelta(days=1), datetime.min.time(), tzinfo=ET)
     else:
         cursor = datetime.combine(day, datetime.max.time(), tzinfo=ET).replace(hour=23, minute=45, second=0, microsecond=0)
-    floor = datetime.combine(day, datetime.min.time(), tzinfo=ET)
+        floor = datetime.combine(day, datetime.min.time(), tzinfo=ET)
     urls = []
     while cursor >= floor:
         stamp = cursor.strftime("%Y-%m-%d_%I_%M%p")
