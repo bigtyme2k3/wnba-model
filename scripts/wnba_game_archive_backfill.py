@@ -87,30 +87,16 @@ def score_index():
 
 
 def find_actual(exact, by_matchup, target_date: str, away: str, home: str):
+    """Return only a final recorded on the prediction's exact slate date.
+
+    A repeated matchup on an adjacent date is not sufficient evidence that a
+    prediction and final belong to the same game. UTC rollover errors must be
+    repaired when scores are ingested, not guessed through while grading.
+    """
     actual = exact.get((target_date, away, home))
     if actual:
         return actual, 'exact_date'
-    target = parse_date(target_date)
-    if target is None:
-        return None, None
-    candidates = []
-    for row in by_matchup.get((away, home), []):
-        actual_date = parse_date(row.get('game_date'))
-        if actual_date is None:
-            continue
-        delta = abs((actual_date - target).days)
-        if delta <= 1:
-            candidates.append((delta, actual_date, row))
-    if not candidates:
-        return None, None
-    candidates.sort(key=lambda item: (item[0], item[1]))
-    best_delta = candidates[0][0]
-    best = [item for item in candidates if item[0] == best_delta]
-    # Equivalent duplicates were removed above. Multiple best rows now mean
-    # genuinely conflicting finals, which must never be guessed through.
-    if len(best) != 1:
-        return None, None
-    return best[0][2], 'adjacent_date' if best_delta else 'exact_date'
+    return None, None
 
 
 def unresolved_rows(rows, exact, by_matchup):

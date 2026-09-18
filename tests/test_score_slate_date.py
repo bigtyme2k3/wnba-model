@@ -16,6 +16,7 @@ from scrape_scores import (
     parse_scoreboard,
     parse_sportsdataverse_schedule,
 )
+from scripts.wnba_game_archive_backfill import find_actual
 
 
 class ScoreSlateDateTests(unittest.TestCase):
@@ -128,6 +129,28 @@ class ScoreSlateDateTests(unittest.TestCase):
         self.assertEqual(frame.iloc[0]["actual_total"], 191)
         self.assertTrue(frame.iloc[0]["is_final"])
         self.assertEqual(frame.iloc[0]["source"], "sportsdataverse_espn_schedule_release")
+
+    def test_game_backfill_rejects_adjacent_date_match(self) -> None:
+        adjacent = {
+            "game_date": "2026-09-18",
+            "away_team": "Las Vegas Aces",
+            "home_team": "Seattle Storm",
+            "away_score": "114",
+            "home_score": "77",
+        }
+        exact = {}
+        by_matchup = {("las vegas aces", "seattle storm"): [adjacent]}
+
+        actual, mode = find_actual(
+            exact,
+            by_matchup,
+            "2026-09-17",
+            "las vegas aces",
+            "seattle storm",
+        )
+
+        self.assertIsNone(actual)
+        self.assertIsNone(mode)
 
 
 if __name__ == "__main__":
