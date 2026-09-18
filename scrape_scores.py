@@ -27,6 +27,7 @@ OUT_DIR      = "data/raw"
 ESPN_BASE    = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba"
 BOARD_URL    = f"{ESPN_BASE}/scoreboard"
 SUMMARY_URL  = f"{ESPN_BASE}/summary"
+WNBA_SCHEDULE_URL = "https://cdn.wnba.com/static/json/staticData/scheduleLeagueV2.json"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -49,6 +50,75 @@ def fetch_game_summary(game_id: str) -> dict:
     resp = requests.get(SUMMARY_URL, headers=HEADERS, params={"event": game_id}, timeout=15)
     resp.raise_for_status()
     return resp.json()
+
+
+def fetch_official_schedule() -> dict:
+    """Fetch the WNBA's public season schedule and final-score feed."""
+    resp = requests.get(WNBA_SCHEDULE_URL, headers=HEADERS, timeout=30)
+    resp.raise_for_status()
+    return resp.json()
+
+
+def official_game_date(value) -> str:
+    text = str(value or "").strip()
+    for fmt in ("%m/%d/%Y %H:%M:%S", "%m/%d/%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(text[:19] if "%H" in fmt else text[:10], fmt).date().isoformat()
+        except ValueError:
+            continue
+    return ""
+
+
+def official_team_name(team: dict) -> str:
+    city = str(team.get("teamCity") or "").strip()
+    name = str(team.get("teamName") or team.get("teamNickname") or "").strip()
+    full = " ".join(part for part in (city, name) if part)
+    return full or str(team.get("teamTricode") or "").strip()
+
+
+def parse_official_schedule(data: dict, target_date: str) -> pd.DataFrame:
+    """Normalize final scores from the official WNBA CDN schedule payload."""
+    schedule = data.get("leagueSchedule") or {}
+    rows = []
+    for date_block in schedule.get("gameDates") or []:
+        block_date = official_game_date(date_block.get("gameDate"))
+        for game in date_block.get("games") or []:
+            game_date = block_date or official_game_date(game.get("gameDateTimeEst"))
+            if game_date != target_date:
+                continue
+            away = game.get("awayTeam") or {}
+            home = game.get("homeTeam") or {}
+            status_text = str(game.get("gameStatusText") or "").strip()
+            status_code = game.get("gameStatus")
+            is_final = str(status_code) == "3" or status_text.upper().startswith("FINAL")
+            away_score = away.get("score")
+            home_score = home.get("score")
+            try:
+                away_score = int(away_score) if away_score not in (None, "") else None
+                home_score = int(home_score) if home_score not in (None, "") else None
+            except (TypeError, ValueError):
+                away_score = home_score = None
+            rows.append({
+                "game_date": target_date,
+                "event_start_utc": game.get("gameDateTimeUTC") or "",
+                "game_id": str(game.get("gameId") or ""),
+                "status": "STATUS_FINAL" if is_final else status_text or f"STATUS_{status_code}",
+                "is_final": is_final,
+                "in_progress": str(status_code) == "2",
+                "home_team": official_team_name(home),
+                "away_team": official_team_name(away),
+                "home_score": home_score,
+                "away_score": away_score,
+                "actual_spread": home_score - away_score if home_score is not None and away_score is not None else None,
+                "actual_total": home_score + away_score if home_score is not None and away_score is not None else None,
+                "posted_spread": "",
+                "posted_total": None,
+                "venue": str((game.get("arena") or {}).get("arenaName") or ""),
+                "attendance": None,
+                "source": "wnba_official_schedule_cdn",
+                "scraped_at": datetime.now().isoformat(),
+            })
+    return pd.DataFrame(rows)
 
 
 def parse_scoreboard(data: dict, target_date: str) -> pd.DataFrame:
@@ -115,6 +185,7 @@ def parse_scoreboard(data: dict, target_date: str) -> pd.DataFrame:
             "posted_total": over_under,
             "venue":        comps.get("venue",{}).get("fullName",""),
             "attendance":   comps.get("attendance"),
+            "source":       "espn_scoreboard",
             "scraped_at":   datetime.now().isoformat(),
         }
         rows.append(row)
@@ -198,8 +269,15 @@ def scrape_date(target_date: str, out_dir: str, include_boxscores: bool = False)
     os.makedirs(out_dir, exist_ok=True)
 
     print(f"Fetching ESPN WNBA scores — {target_date}")
-    data = fetch_scoreboard(target_date)
-    df   = parse_scoreboard(data, target_date)
+    try:
+        data = fetch_scoreboard(target_date)
+        df = parse_scoreboard(data, target_date)
+        if df.empty:
+            print("  ESPN scoreboard returned no events; checking official WNBA CDN.")
+            df = parse_official_schedule(fetch_official_schedule(), target_date)
+    except requests.RequestException as exc:
+        print(f"  ESPN scoreboard unavailable ({type(exc).__name__}); trying official WNBA CDN.")
+        df = parse_official_schedule(fetch_official_schedule(), target_date)
 
     if df.empty:
         print("  No games found for this date.")

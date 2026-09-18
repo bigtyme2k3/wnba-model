@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from scrape_scores import parse_box_score, parse_scoreboard
+from scrape_scores import parse_box_score, parse_official_schedule, parse_scoreboard
 
 
 class ScoreSlateDateTests(unittest.TestCase):
@@ -51,6 +51,33 @@ class ScoreSlateDateTests(unittest.TestCase):
 
         self.assertEqual(frame.iloc[0]["game_date"], "2026-09-17")
         self.assertEqual(frame.iloc[0]["event_start_utc"], "2026-09-18T02:00:00Z")
+
+    def test_official_wnba_schedule_normalizes_final_score(self) -> None:
+        payload = {
+            "leagueSchedule": {
+                "gameDates": [{
+                    "gameDate": "09/17/2026 00:00:00",
+                    "games": [{
+                        "gameId": "1022600305",
+                        "gameStatus": 3,
+                        "gameStatusText": "Final",
+                        "gameDateTimeUTC": "2026-09-18T02:00:00Z",
+                        "awayTeam": {"teamCity": "Las Vegas", "teamName": "Aces", "score": "114"},
+                        "homeTeam": {"teamCity": "Seattle", "teamName": "Storm", "score": "77"},
+                    }],
+                }]
+            }
+        }
+
+        frame = parse_official_schedule(payload, "2026-09-17")
+
+        self.assertEqual(len(frame), 1)
+        self.assertEqual(frame.iloc[0]["away_team"], "Las Vegas Aces")
+        self.assertEqual(frame.iloc[0]["home_team"], "Seattle Storm")
+        self.assertEqual(frame.iloc[0]["away_score"], 114)
+        self.assertEqual(frame.iloc[0]["home_score"], 77)
+        self.assertTrue(frame.iloc[0]["is_final"])
+        self.assertEqual(frame.iloc[0]["source"], "wnba_official_schedule_cdn")
 
 
 if __name__ == "__main__":
