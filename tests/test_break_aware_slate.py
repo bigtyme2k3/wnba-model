@@ -176,6 +176,8 @@ class BreakAwareSlateTests(unittest.TestCase):
         self.assertIn("python wnba_game_performance.py", workflow)
         self.assertIn("'data/history/wnba_game_predictions.jsonl'", workflow)
         self.assertIn("Incomplete game grading", workflow)
+        self.assertIn("actions: write", workflow)
+        self.assertIn("gh workflow run deploy_wnba_dashboard.yml --ref main", workflow)
 
     def test_automatic_alt_recovery_pauses_external_feeds_during_break(self) -> None:
         diagnostics = {
