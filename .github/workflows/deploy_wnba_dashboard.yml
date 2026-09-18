@@ -4,6 +4,11 @@ name: Deploy WNBA Dashboard
 
 on:
   workflow_dispatch:
+  # Daily postgame recovery pass. 10:15 UTC is 6:15 AM Eastern during the WNBA season.
+  # The deploy already owns archive backfill + Game Performance rendering, so reuse it
+  # instead of introducing another grading workflow.
+  schedule:
+    - cron: '15 10 * * *'
   push:
     branches: [main]
     paths:
@@ -359,14 +364,27 @@ jobs:
           print({'status':'PASS','sprint':19,'mode':'results-only' if closed else 'live','dashboard_mode':os.environ.get('DASHBOARD_MODE'),'target':target,'visible_slate_dates':sorted(visible),'stale_slate_dates':stale,'deployment_safe':True,'alt_source_current':alt_current,'alt_source_rows':len(alt.get('rows') or []) if alt_current else 0,'alt_renderer_eligible_rows':len(eligible),'results_state':a6.get('results_state'),'target_history_records':a6.get('target_history_records'),'target_edge_records':a6.get('target_edge_records')})
           PY
 
-      - name: Persist Sprint 19 M06 prediction history
+      - name: Persist grading and Sprint 19 history
         if: env.MAINTENANCE_BREAK != 'true'
         run: |
           set -e
-          if git diff --quiet -- data/history; then echo 'M06 history already persisted; no commit needed.'; exit 0; fi
-          git config user.name 'WNBA Sprint 19 M06 Bot'
+          GRADING_OUTPUTS=(
+            data/history/wnba_game_predictions.jsonl
+            data/dashboard/wnba_game_predictions_ledger.json
+            data/warehouse/wnba_game_predictions_ledger.json
+            data/dashboard/wnba_game_performance.json
+            data/warehouse/wnba_game_performance.json
+            data/dashboard/wnba_game_archive_backfill_audit.json
+          )
+          CHANGED=false
+          if ! git diff --quiet -- data/history; then CHANGED=true; fi
+          for file in "${GRADING_OUTPUTS[@]}"; do
+            if [ -f "$file" ] && ! git diff --quiet -- "$file"; then CHANGED=true; fi
+          done
+          if [ "$CHANGED" != 'true' ]; then echo 'Prediction history and grading artifacts already persisted; no commit needed.'; exit 0; fi
+          git config user.name 'WNBA Results Grading Bot'
           git config user.email 'actions@github.com'
-          bash scripts/atomic_generated_push.sh "Archive WNBA Sprint 19 M06 predictions for ${TARGET}" 'data/history'
+          bash scripts/atomic_generated_push.sh "Persist WNBA results grading for ${TARGET}" data/history "${GRADING_OUTPUTS[@]}"
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
