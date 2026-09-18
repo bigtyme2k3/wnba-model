@@ -165,13 +165,22 @@ jobs:
               })
               raise SystemExit(0)
           current = w.get('target_date')==target and s.get('target_date')==target
-          if not current and os.environ.get('PREPARED_UPCOMING') != 'true':
-              raise SystemExit(f'ALT persisted source target mismatch: warehouse={w.get("target_date")} streaks={s.get("target_date")} target={target}')
+          # ALT is an independently owned optional market surface.  Never let a
+          # stale ALT snapshot block a verified current standard slate from
+          # deploying.  Fail closed for ALT itself and expose that state to all
+          # later steps; standard Games/Matchups/Props continue normally.
+          alt_state='CURRENT' if current else 'PAUSED_STALE_SOURCE'
+          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as env:
+              env.write(f"ALT_CURRENT_SOURCE={'true' if current else 'false'}\\n")
+              env.write(f"ALT_SOURCE_STATE={alt_state}\\n")
           print({
-              'status':'PASS' if current else 'UPCOMING_STANDARD_PROPS_ONLY',
+              'status':'PASS' if current else 'ALT_PAUSED_STANDARD_SLATE_CONTINUES',
               'mode':'persisted-read-only',
               'target':target,
+              'warehouse_target':w.get('target_date'),
+              'streaks_target':s.get('target_date'),
               'alt_current_source':current,
+              'alt_source_state':alt_state,
               'stale_alt_actionable':False,
               'alt_markets':int((w.get('summary') or {}).get('markets') or 0) if current else 0,
               'active_alt_streak_rows':int((s.get('summary') or {}).get('alternate_rows') or 0) if current else 0,
