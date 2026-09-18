@@ -124,7 +124,7 @@ def main() -> None:
         "PREPARED_UPCOMING": "prepared-upcoming deployment gate",
         "DASHBOARD_MODE": "dashboard mode evidence",
         "ALT_CURRENT_SOURCE": "current ALT source gate",
-        "UPCOMING_STANDARD_PROPS_ONLY": "standard-props-only upcoming state",
+        "ALT_PAUSED_STANDARD_SLATE_CONTINUES": "standard-slate ALT-paused state",
         "actionable_injury_unverified_props": "unverified injury actionability assertion",
     }
     missing_upcoming_contract = [label for marker, label in upcoming_contract.items() if marker not in deploy_text]
