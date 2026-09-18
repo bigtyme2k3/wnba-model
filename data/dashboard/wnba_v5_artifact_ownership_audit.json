@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-18T22:06:02.438099+00:00",
+  "generated_at": "2026-09-18T22:47:17.126041+00:00",
   "status": "PASS",
   "mode": "contract_enforced",
-  "contract_mode": "maintenance",
+  "contract_mode": "live",
   "contract_schema_version": 1,
   "contract_path": "config/v5_artifact_ownership.json",
   "scope": ".github/workflows only; .github/workflows-archive excluded",
@@ -12,10 +12,22 @@
   "schedule_violation_count": 0,
   "violation_count": 0,
   "violations": [],
-  "scheduled_workflow_count": 0,
+  "scheduled_workflow_count": 1,
   "scheduled_paid_api_risk_count": 0,
-  "scheduled_live_pipeline_risk_count": 0,
-  "scheduled_workflows": [],
+  "scheduled_live_pipeline_risk_count": 1,
+  "scheduled_workflows": [
+    {
+      "workflow": ".github/workflows/wnba-v5-daily-orchestrator.yml",
+      "name": "WNBA V5 Daily Orchestrator",
+      "crons": [
+        "15 10 * * *",
+        "15 16 * * *"
+      ],
+      "cron_count": 2,
+      "paid_api_risk": false,
+      "live_pipeline_risk": true
+    }
+  ],
   "artifacts": [
     {
       "domain": "current_slate",
