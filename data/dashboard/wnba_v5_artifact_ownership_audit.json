@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T19:27:38.190490+00:00",
+  "generated_at": "2026-09-18T21:29:39.441905+00:00",
   "status": "PASS",
   "mode": "contract_enforced",
   "contract_mode": "maintenance",
@@ -34,7 +34,7 @@
         ".github/workflows/wnba_daily_canonical_build.yml"
       ],
       "unexpected_publish_workflows": [],
-      "reference_count": 15,
+      "reference_count": 16,
       "observed_publish_workflow_count": 1,
       "checks": {
         "writer_workflow_exists": true,
@@ -1047,7 +1047,15 @@
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 87,
+      "line": 91,
+      "publish_context": false,
+      "snippet": "payload=json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8'))"
+    },
+    {
+      "domain": "current_slate",
+      "artifact": "data/dashboard/wnba_master.json",
+      "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "line": 106,
       "publish_context": false,
       "snippet": "'master':'data/dashboard/wnba_master.json',"
     },
@@ -1055,7 +1063,7 @@
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 161,
+      "line": 180,
       "publish_context": false,
       "snippet": "target=os.environ['TARGET']; master=Path('data/dashboard/wnba_master.json')"
     },
@@ -1063,7 +1071,7 @@
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 176,
+      "line": 195,
       "publish_context": false,
       "snippet": "data/dashboard/wnba_master.json"
     },
@@ -1071,7 +1079,7 @@
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 247,
+      "line": 266,
       "publish_context": false,
       "snippet": "PUBLISHED_TARGET=$(git show \"origin/main:data/dashboard/wnba_master.json\" | python -c \"import json,sys; print(str(json.load(sys.stdin).get('target_date') or '')[:10])\")"
     },
@@ -1079,7 +1087,7 @@
       "domain": "standard_props",
       "artifact": "data/dashboard/wnba_player_props.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 88,
+      "line": 107,
       "publish_context": false,
       "snippet": "'standard_props':'data/dashboard/wnba_player_props.json',"
     },
@@ -1087,7 +1095,7 @@
       "domain": "standard_props",
       "artifact": "data/dashboard/wnba_player_props.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 177,
+      "line": 196,
       "publish_context": false,
       "snippet": "data/dashboard/wnba_player_props.json"
     },
@@ -1095,7 +1103,7 @@
       "domain": "injury_context",
       "artifact": "data/dashboard/wnba_injury_intelligence.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 91,
+      "line": 110,
       "publish_context": false,
       "snippet": "'injury':'data/dashboard/wnba_injury_intelligence.json',"
     },
@@ -1103,7 +1111,7 @@
       "domain": "injury_context",
       "artifact": "data/dashboard/wnba_injury_intelligence.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 181,
+      "line": 200,
       "publish_context": false,
       "snippet": "data/dashboard/wnba_injury_intelligence.json"
     },
@@ -1111,7 +1119,7 @@
       "domain": "injury_context",
       "artifact": "data/warehouse/wnba_injury_intelligence.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 182,
+      "line": 201,
       "publish_context": false,
       "snippet": "data/warehouse/wnba_injury_intelligence.json"
     },
@@ -1119,7 +1127,7 @@
       "domain": "game_predictions",
       "artifact": "data/dashboard/wnba_sprint2_predictions.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 90,
+      "line": 109,
       "publish_context": false,
       "snippet": "'base_predictions':'data/dashboard/wnba_sprint2_predictions.json',"
     },
@@ -1127,7 +1135,7 @@
       "domain": "game_predictions",
       "artifact": "data/dashboard/wnba_sprint2_predictions.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 180,
+      "line": 199,
       "publish_context": false,
       "snippet": "data/dashboard/wnba_sprint2_predictions.json"
     },
@@ -1135,7 +1143,7 @@
       "domain": "game_predictions",
       "artifact": "data/dashboard/wnba_sprint2_phase2.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 92,
+      "line": 111,
       "publish_context": false,
       "snippet": "'phase2':'data/dashboard/wnba_sprint2_phase2.json',"
     },
@@ -1143,7 +1151,7 @@
       "domain": "game_predictions",
       "artifact": "data/dashboard/wnba_sprint2_phase2.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 183,
+      "line": 202,
       "publish_context": false,
       "snippet": "data/dashboard/wnba_sprint2_phase2.json"
     },
@@ -1151,7 +1159,7 @@
       "domain": "m02_predictions",
       "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 93,
+      "line": 112,
       "publish_context": false,
       "snippet": "'m02':'data/dashboard/wnba_s19_m02_predictions.json',"
     },
@@ -1159,7 +1167,7 @@
       "domain": "m02_predictions",
       "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 184,
+      "line": 203,
       "publish_context": false,
       "snippet": "data/dashboard/wnba_s19_m02_predictions.json"
     },
@@ -1167,7 +1175,7 @@
       "domain": "m02_predictions",
       "artifact": "data/dashboard/wnba_s19_m02_prediction_audit.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 94,
+      "line": 113,
       "publish_context": false,
       "snippet": "'m02_audit':'data/dashboard/wnba_s19_m02_prediction_audit.json',"
     },
@@ -1175,7 +1183,7 @@
       "domain": "m02_predictions",
       "artifact": "data/dashboard/wnba_s19_m02_prediction_audit.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 185,
+      "line": 204,
       "publish_context": false,
       "snippet": "data/dashboard/wnba_s19_m02_prediction_audit.json"
     },
@@ -1183,7 +1191,7 @@
       "domain": "forward_ledger",
       "artifact": "data/history/wnba_v5_forward_predictions.jsonl",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 187,
+      "line": 206,
       "publish_context": false,
       "snippet": "data/history/wnba_v5_forward_predictions.jsonl"
     },
@@ -1191,7 +1199,7 @@
       "domain": "results",
       "artifact": "data/history/wnba_model_history.jsonl",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 188,
+      "line": 207,
       "publish_context": false,
       "snippet": "data/history/wnba_model_history.jsonl"
     },
@@ -1199,7 +1207,7 @@
       "domain": "alt_market",
       "artifact": "data/dashboard/wnba_alt_market_warehouse.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 189,
+      "line": 208,
       "publish_context": false,
       "snippet": "data/dashboard/wnba_alt_market_warehouse.json"
     },
@@ -1207,7 +1215,7 @@
       "domain": "alt_market",
       "artifact": "data/warehouse/wnba_alt_market_warehouse.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 190,
+      "line": 209,
       "publish_context": false,
       "snippet": "data/warehouse/wnba_alt_market_warehouse.json"
     },
@@ -1215,7 +1223,7 @@
       "domain": "dashboard_freshness",
       "artifact": "data/dashboard/wnba_tab_freshness.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 165,
+      "line": 184,
       "publish_context": false,
       "snippet": "payload=json.loads(Path('data/dashboard/wnba_tab_freshness.json').read_text(encoding='utf-8'))"
     },
@@ -1223,7 +1231,7 @@
       "domain": "projection_integrity",
       "artifact": "data/dashboard/wnba_projection_integrity_audit.json",
       "workflow": ".github/workflows/wnba_daily_slate_rollover.yml",
-      "line": 167,
+      "line": 186,
       "publish_context": false,
       "snippet": "integrity=json.loads(Path('data/dashboard/wnba_projection_integrity_audit.json').read_text(encoding='utf-8'))"
     },
