@@ -69,37 +69,63 @@ def _schedule_label(path: Path) -> str:
         return str(path)
 
 
+def _event_eastern_date(value: Any) -> str | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        if len(text) == 10:
+            return date.fromisoformat(text).isoformat()
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=ZoneInfo("UTC"))
+        return parsed.astimezone(ZoneInfo(DEFAULT_TZ)).date().isoformat()
+    except ValueError:
+        return None
+
+
 def _calendar_dates(payload: Any) -> list[str]:
+    """Return dates backed by actual cached games, never ESPN calendar days.
+
+    ESPN's league ``calendar`` is a dense date range used for scoreboard
+    navigation.  It includes many dates with no games, so treating it as a
+    schedule makes every day look active.  Prefer normalized game rows and use
+    event start times only as a fallback.
+    """
     if not isinstance(payload, dict):
         return []
 
-    event_container = payload.get("data", {}).get("events", {})
+    data = payload.get("data", {})
+    if not isinstance(data, dict):
+        data = {}
+
+    values: set[str] = set()
+    games = data.get("games")
+    if not isinstance(games, list):
+        games = payload.get("games")
+    if isinstance(games, list):
+        for game in games:
+            if not isinstance(game, dict):
+                continue
+            raw = game.get("game_date") or game.get("date") or game.get("start_time")
+            parsed = _event_eastern_date(raw)
+            if parsed:
+                values.add(parsed)
+    if values:
+        return sorted(values)
+
+    event_container = data.get("events", {})
     if not isinstance(event_container, dict):
         event_container = payload.get("events", {})
     if not isinstance(event_container, dict):
         return []
 
-    values: set[str] = set()
-    for league in event_container.get("leagues") or []:
-        if not isinstance(league, dict):
-            continue
-        for raw in league.get("calendar") or []:
-            text = str(raw or "")[:10]
-            try:
-                date.fromisoformat(text)
-            except ValueError:
-                continue
-            values.add(text)
-
     for event in event_container.get("events") or []:
         if not isinstance(event, dict):
             continue
-        text = str(event.get("date") or "")[:10]
-        try:
-            date.fromisoformat(text)
-        except ValueError:
-            continue
-        values.add(text)
+        parsed = _event_eastern_date(event.get("date"))
+        if parsed:
+            values.add(parsed)
 
     return sorted(values)
 

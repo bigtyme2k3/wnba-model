@@ -4,11 +4,6 @@ name: Deploy WNBA Dashboard
 
 on:
   workflow_dispatch:
-  # Daily postgame recovery pass. 10:15 UTC is 6:15 AM Eastern during the WNBA season.
-  # The deploy already owns archive backfill + Game Performance rendering, so reuse it
-  # instead of introducing another grading workflow.
-  schedule:
-    - cron: '15 10 * * *'
   push:
     branches: [main]
     paths:
@@ -202,6 +197,7 @@ jobs:
         run: |
           set -e
           if [ "${MAINTENANCE_BREAK:-false}" = 'true' ]; then
+            python patch_dashboard_game_performance.py --render-only
             BREAK_ARGS=(
               --mode "$SLATE_MODE"
               --current-date "$CURRENT_DATE"
@@ -224,8 +220,7 @@ jobs:
           python patch_dashboard_alt_grading_status.py || true
           python wnba_alt_pending_diagnostics.py || true
           if [ -f data/dashboard/wnba_alt_recovery_progress.json ]; then python patch_dashboard_alt_recovery_progress.py || true; fi
-          python scripts/wnba_game_archive_backfill.py
-          python patch_dashboard_game_performance.py
+          python patch_dashboard_game_performance.py --render-only
           python patch_dashboard_build_verification.py || true
           python - <<'PY'
           import re
@@ -294,6 +289,7 @@ jobs:
               '"paid_api_called":false',
               '"stale_predictions_actionable":false',
               'Results, Game Performance, Remaining Season, and Data Health',
+              'id="game-performance-route-script"',
           ]
           missing=[marker for marker in required if marker not in html]
           if missing: raise SystemExit(f'BREAK_MODE_DEPLOY_UNSAFE: missing {missing}')

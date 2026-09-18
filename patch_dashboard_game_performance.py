@@ -1,6 +1,7 @@
 """Expose Game Performance as a single routed renderer for the locked UI."""
 from __future__ import annotations
 
+import argparse
 import json
 import re
 from pathlib import Path
@@ -15,10 +16,13 @@ STYLE = r'''<style id="game-performance-route-style">
 </style>'''
 
 
-def main() -> None:
+def main(*, render_only: bool = False) -> None:
     if not HTML.exists():
         raise SystemExit("docs/index.html missing")
-    build_game_performance()
+    if not render_only:
+        build_game_performance()
+    elif not DATA.exists():
+        raise SystemExit("render-only Game Performance requires persisted data")
     payload = json.loads(DATA.read_text(encoding="utf-8")) if DATA.exists() else {}
     raw = json.dumps(payload, separators=(",", ":")).replace("</", "<\\/")
     script = r'''<script id="game-performance-route-script">(function(){
@@ -51,4 +55,7 @@ window.fullGamePerformance=function(){
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--render-only", action="store_true")
+    args = parser.parse_args()
+    main(render_only=args.render_only)

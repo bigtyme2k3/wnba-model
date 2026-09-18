@@ -24,6 +24,10 @@ def write_schedule(path: Path, dates: list[str]) -> None:
     payload = {
         "generated_at_utc": "2026-08-31T18:14:46+00:00",
         "data": {
+            "games": [
+                {"game_date": value, "game": f"Away {index} @ Home {index}"}
+                for index, value in enumerate(dates)
+            ],
             "events": {
                 "leagues": [
                     {"calendar": [f"{value}T07:00Z" for value in dates]}
@@ -91,6 +95,27 @@ class BreakAwareSlateTests(unittest.TestCase):
         self.assertFalse(context.maintenance_deploy_allowed)
         self.assertIsNone(context.next_slate_date)
 
+    def test_dense_league_calendar_is_not_game_schedule_evidence(self) -> None:
+        payload = {
+            "generated_at_utc": "2026-09-17T20:00:00+00:00",
+            "data": {
+                "games": [{"game_date": "2026-09-17", "game": "Away @ Home"}],
+                "events": {
+                    "leagues": [{"calendar": ["2026-09-17T07:00Z", "2026-09-18T07:00Z"]}],
+                    "events": [],
+                },
+            },
+        }
+        self.schedule.write_text(json.dumps(payload), encoding="utf-8")
+        now = datetime(2026, 9, 18, 9, 0, tzinfo=ZoneInfo("America/New_York"))
+
+        context = slate.resolve_slate_context(schedule_source=self.schedule, now=now)
+
+        self.assertEqual(context.mode, "offseason")
+        self.assertEqual(context.schedule_date_count, 1)
+        self.assertIsNone(context.active_slate_date)
+        self.assertIsNone(context.next_slate_date)
+
     def test_manual_date_preserves_operator_authority(self) -> None:
         context = slate.resolve_slate_context(
             manual_date="2026-09-17",
@@ -139,6 +164,18 @@ class BreakAwareSlateTests(unittest.TestCase):
         self.assertIn("scripts/wnba_dashboard_slate_context.py --field target_date", workflow)
         self.assertIn("PREPARED_UPCOMING", workflow)
         self.assertIn("UPCOMING_STANDARD_PROPS_ONLY", workflow)
+        self.assertIn("python patch_dashboard_game_performance.py --render-only", workflow)
+        self.assertNotIn("python scripts/wnba_game_archive_backfill.py", workflow)
+
+    def test_results_writer_grades_yesterday_games_before_publish(self) -> None:
+        workflow = (ROOT / ".github/workflows/wnba_results_refresh.yml").read_text(encoding="utf-8")
+
+        self.assertIn("RESULT_DATE=$(TZ=America/New_York date -d 'yesterday' +%F)", workflow)
+        self.assertIn("python scripts/wnba_game_archive_backfill.py", workflow)
+        self.assertIn('python wnba_game_predictions_ledger.py grade --date "$RESULT_DATE"', workflow)
+        self.assertIn("python wnba_game_performance.py", workflow)
+        self.assertIn("'data/history/wnba_game_predictions.jsonl'", workflow)
+        self.assertIn("Incomplete game grading", workflow)
 
     def test_automatic_alt_recovery_pauses_external_feeds_during_break(self) -> None:
         diagnostics = {

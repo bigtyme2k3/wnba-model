@@ -58,7 +58,11 @@ def parse_scoreboard(data: dict, target_date: str) -> pd.DataFrame:
 
     for event in events:
         game_id   = event.get("id")
-        game_date = event.get("date","")[:10]   # "2026-05-12T00:00Z" → "2026-05-12"
+        event_start_utc = event.get("date", "")
+        # ESPN event timestamps are UTC, so evening WNBA games commonly cross
+        # into the next UTC date. The requested scoreboard date is the league
+        # slate date and must remain the grading key.
+        game_date = target_date or event_start_utc[:10]
         status    = event.get("status", {})
         state     = status.get("type", {}).get("name","")  # STATUS_FINAL, STATUS_IN_PROGRESS, etc.
 
@@ -88,6 +92,7 @@ def parse_scoreboard(data: dict, target_date: str) -> pd.DataFrame:
 
         row = {
             "game_date":    game_date or target_date,
+            "event_start_utc": event_start_utc,
             "game_id":      game_id,
             "status":       state,
             "is_final":     "FINAL" in state.upper(),
@@ -117,14 +122,15 @@ def parse_scoreboard(data: dict, target_date: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def parse_box_score(summary: dict, game_id: str) -> pd.DataFrame:
+def parse_box_score(summary: dict, game_id: str, target_date: str | None = None) -> pd.DataFrame:
     """
     Extract player-level box score from ESPN game summary.
     Returns a DataFrame with one row per player per game.
     Useful for updating rolling stats in real time.
     """
     rows = []
-    game_date = summary.get("header",{}).get("competitions",[{}])[0].get("date","")[:10]
+    event_start_utc = summary.get("header",{}).get("competitions",[{}])[0].get("date","")
+    game_date = target_date or event_start_utc[:10]
 
     for team_data in summary.get("boxscore",{}).get("players",[]):
         team_name = team_data.get("team",{}).get("displayName","")
@@ -142,6 +148,7 @@ def parse_box_score(summary: dict, game_id: str) -> pd.DataFrame:
 
                 rows.append({
                     "game_date": game_date,
+                    "event_start_utc": event_start_utc,
                     "game_id":   game_id,
                     "player":    player.get("displayName",""),
                     "team":      team_name,
@@ -226,7 +233,7 @@ def scrape_date(target_date: str, out_dir: str, include_boxscores: bool = False)
         for _, game in df[df["is_final"]].iterrows():
             try:
                 summary = fetch_game_summary(str(game["game_id"]))
-                box_df  = parse_box_score(summary, str(game["game_id"]))
+                box_df  = parse_box_score(summary, str(game["game_id"]), target_date)
                 box_rows.append(box_df)
                 time.sleep(1)
             except Exception as e:

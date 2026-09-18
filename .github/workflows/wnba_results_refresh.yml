@@ -1,9 +1,14 @@
 name: WNBA Results Refresh
 
-# Maintenance mode: hourly grading is paused during the FIBA break. Manual
-# dispatch and explicit maintenance triggers remain available for backlog QA.
+# Scheduled grading remains disabled under the maintenance ownership contract.
+# Manual dispatch and the controlled request marker run the canonical results writer.
 on:
   workflow_dispatch:
+    inputs:
+      result_date:
+        description: 'Eastern slate date to grade (YYYY-MM-DD); defaults to yesterday'
+        required: false
+        type: string
   push:
     branches: [main]
     paths:
@@ -12,7 +17,6 @@ on:
 
 permissions:
   contents: write
-  actions: write
 
 concurrency:
   group: wnba-results-refresh
@@ -46,21 +50,35 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Resolve Eastern slate date
+      - name: Resolve observation and result dates
+        env:
+          REQUESTED_RESULT_DATE: ${{ inputs.result_date }}
         run: |
           TARGET=$(TZ=America/New_York date +%F)
+          if [ -n "${REQUESTED_RESULT_DATE:-}" ]; then
+            RESULT_DATE=$(date -d "$REQUESTED_RESULT_DATE" +%F)
+            test "$RESULT_DATE" = "$REQUESTED_RESULT_DATE"
+          else
+            RESULT_DATE=$(TZ=America/New_York date -d 'yesterday' +%F)
+          fi
+          test "$RESULT_DATE" '<' "$TARGET"
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "Results refresh target: $TARGET"
+          echo "RESULT_DATE=$RESULT_DATE" >> "$GITHUB_ENV"
+          echo "Results observation date: $TARGET; grading slate: $RESULT_DATE"
 
       - name: Refresh verified completed-game actuals
         run: |
           set -e
           [ ! -f wnba_player_game_log_archive.py ] || python wnba_player_game_log_archive.py snapshot
           for OFFSET in 3 2 1 0; do
-            DAY=$(TZ=America/New_York date -d "$OFFSET days ago" +%F)
+            DAY=$(date -d "${RESULT_DATE} -${OFFSET} days" +%F)
             echo "Refreshing verified actuals for $DAY"
             [ ! -f wnba_live_results.py ] || python wnba_live_results.py --date "$DAY" || true
-            [ ! -f scrape_scores.py ] || python scrape_scores.py --date "$DAY" --boxscores || true
+            if [ "$DAY" = "$RESULT_DATE" ]; then
+              python scrape_scores.py --date "$DAY" --boxscores
+            else
+              python scrape_scores.py --date "$DAY" --boxscores || true
+            fi
             [ ! -f wnba_espn_boxscore_fallback.py ] || python wnba_espn_boxscore_fallback.py --date "$DAY" || true
             [ ! -f wnba_player_game_log_warehouse.py ] || python wnba_player_game_log_warehouse.py --date "$DAY" || true
             [ ! -f wnba_player_game_log_archive.py ] || python wnba_player_game_log_archive.py merge
@@ -71,22 +89,26 @@ jobs:
         run: |
           set -e
           for OFFSET in 3 2 1 0; do
-            DAY=$(TZ=America/New_York date -d "$OFFSET days ago" +%F)
+            DAY=$(date -d "${RESULT_DATE} -${OFFSET} days" +%F)
             if [ -f wnba_results_grader.py ]; then
               python wnba_results_grader.py --date "$DAY" || true
             fi
           done
+          python scripts/wnba_game_archive_backfill.py
+          python wnba_game_predictions_ledger.py grade --date "$RESULT_DATE"
+          python wnba_game_performance.py
           if [ -f scripts/wnba_s19_m06_results_lifecycle.py ]; then
             python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" --results-only
           fi
           [ ! -f wnba_edge_database.py ] || python wnba_edge_database.py --date "$TARGET" || true
 
-      - name: Verify Results freshness
+      - name: Verify Results freshness and complete game grading
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
           target=os.environ['TARGET']
+          result_date=os.environ['RESULT_DATE']
           lifecycle=Path('data/dashboard/wnba_s19_m06_results_lifecycle.json')
           if not lifecycle.exists():
               raise SystemExit('Missing Results lifecycle artifact')
@@ -95,7 +117,29 @@ jobs:
               raise SystemExit(f'Results lifecycle is stale: status={data.get("status")} target={data.get("target_date")} expected={target}')
           current=(data.get('current_model') or {}).get('performance') or {}
           recent=(data.get('current_model') or {}).get('recent_results') or []
-          print({'target':target,'graded_decisions':current.get('decisions'),'wins':current.get('wins'),'losses':current.get('losses'),'pushes':current.get('pushes'),'pending':current.get('pending'),'latest_result_date':str(recent[0].get('date') or '')[:10] if recent else None})
+          yesterday=(data.get('current_model') or {}).get('yesterday') or {}
+          if str(yesterday.get('date') or '')[:10] != result_date:
+              raise SystemExit(f'Results lifecycle yesterday mismatch: {yesterday.get("date")} != {result_date}')
+          rows=[]
+          for line in Path('data/history/wnba_game_predictions.jsonl').read_text(encoding='utf-8').splitlines():
+              if line.strip():
+                  row=json.loads(line)
+                  if str(row.get('target_date') or '')[:10] == result_date:
+                      rows.append(row)
+          if not rows:
+              raise SystemExit(f'No frozen game predictions found for {result_date}')
+          ids=[str(row.get('prediction_id') or '') for row in rows]
+          if len(ids) != len(set(ids)):
+              raise SystemExit(f'Duplicate game prediction IDs for {result_date}')
+          pending=[row.get('game') for row in rows if not row.get('graded')]
+          if pending:
+              raise SystemExit(f'Incomplete game grading for {result_date}: {pending}')
+          if any(row.get('actual_away_score') is None or row.get('actual_home_score') is None or not row.get('actual_source') for row in rows):
+              raise SystemExit(f'Graded game rows lack verified final-score evidence for {result_date}')
+          audit=json.loads(Path('data/dashboard/wnba_game_archive_backfill_audit.json').read_text(encoding='utf-8'))
+          if int(audit.get('adjacent_date_matches') or 0) != 0:
+              raise SystemExit(f'Game grading used adjacent-date matches: {audit.get("adjacent_date_matches")}')
+          print({'observation_date':target,'result_date':result_date,'games_graded':len(rows),'game_pending':len(pending),'graded_decisions':current.get('decisions'),'wins':current.get('wins'),'losses':current.get('losses'),'pushes':current.get('pushes'),'pending':current.get('pending'),'latest_result_date':str(recent[0].get('date') or '')[:10] if recent else None})
           PY
 
       - name: Publish graded Results state
@@ -103,18 +147,12 @@ jobs:
           git config user.name 'WNBA Results Bot'
           git config user.email 'actions@github.com'
           bash scripts/atomic_generated_push.sh \
-            "Refresh graded WNBA Results through ${TARGET}" \
+            "Grade WNBA results for ${RESULT_DATE}" \
             'data/history/wnba_model_history.jsonl' \
+            'data/history/wnba_game_predictions.jsonl' \
             'data/dashboard' \
             'data/warehouse' \
             'data/raw/wnba_boxscores_*.json' \
             'data/raw/wnba_boxscores_*.csv' \
             'data/raw/boxscores_*.csv' \
             'data/raw/scores_*.csv'
-
-      - name: Deploy refreshed Results tab
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh workflow run deploy_wnba_dashboard.yml --ref main
-          echo 'Deploy WNBA Dashboard dispatched after Results publish.'
