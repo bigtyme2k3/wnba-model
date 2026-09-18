@@ -267,6 +267,11 @@ jobs:
             python patch_dashboard_s19_m02.py
             python scripts/wnba_s19_m03_dashboard_consumer.py --date "$TARGET"
             python patch_dashboard_s19_m03.py
+            if python scripts/wnba_s19_m04_decision_contract.py --date "$TARGET"; then
+              python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" || echo 'M06 prediction archive failed for this run; will retry on the next deploy run today.'
+            else
+              echo 'M04 decision contract not READY for this slate; skipping prediction archive for today (will retry on the next deploy run).'
+            fi
           else
             echo 'No open current-slate props after finals; rendering verified archived results only.'
             export CLOSED_SLATE=true
