@@ -1,8 +1,9 @@
 {
   "schema_version": 1,
-  "mode": "maintenance",
+  "mode": "live",
   "description": "Authoritative production artifact ownership for WNBA V5. Exactly one workflow owns each protected artifact. Consumers may read/validate/render but may not publish a competing canonical copy.",
   "maintenance_contract": {
+    "_comment": "Enforced only while mode=maintenance (WNBA/FIBA break). Kept here so it's ready to flip back without re-deriving these numbers.",
     "scheduled_workflow_count": 0,
     "scheduled_paid_api_risk_count": 0,
     "scheduled_live_pipeline_risk_count": 0

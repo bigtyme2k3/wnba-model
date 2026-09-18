@@ -1,9 +1,23 @@
 name: WNBA V5 Daily Orchestrator
 
-# Permanent dependency-order entry point for the live V5 daily pipeline.
-# Maintenance mode remains explicit: there is no schedule, and live source
-# execution requires the operator to opt in with live_mode=true.
+# Permanent dependency-order entry point for the live V5 daily pipeline:
+# canonical slate/props -> injury context -> phase2/M02 predictions ->
+# derived dashboard + rollover + deploy, in strict needs: order.
+#
+# Scheduled runs (season live, config/v5_artifact_ownership.json mode=live)
+# always run the full live chain -- there is no unattended dry-run mode, so
+# a schedule firing IS a live_mode=true run. A manual workflow_dispatch still
+# requires the operator to opt in explicitly via the live_mode checkbox.
+#
+# Mirrors the cadence wnba_daily_canonical_build.yml ran solo before the
+# WNBA/FIBA break (10:15 and 16:15 UTC = ~6:15am / 12:15pm ET): once early to
+# catch the overnight schedule/line refresh, once again before evening tip-off
+# in case anything shifted. Flip config/v5_artifact_ownership.json back to
+# mode=maintenance (and remove this schedule) for the off-season.
 on:
+  schedule:
+    - cron: '15 10 * * *'
+    - cron: '15 16 * * *'
   workflow_dispatch:
     inputs:
       target_date:
@@ -45,19 +59,27 @@ jobs:
           p=json.loads(Path('data/dashboard/wnba_v5_artifact_ownership_audit.json').read_text())
           assert p['status']=='PASS', p.get('violations')
           assert p['ownership_violation_count']==0, p.get('violations')
-          assert p['scheduled_workflow_count']==0, p.get('scheduled_workflows')
+          # scheduled_workflow_count==0 is only required during mode=maintenance
+          # (the audit script itself enforces that equality whenever the contract
+          # says maintenance -- see schedule_violation_count above). Once the
+          # contract is mode=live, scheduled workflows are expected and allowed.
+          if p['contract_mode'] == 'maintenance':
+              assert p['scheduled_workflow_count']==0, p.get('scheduled_workflows')
+          assert p['schedule_violation_count']==0, p.get('violations')
           print({
               'status':'PASS',
               'contract_mode':p['contract_mode'],
               'protected_artifacts':p['protected_artifact_count'],
+              'scheduled_workflow_count':p['scheduled_workflow_count'],
               'live_mode_requested':'${{ inputs.live_mode }}',
+              'event_name':'${{ github.event_name }}',
           })
           PY
 
   canonical-base:
     name: Canonical slate + standard props
     needs: ownership-contract
-    if: ${{ inputs.live_mode == true }}
+    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
     uses: ./.github/workflows/wnba_daily_canonical_build.yml
     with:
       target_date: ${{ inputs.target_date }}
@@ -66,7 +88,7 @@ jobs:
   injury-context:
     name: Injury context
     needs: canonical-base
-    if: ${{ inputs.live_mode == true }}
+    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
     uses: ./.github/workflows/wnba_v5_injury_dashboard.yml
     with:
       date: ${{ inputs.target_date }}
@@ -75,7 +97,7 @@ jobs:
   downstream-predictions:
     name: Phase 2 + M02 predictions
     needs: injury-context
-    if: ${{ inputs.live_mode == true }}
+    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
     uses: ./.github/workflows/wnba-new-day-prediction-sync.yml
     with:
       date: ${{ inputs.target_date }}
@@ -85,7 +107,7 @@ jobs:
   derived-dashboard:
     name: Derived intelligence + terminal deploy
     needs: downstream-predictions
-    if: ${{ inputs.live_mode == true }}
+    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
     uses: ./.github/workflows/wnba_daily_slate_rollover.yml
     with:
       target_date: ${{ inputs.target_date }}
