@@ -161,7 +161,7 @@ def main() -> None:
         "Install ALT pipeline dependencies",
         "Score current ALT props",
         "Verify Sprint 19 M02-M06 dashboard routing and current slate artifact",
-        "Persist Sprint 19 M06 prediction history",
+        "Persist grading and Sprint 19 history",
     ):
         block = workflow_step(deploy_text, name)
         if not block or "if: env.MAINTENANCE_BREAK != 'true'" not in block:
