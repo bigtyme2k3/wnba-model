@@ -19,7 +19,7 @@ Usage:
   python scrape_scores.py --live                  # poll every 2 min during games
 """
 
-import os, time, argparse
+import io, os, time, argparse
 from datetime import date, datetime, timedelta
 import requests, pandas as pd
 
@@ -28,6 +28,10 @@ ESPN_BASE    = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba"
 BOARD_URL    = f"{ESPN_BASE}/scoreboard"
 SUMMARY_URL  = f"{ESPN_BASE}/summary"
 WNBA_SCHEDULE_URL = "https://cdn.wnba.com/static/json/staticData/scheduleLeagueV2.json"
+SPORTSDATAVERSE_SCHEDULE_URL = (
+    "https://github.com/sportsdataverse/sportsdataverse-data/releases/download/"
+    "espn_wnba_schedules/wnba_schedule_{year}.csv"
+)
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -57,6 +61,14 @@ def fetch_official_schedule() -> dict:
     resp = requests.get(WNBA_SCHEDULE_URL, headers=HEADERS, timeout=30)
     resp.raise_for_status()
     return resp.json()
+
+
+def fetch_sportsdataverse_schedule(target_date: str) -> pd.DataFrame:
+    """Fetch the current SportsDataverse ESPN-backed WNBA schedule release."""
+    url = SPORTSDATAVERSE_SCHEDULE_URL.format(year=target_date[:4])
+    resp = requests.get(url, headers=HEADERS, timeout=60)
+    resp.raise_for_status()
+    return pd.read_csv(io.BytesIO(resp.content), low_memory=False)
 
 
 def official_game_date(value) -> str:
@@ -118,6 +130,56 @@ def parse_official_schedule(data: dict, target_date: str) -> pd.DataFrame:
                 "source": "wnba_official_schedule_cdn",
                 "scraped_at": datetime.now().isoformat(),
             })
+    return pd.DataFrame(rows)
+
+
+def parse_sportsdataverse_schedule(data: pd.DataFrame, target_date: str) -> pd.DataFrame:
+    """Normalize exact-date results from SportsDataverse's WNBA schedule release."""
+    if data.empty or "game_date" not in data.columns:
+        return pd.DataFrame()
+
+    def clean(value, default=""):
+        return default if pd.isna(value) else value
+
+    def score(value):
+        if pd.isna(value) or value == "":
+            return None
+        return int(float(value))
+
+    def truthy(value) -> bool:
+        if isinstance(value, bool):
+            return value
+        return str(clean(value)).strip().lower() in {"1", "true", "yes"}
+
+    rows = []
+    exact_date = data[data["game_date"].astype(str).str[:10] == target_date]
+    for _, game in exact_date.iterrows():
+        status = str(clean(game.get("status_type_name"))).strip()
+        state = str(clean(game.get("status_type_state"))).strip().lower()
+        is_final = truthy(game.get("status_type_completed")) or "FINAL" in status.upper()
+        home_score = score(game.get("home_score"))
+        away_score = score(game.get("away_score"))
+        game_id = clean(game.get("game_id"), clean(game.get("id")))
+        rows.append({
+            "game_date": target_date,
+            "event_start_utc": str(clean(game.get("date"), clean(game.get("start_date")))),
+            "game_id": str(game_id),
+            "status": status,
+            "is_final": is_final,
+            "in_progress": state == "in",
+            "home_team": str(clean(game.get("home_display_name"))),
+            "away_team": str(clean(game.get("away_display_name"))),
+            "home_score": home_score,
+            "away_score": away_score,
+            "actual_spread": home_score - away_score if home_score is not None and away_score is not None else None,
+            "actual_total": home_score + away_score if home_score is not None and away_score is not None else None,
+            "posted_spread": "",
+            "posted_total": None,
+            "venue": str(clean(game.get("venue_full_name"))),
+            "attendance": score(game.get("attendance")),
+            "source": "sportsdataverse_espn_schedule_release",
+            "scraped_at": datetime.now().isoformat(),
+        })
     return pd.DataFrame(rows)
 
 
@@ -269,15 +331,27 @@ def scrape_date(target_date: str, out_dir: str, include_boxscores: bool = False)
     os.makedirs(out_dir, exist_ok=True)
 
     print(f"Fetching ESPN WNBA scores — {target_date}")
+    df = pd.DataFrame()
     try:
-        data = fetch_scoreboard(target_date)
-        df = parse_scoreboard(data, target_date)
-        if df.empty:
-            print("  ESPN scoreboard returned no events; checking official WNBA CDN.")
+        df = parse_scoreboard(fetch_scoreboard(target_date), target_date)
+    except (requests.RequestException, ValueError) as exc:
+        print(f"  ESPN scoreboard unavailable ({type(exc).__name__}).")
+
+    if df.empty:
+        print("  Checking official WNBA schedule feed.")
+        try:
             df = parse_official_schedule(fetch_official_schedule(), target_date)
-    except requests.RequestException as exc:
-        print(f"  ESPN scoreboard unavailable ({type(exc).__name__}); trying official WNBA CDN.")
-        df = parse_official_schedule(fetch_official_schedule(), target_date)
+        except (requests.RequestException, ValueError) as exc:
+            print(f"  Official WNBA schedule unavailable ({type(exc).__name__}).")
+
+    if df.empty:
+        print("  Checking SportsDataverse WNBA schedule release.")
+        try:
+            release = fetch_sportsdataverse_schedule(target_date)
+            df = parse_sportsdataverse_schedule(release, target_date)
+        except (requests.RequestException, ValueError, pd.errors.ParserError) as exc:
+            print(f"  SportsDataverse schedule unavailable ({type(exc).__name__}).")
+            raise RuntimeError(f"No verified WNBA result source available for {target_date}") from exc
 
     if df.empty:
         print("  No games found for this date.")

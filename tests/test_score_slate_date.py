@@ -8,7 +8,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from scrape_scores import parse_box_score, parse_official_schedule, parse_scoreboard
+import pandas as pd
+
+from scrape_scores import (
+    parse_box_score,
+    parse_official_schedule,
+    parse_scoreboard,
+    parse_sportsdataverse_schedule,
+)
 
 
 class ScoreSlateDateTests(unittest.TestCase):
@@ -78,6 +85,49 @@ class ScoreSlateDateTests(unittest.TestCase):
         self.assertEqual(frame.iloc[0]["home_score"], 77)
         self.assertTrue(frame.iloc[0]["is_final"])
         self.assertEqual(frame.iloc[0]["source"], "wnba_official_schedule_cdn")
+
+    def test_sportsdataverse_release_normalizes_exact_date_final(self) -> None:
+        payload = pd.DataFrame([
+            {
+                "id": 401857194,
+                "game_id": 401857194,
+                "date": "2026-09-18T02:00Z",
+                "game_date": "2026-09-17",
+                "status_type_name": "STATUS_FINAL",
+                "status_type_state": "post",
+                "status_type_completed": True,
+                "away_display_name": "Las Vegas Aces",
+                "away_score": 114,
+                "home_display_name": "Seattle Storm",
+                "home_score": 77,
+                "venue_full_name": "Climate Pledge Arena",
+                "attendance": 14200,
+            },
+            {
+                "id": 401857195,
+                "game_id": 401857195,
+                "date": "2026-09-19T00:00Z",
+                "game_date": "2026-09-18",
+                "status_type_name": "STATUS_SCHEDULED",
+                "status_type_state": "pre",
+                "status_type_completed": False,
+                "away_display_name": "Other Away",
+                "home_display_name": "Other Home",
+            },
+        ])
+
+        frame = parse_sportsdataverse_schedule(payload, "2026-09-17")
+
+        self.assertEqual(len(frame), 1)
+        self.assertEqual(frame.iloc[0]["game_date"], "2026-09-17")
+        self.assertEqual(frame.iloc[0]["away_team"], "Las Vegas Aces")
+        self.assertEqual(frame.iloc[0]["home_team"], "Seattle Storm")
+        self.assertEqual(frame.iloc[0]["away_score"], 114)
+        self.assertEqual(frame.iloc[0]["home_score"], 77)
+        self.assertEqual(frame.iloc[0]["actual_spread"], -37)
+        self.assertEqual(frame.iloc[0]["actual_total"], 191)
+        self.assertTrue(frame.iloc[0]["is_final"])
+        self.assertEqual(frame.iloc[0]["source"], "sportsdataverse_espn_schedule_release")
 
 
 if __name__ == "__main__":
