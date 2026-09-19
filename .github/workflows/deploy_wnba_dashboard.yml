@@ -330,7 +330,11 @@ jobs:
           alt_stamp=str(alt.get('generated_at_utc') or '')
           if not alt_stamp or f'"generated_at_utc":"{alt_stamp}"' not in h: raise SystemExit(f'ALT embedded payload is stale: expected generated_at_utc={alt_stamp}')
           alt_current=str(alt.get('target_date') or '') == target
-          if not alt_current and os.environ.get('PREPARED_UPCOMING') != 'true': raise SystemExit(f'ALT source target mismatch: {alt.get("target_date")} != {target}')
+          # ALT freshness is independently fail-closed earlier in this job.
+          # A stale ALT source pauses ALT only; it must not block a verified
+          # current standard slate at the final Sprint 19 deployment gate.
+          if not alt_current and os.environ.get('ALT_CURRENT_SOURCE','false').lower() == 'true':
+              raise SystemExit(f'ALT source contract contradiction: env says current but artifact={alt.get("target_date")} target={target}')
           eligible=[r for r in alt.get('rows',[]) if alt_current and r.get('line_type')=='alternate' and int(r.get('streak') or 0)>=5 and str(r.get('best_book') or '').lower() in {'fanduel','draftkings','fanatics'}]
           if alt_current and alt.get('rows') and not eligible: raise SystemExit('ALT source is nonempty but has zero renderer-eligible rows')
           if eligible and "row_gate:'target-date-artifact'" not in h: raise SystemExit('ALT renderer is not using the stable target-date artifact gate')
