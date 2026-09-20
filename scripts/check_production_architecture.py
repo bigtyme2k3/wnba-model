@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ACTIVE = ROOT / ".github" / "workflows"
 DEPLOY = ACTIVE / "deploy_wnba_dashboard.yml"
+ROLLOVER = ACTIVE / "wnba_daily_slate_rollover.yml"
 ALT_MARKET_OWNER = ACTIVE / "wnba_alt_pregame_snapshot.yml"
 ALT_LATE_MARKET_ENTRY = ACTIVE / "wnba-alt-late-market-refresh.yml"
 ATOMIC = ROOT / "scripts" / "atomic_generated_push.sh"
@@ -48,6 +49,8 @@ def workflow_step(text: str, name: str) -> str:
 def main() -> None:
     if not DEPLOY.exists():
         fail("canonical Deploy WNBA Dashboard workflow is missing")
+    if not ROLLOVER.exists():
+        fail("canonical derived rollover workflow is missing")
     if not ATOMIC.exists():
         fail("atomic generated publisher is missing")
     if not ALT_MARKET_OWNER.exists():
@@ -104,6 +107,12 @@ def main() -> None:
 
         if workflow != DEPLOY and (git_add_dashboard.search(text) or atomic_dashboard.search(text)):
             fail(f"{name} can publish the docs dashboard outside the canonical deploy")
+
+    rollover_text = ROLLOVER.read_text(encoding="utf-8")
+    if "python wnba_current_slate.py" in rollover_text:
+        fail("derived rollover refreshes a source-owned canonical slate")
+    if "Confirm authoritative slate before source verification" not in rollover_text:
+        fail("derived rollover is missing read-only canonical slate confirmation")
 
     deploy_text = DEPLOY.read_text(encoding="utf-8")
     if "python active_slate_date.py" not in deploy_text:
@@ -236,6 +245,7 @@ def main() -> None:
             "hardcoded_executable_slate_dates_blocked": True,
             "workflow_identity_spoofing_blocked": True,
             "reusable_writer_identity_bound": True,
+            "derived_rollover_source_read_only": True,
             "utc_rollover_fallback_blocked_globally": True,
             "break_aware_deployment_required": True,
             "stale_current_markets_blocked_during_break": True,

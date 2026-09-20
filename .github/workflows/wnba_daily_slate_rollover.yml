@@ -1,10 +1,10 @@
 name: WNBA Daily Slate Rollover
 
-# Maintenance mode: scheduled rollover remains paused during the WNBA/FIBA
-# break. Canonical slate, injury, prediction, ALT, grading, and forward-evidence
+# Canonical slate, injury, prediction, ALT, grading, and forward-evidence
 # artifacts are owned by their dedicated workflows. This workflow consumes
-# those sources and refreshes only derived dashboard intelligence. Production
-# execution is workflow_call from the V5 orchestrator or manual dispatch only.
+# those sources read-only and refreshes only derived dashboard intelligence.
+# Production execution is workflow_call from the V5 orchestrator or manual
+# dispatch only.
 on:
   workflow_call:
     inputs:
@@ -76,14 +76,8 @@ jobs:
           echo "SLATE_MODE=$MODE" >> "$GITHUB_ENV"
           echo "Derived rollover target: $TARGET (mode=$MODE)"
 
-      - name: Refresh authoritative slate before source verification
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      - name: Confirm authoritative slate before source verification
         run: |
-          # The cached schedule can lag the live league slate. Refresh today's
-          # canonical games first; ESPN is primary and The Odds API is the
-          # existing authenticated fallback.
-          python wnba_current_slate.py --date "$TARGET"
           python - <<'PY'
           import json, os
           from pathlib import Path
@@ -91,7 +85,7 @@ jobs:
           payload=json.loads(Path('data/dashboard/wnba_master.json').read_text(encoding='utf-8'))
           games=[g for g in payload.get('games',[]) if str(g.get('game_date') or '')[:10]==target and g.get('bucket')=='today']
           if not games:
-              raise SystemExit(f'No canonical games found after live slate refresh for {target}')
+              raise SystemExit(f'No canonical games found for {target}')
           print({'status':'LIVE_SLATE_CONFIRMED','target':target,'games':len(games),'matchups':[g.get('game') for g in games]})
           PY
 

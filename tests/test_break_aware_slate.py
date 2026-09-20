@@ -163,7 +163,7 @@ class BreakAwareSlateTests(unittest.TestCase):
         self.assertIn("if: env.MAINTENANCE_BREAK != 'true'", workflow)
         self.assertIn("scripts/wnba_dashboard_slate_context.py --field target_date", workflow)
         self.assertIn("PREPARED_UPCOMING", workflow)
-        self.assertIn("UPCOMING_STANDARD_PROPS_ONLY", workflow)
+        self.assertIn("ALT_PAUSED_STANDARD_SLATE_CONTINUES", workflow)
         self.assertIn("python patch_dashboard_game_performance.py --render-only", workflow)
         self.assertNotIn("python scripts/wnba_game_archive_backfill.py", workflow)
 
@@ -178,6 +178,13 @@ class BreakAwareSlateTests(unittest.TestCase):
         self.assertIn("Incomplete game grading", workflow)
         self.assertIn("actions: write", workflow)
         self.assertIn("gh workflow run deploy_wnba_dashboard.yml --ref main", workflow)
+
+    def test_derived_rollover_consumes_canonical_slate_read_only(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "wnba_daily_slate_rollover.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("Confirm authoritative slate before source verification", workflow)
+        self.assertNotIn("python wnba_current_slate.py", workflow)
 
     def test_automatic_alt_recovery_pauses_external_feeds_during_break(self) -> None:
         diagnostics = {
