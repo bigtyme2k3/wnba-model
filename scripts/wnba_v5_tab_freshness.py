@@ -24,6 +24,7 @@ OUT = DASHBOARD / "wnba_tab_freshness.json"
 MAX_AGE_MINUTES = 180.0
 MAX_FUTURE_SKEW_MINUTES = 5.0
 
+# Backward-compatible semantic audit marker. The old Portfolio producer was retired\n# under this reason, but the current Portfolio UI route is active from Phase 2 state.\nLEGACY_RETIRED_REASON = "retired_no_active_producer"\n
 TAB_CONFIG: dict[str, dict[str, Any]] = {
     "games": {"candidates": ["wnba_master.json"], "require_target": True},
     "game_props": {"candidates": ["wnba_game_props.json", "wnba_game_prop_intelligence.json"], "require_target": True},
