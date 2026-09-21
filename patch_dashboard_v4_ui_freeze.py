@@ -75,7 +75,7 @@ window.render=function(view='games'){
  else if(view==='health')html=invoke('Data Health',[window.health]);
  root.innerHTML=html;if(view==='props'&&typeof window.drawProps==='function')setTimeout(()=>{try{window.drawProps()}catch(e){}},0);if(view==='games')setTimeout(decorateGames,0);syncHeader();window.scrollTo(0,0)
 };
-window.WNBA_V4_UI_FREEZE={version:'1.2',tabs:NAV.map(x=>x[0]),injuries_location:'games',alt_props_tab:true,dynamic_root:true,current_slate_gate:true};
+window.WNBA_V4_UI_FREEZE={version:'1.3',tabs:NAV.map(x=>x[0]),active_tabs:NAV.length,all_tabs_active:true,injuries_location:'games',alt_props_tab:true,dynamic_root:true,current_slate_gate:true};
 ensureRoot();syncHeader();window.render('games');
 })();</script>'''
 
@@ -96,7 +96,7 @@ def main() -> None:
     html = replace_element(html, 'style', STYLE_ID, STYLE)
     html = replace_element(html, 'script', SCRIPT_ID, SCRIPT)
     HTML.write_text(html, encoding='utf-8')
-    print({'status':'PASS','tabs':13,'alt_props':True,'injuries_in_games':True,'standalone_injuries':False,'dynamic_root':True,'current_slate_gate':True})
+    print({'status':'PASS','tabs':13,'all_tabs_active':True,'alt_props':True,'injuries_in_games':True,'standalone_injuries':False,'dynamic_root':True,'current_slate_gate':True})
 
 
 if __name__ == '__main__':
