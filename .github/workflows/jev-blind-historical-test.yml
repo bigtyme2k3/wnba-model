@@ -1,0 +1,63 @@
+name: Jev Blind Historical Test
+
+on:
+  push:
+    paths:
+      - 'data/experiments/jev_blind_2026-08-03.json'
+  workflow_dispatch:
+
+concurrency:
+  group: jev-blind-historical-2026-08-03
+  cancel-in-progress: false
+
+jobs:
+  blind-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify TypeSafe key is available
+        run: |
+          if [ -z "$TYPESAFE_API_KEY" ]; then
+            echo "TYPESAFE_API_KEY is missing."
+            exit 1
+          fi
+
+      - name: Run blind Jev shadow decisions
+        run: |
+          python jev_shadow.py             --league wnba             --date 2026-08-03             --input data/experiments/jev_blind_2026-08-03.json             --output data/experiments/jev_shadow_2026-08-03.json             --ledger data/history/wnba_jev_shadow.jsonl             --max-candidates 20
+
+      - name: Grade only after Jev decisions are frozen
+        run: |
+          python grade_jev_historical.py             --shadow data/experiments/jev_shadow_2026-08-03.json             --truth data/history/wnba_graded_bets.csv             --output data/experiments/jev_blind_grade_2026-08-03.json
+
+      - name: Publish research artifacts
+        run: |
+          git config user.name "WNBA Jev Shadow Bot"
+          git config user.email "actions@github.com"
+          git add             data/experiments/jev_shadow_2026-08-03.json             data/experiments/jev_blind_grade_2026-08-03.json             data/history/wnba_jev_shadow.jsonl
+
+          if git diff --cached --quiet; then
+            echo "No Jev research changes to publish."
+            exit 0
+          fi
+
+          git commit -m "Jev blind historical test — 2026-08-03"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push && exit 0
+            echo "Push race on attempt $attempt; retrying."
+            sleep $((attempt * 3))
+          done
+          exit 1
