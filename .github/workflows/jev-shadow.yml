@@ -1,0 +1,90 @@
+name: Jev Shadow Decisions
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD); blank uses the source artifact target date'
+        required: false
+        default: ''
+      source_path:
+        description: 'Fresh WNBA decision artifact to evaluate'
+        required: true
+        default: 'data/dashboard/wnba_best_bets.json'
+      dry_run:
+        description: 'Build request preview without calling TypeSafe'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  jev-shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Resolve source and target date
+        id: source
+        run: |
+          SOURCE="${{ inputs.source_path }}"
+          echo "SOURCE=$SOURCE" >> "$GITHUB_ENV"
+
+          if [ ! -f "$SOURCE" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Source artifact does not exist: $SOURCE"
+            exit 0
+          fi
+
+          if [ -n "${{ inputs.date }}" ]; then
+            TARGET="${{ inputs.date }}"
+          else
+            TARGET=$(python - "$SOURCE" <<'PY'
+          import json, sys
+          with open(sys.argv[1], encoding="utf-8") as f:
+              d = json.load(f)
+          print(str(d.get("target_date") or d.get("date") or "")[:10])
+          PY
+            )
+          fi
+
+          if [ -z "$TARGET" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Could not resolve target date from source artifact."
+            exit 0
+          fi
+
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Run Jev shadow harness
+        if: steps.source.outputs.skip != 'true'
+        run: |
+          EXTRA=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            EXTRA="--dry-run"
+          elif [ -z "$TYPESAFE_API_KEY" ]; then
+            echo "TYPESAFE_API_KEY is not configured; rerun as dry-run or add the repo secret."
+            exit 0
+          fi
+
+          python jev_shadow.py             --league wnba             --date "$TARGET"             --input "$SOURCE"             --output "data/dashboard/wnba_jev_shadow.json"             --ledger "data/history/wnba_jev_shadow.jsonl"             $EXTRA
+
+      - name: Commit shadow artifacts
+        if: steps.source.outputs.skip != 'true'
+        run: |
+          git config user.name "WNBA Jev Shadow Bot"
+          git config user.email "actions@github.com"
+          git add "data/dashboard/wnba_jev_shadow.json" 2>/dev/null || true
+          git add "data/history/wnba_jev_shadow.jsonl" 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "Jev shadow — WNBA ${TARGET}"
+          git push
