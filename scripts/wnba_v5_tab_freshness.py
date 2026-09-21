@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Build the V5 dashboard tab freshness manifest from artifact metadata.
+"""Build V5 dashboard freshness + UI-tab activity manifests from semantic metadata.
 
-Freshness must not depend on checkout mtimes: GitHub Actions checkout rewrites
-filesystem timestamps and can make old artifacts look current. Current-slate
-views must prove their target date, and known failed/standby producer states
-must never be reported as fresh.
+Two separate questions are tracked:
+1) module freshness (internal producer health);
+2) UI tab activity (is every routed dashboard tab backed by a valid source).
+
+The UI activity map intentionally follows the locked 13-tab router rather than
+legacy tab names. Archive tabs may remain active with older target dates when
+that is semantically correct, while current-slate tabs must prove TARGET.
 """
 from __future__ import annotations
 
@@ -21,8 +24,6 @@ OUT = DASHBOARD / "wnba_tab_freshness.json"
 MAX_AGE_MINUTES = 180.0
 MAX_FUTURE_SKEW_MINUTES = 5.0
 
-# Current/active candidates only. Retired legacy artifacts must not be used as a
-# freshness fallback because their presence can mask a missing current producer.
 TAB_CONFIG: dict[str, dict[str, Any]] = {
     "games": {"candidates": ["wnba_master.json"], "require_target": True},
     "game_props": {"candidates": ["wnba_game_props.json", "wnba_game_prop_intelligence.json"], "require_target": True},
@@ -32,16 +33,63 @@ TAB_CONFIG: dict[str, dict[str, Any]] = {
     "daily_edges": {"candidates": ["wnba_daily_edges.json"], "require_target": True},
     "ensemble": {"candidates": ["wnba_ensemble_intelligence.json"], "require_target": True},
     "simulation": {"candidates": ["wnba_monte_carlo_scenarios.json"], "require_target": True},
-    "best_bets": {"candidates": ["wnba_best_bets.json"], "require_target": True},
-    # No active V5 portfolio producer is currently declared. Keep the tab
-    # visible as missing instead of treating a legacy file as current.
-    "portfolio": {"candidates": [], "require_target": False},
-    "results": {"candidates": ["wnba_results_grading.json"], "require_target": True},
-    "performance": {"candidates": ["wnba_game_performance.json"], "require_target": False},
-    "explainability": {"candidates": ["wnba_reasoning_layer.json"], "require_target": False},
-    "remaining_season": {"candidates": ["wnba_remaining_season_intelligence.json"], "require_target": False},
-    "market_intelligence": {"candidates": ["wnba_market_timeline_summary.json", "wnba_line_movement_summary.json"], "require_target": True},
+    "best_bets": {"candidates": ["wnba_best_bets.json", "wnba_sprint2_phase2.json"], "require_target": True},
+    # Portfolio is an active routed view assembled from current Phase 2 candidates.
+    "portfolio": {"candidates": ["wnba_sprint2_phase2.json"], "require_target": True},
+    # Results is an archive/lifecycle view: its artifact target may be yesterday.
+    "results": {
+        "candidates": ["wnba_s19_m06_results_lifecycle.json", "wnba_results_grading.json"],
+        "require_target": False,
+        "max_age_minutes": 10080.0,
+    },
+    "performance": {"candidates": ["wnba_game_performance.json"], "require_target": False, "max_age_minutes": 10080.0},
+    # The routed AI Center is built from current Phase 2 state, not the retired reasoning-layer snapshot.
+    "explainability": {"candidates": ["wnba_sprint2_phase2.json"], "require_target": True},
+    "remaining_season": {"candidates": ["wnba_remaining_season_intelligence.json"], "require_target": True, "max_age_minutes": 1440.0},
+    # Market timeline is an accumulating dataset and does not carry a slate target.
+    "market_intelligence": {
+        "candidates": ["wnba_market_timeline_summary.json", "wnba_line_movement_summary.json"],
+        "require_target": False,
+    },
     "injuries": {"candidates": ["wnba_injury_intelligence.json"], "require_target": True},
+}
+
+# Mirrors patch_dashboard_v4_ui_freeze.py exactly.
+UI_TAB_CONFIG: dict[str, dict[str, Any]] = {
+    "games": {"label": "Games", "candidates": ["wnba_master.json"], "require_target": True},
+    "game-performance": {
+        "label": "Game Performance",
+        "candidates": ["wnba_game_performance.json"],
+        "require_target": False,
+        "max_age_minutes": 10080.0,
+    },
+    "matchups": {"label": "Matchups", "candidates": ["wnba_sprint2_phase2.json"], "require_target": True},
+    "props": {"label": "Player Props", "candidates": ["wnba_player_props.json"], "require_target": True},
+    # ALT route reconstructs current ladders from canonical current-slate prop quotes.
+    "alt-props": {"label": "ALT Props", "candidates": ["wnba_player_props.json"], "require_target": True},
+    "sportsbooks": {"label": "Sportsbooks", "candidates": ["wnba_player_props.json"], "require_target": True},
+    "best": {"label": "Best Bets", "candidates": ["wnba_sprint2_phase2.json"], "require_target": True},
+    "ai": {"label": "AI Center", "candidates": ["wnba_sprint2_phase2.json"], "require_target": True},
+    "live": {"label": "Live", "candidates": ["wnba_master.json"], "require_target": True},
+    "remaining": {
+        "label": "Remaining Season",
+        "candidates": ["wnba_remaining_season_intelligence.json"],
+        "require_target": True,
+        "max_age_minutes": 1440.0,
+    },
+    "results": {
+        "label": "Results",
+        "candidates": ["wnba_s19_m06_results_lifecycle.json", "wnba_results_grading.json"],
+        "require_target": False,
+        "max_age_minutes": 10080.0,
+    },
+    "portfolio": {"label": "Portfolio", "candidates": ["wnba_sprint2_phase2.json"], "require_target": True},
+    "health": {
+        "label": "Data Health",
+        "candidates": ["wnba_v5_current_data_health.json", "wnba_tab_freshness.json"],
+        "require_target": True,
+        "max_age_minutes": 1440.0,
+    },
 }
 
 TARGET_KEYS = ("target_date", "slate_date", "date")
@@ -55,15 +103,8 @@ TIME_KEYS = (
     "captured_at_utc",
 )
 BAD_ARTIFACT_STATUSES = {
-    "error",
-    "failed",
-    "failure",
-    "fetch_failed",
-    "invalid",
-    "missing",
-    "stale",
-    "standby",
-    "unavailable",
+    "error", "failed", "failure", "fetch_failed", "invalid", "missing",
+    "stale", "standby", "unavailable",
 }
 
 
@@ -128,10 +169,7 @@ def git_commit_time(path: Path) -> datetime | None:
     rel = str(path.relative_to(ROOT))
     proc = subprocess.run(
         ["git", "log", "-1", "--format=%cI", "--", rel],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
+        cwd=ROOT, text=True, capture_output=True, check=False,
     )
     return parse_time(proc.stdout.strip()) if proc.returncode == 0 else None
 
@@ -140,27 +178,25 @@ def working_tree_changed(path: Path) -> bool:
     rel = str(path.relative_to(ROOT))
     proc = subprocess.run(
         ["git", "status", "--porcelain", "--", rel],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
+        cwd=ROOT, text=True, capture_output=True, check=False,
     )
     return bool(proc.stdout.strip())
 
 
-def inspect(path: Path, target: str, now: datetime, require_target: bool) -> dict[str, Any]:
+def inspect(
+    path: Path,
+    target: str,
+    now: datetime,
+    require_target: bool,
+    max_age_minutes: float = MAX_AGE_MINUTES,
+) -> dict[str, Any]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         return {
-            "status": "stale",
-            "target_date": target,
-            "artifact_target_date": None,
-            "artifact_status": None,
-            "file": str(path.relative_to(ROOT)),
-            "generated_at": None,
-            "age_minutes": None,
-            "timestamp_source": "invalid_json",
+            "status": "stale", "target_date": target, "artifact_target_date": None,
+            "artifact_status": None, "file": str(path.relative_to(ROOT)),
+            "generated_at": None, "age_minutes": None, "timestamp_source": "invalid_json",
             "reason": f"invalid_json:{type(exc).__name__}",
         }
 
@@ -169,8 +205,6 @@ def inspect(path: Path, target: str, now: datetime, require_target: bool) -> dic
     stamp = artifact_time(payload)
     source = "artifact_metadata" if stamp else None
 
-    # A file generated in this workflow may not yet have a Git commit. Its local
-    # mtime is acceptable only while it is visibly changed in the working tree.
     if stamp is None and working_tree_changed(path):
         stamp = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)
         source = "working_tree_mtime"
@@ -181,8 +215,8 @@ def inspect(path: Path, target: str, now: datetime, require_target: bool) -> dic
     raw_age = None if stamp is None else (now - stamp).total_seconds() / 60.0
     age = None if raw_age is None else round(max(0.0, raw_age), 1)
     future_ok = raw_age is None or raw_age >= -MAX_FUTURE_SKEW_MINUTES
-    target_ok = actual_target == target if require_target else actual_target in (None, target)
-    time_ok = age is not None and age <= MAX_AGE_MINUTES and future_ok
+    target_ok = actual_target == target if require_target else True
+    time_ok = age is not None and age <= max_age_minutes and future_ok
     healthy = health_failure is None
     status = "fresh" if target_ok and time_ok and healthy else "stale"
 
@@ -197,7 +231,9 @@ def inspect(path: Path, target: str, now: datetime, require_target: bool) -> dic
     elif not future_ok:
         reason = "generation_timestamp_in_future"
     elif not time_ok:
-        reason = f"age_exceeds_{int(MAX_AGE_MINUTES)}m"
+        reason = f"age_exceeds_{int(max_age_minutes)}m"
+    elif not require_target and actual_target and actual_target != target:
+        reason = f"archive_current:artifact_target={actual_target}"
     else:
         reason = "current"
 
@@ -214,47 +250,65 @@ def inspect(path: Path, target: str, now: datetime, require_target: bool) -> dic
     }
 
 
+def inspect_config(config: dict[str, Any], target: str, now: datetime) -> dict[str, Any]:
+    candidates = list(config.get("candidates") or [])
+    require_target = bool(config.get("require_target"))
+    max_age = float(config.get("max_age_minutes") or MAX_AGE_MINUTES)
+    inspected = [
+        inspect(DASHBOARD / name, target, now, require_target, max_age)
+        for name in candidates if (DASHBOARD / name).exists()
+    ]
+    if not inspected:
+        return {
+            "status": "missing", "target_date": target, "artifact_target_date": None,
+            "artifact_status": None, "file": None, "generated_at": None,
+            "age_minutes": None, "timestamp_source": None, "reason": "no_active_artifact",
+        }
+    return next((row for row in inspected if row["status"] == "fresh"), inspected[0])
+
+
 def build(target: str) -> dict[str, Any]:
     now = datetime.now(timezone.utc)
-    tabs: dict[str, dict[str, Any]] = {}
+    tabs = {tab: inspect_config(config, target, now) for tab, config in TAB_CONFIG.items()}
 
-    for tab, config in TAB_CONFIG.items():
-        candidates = list(config["candidates"])
-        require_target = bool(config["require_target"])
-        inspected = [
-            inspect(DASHBOARD / name, target, now, require_target)
-            for name in candidates
-            if (DASHBOARD / name).exists()
-        ]
-        if not inspected:
-            tabs[tab] = {
-                "status": "missing",
-                "target_date": target,
-                "artifact_target_date": None,
-                "artifact_status": None,
-                "file": None,
-                "generated_at": None,
-                "age_minutes": None,
-                "timestamp_source": None,
-                "reason": "retired_no_active_producer" if tab == "portfolio" else "no_active_artifact",
-            }
-            continue
-        tabs[tab] = next((row for row in inspected if row["status"] == "fresh"), inspected[0])
+    ui_tabs: dict[str, dict[str, Any]] = {}
+    for route, config in UI_TAB_CONFIG.items():
+        row = inspect_config(config, target, now)
+        source_status = str(row.get("artifact_status") or "").lower()
+        if row["status"] == "fresh":
+            activity = "degraded" if source_status == "degraded" else "active"
+        else:
+            activity = row["status"]
+        ui_tabs[route] = {
+            "label": config["label"],
+            "activity": activity,
+            **row,
+        }
+
+    all_active = all(row["activity"] in {"active", "degraded"} for row in ui_tabs.values())
+    active_count = sum(row["activity"] in {"active", "degraded"} for row in ui_tabs.values())
 
     payload = {
-        "schema_version": "v5-semantic-freshness-2",
+        "schema_version": "v5-semantic-freshness-3",
         "target_date": target,
         "generated_at": now.isoformat(),
         "freshness_policy": {
-            "max_age_minutes": MAX_AGE_MINUTES,
+            "default_max_age_minutes": MAX_AGE_MINUTES,
             "max_future_skew_minutes": MAX_FUTURE_SKEW_MINUTES,
             "checkout_mtime_for_tracked_files": "forbidden",
-            "current_slate_target_date": "required",
-            "target_date_mismatch": "stale",
+            "current_slate_target_date": "required_for_current_views",
+            "archive_target_date": "may_precede_current_target",
             "failed_or_standby_artifact": "stale",
             "legacy_fallbacks": "forbidden",
         },
-        "retired_tabs": ["portfolio"],
+        "retired_tabs": [],
+        "ui_summary": {
+            "tabs": len(ui_tabs),
+            "active": active_count,
+            "inactive": len(ui_tabs) - active_count,
+            "all_tabs_active": all_active,
+        },
+        "ui_tabs": ui_tabs,
         "tabs": tabs,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
