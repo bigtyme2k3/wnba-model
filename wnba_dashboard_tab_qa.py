@@ -1,4 +1,9 @@
-"""Validate that each production dashboard tab is present and wired to data markers."""
+"""Validate every routed production dashboard tab is present and callable.
+
+This audit mirrors the 13-tab locked router in patch_dashboard_v4_ui_freeze.py.
+A tab passes when its navigation entry and its route/renderer markers are in the
+built Pages artifact. Empty current data is allowed; a missing route is not.
+"""
 from __future__ import annotations
 
 import argparse
@@ -12,15 +17,19 @@ OUT_JSON = ROOT / "data" / "dashboard" / "wnba_dashboard_tab_qa.json"
 OUT_MD = ROOT / "docs" / "DASHBOARD_TAB_QA_REPORT.md"
 
 TAB_CHECKS = {
-    "Games": ["Games Today", "window.marketsV25", "namedCandidates"],
-    "Player Props": ["function actualHistory", "function wirePropFilters", "setPropSort"],
-    "Top Plays": ["Best Bets Shortlist", "active ranked plays", "finalKeys.has(k)"],
-    "Market Intelligence": ["v4-market-intelligence-script"],
-    "Mission Control": ["v4-mission-control-script"],
-    "Learning": ["window.WNBA_RESULTS_DATA"],
-    "Performance": ["v4-projection-performance-script", "Results & Grading"],
-    "Explainability": ["v4-explainability-script"],
-    "Alt Markets": ["v4-alt-streaks-script", "v4-alt-ladders-script", "Sportsbook ALT Ladders"],
+    "Games": ["['games','Games']", "gamesV25"],
+    "Game Performance": ["['game-performance','Game Performance']", "fullGamePerformance"],
+    "Matchups": ["['matchups','Matchups']", "canonicalMatchups"],
+    "Player Props": ["['props','Player Props']", "WNBA_CANONICAL_PROPS"],
+    "ALT Props": ["['alt-props','ALT Props']", "canonicalAltProps"],
+    "Sportsbooks": ["['sportsbooks','Sportsbooks']", "canonicalSportsbooks"],
+    "Best Bets": ["['best','Best Bets']", "canonicalBest"],
+    "AI Center": ["['ai','AI Center']", "canonicalAI"],
+    "Live": ["['live','Live']", "canonicalLive"],
+    "Remaining Season": ["['remaining','Remaining Season']", "remainingSeason"],
+    "Results": ["['results','Results']", "s19-m06-results-script", "Player Props Results"],
+    "Portfolio": ["['portfolio','Portfolio']", "canonicalPortfolio"],
+    "Data Health": ["['health','Data Health']", "v5-current-data-health-script"],
 }
 
 
@@ -43,6 +52,7 @@ def audit() -> dict:
             "tabs": len(tabs),
             "passing": len(tabs) - red,
             "failing": red,
+            "all_tabs_active": red == 0,
             "html_bytes": len(html),
         },
         "tabs": tabs,
@@ -72,15 +82,10 @@ def print_diagnostics(result: dict) -> None:
     for row in result["tabs"]:
         status = "PASS" if row["status"] == "green" else "FAIL"
         print(f"{status}: {row['tab']}")
-        if row["missing_markers"]:
-            for marker in row["missing_markers"]:
-                print(f"  missing marker: {marker}")
-        else:
-            print("  all required markers present")
+        for marker in row["missing_markers"]:
+            print(f"  missing marker: {marker}")
     print("=" * 72)
     print(json.dumps(result["summary"], indent=2))
-    print(f"JSON report: {OUT_JSON.relative_to(ROOT)}")
-    print(f"Markdown report: {OUT_MD.relative_to(ROOT)}")
 
 
 def main() -> None:
@@ -93,8 +98,8 @@ def main() -> None:
     write_report(result)
     print_diagnostics(result)
     if args.strict and result["status"] == "red":
-        failed_tabs = ", ".join(row["tab"] for row in result["tabs"] if row["status"] == "red")
-        raise SystemExit(f"Dashboard tab QA failed: {failed_tabs}")
+        failed = ", ".join(row["tab"] for row in result["tabs"] if row["status"] == "red")
+        raise SystemExit(f"Dashboard tab QA failed: {failed}")
 
 
 if __name__ == "__main__":
