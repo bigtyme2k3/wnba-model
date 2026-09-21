@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T21:01:54.886506+00:00",
+  "generated_at": "2026-09-21T21:18:45.810621+00:00",
   "status": "PASS",
   "mode": "contract_enforced",
   "contract_mode": "live",
@@ -428,11 +428,12 @@
       "artifact": "data/dashboard/wnba_tab_freshness.json",
       "expected_writer": ".github/workflows/wnba_daily_slate_rollover.yml",
       "workflow_references": [
+        ".github/workflows/deploy_wnba_dashboard.yml",
         ".github/workflows/wnba_daily_slate_rollover.yml"
       ],
       "observed_publish_workflows": [],
       "unexpected_publish_workflows": [],
-      "reference_count": 1,
+      "reference_count": 2,
       "observed_publish_workflow_count": 0,
       "checks": {
         "writer_workflow_exists": true,
@@ -467,7 +468,7 @@
       "domain": "standard_props",
       "artifact": "data/dashboard/wnba_player_props.json",
       "workflow": ".github/workflows/deploy_wnba_dashboard.yml",
-      "line": 249,
+      "line": 253,
       "publish_context": false,
       "snippet": "props=json.loads(Path('data/dashboard/wnba_player_props.json').read_text())"
     },
@@ -475,7 +476,7 @@
       "domain": "injury_context",
       "artifact": "data/dashboard/wnba_injury_intelligence.json",
       "workflow": ".github/workflows/deploy_wnba_dashboard.yml",
-      "line": 227,
+      "line": 231,
       "publish_context": false,
       "snippet": "if [ -f data/dashboard/wnba_injury_intelligence.json ]; then python patch_dashboard_v5_injury_intelligence.py || true; python patch_dashboard_v5_player_prop_injury_context.py || true; fi"
     },
@@ -483,9 +484,17 @@
       "domain": "alt_market",
       "artifact": "data/dashboard/wnba_alt_market_warehouse.json",
       "workflow": ".github/workflows/deploy_wnba_dashboard.yml",
-      "line": 153,
+      "line": 157,
       "publish_context": false,
       "snippet": "w=json.loads(Path('data/dashboard/wnba_alt_market_warehouse.json').read_text())"
+    },
+    {
+      "domain": "dashboard_freshness",
+      "artifact": "data/dashboard/wnba_tab_freshness.json",
+      "workflow": ".github/workflows/deploy_wnba_dashboard.yml",
+      "line": 302,
+      "publish_context": false,
+      "snippet": "p=Path('data/dashboard/wnba_tab_freshness.json')"
     },
     {
       "domain": "alt_market",
