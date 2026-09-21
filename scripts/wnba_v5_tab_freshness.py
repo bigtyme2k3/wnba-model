@@ -87,7 +87,7 @@ UI_TAB_CONFIG: dict[str, dict[str, Any]] = {
     "portfolio": {"label": "Portfolio", "candidates": ["wnba_sprint2_phase2.json"], "require_target": True},
     "health": {
         "label": "Data Health",
-        "candidates": ["wnba_v5_current_data_health.json", "wnba_tab_freshness.json"],
+        "candidates": ["wnba_daily_canonical_manifest.json", "wnba_v5_current_data_health.json"],
         "require_target": True,
         "max_age_minutes": 1440.0,
     },
