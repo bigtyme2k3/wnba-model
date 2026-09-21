@@ -206,6 +206,20 @@ jobs:
           print({'status':'PASS','alt_performance_views':3,'live_bet_n':p['live_performance']['n']})
           PY
 
+      - name: Refresh dashboard tab activity manifest
+        if: env.MAINTENANCE_BREAK != 'true'
+        run: |
+          python scripts/wnba_v5_tab_freshness.py --date "$TARGET"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('data/dashboard/wnba_tab_freshness.json').read_text(encoding='utf-8'))
+          s=d.get('ui_summary') or {}
+          if s.get('tabs') != 13 or not s.get('all_tabs_active'):
+              raise SystemExit(f"Dashboard tab activity not ready: {s}")
+          print({'status':'PASS', **s})
+          PY
+
       - name: Build complete dashboard artifact
         run: |
           set -e
