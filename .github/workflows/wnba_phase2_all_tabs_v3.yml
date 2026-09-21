@@ -67,6 +67,7 @@ jobs:
           run_if_present wnba_forward_validation_engine.py --mode freeze --date "$TARGET"
           run_if_present wnba_readiness_engine.py
           run_if_present wnba_production_readiness.py
+          run_if_present wnba_v5_current_data_health.py
       - name: Grade results and performance
         run: |
           YESTERDAY=$(TZ=America/New_York date -d yesterday +%F)
