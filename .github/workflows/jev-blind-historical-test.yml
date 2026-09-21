@@ -8,7 +8,7 @@ on:
 
 concurrency:
   group: jev-blind-historical-2026-08-03
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   blind-test:
@@ -22,7 +22,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          sparse-checkout: |
+            jev_shadow.py
+            grade_jev_historical.py
+            data/experiments/jev_blind_2026-08-03.json
+            data/history/wnba_graded_bets.csv
+          sparse-checkout-cone-mode: false
 
       - uses: actions/setup-python@v5
         with:
