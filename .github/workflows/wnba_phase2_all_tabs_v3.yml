@@ -92,36 +92,37 @@ jobs:
               raise SystemExit('No current-slate games after reassertion')
           print({'target':target,'today_games':len(today)})
           PY
-      - name: Verify Phase 2 data outputs
+      - name: Verify all active dashboard tab sources
         run: |
+          python scripts/wnba_v5_tab_freshness.py --date "$TARGET"
           python - <<'PY'
           import json, os
           from pathlib import Path
           target=os.environ['TARGET']; root=Path('data/dashboard')
           master=json.loads((root/'wnba_master.json').read_text(encoding='utf-8'))
-          if str(master.get('target_date') or '') != target: raise SystemExit('Master target mismatch')
+          if str(master.get('target_date') or '') != target:
+              raise SystemExit('Master target mismatch')
           today=[g for g in master.get('games',[]) if str(g.get('bucket','')).lower()=='today']
-          required={
-            'games':['wnba_master.json'], 'game_props':['wnba_game_props.json','wnba_game_prop_intelligence.json'],
-            'player_props':['wnba_player_props.json','wnba_player_prop_intelligence.json'],
-            'alt_streaks':['wnba_alt_streaks.json','wnba_alt_market_watch.json'],
-            'alt_performance':['wnba_alt_performance.json','wnba_alt_pending_diagnostics.json'],
-            'daily_edges':['wnba_daily_edges.json','wnba_daily_edge_engine.json'],
-            'ensemble':['wnba_ensemble_intelligence.json','wnba_ensemble.json'],
-            'simulation':['wnba_unified_simulation.json','wnba_monte_carlo_scenarios.json'],
-            'best_bets':['wnba_best_bets.json'],
-            'portfolio':['wnba_portfolio.json','wnba_portfolio_intelligence.json','wnba_portfolio_dashboard.json'],
-            'results':['wnba_results.json','wnba_live_results.json','wnba_results_grading.json'],
-            'performance':['wnba_game_performance.json','wnba_model_performance.json','best_bets_performance_summary.json'],
-            'ai_center':['wnba_ai_coach.json','wnba_daily_ai_report.json']}
-          tabs={}; missing=[]
-          for tab,names in required.items():
-            found=next((root/n for n in names if (root/n).exists()),None)
-            tabs[tab]={'status':'fresh' if found else 'missing','file':str(found) if found else None,'target_date':target}
-            if not found: missing.append(tab)
-          (root/'wnba_tab_freshness.json').write_text(json.dumps({'target_date':target,'today_games':len(today),'tabs':tabs},indent=2),encoding='utf-8')
-          if missing: raise SystemExit('Missing Phase 2 outputs: '+', '.join(missing))
-          print(json.dumps({'target':target,'today_games':len(today),'tabs':tabs},indent=2))
+          if not today:
+              raise SystemExit('No current-slate games after reassertion')
+          p=json.loads((root/'wnba_tab_freshness.json').read_text(encoding='utf-8'))
+          ui=p.get('ui_tabs') or {}
+          expected={'games','game-performance','matchups','props','alt-props','sportsbooks','best','ai','live','remaining','results','portfolio','health'}
+          missing=sorted(expected-set(ui))
+          inactive={k:v for k,v in ui.items() if v.get('activity') not in {'active','degraded'}}
+          print(json.dumps({
+              'target':target,
+              'today_games':len(today),
+              'ui_summary':p.get('ui_summary'),
+              'missing_routes':missing,
+              'inactive_routes':inactive,
+          },indent=2))
+          if missing:
+              raise SystemExit('Missing UI tab activity entries: '+', '.join(missing))
+          if inactive:
+              raise SystemExit('Inactive UI tab sources: '+', '.join(sorted(inactive)))
+          if not (p.get('ui_summary') or {}).get('all_tabs_active'):
+              raise SystemExit('All-tabs activity contract not satisfied')
           PY
       - name: Publish Phase 2 data atomically
         run: |
