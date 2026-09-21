@@ -52,6 +52,9 @@ on:
       - 'patch_dashboard_v5_injury_intelligence.py'
       - 'patch_dashboard_v5_player_prop_injury_context.py'
       - 'patch_dashboard_v4_remaining_season.py'
+      - 'wnba_remaining_season_intelligence.py'
+      - 'wnba_dashboard_tab_qa.py'
+      - 'scripts/wnba_v5_tab_freshness.py'
       - 'patch_dashboard_v4_alt_streaks_display.py'
       - 'patch_dashboard_v4_alt_ladders.py'
       - 'wnba_results_grader.py'
@@ -135,6 +138,7 @@ jobs:
             patch_dashboard_alt_recovery_progress.py patch_dashboard_game_performance.py patch_dashboard_v4_alt_streaks_display.py patch_dashboard_v4_alt_ladders.py \
             wnba_results_grader.py wnba_edge_database.py
           python -m py_compile active_slate_date.py patch_dashboard_break_state.py
+          python -m py_compile wnba_dashboard_tab_qa.py scripts/wnba_v5_tab_freshness.py wnba_remaining_season_intelligence.py
 
       - name: Compile optional data renderers
         continue-on-error: true
@@ -287,6 +291,28 @@ jobs:
             python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" --results-only
             python patch_dashboard_s19_m06.py
           fi
+
+      - name: Verify all 13 dashboard tabs are active
+        if: env.MAINTENANCE_BREAK != 'true'
+        run: |
+          python wnba_dashboard_tab_qa.py --strict
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/dashboard/wnba_tab_freshness.json')
+          if not p.exists():
+              raise SystemExit('Tab freshness manifest missing')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          ui=d.get('ui_tabs') or {}
+          inactive={k:v.get('activity') for k,v in ui.items() if v.get('activity') not in {'active','degraded'}}
+          if len(ui) != 13:
+              raise SystemExit(f'Expected 13 UI tabs in freshness manifest, found {len(ui)}')
+          if inactive:
+              raise SystemExit(f'Inactive UI tabs: {inactive}')
+          if not (d.get('ui_summary') or {}).get('all_tabs_active'):
+              raise SystemExit('Freshness manifest does not certify all tabs active')
+          print({'status':'PASS','ui_tabs':len(ui),'all_tabs_active':True})
+          PY
 
       - name: Verify maintenance break artifact
         if: env.MAINTENANCE_BREAK == 'true'
