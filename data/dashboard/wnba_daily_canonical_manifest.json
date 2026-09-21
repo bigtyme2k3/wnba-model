@@ -1,29 +1,20 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-09-20T18:49:07.202066+00:00",
-  "target_date": "2026-09-20",
+  "generated_at_utc": "2026-09-21T16:31:24.943644+00:00",
+  "target_date": "2026-09-21",
   "status": "PASS",
   "games": [
-    "Minnesota Lynx @ Connecticut Sun",
-    "New York Liberty @ Toronto Tempo",
-    "Washington Mystics @ Indiana Fever",
-    "Portland Fire @ Los Angeles Sparks",
-    "Seattle Storm @ Las Vegas Aces"
+    "Atlanta Dream @ New York Liberty",
+    "Dallas Wings @ Phoenix Mercury"
   ],
   "teams": [
-    "Connecticut Sun",
-    "Indiana Fever",
-    "Las Vegas Aces",
-    "Los Angeles Sparks",
-    "Minnesota Lynx",
+    "Atlanta Dream",
+    "Dallas Wings",
     "New York Liberty",
-    "Portland Fire",
-    "Seattle Storm",
-    "Toronto Tempo",
-    "Washington Mystics"
+    "Phoenix Mercury"
   ],
-  "game_count": 5,
-  "player_prop_rows": 251,
+  "game_count": 2,
+  "player_prop_rows": 123,
   "sportsbooks_allowed": [
     "draftkings",
     "fanatics",
@@ -42,14 +33,14 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-09-20\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 5,\n  \"matchups\": [\n    \"Minnesota Lynx @ Connecticut Sun\",\n    \"New York Liberty @ Toronto Tempo\",\n    \"Washington Mystics @ Indiana Fever\",\n    \"Portland Fire @ Los Angeles Sparks\",\n    \"Seattle Storm @ Las Vegas Aces\"\n  ]\n}\n",
+      "stdout": "{\n  \"target_date\": \"2026-09-21\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 2,\n  \"matchups\": [\n    \"Atlanta Dream @ New York Liberty\",\n    \"Dallas Wings @ Phoenix Mercury\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-09-20\",\n  \"events\": 5,\n  \"raw_rows\": 251,\n  \"verified_rows\": 251,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"api_called\": true,\n  \"sportsbooks_allowed\": [\n    \"draftkings\",\n    \"fanatics\",\n    \"fanduel\"\n  ],\n  \"sportsbooks_observed\": [\n    \"draftkings\",\n    \"fanduel\"\n  ],\n  \"unsupported_bookmakers_rejected\": [],\n  \"canonical_manifest_synced\": true\n}\n",
+      "stdout": "{\n  \"target_date\": \"2026-09-21\",\n  \"events\": 2,\n  \"raw_rows\": 126,\n  \"verified_rows\": 123,\n  \"unresolved_rows\": 3,\n  \"unresolved_players\": [\n    \"DeWanna Bonner\"\n  ],\n  \"api_called\": true,\n  \"sportsbooks_allowed\": [\n    \"draftkings\",\n    \"fanatics\",\n    \"fanduel\"\n  ],\n  \"sportsbooks_observed\": [\n    \"draftkings\",\n    \"fanduel\"\n  ],\n  \"unsupported_bookmakers_rejected\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
