@@ -19,11 +19,14 @@ fi
 CURRENT_WORKFLOW_PATH="$CALLER_WORKFLOW_PATH"
 REQUESTED_WRITER_WORKFLOW_PATH=${V5_WRITER_WORKFLOW_PATH:-}
 
+# Value is a space-separated list: the primary writer_workflow plus any
+# declared co_writer_workflows (e.g. one workflow appends new rows while
+# another updates existing rows in place -- both are legitimate owners).
 declare -A PROTECTED_WRITERS=()
 if [ -f "$CONTRACT_PATH" ]; then
-  while IFS=$'\t' read -r artifact writer; do
+  while IFS=$'\t' read -r artifact writers; do
     [ -n "$artifact" ] || continue
-    PROTECTED_WRITERS["$artifact"]="$writer"
+    PROTECTED_WRITERS["$artifact"]="$writers"
   done < <(python - "$CONTRACT_PATH" <<'PY'
 import json, sys
 from pathlib import Path
@@ -31,8 +34,10 @@ p = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
 for row in p.get('artifacts') or []:
     artifact = str(row.get('artifact') or '').strip()
     writer = str(row.get('writer_workflow') or '').strip()
-    if artifact and writer:
-        print(f"{artifact}\t{writer}")
+    co_writers = [str(w).strip() for w in (row.get('co_writer_workflows') or []) if str(w).strip()]
+    writers = ' '.join(w for w in [writer, *co_writers] if w)
+    if artifact and writers:
+        print(f"{artifact}\t{writers}")
 PY
   )
 fi
@@ -49,11 +54,13 @@ if [ -n "$REQUESTED_WRITER_WORKFLOW_PATH" ]; then
       ;;
   esac
   writer_known=false
-  for owner in "${PROTECTED_WRITERS[@]}"; do
-    if [ "$owner" = "$REQUESTED_WRITER_WORKFLOW_PATH" ]; then
-      writer_known=true
-      break
-    fi
+  for owners in "${PROTECTED_WRITERS[@]}"; do
+    for owner in $owners; do
+      if [ "$owner" = "$REQUESTED_WRITER_WORKFLOW_PATH" ]; then
+        writer_known=true
+        break 2
+      fi
+    done
   done
   if [ "$writer_known" != true ]; then
     echo "Unknown V5 writer workflow override: $REQUESTED_WRITER_WORKFLOW_PATH" >&2
@@ -70,12 +77,17 @@ is_protected_dashboard_file() {
 
 is_foreign_owned_artifact() {
   local file=$1
-  local owner="${PROTECTED_WRITERS[$file]-}"
-  [ -n "$owner" ] || return 1
-  if [ -n "$CURRENT_WORKFLOW_PATH" ] && [ "$CURRENT_WORKFLOW_PATH" = "$owner" ]; then
-    return 1
+  local owners="${PROTECTED_WRITERS[$file]-}"
+  [ -n "$owners" ] || return 1
+  if [ -n "$CURRENT_WORKFLOW_PATH" ]; then
+    local owner
+    for owner in $owners; do
+      if [ "$CURRENT_WORKFLOW_PATH" = "$owner" ]; then
+        return 1
+      fi
+    done
   fi
-  echo "Skipping protected artifact owned by $owner from ${CURRENT_WORKFLOW_PATH:-local/unresolved}: $file"
+  echo "Skipping protected artifact owned by $owners from ${CURRENT_WORKFLOW_PATH:-local/unresolved}: $file"
   return 0
 }
 

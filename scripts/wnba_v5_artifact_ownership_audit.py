@@ -62,6 +62,9 @@ def load_contract() -> dict:
         domain = str(item.get("domain") or "")
         if not artifact or not writer or not domain:
             raise SystemExit(f"Invalid ownership contract row: {item}")
+        for co_writer in item.get("co_writer_workflows") or []:
+            if not str(co_writer or "").strip():
+                raise SystemExit(f"Invalid co_writer_workflows entry in ownership contract row: {item}")
         if artifact in seen:
             raise SystemExit(f"Duplicate protected artifact in ownership contract: {artifact}")
         seen.add(artifact)
@@ -191,20 +194,25 @@ def main() -> int:
         domain = contract_row["domain"]
         artifact = contract_row["artifact"]
         expected_writer = contract_row["writer_workflow"]
+        co_writers = [str(w).strip() for w in (contract_row.get("co_writer_workflows") or []) if str(w).strip()]
+        allowed_writers = [expected_writer, *co_writers]
         refs = by_artifact.get(artifact, [])
         workflows = sorted({r["workflow"] for r in refs})
         publishers = sorted({r["workflow"] for r in refs if r["publish_context"]})
-        unexpected_publishers = [wf for wf in publishers if wf != expected_writer]
+        unexpected_publishers = [wf for wf in publishers if wf not in allowed_writers]
         checks = {
             "writer_workflow_exists": expected_writer in workflow_paths,
             "writer_references_artifact": expected_writer in workflows,
+            "co_writer_workflows_exist": all(w in workflow_paths for w in co_writers),
             "no_unexpected_publishers": not unexpected_publishers,
-            "no_multiple_observed_publishers": len(publishers) <= 1,
+            "no_multiple_observed_publishers": len(set(publishers) - set(allowed_writers)) == 0
+            and len(publishers) <= max(1, len(allowed_writers)),
         }
         item = {
             "domain": domain,
             "artifact": artifact,
             "expected_writer": expected_writer,
+            "co_writer_workflows": co_writers,
             "workflow_references": workflows,
             "observed_publish_workflows": publishers,
             "unexpected_publish_workflows": unexpected_publishers,
@@ -220,6 +228,7 @@ def main() -> int:
                 "domain": domain,
                 "artifact": artifact,
                 "expected_writer": expected_writer,
+                "co_writer_workflows": co_writers,
                 "failed_checks": [name for name, ok in checks.items() if not ok],
                 "unexpected_publish_workflows": unexpected_publishers,
             })

@@ -72,7 +72,9 @@
     {
       "domain": "results",
       "artifact": "data/history/wnba_model_history.jsonl",
-      "writer_workflow": ".github/workflows/wnba_results_refresh.yml"
+      "writer_workflow": ".github/workflows/wnba_results_refresh.yml",
+      "co_writer_workflows": [".github/workflows/deploy_wnba_dashboard.yml"],
+      "_co_writer_note": "wnba_results_refresh.yml grades/updates existing rows in place; deploy_wnba_dashboard.yml appends today's fresh predictions during a live open-slate deploy (Sprint 19 M06, non-results-only). Both are legitimate writers of the same file for different operations."
     },
     {
       "domain": "results",

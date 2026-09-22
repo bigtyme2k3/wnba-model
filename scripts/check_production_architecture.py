@@ -27,6 +27,14 @@ REUSABLE_WRITER_OVERRIDES = {
     "wnba-new-day-prediction-sync.yml": ".github/workflows/wnba-new-day-prediction-sync.yml",
     "wnba_daily_slate_rollover.yml": ".github/workflows/wnba_daily_slate_rollover.yml",
 }
+# One-off historical backtests intentionally pin an execution date to keep a
+# frozen blind-test experiment reproducible. They are not part of the live
+# daily pipeline (scoped to a single experiment data file / manual dispatch,
+# never the active slate date), so they are exempt from the hardcoded-slate-
+# date guard below only -- every other architecture check still applies.
+FROZEN_HISTORICAL_WORKFLOWS = {
+    "jev-blind-historical-test.yml",
+}
 
 
 def fail(message: str) -> None:
@@ -90,7 +98,7 @@ def main() -> None:
         if retired:
             fail(f"{name} references retired dashboard builders: {retired}")
 
-        if hardcoded_slate_date.search(text):
+        if name not in FROZEN_HISTORICAL_WORKFLOWS and hardcoded_slate_date.search(text):
             fail(f"{name} hardcodes an executable slate date")
 
         if "GITHUB_WORKFLOW=" in text:
