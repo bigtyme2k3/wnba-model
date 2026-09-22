@@ -6,6 +6,12 @@ name: WNBA ALT Canonical Market Writer
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      deploy_dashboard:
+        description: Dispatch dashboard after ALT publish
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -203,6 +209,7 @@ jobs:
             'data/dashboard/wnba_alt_parlays.json'
 
       - name: Dispatch canonical dashboard deploy
+        if: ${{ github.event_name == 'workflow_dispatch' || inputs.deploy_dashboard }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run deploy_wnba_dashboard.yml --ref main
