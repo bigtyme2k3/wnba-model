@@ -265,6 +265,19 @@ def main() -> int:
         ],
     }
 
+    # Keep generated_at stable when the semantic audit result is unchanged.
+    # Without this, every audit run rewrites an otherwise identical report,
+    # creating a commit that retriggers the audit workflow again.
+    if OUT_JSON.exists():
+        try:
+            previous = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+            previous_semantic = {k: v for k, v in previous.items() if k != "generated_at"}
+            current_semantic = {k: v for k, v in payload.items() if k != "generated_at"}
+            if previous_semantic == current_semantic and previous.get("generated_at"):
+                payload["generated_at"] = previous["generated_at"]
+        except (OSError, json.JSONDecodeError, TypeError):
+            pass
+
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     with OUT_CSV.open("w", newline="", encoding="utf-8") as f:
