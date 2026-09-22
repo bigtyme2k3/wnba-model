@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T00:16:34.043571+00:00",
+  "generated_at": "2026-09-22T01:46:10.305040+00:00",
   "status": "PASS",
   "mode": "contract_enforced",
   "contract_mode": "live",
@@ -33,6 +33,7 @@
       "domain": "current_slate",
       "artifact": "data/dashboard/wnba_master.json",
       "expected_writer": ".github/workflows/wnba_daily_canonical_build.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
@@ -51,6 +52,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -60,6 +62,7 @@
       "domain": "standard_props",
       "artifact": "data/dashboard/wnba_player_props.json",
       "expected_writer": ".github/workflows/wnba_daily_canonical_build.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/deploy_wnba_dashboard.yml",
         ".github/workflows/wnba-new-day-prediction-sync.yml",
@@ -77,6 +80,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -86,6 +90,7 @@
       "domain": "injury_context",
       "artifact": "data/dashboard/wnba_injury_intelligence.json",
       "expected_writer": ".github/workflows/wnba_v5_injury_dashboard.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/deploy_wnba_dashboard.yml",
         ".github/workflows/wnba-new-day-prediction-sync.yml",
@@ -105,6 +110,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -114,6 +120,7 @@
       "domain": "injury_context",
       "artifact": "data/warehouse/wnba_injury_intelligence.json",
       "expected_writer": ".github/workflows/wnba_v5_injury_dashboard.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
@@ -130,6 +137,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -139,6 +147,7 @@
       "domain": "game_predictions",
       "artifact": "data/dashboard/wnba_sprint2_predictions.json",
       "expected_writer": ".github/workflows/wnba_daily_canonical_build.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
@@ -154,6 +163,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -163,6 +173,7 @@
       "domain": "game_predictions",
       "artifact": "data/dashboard/wnba_sprint2_phase2.json",
       "expected_writer": ".github/workflows/wnba-new-day-prediction-sync.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba-v5-s3-m02-closing-capture.yml",
@@ -179,6 +190,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -188,6 +200,7 @@
       "domain": "m02_predictions",
       "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
       "expected_writer": ".github/workflows/wnba-new-day-prediction-sync.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba-v5-player-prop-action-policy-v2.yml",
@@ -204,6 +217,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -213,6 +227,7 @@
       "domain": "m02_predictions",
       "artifact": "data/dashboard/wnba_s19_m02_prediction_audit.json",
       "expected_writer": ".github/workflows/wnba-new-day-prediction-sync.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
@@ -228,6 +243,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -237,6 +253,7 @@
       "domain": "forward_ledger",
       "artifact": "data/history/wnba_v5_forward_predictions.jsonl",
       "expected_writer": ".github/workflows/wnba-v5-m12-postgame-learning.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-v5-adaptive-challenger-v2.yml",
         ".github/workflows/wnba-v5-evidence-integrity.yml",
@@ -257,6 +274,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -266,6 +284,7 @@
       "domain": "closing_lines",
       "artifact": "data/dashboard/wnba_v5_closing_lines.csv",
       "expected_writer": ".github/workflows/wnba-v5-s3-m02-closing-capture.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-v5-evidence-integrity.yml",
         ".github/workflows/wnba-v5-s3-m02-closing-capture.yml",
@@ -280,6 +299,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -289,6 +309,7 @@
       "domain": "closing_lines",
       "artifact": "data/dashboard/wnba_v5_closing_snapshot.json",
       "expected_writer": ".github/workflows/wnba-v5-s3-m02-closing-capture.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-v5-s3-m02-closing-capture.yml"
       ],
@@ -301,6 +322,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -310,6 +332,7 @@
       "domain": "closing_lines",
       "artifact": "data/dashboard/wnba_v5_clv_queue.json",
       "expected_writer": ".github/workflows/wnba-v5-s3-m02-closing-capture.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-v5-evidence-integrity.yml",
         ".github/workflows/wnba-v5-s3-m02-closing-capture.yml"
@@ -323,6 +346,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -332,6 +356,9 @@
       "domain": "results",
       "artifact": "data/history/wnba_model_history.jsonl",
       "expected_writer": ".github/workflows/wnba_results_refresh.yml",
+      "co_writer_workflows": [
+        ".github/workflows/deploy_wnba_dashboard.yml"
+      ],
       "workflow_references": [
         ".github/workflows/wnba-v5-evidence-integrity.yml",
         ".github/workflows/wnba-v5-player-prop-action-audit.yml",
@@ -349,6 +376,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -358,6 +386,7 @@
       "domain": "results",
       "artifact": "data/dashboard/wnba_s19_m06_results_lifecycle.json",
       "expected_writer": ".github/workflows/wnba_results_refresh.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-v5-current-data-health.yml",
         ".github/workflows/wnba_results_refresh.yml"
@@ -369,6 +398,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -378,6 +408,7 @@
       "domain": "alt_market",
       "artifact": "data/dashboard/wnba_alt_market_warehouse.json",
       "expected_writer": ".github/workflows/wnba_alt_pregame_snapshot.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/deploy_wnba_dashboard.yml",
         ".github/workflows/wnba-alt-parlay-refresh.yml",
@@ -395,6 +426,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -404,6 +436,7 @@
       "domain": "alt_market",
       "artifact": "data/warehouse/wnba_alt_market_warehouse.json",
       "expected_writer": ".github/workflows/wnba_alt_pregame_snapshot.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba_alt_game_log_recovery.yml",
         ".github/workflows/wnba_alt_pregame_snapshot.yml",
@@ -418,6 +451,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -427,6 +461,7 @@
       "domain": "dashboard_freshness",
       "artifact": "data/dashboard/wnba_tab_freshness.json",
       "expected_writer": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/deploy_wnba_dashboard.yml",
         ".github/workflows/wnba_daily_slate_rollover.yml"
@@ -438,6 +473,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
@@ -447,6 +483,7 @@
       "domain": "projection_integrity",
       "artifact": "data/dashboard/wnba_projection_integrity_audit.json",
       "expected_writer": ".github/workflows/wnba_daily_slate_rollover.yml",
+      "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba_daily_slate_rollover.yml"
       ],
@@ -457,6 +494,7 @@
       "checks": {
         "writer_workflow_exists": true,
         "writer_references_artifact": true,
+        "co_writer_workflows_exist": true,
         "no_unexpected_publishers": true,
         "no_multiple_observed_publishers": true
       },
