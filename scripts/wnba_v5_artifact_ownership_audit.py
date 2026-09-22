@@ -113,6 +113,17 @@ def scheduled_entry(wf: Path, lines: list[str], text: str) -> dict | None:
         return None
 
     lower = text.lower()
+
+    # Reusable workflows can hide paid API usage from the caller's YAML.
+    # Resolve local workflow_call dependencies so scheduled orchestrators are
+    # classified by the capabilities of the workflows they invoke.
+    dependency_text = ""
+    for match in re.finditer(r"uses:\\s*\\./(\\.github/workflows/[^\\s]+)", text):
+        dependency = ROOT / match.group(1)
+        if dependency.exists():
+            dependency_text += "\n" + dependency.read_text(encoding="utf-8", errors="replace").lower()
+    risk_text = lower + dependency_text
+
     paid_markers = (
         "odds_api_key",
         "scrape_odds_props_consensus.py",
@@ -133,8 +144,8 @@ def scheduled_entry(wf: Path, lines: list[str], text: str) -> dict | None:
         "name": workflow_name(lines, wf.stem),
         "crons": crons,
         "cron_count": len(crons),
-        "paid_api_risk": any(marker in lower for marker in paid_markers),
-        "live_pipeline_risk": any(marker in lower for marker in live_markers),
+        "paid_api_risk": any(marker in risk_text for marker in paid_markers),
+        "live_pipeline_risk": any(marker in risk_text for marker in live_markers),
     }
 
 
