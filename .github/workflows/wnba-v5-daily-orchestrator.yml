@@ -85,9 +85,18 @@ jobs:
       target_date: ${{ inputs.target_date }}
     secrets: inherit
 
+  alt-market:
+    name: Current ALT market
+    needs: canonical-base
+    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
+    uses: ./.github/workflows/wnba_alt_pregame_snapshot.yml
+    with:
+      deploy_dashboard: false
+    secrets: inherit
+
   injury-context:
     name: Injury context
-    needs: canonical-base
+    needs: alt-market
     if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
     uses: ./.github/workflows/wnba_v5_injury_dashboard.yml
     with:
