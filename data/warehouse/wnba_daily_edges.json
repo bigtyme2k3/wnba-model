@@ -1,7 +1,7 @@
 {
   "sprint": 6,
   "phase": "6.1-edge-qa-dashboard",
-  "generated_at_utc": "2026-09-24T15:24:50.983317+00:00",
+  "generated_at_utc": "2026-09-24T23:44:14.012235+00:00",
   "target_date": "2026-09-24",
   "status": "ok",
   "source_contract": {
@@ -11,7 +11,7 @@
     "source_target_date": "2026-09-24",
     "source_status": "ready",
     "empty_slate": false,
-    "standard_rows": 8,
+    "standard_rows": 60,
     "off_target_rows": 0,
     "alt_source": "data/dashboard/wnba_alt_market_warehouse.json",
     "alt_target_date": "2026-09-20",
@@ -20,59 +20,62 @@
     "alt_off_target_rows": 0
   },
   "summary": {
-    "source_props": 8,
+    "source_props": 60,
     "source_alt_markets": 0,
-    "candidates_loaded": 8,
-    "candidates_scored": 8,
+    "candidates_loaded": 60,
+    "candidates_scored": 60,
     "invalid_projection_rows_rejected": 0,
     "high_confidence": 0,
-    "moderate_confidence": 0,
-    "low_confidence": 8,
-    "top_score": 58.55,
-    "standard_candidates": 8,
+    "moderate_confidence": 1,
+    "low_confidence": 59,
+    "top_score": 68.13,
+    "standard_candidates": 60,
     "alternate_candidates": 0
   },
   "qa": {
     "score_distribution": {
-      "below-60": 8
+      "68-74.99": 1,
+      "60-67.99": 17,
+      "below-60": 42
     },
     "confidence_distribution": {
-      "LOW": 8
+      "MODERATE": 1,
+      "LOW": 59
     },
     "market_type_distribution": {
-      "standard": 8
+      "standard": 60
     },
     "evidence_coverage_counts": {
-      "projection": 5,
+      "projection": 48,
       "recent_form": 0,
       "season_history": 0,
       "clv": 0,
       "roi": 0,
-      "market_value": 5
+      "market_value": 48
     },
     "evidence_coverage_rates": {
-      "projection": 0.625,
+      "projection": 0.8,
       "recent_form": 0.0,
       "season_history": 0.0,
       "clv": 0.0,
       "roi": 0.0,
-      "market_value": 0.625
+      "market_value": 0.8
     },
     "missing_evidence_counts": {
-      "recent_form": 8,
-      "season_history": 8,
-      "clv": 8,
-      "roi": 8,
-      "projection": 3,
-      "market_value": 3
+      "recent_form": 60,
+      "season_history": 60,
+      "clv": 60,
+      "roi": 60,
+      "projection": 12,
+      "market_value": 12
     },
     "component_averages": {
-      "projection": 64.74,
+      "projection": 73.1,
       "recent_form": 50.0,
       "season_history": 50.0,
       "clv": 50.0,
       "roi": 50.0,
-      "market_value": 57.12,
+      "market_value": 64.63,
       "sample_strength": 20.0
     },
     "projection_integrity": {
@@ -86,28 +89,28 @@
   "top_edges": [
     {
       "target_date": "2026-09-24",
-      "player": "Caitlin Clark",
-      "team": "Indiana Fever",
-      "game": "Indiana Fever @ Minnesota Lynx",
-      "market": "RA",
+      "player": "Gabriela Jaquez",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PR",
       "side": "UNDER",
-      "line": 13.5,
+      "line": 10.5,
       "sportsbook": null,
-      "odds": -140.0,
-      "projection": 12.0,
+      "odds": 100.0,
+      "projection": 7.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6458,
-      "edge_score": 58.55,
-      "confidence": "LOW",
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 68.13,
+      "confidence": "MODERATE",
       "components": {
-        "projection": 82.41,
+        "projection": 100.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 63.75,
+        "market_value": 99.5,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -127,36 +130,330 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.50 versus line",
-        "Model probability edge +6.3%"
+        "Projection edge +3.20 versus line",
+        "Model probability edge +22.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-24",
-      "player": "Kelsey Mitchell",
-      "team": "Indiana Fever",
-      "game": "Indiana Fever @ Minnesota Lynx",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 24.5,
+      "player": "Elizabeth Williams",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 12.5,
       "sportsbook": null,
-      "odds": -107.0,
-      "projection": 26.6,
+      "odds": -106.0,
+      "projection": 8.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6125,
-      "edge_score": 57.64,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 67.68,
       "confidence": "LOW",
       "components": {
-        "projection": 75.0,
+        "projection": 100.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 71.03,
+        "market_value": 96.3,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.70 versus line",
+        "Model probability edge +21.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Gabriela Jaquez",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -107.5,
+      "projection": 4.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 67.57,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 95.52,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.00 versus line",
+        "Model probability edge +20.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sydney Taylor",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 14.5,
+      "sportsbook": null,
+      "odds": -110.0,
+      "projection": 18.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 67.4,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 94.26,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.60 versus line",
+        "Model probability edge +20.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Elizabeth Williams",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -119.0,
+      "projection": 5.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.79,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 89.96,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.50 versus line",
+        "Model probability edge +18.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Michaela Onyenwere",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -122.0,
+      "projection": 10.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.6,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 88.6,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.00 versus line",
+        "Model probability edge +17.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 12.5,
+      "sportsbook": null,
+      "odds": -129.0,
+      "projection": 10.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 66.18,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 85.57,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.40 versus line",
+        "Model probability edge +16.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -131.0,
+      "projection": 6.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.06,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 84.74,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -177,7 +474,693 @@
       ],
       "evidence": [
         "Projection edge +2.10 versus line",
+        "Model probability edge +15.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Gabriela Jaquez",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -132.0,
+      "projection": 7.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 66.01,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 84.33,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.30 versus line",
+        "Model probability edge +15.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": -132.0,
+      "projection": 7.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 66.01,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 84.33,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.70 versus line",
+        "Model probability edge +15.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Elizabeth Williams",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 5.5,
+      "sportsbook": null,
+      "odds": -136.0,
+      "projection": 3.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 65.78,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 82.72,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.20 versus line",
+        "Model probability edge +14.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Indiana Fever @ Minnesota Lynx",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 15.5,
+      "sportsbook": null,
+      "odds": -129.0,
+      "projection": 13.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.7117,
+      "edge_score": 65.0,
+      "confidence": "LOW",
+      "components": {
+        "projection": 97.04,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 82.64,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.50 versus line",
+        "Model probability edge +14.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Gabriela Jaquez",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -150.0,
+      "projection": 2.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.7205,
+      "edge_score": 64.65,
+      "confidence": "LOW",
+      "components": {
+        "projection": 99.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 76.51,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +12.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Courtney Vandersloot",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -128.5,
+      "projection": 9.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.7007,
+      "edge_score": 64.06,
+      "confidence": "LOW",
+      "components": {
+        "projection": 94.61,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 80.44,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.30 versus line",
+        "Model probability edge +13.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kamilla Cardoso",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 12.5,
+      "sportsbook": null,
+      "odds": -117.5,
+      "projection": 14.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.689,
+      "edge_score": 63.7,
+      "confidence": "LOW",
+      "components": {
+        "projection": 92.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 82.73,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.80 versus line",
+        "Model probability edge +14.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Indiana Fever @ Minnesota Lynx",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -118.0,
+      "projection": 6.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.6732,
+      "edge_score": 62.27,
+      "confidence": "LOW",
+      "components": {
+        "projection": 88.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 79.03,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.10 versus line",
+        "Model probability edge +13.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -106.0,
+      "projection": 6.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6575,
+      "edge_score": 61.7,
+      "confidence": "LOW",
+      "components": {
+        "projection": 85.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 81.45,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge +14.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Indiana Fever @ Minnesota Lynx",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 22.5,
+      "sportsbook": null,
+      "odds": -114.5,
+      "projection": 19.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.6575,
+      "edge_score": 61.11,
+      "confidence": "LOW",
+      "components": {
+        "projection": 85.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 77.21,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.70 versus line",
+        "Model probability edge +12.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Michaela Onyenwere",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": 100.0,
+      "projection": 10.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6243,
+      "edge_score": 59.21,
+      "confidence": "LOW",
+      "components": {
+        "projection": 77.63,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 77.36,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.90 versus line",
+        "Model probability edge +12.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "RA",
+      "side": "OVER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -136.0,
+      "projection": 12.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.6484,
+      "edge_score": 58.99,
+      "confidence": "LOW",
+      "components": {
+        "projection": 82.97,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 65.86,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.30 versus line",
+        "Model probability edge +7.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Indiana Fever @ Minnesota Lynx",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 14.5,
+      "sportsbook": null,
+      "odds": -113.0,
+      "projection": 13.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6267,
+      "edge_score": 58.49,
+      "confidence": "LOW",
+      "components": {
+        "projection": 78.16,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 71.17,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
         "Model probability edge +9.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Indiana Fever @ Minnesota Lynx",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 25.5,
+      "sportsbook": null,
+      "odds": -114.0,
+      "projection": 23.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6235,
+      "edge_score": 58.13,
+      "confidence": "LOW",
+      "components": {
+        "projection": 77.45,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 69.98,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.40 versus line",
+        "Model probability edge +9.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -187,25 +1170,74 @@
       "player": "Caitlin Clark",
       "team": "Indiana Fever",
       "game": "Indiana Fever @ Minnesota Lynx",
-      "market": "REB",
-      "side": "OVER",
-      "line": 3.5,
+      "market": "RA",
+      "side": "UNDER",
+      "line": 13.5,
       "sportsbook": null,
-      "odds": -150.0,
-      "projection": 4.3,
+      "odds": -136.5,
+      "projection": 12.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.626,
-      "edge_score": 56.28,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.6361,
+      "edge_score": 57.88,
       "confidence": "LOW",
       "components": {
-        "projection": 78.0,
+        "projection": 80.25,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 55.72,
+        "market_value": 62.97,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +5.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -118.5,
+      "projection": 7.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.6235,
+      "edge_score": 57.84,
+      "confidence": "LOW",
+      "components": {
+        "projection": 77.45,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 67.86,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -226,7 +1258,203 @@
       ],
       "evidence": [
         "Projection edge +0.80 versus line",
-        "Model probability edge +2.6%"
+        "Model probability edge +8.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kelsey Mitchell",
+      "team": "Indiana Fever",
+      "game": "Indiana Fever @ Minnesota Lynx",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 24.5,
+      "sportsbook": null,
+      "odds": -113.5,
+      "projection": 26.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6179,
+      "edge_score": 57.67,
+      "confidence": "LOW",
+      "components": {
+        "projection": 76.19,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 68.97,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.20 versus line",
+        "Model probability edge +8.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kamilla Cardoso",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PR",
+      "side": "OVER",
+      "line": 20.5,
+      "sportsbook": null,
+      "odds": -129.0,
+      "projection": 22.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.628,
+      "edge_score": 57.59,
+      "confidence": "LOW",
+      "components": {
+        "projection": 78.46,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 64.24,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.00 versus line",
+        "Model probability edge +6.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "REB",
+      "side": "OVER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": -111.0,
+      "projection": 10.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.6105,
+      "edge_score": 57.19,
+      "confidence": "LOW",
+      "components": {
+        "projection": 74.56,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 68.58,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.80 versus line",
+        "Model probability edge +8.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 15.5,
+      "sportsbook": null,
+      "odds": -128.0,
+      "projection": 16.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6185,
+      "edge_score": 56.81,
+      "confidence": "LOW",
+      "components": {
+        "projection": 76.34,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 62.57,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +5.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -240,21 +1468,21 @@
       "side": "OVER",
       "line": 21.5,
       "sportsbook": null,
-      "odds": -111.0,
-      "projection": 22.8,
+      "odds": -108.0,
+      "projection": 23.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
-      "model_probability": 0.5794,
-      "edge_score": 54.43,
+      "model_probability": 0.5977,
+      "edge_score": 56.26,
       "confidence": "LOW",
       "components": {
-        "projection": 67.64,
+        "projection": 71.71,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 61.72,
+        "market_value": 67.26,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -274,8 +1502,155 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.30 versus line",
-        "Model probability edge +5.3%"
+        "Projection edge +1.60 versus line",
+        "Model probability edge +7.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 17.5,
+      "sportsbook": null,
+      "odds": -132.0,
+      "projection": 19.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6125,
+      "edge_score": 56.04,
+      "confidence": "LOW",
+      "components": {
+        "projection": 75.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 59.58,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.50 versus line",
+        "Model probability edge +4.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 12.5,
+      "sportsbook": null,
+      "odds": 102.0,
+      "projection": 11.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.584,
+      "edge_score": 55.79,
+      "confidence": "LOW",
+      "components": {
+        "projection": 68.67,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 69.57,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.80 versus line",
+        "Model probability edge +8.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kamilla Cardoso",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 23.5,
+      "sportsbook": null,
+      "odds": -112.0,
+      "projection": 25.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5894,
+      "edge_score": 55.24,
+      "confidence": "LOW",
+      "components": {
+        "projection": 69.86,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 63.43,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.60 versus line",
+        "Model probability edge +6.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -289,21 +1664,119 @@
       "side": "OVER",
       "line": 25.5,
       "sportsbook": null,
-      "odds": -120.0,
-      "projection": 26.8,
+      "odds": -117.5,
+      "projection": 27.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
-      "model_probability": 0.5669,
-      "edge_score": 52.73,
+      "model_probability": 0.5824,
+      "edge_score": 54.26,
       "confidence": "LOW",
       "components": {
-        "projection": 64.87,
+        "projection": 68.3,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 54.72,
+        "market_value": 59.27,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.60 versus line",
+        "Model probability edge +4.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Courtney Vandersloot",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 17.5,
+      "sportsbook": null,
+      "odds": -128.0,
+      "projection": 18.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.575,
+      "edge_score": 52.95,
+      "confidence": "LOW",
+      "components": {
+        "projection": 66.67,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 52.99,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge +1.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PR",
+      "side": "OVER",
+      "line": 27.5,
+      "sportsbook": null,
+      "odds": -120.0,
+      "projection": 28.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.562,
+      "edge_score": 52.3,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.79,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 53.65,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -324,7 +1797,546 @@
       ],
       "evidence": [
         "Projection edge +1.30 versus line",
-        "Model probability edge +2.1%"
+        "Model probability edge +1.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Courtney Vandersloot",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PA",
+      "side": "OVER",
+      "line": 14.5,
+      "sportsbook": null,
+      "odds": -124.0,
+      "projection": 15.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5634,
+      "edge_score": 52.16,
+      "confidence": "LOW",
+      "components": {
+        "projection": 64.08,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 52.15,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +1.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kiki Iriafen",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 15.5,
+      "sportsbook": null,
+      "odds": -119.5,
+      "projection": 16.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.5593,
+      "edge_score": 52.08,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.17,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 53.27,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +1.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 25.5,
+      "sportsbook": null,
+      "odds": -126.0,
+      "projection": 24.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5618,
+      "edge_score": 51.9,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.73,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.93,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.20 versus line",
+        "Model probability edge +0.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PA",
+      "side": "OVER",
+      "line": 20.5,
+      "sportsbook": null,
+      "odds": -122.0,
+      "projection": 21.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5576,
+      "edge_score": 51.78,
+      "confidence": "LOW",
+      "components": {
+        "projection": 62.8,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 51.78,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.90 versus line",
+        "Model probability edge +0.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PR",
+      "side": "OVER",
+      "line": 19.5,
+      "sportsbook": null,
+      "odds": -120.5,
+      "projection": 20.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5471,
+      "edge_score": 50.94,
+      "confidence": "LOW",
+      "components": {
+        "projection": 60.47,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.14,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +0.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kamilla Cardoso",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -148.5,
+      "projection": 8.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.5618,
+      "edge_score": 50.67,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.73,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 42.12,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.40 versus line",
+        "Model probability edge -3.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 18.5,
+      "sportsbook": null,
+      "odds": -108.0,
+      "projection": 18.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.5284,
+      "edge_score": 50.12,
+      "confidence": "LOW",
+      "components": {
+        "projection": 56.31,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 52.01,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.40 versus line",
+        "Model probability edge +0.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Caitlin Clark",
+      "team": "Indiana Fever",
+      "game": "Indiana Fever @ Minnesota Lynx",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 4.5,
+      "sportsbook": null,
+      "odds": -163.0,
+      "projection": 4.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.563,
+      "edge_score": 50.09,
+      "confidence": "LOW",
+      "components": {
+        "projection": 64.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 37.51,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.40 versus line",
+        "Model probability edge -5.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 30.5,
+      "sportsbook": null,
+      "odds": -111.0,
+      "projection": 31.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5301,
+      "edge_score": 50.06,
+      "confidence": "LOW",
+      "components": {
+        "projection": 56.69,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.89,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +0.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 21.5,
+      "sportsbook": null,
+      "odds": -115.0,
+      "projection": 21.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5305,
+      "edge_score": 49.83,
+      "confidence": "LOW",
+      "components": {
+        "projection": 56.78,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 49.04,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge -0.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PA",
+      "side": "OVER",
+      "line": 20.5,
+      "sportsbook": null,
+      "odds": -132.0,
+      "projection": 21.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5384,
+      "edge_score": 49.48,
+      "confidence": "LOW",
+      "components": {
+        "projection": 58.54,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 43.28,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.60 versus line",
+        "Model probability edge -3.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -335,14 +2347,112 @@
       "team": "Indiana Fever",
       "game": "Indiana Fever @ Minnesota Lynx",
       "market": "PA",
-      "side": "PASS",
+      "side": "OVER",
       "line": 30.5,
       "sportsbook": null,
-      "odds": null,
-      "projection": 30.8,
+      "odds": -115.0,
+      "projection": 31.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
+      "model_probability": 0.5258,
+      "edge_score": 49.41,
+      "confidence": "LOW",
+      "components": {
+        "projection": 55.74,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 48.01,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.60 versus line",
+        "Model probability edge -0.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Caitlin Clark",
+      "team": "Indiana Fever",
+      "game": "Indiana Fever @ Minnesota Lynx",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 34.5,
+      "sportsbook": null,
+      "odds": -119.5,
+      "projection": 35.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5228,
+      "edge_score": 48.85,
+      "confidence": "LOW",
+      "components": {
+        "projection": 55.07,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 45.25,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.60 versus line",
+        "Model probability edge -2.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "RA",
+      "side": "PASS",
+      "line": 12.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 12.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
       "model_probability": null,
       "edge_score": 32.2,
       "confidence": "LOW",
@@ -379,18 +2489,402 @@
     },
     {
       "target_date": "2026-09-24",
-      "player": "Caitlin Clark",
-      "team": "Indiana Fever",
-      "game": "Indiana Fever @ Minnesota Lynx",
-      "market": "PRA",
+      "player": "Shakira Austin",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "AST",
       "side": "PASS",
-      "line": 34.5,
+      "line": 2.5,
       "sportsbook": null,
       "odds": null,
-      "projection": 34.8,
+      "projection": 2.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PTS",
+      "side": "PASS",
+      "line": 16.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 16.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "REB",
+      "side": "PASS",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 3.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PRA",
+      "side": "PASS",
+      "line": 24.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 24.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kiki Iriafen",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PR",
+      "side": "PASS",
+      "line": 25.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 25.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kiki Iriafen",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "PRA",
+      "side": "PASS",
+      "line": 26.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 26.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Courtney Vandersloot",
+      "team": "Chicago Sky",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "AST",
+      "side": "PASS",
+      "line": 5.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 5.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Georgia Amoore",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "AST",
+      "side": "PASS",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 3.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Kiki Iriafen",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "REB",
+      "side": "PASS",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 9.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
       "model_probability": null,
       "edge_score": 32.2,
       "confidence": "LOW",
@@ -435,7 +2929,55 @@
       "line": 8.5,
       "sportsbook": null,
       "odds": null,
-      "projection": 8.2,
+      "projection": 8.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-24",
+      "player": "Sonia Citron",
+      "team": "Washington Mystics",
+      "game": "Chicago Sky @ Washington Mystics",
+      "market": "AST",
+      "side": "PASS",
+      "line": 4.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 4.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
