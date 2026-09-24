@@ -21,9 +21,15 @@ from pathlib import Path
 from typing import Any
 
 ALT_WAREHOUSE = Path("data/dashboard/wnba_alt_market_warehouse.json")
+PLAYER_INTELLIGENCE = Path("data/warehouse/wnba_player_intelligence.json")
 MIN_HISTORY = 5
 ACTIVE_STREAK_MIN = 5
 ALLOWED_BOOKS = {"draftkings", "fanduel", "fanatics"}
+
+
+def load_player_intel_map() -> dict[str, dict[str, Any]]:
+    intelligence = load(PLAYER_INTELLIGENCE, {})
+    return {str(r.get("player") or "").strip().lower(): r for r in list_rows(intelligence, "players")}
 
 
 def allowed_output_book(row: dict[str, Any]) -> bool:
@@ -163,6 +169,7 @@ def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any], i
     payload = load(ALT_WAREHOUSE, {})
     summary = payload.get("summary", {}) if isinstance(payload, dict) else {}
     markets = list_rows(payload, "rows")
+    intel_map = load_player_intel_map()
     output: list[dict[str, Any]] = []
     omitted_history = 0
     for market in markets:
@@ -190,9 +197,10 @@ def exact_alt_rows(target: str) -> tuple[list[dict[str, Any]], dict[str, Any], i
         l5_hits, l5_games, l5_pct = hit_window(values, line, side, 5)
         l10_hits, l10_games, l10_pct = hit_window(values, line, side, 10)
         season = market.get("season") if isinstance(market.get("season"), dict) else {}
+        intel = intel_map.get(player.lower(), {})
         output.append(clean({
             "player": player,
-            "team": market.get("team"),
+            "team": market.get("team") or intel.get("team"),
             "game": market.get("game"),
             "opponent": market.get("opponent"),
             "stat": stat,
@@ -231,8 +239,7 @@ def standard_rows(target: str) -> tuple[list[dict[str, Any]], int, int, int]:
     master_props = list_rows(master, "props")
     csv_props = load_csv_props(target)
     props = csv_props or master_props
-    intelligence = load("data/warehouse/wnba_player_intelligence.json", {})
-    intel_map = {str(r.get("player") or "").strip().lower(): r for r in list_rows(intelligence, "players")}
+    intel_map = load_player_intel_map()
     rows_out: list[dict[str, Any]] = []
     omitted_no_history = omitted_no_streak = 0
     for prop in props:
