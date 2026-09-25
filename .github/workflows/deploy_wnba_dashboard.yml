@@ -71,7 +71,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # WNBA V5 Daily Orchestrator pushes one commit per stage (canonical-base,
+  # alt-market, injury-context, downstream-predictions, derived-dashboard),
+  # and this workflow's own push trigger paths (data/dashboard/**, etc.)
+  # match every one of them -- not just the final stage's commit, which is
+  # the only one that ever has a complete, all-13-tabs-fresh dashboard to
+  # publish. Left alone, that means ~4 doomed deploy attempts per
+  # orchestrator run, each failing the tab-freshness gate a few minutes in,
+  # showing as a red "failure" indistinguishable from a real problem.
+  # Recognize those specific, known, non-terminal commit messages here and
+  # skip the real work entirely -- cheaply, before the expensive checkout
+  # and build steps -- so only the terminal stage's deploy (or a genuine
+  # standalone commit, or a real failure) ever runs to completion.
+  detect-orchestrator-stage:
+    name: Detect non-terminal orchestrator stage commit
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - id: check
+        name: Check commit message against known non-terminal orchestrator stages
+        run: |
+          MSG=$(git log -1 --format=%s)
+          case "$MSG" in
+            "Refresh canonical WNBA base sources for "*|\
+            "Refresh canonical WNBA ALT market state for "*|\
+            "Refresh source-only WNBA injury intelligence for "*|\
+            "Refresh WNBA downstream prediction stack for "*)
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "::notice::Skipping deploy for non-terminal WNBA V5 Daily Orchestrator stage commit: $MSG -- the orchestrator's final stage (or an explicit dispatch) triggers the real deploy once all stages are done."
+              ;;
+            *)
+              echo "skip=false" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
   deploy:
+    needs: detect-orchestrator-stage
+    if: ${{ !cancelled() && needs.detect-orchestrator-stage.outputs.skip != 'true' }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages
