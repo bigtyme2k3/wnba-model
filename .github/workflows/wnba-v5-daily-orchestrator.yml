@@ -78,15 +78,33 @@ jobs:
           if p['contract_mode'] == 'maintenance':
               assert p['scheduled_workflow_count']==0, p.get('scheduled_workflows')
           assert p['schedule_violation_count']==0, p.get('violations')
+          live = '${{ github.event_name }}' == 'schedule' or '${{ inputs.live_mode }}' == 'true'
           print({
-              'status':'PASS',
+              'contract_status':'PASS',
               'contract_mode':p['contract_mode'],
               'protected_artifacts':p['protected_artifact_count'],
               'scheduled_workflow_count':p['scheduled_workflow_count'],
               'live_mode_requested':'${{ inputs.live_mode }}',
               'event_name':'${{ github.event_name }}',
+              'pipeline_will_run':live,
           })
           PY
+
+  dry-run-guard:
+    name: DRY RUN - no pipeline stages executed
+    needs: ownership-contract
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.live_mode != true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail loudly so this can never be mistaken for a completed run
+        run: |
+          echo "::error::SKIPPED (dry run): live_mode was not checked on this manual dispatch."
+          echo "::error::No pipeline stages ran -- canonical build, ALT market, injury context,"
+          echo "::error::predictions, rollover, and deploy were all skipped by design (see"
+          echo "::error::wnba-v5-daily-orchestrator.yml's live_mode gate). This run is NOT a"
+          echo "::error::completed daily update. Re-dispatch with the live_mode box checked to"
+          echo "::error::actually run the pipeline."
+          exit 1
 
   canonical-base:
     name: Canonical slate + standard props
