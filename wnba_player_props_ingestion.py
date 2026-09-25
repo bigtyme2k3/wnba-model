@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import re
+import time
 import unicodedata
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -15,6 +16,11 @@ BASE = "https://api.the-odds-api.com/v4"
 ET = ZoneInfo("America/New_York")
 DASH = Path("data/dashboard")
 RAW = Path("data/raw")
+# Sportsbooks intermittently haven't posted standard player-prop lines yet
+# when this runs (especially right after a GitHub Actions schedule delay).
+# Retry the live fetch a few times before giving up for the day.
+LIVE_FETCH_MAX_ATTEMPTS = 3
+LIVE_FETCH_RETRY_SECONDS = 90
 MARKETS = [
     "player_points", "player_rebounds", "player_assists", "player_threes",
     "player_points_rebounds_assists", "player_points_rebounds",
@@ -204,6 +210,79 @@ def main() -> None:
     DASH.mkdir(parents=True, exist_ok=True)
     RAW.mkdir(parents=True, exist_ok=True)
     raw_path = RAW / f"wnba_player_props_{target}.json"
+    teams_by_player = roster_map()
+
+    def group_props(events_list, *, session, from_cache: bool):
+        grouped: dict[tuple, dict] = {}
+        raw_events = []
+        observed_books: set[str] = set()
+        rejected_books: set[str] = set()
+        for event in events_list:
+            event_id = event["id"]
+            away = str(event.get("away_team") or "").strip()
+            home = str(event.get("home_team") or "").strip()
+            game = f"{away} @ {home}"
+            if from_cache:
+                payload = event
+            else:
+                resp = session.get(
+                    f"{BASE}/sports/{SPORT}/events/{event_id}/odds",
+                    params={
+                        "apiKey": api_key,
+                        "bookmakers": PRODUCTION_BOOKMAKERS,
+                        "markets": ",".join(MARKETS),
+                        "oddsFormat": "american",
+                        "dateFormat": "iso",
+                    },
+                    timeout=45,
+                )
+                if resp.status_code == 404:
+                    continue
+                resp.raise_for_status()
+                payload = resp.json()
+            payload, payload_books, payload_rejected = filter_supported_bookmakers(payload)
+            observed_books.update(payload_books)
+            rejected_books.update(payload_rejected)
+            raw_events.append(payload)
+            for book in payload.get("bookmakers", []):
+                book_key = normalize_book_key(book)
+                if not book_key:
+                    continue
+                book_name = PRODUCTION_BOOKS[book_key]
+                for market in book.get("markets", []):
+                    stat = STAT_MAP.get(market.get("key"))
+                    if not stat:
+                        continue
+                    for outcome in market.get("outcomes", []):
+                        player = str(outcome.get("description") or "").strip()
+                        side = str(outcome.get("name") or "").upper().strip()
+                        line = outcome.get("point")
+                        price = outcome.get("price")
+                        if not player or side not in {"OVER", "UNDER"} or line is None:
+                            continue
+                        team, team_source = resolve_team(player, away, home, teams_by_player)
+                        key = (event_id, player_key(player), stat, float(line))
+                        row = grouped.setdefault(key, {
+                            "target_date": target,
+                            "event_id": event_id,
+                            "commence_time": event.get("commence_time"),
+                            "game": game,
+                            "away_team": away,
+                            "home_team": home,
+                            "player": player,
+                            "team": team,
+                            "team_source": team_source,
+                            "stat": stat,
+                            "line": float(line),
+                            "books": [],
+                        })
+                        if not row.get("team") and team:
+                            row["team"] = team
+                            row["team_source"] = team_source
+                        row["books"].append({"book": book_name, "side": side, "price": price})
+        return grouped, raw_events, observed_books, rejected_books
+
+    attempts_used = 1
     if args.from_raw_cache:
         cached = load_json(raw_path, [])
         if not isinstance(cached, list) or not cached:
@@ -215,87 +294,31 @@ def main() -> None:
             )
         events = [e for e in cached if isinstance(e, dict)]
         api_called = False
+        grouped, raw_events, observed_books, rejected_books = group_props(events, session=None, from_cache=True)
     else:
         import requests
 
         session = requests.Session()
-        events_resp = session.get(f"{BASE}/sports/{SPORT}/events", params={"apiKey": api_key}, timeout=30)
-        events_resp.raise_for_status()
-        events = [e for e in events_resp.json() if event_date(e.get("commence_time")) == target]
         api_called = True
-    teams_by_player = roster_map()
-    grouped: dict[tuple, dict] = {}
-    raw_events = []
-    observed_books: set[str] = set()
-    rejected_books: set[str] = set()
-
-    for event in events:
-        event_id = event["id"]
-        away = str(event.get("away_team") or "").strip()
-        home = str(event.get("home_team") or "").strip()
-        game = f"{away} @ {home}"
-        if args.from_raw_cache:
-            payload = event
-        else:
-            resp = session.get(
-                f"{BASE}/sports/{SPORT}/events/{event_id}/odds",
-                params={
-                    "apiKey": api_key,
-                    "bookmakers": PRODUCTION_BOOKMAKERS,
-                    "markets": ",".join(MARKETS),
-                    "oddsFormat": "american",
-                    "dateFormat": "iso",
-                },
-                timeout=45,
-            )
-            if resp.status_code == 404:
-                continue
-            resp.raise_for_status()
-            payload = resp.json()
-        payload, payload_books, payload_rejected = filter_supported_bookmakers(payload)
-        observed_books.update(payload_books)
-        rejected_books.update(payload_rejected)
-        raw_events.append(payload)
-        for book in payload.get("bookmakers", []):
-            book_key = normalize_book_key(book)
-            if not book_key:
-                continue
-            book_name = PRODUCTION_BOOKS[book_key]
-            for market in book.get("markets", []):
-                stat = STAT_MAP.get(market.get("key"))
-                if not stat:
-                    continue
-                for outcome in market.get("outcomes", []):
-                    player = str(outcome.get("description") or "").strip()
-                    side = str(outcome.get("name") or "").upper().strip()
-                    line = outcome.get("point")
-                    price = outcome.get("price")
-                    if not player or side not in {"OVER", "UNDER"} or line is None:
-                        continue
-                    team, team_source = resolve_team(player, away, home, teams_by_player)
-                    key = (event_id, player_key(player), stat, float(line))
-                    row = grouped.setdefault(key, {
-                        "target_date": target,
-                        "event_id": event_id,
-                        "commence_time": event.get("commence_time"),
-                        "game": game,
-                        "away_team": away,
-                        "home_team": home,
-                        "player": player,
-                        "team": team,
-                        "team_source": team_source,
-                        "stat": stat,
-                        "line": float(line),
-                        "books": [],
-                    })
-                    if not row.get("team") and team:
-                        row["team"] = team
-                        row["team_source"] = team_source
-                    row["books"].append({"book": book_name, "side": side, "price": price})
+        for attempts_used in range(1, LIVE_FETCH_MAX_ATTEMPTS + 1):
+            events_resp = session.get(f"{BASE}/sports/{SPORT}/events", params={"apiKey": api_key}, timeout=30)
+            events_resp.raise_for_status()
+            events = [e for e in events_resp.json() if event_date(e.get("commence_time")) == target]
+            grouped, raw_events, observed_books, rejected_books = group_props(events, session=session, from_cache=False)
+            if not events or grouped:
+                break
+            if attempts_used < LIVE_FETCH_MAX_ATTEMPTS:
+                print(
+                    f"  [attempt {attempts_used}/{LIVE_FETCH_MAX_ATTEMPTS}] No supported "
+                    f"DraftKings/FanDuel/Fanatics player props yet for {target}; "
+                    f"retrying in {LIVE_FETCH_RETRY_SECONDS}s"
+                )
+                time.sleep(LIVE_FETCH_RETRY_SECONDS)
 
     if events and not grouped:
         raise SystemExit(
-            "No supported DraftKings, FanDuel, or Fanatics standard player props were available"
+            "No supported DraftKings, FanDuel, or Fanatics standard player props were available "
+            f"after {attempts_used} attempt(s)"
         )
 
     verified_rows = []
