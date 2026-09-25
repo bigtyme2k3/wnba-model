@@ -9,15 +9,27 @@ name: WNBA V5 Daily Orchestrator
 # a schedule firing IS a live_mode=true run. A manual workflow_dispatch still
 # requires the operator to opt in explicitly via the live_mode checkbox.
 #
-# Mirrors the cadence wnba_daily_canonical_build.yml ran solo before the
-# WNBA/FIBA break (10:15 and 16:15 UTC = ~6:15am / 12:15pm ET): once early to
-# catch the overnight schedule/line refresh, once again before evening tip-off
-# in case anything shifted. Flip config/v5_artifact_ownership.json back to
-# mode=maintenance (and remove this schedule) for the off-season.
+# Three UTC fires, chosen against real WNBA tip-off times (earliest observed
+# tip is 23:00 UTC / 7pm ET) and how late DraftKings/FanDuel/Fanatics
+# actually post standard player props -- the 2026-09-24 16:15 UTC (12:15pm ET)
+# fire still found zero props posted even after GitHub's own scheduling delay
+# pushed its real start to ~19:58 UTC. Times below assume EDT (UTC-4), true
+# for the whole WNBA season through early Nov; bump each cron hour by 1 if a
+# playoff run ever lands after the fall DST changeover to EST (UTC-5).
+#   10:15 UTC = 6:15am ET  -- overnight schedule/line refresh
+#   18:15 UTC = 2:15pm ET  -- shifted later than the original 12:15pm fire so
+#                             books have had more of the day to post props
+#   21:15 UTC = 5:15pm ET  -- safety net: ~1h45m ahead of the earliest 7pm ET
+#                             tip-off, so props are reliably posted by now even
+#                             if the 2:15pm fire (plus its own retries in
+#                             wnba_player_props_ingestion.py) still came up empty
+# Flip config/v5_artifact_ownership.json back to mode=maintenance (and remove
+# this schedule) for the off-season.
 on:
   schedule:
     - cron: '15 10 * * *'
-    - cron: '15 16 * * *'
+    - cron: '15 18 * * *'
+    - cron: '15 21 * * *'
   workflow_dispatch:
     inputs:
       target_date:
