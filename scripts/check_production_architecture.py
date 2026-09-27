@@ -23,6 +23,7 @@ RETIRED_DASHBOARD_BUILDERS = {
     "patch_dashboard_navigation_v2.py",
 }
 REUSABLE_WRITER_OVERRIDES = {
+    "wnba_alt_pregame_snapshot.yml": ".github/workflows/wnba_alt_pregame_snapshot.yml",
     "wnba_v5_injury_dashboard.yml": ".github/workflows/wnba_v5_injury_dashboard.yml",
     "wnba-new-day-prediction-sync.yml": ".github/workflows/wnba-new-day-prediction-sync.yml",
     "wnba_daily_slate_rollover.yml": ".github/workflows/wnba_daily_slate_rollover.yml",
