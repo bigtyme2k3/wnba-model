@@ -30,6 +30,14 @@ on:
     - cron: '15 10 * * *'
     - cron: '15 18 * * *'
     - cron: '15 21 * * *'
+    # 2026-09-27 playoff slate: 45 minutes before the 2, 4, 7, and 9pm ET tips.
+    # GitHub cron uses UTC; the final slot falls on September 28 UTC.
+    # The schedule gate below prevents these annual expressions from running
+    # the pipeline in other years and suppresses today's regular afternoon slots.
+    - cron: '15 17 27 9 *'  # 1:15pm ET
+    - cron: '15 19 27 9 *'  # 3:15pm ET
+    - cron: '15 22 27 9 *'  # 6:15pm ET
+    - cron: '15 0 28 9 *'   # 8:15pm ET on September 27
   workflow_dispatch:
     inputs:
       target_date:
@@ -52,8 +60,41 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  schedule-gate:
+    name: Allow only intended refresh slots
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.decide.outputs.should_run }}
+    steps:
+      - name: Check Eastern date and scheduled cron
+        id: decide
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE_CRON: ${{ github.event.schedule }}
+        run: |
+          if [ "$EVENT_NAME" != schedule ]; then
+            echo 'should_run=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          eastern_date=$(TZ=America/New_York date +%F)
+          if [ "$eastern_date" = '2026-09-27' ]; then
+            case "$SCHEDULE_CRON" in
+              '15 17 27 9 *'|'15 19 27 9 *'|'15 22 27 9 *'|'15 0 28 9 *') should_run=true ;;
+              *) should_run=false ;;
+            esac
+          else
+            case "$SCHEDULE_CRON" in
+              '15 10 * * *'|'15 18 * * *'|'15 21 * * *') should_run=true ;;
+              *) should_run=false ;;
+            esac
+          fi
+          echo "should_run=$should_run" >> "$GITHUB_OUTPUT"
+          echo "Eastern date: $eastern_date; cron: $SCHEDULE_CRON; run: $should_run"
+
   ownership-contract:
     name: Verify V5 ownership contract
+    needs: schedule-gate
+    if: ${{ needs.schedule-gate.outputs.should_run == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -108,8 +149,8 @@ jobs:
 
   canonical-base:
     name: Canonical slate + standard props
-    needs: ownership-contract
-    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
+    needs: [ownership-contract, schedule-gate]
+    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule') && needs.schedule-gate.outputs.should_run == 'true' }}
     uses: ./.github/workflows/wnba_daily_canonical_build.yml
     with:
       target_date: ${{ inputs.target_date }}
