@@ -11,6 +11,16 @@ on:
         description: Optional Eastern slate date (YYYY-MM-DD)
         required: false
         type: string
+    outputs:
+      target_date:
+        description: Eastern date evaluated by the canonical slate owner
+        value: ${{ jobs.build.outputs.target_date }}
+      game_count:
+        description: Number of confirmed WNBA games on the evaluated date
+        value: ${{ jobs.build.outputs.game_count }}
+      has_active_slate:
+        description: Whether the evaluated date has at least one confirmed game
+        value: ${{ jobs.build.outputs.has_active_slate }}
     secrets:
       ODDS_API_KEY:
         required: false
@@ -32,6 +42,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      target_date: ${{ steps.base-status.outputs.target_date }}
+      game_count: ${{ steps.base-status.outputs.game_count }}
+      has_active_slate: ${{ steps.base-status.outputs.has_active_slate }}
     env:
       TZ: America/New_York
       ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -70,6 +84,7 @@ jobs:
         run: python wnba_sprint2_prediction_engine.py --date "$TARGET"
 
       - name: Validate canonical base outputs
+        id: base-status
         run: |
           python - <<'PY'
           import json, os
@@ -112,6 +127,10 @@ jobs:
               'rated_teams':len(ratings.get('teams') or []),
               'ownership':'CANONICAL_BASE_ONLY',
           })
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write(f"target_date={target}\n")
+              output.write(f"game_count={len(games)}\n")
+              output.write(f"has_active_slate={'true' if games else 'false'}\n")
           PY
 
           if ! git diff --quiet -- \
