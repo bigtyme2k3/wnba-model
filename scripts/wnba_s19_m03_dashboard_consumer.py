@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import argparse, json, subprocess
+import argparse, json, math, subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -10,11 +10,98 @@ RESULTS=DASH/'wnba_results_grading.json'
 OUT=DASH/'wnba_s19_m03_dashboard_consumer.json'
 AUDIT=DASH/'wnba_s19_m03_dashboard_consumer_audit.json'
 ALLOWED_BOOKS={'draftkings','fanduel','fanatics'}
+MARKET=DASH/'wnba_player_props.json'
+BUY=DASH/'wnba_v5_buy_signals.json'
+MAX_MARKET_AGE_MINUTES=180
 
 
 def load(path, default):
     try:return json.loads(path.read_text(encoding='utf-8'))
     except Exception:return default
+
+
+def exact_key(row):
+    try:
+        line=float(row.get('line'))
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(line):
+        return None
+    return (str(row.get('player') or '').strip().casefold(),
+            str(row.get('game') or '').strip().casefold(),
+            str(row.get('stat') or '').strip().upper(), round(line, 3))
+
+
+def build_research_watchlist(props, target):
+    market=load(MARKET,{})
+    stamp=str(market.get('generated_at_utc') or '')
+    state={'status':'MARKET_UNAVAILABLE','market_generated_at_utc':stamp,
+           'source':'exact current-slate canonical sportsbook props',
+           'policy':'WATCH research only; no V5 approval, calibrated EV, or betting recommendation'}
+    try:
+        age=(datetime.now(timezone.utc)-datetime.fromisoformat(stamp.replace('Z','+00:00'))).total_seconds()/60
+    except (TypeError, ValueError):
+        return [],state
+    if str(market.get('target_date') or '')[:10]!=target or age < -5 or age > MAX_MARKET_AGE_MINUTES:
+        state['status']='MARKET_STALE_OR_OFF_SLATE'
+        return [],state
+    current={}
+    for row in market.get('rows') or []:
+        if not isinstance(row,dict):continue
+        key=exact_key(row)
+        if key and key not in current:current[key]=row
+    candidates=[]
+    for row in props:
+        if (str(row.get('final_action') or '').upper()!='WATCH'
+                or row.get('candidate_eligible') is not True
+                or row.get('injury_source_verified') is not True
+                or row.get('projection_validated') is not True
+                or str(row.get('injury_status') or '').upper() not in {'ACTIVE','PROBABLE'}):
+            continue
+        side=str(row.get('recommendation') or '').upper()
+        if side not in {'OVER','UNDER'}:continue
+        source=current.get(exact_key(row))
+        if not source:continue
+        book=source.get('best_over_book' if side=='OVER' else 'best_under_book')
+        price=source.get('best_over_price' if side=='OVER' else 'best_under_price')
+        try:
+            odds=float(price)
+            confidence=float(row.get('confidence'))
+            edge=float(row.get('edge'))
+        except (TypeError, ValueError):
+            continue
+        if (str(book or '').strip().lower().replace(' ','') not in ALLOWED_BOOKS
+                or not all(math.isfinite(v) for v in (odds,confidence,edge))
+                or odds == 0 or abs(odds)>10000 or confidence<55 or abs(edge)<1.5):
+            continue
+        # The exact side and price must exist in the current market's book rows.
+        if not any(str(b.get('book') or '').strip().lower()==str(book).strip().lower()
+                   and str(b.get('side') or '').upper()==side
+                   and str(b.get('price'))==str(int(odds))
+                   for b in source.get('books') or [] if isinstance(b,dict)):
+            continue
+        candidates.append({
+            'target_date':target,'player':row.get('player'),'game':row.get('game'),
+            'stat':row.get('stat'),'side':side,'line':row.get('line'),
+            'model_projection':row.get('model_projection'),'edge':edge,
+            'confidence':confidence,'injury_status':row.get('injury_status'),
+            'projected_minutes':row.get('projected_minutes'),
+            'sportsbook':book,'american_odds':int(odds),'book_count':source.get('book_count'),
+            'commence_time':source.get('commence_time'),
+            'market_generated_at_utc':stamp,'final_action':'WATCH','research_only':True,
+            'reason_not_bet':'No approved current V5 buy signal for this market',
+        })
+    candidates.sort(key=lambda r:(r['confidence'],abs(r['edge'])),reverse=True)
+    selected=[];players=set();game_counts={}
+    for row in candidates:
+        player=str(row['player'] or '').casefold()
+        game=str(row['game'] or '').casefold()
+        if player in players or game_counts.get(game,0)>=2:continue
+        selected.append(row);players.add(player);game_counts[game]=game_counts.get(game,0)+1
+        if len(selected)>=6:break
+    state.update({'status':'CURRENT','candidate_rows':len(candidates),'display_rows':len(selected),
+                  'maximum_age_minutes':MAX_MARKET_AGE_MINUTES})
+    return selected,state
 
 
 def build(target:str):
@@ -31,6 +118,8 @@ def build(target:str):
     props=m02.get('player_props') or []
     best=m02.get('best_bets') or []
     portfolio=m02.get('portfolio') or []
+    watchlist,watchlist_state=build_research_watchlist(props,target)
+    buy=load(BUY,{})
 
     if not games: raise SystemExit('M03 refuses dashboard with zero canonical games')
     if not props: raise SystemExit('M03 refuses dashboard with zero canonical player prop predictions')
@@ -45,9 +134,11 @@ def build(target:str):
     payload={
       'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,
       'schema_version':'sprint19-m03-canonical-dashboard-consumer-v1','status':'READY',
-      'source_policy':{'games':'wnba_s19_m02_predictions.json.games','player_props':'wnba_s19_m02_predictions.json.player_props','best_bets':'wnba_s19_m02_predictions.json.best_bets','portfolio':'wnba_s19_m02_predictions.json.portfolio','results':'wnba_results_grading.json from deterministic grader','legacy_phase2_fallback':False},
+      'source_policy':{'games':'wnba_s19_m02_predictions.json.games','player_props':'wnba_s19_m02_predictions.json.player_props','best_bets':'wnba_s19_m02_predictions.json.best_bets','portfolio':'wnba_s19_m02_predictions.json.portfolio','results':'wnba_results_grading.json from deterministic grader','legacy_phase2_fallback':False,'research_watchlist':'M02 WATCH rows plus exact same-slate canonical sportsbook lines; never approved as Best Bets'},
       'games':games,'player_props':props,'best_bets':best,'portfolio':portfolio,'results':results,
-      'summary':{'games':len(games),'player_props':len(props),'best_bets':len(best),'portfolio':len(portfolio),'results_status':results.get('status'),'results_archived_predictions':results.get('archived_predictions',0),'results_graded':(results.get('summary') or {}).get('graded_this_run',0)}
+      'research_watchlist':watchlist,'research_watchlist_state':watchlist_state,
+      'buy_signal_source_date':str(buy.get('injury_target_date') or '')[:10],
+      'summary':{'games':len(games),'player_props':len(props),'best_bets':len(best),'research_watchlist':len(watchlist),'portfolio':len(portfolio),'results_status':results.get('status'),'results_archived_predictions':results.get('archived_predictions',0),'results_graded':(results.get('summary') or {}).get('graded_this_run',0)}
     }
     OUT.write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
     audit={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'READY','module':'SPRINT19-M03','m02_status':m02.get('status'),'results_status':results.get('status'),'games':len(games),'player_props':len(props),'best_bets':len(best),'portfolio':len(portfolio),'actionable_unavailable_props':0,'phase2_best_bets_fallback_enabled':False,'phase2_portfolio_fallback_enabled':False,'all_consumers_single_source':True}
