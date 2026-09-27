@@ -8,7 +8,7 @@ DASH=Path('data/dashboard'); WARE=Path('data/warehouse')
 OUTS=[DASH/'wnba_pipeline_readiness.json',WARE/'wnba_pipeline_readiness.json']
 
 def load(path:Path,default:Any):
-    try:return json.load(path.open(encoding='utf-8')) if path.exists() else default
+    try:return json.loads(path.read_text(encoding='utf-8')) if path.exists() else default
     except Exception:return default
 
 def count_rows(payload:Any,*keys:str)->int:
@@ -26,12 +26,19 @@ def count_rows(payload:Any,*keys:str)->int:
 
 def build(target_date:str|None=None)->dict[str,Any]:
     master=load(DASH/'wnba_master.json',{})
+    canonical_props=load(DASH/'wnba_player_props.json',{})
     sportsbook=load(DASH/'wnba_sportsbook_consensus.json',{})
     edges=load(DASH/'wnba_daily_edges.json',{})
     logs=load(WARE/'wnba_player_game_logs.json',{})
-    games=[g for g in master.get('games',[]) if isinstance(g,dict)] if isinstance(master,dict) else []
-    today=[g for g in games if g.get('bucket')=='today']
-    props=master.get('props',[]) if isinstance(master,dict) and isinstance(master.get('props'),list) else []
+    target=target_date or master.get('target_date') or edges.get('target_date')
+    games=master.get('today_games',[]) if isinstance(master,dict) else []
+    today=[g for g in games if isinstance(g,dict) and g.get('game_date')==target] if isinstance(games,list) else []
+    # master.props is a retired embedded view; the canonical, target-dated
+    # sportsbook quotes are owned by wnba_player_props.json.
+    candidate_props=canonical_props.get('rows',[]) if isinstance(canonical_props,dict) else []
+    props=[row for row in candidate_props if isinstance(row,dict) and row.get('target_date')==target and row.get('books')]
+    if not isinstance(canonical_props,dict) or canonical_props.get('target_date')!=target:
+        props=[]
     markets=count_rows(sportsbook,'all_consensus','markets')
     player_logs=count_rows(logs,'records')
     checks={
@@ -47,14 +54,16 @@ def build(target_date:str|None=None)->dict[str,Any]:
     status='READY' if live_inputs and core_health else 'WAIT' if core_health else 'BLOCKED'
     report={
       'sprint':11,'phase':'restart-readiness','generated_at_utc':datetime.now(timezone.utc).isoformat(),
-      'target_date':target_date or edges.get('target_date') or master.get('target_date'),'status':status,
+      'target_date':target,'status':status,
       'counts':{'today_games':len(today),'props':len(props),'sportsbook_markets':markets,'player_logs':player_logs},
       'checks':checks,'blockers':blockers,
-      'reason':'Pipeline ready for live model execution.' if status=='READY' else 'Awaiting live regular-season market data.' if status=='WAIT' else 'Core data or dashboard dependency is unavailable.',
+      'reason':'Pipeline ready for live model execution.' if status=='READY' else 'Awaiting current WNBA slate or market data.' if status=='WAIT' else 'Core data or dashboard dependency is unavailable.',
       'preserve_last_valid_reports':status!='READY',
       'historical_reconstruction_required':False,
     }
-    for path in OUTS:path.parent.mkdir(parents=True,exist_ok=True);json.dump(report,path.open('w',encoding='utf-8'),indent=2,allow_nan=False)
+    for path in OUTS:
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_text(json.dumps(report,indent=2,allow_nan=False),encoding='utf-8')
     print(json.dumps(report,indent=2));return report
 
 if __name__=='__main__':build()
