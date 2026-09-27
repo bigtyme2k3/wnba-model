@@ -141,7 +141,7 @@ def build(target:str):
       'summary':{'games':len(games),'player_props':len(props),'best_bets':len(best),'research_watchlist':len(watchlist),'portfolio':len(portfolio),'results_status':results.get('status'),'results_archived_predictions':results.get('archived_predictions',0),'results_graded':(results.get('summary') or {}).get('graded_this_run',0)}
     }
     OUT.write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
-    audit={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'READY','module':'SPRINT19-M03','m02_status':m02.get('status'),'results_status':results.get('status'),'games':len(games),'player_props':len(props),'best_bets':len(best),'portfolio':len(portfolio),'actionable_unavailable_props':0,'phase2_best_bets_fallback_enabled':False,'phase2_portfolio_fallback_enabled':False,'all_consumers_single_source':True}
+    audit={'generated_at_utc':datetime.now(timezone.utc).isoformat(),'target_date':target,'status':'READY','module':'SPRINT19-M03','m02_status':m02.get('status'),'results_status':results.get('status'),'games':len(games),'player_props':len(props),'best_bets':len(best),'research_watchlist_rows':len(watchlist),'research_watchlist_market_status':watchlist_state['status'],'portfolio':len(portfolio),'actionable_unavailable_props':0,'phase2_best_bets_fallback_enabled':False,'phase2_portfolio_fallback_enabled':False,'all_consumers_single_source':True}
     AUDIT.write_text(json.dumps(audit,indent=2)+'\n',encoding='utf-8')
     print('SPRINT19_M03_CONSUMER_READY',json.dumps(audit))
 
