@@ -192,6 +192,10 @@ jobs:
           PY
 
       - name: Persist authoritative calibrated ALT state
+        env:
+          # workflow_call exposes the orchestrator as GITHUB_WORKFLOW_REF;
+          # bind this reusable job to its declared artifact-owner identity.
+          V5_WRITER_WORKFLOW_PATH: .github/workflows/wnba_alt_pregame_snapshot.yml
         run: |
           git config user.name 'WNBA ALT Market Owner Bot'
           git config user.email 'actions@github.com'
