@@ -118,11 +118,26 @@ jobs:
   alt-market:
     name: Current ALT market
     needs: canonical-base
-    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
+    # A confirmed empty slate is a healthy terminal state. Do not call the paid
+    # ALT owner (or mark the daily run failed) merely because there are no games.
+    # On game days, missing ALT eligibility remains a hard failure.
+    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule') && needs.canonical-base.outputs.has_active_slate == 'true' }}
     uses: ./.github/workflows/wnba_alt_pregame_snapshot.yml
     with:
       deploy_dashboard: false
     secrets: inherit
+
+  no-slate:
+    name: Healthy no-slate completion
+    needs: canonical-base
+    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule') && needs.canonical-base.outputs.has_active_slate == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record confirmed empty slate
+        run: |
+          echo "No WNBA games are scheduled for ${{ needs.canonical-base.outputs.target_date }}."
+          echo "Canonical game count: ${{ needs.canonical-base.outputs.game_count }}"
+          echo "ALT, injuries, predictions, and rollover are correctly skipped."
 
   injury-context:
     name: Injury context
