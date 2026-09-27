@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       result_date:
-        description: 'Eastern slate date to grade (YYYY-MM-DD); defaults to yesterday'
+        description: 'Eastern slate date to grade (YYYY-MM-DD); defaults to latest archived past slate'
         required: false
         type: string
   push:
@@ -60,7 +60,30 @@ jobs:
             RESULT_DATE=$(date -d "$REQUESTED_RESULT_DATE" +%F)
             test "$RESULT_DATE" = "$REQUESTED_RESULT_DATE"
           else
-            RESULT_DATE=$(TZ=America/New_York date -d 'yesterday' +%F)
+            # On an off day, yesterday may have no predictions. Select the
+            # latest archived past slate so verified finals can be backfilled.
+            RESULT_DATE=$(python - "$TARGET" <<'PY'
+          import json
+          import sys
+          from datetime import date, timedelta
+          from pathlib import Path
+          target = date.fromisoformat(sys.argv[1])
+          ledger = Path('data/history/wnba_game_predictions.jsonl')
+          dates = []
+          if ledger.exists():
+              for line in ledger.read_text(encoding='utf-8').splitlines():
+                  if not line.strip():
+                      continue
+                  row = json.loads(line)
+                  try:
+                      game_date = date.fromisoformat(str(row.get('target_date') or '')[:10])
+                  except ValueError:
+                      continue
+                  if game_date < target:
+                      dates.append(game_date)
+          print((max(dates) if dates else target - timedelta(days=1)).isoformat())
+          PY
+            )
           fi
           test "$RESULT_DATE" '<' "$TARGET"
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
@@ -108,6 +131,7 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
+          from datetime import date, timedelta
           target=os.environ['TARGET']
           result_date=os.environ['RESULT_DATE']
           lifecycle=Path('data/dashboard/wnba_s19_m06_results_lifecycle.json')
@@ -119,8 +143,9 @@ jobs:
           current=(data.get('current_model') or {}).get('performance') or {}
           recent=(data.get('current_model') or {}).get('recent_results') or []
           yesterday=(data.get('current_model') or {}).get('yesterday') or {}
-          if str(yesterday.get('date') or '')[:10] != result_date:
-              raise SystemExit(f'Results lifecycle yesterday mismatch: {yesterday.get("date")} != {result_date}')
+          previous_day=(date.fromisoformat(target)-timedelta(days=1)).isoformat()
+          if str(yesterday.get('date') or '')[:10] != previous_day:
+              raise SystemExit(f'Results lifecycle yesterday mismatch: {yesterday.get("date")} != {previous_day}')
           rows=[]
           for line in Path('data/history/wnba_game_predictions.jsonl').read_text(encoding='utf-8').splitlines():
               if line.strip():
