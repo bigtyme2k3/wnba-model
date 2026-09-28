@@ -278,6 +278,8 @@ jobs:
               BREAK_ARGS+=(--days-until-slate "$DAYS_UNTIL_SLATE")
             fi
             python patch_dashboard_break_state.py "${BREAK_ARGS[@]}"
+            python scripts/wnba_s19_m06_results_lifecycle.py --date "$TARGET" --results-only
+            python patch_dashboard_s19_m06.py
             echo 'BREAK_MODE_DEPLOY_SAFE: current betting views are paused; archive and health views remain available.'
             exit 0
           fi
@@ -385,6 +387,7 @@ jobs:
               '"stale_predictions_actionable":false',
               'Results, Game Performance, Remaining Season, and Data Health',
               'id="game-performance-route-script"',
+              'id="s19-m06-results-script"',
           ]
           missing=[marker for marker in required if marker not in html]
           if missing: raise SystemExit(f'BREAK_MODE_DEPLOY_UNSAFE: missing {missing}')
