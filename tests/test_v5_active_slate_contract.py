@@ -209,7 +209,7 @@ def main() -> int:
         assert prediction_result["player_props"][0]["player"] == PLAYER
         assert prediction_result["player_props"][0]["game"] == GAME
         assert prediction_result["player_props"][0]["model_projection"] == 17.0
-        assert prediction_result["player_props"][0]["final_action"] == "WATCH"
+        assert prediction_result["model_mode"] == "PLAYOFF"\n        assert prediction_result["decision_states"] == ["BET", "PASS"]\n        assert prediction_result["player_props"][0]["final_action"] == "PASS"\n        assert prediction_result["player_props"][0]["playoff_mode"] is True\n        assert prediction_result["player_props"][0]["playoff_gate_passed"] is False
         assert prediction_result["best_bets"] == []
         assert prediction_result["portfolio"] == []
         assert prediction_audit["status"] == "READY"
