@@ -28,6 +28,9 @@ on:
       - 'scripts/build_daily_canonical_slate.py'
       - 'wnba_forward_validation_engine.py'
       - 'wnba_best_bets.py'
+      - 'wnba_game_prediction_engine.py'
+      - 'wnba_results_dashboard_builder.py'
+      - 'config/wnba_playoff_mode.json'
       - '.github/workflows/wnba-v5-empty-slate-contract.yml'
 
 permissions:
@@ -64,6 +67,8 @@ jobs:
             wnba_current_slate.py \
             wnba_forward_validation_engine.py \
             wnba_best_bets.py \
+            wnba_game_prediction_engine.py \
+            wnba_results_dashboard_builder.py \
             active_slate_date.py \
             patch_dashboard_break_state.py \
             patch_dashboard_s19_m02.py \
