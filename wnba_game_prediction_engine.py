@@ -19,6 +19,7 @@ from typing import Any
 
 MASTER_PATHS = [Path("data/dashboard/wnba_master.json"), Path("data/master/wnba_master.json")]
 OUT_PATHS = [Path("data/dashboard/wnba_game_predictions.json"), Path("data/warehouse/wnba_game_predictions.json")]
+PLAYOFF_CONFIG = Path("config/wnba_playoff_mode.json")
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -114,7 +115,7 @@ def confidence(edge: float, samples: int) -> int:
     return int(round(min(90, max(50, raw))))
 
 
-def predict_game(game: dict[str, Any], profiles: dict[str, dict[str, Any]]) -> dict[str, Any]:
+def predict_game(game: dict[str, Any], profiles: dict[str, dict[str, Any]], playoff_policy: dict[str, Any] | None = None) -> dict[str, Any]:
     home = str(game.get("home_team") or "")
     away = str(game.get("away_team") or "")
     hp = profiles.get(home, {})
@@ -160,7 +161,16 @@ def predict_game(game: dict[str, Any], profiles: dict[str, dict[str, Any]]) -> d
     if total_pick:
         candidates.append({"market": "TOTAL", "pick": total_pick, "edge": round(abs(total_edge), 2), "signed_edge": round(total_edge, 2), "confidence": confidence(total_edge, min_samples)})
     candidates.sort(key=lambda x: (x["edge"], x["confidence"]), reverse=True)
-    best = candidates[0] if candidates and candidates[0]["edge"] >= 1.0 else None
+    if playoff_policy:
+        edge_min = float(playoff_policy.get("minimum_edge_points", 2.5))
+        prob_min = float(playoff_policy.get("minimum_probability", 0.57))
+        for x in candidates:
+            sigma = 12.5 if x["market"] == "SPREAD" else 21.0
+            x["estimated_probability"] = round(normal_cdf(x["edge"] / sigma), 4)
+            x["decision"] = "BET" if x["edge"] >= edge_min and x["estimated_probability"] >= prob_min else "PASS"
+        best = next((x for x in candidates if x["decision"] == "BET"), None)
+    else:
+        best = candidates[0] if candidates and candidates[0]["edge"] >= 1.0 else None
 
     return clean({
         "game_id": game.get("game_id"),
@@ -194,7 +204,10 @@ def build(target: str) -> dict[str, Any]:
     history = read_history(target)
     profiles = team_profiles(history)
     games = [g for g in master.get("games", []) if str(g.get("game_date") or "")[:10] == target and str(g.get("bucket") or "today") == "today"]
-    predictions = [predict_game(game, profiles) for game in games]
+    playoff = load_json(PLAYOFF_CONFIG, {})
+    playoff_mode = str(playoff.get("mode") or "").upper() == "PLAYOFF" and target >= str(playoff.get("effective_date") or "9999-12-31")
+    playoff_policy = playoff.get("game_markets", {}) if playoff_mode else None
+    predictions = [predict_game(game, profiles, playoff_policy) for game in games]
     by_id = {str(row.get("game_id")): row for row in predictions}
     by_game = {str(row.get("game")): row for row in predictions}
 
@@ -220,6 +233,8 @@ def build(target: str) -> dict[str, Any]:
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target_date": target,
+        "model_mode": "PLAYOFF" if playoff_mode else "REGULAR_SEASON",
+        "decision_states": ["BET", "PASS"] if playoff_mode else ["PLAY", "PASS"],
         "summary": {
             "games": len(predictions),
             "ready": sum(row["model_status"] == "ready" for row in predictions),
