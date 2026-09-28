@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "mode": "PLAYOFF",
+  "season": 2026,
+  "effective_date": "2026-09-27",
+  "decision_states": ["BET", "PASS"],
+  "data_policy": {
+    "regular_season": {
+      "role": "prior_reference_only",
+      "allow_live_calibration_updates": false,
+      "preserve_warehouse_rows": true
+    },
+    "playoffs": {
+      "role": "primary_live_evidence",
+      "isolated_performance_tracking": true,
+      "isolated_calibration": true,
+      "preserve_round_series_game_number": true
+    }
+  },
+  "game_markets": {
+    "minimum_edge_points": 2.5,
+    "minimum_probability": 0.57,
+    "minimum_playoff_sample_games": 1,
+    "early_playoff_regular_season_prior": true,
+    "decision_fallback": "PASS"
+  },
+  "player_props": {
+    "allowed_actions": ["BET", "PASS"],
+    "minimum_confidence": 65.0,
+    "minimum_absolute_projection_edge": 3.0,
+    "maximum_price": -150,
+    "approved_books": ["DraftKings", "FanDuel", "Fanatics"],
+    "block_injury_status": ["OUT", "DOUBTFUL", "QUESTIONABLE", "UNKNOWN"],
+    "decision_fallback": "PASS"
+  },
+  "reporting": {
+    "separate_regular_season_and_playoffs": true,
+    "daily_bet_record_only": true,
+    "passes_retained_for_research": true
+  }
+}
