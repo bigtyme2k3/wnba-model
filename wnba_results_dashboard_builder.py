@@ -6,6 +6,7 @@ from datetime import datetime,timezone
 
 HISTORY='data/history/wnba_model_history.jsonl'
 TARGETS=['data/warehouse/wnba_phase5_learning.json','data/dashboard/wnba_phase5_learning.json']
+PLAYOFF_START='2026-09-27'
 
 def rows():
  out=[]
@@ -28,10 +29,12 @@ def main():
  for d,x in daily.items():
   risk=x['wins']+x['losses'];x['date']=d;x['units']=round(x['units'],3);x['roi']=round(x['units']/risk,4) if risk else None
  summary=sorted(daily.values(),key=lambda x:x['date'],reverse=True)
+ regular=[x for x in summary if x['date'] < PLAYOFF_START]
+ playoffs=[x for x in summary if x['date'] >= PLAYOFF_START]
  for path in TARGETS:
   try:data=json.load(open(path,encoding='utf-8'))
   except Exception:data={}
-  data['recent_graded']=graded[:100];data['daily_results']=summary[:60];data['results_updated_at_utc']=datetime.now(timezone.utc).isoformat()
+  data['recent_graded']=graded[:100];data['daily_results']=summary[:60];data['regular_season_results']=regular[:60];data['playoff_results']=playoffs[:60];data['playoff_mode']=True;data['playoff_start']=PLAYOFF_START;data['results_updated_at_utc']=datetime.now(timezone.utc).isoformat()
   os.makedirs(os.path.dirname(path),exist_ok=True);json.dump(data,open(path,'w',encoding='utf-8'),indent=2,allow_nan=False)
  print('Results dashboard rows:',len(graded))
 if __name__=='__main__':main()
