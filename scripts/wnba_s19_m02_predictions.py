@@ -27,6 +27,7 @@ OUT = DASH / 'wnba_s19_m02_predictions.json'
 AUDIT = DASH / 'wnba_s19_m02_prediction_audit.json'
 MODEL_VERSION = 'sprint19_player_props_v5_m02_action_v2'
 ALLOWED_BOOKS = {'draftkings', 'fanduel', 'fanatics'}
+PLAYOFF_CONFIG = Path('config/wnba_playoff_mode.json')
 
 
 def load(path: Path, default):
@@ -229,6 +230,9 @@ def build(target: str):
     injury = load(INJURY, {})
     buy = load(BUY, {})
     portfolio = load(PORTFOLIO, {})
+    playoff = load(PLAYOFF_CONFIG, {})
+    playoff_mode = str(playoff.get('mode') or '').upper() == 'PLAYOFF' and target >= str(playoff.get('effective_date') or '9999-12-31')
+    prop_policy = playoff.get('player_props', {}) if playoff_mode else {}
 
     for name, payload in [('master', master), ('games', games), ('injury', injury)]:
         actual = str(payload.get('target_date') or '')[:10]
@@ -413,6 +417,19 @@ def build(target: str):
     for row in prop_rows:
         finalized = finalized_bets.get(decision_key(row))
         action = 'BET' if finalized else ('WATCH' if row.get('recommendation') in {'OVER', 'UNDER'} else 'PASS')
+        if playoff_mode:
+            side = str(row.get('recommendation') or '').upper()
+            conf = f(row.get('confidence'))
+            edge_abs = abs(f(row.get('edge'), 0.0) or 0.0)
+            book, price = (row.get('best_over_book'), f(row.get('best_over_price'))) if side == 'OVER' else (row.get('best_under_book'), f(row.get('best_under_price'))) if side == 'UNDER' else (None, None)
+            book_ok = norm(book).replace(' ', '') in {norm(x).replace(' ', '') for x in prop_policy.get('approved_books', [])}
+            price_ok = price is not None and price >= f(prop_policy.get('maximum_price'), -150)
+            injury_ok = str(row.get('injury_status') or '').upper() not in set(prop_policy.get('block_injury_status', []))
+            gate = side in {'OVER','UNDER'} and bool(row.get('candidate_eligible')) and conf is not None and conf >= f(prop_policy.get('minimum_confidence'),65.0) and edge_abs >= f(prop_policy.get('minimum_absolute_projection_edge'),3.0) and book_ok and price_ok and injury_ok and injury_source_verified
+            action = 'BET' if gate else 'PASS'
+            row['playoff_mode'] = True
+            row['playoff_gate_passed'] = gate
+            row['playoff_gate'] = {'confidence_min': prop_policy.get('minimum_confidence'), 'edge_min': prop_policy.get('minimum_absolute_projection_edge'), 'maximum_price': prop_policy.get('maximum_price')}
         if finalized:
             side = str(row.get('recommendation') or '').upper()
             book = first(finalized, 'sportsbook', 'best_book', 'book')
@@ -436,6 +453,8 @@ def build(target: str):
         'schema_version': 'sprint19-m02-unified-predictions-v5',
         'status': 'READY',
         'empty_slate': False,
+        'model_mode': 'PLAYOFF' if playoff_mode else 'REGULAR_SEASON',
+        'decision_states': ['BET','PASS'] if playoff_mode else ['BET','WATCH','PASS'],
         'source_policy': {
             'games': 'data/dashboard/wnba_sprint2_phase2.json',
             'player_props': 'exact current-slate sportsbook props prepared by wnba_s19_m02_prop_source.py -> player_points.py -> current injury intelligence',
