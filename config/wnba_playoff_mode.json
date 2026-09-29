@@ -3,7 +3,10 @@
   "mode": "PLAYOFF",
   "season": 2026,
   "effective_date": "2026-09-27",
-  "decision_states": ["BET", "PASS"],
+  "decision_states": [
+    "BET",
+    "PASS"
+  ],
   "data_policy": {
     "regular_season": {
       "role": "prior_reference_only",
@@ -25,13 +28,41 @@
     "decision_fallback": "PASS"
   },
   "player_props": {
-    "allowed_actions": ["BET", "PASS"],
-    "minimum_confidence": 65.0,
-    "minimum_absolute_projection_edge": 3.0,
+    "allowed_actions": [
+      "BET",
+      "PASS"
+    ],
+    "minimum_confidence": 65,
+    "minimum_absolute_projection_edge": 3,
     "maximum_price": -150,
-    "approved_books": ["DraftKings", "FanDuel", "Fanatics"],
-    "block_injury_status": ["OUT", "DOUBTFUL", "QUESTIONABLE", "UNKNOWN"],
-    "decision_fallback": "PASS"
+    "approved_books": [
+      "DraftKings",
+      "FanDuel",
+      "Fanatics"
+    ],
+    "block_injury_status": [
+      "OUT",
+      "DOUBTFUL",
+      "QUESTIONABLE",
+      "UNKNOWN"
+    ],
+    "decision_fallback": "PASS",
+    "max_correlated_bets_per_player": 1,
+    "correlation_policy": "keep_strongest_qualified_market_per_player",
+    "correlation_rank": [
+      "confidence",
+      "absolute_edge",
+      "price"
+    ],
+    "correlation_stats": [
+      "PTS",
+      "REB",
+      "AST",
+      "PA",
+      "PR",
+      "RA",
+      "PRA"
+    ]
   },
   "reporting": {
     "separate_regular_season_and_playoffs": true,
