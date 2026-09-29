@@ -446,6 +446,33 @@ def build(target: str):
         if action == 'BET':
             row['sportsbook'] = first(finalized, 'sportsbook', 'best_book', 'book')
             row['american_odds'] = f(first(finalized, 'american_odds', 'odds', 'price'))
+    if playoff_mode:
+        max_per_player = int(prop_policy.get('max_correlated_bets_per_player', 1))
+        correlated_stats = set(prop_policy.get('correlation_stats', ['PTS','REB','AST','PA','PR','RA','PRA']))
+        qualified_by_player = {}
+        for row in prop_rows:
+            if row.get('final_action') == 'BET' and str(row.get('stat') or '').upper() in correlated_stats:
+                qualified_by_player.setdefault(norm(row.get('player')), []).append(row)
+        for player_rows in qualified_by_player.values():
+            def exposure_rank(item):
+                side = str(item.get('recommendation') or '').upper()
+                price = f(item.get('best_over_price') if side == 'OVER' else item.get('best_under_price'), -9999.0)
+                return (f(item.get('confidence'), 0.0), abs(f(item.get('edge'), 0.0)), price)
+            ranked = sorted(player_rows, key=exposure_rank, reverse=True)
+            for row in ranked[max_per_player:]:
+                row['action'] = 'PASS'
+                row['final_action'] = 'PASS'
+                row['eligible_for_bet'] = False
+                row['playoff_gate_passed'] = False
+                row['pass_reason'] = 'CORRELATED_PLAYER_EXPOSURE'
+                row['correlation_winner'] = {
+                    'stat': ranked[0].get('stat'),
+                    'line': ranked[0].get('line'),
+                    'recommendation': ranked[0].get('recommendation'),
+                    'confidence': ranked[0].get('confidence'),
+                    'edge': ranked[0].get('edge'),
+                }
+
     explicit_best_bets = [dict(row) for row in prop_rows if row.get('final_action') == 'BET']
     payload = {
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
