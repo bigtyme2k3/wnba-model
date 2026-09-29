@@ -1,7 +1,7 @@
 {
   "sprint": 6,
   "phase": "6.1-edge-qa-dashboard",
-  "generated_at_utc": "2026-09-29T13:53:17.406513+00:00",
+  "generated_at_utc": "2026-09-29T16:49:46.170943+00:00",
   "target_date": "2026-09-29",
   "status": "ok",
   "source_contract": {
@@ -11,76 +11,74 @@
     "source_target_date": "2026-09-29",
     "source_status": "ready",
     "empty_slate": false,
-    "standard_rows": 154,
+    "standard_rows": 151,
     "off_target_rows": 0,
     "alt_source": "data/dashboard/wnba_alt_market_warehouse.json",
     "alt_target_date": "2026-09-29",
     "alt_status": "ok",
-    "alt_rows": 1969,
+    "alt_rows": 1990,
     "alt_off_target_rows": 0
   },
   "summary": {
-    "source_props": 154,
-    "source_alt_markets": 1969,
-    "candidates_loaded": 2123,
-    "candidates_scored": 154,
-    "invalid_projection_rows_rejected": 1969,
+    "source_props": 151,
+    "source_alt_markets": 1990,
+    "candidates_loaded": 2141,
+    "candidates_scored": 151,
+    "invalid_projection_rows_rejected": 1990,
     "high_confidence": 0,
-    "moderate_confidence": 1,
-    "low_confidence": 153,
-    "top_score": 68.13,
-    "standard_candidates": 154,
+    "moderate_confidence": 0,
+    "low_confidence": 151,
+    "top_score": 67.57,
+    "standard_candidates": 151,
     "alternate_candidates": 0
   },
   "qa": {
     "score_distribution": {
-      "68-74.99": 1,
-      "60-67.99": 45,
-      "below-60": 108
+      "60-67.99": 40,
+      "below-60": 111
     },
     "confidence_distribution": {
-      "MODERATE": 1,
-      "LOW": 153
+      "LOW": 151
     },
     "market_type_distribution": {
-      "standard": 154
+      "standard": 151
     },
     "evidence_coverage_counts": {
-      "projection": 127,
+      "projection": 123,
       "recent_form": 0,
       "season_history": 0,
       "clv": 0,
       "roi": 0,
-      "market_value": 127
+      "market_value": 123
     },
     "evidence_coverage_rates": {
-      "projection": 0.8247,
+      "projection": 0.8146,
       "recent_form": 0.0,
       "season_history": 0.0,
       "clv": 0.0,
       "roi": 0.0,
-      "market_value": 0.8247
+      "market_value": 0.8146
     },
     "missing_evidence_counts": {
-      "recent_form": 154,
-      "season_history": 154,
-      "clv": 154,
-      "roi": 154,
-      "projection": 27,
-      "market_value": 27
+      "recent_form": 151,
+      "season_history": 151,
+      "clv": 151,
+      "roi": 151,
+      "projection": 28,
+      "market_value": 28
     },
     "component_averages": {
-      "projection": 74.52,
+      "projection": 73.44,
       "recent_form": 50.0,
       "season_history": 50.0,
       "clv": 50.0,
       "roi": 50.0,
-      "market_value": 65.29,
+      "market_value": 64.37,
       "sample_strength": 20.0
     },
     "projection_integrity": {
       "contract": "wnba_projection_contract.py",
-      "invalid_rows_rejected": 1969,
+      "invalid_rows_rejected": 1990,
       "rejection_sample": [
         {
           "player": "A'ja Wilson",
@@ -239,15 +237,6 @@
           "player": "A'ja Wilson",
           "game": "Las Vegas Aces @ Indiana Fever",
           "stat": "AST",
-          "line": 6.5,
-          "source_kind": "alt",
-          "reason": "missing_projection",
-          "projection_rejections": []
-        },
-        {
-          "player": "A'ja Wilson",
-          "game": "Las Vegas Aces @ Indiana Fever",
-          "stat": "AST",
           "line": 1.5,
           "source_kind": "alt",
           "reason": "missing_projection",
@@ -261,6 +250,15 @@
           "source_kind": "alt",
           "reason": "missing_projection",
           "projection_rejections": []
+        },
+        {
+          "player": "A'ja Wilson",
+          "game": "Las Vegas Aces @ Indiana Fever",
+          "stat": "AST",
+          "line": 5.5,
+          "source_kind": "alt",
+          "reason": "missing_projection",
+          "projection_rejections": []
         }
       ],
       "all_published_projections_validated": true
@@ -270,104 +268,6 @@
   "top_edges": [
     {
       "target_date": "2026-09-29",
-      "player": "Makayla Timpson",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 12.5,
-      "sportsbook": null,
-      "odds": 100.0,
-      "projection": 9.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 68.13,
-      "confidence": "MODERATE",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 99.5,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.80 versus line",
-        "Model probability edge +22.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Stephanie Talbot",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 8.5,
-      "sportsbook": null,
-      "odds": -105.0,
-      "projection": 2.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 67.75,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 96.82,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.70 versus line",
-        "Model probability edge +21.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
       "player": "Leonie Fiebich",
       "team": "New York Liberty",
       "game": "Minnesota Lynx @ New York Liberty",
@@ -375,13 +275,13 @@
       "side": "OVER",
       "line": 8.5,
       "sportsbook": null,
-      "odds": -106.0,
-      "projection": 13.0,
+      "odds": -107.5,
+      "projection": 13.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 67.68,
+      "edge_score": 67.57,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -389,7 +289,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 96.3,
+        "market_value": 95.52,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -409,57 +309,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +4.50 versus line",
-        "Model probability edge +21.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Aliyah Boston",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 8.5,
-      "sportsbook": null,
-      "odds": -109.5,
-      "projection": 6.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.725,
-      "edge_score": 67.43,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 94.51,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.10 versus line",
-        "Model probability edge +20.2%"
+        "Projection edge +4.60 versus line",
+        "Model probability edge +20.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -473,11 +324,60 @@
       "side": "UNDER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": -110.0,
-      "projection": 1.6,
+      "odds": -109.0,
+      "projection": 1.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 67.47,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 94.76,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.00 versus line",
+        "Model probability edge +20.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Stephanie Talbot",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -110.0,
+      "projection": 2.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
       "model_probability": 0.725,
       "edge_score": 67.4,
       "confidence": "LOW",
@@ -507,7 +407,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.90 versus line",
+        "Projection edge +5.70 versus line",
         "Model probability edge +20.1%"
       ],
       "market_type": "standard",
@@ -564,18 +464,67 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Aliyah Boston",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 24.5,
+      "player": "Natasha Howard",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 10.5,
       "sportsbook": null,
-      "odds": -112.0,
-      "projection": 19.6,
+      "odds": -111.5,
+      "projection": 12.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 67.29,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 93.52,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.00 versus line",
+        "Model probability edge +19.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Sabrina Ionescu",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 15.5,
+      "sportsbook": null,
+      "odds": -112.0,
+      "projection": 20.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
       "model_probability": 0.725,
       "edge_score": 67.26,
       "confidence": "LOW",
@@ -605,8 +554,155 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +4.90 versus line",
+        "Projection edge +5.00 versus line",
         "Model probability edge +19.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Makayla Timpson",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 6.5,
+      "sportsbook": null,
+      "odds": -113.5,
+      "projection": 4.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 67.16,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 92.54,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.20 versus line",
+        "Model probability edge +19.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 15.5,
+      "sportsbook": null,
+      "odds": -108.0,
+      "projection": 12.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.7202,
+      "edge_score": 67.11,
+      "confidence": "LOW",
+      "components": {
+        "projection": 98.92,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 94.2,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.60 versus line",
+        "Model probability edge +20.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 24.5,
+      "sportsbook": null,
+      "odds": -115.0,
+      "projection": 19.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 67.06,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 91.83,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.90 versus line",
+        "Model probability edge +19.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -616,110 +712,12 @@
       "player": "Sabrina Ionescu",
       "team": "New York Liberty",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 15.5,
-      "sportsbook": null,
-      "odds": -113.0,
-      "projection": 20.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 67.19,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 92.79,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.00 versus line",
-        "Model probability edge +19.4%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": -114.0,
-      "projection": 12.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 67.12,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 92.3,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.00 versus line",
-        "Model probability edge +19.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
       "market": "PR",
       "side": "OVER",
-      "line": 12.5,
+      "line": 19.5,
       "sportsbook": null,
       "odds": -115.5,
-      "projection": 16.0,
+      "projection": 24.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
@@ -752,155 +750,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.50 versus line",
-        "Model probability edge +18.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Aliyah Boston",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 15.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 12.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.7202,
-      "edge_score": 66.97,
-      "confidence": "LOW",
-      "components": {
-        "projection": 98.92,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 93.2,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.60 versus line",
-        "Model probability edge +19.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PR",
-      "side": "OVER",
-      "line": 19.5,
-      "sportsbook": null,
-      "odds": -117.0,
-      "projection": 24.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 66.92,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 90.88,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
         "Projection edge +5.20 versus line",
-        "Model probability edge +18.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 25.5,
-      "sportsbook": null,
-      "odds": -106.0,
-      "projection": 29.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.7162,
-      "edge_score": 66.9,
-      "confidence": "LOW",
-      "components": {
-        "projection": 98.04,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 94.35,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +4.20 versus line",
-        "Model probability edge +20.2%"
+        "Model probability edge +18.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -914,21 +765,21 @@
       "side": "OVER",
       "line": 2.5,
       "sportsbook": null,
-      "odds": 106.5,
-      "projection": 3.8,
+      "odds": -110.0,
+      "projection": 3.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
-      "model_probability": 0.7047,
-      "edge_score": 66.82,
+      "model_probability": 0.7205,
+      "edge_score": 67.0,
       "confidence": "LOW",
       "components": {
-        "projection": 95.5,
+        "projection": 99.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 98.51,
+        "market_value": 93.27,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -948,175 +799,28 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.30 versus line",
-        "Model probability edge +22.0%"
+        "Projection edge +1.40 versus line",
+        "Model probability edge +19.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Makayla Timpson",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": -119.0,
-      "projection": 4.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.725,
-      "edge_score": 66.79,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 89.96,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +18.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Aliyah Boston",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 28.5,
-      "sportsbook": null,
-      "odds": -121.0,
-      "projection": 22.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.725,
-      "edge_score": 66.67,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 89.05,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.60 versus line",
-        "Model probability edge +17.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Sophie Cunningham",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": -121.5,
-      "projection": 8.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 66.63,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.82,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.40 versus line",
-        "Model probability edge +17.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Sabrina Ionescu",
+      "player": "Leonie Fiebich",
       "team": "New York Liberty",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
+      "market": "PR",
       "side": "OVER",
-      "line": 24.5,
+      "line": 12.5,
       "sportsbook": null,
-      "odds": -122.0,
-      "projection": 29.8,
+      "odds": -117.5,
+      "projection": 16.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
+      "projection_ceiling": 120.0,
       "model_probability": 0.725,
-      "edge_score": 66.6,
+      "edge_score": 66.89,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1124,7 +828,56 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 88.6,
+        "market_value": 90.65,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.60 versus line",
+        "Model probability edge +18.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Leonie Fiebich",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PA",
+      "side": "OVER",
+      "line": 10.5,
+      "sportsbook": null,
+      "odds": -118.0,
+      "projection": 15.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 66.86,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 90.42,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1145,25 +898,221 @@
       ],
       "evidence": [
         "Projection edge +5.30 versus line",
-        "Model probability edge +17.5%"
+        "Model probability edge +18.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Jonquel Jones",
+      "player": "Stephanie Talbot",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 5.5,
+      "sportsbook": null,
+      "odds": -118.5,
+      "projection": 0.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.83,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 90.19,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.70 versus line",
+        "Model probability edge +18.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 27.5,
+      "sportsbook": null,
+      "odds": -106.0,
+      "projection": 23.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.7148,
+      "edge_score": 66.78,
+      "confidence": "LOW",
+      "components": {
+        "projection": 97.73,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 94.05,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.50 versus line",
+        "Model probability edge +20.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Sabrina Ionescu",
       "team": "New York Liberty",
       "game": "Minnesota Lynx @ New York Liberty",
       "market": "PA",
       "side": "OVER",
-      "line": 15.5,
+      "line": 20.5,
       "sportsbook": null,
-      "odds": -122.0,
-      "projection": 18.7,
+      "odds": -119.5,
+      "projection": 25.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 66.76,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 89.73,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +5.10 versus line",
+        "Model probability edge +18.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Sophie Cunningham",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 6.5,
+      "sportsbook": null,
+      "odds": -119.5,
+      "projection": 8.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.76,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 89.73,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.40 versus line",
+        "Model probability edge +18.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -122.0,
+      "projection": 6.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
       "model_probability": 0.725,
       "edge_score": 66.6,
       "confidence": "LOW",
@@ -1193,7 +1142,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.20 versus line",
+        "Projection edge +2.20 versus line",
         "Model probability edge +17.5%"
       ],
       "market_type": "standard",
@@ -1204,15 +1153,15 @@
       "player": "Sabrina Ionescu",
       "team": "New York Liberty",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PA",
+      "market": "PRA",
       "side": "OVER",
-      "line": 20.5,
+      "line": 24.5,
       "sportsbook": null,
       "odds": -122.5,
-      "projection": 25.6,
+      "projection": 29.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
+      "projection_ceiling": 140.0,
       "model_probability": 0.725,
       "edge_score": 66.57,
       "confidence": "LOW",
@@ -1242,57 +1191,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +5.10 versus line",
+        "Projection edge +5.30 versus line",
         "Model probability edge +17.4%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Stephanie Talbot",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 5.5,
-      "sportsbook": null,
-      "odds": -123.0,
-      "projection": 0.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 66.54,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +4.70 versus line",
-        "Model probability edge +17.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1306,13 +1206,13 @@
       "side": "OVER",
       "line": 12.5,
       "sportsbook": null,
-      "odds": -117.5,
+      "odds": -117.0,
       "projection": 14.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.7205,
-      "edge_score": 66.49,
+      "edge_score": 66.52,
       "confidence": "LOW",
       "components": {
         "projection": 99.0,
@@ -1320,7 +1220,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 89.66,
+        "market_value": 89.89,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1341,25 +1241,25 @@
       ],
       "evidence": [
         "Projection edge +2.10 versus line",
-        "Model probability edge +18.0%"
+        "Model probability edge +18.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PA",
-      "side": "OVER",
-      "line": 10.5,
+      "player": "Aliyah Boston",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 28.5,
       "sportsbook": null,
       "odds": -124.0,
-      "projection": 15.8,
+      "projection": 22.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
+      "projection_ceiling": 140.0,
       "model_probability": 0.725,
       "edge_score": 66.48,
       "confidence": "LOW",
@@ -1389,7 +1289,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +5.30 versus line",
+        "Projection edge +5.60 versus line",
         "Model probability edge +17.1%"
       ],
       "market_type": "standard",
@@ -1404,13 +1304,13 @@
       "side": "UNDER",
       "line": 13.5,
       "sportsbook": null,
-      "odds": -125.0,
+      "odds": -125.5,
       "projection": 9.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.725,
-      "edge_score": 66.42,
+      "edge_score": 66.39,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1418,7 +1318,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 87.28,
+        "market_value": 87.06,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1439,7 +1339,56 @@
       ],
       "evidence": [
         "Projection edge +3.90 versus line",
-        "Model probability edge +16.9%"
+        "Model probability edge +16.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Jonquel Jones",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PA",
+      "side": "OVER",
+      "line": 15.5,
+      "sportsbook": null,
+      "odds": -126.0,
+      "projection": 18.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 66.36,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 86.85,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.20 versus line",
+        "Model probability edge +16.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1502,13 +1451,13 @@
       "side": "UNDER",
       "line": 19.5,
       "sportsbook": null,
-      "odds": -122.0,
+      "odds": -122.5,
       "projection": 16.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.7221,
-      "edge_score": 66.35,
+      "edge_score": 66.32,
       "confidence": "LOW",
       "components": {
         "projection": 99.36,
@@ -1516,7 +1465,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 87.96,
+        "market_value": 87.74,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1537,25 +1486,25 @@
       ],
       "evidence": [
         "Projection edge +3.30 versus line",
-        "Model probability edge +17.3%"
+        "Model probability edge +17.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Aliyah Boston",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 25.5,
+      "player": "Leonie Fiebich",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 14.5,
       "sportsbook": null,
       "odds": -127.0,
-      "projection": 19.5,
+      "projection": 18.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
+      "projection_ceiling": 140.0,
       "model_probability": 0.725,
       "edge_score": 66.3,
       "confidence": "LOW",
@@ -1585,57 +1534,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +6.00 versus line",
-        "Model probability edge +16.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 14.5,
-      "sportsbook": null,
-      "odds": -128.0,
-      "projection": 18.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.725,
-      "edge_score": 66.24,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.99,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
         "Projection edge +4.30 versus line",
-        "Model probability edge +16.4%"
+        "Model probability edge +16.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1649,13 +1549,13 @@
       "side": "UNDER",
       "line": 16.5,
       "sportsbook": null,
-      "odds": -129.0,
+      "odds": -130.0,
       "projection": 12.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 66.18,
+      "edge_score": 66.12,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1663,7 +1563,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 85.57,
+        "market_value": 85.15,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1684,7 +1584,7 @@
       ],
       "evidence": [
         "Projection edge +3.70 versus line",
-        "Model probability edge +16.2%"
+        "Model probability edge +16.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1698,13 +1598,13 @@
       "side": "UNDER",
       "line": 5.5,
       "sportsbook": null,
-      "odds": -129.5,
+      "odds": -132.0,
       "projection": 0.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 66.15,
+      "edge_score": 66.01,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1712,7 +1612,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 85.36,
+        "market_value": 84.33,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1733,7 +1633,7 @@
       ],
       "evidence": [
         "Projection edge +5.00 versus line",
-        "Model probability edge +16.1%"
+        "Model probability edge +15.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1745,23 +1645,23 @@
       "game": "Las Vegas Aces @ Indiana Fever",
       "market": "RA",
       "side": "UNDER",
-      "line": 12.5,
+      "line": 11.5,
       "sportsbook": null,
-      "odds": -135.0,
-      "projection": 9.6,
+      "odds": -110.0,
+      "projection": 9.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
-      "model_probability": 0.725,
-      "edge_score": 65.84,
+      "model_probability": 0.7054,
+      "edge_score": 65.66,
       "confidence": "LOW",
       "components": {
-        "projection": 100.0,
+        "projection": 95.65,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 83.12,
+        "market_value": 89.96,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1781,57 +1681,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.90 versus line",
-        "Model probability edge +15.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PR",
-      "side": "OVER",
-      "line": 16.5,
-      "sportsbook": null,
-      "odds": -120.0,
-      "projection": 19.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.7148,
-      "edge_score": 65.82,
-      "confidence": "LOW",
-      "components": {
-        "projection": 97.73,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 87.25,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.70 versus line",
-        "Model probability edge +16.9%"
+        "Projection edge +1.80 versus line",
+        "Model probability edge +18.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1845,13 +1696,13 @@
       "side": "UNDER",
       "line": 7.5,
       "sportsbook": null,
-      "odds": -143.5,
+      "odds": -146.5,
       "projection": 4.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
       "model_probability": 0.725,
-      "edge_score": 65.38,
+      "edge_score": 65.23,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1859,7 +1710,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 79.85,
+        "market_value": 78.75,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1880,329 +1731,35 @@
       ],
       "evidence": [
         "Projection edge +2.80 versus line",
-        "Model probability edge +13.6%"
+        "Model probability edge +13.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Stephanie Talbot",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -154.5,
-      "projection": 0.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.725,
-      "edge_score": 64.83,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 75.94,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.60 versus line",
-        "Model probability edge +11.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Kayla McBride",
+      "player": "Natasha Howard",
       "team": "Minnesota Lynx",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PTS",
+      "market": "PR",
       "side": "OVER",
       "line": 16.5,
       "sportsbook": null,
-      "odds": -118.5,
-      "projection": 19.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6989,
-      "edge_score": 64.51,
-      "confidence": "LOW",
-      "components": {
-        "projection": 94.19,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 84.44,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +15.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "REB",
-      "side": "OVER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -162.5,
-      "projection": 5.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.725,
-      "edge_score": 64.46,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 73.31,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.50 versus line",
-        "Model probability edge +10.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "AST",
-      "side": "OVER",
-      "line": 4.5,
-      "sportsbook": null,
-      "odds": -162.0,
-      "projection": 5.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.7205,
-      "edge_score": 64.09,
-      "confidence": "LOW",
-      "components": {
-        "projection": 99.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 72.48,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.40 versus line",
-        "Model probability edge +10.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Caitlin Clark",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 9.5,
-      "sportsbook": null,
-      "odds": -141.0,
-      "projection": 8.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.7072,
-      "edge_score": 63.94,
-      "confidence": "LOW",
-      "components": {
-        "projection": 96.05,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 76.88,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.50 versus line",
-        "Model probability edge +12.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Makayla Timpson",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": -122.5,
-      "projection": 5.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.689,
-      "edge_score": 63.38,
-      "confidence": "LOW",
-      "components": {
-        "projection": 92.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 80.46,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +13.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Kayla McBride",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PA",
-      "side": "OVER",
-      "line": 18.5,
-      "sportsbook": null,
       "odds": -130.0,
-      "projection": 21.2,
+      "projection": 19.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.6916,
-      "edge_score": 63.16,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.7148,
+      "edge_score": 65.22,
       "confidence": "LOW",
       "components": {
-        "projection": 92.57,
+        "projection": 97.73,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 77.79,
+        "market_value": 82.9,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2223,56 +1780,7 @@
       ],
       "evidence": [
         "Projection edge +2.70 versus line",
-        "Model probability edge +12.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Jonquel Jones",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PA",
-      "side": "OVER",
-      "line": 16.5,
-      "sportsbook": null,
-      "odds": -113.0,
-      "projection": 18.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.667,
-      "edge_score": 62.06,
-      "confidence": "LOW",
-      "components": {
-        "projection": 87.12,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 80.04,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.10 versus line",
-        "Model probability edge +13.7%"
+        "Model probability edge +15.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2282,25 +1790,25 @@
       "player": "Kayla McBride",
       "team": "Minnesota Lynx",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PR",
+      "market": "PTS",
       "side": "OVER",
-      "line": 19.5,
+      "line": 16.5,
       "sportsbook": null,
-      "odds": -115.5,
-      "projection": 21.8,
+      "odds": -122.0,
+      "projection": 19.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.6548,
-      "edge_score": 60.81,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.7068,
+      "edge_score": 64.99,
       "confidence": "LOW",
       "components": {
-        "projection": 84.4,
+        "projection": 95.96,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 76.15,
+        "market_value": 84.6,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2320,8 +1828,253 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.30 versus line",
-        "Model probability edge +11.9%"
+        "Projection edge +2.60 versus line",
+        "Model probability edge +15.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Stephanie Talbot",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -155.5,
+      "projection": 0.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 64.79,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 75.61,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.60 versus line",
+        "Model probability edge +11.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Makayla Timpson",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 6.5,
+      "sportsbook": null,
+      "odds": -124.0,
+      "projection": 5.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.7047,
+      "edge_score": 64.69,
+      "confidence": "LOW",
+      "components": {
+        "projection": 95.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 83.26,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.30 versus line",
+        "Model probability edge +15.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Sabrina Ionescu",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "REB",
+      "side": "OVER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -159.0,
+      "projection": 5.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 64.62,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 74.44,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.50 versus line",
+        "Model probability edge +11.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Sabrina Ionescu",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "AST",
+      "side": "OVER",
+      "line": 4.5,
+      "sportsbook": null,
+      "odds": -160.0,
+      "projection": 5.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.7205,
+      "edge_score": 64.18,
+      "confidence": "LOW",
+      "components": {
+        "projection": 99.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 73.13,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +10.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Caitlin Clark",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": -138.0,
+      "projection": 8.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.6934,
+      "edge_score": 62.87,
+      "confidence": "LOW",
+      "components": {
+        "projection": 92.98,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 74.99,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +11.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2335,13 +2088,13 @@
       "side": "OVER",
       "line": 4.5,
       "sportsbook": null,
-      "odds": -147.0,
+      "odds": -148.0,
       "projection": 5.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.6732,
-      "edge_score": 60.62,
+      "edge_score": 60.56,
       "confidence": "LOW",
       "components": {
         "projection": 88.5,
@@ -2349,7 +2102,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 67.18,
+        "market_value": 66.82,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2370,7 +2123,56 @@
       ],
       "evidence": [
         "Projection edge +1.10 versus line",
-        "Model probability edge +7.8%"
+        "Model probability edge +7.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Kayla McBride",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PR",
+      "side": "OVER",
+      "line": 19.5,
+      "sportsbook": null,
+      "odds": -120.0,
+      "projection": 21.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.6548,
+      "edge_score": 60.51,
+      "confidence": "LOW",
+      "components": {
+        "projection": 84.4,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 74.06,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.30 versus line",
+        "Model probability edge +10.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2426,202 +2228,6 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Jonquel Jones",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 24.5,
-      "sportsbook": null,
-      "odds": -120.0,
-      "projection": 27.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.65,
-      "edge_score": 60.09,
-      "confidence": "LOW",
-      "components": {
-        "projection": 83.33,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 73.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.80 versus line",
-        "Model probability edge +10.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Napheesa Collier",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "RA",
-      "side": "OVER",
-      "line": 9.5,
-      "sportsbook": null,
-      "odds": -146.0,
-      "projection": 10.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6658,
-      "edge_score": 60.0,
-      "confidence": "LOW",
-      "components": {
-        "projection": 86.84,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 65.9,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +7.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Jackie Young",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 21.5,
-      "sportsbook": null,
-      "odds": -127.0,
-      "projection": 19.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6526,
-      "edge_score": 59.89,
-      "confidence": "LOW",
-      "components": {
-        "projection": 83.91,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 70.49,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +9.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Kayla McBride",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 21.5,
-      "sportsbook": null,
-      "odds": -128.0,
-      "projection": 24.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6526,
-      "edge_score": 59.83,
-      "confidence": "LOW",
-      "components": {
-        "projection": 83.91,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 70.07,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +9.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
       "player": "Jackie Young",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Indiana Fever",
@@ -2671,6 +2277,55 @@
     },
     {
       "target_date": "2026-09-29",
+      "player": "Jonquel Jones",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 24.5,
+      "sportsbook": null,
+      "odds": -129.0,
+      "projection": 27.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.65,
+      "edge_score": 59.54,
+      "confidence": "LOW",
+      "components": {
+        "projection": 83.33,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 69.07,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.80 versus line",
+        "Model probability edge +8.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
       "player": "Breanna Stewart",
       "team": "New York Liberty",
       "game": "Minnesota Lynx @ New York Liberty",
@@ -2678,13 +2333,13 @@
       "side": "OVER",
       "line": 8.5,
       "sportsbook": null,
-      "odds": -133.0,
+      "odds": -141.0,
       "projection": 9.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.6544,
-      "edge_score": 59.7,
+      "edge_score": 59.26,
       "confidence": "LOW",
       "components": {
         "projection": 84.31,
@@ -2692,7 +2347,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 68.39,
+        "market_value": 65.26,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2713,154 +2368,7 @@
       ],
       "evidence": [
         "Projection edge +1.00 versus line",
-        "Model probability edge +8.4%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Caitlin Clark",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 13.5,
-      "sportsbook": null,
-      "odds": -111.0,
-      "projection": 12.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6361,
-      "edge_score": 59.45,
-      "confidence": "LOW",
-      "components": {
-        "projection": 80.25,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 74.21,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.40 versus line",
-        "Model probability edge +11.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Jonquel Jones",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 13.5,
-      "sportsbook": null,
-      "odds": -115.5,
-      "projection": 14.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6361,
-      "edge_score": 59.15,
-      "confidence": "LOW",
-      "components": {
-        "projection": 80.25,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 72.03,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.40 versus line",
-        "Model probability edge +10.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Jewell Loyd",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 8.5,
-      "sportsbook": null,
-      "odds": -129.5,
-      "projection": 7.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.639,
-      "edge_score": 58.53,
-      "confidence": "LOW",
-      "components": {
-        "projection": 80.88,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 66.43,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge +7.5%"
+        "Model probability edge +6.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2874,21 +2382,21 @@
       "side": "UNDER",
       "line": 10.5,
       "sportsbook": null,
-      "odds": -111.0,
-      "projection": 9.5,
+      "odds": -116.5,
+      "projection": 9.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
-      "model_probability": 0.625,
-      "edge_score": 58.47,
+      "model_probability": 0.6375,
+      "edge_score": 59.21,
       "confidence": "LOW",
       "components": {
-        "projection": 77.78,
+        "projection": 80.56,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 71.77,
+        "market_value": 71.87,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2908,7 +2416,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.00 versus line",
+        "Projection edge +1.10 versus line",
         "Model probability edge +9.9%"
       ],
       "market_type": "standard",
@@ -2916,28 +2424,126 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Napheesa Collier",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "AST",
-      "side": "OVER",
-      "line": 2.5,
+      "player": "Caitlin Clark",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 13.5,
       "sportsbook": null,
-      "odds": -138.5,
-      "projection": 3.4,
+      "odds": -107.0,
+      "projection": 12.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.6418,
-      "edge_score": 58.27,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.6264,
+      "edge_score": 58.88,
       "confidence": "LOW",
       "components": {
-        "projection": 81.5,
+        "projection": 78.09,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 63.43,
+        "market_value": 74.09,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.30 versus line",
+        "Model probability edge +10.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Jonquel Jones",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 13.5,
+      "sportsbook": null,
+      "odds": -109.0,
+      "projection": 14.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6264,
+      "edge_score": 58.73,
+      "confidence": "LOW",
+      "components": {
+        "projection": 78.09,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 73.07,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.30 versus line",
+        "Model probability edge +10.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Jewell Loyd",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -127.5,
+      "projection": 7.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.639,
+      "edge_score": 58.65,
+      "confidence": "LOW",
+      "components": {
+        "projection": 80.88,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 67.28,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2958,56 +2564,7 @@
       ],
       "evidence": [
         "Projection edge +0.90 versus line",
-        "Model probability edge +6.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Breanna Stewart",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 23.5,
-      "sportsbook": null,
-      "odds": -113.5,
-      "projection": 21.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6229,
-      "edge_score": 58.11,
-      "confidence": "LOW",
-      "components": {
-        "projection": 77.3,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 70.08,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +9.1%"
+        "Model probability edge +7.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3021,13 +2578,13 @@
       "side": "OVER",
       "line": 17.5,
       "sportsbook": null,
-      "odds": -115.0,
+      "odds": -110.0,
       "projection": 19.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.62,
-      "edge_score": 57.76,
+      "edge_score": 58.1,
       "confidence": "LOW",
       "components": {
         "projection": 76.67,
@@ -3035,7 +2592,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 68.73,
+        "market_value": 71.16,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3056,35 +2613,35 @@
       ],
       "evidence": [
         "Projection edge +1.60 versus line",
-        "Model probability edge +8.5%"
+        "Model probability edge +9.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Breanna Stewart",
-      "team": "New York Liberty",
+      "player": "Napheesa Collier",
+      "team": "Minnesota Lynx",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 27.5,
+      "market": "AST",
+      "side": "OVER",
+      "line": 2.5,
       "sportsbook": null,
-      "odds": -114.5,
-      "projection": 25.0,
+      "odds": -144.5,
+      "projection": 3.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.6193,
-      "edge_score": 57.73,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.6418,
+      "edge_score": 57.95,
       "confidence": "LOW",
       "components": {
-        "projection": 76.52,
+        "projection": 81.5,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 68.81,
+        "market_value": 61.16,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3104,8 +2661,106 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +8.6%"
+        "Projection edge +0.90 versus line",
+        "Model probability edge +5.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 23.5,
+      "sportsbook": null,
+      "odds": -119.0,
+      "projection": 21.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6229,
+      "edge_score": 57.75,
+      "confidence": "LOW",
+      "components": {
+        "projection": 77.3,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 67.49,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.20 versus line",
+        "Model probability edge +7.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Kayla McBride",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 17.5,
+      "sportsbook": null,
+      "odds": -106.0,
+      "projection": 19.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6125,
+      "edge_score": 57.72,
+      "confidence": "LOW",
+      "components": {
+        "projection": 75.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 71.55,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.50 versus line",
+        "Model probability edge +9.8%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3168,13 +2823,13 @@
       "side": "UNDER",
       "line": 39.5,
       "sportsbook": null,
-      "odds": -122.5,
+      "odds": -123.5,
       "projection": 35.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.6229,
-      "edge_score": 57.53,
+      "edge_score": 57.47,
       "confidence": "LOW",
       "components": {
         "projection": 77.32,
@@ -3182,7 +2837,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 65.92,
+        "market_value": 65.48,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3203,7 +2858,7 @@
       ],
       "evidence": [
         "Projection edge +3.70 versus line",
-        "Model probability edge +7.2%"
+        "Model probability edge +7.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3259,28 +2914,28 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Courtney Williams",
+      "player": "Natasha Howard",
       "team": "Minnesota Lynx",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PA",
+      "market": "PRA",
       "side": "OVER",
-      "line": 16.5,
+      "line": 20.5,
       "sportsbook": null,
-      "odds": -121.0,
-      "projection": 18.0,
+      "odds": -115.0,
+      "projection": 22.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.6193,
-      "edge_score": 57.31,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6152,
+      "edge_score": 57.33,
       "confidence": "LOW",
       "components": {
-        "projection": 76.52,
+        "projection": 75.61,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 65.8,
+        "market_value": 67.68,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3300,8 +2955,204 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.50 versus line",
-        "Model probability edge +7.2%"
+        "Projection edge +1.80 versus line",
+        "Model probability edge +8.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Kayla McBride",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PA",
+      "side": "OVER",
+      "line": 19.5,
+      "sportsbook": null,
+      "odds": -116.5,
+      "projection": 21.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.6144,
+      "edge_score": 57.16,
+      "confidence": "LOW",
+      "components": {
+        "projection": 75.43,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 66.79,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.70 versus line",
+        "Model probability edge +7.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 27.5,
+      "sportsbook": null,
+      "odds": -124.0,
+      "projection": 25.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.6193,
+      "edge_score": 57.12,
+      "confidence": "LOW",
+      "components": {
+        "projection": 76.52,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 64.46,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.50 versus line",
+        "Model probability edge +6.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Courtney Williams",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PA",
+      "side": "OVER",
+      "line": 16.5,
+      "sportsbook": null,
+      "odds": -114.0,
+      "projection": 17.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.6114,
+      "edge_score": 57.06,
+      "confidence": "LOW",
+      "components": {
+        "projection": 74.75,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 67.3,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +7.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Olivia Miles",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 17.5,
+      "sportsbook": null,
+      "odds": -127.0,
+      "projection": 19.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.62,
+      "edge_score": 57.0,
+      "confidence": "LOW",
+      "components": {
+        "projection": 76.67,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 63.32,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.60 versus line",
+        "Model probability edge +6.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3357,153 +3208,6 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Breanna Stewart",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "AST",
-      "side": "OVER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -138.0,
-      "projection": 4.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.626,
-      "edge_score": 56.9,
-      "confidence": "LOW",
-      "components": {
-        "projection": 78.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 60.16,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge +4.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 20.5,
-      "sportsbook": null,
-      "odds": -122.0,
-      "projection": 22.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6152,
-      "edge_score": 56.88,
-      "confidence": "LOW",
-      "components": {
-        "projection": 75.61,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 64.45,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.80 versus line",
-        "Model probability edge +6.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Kayla McBride",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PA",
-      "side": "OVER",
-      "line": 19.5,
-      "sportsbook": null,
-      "odds": -112.0,
-      "projection": 21.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.6077,
-      "edge_score": 56.87,
-      "confidence": "LOW",
-      "components": {
-        "projection": 73.93,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 67.47,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.60 versus line",
-        "Model probability edge +7.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
       "player": "Kayla McBride",
       "team": "Minnesota Lynx",
       "game": "Minnesota Lynx @ New York Liberty",
@@ -3553,153 +3257,6 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Kelsey Mitchell",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "REB",
-      "side": "OVER",
-      "line": 1.5,
-      "sportsbook": null,
-      "odds": -143.5,
-      "projection": 2.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.626,
-      "edge_score": 56.61,
-      "confidence": "LOW",
-      "components": {
-        "projection": 78.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 58.07,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge +3.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Courtney Williams",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 20.5,
-      "sportsbook": null,
-      "odds": -118.0,
-      "projection": 22.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6088,
-      "edge_score": 56.57,
-      "confidence": "LOW",
-      "components": {
-        "projection": 74.19,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 64.86,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +6.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Pauline Astier",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PA",
-      "side": "OVER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 12.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.6027,
-      "edge_score": 56.57,
-      "confidence": "LOW",
-      "components": {
-        "projection": 72.83,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 67.36,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge +7.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
       "player": "Jackie Young",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Indiana Fever",
@@ -3707,13 +3264,13 @@
       "side": "UNDER",
       "line": 27.5,
       "sportsbook": null,
-      "odds": -114.0,
+      "odds": -110.0,
       "projection": 25.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.605,
-      "edge_score": 56.49,
+      "edge_score": 56.77,
       "confidence": "LOW",
       "components": {
         "projection": 73.33,
@@ -3721,7 +3278,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 65.9,
+        "market_value": 67.86,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3742,35 +3299,35 @@
       ],
       "evidence": [
         "Projection edge +2.20 versus line",
-        "Model probability edge +7.2%"
+        "Model probability edge +8.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "A'ja Wilson",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 42.5,
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "AST",
+      "side": "OVER",
+      "line": 3.5,
       "sportsbook": null,
-      "odds": -112.0,
-      "projection": 39.2,
+      "odds": -141.0,
+      "projection": 4.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6019,
-      "edge_score": 56.36,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.626,
+      "edge_score": 56.74,
       "confidence": "LOW",
       "components": {
-        "projection": 72.65,
+        "projection": 78.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 66.19,
+        "market_value": 59.01,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3790,8 +3347,155 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.30 versus line",
-        "Model probability edge +7.4%"
+        "Projection edge +0.80 versus line",
+        "Model probability edge +4.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Pauline Astier",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PA",
+      "side": "OVER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -109.5,
+      "projection": 12.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.6027,
+      "edge_score": 56.6,
+      "confidence": "LOW",
+      "components": {
+        "projection": 72.83,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 67.61,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.90 versus line",
+        "Model probability edge +8.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Courtney Williams",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 20.5,
+      "sportsbook": null,
+      "odds": -128.0,
+      "projection": 22.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6152,
+      "edge_score": 56.52,
+      "confidence": "LOW",
+      "components": {
+        "projection": 75.61,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 61.84,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.80 versus line",
+        "Model probability edge +5.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Kelsey Mitchell",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "REB",
+      "side": "OVER",
+      "line": 1.5,
+      "sportsbook": null,
+      "odds": -147.5,
+      "projection": 2.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.626,
+      "edge_score": 56.41,
+      "confidence": "LOW",
+      "components": {
+        "projection": 78.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 56.61,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.80 versus line",
+        "Model probability edge +3.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3805,13 +3509,13 @@
       "side": "OVER",
       "line": 14.5,
       "sportsbook": null,
-      "odds": -101.0,
+      "odds": 100.0,
       "projection": 15.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.5905,
-      "edge_score": 56.14,
+      "edge_score": 56.22,
       "confidence": "LOW",
       "components": {
         "projection": 70.11,
@@ -3819,7 +3523,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 69.37,
+        "market_value": 69.91,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3840,56 +3544,7 @@
       ],
       "evidence": [
         "Projection edge +1.00 versus line",
-        "Model probability edge +8.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Pauline Astier",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 15.5,
-      "sportsbook": null,
-      "odds": -128.0,
-      "projection": 14.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6101,
-      "edge_score": 56.06,
-      "confidence": "LOW",
-      "components": {
-        "projection": 74.46,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 60.71,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.30 versus line",
-        "Model probability edge +4.9%"
+        "Model probability edge +9.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3945,6 +3600,55 @@
     },
     {
       "target_date": "2026-09-29",
+      "player": "A'ja Wilson",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 42.5,
+      "sportsbook": null,
+      "odds": -117.0,
+      "projection": 39.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6019,
+      "edge_score": 56.02,
+      "confidence": "LOW",
+      "components": {
+        "projection": 72.65,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 63.8,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.30 versus line",
+        "Model probability edge +6.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
       "player": "Jackie Young",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Indiana Fever",
@@ -3994,6 +3698,55 @@
     },
     {
       "target_date": "2026-09-29",
+      "player": "Pauline Astier",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 15.5,
+      "sportsbook": null,
+      "odds": -129.5,
+      "projection": 14.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6101,
+      "edge_score": 55.97,
+      "confidence": "LOW",
+      "components": {
+        "projection": 74.46,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 60.08,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.30 versus line",
+        "Model probability edge +4.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
       "player": "Jackie Young",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Indiana Fever",
@@ -4001,13 +3754,13 @@
       "side": "UNDER",
       "line": 20.5,
       "sportsbook": null,
-      "odds": -106.0,
+      "odds": -105.5,
       "projection": 19.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.5896,
-      "edge_score": 55.69,
+      "edge_score": 55.73,
       "confidence": "LOW",
       "components": {
         "projection": 69.92,
@@ -4015,7 +3768,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 66.52,
+        "market_value": 66.78,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4036,84 +3789,35 @@
       ],
       "evidence": [
         "Projection edge +1.40 versus line",
-        "Model probability edge +7.5%"
+        "Model probability edge +7.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Breanna Stewart",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 36.5,
-      "sportsbook": null,
-      "odds": -113.5,
-      "projection": 33.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.5935,
-      "edge_score": 55.51,
-      "confidence": "LOW",
-      "components": {
-        "projection": 70.78,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 63.61,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.60 versus line",
-        "Model probability edge +6.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Lexie Hull",
-      "team": "Indiana Fever",
+      "player": "Chelsea Gray",
+      "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PR",
+      "market": "AST",
       "side": "OVER",
       "line": 6.5,
       "sportsbook": null,
-      "odds": -138.0,
-      "projection": 7.2,
+      "odds": -112.0,
+      "projection": 7.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.6102,
-      "edge_score": 55.51,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.5945,
+      "edge_score": 55.7,
       "confidence": "LOW",
       "components": {
-        "projection": 74.5,
+        "projection": 71.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 56.69,
+        "market_value": 64.56,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4133,36 +3837,36 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.70 versus line",
-        "Model probability edge +3.0%"
+        "Projection edge +0.60 versus line",
+        "Model probability edge +6.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Breanna Stewart",
-      "team": "New York Liberty",
+      "player": "Natasha Howard",
+      "team": "Minnesota Lynx",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 32.5,
+      "market": "AST",
+      "side": "OVER",
+      "line": 2.5,
       "sportsbook": null,
-      "odds": -113.0,
-      "projection": 30.2,
+      "odds": -166.0,
+      "projection": 3.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.5929,
-      "edge_score": 55.49,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.626,
+      "edge_score": 55.54,
       "confidence": "LOW",
       "components": {
-        "projection": 70.64,
+        "projection": 78.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 63.72,
+        "market_value": 50.43,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4182,8 +3886,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.30 versus line",
-        "Model probability edge +6.2%"
+        "Projection edge +0.80 versus line",
+        "Model probability edge +0.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4239,28 +3943,28 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "A'ja Wilson",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PA",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PRA",
       "side": "UNDER",
-      "line": 32.5,
+      "line": 36.5,
       "sportsbook": null,
-      "odds": -126.0,
-      "projection": 30.0,
+      "odds": -116.5,
+      "projection": 33.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.601,
-      "edge_score": 55.37,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5935,
+      "edge_score": 55.31,
       "confidence": "LOW",
       "components": {
-        "projection": 72.44,
+        "projection": 70.78,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 59.56,
+        "market_value": 62.19,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4280,36 +3984,36 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +4.3%"
+        "Projection edge +2.60 versus line",
+        "Model probability edge +5.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Natasha Howard",
-      "team": "Minnesota Lynx",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
       "game": "Minnesota Lynx @ New York Liberty",
-      "market": "AST",
-      "side": "OVER",
-      "line": 2.5,
+      "market": "PR",
+      "side": "UNDER",
+      "line": 32.5,
       "sportsbook": null,
-      "odds": -172.0,
-      "projection": 3.3,
+      "odds": -116.5,
+      "projection": 30.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.626,
-      "edge_score": 55.28,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5929,
+      "edge_score": 55.25,
       "confidence": "LOW",
       "components": {
-        "projection": 78.0,
+        "projection": 70.64,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 48.6,
+        "market_value": 62.05,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4329,8 +4033,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge -0.6%"
+        "Projection edge +2.30 versus line",
+        "Model probability edge +5.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4393,13 +4097,13 @@
       "side": "UNDER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": -146.5,
+      "odds": -147.5,
       "projection": 2.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
       "model_probability": 0.6102,
-      "edge_score": 55.06,
+      "edge_score": 55.01,
       "confidence": "LOW",
       "components": {
         "projection": 74.5,
@@ -4407,7 +4111,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 53.5,
+        "market_value": 53.14,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4428,105 +4132,7 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge +1.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Kayla McBride",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 22.5,
-      "sportsbook": null,
-      "odds": -109.0,
-      "projection": 23.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.5817,
-      "edge_score": 54.77,
-      "confidence": "LOW",
-      "components": {
-        "projection": 68.15,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 63.23,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.40 versus line",
-        "Model probability edge +6.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Jonquel Jones",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 25.5,
-      "sportsbook": null,
-      "odds": -118.0,
-      "projection": 27.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.5875,
-      "edge_score": 54.68,
-      "confidence": "LOW",
-      "components": {
-        "projection": 69.44,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 60.17,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +4.6%"
+        "Model probability edge +1.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4582,6 +4188,104 @@
     },
     {
       "target_date": "2026-09-29",
+      "player": "Kayla McBride",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PR",
+      "side": "OVER",
+      "line": 20.5,
+      "sportsbook": null,
+      "odds": -106.0,
+      "projection": 21.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5768,
+      "edge_score": 54.56,
+      "confidence": "LOW",
+      "components": {
+        "projection": 67.07,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 63.7,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.20 versus line",
+        "Model probability edge +6.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Kayla McBride",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 22.5,
+      "sportsbook": null,
+      "odds": -113.0,
+      "projection": 23.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5817,
+      "edge_score": 54.49,
+      "confidence": "LOW",
+      "components": {
+        "projection": 68.15,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 61.25,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +5.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
       "player": "A'ja Wilson",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Indiana Fever",
@@ -4631,55 +4335,6 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Chelsea Gray",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "AST",
-      "side": "OVER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 7.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.5787,
-      "edge_score": 54.44,
-      "confidence": "LOW",
-      "components": {
-        "projection": 67.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 62.09,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.50 versus line",
-        "Model probability edge +5.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
       "player": "Courtney Williams",
       "team": "Minnesota Lynx",
       "game": "Minnesota Lynx @ New York Liberty",
@@ -4687,21 +4342,21 @@
       "side": "OVER",
       "line": 16.5,
       "sportsbook": null,
-      "odds": -115.0,
-      "projection": 17.5,
+      "odds": -121.5,
+      "projection": 17.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
-      "model_probability": 0.5795,
-      "edge_score": 54.17,
+      "model_probability": 0.5875,
+      "edge_score": 54.45,
       "confidence": "LOW",
       "components": {
-        "projection": 67.68,
+        "projection": 69.44,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 59.83,
+        "market_value": 58.57,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4721,8 +4376,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.00 versus line",
-        "Model probability edge +4.5%"
+        "Projection edge +1.10 versus line",
+        "Model probability edge +3.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Pauline Astier",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -138.0,
+      "projection": 2.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.5945,
+      "edge_score": 54.11,
+      "confidence": "LOW",
+      "components": {
+        "projection": 71.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 53.23,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.60 versus line",
+        "Model probability edge +1.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4778,28 +4482,28 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Pauline Astier",
-      "team": "New York Liberty",
+      "player": "Natasha Howard",
+      "team": "Minnesota Lynx",
       "game": "Minnesota Lynx @ New York Liberty",
       "market": "AST",
       "side": "UNDER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": -145.0,
-      "projection": 2.9,
+      "odds": -179.0,
+      "projection": 2.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
-      "model_probability": 0.5945,
-      "edge_score": 53.74,
+      "model_probability": 0.6102,
+      "edge_score": 53.61,
       "confidence": "LOW",
       "components": {
-        "projection": 71.0,
+        "projection": 74.5,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 50.59,
+        "market_value": 43.11,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4819,8 +4523,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.60 versus line",
-        "Model probability edge +0.3%"
+        "Projection edge +0.70 versus line",
+        "Model probability edge -3.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4834,13 +4538,13 @@
       "side": "UNDER",
       "line": 11.5,
       "sportsbook": null,
-      "odds": -110.5,
+      "odds": -113.0,
       "projection": 10.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.5685,
-      "edge_score": 53.5,
+      "edge_score": 53.33,
       "confidence": "LOW",
       "components": {
         "projection": 65.22,
@@ -4848,7 +4552,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 59.58,
+        "market_value": 58.35,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4869,35 +4573,35 @@
       ],
       "evidence": [
         "Projection edge +0.60 versus line",
-        "Model probability edge +4.4%"
+        "Model probability edge +3.8%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-09-29",
-      "player": "Lexie Hull",
-      "team": "Indiana Fever",
-      "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 7.5,
+      "player": "Olivia Miles",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "RA",
+      "side": "OVER",
+      "line": 10.5,
       "sportsbook": null,
-      "odds": -127.0,
-      "projection": 7.0,
+      "odds": -122.0,
+      "projection": 11.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.5787,
-      "edge_score": 53.34,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.575,
+      "edge_score": 53.32,
       "confidence": "LOW",
       "components": {
-        "projection": 67.5,
+        "projection": 66.67,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 54.24,
+        "market_value": 55.6,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4917,8 +4621,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.50 versus line",
-        "Model probability edge +1.9%"
+        "Projection edge +0.60 versus line",
+        "Model probability edge +2.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4974,28 +4678,28 @@
     },
     {
       "target_date": "2026-09-29",
-      "player": "Olivia Miles",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
+      "player": "A'ja Wilson",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Indiana Fever",
       "market": "RA",
-      "side": "OVER",
-      "line": 10.5,
+      "side": "UNDER",
+      "line": 13.5,
       "sportsbook": null,
-      "odds": -126.0,
-      "projection": 11.1,
+      "odds": -103.0,
+      "projection": 12.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
-      "model_probability": 0.575,
-      "edge_score": 53.07,
+      "model_probability": 0.5583,
+      "edge_score": 53.14,
       "confidence": "LOW",
       "components": {
-        "projection": 66.67,
+        "projection": 62.96,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 53.85,
+        "market_value": 61.21,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -5016,7 +4720,7 @@
       ],
       "evidence": [
         "Projection edge +0.60 versus line",
-        "Model probability edge +1.7%"
+        "Model probability edge +5.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -5026,118 +4730,20 @@
       "player": "Kelsey Mitchell",
       "team": "Indiana Fever",
       "game": "Las Vegas Aces @ Indiana Fever",
-      "market": "PTS",
+      "market": "PA",
       "side": "OVER",
-      "line": 25.5,
+      "line": 27.5,
       "sportsbook": null,
-      "odds": -103.0,
-      "projection": 26.6,
+      "odds": -130.0,
+      "projection": 29.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.5566,
-      "edge_score": 52.99,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5764,
+      "edge_score": 52.96,
       "confidence": "LOW",
       "components": {
-        "projection": 62.58,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 60.83,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.10 versus line",
-        "Model probability edge +4.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Courtney Williams",
-      "team": "Minnesota Lynx",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "RA",
-      "side": "OVER",
-      "line": 8.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 8.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.5618,
-      "edge_score": 52.94,
-      "confidence": "LOW",
-      "components": {
-        "projection": 63.73,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 58.35,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.40 versus line",
-        "Model probability edge +3.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-09-29",
-      "player": "Breanna Stewart",
-      "team": "New York Liberty",
-      "game": "Minnesota Lynx @ New York Liberty",
-      "market": "RA",
-      "side": "OVER",
-      "line": 12.5,
-      "sportsbook": null,
-      "odds": -128.5,
-      "projection": 13.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.5735,
-      "edge_score": 52.79,
-      "confidence": "LOW",
-      "components": {
-        "projection": 66.33,
+        "projection": 66.97,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
@@ -5162,8 +4768,400 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.70 versus line",
+        "Projection edge +1.60 versus line",
         "Model probability edge +1.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Kelsey Mitchell",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 25.5,
+      "sportsbook": null,
+      "odds": -104.0,
+      "projection": 26.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.5566,
+      "edge_score": 52.91,
+      "confidence": "LOW",
+      "components": {
+        "projection": 62.58,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 60.3,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.10 versus line",
+        "Model probability edge +4.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Courtney Williams",
+      "team": "Minnesota Lynx",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "RA",
+      "side": "OVER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -111.0,
+      "projection": 8.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.5618,
+      "edge_score": 52.87,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.73,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 57.85,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.40 versus line",
+        "Model probability edge +3.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Lexie Hull",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -136.0,
+      "projection": 7.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5787,
+      "edge_score": 52.83,
+      "confidence": "LOW",
+      "components": {
+        "projection": 67.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.55,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge +0.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "A'ja Wilson",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 31.5,
+      "sportsbook": null,
+      "odds": -109.0,
+      "projection": 30.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5583,
+      "edge_score": 52.7,
+      "confidence": "LOW",
+      "components": {
+        "projection": 62.96,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 58.1,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +3.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "RA",
+      "side": "OVER",
+      "line": 12.5,
+      "sportsbook": null,
+      "odds": -133.0,
+      "projection": 13.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.5735,
+      "edge_score": 52.53,
+      "confidence": "LOW",
+      "components": {
+        "projection": 66.33,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.59,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +0.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Caitlin Clark",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 32.5,
+      "sportsbook": null,
+      "odds": -126.0,
+      "projection": 30.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5687,
+      "edge_score": 52.51,
+      "confidence": "LOW",
+      "components": {
+        "projection": 65.26,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 52.45,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.70 versus line",
+        "Model probability edge +1.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Caitlin Clark",
+      "team": "Indiana Fever",
+      "game": "Las Vegas Aces @ Indiana Fever",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 36.5,
+      "sportsbook": null,
+      "odds": -116.5,
+      "projection": 34.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5611,
+      "edge_score": 52.44,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.58,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 55.07,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.70 versus line",
+        "Model probability edge +2.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-09-29",
+      "player": "Jonquel Jones",
+      "team": "New York Liberty",
+      "game": "Minnesota Lynx @ New York Liberty",
+      "market": "PR",
+      "side": "OVER",
+      "line": 22.5,
+      "sportsbook": null,
+      "odds": -114.0,
+      "projection": 23.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5583,
+      "edge_score": 52.36,
+      "confidence": "LOW",
+      "components": {
+        "projection": 62.96,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 55.64,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge +2.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
