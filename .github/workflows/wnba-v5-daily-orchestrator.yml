@@ -199,6 +199,62 @@ jobs:
       deploy_dashboard: false
     secrets: inherit
 
+  jev-shadow:
+    name: Jev forward shadow (research only)
+    needs: downstream-predictions
+    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule') && needs.downstream-predictions.result == 'success' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Evaluate frozen production decisions without mutation
+        run: |
+          TARGET=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/dashboard/wnba_s19_m02_predictions.json').read_text())
+          print(str(p.get('target_date') or '')[:10])
+          PY
+          )
+          if [ -z "$TARGET" ]; then
+            echo "::warning::Jev skipped: prediction artifact has no target date."
+            exit 0
+          fi
+          if [ -z "$TYPESAFE_API_KEY" ]; then
+            echo "::warning::Jev skipped: TYPESAFE_API_KEY is not configured."
+            exit 0
+          fi
+          python jev_shadow.py \
+            --league wnba \
+            --date "$TARGET" \
+            --input data/dashboard/wnba_s19_m02_predictions.json \
+            --output data/dashboard/wnba_jev_shadow.json \
+            --ledger data/history/wnba_jev_shadow.jsonl \
+            --max-candidates 20
+      - name: Publish Jev research artifacts
+        run: |
+          git config user.name 'WNBA Jev Shadow Bot'
+          git config user.email 'actions@github.com'
+          git add data/dashboard/wnba_jev_shadow.json data/history/wnba_jev_shadow.jsonl 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No Jev shadow changes to publish.'
+            exit 0
+          fi
+          git commit -m "Jev forward shadow for WNBA"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push && exit 0
+            git rebase --abort || true
+            sleep $((attempt*3))
+          done
+          exit 1
+
   derived-dashboard:
     name: Derived intelligence + terminal deploy
     needs: downstream-predictions
