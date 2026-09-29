@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-28T14:23:45.881543+00:00",
+  "generated_at": "2026-09-29T13:09:16.306153+00:00",
   "status": "PASS",
   "mode": "contract_enforced",
   "contract_mode": "live",
@@ -208,6 +208,7 @@
       "co_writer_workflows": [],
       "workflow_references": [
         ".github/workflows/wnba-new-day-prediction-sync.yml",
+        ".github/workflows/wnba-v5-daily-orchestrator.yml",
         ".github/workflows/wnba-v5-player-prop-action-policy-v2.yml",
         ".github/workflows/wnba_daily_canonical_build.yml",
         ".github/workflows/wnba_daily_slate_rollover.yml",
@@ -217,7 +218,7 @@
         ".github/workflows/wnba-new-day-prediction-sync.yml"
       ],
       "unexpected_publish_workflows": [],
-      "reference_count": 10,
+      "reference_count": 12,
       "observed_publish_workflow_count": 1,
       "checks": {
         "writer_workflow_exists": true,
@@ -762,6 +763,22 @@
       "line": 17,
       "publish_context": false,
       "snippet": "- 'data/dashboard/wnba_s19_m06_results_lifecycle.json'"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
+      "workflow": ".github/workflows/wnba-v5-daily-orchestrator.yml",
+      "line": 222,
+      "publish_context": false,
+      "snippet": "p=json.loads(Path('data/dashboard/wnba_s19_m02_predictions.json').read_text())"
+    },
+    {
+      "domain": "m02_predictions",
+      "artifact": "data/dashboard/wnba_s19_m02_predictions.json",
+      "workflow": ".github/workflows/wnba-v5-daily-orchestrator.yml",
+      "line": 237,
+      "publish_context": false,
+      "snippet": "--input data/dashboard/wnba_s19_m02_predictions.json \\"
     },
     {
       "domain": "forward_ledger",
