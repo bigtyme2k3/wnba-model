@@ -1,11 +1,11 @@
 {
   "version": "jev_shadow_v2",
   "league": "WNBA",
-  "generated_at_utc": "2026-09-29T13:48:40.215447+00:00",
-  "target_date": "2026-09-27",
+  "generated_at_utc": "2026-09-29T16:44:50.273655+00:00",
+  "target_date": "2026-09-29",
   "source": {
-    "target_date": "2026-09-27",
-    "generated_at_utc": "2026-09-28T00:56:37.826980+00:00",
+    "target_date": "2026-09-29",
+    "generated_at_utc": "2026-09-29T13:48:05.130596+00:00",
     "status": "READY",
     "schema_version": "sprint19-m02-unified-predictions-v5",
     "input_path": "data/dashboard/wnba_s19_m02_predictions.json",
@@ -16,359 +16,231 @@
   "status": "OK",
   "model": "jev-1.13.0",
   "usage": {
-    "input_tokens": 13448,
-    "output_tokens": 2680
+    "input_tokens": 13172,
+    "output_tokens": 2687
   },
   "summary": {
     "candidates": 20,
     "new_ledger_rows": 20,
     "action_counts": {
-      "BET": 4,
-      "WATCH": 13,
-      "PASS": 3
+      "PASS": 6,
+      "BET": 9,
+      "WATCH": 4,
+      "LEAN": 1
     },
     "trust_counts": {
-      "MEDIUM": 9,
-      "LOW": 9,
-      "HIGH": 2
+      "MEDIUM": 16,
+      "LOW": 4
     },
-    "review_ge_050": 15,
-    "anomaly_ge_050": 10,
+    "review_ge_050": 6,
+    "anomaly_ge_050": 4,
     "batch_directional_concentration_ge_050": true,
     "batch_systemic_integrity_risk_ge_050": true
   },
   "batch": {
-    "directional_concentration_probability": 0.66,
-    "systemic_integrity_risk_probability": 0.7
+    "directional_concentration_probability": 0.7,
+    "systemic_integrity_risk_probability": 0.72
   },
   "decisions": [
     {
-      "shadow_id": "57593d1c434d068c43bd7ae9",
+      "shadow_id": "bdae51480759dd03b700db48",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
       "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Kiki Iriafen",
-        "team": "Washington Mystics",
-        "stat": "PTS",
-        "line": 9.5,
-        "edge": 6.5,
-        "model_projection": 16.0,
-        "confidence": 66.0,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "PASS": 0.0,
-          "LEAN": 0.04,
-          "WATCH": 0.0,
-          "BET": 0.96
-        },
-        "action_confidence": 0.94,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "MEDIUM": 0.55,
-          "REJECT": 0.01,
-          "HIGH": 0.42,
-          "LOW": 0.02
-        },
-        "trust_confidence": 0.41,
-        "anomaly_probability": 0.26,
-        "review_probability": 0.26
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "7eba6e5b75f75279356a5fe1",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Rhyne Howard",
-        "team": "Atlanta Dream",
-        "stat": "RA",
-        "line": 3.5,
-        "edge": 3.9,
-        "model_projection": 7.4,
-        "confidence": 60.6,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.0,
-          "LEAN": 0.17,
-          "WATCH": 0.81,
-          "BET": 0.01
-        },
-        "action_confidence": 0.75,
-        "trust": "LOW",
-        "trust_probabilities": {
-          "MEDIUM": 0.4,
-          "REJECT": 0.13,
-          "HIGH": 0.0,
-          "LOW": 0.47
-        },
-        "trust_confidence": 0.3,
-        "anomaly_probability": 0.63,
-        "review_probability": 0.89
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "d3918928a17ab03c164f1188",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Shakira Austin",
-        "team": "Washington Mystics",
-        "stat": "RA",
-        "line": 18.5,
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "Stephanie Talbot",
+        "team": "Las Vegas Aces",
+        "stat": "PR",
+        "line": 8.5,
         "edge": -5.7,
-        "model_projection": 12.8,
+        "model_projection": 2.8,
         "confidence": 65.3,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "PASS": 0.93,
+          "BET": 0.04,
           "LEAN": 0.02,
           "WATCH": 0.01,
-          "BET": 0.04
+          "PASS": 0.93
         },
-        "action_confidence": 0.91,
+        "action_confidence": 0.9,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "REJECT": 0.06,
-          "HIGH": 0.27,
-          "MEDIUM": 0.57,
-          "LOW": 0.1
+          "HIGH": 0.08,
+          "REJECT": 0.24,
+          "LOW": 0.34,
+          "MEDIUM": 0.33999999999999997
         },
-        "trust_confidence": 0.44,
-        "anomaly_probability": 0.34,
-        "review_probability": 0.46
+        "trust_confidence": 0.13,
+        "anomaly_probability": 0.43,
+        "review_probability": 0.44
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "2c2960c0d7e8811404b0d377",
+      "shadow_id": "9c1abe8454464525543e2309",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
       "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Awak Kuier",
-        "team": "Dallas Wings",
-        "stat": "PRA",
-        "line": 14.5,
-        "edge": -7.3,
-        "model_projection": 7.2,
-        "confidence": 66.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.32,
-          "LEAN": 0.02,
-          "WATCH": 0.66,
-          "BET": 0.0
-        },
-        "action_confidence": 0.54,
-        "trust": "LOW",
-        "trust_probabilities": {
-          "MEDIUM": 0.16,
-          "REJECT": 0.35,
-          "HIGH": 0.0,
-          "LOW": 0.49
-        },
-        "trust_confidence": 0.33,
-        "anomaly_probability": 0.66,
-        "review_probability": 0.89
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "f626073bde846f7a32237ede",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Arike Ogunbowale",
-        "team": "Dallas Wings",
-        "stat": "PRA",
-        "line": 20.5,
-        "edge": 6.7,
-        "model_projection": 27.2,
-        "confidence": 66.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.01,
-          "LEAN": 0.27,
-          "WATCH": 0.68,
-          "BET": 0.04
-        },
-        "action_confidence": 0.57,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "MEDIUM": 0.58,
-          "REJECT": 0.09,
-          "HIGH": 0.0,
-          "LOW": 0.33
-        },
-        "trust_confidence": 0.44,
-        "anomaly_probability": 0.63,
-        "review_probability": 0.86
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "2594274ae703a851d86ede92",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Arike Ogunbowale",
-        "team": "Dallas Wings",
-        "stat": "PA",
-        "line": 17.5,
-        "edge": 6.1,
-        "model_projection": 23.6,
-        "confidence": 66.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.01,
-          "LEAN": 0.26,
-          "WATCH": 0.66,
-          "BET": 0.07
-        },
-        "action_confidence": 0.56,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "MEDIUM": 0.57,
-          "REJECT": 0.09,
-          "HIGH": 0.0,
-          "LOW": 0.34
-        },
-        "trust_confidence": 0.43,
-        "anomaly_probability": 0.51,
-        "review_probability": 0.84
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "f821ed292b5985d7365960f1",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Awak Kuier",
-        "team": "Dallas Wings",
-        "stat": "PR",
-        "line": 13.5,
-        "edge": -7.2,
-        "model_projection": 6.3,
-        "confidence": 66.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "PASS",
-        "action_probabilities": {
-          "PASS": 0.5,
-          "LEAN": 0.05,
-          "WATCH": 0.43,
-          "BET": 0.02
-        },
-        "action_confidence": 0.34,
-        "trust": "LOW",
-        "trust_probabilities": {
-          "REJECT": 0.28,
-          "HIGH": 0.0,
-          "MEDIUM": 0.18,
-          "LOW": 0.54
-        },
-        "trust_confidence": 0.38,
-        "anomaly_probability": 0.51,
-        "review_probability": 0.85
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "f3407a24b80c9712663fd021",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Kiki Iriafen",
-        "team": "Washington Mystics",
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Leonie Fiebich",
+        "team": "New York Liberty",
         "stat": "PTS",
-        "line": 10.5,
-        "edge": 5.7,
-        "model_projection": 16.2,
-        "confidence": 65.3,
+        "line": 8.5,
+        "edge": 4.5,
+        "model_projection": 13.0,
+        "confidence": 62.2,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "PASS": 0.03,
-          "LEAN": 0.11,
-          "WATCH": 0.04,
-          "BET": 0.82
+          "LEAN": 0.22,
+          "BET": 0.78,
+          "WATCH": 0.0,
+          "PASS": 0.0
         },
-        "action_confidence": 0.77,
-        "trust": "HIGH",
+        "action_confidence": 0.71,
+        "trust": "MEDIUM",
         "trust_probabilities": {
-          "REJECT": 0.01,
-          "HIGH": 0.49,
-          "MEDIUM": 0.48,
-          "LOW": 0.02
+          "MEDIUM": 0.78,
+          "HIGH": 0.21,
+          "LOW": 0.01,
+          "REJECT": 0.0
         },
-        "trust_confidence": 0.32,
-        "anomaly_probability": 0.3,
+        "trust_confidence": 0.69,
+        "anomaly_probability": 0.2,
+        "review_probability": 0.3
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "5c0ebe4aeb0cd55f2d073113",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PTS",
+        "line": 15.5,
+        "edge": 5.0,
+        "model_projection": 20.5,
+        "confidence": 63.5,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "LEAN": 0.09,
+          "BET": 0.91,
+          "WATCH": 0.0,
+          "PASS": 0.0
+        },
+        "action_confidence": 0.87,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.29,
+          "REJECT": 0.0,
+          "LOW": 0.01,
+          "MEDIUM": 0.7
+        },
+        "trust_confidence": 0.59,
+        "anomaly_probability": 0.18,
+        "review_probability": 0.29
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "77670476cfca8bc377d4c3a6",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PRA",
+        "line": 25.5,
+        "edge": 4.2,
+        "model_projection": 29.7,
+        "confidence": 61.4,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "LEAN": 0.19,
+          "BET": 0.77,
+          "WATCH": 0.02,
+          "PASS": 0.02
+        },
+        "action_confidence": 0.7,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "MEDIUM": 0.73,
+          "HIGH": 0.23,
+          "LOW": 0.03,
+          "REJECT": 0.01
+        },
+        "trust_confidence": 0.64,
+        "anomaly_probability": 0.29,
+        "review_probability": 0.34
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "c474133e3cf58af0c7516f03",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PR",
+        "line": 19.5,
+        "edge": 5.2,
+        "model_projection": 24.7,
+        "confidence": 64.0,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "LEAN": 0.09,
+          "BET": 0.9,
+          "WATCH": 0.01,
+          "PASS": 0.0
+        },
+        "action_confidence": 0.86,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "REJECT": 0.0,
+          "MEDIUM": 0.62,
+          "LOW": 0.02,
+          "HIGH": 0.36
+        },
+        "trust_confidence": 0.5,
+        "anomaly_probability": 0.24,
         "review_probability": 0.33
       },
       "research_only": true,
@@ -376,333 +248,536 @@
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "0d3db2cc9c67702b2983e549",
+      "shadow_id": "a2f9964b321447fd3942d12f",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
       "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Kiki Iriafen",
-        "team": "Washington Mystics",
-        "stat": "PR",
-        "line": 19.5,
-        "edge": 5.8,
-        "model_projection": 25.3,
-        "confidence": 65.6,
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PRA",
+        "line": 24.5,
+        "edge": 5.3,
+        "model_projection": 29.8,
+        "confidence": 64.3,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "PASS": 0.0,
-          "LEAN": 0.07,
+          "LEAN": 0.09,
+          "BET": 0.83,
+          "WATCH": 0.05,
+          "PASS": 0.03
+        },
+        "action_confidence": 0.77,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "REJECT": 0.01,
+          "MEDIUM": 0.7,
+          "LOW": 0.04,
+          "HIGH": 0.25
+        },
+        "trust_confidence": 0.59,
+        "anomaly_probability": 0.44,
+        "review_probability": 0.44
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "3ca08e2a2c6986700ff694cd",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Leonie Fiebich",
+        "team": "New York Liberty",
+        "stat": "PA",
+        "line": 10.5,
+        "edge": 5.3,
+        "model_projection": 15.8,
+        "confidence": 64.3,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "BET": 0.93,
+          "LEAN": 0.06,
           "WATCH": 0.01,
-          "BET": 0.92
+          "PASS": 0.0
+        },
+        "action_confidence": 0.91,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "MEDIUM": 0.59,
+          "HIGH": 0.4,
+          "LOW": 0.01,
+          "REJECT": 0.0
+        },
+        "trust_confidence": 0.44,
+        "anomaly_probability": 0.2,
+        "review_probability": 0.29
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "9218a0883826d23893029487",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PA",
+        "line": 20.5,
+        "edge": 5.1,
+        "model_projection": 25.6,
+        "confidence": 63.8,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "LEAN": 0.09,
+          "BET": 0.9,
+          "WATCH": 0.01,
+          "PASS": 0.0
+        },
+        "action_confidence": 0.87,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "REJECT": 0.0,
+          "MEDIUM": 0.57,
+          "LOW": 0.01,
+          "HIGH": 0.42
+        },
+        "trust_confidence": 0.42,
+        "anomaly_probability": 0.23,
+        "review_probability": 0.3
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "187ea89ea44e50ec69ba4c11",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "Makayla Timpson",
+        "team": "Indiana Fever",
+        "stat": "PR",
+        "line": 12.5,
+        "edge": -2.8,
+        "model_projection": 9.7,
+        "confidence": 57.8,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "BET": 0.0,
+          "LEAN": 0.01,
+          "WATCH": 0.79,
+          "PASS": 0.2
+        },
+        "action_confidence": 0.72,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "REJECT": 0.27,
+          "MEDIUM": 0.07,
+          "LOW": 0.66,
+          "HIGH": 0.0
+        },
+        "trust_confidence": 0.55,
+        "anomaly_probability": 0.68,
+        "review_probability": 0.91
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "7b3297ca6538d766eebd958c",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "Stephanie Talbot",
+        "team": "Las Vegas Aces",
+        "stat": "PTS",
+        "line": 5.5,
+        "edge": -4.7,
+        "model_projection": 0.8,
+        "confidence": 62.7,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "LEAN": 0.02,
+          "BET": 0.03,
+          "WATCH": 0.03,
+          "PASS": 0.92
         },
         "action_confidence": 0.89,
-        "trust": "HIGH",
-        "trust_probabilities": {
-          "HIGH": 0.53,
-          "MEDIUM": 0.46,
-          "REJECT": 0.0,
-          "LOW": 0.01
-        },
-        "trust_confidence": 0.36,
-        "anomaly_probability": 0.24,
-        "review_probability": 0.28
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "e8be7c3d6b74d34b7e529ef5",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Awak Kuier",
-        "team": "Dallas Wings",
-        "stat": "REB",
-        "line": 5.5,
-        "edge": -3.1,
-        "model_projection": 2.4,
-        "confidence": 58.6,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.35,
-          "LEAN": 0.04,
-          "WATCH": 0.6,
-          "BET": 0.01
-        },
-        "action_confidence": 0.46,
-        "trust": "LOW",
-        "trust_probabilities": {
-          "MEDIUM": 0.18,
-          "REJECT": 0.22,
-          "HIGH": 0.0,
-          "LOW": 0.6
-        },
-        "trust_confidence": 0.47,
-        "anomaly_probability": 0.49,
-        "review_probability": 0.82
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "7809d21505820317eba2266c",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Rhyne Howard",
-        "team": "Atlanta Dream",
-        "stat": "PTS",
-        "line": 20.5,
-        "edge": -5.9,
-        "model_projection": 14.6,
-        "confidence": 65.8,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.26,
-          "LEAN": 0.15,
-          "WATCH": 0.56,
-          "BET": 0.03
-        },
-        "action_confidence": 0.4,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "MEDIUM": 0.45,
-          "REJECT": 0.11,
-          "HIGH": 0.0,
-          "LOW": 0.44
+          "REJECT": 0.08,
+          "MEDIUM": 0.47,
+          "LOW": 0.22,
+          "HIGH": 0.23
         },
-        "trust_confidence": 0.26,
-        "anomaly_probability": 0.53,
-        "review_probability": 0.83
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "bc91cceea834daa132fa48a2",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Awak Kuier",
-        "team": "Dallas Wings",
-        "stat": "PA",
-        "line": 8.5,
-        "edge": -4.1,
-        "model_projection": 4.4,
-        "confidence": 61.2,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.34,
-          "LEAN": 0.09,
-          "WATCH": 0.55,
-          "BET": 0.02
-        },
-        "action_confidence": 0.4,
-        "trust": "LOW",
-        "trust_probabilities": {
-          "MEDIUM": 0.2,
-          "REJECT": 0.24,
-          "HIGH": 0.0,
-          "LOW": 0.56
-        },
-        "trust_confidence": 0.41,
+        "trust_confidence": 0.29,
         "anomaly_probability": 0.43,
-        "review_probability": 0.84
+        "review_probability": 0.54
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "ff1323dcb49c4e651afd9996",
+      "shadow_id": "2124d65578c791c2e7852acb",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
       "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Arike Ogunbowale",
-        "team": "Dallas Wings",
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "Cheyenne Parker-Tyus",
+        "team": "Las Vegas Aces",
         "stat": "PTS",
-        "line": 13.5,
-        "edge": 6.4,
-        "model_projection": 19.9,
-        "confidence": 66.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+        "line": 5.5,
+        "edge": -5.0,
+        "model_projection": 0.5,
+        "confidence": 63.5,
+        "injury_status": "ACTIVE"
       },
       "jev": {
-        "action": "WATCH",
+        "action": "PASS",
         "action_probabilities": {
-          "LEAN": 0.32,
-          "PASS": 0.01,
-          "WATCH": 0.52,
-          "BET": 0.15
+          "BET": 0.04,
+          "LEAN": 0.03,
+          "WATCH": 0.02,
+          "PASS": 0.91
         },
-        "action_confidence": 0.36,
+        "action_confidence": 0.88,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "MEDIUM": 0.53,
-          "REJECT": 0.08,
-          "HIGH": 0.0,
-          "LOW": 0.39
-        },
-        "trust_confidence": 0.38,
-        "anomaly_probability": 0.5,
-        "review_probability": 0.81
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "df4e7ba8bbaf8b49801631c3",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Arike Ogunbowale",
-        "team": "Dallas Wings",
-        "stat": "PA",
-        "line": 16.5,
-        "edge": 7.2,
-        "model_projection": 23.7,
-        "confidence": 66.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.02,
-          "LEAN": 0.28,
-          "WATCH": 0.5599999999999999,
-          "BET": 0.14
-        },
-        "action_confidence": 0.42,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "MEDIUM": 0.49,
-          "REJECT": 0.08,
-          "HIGH": 0.0,
-          "LOW": 0.43
-        },
-        "trust_confidence": 0.31,
-        "anomaly_probability": 0.48,
-        "review_probability": 0.81
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "8af847adb41fc3e27679baf7",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Arike Ogunbowale",
-        "team": "Dallas Wings",
-        "stat": "PR",
-        "line": 16.5,
-        "edge": 7.0,
-        "model_projection": 23.5,
-        "confidence": 66.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "LEAN": 0.24,
-          "PASS": 0.02,
-          "WATCH": 0.64,
-          "BET": 0.1
-        },
-        "action_confidence": 0.53,
-        "trust": "LOW",
-        "trust_probabilities": {
-          "REJECT": 0.11,
-          "HIGH": 0.0,
-          "MEDIUM": 0.41,
-          "LOW": 0.48
+          "MEDIUM": 0.47,
+          "HIGH": 0.22,
+          "LOW": 0.23,
+          "REJECT": 0.08
         },
         "trust_confidence": 0.3,
-        "anomaly_probability": 0.49,
-        "review_probability": 0.83
+        "anomaly_probability": 0.47,
+        "review_probability": 0.53
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "d8d9794cd6026ba1ef3237a4",
+      "shadow_id": "f5332b93d31d0c83af07f646",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
       "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Shakira Austin",
-        "team": "Washington Mystics",
-        "stat": "PA",
-        "line": 17.5,
-        "edge": 3.8,
-        "model_projection": 21.3,
-        "confidence": 60.4,
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "A'ja Wilson",
+        "team": "Las Vegas Aces",
+        "stat": "PRA",
+        "line": 42.5,
+        "edge": -3.3,
+        "model_projection": 39.2,
+        "confidence": 59.1,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "LEAN": 0.04,
+          "BET": 0.01,
+          "WATCH": 0.82,
+          "PASS": 0.13
+        },
+        "action_confidence": 0.77,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "HIGH": 0.0,
+          "REJECT": 0.23,
+          "LOW": 0.59,
+          "MEDIUM": 0.18
+        },
+        "trust_confidence": 0.46,
+        "anomaly_probability": 0.7,
+        "review_probability": 0.89
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "32b66c5e6ff2229d506b0152",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Leonie Fiebich",
+        "team": "New York Liberty",
+        "stat": "PR",
+        "line": 12.5,
+        "edge": 3.5,
+        "model_projection": 16.0,
+        "confidence": 59.6,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "PASS": 0.02,
-          "LEAN": 0.34,
-          "WATCH": 0.09,
-          "BET": 0.55
+          "LEAN": 0.31,
+          "BET": 0.51,
+          "WATCH": 0.12,
+          "PASS": 0.06
         },
-        "action_confidence": 0.4,
+        "action_confidence": 0.35,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "MEDIUM": 0.73,
-          "REJECT": 0.01,
-          "HIGH": 0.2,
-          "LOW": 0.06
+          "HIGH": 0.16,
+          "REJECT": 0.02,
+          "LOW": 0.12,
+          "MEDIUM": 0.7
         },
-        "trust_confidence": 0.65,
-        "anomaly_probability": 0.29,
+        "trust_confidence": 0.6,
+        "anomaly_probability": 0.26,
+        "review_probability": 0.45
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "4f23a2e5bf6068d03148f44e",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Leonie Fiebich",
+        "team": "New York Liberty",
+        "stat": "PRA",
+        "line": 14.5,
+        "edge": 4.3,
+        "model_projection": 18.8,
+        "confidence": 61.7,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "LEAN": 0.29,
+          "BET": 0.68,
+          "WATCH": 0.02,
+          "PASS": 0.01
+        },
+        "action_confidence": 0.57,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.21,
+          "REJECT": 0.01,
+          "LOW": 0.03,
+          "MEDIUM": 0.75
+        },
+        "trust_confidence": 0.67,
+        "anomaly_probability": 0.21,
+        "review_probability": 0.32
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "85d5ec6c07ddefa7e4e86f70",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "A'ja Wilson",
+        "team": "Las Vegas Aces",
+        "stat": "PR",
+        "line": 39.5,
+        "edge": -3.7,
+        "model_projection": 35.8,
+        "confidence": 60.1,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "LEAN": 0.03,
+          "BET": 0.01,
+          "WATCH": 0.78,
+          "PASS": 0.18
+        },
+        "action_confidence": 0.7,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "MEDIUM": 0.28,
+          "HIGH": 0.0,
+          "LOW": 0.55,
+          "REJECT": 0.17
+        },
+        "trust_confidence": 0.41,
+        "anomaly_probability": 0.57,
+        "review_probability": 0.88
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "50783ab5b67611696eeb789f",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "Makayla Timpson",
+        "team": "Indiana Fever",
+        "stat": "PR",
+        "line": 13.5,
+        "edge": -3.9,
+        "model_projection": 9.6,
+        "confidence": 60.6,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "BET": 0.02,
+          "LEAN": 0.05,
+          "WATCH": 0.54,
+          "PASS": 0.39
+        },
+        "action_confidence": 0.38,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "HIGH": 0.0,
+          "REJECT": 0.12,
+          "LOW": 0.5,
+          "MEDIUM": 0.38
+        },
+        "trust_confidence": 0.33,
+        "anomaly_probability": 0.54,
+        "review_probability": 0.77
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "b279d5ff3ff4b6f467d74521",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Breanna Stewart",
+        "team": "New York Liberty",
+        "stat": "PRA",
+        "line": 36.5,
+        "edge": -2.6,
+        "model_projection": 33.9,
+        "confidence": 57.3,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "LEAN": 0.19,
+          "BET": 0.03,
+          "WATCH": 0.1,
+          "PASS": 0.68
+        },
+        "action_confidence": 0.57,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.02,
+          "REJECT": 0.01,
+          "LOW": 0.21,
+          "MEDIUM": 0.76
+        },
+        "trust_confidence": 0.68,
+        "anomaly_probability": 0.27,
+        "review_probability": 0.48
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "c0b7d6d0ce0ad841fe7afcdb",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Jonquel Jones",
+        "team": "New York Liberty",
+        "stat": "PA",
+        "line": 15.5,
+        "edge": 3.2,
+        "model_projection": 18.7,
+        "confidence": 58.8,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "LEAN",
+        "action_probabilities": {
+          "LEAN": 0.65,
+          "BET": 0.18,
+          "WATCH": 0.06,
+          "PASS": 0.11
+        },
+        "action_confidence": 0.54,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.02,
+          "REJECT": 0.01,
+          "LOW": 0.17,
+          "MEDIUM": 0.8
+        },
+        "trust_confidence": 0.74,
+        "anomaly_probability": 0.27,
         "review_probability": 0.41
       },
       "research_only": true,
@@ -710,168 +785,82 @@
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "0550d7609e931d44f70c26c6",
+      "shadow_id": "82d95f3a02db41938b424bcc",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
       "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Awak Kuier",
-        "team": "Dallas Wings",
-        "stat": "PRA",
-        "line": 15.5,
-        "edge": -8.5,
-        "model_projection": 7.0,
-        "confidence": 66.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.31,
-          "LEAN": 0.16,
-          "WATCH": 0.41000000000000003,
-          "BET": 0.12
-        },
-        "action_confidence": 0.21,
-        "trust": "LOW",
-        "trust_probabilities": {
-          "MEDIUM": 0.34,
-          "REJECT": 0.16,
-          "HIGH": 0.02,
-          "LOW": 0.48
-        },
-        "trust_confidence": 0.3,
-        "anomaly_probability": 0.51,
-        "review_probability": 0.76
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "6d0a80efa88918ed52a93a3e",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Angel Reese",
-        "team": "Atlanta Dream",
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Breanna Stewart",
+        "team": "New York Liberty",
         "stat": "PA",
-        "line": 12.5,
-        "edge": 4.8,
-        "model_projection": 17.3,
-        "confidence": 63.0,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "LEAN": 0.37,
-          "PASS": 0.02,
-          "WATCH": 0.54,
-          "BET": 0.07
-        },
-        "action_confidence": 0.39,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "MEDIUM": 0.51,
-          "REJECT": 0.05,
-          "HIGH": 0.0,
-          "LOW": 0.44
-        },
-        "trust_confidence": 0.34,
-        "anomaly_probability": 0.5,
-        "review_probability": 0.8
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "af49fd2db34cfbee96b2cd0b",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Washington Mystics @ Atlanta Dream",
-        "player": "Angel Reese",
-        "team": "Atlanta Dream",
-        "stat": "PR",
-        "line": 22.5,
-        "edge": 3.0,
-        "model_projection": 25.5,
-        "confidence": 58.3,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "PASS": 0.03,
-          "LEAN": 0.27,
-          "WATCH": 0.68,
-          "BET": 0.02
-        },
-        "action_confidence": 0.57,
-        "trust": "LOW",
-        "trust_probabilities": {
-          "MEDIUM": 0.34,
-          "REJECT": 0.07,
-          "HIGH": 0.0,
-          "LOW": 0.59
-        },
-        "trust_confidence": 0.44,
-        "anomaly_probability": 0.51,
-        "review_probability": 0.83
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "7fc995510793299d71cfe6de",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-27",
-      "issued_at_utc": "2026-09-29T13:48:40.215447+00:00",
-      "candidate": {
-        "game": "Dallas Wings @ Golden State Valkyries",
-        "player": "Awak Kuier",
-        "team": "Dallas Wings",
-        "stat": "PTS",
-        "line": 7.5,
-        "edge": -3.9,
-        "model_projection": 3.6,
-        "confidence": 60.6,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+        "line": 27.5,
+        "edge": -2.5,
+        "model_projection": 25.0,
+        "confidence": 57.0,
+        "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "LEAN": 0.03,
-          "PASS": 0.51,
-          "WATCH": 0.45,
-          "BET": 0.01
+          "LEAN": 0.22,
+          "BET": 0.06,
+          "WATCH": 0.06,
+          "PASS": 0.66
         },
-        "action_confidence": 0.36,
-        "trust": "LOW",
+        "action_confidence": 0.54,
+        "trust": "MEDIUM",
         "trust_probabilities": {
-          "MEDIUM": 0.15,
-          "REJECT": 0.23,
-          "HIGH": 0.0,
-          "LOW": 0.62
+          "HIGH": 0.02,
+          "REJECT": 0.01,
+          "LOW": 0.22,
+          "MEDIUM": 0.75
         },
-        "trust_confidence": 0.5,
-        "anomaly_probability": 0.48,
-        "review_probability": 0.87
+        "trust_confidence": 0.66,
+        "anomaly_probability": 0.3,
+        "review_probability": 0.49
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "651b6419d33a770a9df2d78a",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Breanna Stewart",
+        "team": "New York Liberty",
+        "stat": "PR",
+        "line": 32.5,
+        "edge": -2.3,
+        "model_projection": 30.2,
+        "confidence": 56.5,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "LEAN": 0.15,
+          "BET": 0.02,
+          "WATCH": 0.1,
+          "PASS": 0.73
+        },
+        "action_confidence": 0.64,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "REJECT": 0.01,
+          "MEDIUM": 0.73,
+          "LOW": 0.25,
+          "HIGH": 0.01
+        },
+        "trust_confidence": 0.64,
+        "anomaly_probability": 0.3,
+        "review_probability": 0.49
       },
       "research_only": true,
       "production_mutation": false,
