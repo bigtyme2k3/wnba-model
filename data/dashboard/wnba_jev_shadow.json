@@ -1,11 +1,11 @@
 {
   "version": "jev_shadow_v2",
   "league": "WNBA",
-  "generated_at_utc": "2026-09-29T16:44:50.273655+00:00",
+  "generated_at_utc": "2026-09-29T22:28:36.880270+00:00",
   "target_date": "2026-09-29",
   "source": {
     "target_date": "2026-09-29",
-    "generated_at_utc": "2026-09-29T13:48:05.130596+00:00",
+    "generated_at_utc": "2026-09-29T16:44:19.735805+00:00",
     "status": "READY",
     "schema_version": "sprint19-m02-unified-predictions-v5",
     "input_path": "data/dashboard/wnba_s19_m02_predictions.json",
@@ -16,30 +16,30 @@
   "status": "OK",
   "model": "jev-1.13.0",
   "usage": {
-    "input_tokens": 13172,
-    "output_tokens": 2687
+    "input_tokens": 13225,
+    "output_tokens": 2686
   },
   "summary": {
     "candidates": 20,
-    "new_ledger_rows": 20,
+    "new_ledger_rows": 4,
     "action_counts": {
       "PASS": 6,
-      "BET": 9,
-      "WATCH": 4,
-      "LEAN": 1
+      "BET": 7,
+      "LEAN": 2,
+      "WATCH": 5
     },
     "trust_counts": {
-      "MEDIUM": 16,
-      "LOW": 4
+      "MEDIUM": 15,
+      "LOW": 5
     },
-    "review_ge_050": 6,
-    "anomaly_ge_050": 4,
+    "review_ge_050": 9,
+    "anomaly_ge_050": 5,
     "batch_directional_concentration_ge_050": true,
     "batch_systemic_integrity_risk_ge_050": true
   },
   "batch": {
-    "directional_concentration_probability": 0.7,
-    "systemic_integrity_risk_probability": 0.72
+    "directional_concentration_probability": 0.62,
+    "systemic_integrity_risk_probability": 0.56
   },
   "decisions": [
     {
@@ -47,7 +47,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Las Vegas Aces @ Indiana Fever",
         "player": "Stephanie Talbot",
@@ -62,22 +62,22 @@
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.04,
           "LEAN": 0.02,
+          "BET": 0.03,
           "WATCH": 0.01,
           "PASS": 0.93
         },
-        "action_confidence": 0.9,
+        "action_confidence": 0.91,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.08,
-          "REJECT": 0.24,
-          "LOW": 0.34,
-          "MEDIUM": 0.33999999999999997
+          "MEDIUM": 0.43,
+          "LOW": 0.28,
+          "REJECT": 0.21,
+          "HIGH": 0.08
         },
-        "trust_confidence": 0.13,
-        "anomaly_probability": 0.43,
-        "review_probability": 0.44
+        "trust_confidence": 0.23,
+        "anomaly_probability": 0.45,
+        "review_probability": 0.56
       },
       "research_only": true,
       "production_mutation": false,
@@ -88,37 +88,37 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Minnesota Lynx @ New York Liberty",
         "player": "Leonie Fiebich",
         "team": "New York Liberty",
         "stat": "PTS",
         "line": 8.5,
-        "edge": 4.5,
-        "model_projection": 13.0,
-        "confidence": 62.2,
+        "edge": 4.6,
+        "model_projection": 13.1,
+        "confidence": 62.5,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "LEAN": 0.22,
-          "BET": 0.78,
-          "WATCH": 0.0,
-          "PASS": 0.0
+          "LEAN": 0.21,
+          "BET": 0.79,
+          "PASS": 0.0,
+          "WATCH": 0.0
         },
         "action_confidence": 0.71,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "MEDIUM": 0.78,
-          "HIGH": 0.21,
+          "MEDIUM": 0.81,
           "LOW": 0.01,
-          "REJECT": 0.0
+          "REJECT": 0.0,
+          "HIGH": 0.18
         },
-        "trust_confidence": 0.69,
+        "trust_confidence": 0.74,
         "anomaly_probability": 0.2,
-        "review_probability": 0.3
+        "review_probability": 0.31
       },
       "research_only": true,
       "production_mutation": false,
@@ -129,7 +129,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Minnesota Lynx @ New York Liberty",
         "player": "Sabrina Ionescu",
@@ -144,63 +144,22 @@
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "LEAN": 0.09,
-          "BET": 0.91,
+          "LEAN": 0.12,
+          "BET": 0.88,
           "WATCH": 0.0,
           "PASS": 0.0
         },
-        "action_confidence": 0.87,
+        "action_confidence": 0.84,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.29,
-          "REJECT": 0.0,
+          "MEDIUM": 0.7,
           "LOW": 0.01,
-          "MEDIUM": 0.7
+          "REJECT": 0.0,
+          "HIGH": 0.29
         },
         "trust_confidence": 0.59,
-        "anomaly_probability": 0.18,
-        "review_probability": 0.29
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "77670476cfca8bc377d4c3a6",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
-      "candidate": {
-        "game": "Minnesota Lynx @ New York Liberty",
-        "player": "Sabrina Ionescu",
-        "team": "New York Liberty",
-        "stat": "PRA",
-        "line": 25.5,
-        "edge": 4.2,
-        "model_projection": 29.7,
-        "confidence": 61.4,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "LEAN": 0.19,
-          "BET": 0.77,
-          "WATCH": 0.02,
-          "PASS": 0.02
-        },
-        "action_confidence": 0.7,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "MEDIUM": 0.73,
-          "HIGH": 0.23,
-          "LOW": 0.03,
-          "REJECT": 0.01
-        },
-        "trust_confidence": 0.64,
-        "anomaly_probability": 0.29,
-        "review_probability": 0.34
+        "anomaly_probability": 0.16,
+        "review_probability": 0.3
       },
       "research_only": true,
       "production_mutation": false,
@@ -211,7 +170,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Minnesota Lynx @ New York Liberty",
         "player": "Sabrina Ionescu",
@@ -226,63 +185,22 @@
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "LEAN": 0.09,
-          "BET": 0.9,
+          "LEAN": 0.1,
+          "BET": 0.89,
           "WATCH": 0.01,
           "PASS": 0.0
         },
         "action_confidence": 0.86,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "REJECT": 0.0,
           "MEDIUM": 0.62,
-          "LOW": 0.02,
-          "HIGH": 0.36
+          "LOW": 0.01,
+          "REJECT": 0.0,
+          "HIGH": 0.37
         },
-        "trust_confidence": 0.5,
-        "anomaly_probability": 0.24,
-        "review_probability": 0.33
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "a2f9964b321447fd3942d12f",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
-      "candidate": {
-        "game": "Minnesota Lynx @ New York Liberty",
-        "player": "Sabrina Ionescu",
-        "team": "New York Liberty",
-        "stat": "PRA",
-        "line": 24.5,
-        "edge": 5.3,
-        "model_projection": 29.8,
-        "confidence": 64.3,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "LEAN": 0.09,
-          "BET": 0.83,
-          "WATCH": 0.05,
-          "PASS": 0.03
-        },
-        "action_confidence": 0.77,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "REJECT": 0.01,
-          "MEDIUM": 0.7,
-          "LOW": 0.04,
-          "HIGH": 0.25
-        },
-        "trust_confidence": 0.59,
-        "anomaly_probability": 0.44,
-        "review_probability": 0.44
+        "trust_confidence": 0.49,
+        "anomaly_probability": 0.18,
+        "review_probability": 0.29
       },
       "research_only": true,
       "production_mutation": false,
@@ -293,7 +211,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Minnesota Lynx @ New York Liberty",
         "player": "Leonie Fiebich",
@@ -308,22 +226,22 @@
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "BET": 0.93,
-          "LEAN": 0.06,
+          "LEAN": 0.11,
+          "BET": 0.88,
           "WATCH": 0.01,
           "PASS": 0.0
         },
-        "action_confidence": 0.91,
+        "action_confidence": 0.84,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "MEDIUM": 0.59,
-          "HIGH": 0.4,
+          "MEDIUM": 0.58,
           "LOW": 0.01,
-          "REJECT": 0.0
+          "REJECT": 0.0,
+          "HIGH": 0.41
         },
         "trust_confidence": 0.44,
         "anomaly_probability": 0.2,
-        "review_probability": 0.29
+        "review_probability": 0.3
       },
       "research_only": true,
       "production_mutation": false,
@@ -334,7 +252,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Minnesota Lynx @ New York Liberty",
         "player": "Sabrina Ionescu",
@@ -349,64 +267,63 @@
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "LEAN": 0.09,
-          "BET": 0.9,
+          "BET": 0.89,
+          "LEAN": 0.1,
           "WATCH": 0.01,
           "PASS": 0.0
         },
-        "action_confidence": 0.87,
+        "action_confidence": 0.85,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "REJECT": 0.0,
-          "MEDIUM": 0.57,
+          "MEDIUM": 0.55,
           "LOW": 0.01,
-          "HIGH": 0.42
+          "REJECT": 0.0,
+          "HIGH": 0.44
         },
-        "trust_confidence": 0.42,
-        "anomaly_probability": 0.23,
-        "review_probability": 0.3
+        "trust_confidence": 0.39,
+        "anomaly_probability": 0.19,
+        "review_probability": 0.32
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "187ea89ea44e50ec69ba4c11",
+      "shadow_id": "a2f9964b321447fd3942d12f",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
-        "game": "Las Vegas Aces @ Indiana Fever",
-        "player": "Makayla Timpson",
-        "team": "Indiana Fever",
-        "stat": "PR",
-        "line": 12.5,
-        "edge": -2.8,
-        "model_projection": 9.7,
-        "confidence": 57.8,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PRA",
+        "line": 24.5,
+        "edge": 5.3,
+        "model_projection": 29.8,
+        "confidence": 64.3,
+        "injury_status": "ACTIVE"
       },
       "jev": {
-        "action": "WATCH",
+        "action": "BET",
         "action_probabilities": {
-          "BET": 0.0,
-          "LEAN": 0.01,
-          "WATCH": 0.79,
-          "PASS": 0.2
+          "LEAN": 0.11,
+          "BET": 0.88,
+          "PASS": 0.0,
+          "WATCH": 0.01
         },
-        "action_confidence": 0.72,
-        "trust": "LOW",
+        "action_confidence": 0.84,
+        "trust": "MEDIUM",
         "trust_probabilities": {
-          "REJECT": 0.27,
-          "MEDIUM": 0.07,
-          "LOW": 0.66,
-          "HIGH": 0.0
+          "MEDIUM": 0.58,
+          "LOW": 0.01,
+          "REJECT": 0.0,
+          "HIGH": 0.41
         },
-        "trust_confidence": 0.55,
-        "anomaly_probability": 0.68,
-        "review_probability": 0.91
+        "trust_confidence": 0.44,
+        "anomaly_probability": 0.22,
+        "review_probability": 0.32
       },
       "research_only": true,
       "production_mutation": false,
@@ -417,7 +334,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Las Vegas Aces @ Indiana Fever",
         "player": "Stephanie Talbot",
@@ -433,21 +350,21 @@
         "action": "PASS",
         "action_probabilities": {
           "LEAN": 0.02,
-          "BET": 0.03,
-          "WATCH": 0.03,
-          "PASS": 0.92
+          "BET": 0.01,
+          "WATCH": 0.02,
+          "PASS": 0.95
         },
-        "action_confidence": 0.89,
+        "action_confidence": 0.93,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "REJECT": 0.08,
-          "MEDIUM": 0.47,
+          "MEDIUM": 0.48,
           "LOW": 0.22,
-          "HIGH": 0.23
+          "REJECT": 0.14,
+          "HIGH": 0.16
         },
-        "trust_confidence": 0.29,
-        "anomaly_probability": 0.43,
-        "review_probability": 0.54
+        "trust_confidence": 0.3,
+        "anomaly_probability": 0.44,
+        "review_probability": 0.61
       },
       "research_only": true,
       "production_mutation": false,
@@ -458,7 +375,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Las Vegas Aces @ Indiana Fever",
         "player": "Cheyenne Parker-Tyus",
@@ -473,22 +390,104 @@
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.04,
-          "LEAN": 0.03,
+          "LEAN": 0.02,
+          "BET": 0.02,
           "WATCH": 0.02,
-          "PASS": 0.91
+          "PASS": 0.94
         },
-        "action_confidence": 0.88,
+        "action_confidence": 0.92,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "MEDIUM": 0.47,
-          "HIGH": 0.22,
+          "MEDIUM": 0.49,
           "LOW": 0.23,
-          "REJECT": 0.08
+          "REJECT": 0.08,
+          "HIGH": 0.2
         },
-        "trust_confidence": 0.3,
-        "anomaly_probability": 0.47,
-        "review_probability": 0.53
+        "trust_confidence": 0.32,
+        "anomaly_probability": 0.45,
+        "review_probability": 0.59
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "32b66c5e6ff2229d506b0152",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Leonie Fiebich",
+        "team": "New York Liberty",
+        "stat": "PR",
+        "line": 12.5,
+        "edge": 3.6,
+        "model_projection": 16.1,
+        "confidence": 59.9,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "LEAN",
+        "action_probabilities": {
+          "LEAN": 0.66,
+          "BET": 0.31,
+          "WATCH": 0.02,
+          "PASS": 0.01
+        },
+        "action_confidence": 0.54,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "MEDIUM": 0.85,
+          "LOW": 0.06,
+          "REJECT": 0.0,
+          "HIGH": 0.09
+        },
+        "trust_confidence": 0.8,
+        "anomaly_probability": 0.22,
+        "review_probability": 0.39
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "4f23a2e5bf6068d03148f44e",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Leonie Fiebich",
+        "team": "New York Liberty",
+        "stat": "PRA",
+        "line": 14.5,
+        "edge": 4.3,
+        "model_projection": 18.8,
+        "confidence": 61.7,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "LEAN": 0.42,
+          "BET": 0.5700000000000001,
+          "WATCH": 0.01,
+          "PASS": 0.0
+        },
+        "action_confidence": 0.42,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "MEDIUM": 0.86,
+          "LOW": 0.03,
+          "REJECT": 0.0,
+          "HIGH": 0.11
+        },
+        "trust_confidence": 0.81,
+        "anomaly_probability": 0.21,
+        "review_probability": 0.37
       },
       "research_only": true,
       "production_mutation": false,
@@ -499,7 +498,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Las Vegas Aces @ Indiana Fever",
         "player": "A'ja Wilson",
@@ -515,104 +514,64 @@
       "jev": {
         "action": "WATCH",
         "action_probabilities": {
-          "LEAN": 0.04,
-          "BET": 0.01,
-          "WATCH": 0.82,
-          "PASS": 0.13
+          "BET": 0.0,
+          "LEAN": 0.02,
+          "WATCH": 0.9,
+          "PASS": 0.08
         },
-        "action_confidence": 0.77,
+        "action_confidence": 0.86,
         "trust": "LOW",
         "trust_probabilities": {
-          "HIGH": 0.0,
-          "REJECT": 0.23,
-          "LOW": 0.59,
-          "MEDIUM": 0.18
+          "MEDIUM": 0.11,
+          "LOW": 0.68,
+          "REJECT": 0.21,
+          "HIGH": 0.0
         },
-        "trust_confidence": 0.46,
-        "anomaly_probability": 0.7,
-        "review_probability": 0.89
+        "trust_confidence": 0.57,
+        "anomaly_probability": 0.63,
+        "review_probability": 0.9
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "32b66c5e6ff2229d506b0152",
+      "shadow_id": "50783ab5b67611696eeb789f",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
-        "game": "Minnesota Lynx @ New York Liberty",
-        "player": "Leonie Fiebich",
-        "team": "New York Liberty",
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "Makayla Timpson",
+        "team": "Indiana Fever",
         "stat": "PR",
-        "line": 12.5,
-        "edge": 3.5,
-        "model_projection": 16.0,
-        "confidence": 59.6,
-        "injury_status": "ACTIVE"
+        "line": 13.5,
+        "edge": -3.9,
+        "model_projection": 9.6,
+        "confidence": 60.6,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
       },
       "jev": {
-        "action": "BET",
+        "action": "WATCH",
         "action_probabilities": {
-          "LEAN": 0.31,
-          "BET": 0.51,
-          "WATCH": 0.12,
-          "PASS": 0.06
+          "LEAN": 0.03,
+          "BET": 0.0,
+          "WATCH": 0.81,
+          "PASS": 0.16
         },
-        "action_confidence": 0.35,
-        "trust": "MEDIUM",
+        "action_confidence": 0.75,
+        "trust": "LOW",
         "trust_probabilities": {
-          "HIGH": 0.16,
-          "REJECT": 0.02,
-          "LOW": 0.12,
-          "MEDIUM": 0.7
+          "MEDIUM": 0.13,
+          "LOW": 0.69,
+          "REJECT": 0.18,
+          "HIGH": 0.0
         },
-        "trust_confidence": 0.6,
-        "anomaly_probability": 0.26,
-        "review_probability": 0.45
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "4f23a2e5bf6068d03148f44e",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
-      "candidate": {
-        "game": "Minnesota Lynx @ New York Liberty",
-        "player": "Leonie Fiebich",
-        "team": "New York Liberty",
-        "stat": "PRA",
-        "line": 14.5,
-        "edge": 4.3,
-        "model_projection": 18.8,
-        "confidence": 61.7,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "LEAN": 0.29,
-          "BET": 0.68,
-          "WATCH": 0.02,
-          "PASS": 0.01
-        },
-        "action_confidence": 0.57,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.21,
-          "REJECT": 0.01,
-          "LOW": 0.03,
-          "MEDIUM": 0.75
-        },
-        "trust_confidence": 0.67,
-        "anomaly_probability": 0.21,
-        "review_probability": 0.32
+        "trust_confidence": 0.59,
+        "anomaly_probability": 0.59,
+        "review_probability": 0.89
       },
       "research_only": true,
       "production_mutation": false,
@@ -623,7 +582,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Las Vegas Aces @ Indiana Fever",
         "player": "A'ja Wilson",
@@ -641,62 +600,103 @@
         "action_probabilities": {
           "LEAN": 0.03,
           "BET": 0.01,
-          "WATCH": 0.78,
-          "PASS": 0.18
+          "WATCH": 0.75,
+          "PASS": 0.21
         },
-        "action_confidence": 0.7,
+        "action_confidence": 0.68,
         "trust": "LOW",
         "trust_probabilities": {
-          "MEDIUM": 0.28,
-          "HIGH": 0.0,
-          "LOW": 0.55,
-          "REJECT": 0.17
+          "MEDIUM": 0.18,
+          "LOW": 0.66,
+          "REJECT": 0.16,
+          "HIGH": 0.0
         },
-        "trust_confidence": 0.41,
-        "anomaly_probability": 0.57,
-        "review_probability": 0.88
+        "trust_confidence": 0.55,
+        "anomaly_probability": 0.52,
+        "review_probability": 0.87
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "50783ab5b67611696eeb789f",
+      "shadow_id": "10320a3a2768880ba414ff93",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Las Vegas Aces @ Indiana Fever",
-        "player": "Makayla Timpson",
-        "team": "Indiana Fever",
-        "stat": "PR",
-        "line": 13.5,
-        "edge": -3.9,
-        "model_projection": 9.6,
-        "confidence": 60.6,
+        "player": "Jackie Young",
+        "team": "Las Vegas Aces",
+        "stat": "PA",
+        "line": 27.5,
+        "edge": -2.2,
+        "model_projection": 25.3,
+        "confidence": 56.2,
         "injury_status": "SPECULATIVE",
         "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
       },
       "jev": {
         "action": "WATCH",
         "action_probabilities": {
-          "BET": 0.02,
-          "LEAN": 0.05,
-          "WATCH": 0.54,
-          "PASS": 0.39
+          "LEAN": 0.02,
+          "BET": 0.0,
+          "WATCH": 0.86,
+          "PASS": 0.12
         },
-        "action_confidence": 0.38,
+        "action_confidence": 0.81,
         "trust": "LOW",
         "trust_probabilities": {
-          "HIGH": 0.0,
-          "REJECT": 0.12,
-          "LOW": 0.5,
-          "MEDIUM": 0.38
+          "MEDIUM": 0.1,
+          "LOW": 0.75,
+          "REJECT": 0.15,
+          "HIGH": 0.0
         },
-        "trust_confidence": 0.33,
+        "trust_confidence": 0.67,
         "anomaly_probability": 0.54,
-        "review_probability": 0.77
+        "review_probability": 0.87
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "977a1f265473cc3b41592e66",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Pauline Astier",
+        "team": "New York Liberty",
+        "stat": "REB",
+        "line": 3.5,
+        "edge": -2.0,
+        "model_projection": 1.5,
+        "confidence": 55.7,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "LEAN": 0.1,
+          "BET": 0.02,
+          "WATCH": 0.11,
+          "PASS": 0.77
+        },
+        "action_confidence": 0.69,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "MEDIUM": 0.62,
+          "LOW": 0.34,
+          "REJECT": 0.02,
+          "HIGH": 0.02
+        },
+        "trust_confidence": 0.5,
+        "anomaly_probability": 0.27,
+        "review_probability": 0.45
       },
       "research_only": true,
       "production_mutation": false,
@@ -707,7 +707,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Minnesota Lynx @ New York Liberty",
         "player": "Breanna Stewart",
@@ -722,22 +722,106 @@
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "LEAN": 0.19,
-          "BET": 0.03,
-          "WATCH": 0.1,
-          "PASS": 0.68
+          "LEAN": 0.1,
+          "BET": 0.02,
+          "WATCH": 0.09,
+          "PASS": 0.79
         },
-        "action_confidence": 0.57,
+        "action_confidence": 0.72,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.02,
-          "REJECT": 0.01,
-          "LOW": 0.21,
-          "MEDIUM": 0.76
+          "MEDIUM": 0.64,
+          "LOW": 0.31,
+          "REJECT": 0.02,
+          "HIGH": 0.03
         },
-        "trust_confidence": 0.68,
-        "anomaly_probability": 0.27,
+        "trust_confidence": 0.53,
+        "anomaly_probability": 0.28,
+        "review_probability": 0.44
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "3a65543d30142cdc784d8d72",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
+      "candidate": {
+        "game": "Las Vegas Aces @ Indiana Fever",
+        "player": "Makayla Timpson",
+        "team": "Indiana Fever",
+        "stat": "REB",
+        "line": 6.5,
+        "edge": -2.2,
+        "model_projection": 4.3,
+        "confidence": 56.2,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "LEAN": 0.07,
+          "BET": 0.02,
+          "PASS": 0.8,
+          "WATCH": 0.11
+        },
+        "action_confidence": 0.73,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "MEDIUM": 0.56,
+          "LOW": 0.39,
+          "REJECT": 0.03,
+          "HIGH": 0.02
+        },
+        "trust_confidence": 0.42,
+        "anomaly_probability": 0.33,
         "review_probability": 0.48
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "e369c1d8e526319d1bf891dc",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-09-29",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
+      "candidate": {
+        "game": "Minnesota Lynx @ New York Liberty",
+        "player": "Natasha Howard",
+        "team": "Minnesota Lynx",
+        "stat": "PTS",
+        "line": 10.5,
+        "edge": 2.0,
+        "model_projection": 12.5,
+        "confidence": 55.7,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "LEAN": 0.15,
+          "BET": 0.03,
+          "WATCH": 0.71,
+          "PASS": 0.11
+        },
+        "action_confidence": 0.61,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "MEDIUM": 0.21,
+          "LOW": 0.67,
+          "REJECT": 0.12,
+          "HIGH": 0.0
+        },
+        "trust_confidence": 0.56,
+        "anomaly_probability": 0.59,
+        "review_probability": 0.84
       },
       "research_only": true,
       "production_mutation": false,
@@ -748,7 +832,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
+      "issued_at_utc": "2026-09-29T22:28:36.880270+00:00",
       "candidate": {
         "game": "Minnesota Lynx @ New York Liberty",
         "player": "Jonquel Jones",
@@ -763,104 +847,22 @@
       "jev": {
         "action": "LEAN",
         "action_probabilities": {
-          "LEAN": 0.65,
-          "BET": 0.18,
-          "WATCH": 0.06,
-          "PASS": 0.11
-        },
-        "action_confidence": 0.54,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.02,
-          "REJECT": 0.01,
-          "LOW": 0.17,
-          "MEDIUM": 0.8
-        },
-        "trust_confidence": 0.74,
-        "anomaly_probability": 0.27,
-        "review_probability": 0.41
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "82d95f3a02db41938b424bcc",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
-      "candidate": {
-        "game": "Minnesota Lynx @ New York Liberty",
-        "player": "Breanna Stewart",
-        "team": "New York Liberty",
-        "stat": "PA",
-        "line": 27.5,
-        "edge": -2.5,
-        "model_projection": 25.0,
-        "confidence": 57.0,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "PASS",
-        "action_probabilities": {
-          "LEAN": 0.22,
-          "BET": 0.06,
-          "WATCH": 0.06,
-          "PASS": 0.66
-        },
-        "action_confidence": 0.54,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.02,
-          "REJECT": 0.01,
-          "LOW": 0.22,
-          "MEDIUM": 0.75
-        },
-        "trust_confidence": 0.66,
-        "anomaly_probability": 0.3,
-        "review_probability": 0.49
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "651b6419d33a770a9df2d78a",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-09-29",
-      "issued_at_utc": "2026-09-29T16:44:50.273655+00:00",
-      "candidate": {
-        "game": "Minnesota Lynx @ New York Liberty",
-        "player": "Breanna Stewart",
-        "team": "New York Liberty",
-        "stat": "PR",
-        "line": 32.5,
-        "edge": -2.3,
-        "model_projection": 30.2,
-        "confidence": 56.5,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "PASS",
-        "action_probabilities": {
-          "LEAN": 0.15,
-          "BET": 0.02,
+          "LEAN": 0.47,
+          "BET": 0.4,
           "WATCH": 0.1,
-          "PASS": 0.73
+          "PASS": 0.03
         },
-        "action_confidence": 0.64,
+        "action_confidence": 0.29,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "REJECT": 0.01,
-          "MEDIUM": 0.73,
-          "LOW": 0.25,
-          "HIGH": 0.01
+          "MEDIUM": 0.7,
+          "LOW": 0.19,
+          "REJECT": 0.02,
+          "HIGH": 0.09
         },
-        "trust_confidence": 0.64,
-        "anomaly_probability": 0.3,
-        "review_probability": 0.49
+        "trust_confidence": 0.61,
+        "anomaly_probability": 0.25,
+        "review_probability": 0.55
       },
       "research_only": true,
       "production_mutation": false,
