@@ -28,6 +28,7 @@ DEFAULT_MODEL = "jev-latest"
 QUESTION_VERSION = "jev_shadow_v2"
 
 CANDIDATE_KEYS = (
+    "player_props",
     "best_bets",
     "qualified_bets",
     "ranked_cards",
