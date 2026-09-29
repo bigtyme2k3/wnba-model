@@ -214,6 +214,10 @@ def main() -> int:
         assert prediction_result["player_props"][0]["final_action"] == "PASS"
         assert prediction_result["player_props"][0]["playoff_mode"] is True
         assert prediction_result["player_props"][0]["playoff_gate_passed"] is False
+        assert all(row.get("final_action") in {"BET", "PASS"} for row in prediction_result["player_props"])
+        playoff_bets = [row for row in prediction_result["player_props"] if row.get("final_action") == "BET"]
+        bet_players = [str(row.get("player") or "").strip().lower() for row in playoff_bets]
+        assert len(bet_players) == len(set(bet_players))
         assert prediction_result["best_bets"] == []
         assert prediction_result["portfolio"] == []
         assert prediction_audit["status"] == "READY"
