@@ -26,10 +26,6 @@ name: WNBA V5 Daily Orchestrator
 # Flip config/v5_artifact_ownership.json back to mode=maintenance (and remove
 # this schedule) for the off-season.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'config/manual_refresh_request.json'
   schedule:
     - cron: '15 10 * * *'
     - cron: '15 18 * * *'
@@ -123,7 +119,7 @@ jobs:
           if p['contract_mode'] == 'maintenance':
               assert p['scheduled_workflow_count']==0, p.get('scheduled_workflows')
           assert p['schedule_violation_count']==0, p.get('violations')
-          live = '${{ github.event_name }}' in ('schedule', 'push') or '${{ inputs.live_mode }}' == 'true'
+          live = '${{ github.event_name }}' == 'schedule' or '${{ inputs.live_mode }}' == 'true'
           print({
               'contract_status':'PASS',
               'contract_mode':p['contract_mode'],
@@ -154,7 +150,7 @@ jobs:
   canonical-base:
     name: Canonical slate + standard props
     needs: [ownership-contract, schedule-gate]
-    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule' || github.event_name == 'push') && needs.schedule-gate.outputs.should_run == 'true' }}
+    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule') && needs.schedule-gate.outputs.should_run == 'true' }}
     uses: ./.github/workflows/wnba_daily_canonical_build.yml
     with:
       target_date: ${{ inputs.target_date }}
@@ -166,7 +162,7 @@ jobs:
     # A confirmed empty slate is a healthy terminal state. Do not call the paid
     # ALT owner (or mark the daily run failed) merely because there are no games.
     # On game days, missing ALT eligibility remains a hard failure.
-    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule' || github.event_name == 'push') && needs.canonical-base.outputs.has_active_slate == 'true' }}
+    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule') && needs.canonical-base.outputs.has_active_slate == 'true' }}
     uses: ./.github/workflows/wnba_alt_pregame_snapshot.yml
     with:
       deploy_dashboard: false
@@ -175,7 +171,7 @@ jobs:
   no-slate:
     name: Healthy no-slate completion
     needs: canonical-base
-    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule' || github.event_name == 'push') && needs.canonical-base.outputs.has_active_slate == 'false' }}
+    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule') && needs.canonical-base.outputs.has_active_slate == 'false' }}
     runs-on: ubuntu-latest
     steps:
       - name: Record confirmed empty slate
@@ -187,7 +183,7 @@ jobs:
   injury-context:
     name: Injury context
     needs: alt-market
-    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' || github.event_name == 'push' }}
+    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
     uses: ./.github/workflows/wnba_v5_injury_dashboard.yml
     with:
       date: ${{ inputs.target_date }}
@@ -196,7 +192,7 @@ jobs:
   downstream-predictions:
     name: Phase 2 + M02 predictions
     needs: injury-context
-    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' || github.event_name == 'push' }}
+    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
     uses: ./.github/workflows/wnba-new-day-prediction-sync.yml
     with:
       date: ${{ inputs.target_date }}
@@ -206,7 +202,7 @@ jobs:
   jev-shadow:
     name: Jev forward shadow (research only)
     needs: downstream-predictions
-    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule' || github.event_name == 'push') && needs.downstream-predictions.result == 'success' }}
+    if: ${{ (inputs.live_mode == true || github.event_name == 'schedule') && needs.downstream-predictions.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
     env:
@@ -264,7 +260,7 @@ jobs:
   derived-dashboard:
     name: Derived intelligence + terminal deploy
     needs: downstream-predictions
-    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' || github.event_name == 'push' }}
+    if: ${{ inputs.live_mode == true || github.event_name == 'schedule' }}
     uses: ./.github/workflows/wnba_daily_slate_rollover.yml
     with:
       target_date: ${{ inputs.target_date }}
