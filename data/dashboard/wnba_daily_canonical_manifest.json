@@ -1,7 +1,7 @@
 {
   "schema_version": "daily-canonical-v1",
-  "generated_at_utc": "2026-10-05T00:03:09.001764+00:00",
-  "target_date": "2026-10-04",
+  "generated_at_utc": "2026-10-07T17:30:08.860026+00:00",
+  "target_date": "2026-10-07",
   "status": "PASS",
   "games": [
     "New York Liberty @ Atlanta Dream",
@@ -14,13 +14,16 @@
     "New York Liberty"
   ],
   "game_count": 2,
-  "player_prop_rows": 0,
+  "player_prop_rows": 161,
   "sportsbooks_allowed": [
     "draftkings",
     "fanatics",
     "fanduel"
   ],
-  "sportsbooks_observed": [],
+  "sportsbooks_observed": [
+    "draftkings",
+    "fanduel"
+  ],
   "sources": {
     "slate": "data/dashboard/wnba_master.json",
     "player_props": "data/dashboard/wnba_player_props.json"
@@ -30,14 +33,14 @@
       "script": "wnba_current_slate.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-10-04\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 2,\n  \"matchups\": [\n    \"New York Liberty @ Atlanta Dream\",\n    \"Las Vegas Aces @ Golden State Valkyries\"\n  ]\n}\n",
+      "stdout": "{\n  \"target_date\": \"2026-10-07\",\n  \"source\": \"espn_scoreboard\",\n  \"fallback_errors\": [],\n  \"games\": 2,\n  \"matchups\": [\n    \"New York Liberty @ Atlanta Dream\",\n    \"Las Vegas Aces @ Golden State Valkyries\"\n  ]\n}\n",
       "stderr": ""
     },
     {
       "script": "wnba_player_props_ingestion.py",
       "status": "ok",
       "returncode": 0,
-      "stdout": "{\n  \"target_date\": \"2026-10-04\",\n  \"events\": 0,\n  \"raw_rows\": 0,\n  \"verified_rows\": 0,\n  \"unresolved_rows\": 0,\n  \"unresolved_players\": [],\n  \"api_called\": true,\n  \"sportsbooks_allowed\": [\n    \"draftkings\",\n    \"fanatics\",\n    \"fanduel\"\n  ],\n  \"sportsbooks_observed\": [],\n  \"unsupported_bookmakers_rejected\": [],\n  \"canonical_manifest_synced\": true\n}\n",
+      "stdout": "{\n  \"target_date\": \"2026-10-07\",\n  \"events\": 2,\n  \"raw_rows\": 169,\n  \"verified_rows\": 161,\n  \"unresolved_rows\": 8,\n  \"unresolved_players\": [\n    \"DeWanna Bonner\"\n  ],\n  \"api_called\": true,\n  \"sportsbooks_allowed\": [\n    \"draftkings\",\n    \"fanatics\",\n    \"fanduel\"\n  ],\n  \"sportsbooks_observed\": [\n    \"draftkings\",\n    \"fanduel\"\n  ],\n  \"unsupported_bookmakers_rejected\": [],\n  \"canonical_manifest_synced\": true\n}\n",
       "stderr": ""
     }
   ],
