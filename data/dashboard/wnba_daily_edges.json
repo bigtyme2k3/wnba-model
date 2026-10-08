@@ -1,7 +1,7 @@
 {
   "sprint": 6,
   "phase": "6.1-edge-qa-dashboard",
-  "generated_at_utc": "2026-10-07T23:21:45.574737+00:00",
+  "generated_at_utc": "2026-10-08T01:23:42.738804+00:00",
   "target_date": "2026-10-07",
   "status": "ok",
   "source_contract": {
@@ -11,76 +11,76 @@
     "source_target_date": "2026-10-07",
     "source_status": "ready",
     "empty_slate": false,
-    "standard_rows": 155,
+    "standard_rows": 134,
     "off_target_rows": 0,
     "alt_source": "data/dashboard/wnba_alt_market_warehouse.json",
     "alt_target_date": "2026-10-07",
     "alt_status": "ok",
-    "alt_rows": 1898,
+    "alt_rows": 1209,
     "alt_off_target_rows": 0
   },
   "summary": {
-    "source_props": 155,
-    "source_alt_markets": 1898,
-    "candidates_loaded": 2053,
-    "candidates_scored": 155,
-    "invalid_projection_rows_rejected": 1898,
+    "source_props": 134,
+    "source_alt_markets": 1209,
+    "candidates_loaded": 1343,
+    "candidates_scored": 134,
+    "invalid_projection_rows_rejected": 1209,
     "high_confidence": 0,
-    "moderate_confidence": 3,
-    "low_confidence": 152,
+    "moderate_confidence": 7,
+    "low_confidence": 127,
     "top_score": 68.2,
-    "standard_candidates": 155,
+    "standard_candidates": 134,
     "alternate_candidates": 0
   },
   "qa": {
     "score_distribution": {
-      "68-74.99": 3,
-      "60-67.99": 75,
-      "below-60": 77
+      "68-74.99": 7,
+      "60-67.99": 67,
+      "below-60": 60
     },
     "confidence_distribution": {
-      "MODERATE": 3,
-      "LOW": 152
+      "MODERATE": 7,
+      "LOW": 127
     },
     "market_type_distribution": {
-      "standard": 155
+      "standard": 134
     },
     "evidence_coverage_counts": {
-      "projection": 129,
+      "projection": 110,
       "recent_form": 0,
       "season_history": 0,
       "clv": 0,
       "roi": 0,
-      "market_value": 129
+      "market_value": 110
     },
     "evidence_coverage_rates": {
-      "projection": 0.8323,
+      "projection": 0.8209,
       "recent_form": 0.0,
       "season_history": 0.0,
       "clv": 0.0,
       "roi": 0.0,
-      "market_value": 0.8323
+      "market_value": 0.8209
     },
     "missing_evidence_counts": {
-      "recent_form": 155,
-      "season_history": 155,
-      "clv": 155,
-      "roi": 155,
-      "projection": 26,
-      "market_value": 26
+      "recent_form": 134,
+      "season_history": 134,
+      "clv": 134,
+      "roi": 134,
+      "projection": 24,
+      "market_value": 24
     },
     "component_averages": {
-      "projection": 79.41,
+      "projection": 81.21,
       "recent_form": 50.0,
       "season_history": 50.0,
       "clv": 50.0,
       "roi": 50.0,
-      "market_value": 70.28,
+      "market_value": 71.77,
       "sample_strength": 20.0
     },
     "projection_integrity": {
       "contract": "wnba_projection_contract.py",
-      "invalid_rows_rejected": 1898,
+      "invalid_rows_rejected": 1209,
       "rejection_sample": [
         {
           "player": "A'ja Wilson",
@@ -247,8 +247,8 @@
         {
           "player": "A'ja Wilson",
           "game": "Las Vegas Aces @ Golden State Valkyries",
-          "stat": "PA",
-          "line": 19.5,
+          "stat": "AST",
+          "line": 5.5,
           "source_kind": "alt",
           "reason": "missing_projection",
           "projection_rejections": []
@@ -257,7 +257,7 @@
           "player": "A'ja Wilson",
           "game": "Las Vegas Aces @ Golden State Valkyries",
           "stat": "PA",
-          "line": 24.5,
+          "line": 19.5,
           "source_kind": "alt",
           "reason": "missing_projection",
           "projection_rejections": []
@@ -270,6 +270,153 @@
   "top_edges": [
     {
       "target_date": "2026-10-07",
+      "player": "Leonie Fiebich",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 2.5,
+      "sportsbook": null,
+      "odds": 124.0,
+      "projection": 12.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 68.2,
+      "confidence": "MODERATE",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 100.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +10.40 versus line",
+        "Model probability edge +27.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 49.5,
+      "sportsbook": null,
+      "odds": 106.0,
+      "projection": 34.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.725,
+      "edge_score": 68.2,
+      "confidence": "MODERATE",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 100.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +15.50 versus line",
+        "Model probability edge +24.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 36.5,
+      "sportsbook": null,
+      "odds": 104.0,
+      "projection": 21.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 68.2,
+      "confidence": "MODERATE",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 100.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +15.10 versus line",
+        "Model probability edge +23.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
       "player": "Stephanie Talbot",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Golden State Valkyries",
@@ -277,8 +424,8 @@
       "side": "UNDER",
       "line": 8.5,
       "sportsbook": null,
-      "odds": 102.0,
-      "projection": 2.5,
+      "odds": 104.0,
+      "projection": 2.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
@@ -311,28 +458,28 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +6.00 versus line",
-        "Model probability edge +23.0%"
+        "Projection edge +5.70 versus line",
+        "Model probability edge +23.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
+      "player": "Jonquel Jones",
+      "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 19.5,
+      "market": "AST",
+      "side": "OVER",
+      "line": 0.5,
       "sportsbook": null,
-      "odds": 100.0,
-      "projection": 14.6,
+      "odds": 108.0,
+      "projection": 3.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
+      "projection_ceiling": 30.0,
       "model_probability": 0.725,
-      "edge_score": 68.13,
+      "edge_score": 68.2,
       "confidence": "MODERATE",
       "components": {
         "projection": 100.0,
@@ -340,7 +487,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 99.5,
+        "market_value": 100.0,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -360,8 +507,155 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +4.90 versus line",
-        "Model probability edge +22.5%"
+        "Projection edge +3.30 versus line",
+        "Model probability edge +24.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Pauline Astier",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 5.5,
+      "sportsbook": null,
+      "odds": 106.0,
+      "projection": 9.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 68.2,
+      "confidence": "MODERATE",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 100.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.50 versus line",
+        "Model probability edge +24.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Jonquel Jones",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "RA",
+      "side": "OVER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": 102.0,
+      "projection": 12.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.725,
+      "edge_score": 68.2,
+      "confidence": "MODERATE",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 100.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.90 versus line",
+        "Model probability edge +23.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "RA",
+      "side": "OVER",
+      "line": 10.5,
+      "sportsbook": null,
+      "odds": -102.0,
+      "projection": 13.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.725,
+      "edge_score": 67.98,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 98.41,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.60 versus line",
+        "Model probability edge +22.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -375,60 +669,11 @@
       "side": "UNDER",
       "line": 6.5,
       "sportsbook": null,
-      "odds": -101.0,
-      "projection": 1.6,
+      "odds": -103.0,
+      "projection": 1.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 68.05,
-      "confidence": "MODERATE",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 98.95,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +4.90 versus line",
-        "Model probability edge +22.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 8.5,
-      "sportsbook": null,
-      "odds": -103.0,
-      "projection": 13.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
       "model_probability": 0.725,
       "edge_score": 67.9,
       "confidence": "LOW",
@@ -458,7 +703,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +4.50 versus line",
+        "Projection edge +4.60 versus line",
         "Model probability edge +21.8%"
       ],
       "market_type": "standard",
@@ -466,20 +711,20 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
+      "player": "Breanna Stewart",
       "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 24.5,
+      "market": "PA",
+      "side": "UNDER",
+      "line": 40.5,
       "sportsbook": null,
-      "odds": -106.0,
-      "projection": 29.7,
+      "odds": -104.0,
+      "projection": 25.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
+      "projection_ceiling": 110.0,
       "model_probability": 0.725,
-      "edge_score": 67.68,
+      "edge_score": 67.83,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -487,7 +732,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 96.3,
+        "market_value": 97.34,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -507,8 +752,106 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +5.20 versus line",
-        "Model probability edge +21.0%"
+        "Projection edge +15.40 versus line",
+        "Model probability edge +21.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Pauline Astier",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": -104.0,
+      "projection": 14.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.725,
+      "edge_score": 67.83,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 97.34,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.70 versus line",
+        "Model probability edge +21.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Sabrina Ionescu",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PA",
+      "side": "OVER",
+      "line": 19.5,
+      "sportsbook": null,
+      "odds": -105.0,
+      "projection": 25.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 67.75,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 96.82,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +6.00 versus line",
+        "Model probability edge +21.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -613,69 +956,20 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": -109.0,
-      "projection": 15.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 67.47,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 94.76,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.30 versus line",
-        "Model probability edge +20.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
       "player": "Pauline Astier",
       "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 6.5,
+      "market": "AST",
+      "side": "OVER",
+      "line": 1.5,
       "sportsbook": null,
-      "odds": -109.5,
-      "projection": 4.8,
+      "odds": -106.0,
+      "projection": 3.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
+      "projection_ceiling": 30.0,
       "model_probability": 0.725,
-      "edge_score": 67.43,
+      "edge_score": 67.68,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -683,7 +977,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 94.51,
+        "market_value": 96.3,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -703,28 +997,28 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +20.2%"
+        "Projection edge +1.50 versus line",
+        "Model probability edge +21.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Leonie Fiebich",
+      "player": "Jonquel Jones",
       "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
       "market": "PTS",
-      "side": "OVER",
-      "line": 7.5,
+      "side": "UNDER",
+      "line": 19.5,
       "sportsbook": null,
-      "odds": -110.0,
-      "projection": 13.1,
+      "odds": -107.5,
+      "projection": 14.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 67.4,
+      "edge_score": 67.57,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -732,7 +1026,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 94.26,
+        "market_value": 95.52,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -752,8 +1046,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +5.60 versus line",
-        "Model probability edge +20.1%"
+        "Projection edge +4.60 versus line",
+        "Model probability edge +20.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Jordin Canada",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 24.5,
+      "sportsbook": null,
+      "odds": -108.0,
+      "projection": 14.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 67.54,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 95.27,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +10.00 versus line",
+        "Model probability edge +20.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -809,20 +1152,20 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
+      "player": "Naz Hillmon",
+      "team": "Atlanta Dream",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 20.5,
+      "market": "PR",
+      "side": "UNDER",
+      "line": 18.5,
       "sportsbook": null,
-      "odds": -111.0,
-      "projection": 25.5,
+      "odds": -111.5,
+      "projection": 13.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 110.0,
+      "projection_ceiling": 120.0,
       "model_probability": 0.725,
-      "edge_score": 67.33,
+      "edge_score": 67.29,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -830,7 +1173,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 93.77,
+        "market_value": 93.52,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -850,8 +1193,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +5.00 versus line",
-        "Model probability edge +19.9%"
+        "Projection edge +5.10 versus line",
+        "Model probability edge +19.8%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -863,59 +1206,10 @@
       "game": "New York Liberty @ Atlanta Dream",
       "market": "PTS",
       "side": "UNDER",
-      "line": 13.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 11.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.7236,
-      "edge_score": 67.27,
-      "confidence": "LOW",
-      "components": {
-        "projection": 99.69,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 93.96,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.30 versus line",
-        "Model probability edge +20.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 15.5,
+      "line": 21.5,
       "sportsbook": null,
       "odds": -112.0,
-      "projection": 20.5,
+      "projection": 11.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
@@ -948,57 +1242,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +5.00 versus line",
+        "Projection edge +10.30 versus line",
         "Model probability edge +19.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Gabby Williams",
-      "team": "Golden State Valkyries",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 21.5,
-      "sportsbook": null,
-      "odds": -112.5,
-      "projection": 17.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 67.22,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 93.03,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.90 versus line",
-        "Model probability edge +19.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1048,6 +1293,104 @@
       "evidence": [
         "Projection edge +1.70 versus line",
         "Model probability edge +19.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Gabby Williams",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 21.5,
+      "sportsbook": null,
+      "odds": -113.5,
+      "projection": 17.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 67.16,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 92.54,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.90 versus line",
+        "Model probability edge +19.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Jordin Canada",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 33.5,
+      "sportsbook": null,
+      "odds": -114.0,
+      "projection": 22.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.725,
+      "edge_score": 67.12,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 92.3,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +10.90 versus line",
+        "Model probability edge +19.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1106,17 +1449,17 @@
       "player": "Stephanie Talbot",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "PRA",
+      "market": "RA",
       "side": "UNDER",
-      "line": 10.5,
+      "line": 4.5,
       "sportsbook": null,
-      "odds": -115.0,
-      "projection": 3.4,
+      "odds": -114.0,
+      "projection": 2.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
+      "projection_ceiling": 70.0,
       "model_probability": 0.725,
-      "edge_score": 67.06,
+      "edge_score": 67.12,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1124,7 +1467,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 91.83,
+        "market_value": 92.3,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1144,8 +1487,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +7.10 versus line",
-        "Model probability edge +19.0%"
+        "Projection edge +2.40 versus line",
+        "Model probability edge +19.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Kayla Thornton",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 6.5,
+      "sportsbook": null,
+      "odds": -114.5,
+      "projection": 8.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 67.09,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 92.06,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.00 versus line",
+        "Model probability edge +19.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1155,17 +1547,17 @@
       "player": "Stephanie Talbot",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "RA",
+      "market": "PTS",
       "side": "UNDER",
-      "line": 4.5,
+      "line": 5.5,
       "sportsbook": null,
-      "odds": -115.0,
-      "projection": 2.0,
+      "odds": -116.0,
+      "projection": 0.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
+      "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 67.06,
+      "edge_score": 66.99,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1173,7 +1565,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 91.83,
+        "market_value": 91.35,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1193,26 +1585,26 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +19.0%"
+        "Projection edge +4.70 versus line",
+        "Model probability edge +18.8%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Rhyne Howard",
+      "player": "Jordin Canada",
       "team": "Atlanta Dream",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "PRA",
+      "market": "PA",
       "side": "UNDER",
-      "line": 28.5,
+      "line": 30.5,
       "sportsbook": null,
       "odds": -116.5,
-      "projection": 21.7,
+      "projection": 19.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
+      "projection_ceiling": 110.0,
       "model_probability": 0.725,
       "edge_score": 66.96,
       "confidence": "LOW",
@@ -1242,7 +1634,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +6.80 versus line",
+        "Projection edge +11.20 versus line",
         "Model probability edge +18.7%"
       ],
       "market_type": "standard",
@@ -1304,62 +1696,13 @@
       "game": "New York Liberty @ Atlanta Dream",
       "market": "PR",
       "side": "OVER",
-      "line": 19.5,
+      "line": 14.5,
       "sportsbook": null,
-      "odds": -117.0,
+      "odds": -118.0,
       "projection": 24.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 66.92,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 90.88,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.20 versus line",
-        "Model probability edge +18.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 23.5,
-      "sportsbook": null,
-      "odds": -118.0,
-      "projection": 29.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
       "model_probability": 0.725,
       "edge_score": 66.86,
       "confidence": "LOW",
@@ -1389,7 +1732,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +6.30 versus line",
+        "Projection edge +10.20 versus line",
         "Model probability edge +18.4%"
       ],
       "market_type": "standard",
@@ -1397,20 +1740,20 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Stephanie Talbot",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 5.5,
+      "player": "Leonie Fiebich",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PR",
+      "side": "OVER",
+      "line": 6.5,
       "sportsbook": null,
-      "odds": -118.5,
-      "projection": 0.5,
+      "odds": -118.0,
+      "projection": 16.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
+      "projection_ceiling": 120.0,
       "model_probability": 0.725,
-      "edge_score": 66.83,
+      "edge_score": 66.86,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1418,7 +1761,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 90.19,
+        "market_value": 90.42,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1438,26 +1781,26 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +5.00 versus line",
-        "Model probability edge +18.3%"
+        "Projection edge +9.60 versus line",
+        "Model probability edge +18.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Naz Hillmon",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 7.5,
+      "player": "Stephanie Talbot",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 10.5,
       "sportsbook": null,
       "odds": -119.0,
-      "projection": 10.1,
+      "projection": 3.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
+      "projection_ceiling": 140.0,
       "model_probability": 0.725,
       "edge_score": 66.79,
       "confidence": "LOW",
@@ -1487,7 +1830,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.60 versus line",
+        "Projection edge +6.80 versus line",
         "Model probability edge +18.2%"
       ],
       "market_type": "standard",
@@ -1495,18 +1838,18 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Pauline Astier",
+      "player": "Jonquel Jones",
       "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 7.5,
+      "market": "PR",
+      "side": "UNDER",
+      "line": 28.5,
       "sportsbook": null,
       "odds": -119.5,
-      "projection": 9.1,
+      "projection": 23.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
+      "projection_ceiling": 120.0,
       "model_probability": 0.725,
       "edge_score": 66.76,
       "confidence": "LOW",
@@ -1536,7 +1879,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.60 versus line",
+        "Projection edge +5.10 versus line",
         "Model probability edge +18.1%"
       ],
       "market_type": "standard",
@@ -1544,15 +1887,15 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
       "market": "PR",
       "side": "UNDER",
-      "line": 24.5,
+      "line": 46.5,
       "sportsbook": null,
       "odds": -120.0,
-      "projection": 18.0,
+      "projection": 30.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
@@ -1585,7 +1928,56 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +6.50 versus line",
+        "Projection edge +16.30 versus line",
+        "Model probability edge +18.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 37.5,
+      "sportsbook": null,
+      "odds": -120.0,
+      "projection": 21.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.73,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 89.5,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +16.20 versus line",
         "Model probability edge +18.0%"
       ],
       "market_type": "standard",
@@ -1600,13 +1992,13 @@
       "side": "UNDER",
       "line": 18.5,
       "sportsbook": null,
-      "odds": -121.5,
+      "odds": -120.0,
       "projection": 14.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 66.63,
+      "edge_score": 66.73,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1614,7 +2006,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 88.82,
+        "market_value": 89.5,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1635,56 +2027,7 @@
       ],
       "evidence": [
         "Projection edge +3.80 versus line",
-        "Model probability edge +17.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 24.5,
-      "sportsbook": null,
-      "odds": -123.0,
-      "projection": 18.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.54,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +6.30 versus line",
-        "Model probability edge +17.3%"
+        "Model probability edge +18.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1740,6 +2083,55 @@
     },
     {
       "target_date": "2026-10-07",
+      "player": "Sabrina Ionescu",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -124.0,
+      "projection": 20.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 66.48,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 87.71,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +9.00 versus line",
+        "Model probability edge +17.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
       "player": "Kiah Stokes",
       "team": "Golden State Valkyries",
       "game": "Las Vegas Aces @ Golden State Valkyries",
@@ -1789,167 +2181,20 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Naz Hillmon",
-      "team": "Atlanta Dream",
+      "player": "Pauline Astier",
+      "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": -124.0,
-      "projection": 4.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.725,
-      "edge_score": 66.48,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 87.71,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +17.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Isobel Borlase",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PTS",
+      "market": "PA",
       "side": "OVER",
-      "line": 2.5,
-      "sportsbook": null,
-      "odds": -118.0,
-      "projection": 3.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.7205,
-      "edge_score": 66.46,
-      "confidence": "LOW",
-      "components": {
-        "projection": 99.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 89.43,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.40 versus line",
-        "Model probability edge +17.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Kayla Thornton",
-      "team": "Golden State Valkyries",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": -124.5,
-      "projection": 8.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 66.45,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 87.5,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.00 versus line",
-        "Model probability edge +17.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Gabby Williams",
-      "team": "Golden State Valkyries",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "RA",
-      "side": "UNDER",
       "line": 7.5,
       "sportsbook": null,
-      "odds": -124.5,
-      "projection": 5.8,
+      "odds": -125.0,
+      "projection": 12.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
+      "projection_ceiling": 110.0,
       "model_probability": 0.725,
-      "edge_score": 66.45,
+      "edge_score": 66.42,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1957,7 +2202,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 87.5,
+        "market_value": 87.28,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1977,23 +2222,23 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +17.0%"
+        "Projection edge +4.90 versus line",
+        "Model probability edge +16.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Stephanie Talbot",
+      "player": "Chelsea Gray",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Golden State Valkyries",
       "market": "PR",
-      "side": "UNDER",
-      "line": 9.5,
+      "side": "OVER",
+      "line": 14.5,
       "sportsbook": null,
       "odds": -125.0,
-      "projection": 2.4,
+      "projection": 17.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
@@ -2026,7 +2271,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +7.10 versus line",
+        "Projection edge +2.90 versus line",
         "Model probability edge +16.9%"
       ],
       "market_type": "standard",
@@ -2034,20 +2279,20 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PTS",
+      "player": "Gabby Williams",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "RA",
       "side": "UNDER",
-      "line": 20.5,
+      "line": 7.5,
       "sportsbook": null,
-      "odds": -126.0,
-      "projection": 14.5,
+      "odds": -126.5,
+      "projection": 5.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
+      "projection_ceiling": 70.0,
       "model_probability": 0.725,
-      "edge_score": 66.36,
+      "edge_score": 66.33,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -2055,7 +2300,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 86.85,
+        "market_value": 86.63,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2075,7 +2320,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +6.00 versus line",
+        "Projection edge +1.80 versus line",
         "Model probability edge +16.7%"
       ],
       "market_type": "standard",
@@ -2083,113 +2328,15 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Chelsea Gray",
+      "player": "Stephanie Talbot",
       "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Golden State Valkyries",
       "market": "PR",
-      "side": "OVER",
-      "line": 14.5,
-      "sportsbook": null,
-      "odds": -126.0,
-      "projection": 17.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 66.36,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 86.85,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.90 versus line",
-        "Model probability edge +16.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PR",
-      "side": "OVER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -127.0,
-      "projection": 16.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 66.3,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 86.42,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +4.60 versus line",
-        "Model probability edge +16.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PR",
       "side": "UNDER",
-      "line": 17.5,
+      "line": 9.5,
       "sportsbook": null,
       "odds": -127.0,
-      "projection": 14.4,
+      "projection": 2.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
@@ -2222,7 +2369,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.10 versus line",
+        "Projection edge +6.80 versus line",
         "Model probability edge +16.6%"
       ],
       "market_type": "standard",
@@ -2230,15 +2377,15 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Leonie Fiebich",
+      "player": "Sabrina Ionescu",
       "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
       "market": "PRA",
       "side": "OVER",
-      "line": 13.5,
+      "line": 21.5,
       "sportsbook": null,
       "odds": -128.0,
-      "projection": 18.8,
+      "projection": 29.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
@@ -2271,7 +2418,56 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +5.30 versus line",
+        "Projection edge +8.30 versus line",
+        "Model probability edge +16.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Pauline Astier",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PR",
+      "side": "OVER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -128.0,
+      "projection": 11.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 66.24,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 85.99,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.50 versus line",
         "Model probability edge +16.4%"
       ],
       "market_type": "standard",
@@ -2286,13 +2482,13 @@
       "side": "UNDER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": -128.5,
-      "projection": 0.9,
+      "odds": -129.0,
+      "projection": 1.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.725,
-      "edge_score": 66.21,
+      "edge_score": 66.18,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -2300,7 +2496,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 85.78,
+        "market_value": 85.57,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2320,351 +2516,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.60 versus line",
-        "Model probability edge +16.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "RA",
-      "side": "OVER",
-      "line": 8.5,
-      "sportsbook": null,
-      "odds": 102.0,
-      "projection": 9.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.7007,
-      "edge_score": 66.13,
-      "confidence": "LOW",
-      "components": {
-        "projection": 94.61,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 95.25,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.30 versus line",
-        "Model probability edge +20.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PR",
-      "side": "OVER",
-      "line": 18.5,
-      "sportsbook": null,
-      "odds": -130.0,
-      "projection": 24.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 66.12,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +6.30 versus line",
-        "Model probability edge +16.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 19.5,
-      "sportsbook": null,
-      "odds": -130.0,
-      "projection": 25.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.12,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +6.10 versus line",
-        "Model probability edge +16.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PR",
-      "side": "OVER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": -130.0,
-      "projection": 16.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 66.12,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.60 versus line",
-        "Model probability edge +16.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Naz Hillmon",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 9.5,
-      "sportsbook": null,
-      "odds": -130.0,
-      "projection": 11.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.12,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.10 versus line",
-        "Model probability edge +16.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Jonquel Jones",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "AST",
-      "side": "OVER",
-      "line": 2.5,
-      "sportsbook": null,
-      "odds": 122.0,
-      "projection": 3.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.689,
-      "edge_score": 66.12,
-      "confidence": "LOW",
-      "components": {
-        "projection": 92.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 100.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +23.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Pauline Astier",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": -132.0,
-      "projection": 12.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.01,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 84.33,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.00 versus line",
-        "Model probability edge +15.6%"
+        "Projection edge +2.50 versus line",
+        "Model probability edge +16.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2678,13 +2531,13 @@
       "side": "OVER",
       "line": 6.5,
       "sportsbook": null,
-      "odds": -131.0,
+      "odds": -127.0,
       "projection": 7.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.7205,
-      "edge_score": 65.67,
+      "edge_score": 65.9,
       "confidence": "LOW",
       "components": {
         "projection": 99.0,
@@ -2692,7 +2545,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 83.75,
+        "market_value": 85.43,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2713,7 +2566,105 @@
       ],
       "evidence": [
         "Projection edge +1.40 versus line",
-        "Model probability edge +15.3%"
+        "Model probability edge +16.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "REB",
+      "side": "OVER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -134.5,
+      "projection": 10.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 65.86,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 83.32,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.30 versus line",
+        "Model probability edge +15.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Sabrina Ionescu",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PA",
+      "side": "OVER",
+      "line": 18.5,
+      "sportsbook": null,
+      "odds": -136.0,
+      "projection": 25.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 65.78,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 82.72,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +7.10 versus line",
+        "Model probability edge +14.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2776,11 +2727,60 @@
       "side": "OVER",
       "line": 5.5,
       "sportsbook": null,
-      "odds": -149.0,
+      "odds": -148.5,
       "projection": 7.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
+      "model_probability": 0.725,
+      "edge_score": 65.12,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 78.03,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.70 versus line",
+        "Model probability edge +12.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Kiah Stokes",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -149.0,
+      "projection": 5.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
       "model_probability": 0.725,
       "edge_score": 65.1,
       "confidence": "LOW",
@@ -2810,106 +2810,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.70 versus line",
+        "Projection edge +2.20 versus line",
         "Model probability edge +12.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "REB",
-      "side": "OVER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -118.5,
-      "projection": 4.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.7047,
-      "edge_score": 65.03,
-      "confidence": "LOW",
-      "components": {
-        "projection": 95.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.73,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.30 versus line",
-        "Model probability edge +16.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Sabrina Ionescu",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "RA",
-      "side": "OVER",
-      "line": 7.5,
-      "sportsbook": null,
-      "odds": -152.0,
-      "projection": 10.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.725,
-      "edge_score": 64.95,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 76.8,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +12.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2919,25 +2821,25 @@
       "player": "Pauline Astier",
       "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "REB",
-      "side": "UNDER",
+      "market": "RA",
+      "side": "OVER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": -152.5,
-      "projection": 1.3,
+      "odds": 122.0,
+      "projection": 4.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.725,
-      "edge_score": 64.93,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.6732,
+      "edge_score": 65.07,
       "confidence": "LOW",
       "components": {
-        "projection": 100.0,
+        "projection": 88.5,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 76.63,
+        "market_value": 99.02,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2957,8 +2859,204 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +12.1%"
+        "Projection edge +1.10 versus line",
+        "Model probability edge +22.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 20.5,
+      "sportsbook": null,
+      "odds": -130.0,
+      "projection": 17.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.7113,
+      "edge_score": 64.91,
+      "confidence": "LOW",
+      "components": {
+        "projection": 96.95,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 82.13,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.30 versus line",
+        "Model probability edge +14.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Kiah Stokes",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": 104.0,
+      "projection": 9.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6826,
+      "edge_score": 64.68,
+      "confidence": "LOW",
+      "components": {
+        "projection": 90.58,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 92.33,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.60 versus line",
+        "Model probability edge +19.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Isobel Borlase",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -158.0,
+      "projection": 3.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 64.67,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 74.77,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +7.80 versus line",
+        "Model probability edge +11.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 17.5,
+      "sportsbook": null,
+      "odds": -124.0,
+      "projection": 14.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.7025,
+      "edge_score": 64.49,
+      "confidence": "LOW",
+      "components": {
+        "projection": 95.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 82.76,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.70 versus line",
+        "Model probability edge +14.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3017,115 +3115,17 @@
       "player": "Kiah Stokes",
       "team": "Golden State Valkyries",
       "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -104.0,
-      "projection": 9.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6826,
-      "edge_score": 64.07,
-      "confidence": "LOW",
-      "components": {
-        "projection": 90.58,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.02,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.60 versus line",
-        "Model probability edge +17.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "AST",
-      "side": "OVER",
-      "line": 1.5,
-      "sportsbook": null,
-      "odds": -176.0,
-      "projection": 3.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.725,
-      "edge_score": 63.89,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 69.21,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +8.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Kiah Stokes",
-      "team": "Golden State Valkyries",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
       "market": "PA",
       "side": "UNDER",
       "line": 5.5,
       "sportsbook": null,
-      "odds": -144.0,
+      "odds": -138.0,
       "projection": 4.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.7047,
-      "edge_score": 63.56,
+      "edge_score": 63.88,
       "confidence": "LOW",
       "components": {
         "projection": 95.5,
@@ -3133,7 +3133,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 75.21,
+        "market_value": 77.48,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3154,7 +3154,7 @@
       ],
       "evidence": [
         "Projection edge +1.30 versus line",
-        "Model probability edge +11.5%"
+        "Model probability edge +12.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3168,13 +3168,13 @@
       "side": "UNDER",
       "line": 10.5,
       "sportsbook": null,
-      "odds": -118.5,
+      "odds": -113.5,
       "projection": 9.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.6875,
-      "edge_score": 63.51,
+      "edge_score": 63.83,
       "confidence": "LOW",
       "components": {
         "projection": 91.67,
@@ -3182,7 +3182,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 81.94,
+        "market_value": 84.29,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3203,7 +3203,7 @@
       ],
       "evidence": [
         "Projection edge +1.50 versus line",
-        "Model probability edge +14.5%"
+        "Model probability edge +15.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3214,24 +3214,24 @@
       "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
       "market": "AST",
-      "side": "OVER",
-      "line": 4.5,
+      "side": "UNDER",
+      "line": 7.5,
       "sportsbook": null,
-      "odds": -104.5,
-      "projection": 5.6,
+      "odds": -184.0,
+      "projection": 5.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
-      "model_probability": 0.6732,
-      "edge_score": 63.21,
+      "model_probability": 0.725,
+      "edge_score": 63.57,
       "confidence": "LOW",
       "components": {
-        "projection": 88.5,
+        "projection": 100.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 85.69,
+        "market_value": 66.96,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3251,85 +3251,36 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.10 versus line",
-        "Model probability edge +16.2%"
+        "Projection edge +2.10 versus line",
+        "Model probability edge +7.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Naz Hillmon",
+      "player": "Jordin Canada",
       "team": "Atlanta Dream",
       "game": "New York Liberty @ Atlanta Dream",
       "market": "REB",
-      "side": "UNDER",
-      "line": 4.5,
-      "sportsbook": null,
-      "odds": -130.5,
-      "projection": 3.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.689,
-      "edge_score": 62.9,
-      "confidence": "LOW",
-      "components": {
-        "projection": 92.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 77.02,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +12.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "A'ja Wilson",
-      "team": "Las Vegas Aces",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "AST",
       "side": "OVER",
       "line": 2.5,
       "sportsbook": null,
-      "odds": -139.0,
-      "projection": 3.7,
+      "odds": -188.0,
+      "projection": 4.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.689,
-      "edge_score": 62.43,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 63.42,
       "confidence": "LOW",
       "components": {
-        "projection": 92.0,
+        "projection": 100.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 73.63,
+        "market_value": 65.89,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3349,8 +3300,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +10.7%"
+        "Projection edge +1.50 versus line",
+        "Model probability edge +7.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3364,13 +3315,13 @@
       "side": "OVER",
       "line": 16.5,
       "sportsbook": null,
-      "odds": -119.5,
+      "odds": -115.5,
       "projection": 18.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.675,
-      "edge_score": 62.33,
+      "edge_score": 62.59,
       "confidence": "LOW",
       "components": {
         "projection": 88.89,
@@ -3378,7 +3329,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 78.73,
+        "market_value": 80.59,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3399,7 +3350,105 @@
       ],
       "evidence": [
         "Projection edge +2.20 versus line",
-        "Model probability edge +13.1%"
+        "Model probability edge +13.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Sabrina Ionescu",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "REB",
+      "side": "OVER",
+      "line": 2.5,
+      "sportsbook": null,
+      "odds": -215.0,
+      "projection": 5.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 62.51,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 59.34,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.60 versus line",
+        "Model probability edge +4.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "A'ja Wilson",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "AST",
+      "side": "OVER",
+      "line": 2.5,
+      "sportsbook": null,
+      "odds": -138.0,
+      "projection": 3.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.689,
+      "edge_score": 62.48,
+      "confidence": "LOW",
+      "components": {
+        "projection": 92.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 74.02,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.20 versus line",
+        "Model probability edge +10.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3462,13 +3511,13 @@
       "side": "UNDER",
       "line": 1.5,
       "sportsbook": null,
-      "odds": -225.0,
+      "odds": -231.0,
       "projection": 0.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
       "model_probability": 0.725,
-      "edge_score": 62.21,
+      "edge_score": 62.04,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -3476,7 +3525,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 57.19,
+        "market_value": 55.97,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3497,7 +3546,7 @@
       ],
       "evidence": [
         "Projection edge +1.50 versus line",
-        "Model probability edge +3.3%"
+        "Model probability edge +2.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3511,13 +3560,13 @@
       "side": "OVER",
       "line": 8.5,
       "sportsbook": null,
-      "odds": -119.0,
+      "odds": -118.0,
       "projection": 9.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
       "model_probability": 0.6699,
-      "edge_score": 61.91,
+      "edge_score": 61.98,
       "confidence": "LOW",
       "components": {
         "projection": 87.75,
@@ -3525,7 +3574,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 77.82,
+        "market_value": 78.29,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3546,251 +3595,6 @@
       ],
       "evidence": [
         "Projection edge +1.10 versus line",
-        "Model probability edge +12.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 16.5,
-      "sportsbook": null,
-      "odds": -106.0,
-      "projection": 14.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.6591,
-      "edge_score": 61.84,
-      "confidence": "LOW",
-      "components": {
-        "projection": 85.35,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 81.8,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.00 versus line",
-        "Model probability edge +14.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Kiah Stokes",
-      "team": "Golden State Valkyries",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": 114.5,
-      "projection": 5.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.6418,
-      "edge_score": 61.8,
-      "confidence": "LOW",
-      "components": {
-        "projection": 81.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.62,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge +17.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Jonquel Jones",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 16.5,
-      "sportsbook": null,
-      "odds": -128.5,
-      "projection": 18.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.675,
-      "edge_score": 61.78,
-      "confidence": "LOW",
-      "components": {
-        "projection": 88.89,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 74.78,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +11.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Kiah Stokes",
-      "team": "Golden State Valkyries",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 2.5,
-      "sportsbook": null,
-      "odds": -128.0,
-      "projection": 3.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6733,
-      "edge_score": 61.66,
-      "confidence": "LOW",
-      "components": {
-        "projection": 88.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 74.61,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.10 versus line",
-        "Model probability edge +11.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "RA",
-      "side": "OVER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": -114.5,
-      "projection": 11.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6625,
-      "edge_score": 61.55,
-      "confidence": "LOW",
-      "components": {
-        "projection": 86.11,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 78.31,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.30 versus line",
         "Model probability edge +12.9%"
       ],
       "market_type": "standard",
@@ -3798,28 +3602,28 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "AST",
+      "player": "Veronica Burton",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PRA",
       "side": "OVER",
-      "line": 7.5,
+      "line": 19.5,
       "sportsbook": null,
-      "odds": -110.0,
-      "projection": 8.5,
+      "odds": -126.0,
+      "projection": 22.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.6575,
-      "edge_score": 61.42,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.675,
+      "edge_score": 61.93,
       "confidence": "LOW",
       "components": {
-        "projection": 85.0,
+        "projection": 88.89,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 79.41,
+        "market_value": 75.85,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3839,8 +3643,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.00 versus line",
-        "Model probability edge +13.4%"
+        "Projection edge +2.60 versus line",
+        "Model probability edge +11.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Naz Hillmon",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -235.0,
+      "projection": 3.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 61.92,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 55.17,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.50 versus line",
+        "Model probability edge +2.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3854,13 +3707,13 @@
       "side": "OVER",
       "line": 12.5,
       "sportsbook": null,
-      "odds": -115.0,
+      "odds": -106.0,
       "projection": 14.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.6575,
-      "edge_score": 61.08,
+      "edge_score": 61.7,
       "confidence": "LOW",
       "components": {
         "projection": 85.0,
@@ -3868,7 +3721,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 76.98,
+        "market_value": 81.45,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3889,35 +3742,35 @@
       ],
       "evidence": [
         "Projection edge +1.50 versus line",
-        "Model probability edge +12.3%"
+        "Model probability edge +14.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 8.5,
+      "player": "Kiah Stokes",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 2.5,
       "sportsbook": null,
-      "odds": -144.0,
-      "projection": 7.4,
+      "odds": -130.0,
+      "projection": 3.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6699,
-      "edge_score": 60.47,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6733,
+      "edge_score": 61.54,
       "confidence": "LOW",
       "components": {
-        "projection": 87.75,
+        "projection": 88.5,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 67.53,
+        "market_value": 73.77,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3938,7 +3791,56 @@
       ],
       "evidence": [
         "Projection edge +1.10 versus line",
-        "Model probability edge +8.0%"
+        "Model probability edge +10.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Naz Hillmon",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -121.5,
+      "projection": 10.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6598,
+      "edge_score": 60.86,
+      "confidence": "LOW",
+      "components": {
+        "projection": 85.51,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 74.47,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +11.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3952,13 +3854,13 @@
       "side": "OVER",
       "line": 21.5,
       "sportsbook": null,
-      "odds": -110.0,
+      "odds": -114.0,
       "projection": 23.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.6465,
-      "edge_score": 60.44,
+      "edge_score": 60.17,
       "confidence": "LOW",
       "components": {
         "projection": 82.56,
@@ -3966,7 +3868,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 76.99,
+        "market_value": 75.04,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3987,7 +3889,7 @@
       ],
       "evidence": [
         "Projection edge +2.40 versus line",
-        "Model probability edge +12.3%"
+        "Model probability edge +11.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4001,21 +3903,21 @@
       "side": "OVER",
       "line": 14.5,
       "sportsbook": null,
-      "odds": -124.5,
-      "projection": 16.2,
+      "odds": -118.5,
+      "projection": 16.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
-      "model_probability": 0.6539,
-      "edge_score": 60.15,
+      "model_probability": 0.6448,
+      "edge_score": 59.72,
       "confidence": "LOW",
       "components": {
-        "projection": 84.2,
+        "projection": 82.18,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 71.85,
+        "market_value": 72.55,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4035,57 +3937,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +9.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Leonie Fiebich",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "RA",
-      "side": "OVER",
-      "line": 5.5,
-      "sportsbook": null,
-      "odds": -109.0,
-      "projection": 6.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6418,
-      "edge_score": 60.09,
-      "confidence": "LOW",
-      "components": {
-        "projection": 81.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 76.45,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge +12.0%"
+        "Projection edge +1.60 versus line",
+        "Model probability edge +10.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4099,13 +3952,13 @@
       "side": "OVER",
       "line": 11.5,
       "sportsbook": null,
-      "odds": -105.5,
+      "odds": -110.0,
       "projection": 12.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.637,
-      "edge_score": 59.92,
+      "edge_score": 59.6,
       "confidence": "LOW",
       "components": {
         "projection": 80.43,
@@ -4113,7 +3966,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 77.19,
+        "market_value": 74.89,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4134,7 +3987,7 @@
       ],
       "evidence": [
         "Projection edge +1.20 versus line",
-        "Model probability edge +12.4%"
+        "Model probability edge +11.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4148,13 +4001,13 @@
       "side": "OVER",
       "line": 5.5,
       "sportsbook": null,
-      "odds": -147.5,
+      "odds": -150.5,
       "projection": 6.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
       "model_probability": 0.6575,
-      "edge_score": 59.2,
+      "edge_score": 59.05,
       "confidence": "LOW",
       "components": {
         "projection": 85.0,
@@ -4162,7 +4015,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 63.54,
+        "market_value": 62.47,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4183,56 +4036,7 @@
       ],
       "evidence": [
         "Projection edge +1.00 versus line",
-        "Model probability edge +6.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 21.5,
-      "sportsbook": null,
-      "odds": -123.5,
-      "projection": 19.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.6343,
-      "edge_score": 58.48,
-      "confidence": "LOW",
-      "components": {
-        "projection": 79.84,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 67.98,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +8.2%"
+        "Model probability edge +5.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4246,13 +4050,13 @@
       "side": "OVER",
       "line": 8.5,
       "sportsbook": null,
-      "odds": -131.0,
+      "odds": -126.0,
       "projection": 9.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.639,
-      "edge_score": 58.44,
+      "edge_score": 58.74,
       "confidence": "LOW",
       "components": {
         "projection": 80.88,
@@ -4260,7 +4064,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 65.81,
+        "market_value": 67.92,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4281,105 +4085,7 @@
       ],
       "evidence": [
         "Projection edge +0.90 versus line",
-        "Model probability edge +7.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Breanna Stewart",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "REB",
-      "side": "OVER",
-      "line": 8.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 9.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.6235,
-      "edge_score": 58.41,
-      "confidence": "LOW",
-      "components": {
-        "projection": 77.45,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 71.94,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge +10.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Angel Reese",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 16.5,
-      "sportsbook": null,
-      "odds": -131.5,
-      "projection": 14.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6352,
-      "edge_score": 58.08,
-      "confidence": "LOW",
-      "components": {
-        "projection": 80.05,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 64.78,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +6.7%"
+        "Model probability edge +8.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4435,28 +4141,28 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Veronica Burton",
-      "team": "Golden State Valkyries",
-      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "player": "Breanna Stewart",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
       "market": "AST",
       "side": "OVER",
-      "line": 5.5,
+      "line": 3.5,
       "sportsbook": null,
-      "odds": 117.0,
-      "projection": 6.1,
+      "odds": -160.0,
+      "projection": 4.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
-      "model_probability": 0.5945,
-      "edge_score": 57.78,
+      "model_probability": 0.6418,
+      "edge_score": 57.2,
       "confidence": "LOW",
       "components": {
-        "projection": 71.0,
+        "projection": 81.5,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 79.41,
+        "market_value": 55.8,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4476,57 +4182,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.60 versus line",
-        "Model probability edge +13.4%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Jonquel Jones",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "RA",
-      "side": "OVER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -146.0,
-      "projection": 12.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.637,
-      "edge_score": 57.45,
-      "confidence": "LOW",
-      "components": {
-        "projection": 80.43,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 59.56,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +4.3%"
+        "Projection edge +0.90 versus line",
+        "Model probability edge +2.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4631,77 +4288,28 @@
     },
     {
       "target_date": "2026-10-07",
-      "player": "Breanna Stewart",
+      "player": "Jonquel Jones",
       "team": "New York Liberty",
       "game": "New York Liberty @ Atlanta Dream",
-      "market": "AST",
-      "side": "OVER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -120.5,
-      "projection": 4.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.6102,
-      "edge_score": 56.53,
-      "confidence": "LOW",
-      "components": {
-        "projection": 74.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 64.03,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.70 versus line",
-        "Model probability edge +6.4%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PRA",
+      "market": "PA",
       "side": "UNDER",
-      "line": 24.5,
+      "line": 20.5,
       "sportsbook": null,
-      "odds": -115.5,
-      "projection": 22.6,
+      "odds": -136.0,
+      "projection": 18.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6018,
-      "edge_score": 56.11,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.6216,
+      "edge_score": 56.62,
       "confidence": "LOW",
       "components": {
-        "projection": 72.62,
+        "projection": 77.03,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 64.48,
+        "market_value": 59.98,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4722,7 +4330,203 @@
       ],
       "evidence": [
         "Projection edge +1.90 versus line",
-        "Model probability edge +6.6%"
+        "Model probability edge +4.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Veronica Burton",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "AST",
+      "side": "OVER",
+      "line": 5.5,
+      "sportsbook": null,
+      "odds": 118.0,
+      "projection": 6.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.5787,
+      "edge_score": 56.45,
+      "confidence": "LOW",
+      "components": {
+        "projection": 67.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 76.41,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge +12.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Veronica Burton",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 20.5,
+      "sportsbook": null,
+      "odds": -102.0,
+      "projection": 21.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5896,
+      "edge_score": 55.99,
+      "confidence": "LOW",
+      "components": {
+        "projection": 69.92,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 68.63,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.40 versus line",
+        "Model probability edge +8.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PTS",
+      "side": "OVER",
+      "line": 13.5,
+      "sportsbook": null,
+      "odds": -111.5,
+      "projection": 14.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.5972,
+      "edge_score": 55.97,
+      "confidence": "LOW",
+      "components": {
+        "projection": 71.6,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 65.41,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge +7.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Jonquel Jones",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 29.5,
+      "sportsbook": null,
+      "odds": -138.0,
+      "projection": 27.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6068,
+      "edge_score": 55.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 73.73,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 55.93,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.40 versus line",
+        "Model probability edge +2.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4736,21 +4540,266 @@
       "side": "OVER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": -153.5,
-      "projection": 4.3,
+      "odds": -102.0,
+      "projection": 4.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
-      "model_probability": 0.626,
-      "edge_score": 56.11,
+      "model_probability": 0.5787,
+      "edge_score": 55.02,
       "confidence": "LOW",
       "components": {
-        "projection": 78.0,
+        "projection": 67.5,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 54.51,
+        "market_value": 66.24,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge +7.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Tiffany Hayes",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -109.0,
+      "projection": 7.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.5787,
+      "edge_score": 54.51,
+      "confidence": "LOW",
+      "components": {
+        "projection": 67.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 62.59,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge +5.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Cecilia Zandalasini",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 10.5,
+      "sportsbook": null,
+      "odds": -108.0,
+      "projection": 11.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.575,
+      "edge_score": 54.25,
+      "confidence": "LOW",
+      "components": {
+        "projection": 66.67,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 62.27,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.60 versus line",
+        "Model probability edge +5.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Cecilia Zandalasini",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -145.0,
+      "projection": 2.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.5945,
+      "edge_score": 53.74,
+      "confidence": "LOW",
+      "components": {
+        "projection": 71.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.59,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.60 versus line",
+        "Model probability edge +0.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "A'ja Wilson",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "PA",
+      "side": "OVER",
+      "line": 28.5,
+      "sportsbook": null,
+      "odds": -120.0,
+      "projection": 30.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5737,
+      "edge_score": 53.33,
+      "confidence": "LOW",
+      "components": {
+        "projection": 66.37,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 56.21,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.60 versus line",
+        "Model probability edge +2.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Sabrina Ionescu",
+      "team": "New York Liberty",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 10.5,
+      "sportsbook": null,
+      "odds": -164.0,
+      "projection": 9.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.6,
+      "edge_score": 53.32,
+      "confidence": "LOW",
+      "components": {
+        "projection": 72.22,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 45.33,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4771,35 +4820,35 @@
       ],
       "evidence": [
         "Projection edge +0.80 versus line",
-        "Model probability edge +2.0%"
+        "Model probability edge -2.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Veronica Burton",
-      "team": "Golden State Valkyries",
+      "player": "A'ja Wilson",
+      "team": "Las Vegas Aces",
       "game": "Las Vegas Aces @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 20.5,
+      "market": "RA",
+      "side": "UNDER",
+      "line": 13.5,
       "sportsbook": null,
-      "odds": -109.0,
-      "projection": 22.0,
+      "odds": -133.0,
+      "projection": 12.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.596,
-      "edge_score": 56.04,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.5778,
+      "edge_score": 52.91,
       "confidence": "LOW",
       "components": {
-        "projection": 71.34,
+        "projection": 67.28,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 66.39,
+        "market_value": 51.53,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4819,36 +4868,183 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.50 versus line",
-        "Model probability edge +7.5%"
+        "Projection edge +0.80 versus line",
+        "Model probability edge +0.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Jonquel Jones",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
+      "player": "Kayla Thornton",
+      "team": "Golden State Valkyries",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
       "market": "REB",
-      "side": "UNDER",
-      "line": 9.5,
+      "side": "OVER",
+      "line": 4.5,
       "sportsbook": null,
-      "odds": -110.0,
-      "projection": 8.8,
+      "odds": -114.5,
+      "projection": 4.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
-      "model_probability": 0.5967,
-      "edge_score": 56.03,
+      "model_probability": 0.563,
+      "edge_score": 52.74,
       "confidence": "LOW",
       "components": {
-        "projection": 71.49,
+        "projection": 64.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 66.04,
+        "market_value": 56.42,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.40 versus line",
+        "Model probability edge +2.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Jackie Young",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
+      "market": "RA",
+      "side": "OVER",
+      "line": 10.5,
+      "sportsbook": null,
+      "odds": -123.0,
+      "projection": 11.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.5625,
+      "edge_score": 52.15,
+      "confidence": "LOW",
+      "components": {
+        "projection": 63.89,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 52.4,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge +1.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "REB",
+      "side": "OVER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -152.0,
+      "projection": 4.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.5787,
+      "edge_score": 52.0,
+      "confidence": "LOW",
+      "components": {
+        "projection": 67.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 44.63,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge -2.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-07",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "New York Liberty @ Atlanta Dream",
+      "market": "PA",
+      "side": "OVER",
+      "line": 17.5,
+      "sportsbook": null,
+      "odds": -112.0,
+      "projection": 18.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5525,
+      "edge_score": 51.98,
+      "confidence": "LOW",
+      "components": {
+        "projection": 61.67,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 55.32,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4869,133 +5065,35 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge +7.3%"
+        "Model probability edge +2.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Angel Reese",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 30.5,
-      "sportsbook": null,
-      "odds": -128.0,
-      "projection": 28.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.6076,
-      "edge_score": 55.84,
-      "confidence": "LOW",
-      "components": {
-        "projection": 73.91,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 60.16,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.50 versus line",
-        "Model probability edge +4.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Pauline Astier",
-      "team": "New York Liberty",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PA",
-      "side": "OVER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -106.0,
-      "projection": 12.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.5913,
-      "edge_score": 55.84,
-      "confidence": "LOW",
-      "components": {
-        "projection": 70.29,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 66.88,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge +7.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
+      "player": "Chelsea Gray",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
       "market": "REB",
       "side": "UNDER",
-      "line": 4.5,
+      "line": 3.5,
       "sportsbook": null,
-      "odds": -169.5,
-      "projection": 3.7,
+      "odds": -140.0,
+      "projection": 3.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
-      "model_probability": 0.626,
-      "edge_score": 55.39,
+      "model_probability": 0.563,
+      "edge_score": 51.21,
       "confidence": "LOW",
       "components": {
-        "projection": 78.0,
+        "projection": 64.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 49.35,
+        "market_value": 45.53,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -5015,134 +5113,36 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge -0.3%"
+        "Projection edge +0.40 versus line",
+        "Model probability edge -2.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-07",
-      "player": "Angel Reese",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 27.5,
-      "sportsbook": null,
-      "odds": -120.0,
-      "projection": 25.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.5955,
-      "edge_score": 55.25,
-      "confidence": "LOW",
-      "components": {
-        "projection": 71.21,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 61.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.00 versus line",
-        "Model probability edge +5.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Naz Hillmon",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
-      "market": "PR",
-      "side": "OVER",
-      "line": 12.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 13.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.584,
-      "edge_score": 54.91,
-      "confidence": "LOW",
-      "components": {
-        "projection": 68.67,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 63.24,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge +6.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-07",
-      "player": "Angel Reese",
-      "team": "Atlanta Dream",
-      "game": "New York Liberty @ Atlanta Dream",
+      "player": "Jackie Young",
+      "team": "Las Vegas Aces",
+      "game": "Las Vegas Aces @ Golden State Valkyries",
       "market": "PA",
-      "side": "UNDER",
-      "line": 18.5,
+      "side": "OVER",
+      "line": 24.5,
       "sportsbook": null,
-      "odds": -116.0,
-      "projection": 17.3,
+      "odds": -118.0,
+      "projection": 25.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
-      "model_probability": 0.5851,
-      "edge_score": 54.6,
+      "model_probability": 0.5429,
+      "edge_score": 50.72,
       "confidence": "LOW",
       "components": {
-        "projection": 68.92,
+        "projection": 59.52,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 60.58,
+        "market_value": 50.35,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -5162,8 +5162,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.20 versus line",
-        "Model probability edge +4.8%"
+        "Projection edge +0.80 versus line",
+        "Model probability edge +0.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
