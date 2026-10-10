@@ -1,11 +1,11 @@
 {
   "version": "jev_shadow_v2",
   "league": "WNBA",
-  "generated_at_utc": "2026-10-09T22:53:02.956679+00:00",
+  "generated_at_utc": "2026-10-10T01:11:10.626176+00:00",
   "target_date": "2026-10-09",
   "source": {
     "target_date": "2026-10-09",
-    "generated_at_utc": "2026-10-09T17:13:57.399374+00:00",
+    "generated_at_utc": "2026-10-09T22:52:29.560982+00:00",
     "status": "READY",
     "schema_version": "sprint19-m02-unified-predictions-v5",
     "input_path": "data/dashboard/wnba_s19_m02_predictions.json",
@@ -16,29 +16,29 @@
   "status": "OK",
   "model": "jev-1.13.0",
   "usage": {
-    "input_tokens": 13136,
+    "input_tokens": 13091,
     "output_tokens": 2689
   },
   "summary": {
     "candidates": 20,
-    "new_ledger_rows": 20,
+    "new_ledger_rows": 6,
     "action_counts": {
-      "PASS": 4,
-      "BET": 11,
-      "WATCH": 5
+      "PASS": 5,
+      "BET": 13,
+      "WATCH": 2
     },
     "trust_counts": {
       "MEDIUM": 18,
       "LOW": 2
     },
-    "review_ge_050": 6,
-    "anomaly_ge_050": 4,
+    "review_ge_050": 5,
+    "anomaly_ge_050": 3,
     "batch_directional_concentration_ge_050": true,
     "batch_systemic_integrity_risk_ge_050": true
   },
   "batch": {
-    "directional_concentration_probability": 0.71,
-    "systemic_integrity_risk_probability": 0.62
+    "directional_concentration_probability": 0.66,
+    "systemic_integrity_risk_probability": 0.56
   },
   "decisions": [
     {
@@ -46,7 +46,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Golden State Valkyries @ Las Vegas Aces",
         "player": "Gabby Williams",
@@ -61,63 +61,22 @@
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.16,
-          "LEAN": 0.1,
+          "BET": 0.13,
+          "LEAN": 0.08,
           "WATCH": 0.02,
-          "PASS": 0.72
+          "PASS": 0.77
         },
-        "action_confidence": 0.63,
+        "action_confidence": 0.69,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.09,
-          "MEDIUM": 0.69,
-          "LOW": 0.15,
-          "REJECT": 0.07
+          "HIGH": 0.19,
+          "MEDIUM": 0.68,
+          "LOW": 0.09,
+          "REJECT": 0.04
         },
-        "trust_confidence": 0.59,
-        "anomaly_probability": 0.41,
-        "review_probability": 0.48
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "2bb74dc2cceb8bb448e4f728",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
-      "candidate": {
-        "game": "Golden State Valkyries @ Las Vegas Aces",
-        "player": "Gabby Williams",
-        "team": "Golden State Valkyries",
-        "stat": "PR",
-        "line": 23.5,
-        "edge": -5.7,
-        "model_projection": 17.8,
-        "confidence": 65.3,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "PASS",
-        "action_probabilities": {
-          "BET": 0.12,
-          "LEAN": 0.05,
-          "WATCH": 0.01,
-          "PASS": 0.82
-        },
-        "action_confidence": 0.76,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.12,
-          "MEDIUM": 0.51,
-          "LOW": 0.19,
-          "REJECT": 0.18
-        },
-        "trust_confidence": 0.35,
-        "anomaly_probability": 0.3,
-        "review_probability": 0.47
+        "trust_confidence": 0.57,
+        "anomaly_probability": 0.35,
+        "review_probability": 0.54
       },
       "research_only": true,
       "production_mutation": false,
@@ -128,7 +87,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
         "player": "Leonie Fiebich",
@@ -143,145 +102,63 @@
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "BET": 0.88,
-          "LEAN": 0.11,
-          "WATCH": 0.01,
+          "BET": 0.91,
+          "LEAN": 0.09,
+          "WATCH": 0.0,
           "PASS": 0.0
         },
-        "action_confidence": 0.84,
+        "action_confidence": 0.88,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.25,
-          "MEDIUM": 0.72,
-          "LOW": 0.02,
+          "HIGH": 0.36,
+          "MEDIUM": 0.62,
+          "LOW": 0.01,
           "REJECT": 0.01
         },
-        "trust_confidence": 0.63,
-        "anomaly_probability": 0.31,
-        "review_probability": 0.34
+        "trust_confidence": 0.49,
+        "anomaly_probability": 0.36,
+        "review_probability": 0.33
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "200a6ec3aa779c877c585f38",
+      "shadow_id": "2bb74dc2cceb8bb448e4f728",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ New York Liberty",
-        "player": "Pauline Astier",
-        "team": "New York Liberty",
-        "stat": "PRA",
-        "line": 9.5,
-        "edge": 4.7,
-        "model_projection": 14.2,
-        "confidence": 62.7,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "BET": 0.78,
-          "LEAN": 0.21,
-          "WATCH": 0.01,
-          "PASS": 0.0
-        },
-        "action_confidence": 0.71,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.25,
-          "MEDIUM": 0.72,
-          "LOW": 0.02,
-          "REJECT": 0.01
-        },
-        "trust_confidence": 0.63,
-        "anomaly_probability": 0.29,
-        "review_probability": 0.31
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "95fac90d32ecca716f411ed2",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ New York Liberty",
-        "player": "Sabrina Ionescu",
-        "team": "New York Liberty",
-        "stat": "PRA",
-        "line": 24.5,
-        "edge": 5.3,
-        "model_projection": 29.8,
-        "confidence": 64.3,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "BET": 0.92,
-          "LEAN": 0.07,
-          "WATCH": 0.01,
-          "PASS": 0.0
-        },
-        "action_confidence": 0.89,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.33,
-          "MEDIUM": 0.65,
-          "LOW": 0.02,
-          "REJECT": 0.0
-        },
-        "trust_confidence": 0.53,
-        "anomaly_probability": 0.22,
-        "review_probability": 0.32
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "f3f349fb3671bc019a693931",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Golden State Valkyries @ Las Vegas Aces",
         "player": "Gabby Williams",
         "team": "Golden State Valkyries",
-        "stat": "PRA",
-        "line": 27.5,
-        "edge": -7.0,
-        "model_projection": 20.5,
-        "confidence": 66.0,
+        "stat": "PR",
+        "line": 23.5,
+        "edge": -5.8,
+        "model_projection": 17.7,
+        "confidence": 65.6,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.35,
-          "LEAN": 0.13,
-          "WATCH": 0.08,
-          "PASS": 0.44
+          "BET": 0.08,
+          "LEAN": 0.04,
+          "WATCH": 0.02,
+          "PASS": 0.86
         },
-        "action_confidence": 0.25,
+        "action_confidence": 0.81,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.18,
-          "MEDIUM": 0.58,
-          "LOW": 0.18,
-          "REJECT": 0.06
+          "HIGH": 0.26,
+          "MEDIUM": 0.62,
+          "LOW": 0.08,
+          "REJECT": 0.04
         },
-        "trust_confidence": 0.44,
-        "anomaly_probability": 0.5,
-        "review_probability": 0.54
+        "trust_confidence": 0.49,
+        "anomaly_probability": 0.25,
+        "review_probability": 0.47
       },
       "research_only": true,
       "production_mutation": false,
@@ -292,7 +169,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
         "player": "Leonie Fiebich",
@@ -308,61 +185,61 @@
         "action": "BET",
         "action_probabilities": {
           "BET": 0.95,
-          "LEAN": 0.04,
-          "WATCH": 0.01,
+          "LEAN": 0.05,
+          "WATCH": 0.0,
           "PASS": 0.0
         },
         "action_confidence": 0.93,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.43,
-          "MEDIUM": 0.54,
-          "LOW": 0.02,
+          "HIGH": 0.42,
+          "MEDIUM": 0.56,
+          "LOW": 0.01,
           "REJECT": 0.01
         },
-        "trust_confidence": 0.39,
-        "anomaly_probability": 0.2,
-        "review_probability": 0.33
+        "trust_confidence": 0.41,
+        "anomaly_probability": 0.29,
+        "review_probability": 0.32
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "69262f5a91331a7e34ee1d62",
+      "shadow_id": "2c17338013f236c845823031",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
-        "player": "Leonie Fiebich",
+        "player": "Sabrina Ionescu",
         "team": "New York Liberty",
-        "stat": "PR",
-        "line": 11.5,
-        "edge": 4.5,
-        "model_projection": 16.0,
-        "confidence": 62.2,
+        "stat": "PA",
+        "line": 21.5,
+        "edge": 4.0,
+        "model_projection": 25.5,
+        "confidence": 60.9,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "BET": 0.73,
-          "LEAN": 0.24,
-          "WATCH": 0.02,
-          "PASS": 0.01
+          "BET": 0.58,
+          "LEAN": 0.41,
+          "WATCH": 0.01,
+          "PASS": 0.0
         },
-        "action_confidence": 0.64,
+        "action_confidence": 0.44,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.2,
-          "MEDIUM": 0.78,
-          "LOW": 0.02,
+          "HIGH": 0.17,
+          "MEDIUM": 0.82,
+          "LOW": 0.01,
           "REJECT": 0.0
         },
-        "trust_confidence": 0.71,
-        "anomaly_probability": 0.23,
+        "trust_confidence": 0.76,
+        "anomaly_probability": 0.26,
         "review_probability": 0.36
       },
       "research_only": true,
@@ -370,84 +247,82 @@
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "51382e38492bd2ffad7973da",
+      "shadow_id": "200a6ec3aa779c877c585f38",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
-        "player": "Rhyne Howard",
-        "team": "Atlanta Dream",
-        "stat": "PA",
-        "line": 22.5,
-        "edge": -4.2,
-        "model_projection": 18.3,
-        "confidence": 61.4,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+        "player": "Pauline Astier",
+        "team": "New York Liberty",
+        "stat": "PRA",
+        "line": 9.5,
+        "edge": 4.7,
+        "model_projection": 14.2,
+        "confidence": 62.7,
+        "injury_status": "ACTIVE"
       },
       "jev": {
-        "action": "WATCH",
+        "action": "BET",
         "action_probabilities": {
-          "BET": 0.0,
-          "LEAN": 0.01,
-          "WATCH": 0.93,
-          "PASS": 0.06
+          "BET": 0.82,
+          "LEAN": 0.17,
+          "WATCH": 0.01,
+          "PASS": 0.0
         },
-        "action_confidence": 0.91,
-        "trust": "LOW",
+        "action_confidence": 0.76,
+        "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.0,
-          "MEDIUM": 0.25,
-          "LOW": 0.58,
-          "REJECT": 0.17
+          "HIGH": 0.22,
+          "MEDIUM": 0.77,
+          "LOW": 0.01,
+          "REJECT": 0.0
         },
-        "trust_confidence": 0.44,
-        "anomaly_probability": 0.64,
-        "review_probability": 0.92
+        "trust_confidence": 0.69,
+        "anomaly_probability": 0.24,
+        "review_probability": 0.33
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "c8673838eace3438c172fbc7",
+      "shadow_id": "13717c94abf63545709358ac",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
-        "player": "Rhyne Howard",
-        "team": "Atlanta Dream",
-        "stat": "PR",
-        "line": 22.5,
-        "edge": -4.4,
-        "model_projection": 18.1,
-        "confidence": 61.9,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PTS",
+        "line": 16.5,
+        "edge": 3.9,
+        "model_projection": 20.4,
+        "confidence": 60.6,
+        "injury_status": "ACTIVE"
       },
       "jev": {
-        "action": "WATCH",
+        "action": "BET",
         "action_probabilities": {
-          "BET": 0.0,
-          "LEAN": 0.02,
-          "WATCH": 0.89,
-          "PASS": 0.09
+          "BET": 0.55,
+          "LEAN": 0.43,
+          "WATCH": 0.01,
+          "PASS": 0.01
         },
-        "action_confidence": 0.85,
-        "trust": "LOW",
+        "action_confidence": 0.4,
+        "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.0,
-          "MEDIUM": 0.26,
-          "LOW": 0.52,
-          "REJECT": 0.22
+          "HIGH": 0.22,
+          "MEDIUM": 0.77,
+          "LOW": 0.01,
+          "REJECT": 0.0
         },
-        "trust_confidence": 0.36,
-        "anomaly_probability": 0.54,
-        "review_probability": 0.89
+        "trust_confidence": 0.69,
+        "anomaly_probability": 0.18,
+        "review_probability": 0.34
       },
       "research_only": true,
       "production_mutation": false,
@@ -458,7 +333,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Golden State Valkyries @ Las Vegas Aces",
         "player": "Gabby Williams",
@@ -473,21 +348,21 @@
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.15,
-          "LEAN": 0.1,
+          "BET": 0.04,
+          "LEAN": 0.04,
           "WATCH": 0.02,
-          "PASS": 0.73
+          "PASS": 0.9
         },
-        "action_confidence": 0.64,
+        "action_confidence": 0.87,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.18,
-          "MEDIUM": 0.69,
-          "LOW": 0.11,
+          "HIGH": 0.23,
+          "MEDIUM": 0.68,
+          "LOW": 0.06,
           "REJECT": 0.02
         },
-        "trust_confidence": 0.59,
-        "anomaly_probability": 0.29,
+        "trust_confidence": 0.57,
+        "anomaly_probability": 0.28,
         "review_probability": 0.44
       },
       "research_only": true,
@@ -495,41 +370,164 @@
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "4d9973bf91b178fbb6bccf92",
+      "shadow_id": "69262f5a91331a7e34ee1d62",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
-        "player": "Pauline Astier",
+        "player": "Leonie Fiebich",
         "team": "New York Liberty",
-        "stat": "PTS",
-        "line": 5.5,
-        "edge": 3.5,
-        "model_projection": 9.0,
-        "confidence": 59.6,
+        "stat": "PR",
+        "line": 11.5,
+        "edge": 4.5,
+        "model_projection": 16.0,
+        "confidence": 62.2,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "BET": 0.57,
-          "LEAN": 0.38,
-          "WATCH": 0.03,
-          "PASS": 0.02
+          "BET": 0.79,
+          "LEAN": 0.2,
+          "WATCH": 0.01,
+          "PASS": 0.0
         },
-        "action_confidence": 0.43,
+        "action_confidence": 0.72,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.1,
-          "MEDIUM": 0.81,
-          "LOW": 0.08,
+          "HIGH": 0.32,
+          "MEDIUM": 0.66,
+          "LOW": 0.02,
+          "REJECT": 0.0
+        },
+        "trust_confidence": 0.55,
+        "anomaly_probability": 0.17,
+        "review_probability": 0.31
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "a8b4579c89d985cb90709fea",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-09",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
+      "candidate": {
+        "game": "Golden State Valkyries @ Las Vegas Aces",
+        "player": "Gabby Williams",
+        "team": "Golden State Valkyries",
+        "stat": "PTS",
+        "line": 18.5,
+        "edge": -3.7,
+        "model_projection": 14.8,
+        "confidence": 60.1,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "BET": 0.06,
+          "LEAN": 0.08,
+          "WATCH": 0.02,
+          "PASS": 0.84
+        },
+        "action_confidence": 0.79,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.13,
+          "MEDIUM": 0.79,
+          "LOW": 0.07,
           "REJECT": 0.01
         },
-        "trust_confidence": 0.75,
-        "anomaly_probability": 0.27,
-        "review_probability": 0.45
+        "trust_confidence": 0.72,
+        "anomaly_probability": 0.25,
+        "review_probability": 0.53
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "f3f349fb3671bc019a693931",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-09",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
+      "candidate": {
+        "game": "Golden State Valkyries @ Las Vegas Aces",
+        "player": "Gabby Williams",
+        "team": "Golden State Valkyries",
+        "stat": "PRA",
+        "line": 27.5,
+        "edge": -7.0,
+        "model_projection": 20.5,
+        "confidence": 66.0,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "BET": 0.21,
+          "LEAN": 0.06,
+          "WATCH": 0.03,
+          "PASS": 0.7
+        },
+        "action_confidence": 0.6,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.3,
+          "MEDIUM": 0.53,
+          "LOW": 0.13,
+          "REJECT": 0.04
+        },
+        "trust_confidence": 0.37,
+        "anomaly_probability": 0.55,
+        "review_probability": 0.57
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "95fac90d32ecca716f411ed2",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-09",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ New York Liberty",
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PRA",
+        "line": 24.5,
+        "edge": 5.3,
+        "model_projection": 29.8,
+        "confidence": 64.3,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "BET": 0.93,
+          "LEAN": 0.07,
+          "WATCH": 0.0,
+          "PASS": 0.0
+        },
+        "action_confidence": 0.91,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.42,
+          "MEDIUM": 0.5700000000000001,
+          "LOW": 0.01,
+          "REJECT": 0.0
+        },
+        "trust_confidence": 0.43,
+        "anomaly_probability": 0.22,
+        "review_probability": 0.34
       },
       "research_only": true,
       "production_mutation": false,
@@ -540,7 +538,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
         "player": "Leonie Fiebich",
@@ -555,22 +553,228 @@
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "BET": 0.9,
-          "LEAN": 0.09,
+          "BET": 0.92,
+          "LEAN": 0.07,
           "WATCH": 0.01,
           "PASS": 0.0
         },
-        "action_confidence": 0.87,
+        "action_confidence": 0.89,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.39,
-          "MEDIUM": 0.58,
+          "HIGH": 0.36,
+          "MEDIUM": 0.61,
           "LOW": 0.02,
           "REJECT": 0.01
         },
-        "trust_confidence": 0.44,
-        "anomaly_probability": 0.22,
+        "trust_confidence": 0.48,
+        "anomaly_probability": 0.24,
+        "review_probability": 0.36
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "2b57d7e74eaf51f91302bd92",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-09",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
+      "candidate": {
+        "game": "Golden State Valkyries @ Las Vegas Aces",
+        "player": "Veronica Burton",
+        "team": "Golden State Valkyries",
+        "stat": "PA",
+        "line": 15.5,
+        "edge": 3.1,
+        "model_projection": 18.6,
+        "confidence": 58.6,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "BET": 0.48,
+          "LEAN": 0.45,
+          "WATCH": 0.06,
+          "PASS": 0.01
+        },
+        "action_confidence": 0.31,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.1,
+          "MEDIUM": 0.81,
+          "LOW": 0.08,
+          "REJECT": 0.01
+        },
+        "trust_confidence": 0.75,
+        "anomaly_probability": 0.26,
+        "review_probability": 0.47
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "d284e45fd7a2770e9146caa5",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-09",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ New York Liberty",
+        "player": "Pauline Astier",
+        "team": "New York Liberty",
+        "stat": "PA",
+        "line": 7.5,
+        "edge": 4.9,
+        "model_projection": 12.4,
+        "confidence": 63.2,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "BET": 0.81,
+          "LEAN": 0.15,
+          "WATCH": 0.04,
+          "PASS": 0.0
+        },
+        "action_confidence": 0.75,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.29,
+          "MEDIUM": 0.68,
+          "LOW": 0.03,
+          "REJECT": 0.0
+        },
+        "trust_confidence": 0.57,
+        "anomaly_probability": 0.25,
         "review_probability": 0.37
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "98da8fbf476afe37c2c90472",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-09",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ New York Liberty",
+        "player": "Rhyne Howard",
+        "team": "Atlanta Dream",
+        "stat": "PRA",
+        "line": 26.5,
+        "edge": -4.8,
+        "model_projection": 21.7,
+        "confidence": 63.0,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "BET": 0.02,
+          "LEAN": 0.05,
+          "WATCH": 0.83,
+          "PASS": 0.1
+        },
+        "action_confidence": 0.77,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "HIGH": 0.0,
+          "MEDIUM": 0.24,
+          "LOW": 0.51,
+          "REJECT": 0.25
+        },
+        "trust_confidence": 0.35,
+        "anomaly_probability": 0.69,
+        "review_probability": 0.91
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "2d765ae8ef298d2b19ab0ba5",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-09",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ New York Liberty",
+        "player": "Sabrina Ionescu",
+        "team": "New York Liberty",
+        "stat": "PA",
+        "line": 20.5,
+        "edge": 5.1,
+        "model_projection": 25.6,
+        "confidence": 63.8,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "BET": 0.7,
+          "LEAN": 0.12,
+          "WATCH": 0.16,
+          "PASS": 0.02
+        },
+        "action_confidence": 0.6,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.3,
+          "MEDIUM": 0.59,
+          "LOW": 0.08,
+          "REJECT": 0.03
+        },
+        "trust_confidence": 0.45,
+        "anomaly_probability": 0.27,
+        "review_probability": 0.36
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "4d9973bf91b178fbb6bccf92",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-09",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ New York Liberty",
+        "player": "Pauline Astier",
+        "team": "New York Liberty",
+        "stat": "PTS",
+        "line": 5.5,
+        "edge": 3.6,
+        "model_projection": 9.1,
+        "confidence": 59.9,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "BET": 0.71,
+          "LEAN": 0.13,
+          "WATCH": 0.14,
+          "PASS": 0.02
+        },
+        "action_confidence": 0.61,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.36,
+          "MEDIUM": 0.57,
+          "LOW": 0.06,
+          "REJECT": 0.01
+        },
+        "trust_confidence": 0.43,
+        "anomaly_probability": 0.26,
+        "review_probability": 0.42
       },
       "research_only": true,
       "production_mutation": false,
@@ -581,7 +785,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
         "player": "Sabrina Ionescu",
@@ -596,270 +800,64 @@
       "jev": {
         "action": "BET",
         "action_probabilities": {
-          "BET": 0.86,
-          "LEAN": 0.09,
-          "WATCH": 0.03,
-          "PASS": 0.02
-        },
-        "action_confidence": 0.81,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.3,
-          "MEDIUM": 0.66,
-          "LOW": 0.03,
-          "REJECT": 0.01
-        },
-        "trust_confidence": 0.55,
-        "anomaly_probability": 0.24,
-        "review_probability": 0.39
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "0d62aae4a4077bb0c7ac64a2",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ New York Liberty",
-        "player": "Rhyne Howard",
-        "team": "Atlanta Dream",
-        "stat": "PTS",
-        "line": 18.5,
-        "edge": -3.9,
-        "model_projection": 14.6,
-        "confidence": 60.6,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "BET": 0.02,
-          "LEAN": 0.08,
-          "WATCH": 0.73,
-          "PASS": 0.17
-        },
-        "action_confidence": 0.64,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.0,
-          "MEDIUM": 0.48,
-          "LOW": 0.38,
-          "REJECT": 0.14
-        },
-        "trust_confidence": 0.31,
-        "anomaly_probability": 0.53,
-        "review_probability": 0.84
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "f27b52025c8e71c72ea2295a",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ New York Liberty",
-        "player": "Rhyne Howard",
-        "team": "Atlanta Dream",
-        "stat": "PRA",
-        "line": 27.5,
-        "edge": -5.8,
-        "model_projection": 21.7,
-        "confidence": 65.6,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "BET": 0.02,
-          "LEAN": 0.09,
-          "WATCH": 0.74,
-          "PASS": 0.15
-        },
-        "action_confidence": 0.65,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.0,
-          "MEDIUM": 0.51,
-          "LOW": 0.36,
-          "REJECT": 0.13
-        },
-        "trust_confidence": 0.35,
-        "anomaly_probability": 0.45,
-        "review_probability": 0.82
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "2d765ae8ef298d2b19ab0ba5",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ New York Liberty",
-        "player": "Sabrina Ionescu",
-        "team": "New York Liberty",
-        "stat": "PA",
-        "line": 20.5,
-        "edge": 5.1,
-        "model_projection": 25.6,
-        "confidence": 63.8,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "BET": 0.28,
-          "LEAN": 0.14,
-          "WATCH": 0.49,
-          "PASS": 0.09
-        },
-        "action_confidence": 0.32,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.06,
-          "MEDIUM": 0.7,
-          "LOW": 0.19,
-          "REJECT": 0.05
-        },
-        "trust_confidence": 0.6,
-        "anomaly_probability": 0.34,
-        "review_probability": 0.66
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "18718ce3fef29d156cf4df22",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ New York Liberty",
-        "player": "Pauline Astier",
-        "team": "New York Liberty",
-        "stat": "PA",
-        "line": 6.5,
-        "edge": 6.0,
-        "model_projection": 12.5,
-        "confidence": 66.0,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "BET": 0.91,
-          "LEAN": 0.05,
-          "WATCH": 0.03,
+          "BET": 0.84,
+          "LEAN": 0.11,
+          "WATCH": 0.04,
           "PASS": 0.01
         },
-        "action_confidence": 0.88,
+        "action_confidence": 0.79,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.38,
-          "MEDIUM": 0.58,
+          "HIGH": 0.41,
+          "MEDIUM": 0.55,
           "LOW": 0.03,
           "REJECT": 0.01
         },
-        "trust_confidence": 0.44,
-        "anomaly_probability": 0.35,
-        "review_probability": 0.42
+        "trust_confidence": 0.4,
+        "anomaly_probability": 0.2,
+        "review_probability": 0.3
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "d9a367903f7706b7207611cf",
+      "shadow_id": "c8673838eace3438c172fbc7",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
+      "issued_at_utc": "2026-10-10T01:11:10.626176+00:00",
       "candidate": {
         "game": "Atlanta Dream @ New York Liberty",
-        "player": "Pauline Astier",
-        "team": "New York Liberty",
-        "stat": "PRA",
-        "line": 8.5,
-        "edge": 5.8,
-        "model_projection": 14.3,
-        "confidence": 65.6,
-        "injury_status": "ACTIVE"
+        "player": "Rhyne Howard",
+        "team": "Atlanta Dream",
+        "stat": "PR",
+        "line": 22.5,
+        "edge": -4.5,
+        "model_projection": 18.0,
+        "confidence": 62.2,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
       },
       "jev": {
-        "action": "BET",
+        "action": "WATCH",
         "action_probabilities": {
-          "BET": 0.92,
-          "LEAN": 0.06,
-          "WATCH": 0.02,
-          "PASS": 0.0
+          "BET": 0.01,
+          "LEAN": 0.03,
+          "WATCH": 0.87,
+          "PASS": 0.09
         },
-        "action_confidence": 0.89,
-        "trust": "MEDIUM",
+        "action_confidence": 0.83,
+        "trust": "LOW",
         "trust_probabilities": {
-          "HIGH": 0.36,
-          "MEDIUM": 0.6,
-          "LOW": 0.03,
-          "REJECT": 0.01
+          "HIGH": 0.0,
+          "MEDIUM": 0.34,
+          "LOW": 0.39,
+          "REJECT": 0.27
         },
-        "trust_confidence": 0.47,
-        "anomaly_probability": 0.34,
-        "review_probability": 0.39
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "c6d613c88e99719ac0e3a79a",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-09",
-      "issued_at_utc": "2026-10-09T22:53:02.956679+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ New York Liberty",
-        "player": "Sabrina Ionescu",
-        "team": "New York Liberty",
-        "stat": "PTS",
-        "line": 15.5,
-        "edge": 5.0,
-        "model_projection": 20.5,
-        "confidence": 63.5,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "BET": 0.9,
-          "LEAN": 0.09,
-          "WATCH": 0.01,
-          "PASS": 0.0
-        },
-        "action_confidence": 0.87,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.35,
-          "MEDIUM": 0.62,
-          "LOW": 0.02,
-          "REJECT": 0.01
-        },
-        "trust_confidence": 0.49,
-        "anomaly_probability": 0.23,
-        "review_probability": 0.32
+        "trust_confidence": 0.19,
+        "anomaly_probability": 0.63,
+        "review_probability": 0.88
       },
       "research_only": true,
       "production_mutation": false,
