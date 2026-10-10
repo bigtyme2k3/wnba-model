@@ -1,0 +1,48 @@
+name: WNBA V5 Finals Research
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["WNBA Results Refresh"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wnba-finals-research
+  cancel-in-progress: false
+
+jobs:
+  research:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test Finals research
+        run: python -m unittest discover -s tests -p test_wnba_finals_research.py -v
+      - name: Generate Finals research
+        run: python scripts/wnba_finals_research.py
+      - name: Publish research output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/dashboard/wnba_finals_research.json
+          if git diff --cached --quiet; then
+            echo "No research changes"
+            exit 0
+          fi
+          git commit -m "Publish WNBA V5 Finals research report"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 3
+          done
+          exit 1
