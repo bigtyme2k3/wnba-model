@@ -45,6 +45,11 @@ def report(rows):
 def main():
     source = json.loads(SOURCE.read_text(encoding="utf-8"))
     rows = source.get("recent_games") or []
+    archived = int((source.get("summary") or {}).get("archived_games") or 0)
+    if archived and len(rows) != archived:
+        raise ValueError(f"Incomplete performance archive: {len(rows)} rows vs {archived} archived games")
+    if len({r.get("prediction_id") for r in rows}) != len(rows):
+        raise ValueError("Duplicate prediction IDs in performance archive")
     data = {"schema_version": 1, "status": "RESEARCH_ONLY", "finals_teams": list(TEAMS),
             "postseason_start": CUTOFF, "source": str(SOURCE),
             "source_generated_at_utc": source.get("generated_at_utc"),
