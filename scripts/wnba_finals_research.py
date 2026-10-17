@@ -45,9 +45,16 @@ def report(rows):
 def main():
     source = json.loads(SOURCE.read_text(encoding="utf-8"))
     rows = source.get("recent_games") or []
-    archived = int((source.get("summary") or {}).get("archived_games") or 0)
-    if archived and len(rows) != archived:
-        raise ValueError(f"Incomplete performance archive: {len(rows)} rows vs {archived} archived games")
+    summary = source.get("summary") or {}
+    archived = int(summary.get("archived_games") or 0)
+    graded = int(summary.get("graded_games") or 0)
+    pending = int(summary.get("pending_games") or 0)
+    if archived != graded + pending:
+        raise ValueError(f"Inconsistent archive counts: archived={archived}, graded={graded}, pending={pending}")
+    if len(rows) != graded:
+        raise ValueError(f"Incomplete graded performance archive: {len(rows)} rows vs {graded} graded games")
+    if any(r.get("status") != "GRADED" for r in rows):
+        raise ValueError("Non-graded row in graded performance archive")
     if len({r.get("prediction_id") for r in rows}) != len(rows):
         raise ValueError("Duplicate prediction IDs in performance archive")
     data = {"schema_version": 1, "status": "RESEARCH_ONLY", "finals_teams": list(TEAMS),
