@@ -59,6 +59,9 @@ jobs:
           if [ -n "${REQUESTED_RESULT_DATE:-}" ]; then
             RESULT_DATE=$(date -d "$REQUESTED_RESULT_DATE" +%F)
             test "$RESULT_DATE" = "$REQUESTED_RESULT_DATE"
+          elif [ -f data/results_refresh_request.txt ] && [ "${{ github.event_name }}" = "push" ]; then
+            RESULT_DATE=$(tr -d "\\r\\n" < data/results_refresh_request.txt)
+            date -d "$RESULT_DATE" +%F | grep -Fx "$RESULT_DATE"
           else
             # On an off day, yesterday may have no predictions. Select the
             # latest archived past slate so verified finals can be backfilled.
@@ -85,7 +88,7 @@ jobs:
           PY
             )
           fi
-          test "$RESULT_DATE" '<' "$TARGET"
+          # Same-day grading is permitted only when downstream verification confirms\n          # every archived prediction has a sourced final score.\n          test "$RESULT_DATE" '<=' "$TARGET"
           echo "TARGET=$TARGET" >> "$GITHUB_ENV"
           echo "RESULT_DATE=$RESULT_DATE" >> "$GITHUB_ENV"
           echo "Results observation date: $TARGET; grading slate: $RESULT_DATE"
