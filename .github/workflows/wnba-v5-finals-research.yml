@@ -2,6 +2,14 @@ name: WNBA V5 Finals Research
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/wnba_finals_research.py'
+      - 'scripts/wnba_finals_game1_shadow.py'
+      - 'tests/test_wnba_finals_research.py'
+      - 'tests/test_wnba_finals_game1_shadow.py'
+      - '.github/workflows/wnba-v5-finals-research.yml'
   workflow_run:
     workflows: ["WNBA Results Refresh"]
     types: [completed]
@@ -15,7 +23,7 @@ concurrency:
 
 jobs:
   research:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
