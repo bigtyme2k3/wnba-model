@@ -7,8 +7,10 @@ on:
     paths:
       - 'scripts/wnba_finals_research.py'
       - 'scripts/wnba_finals_game1_shadow.py'
+      - 'scripts/wnba_finals_defensive_total_shadow.py'
       - 'tests/test_wnba_finals_research.py'
       - 'tests/test_wnba_finals_game1_shadow.py'
+      - 'tests/test_wnba_finals_defensive_total_shadow.py'
       - '.github/workflows/wnba-v5-finals-research.yml'
   workflow_run:
     workflows: ["WNBA Results Refresh"]
@@ -37,15 +39,19 @@ jobs:
         run: python -m unittest discover -s tests -p test_wnba_finals_research.py -v
       - name: Test Finals shadow projection
         run: python -m unittest discover -s tests -p test_wnba_finals_game1_shadow.py -v
+      - name: Test defensive total shadow
+        run: python -m unittest discover -s tests -p test_wnba_finals_defensive_total_shadow.py -v
       - name: Generate Finals research
         run: python scripts/wnba_finals_research.py
       - name: Generate Game 1 shadow baseline
         run: python scripts/wnba_finals_game1_shadow.py
+      - name: Generate defensive total shadow
+        run: python scripts/wnba_finals_defensive_total_shadow.py
       - name: Publish research output
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/dashboard/wnba_finals_research.json data/dashboard/wnba_finals_game1_shadow.json
+          git add data/dashboard/wnba_finals_research.json data/dashboard/wnba_finals_game1_shadow.json data/dashboard/wnba_finals_defensive_total_shadow.json
           if git diff --cached --quiet; then
             echo "No research changes"
             exit 0
