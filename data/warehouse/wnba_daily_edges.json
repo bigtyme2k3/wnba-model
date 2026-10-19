@@ -1,7 +1,7 @@
 {
   "sprint": 6,
   "phase": "6.1-edge-qa-dashboard",
-  "generated_at_utc": "2026-10-19T17:17:33.132766+00:00",
+  "generated_at_utc": "2026-10-19T22:41:31.520743+00:00",
   "target_date": "2026-10-19",
   "status": "ok",
   "source_contract": {
@@ -11,76 +11,76 @@
     "source_target_date": "2026-10-19",
     "source_status": "ready",
     "empty_slate": false,
-    "standard_rows": 92,
+    "standard_rows": 96,
     "off_target_rows": 0,
     "alt_source": "data/dashboard/wnba_alt_market_warehouse.json",
     "alt_target_date": "2026-10-19",
     "alt_status": "ok",
-    "alt_rows": 1005,
+    "alt_rows": 997,
     "alt_off_target_rows": 0
   },
   "summary": {
-    "source_props": 92,
-    "source_alt_markets": 1005,
-    "candidates_loaded": 1097,
-    "candidates_scored": 92,
-    "invalid_projection_rows_rejected": 1005,
+    "source_props": 96,
+    "source_alt_markets": 997,
+    "candidates_loaded": 1093,
+    "candidates_scored": 96,
+    "invalid_projection_rows_rejected": 997,
     "high_confidence": 0,
-    "moderate_confidence": 3,
-    "low_confidence": 89,
+    "moderate_confidence": 1,
+    "low_confidence": 95,
     "top_score": 68.2,
-    "standard_candidates": 92,
+    "standard_candidates": 96,
     "alternate_candidates": 0
   },
   "qa": {
     "score_distribution": {
-      "68-74.99": 3,
-      "60-67.99": 46,
-      "below-60": 43
+      "68-74.99": 1,
+      "60-67.99": 48,
+      "below-60": 47
     },
     "confidence_distribution": {
-      "MODERATE": 3,
-      "LOW": 89
+      "MODERATE": 1,
+      "LOW": 95
     },
     "market_type_distribution": {
-      "standard": 92
+      "standard": 96
     },
     "evidence_coverage_counts": {
-      "projection": 77,
+      "projection": 82,
       "recent_form": 0,
       "season_history": 0,
       "clv": 0,
       "roi": 0,
-      "market_value": 77
+      "market_value": 82
     },
     "evidence_coverage_rates": {
-      "projection": 0.837,
+      "projection": 0.8542,
       "recent_form": 0.0,
       "season_history": 0.0,
       "clv": 0.0,
       "roi": 0.0,
-      "market_value": 0.837
+      "market_value": 0.8542
     },
     "missing_evidence_counts": {
-      "recent_form": 92,
-      "season_history": 92,
-      "clv": 92,
-      "roi": 92,
-      "projection": 15,
-      "market_value": 15
+      "recent_form": 96,
+      "season_history": 96,
+      "clv": 96,
+      "roi": 96,
+      "projection": 14,
+      "market_value": 14
     },
     "component_averages": {
-      "projection": 81.73,
+      "projection": 81.25,
       "recent_form": 50.0,
       "season_history": 50.0,
       "clv": 50.0,
       "roi": 50.0,
-      "market_value": 71.64,
+      "market_value": 70.26,
       "sample_strength": 20.0
     },
     "projection_integrity": {
       "contract": "wnba_projection_contract.py",
-      "invalid_rows_rejected": 1005,
+      "invalid_rows_rejected": 997,
       "rejection_sample": [
         {
           "player": "Allisha Gray",
@@ -131,6 +131,15 @@
           "player": "Allisha Gray",
           "game": "Atlanta Dream @ Golden State Valkyries",
           "stat": "3PM",
+          "line": 5.5,
+          "source_kind": "alt",
+          "reason": "missing_projection",
+          "projection_rejections": []
+        },
+        {
+          "player": "Allisha Gray",
+          "game": "Atlanta Dream @ Golden State Valkyries",
+          "stat": "3PM",
           "line": 0.5,
           "source_kind": "alt",
           "reason": "missing_projection",
@@ -249,15 +258,6 @@
           "game": "Atlanta Dream @ Golden State Valkyries",
           "stat": "AST",
           "line": 1.5,
-          "source_kind": "alt",
-          "reason": "missing_projection",
-          "projection_rejections": []
-        },
-        {
-          "player": "Allisha Gray",
-          "game": "Atlanta Dream @ Golden State Valkyries",
-          "stat": "AST",
-          "line": 2.5,
           "source_kind": "alt",
           "reason": "missing_projection",
           "projection_rejections": []
@@ -270,349 +270,6 @@
   "top_edges": [
     {
       "target_date": "2026-10-19",
-      "player": "Veronica Burton",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": 102.0,
-      "projection": 12.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 68.2,
-      "confidence": "MODERATE",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 100.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.20 versus line",
-        "Model probability edge +23.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kiah Stokes",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 8.5,
-      "sportsbook": null,
-      "odds": 102.0,
-      "projection": 6.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.725,
-      "edge_score": 68.2,
-      "confidence": "MODERATE",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 100.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.10 versus line",
-        "Model probability edge +23.0%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Naz Hillmon",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
-      "side": "OVER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": 100.0,
-      "projection": 13.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 68.13,
-      "confidence": "MODERATE",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 99.5,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.70 versus line",
-        "Model probability edge +22.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Veronica Burton",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 18.5,
-      "sportsbook": null,
-      "odds": -102.5,
-      "projection": 21.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.725,
-      "edge_score": 67.94,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 98.14,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.40 versus line",
-        "Model probability edge +21.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Tiffany Hayes",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -103.0,
-      "projection": 8.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 67.9,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 97.87,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.00 versus line",
-        "Model probability edge +21.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Gabby Williams",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 18.5,
-      "sportsbook": null,
-      "odds": -105.0,
-      "projection": 14.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 67.75,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 96.82,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.70 versus line",
-        "Model probability edge +21.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kayla Thornton",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
-      "side": "OVER",
-      "line": 7.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 13.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 67.4,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 94.26,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.80 versus line",
-        "Model probability edge +20.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
       "player": "Naz Hillmon",
       "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
@@ -620,70 +277,21 @@
       "side": "OVER",
       "line": 6.5,
       "sportsbook": null,
-      "odds": -110.0,
-      "projection": 10.1,
+      "odds": 101.5,
+      "projection": 10.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 67.4,
-      "confidence": "LOW",
+      "edge_score": 68.2,
+      "confidence": "MODERATE",
       "components": {
         "projection": 100.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 94.26,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.60 versus line",
-        "Model probability edge +20.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Tiffany Hayes",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 14.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 11.0,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.725,
-      "edge_score": 67.4,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 94.26,
+        "market_value": 100.0,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -704,7 +312,203 @@
       ],
       "evidence": [
         "Projection edge +3.50 versus line",
-        "Model probability edge +20.1%"
+        "Model probability edge +22.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Gabby Williams",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 18.5,
+      "sportsbook": null,
+      "odds": -102.0,
+      "projection": 14.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 67.98,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 98.41,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.70 versus line",
+        "Model probability edge +22.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Gabby Williams",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 23.5,
+      "sportsbook": null,
+      "odds": -107.0,
+      "projection": 17.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 67.61,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 95.78,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +5.70 versus line",
+        "Model probability edge +20.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Veronica Burton",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PR",
+      "side": "OVER",
+      "line": 13.5,
+      "sportsbook": null,
+      "odds": -107.0,
+      "projection": 16.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 67.61,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 95.78,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.60 versus line",
+        "Model probability edge +20.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Tiffany Hayes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -108.0,
+      "projection": 9.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 67.54,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 95.27,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.00 versus line",
+        "Model probability edge +20.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -760,20 +564,20 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Veronica Burton",
-      "team": "Golden State Valkyries",
+      "player": "Naz Hillmon",
+      "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
+      "market": "PRA",
       "side": "OVER",
-      "line": 13.5,
+      "line": 11.5,
       "sportsbook": null,
-      "odds": -112.5,
-      "projection": 16.1,
+      "odds": -111.0,
+      "projection": 14.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
+      "projection_ceiling": 140.0,
       "model_probability": 0.725,
-      "edge_score": 67.22,
+      "edge_score": 67.33,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -781,7 +585,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 93.03,
+        "market_value": 93.77,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -801,26 +605,124 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.60 versus line",
-        "Model probability edge +19.6%"
+        "Projection edge +3.20 versus line",
+        "Model probability edge +19.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Veronica Burton",
+      "player": "Kayla Thornton",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "AST",
+      "market": "PTS",
       "side": "OVER",
       "line": 4.5,
       "sportsbook": null,
-      "odds": -113.5,
-      "projection": 6.2,
+      "odds": -111.5,
+      "projection": 8.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 30.0,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 67.29,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 93.52,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.00 versus line",
+        "Model probability edge +19.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Gabby Williams",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 19.5,
+      "sportsbook": null,
+      "odds": -113.0,
+      "projection": 14.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 67.19,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 92.79,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.70 versus line",
+        "Model probability edge +19.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kayla Thornton",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PR",
+      "side": "OVER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -113.5,
+      "projection": 13.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
       "model_probability": 0.725,
       "edge_score": 67.16,
       "confidence": "LOW",
@@ -850,7 +752,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.70 versus line",
+        "Projection edge +5.80 versus line",
         "Model probability edge +19.3%"
       ],
       "market_type": "standard",
@@ -858,18 +760,18 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Kayla Thornton",
+      "player": "Gabby Williams",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 4.5,
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 26.5,
       "sportsbook": null,
       "odds": -114.0,
-      "projection": 8.5,
+      "projection": 20.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
+      "projection_ceiling": 140.0,
       "model_probability": 0.725,
       "edge_score": 67.12,
       "confidence": "LOW",
@@ -899,57 +801,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +4.00 versus line",
+        "Projection edge +5.90 versus line",
         "Model probability edge +19.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Naz Hillmon",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 11.5,
-      "sportsbook": null,
-      "odds": -115.0,
-      "projection": 14.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.725,
-      "edge_score": 67.06,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 91.83,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.30 versus line",
-        "Model probability edge +19.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -959,15 +812,113 @@
       "player": "Tiffany Hayes",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PTS",
+      "market": "PR",
       "side": "UNDER",
-      "line": 9.5,
+      "line": 11.5,
       "sportsbook": null,
-      "odds": -115.0,
-      "projection": 7.0,
+      "odds": -114.0,
+      "projection": 8.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 67.12,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 92.3,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.00 versus line",
+        "Model probability edge +19.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Veronica Burton",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "AST",
+      "side": "OVER",
+      "line": 4.5,
+      "sportsbook": null,
+      "odds": -114.0,
+      "projection": 6.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.725,
+      "edge_score": 67.12,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 92.3,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.70 versus line",
+        "Model probability edge +19.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Veronica Burton",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PA",
+      "side": "OVER",
+      "line": 14.5,
+      "sportsbook": null,
+      "odds": -115.0,
+      "projection": 18.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
       "model_probability": 0.725,
       "edge_score": 67.06,
       "confidence": "LOW",
@@ -997,7 +948,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.50 versus line",
+        "Projection edge +4.20 versus line",
         "Model probability edge +19.0%"
       ],
       "market_type": "standard",
@@ -1005,20 +956,20 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Kiah Stokes",
+      "player": "Kayla Thornton",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 13.5,
+      "market": "RA",
+      "side": "OVER",
+      "line": 3.5,
       "sportsbook": null,
-      "odds": -116.5,
-      "projection": 9.8,
+      "odds": -116.0,
+      "projection": 5.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 140.0,
+      "projection_ceiling": 70.0,
       "model_probability": 0.725,
-      "edge_score": 66.96,
+      "edge_score": 66.99,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1026,7 +977,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 91.12,
+        "market_value": 91.35,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1046,8 +997,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.70 versus line",
-        "Model probability edge +18.7%"
+        "Projection edge +2.10 versus line",
+        "Model probability edge +18.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Naz Hillmon",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PA",
+      "side": "OVER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -117.0,
+      "projection": 11.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 66.92,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 90.88,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.00 versus line",
+        "Model probability edge +18.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1103,18 +1103,18 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Kayla Thornton",
-      "team": "Golden State Valkyries",
+      "player": "Allisha Gray",
+      "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "RA",
+      "market": "PR",
       "side": "OVER",
-      "line": 3.5,
+      "line": 18.5,
       "sportsbook": null,
       "odds": -118.0,
-      "projection": 5.6,
+      "projection": 21.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
+      "projection_ceiling": 120.0,
       "model_probability": 0.725,
       "edge_score": 66.86,
       "confidence": "LOW",
@@ -1144,7 +1144,7 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.10 versus line",
+        "Projection edge +3.40 versus line",
         "Model probability edge +18.4%"
       ],
       "market_type": "standard",
@@ -1155,113 +1155,113 @@
       "player": "Gabby Williams",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 22.5,
+      "sportsbook": null,
+      "odds": -119.5,
+      "projection": 17.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 66.76,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 89.73,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +5.00 versus line",
+        "Model probability edge +18.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kiah Stokes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 8.5,
+      "sportsbook": null,
+      "odds": -120.0,
+      "projection": 6.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.725,
+      "edge_score": 66.73,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 89.5,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.30 versus line",
+        "Model probability edge +18.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kiah Stokes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
       "market": "PRA",
       "side": "UNDER",
-      "line": 26.5,
+      "line": 13.5,
       "sportsbook": null,
-      "odds": -118.5,
-      "projection": 20.5,
+      "odds": -120.5,
+      "projection": 9.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
-      "model_probability": 0.725,
-      "edge_score": 66.83,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 90.19,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +6.00 versus line",
-        "Model probability edge +18.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kayla Thornton",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PA",
-      "side": "OVER",
-      "line": 4.5,
-      "sportsbook": null,
-      "odds": -119.0,
-      "projection": 9.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.79,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 89.96,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +4.70 versus line",
-        "Model probability edge +18.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Veronica Burton",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PA",
-      "side": "OVER",
-      "line": 14.5,
-      "sportsbook": null,
-      "odds": -120.5,
-      "projection": 18.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
       "model_probability": 0.725,
       "edge_score": 66.7,
       "confidence": "LOW",
@@ -1291,253 +1291,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +4.20 versus line",
+        "Projection edge +3.70 versus line",
         "Model probability edge +17.9%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kayla Thornton",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -123.0,
-      "projection": 8.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 66.54,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.00 versus line",
-        "Model probability edge +17.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Naz Hillmon",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PA",
-      "side": "OVER",
-      "line": 7.5,
-      "sportsbook": null,
-      "odds": -123.0,
-      "projection": 11.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.54,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +4.10 versus line",
-        "Model probability edge +17.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Tiffany Hayes",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 12.5,
-      "sportsbook": null,
-      "odds": -123.0,
-      "projection": 9.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.54,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.10 versus line",
-        "Model probability edge +17.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kaila Charles",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 7.5,
-      "sportsbook": null,
-      "odds": -123.0,
-      "projection": 5.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.54,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 88.15,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +17.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kaila Charles",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": -107.0,
-      "projection": 8.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.7125,
-      "edge_score": 66.5,
-      "confidence": "LOW",
-      "components": {
-        "projection": 97.22,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 93.03,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.70 versus line",
-        "Model probability edge +19.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1593,20 +1348,20 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Kayla Thornton",
+      "player": "Gabby Williams",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
       "market": "PRA",
-      "side": "OVER",
-      "line": 7.5,
+      "side": "UNDER",
+      "line": 27.5,
       "sportsbook": null,
-      "odds": -127.0,
-      "projection": 14.1,
+      "odds": -126.0,
+      "projection": 20.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.725,
-      "edge_score": 66.3,
+      "edge_score": 66.36,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1614,7 +1369,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 86.42,
+        "market_value": 86.85,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1634,26 +1389,26 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +6.60 versus line",
-        "Model probability edge +16.6%"
+        "Projection edge +7.00 versus line",
+        "Model probability edge +16.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Allisha Gray",
-      "team": "Atlanta Dream",
+      "player": "Veronica Burton",
+      "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
+      "market": "PTS",
       "side": "OVER",
-      "line": 18.5,
+      "line": 9.5,
       "sportsbook": null,
       "odds": -127.5,
-      "projection": 21.9,
+      "projection": 12.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
+      "projection_ceiling": 80.0,
       "model_probability": 0.725,
       "edge_score": 66.27,
       "confidence": "LOW",
@@ -1691,167 +1446,20 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Gabby Williams",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
-      "side": "UNDER",
-      "line": 23.5,
-      "sportsbook": null,
-      "odds": -128.0,
-      "projection": 17.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": 0.725,
-      "edge_score": 66.24,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.99,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.80 versus line",
-        "Model probability edge +16.4%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Veronica Burton",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "OVER",
-      "line": 9.5,
-      "sportsbook": null,
-      "odds": -128.0,
-      "projection": 12.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.725,
-      "edge_score": 66.24,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.99,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +3.40 versus line",
-        "Model probability edge +16.4%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Gabby Williams",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PA",
-      "side": "UNDER",
-      "line": 22.5,
-      "sportsbook": null,
-      "odds": -129.0,
-      "projection": 17.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 110.0,
-      "model_probability": 0.725,
-      "edge_score": 66.18,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 85.57,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +5.00 versus line",
-        "Model probability edge +16.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Naz Hillmon",
+      "player": "Allisha Gray",
       "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
+      "market": "PRA",
       "side": "OVER",
-      "line": 9.5,
+      "line": 20.5,
       "sportsbook": null,
-      "odds": -132.0,
-      "projection": 13.4,
+      "odds": -128.0,
+      "projection": 24.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 120.0,
+      "projection_ceiling": 140.0,
       "model_probability": 0.725,
-      "edge_score": 66.01,
+      "edge_score": 66.24,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1859,7 +1467,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 84.33,
+        "market_value": 85.99,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1879,8 +1487,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +3.90 versus line",
-        "Model probability edge +15.6%"
+        "Projection edge +3.60 versus line",
+        "Model probability edge +16.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Tiffany Hayes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 14.5,
+      "sportsbook": null,
+      "odds": -128.0,
+      "projection": 10.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.725,
+      "edge_score": 66.24,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 85.99,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.60 versus line",
+        "Model probability edge +16.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -1894,13 +1551,13 @@
       "side": "UNDER",
       "line": 7.5,
       "sportsbook": null,
-      "odds": -132.5,
+      "odds": -128.0,
       "projection": 5.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
       "model_probability": 0.725,
-      "edge_score": 65.98,
+      "edge_score": 66.24,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1908,7 +1565,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 84.12,
+        "market_value": 85.99,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -1929,27 +1586,27 @@
       ],
       "evidence": [
         "Projection edge +1.80 versus line",
-        "Model probability edge +15.5%"
+        "Model probability edge +16.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Kaila Charles",
+      "player": "Tiffany Hayes",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
       "market": "PTS",
       "side": "UNDER",
-      "line": 6.5,
+      "line": 9.5,
       "sportsbook": null,
-      "odds": -133.5,
-      "projection": 4.6,
+      "odds": -130.0,
+      "projection": 6.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.725,
-      "edge_score": 65.92,
+      "edge_score": 66.12,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -1957,154 +1614,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 83.72,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +1.90 versus line",
-        "Model probability edge +15.3%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "AST",
-      "side": "OVER",
-      "line": 6.5,
-      "sportsbook": null,
-      "odds": -134.5,
-      "projection": 8.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.725,
-      "edge_score": 65.86,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 83.32,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.10 versus line",
-        "Model probability edge +15.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kiah Stokes",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 7.5,
-      "sportsbook": null,
-      "odds": -136.5,
-      "projection": 5.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.725,
-      "edge_score": 65.75,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 82.52,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.10 versus line",
-        "Model probability edge +14.8%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kaila Charles",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 12.5,
-      "sportsbook": null,
-      "odds": -137.0,
-      "projection": 9.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.725,
-      "edge_score": 65.73,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 82.33,
+        "market_value": 85.15,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2125,7 +1635,7 @@
       ],
       "evidence": [
         "Projection edge +2.60 versus line",
-        "Model probability edge +14.7%"
+        "Model probability edge +16.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2135,17 +1645,17 @@
       "player": "Veronica Burton",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "RA",
+      "market": "PRA",
       "side": "OVER",
-      "line": 7.5,
+      "line": 17.5,
       "sportsbook": null,
-      "odds": -137.0,
-      "projection": 9.6,
+      "odds": -130.5,
+      "projection": 22.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
+      "projection_ceiling": 140.0,
       "model_probability": 0.725,
-      "edge_score": 65.73,
+      "edge_score": 66.09,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -2153,7 +1663,301 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 82.33,
+        "market_value": 84.94,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.60 versus line",
+        "Model probability edge +15.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Naz Hillmon",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PR",
+      "side": "OVER",
+      "line": 9.5,
+      "sportsbook": null,
+      "odds": -131.5,
+      "projection": 13.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.725,
+      "edge_score": 66.03,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 84.53,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +3.90 versus line",
+        "Model probability edge +15.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kaila Charles",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PA",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -134.0,
+      "projection": 5.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 65.89,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 83.52,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.70 versus line",
+        "Model probability edge +15.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kaila Charles",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 6.5,
+      "sportsbook": null,
+      "odds": -135.0,
+      "projection": 4.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.725,
+      "edge_score": 65.84,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 83.12,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.90 versus line",
+        "Model probability edge +15.1%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kayla Thornton",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PA",
+      "side": "OVER",
+      "line": 4.5,
+      "sportsbook": null,
+      "odds": -138.0,
+      "projection": 9.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.725,
+      "edge_score": 65.67,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 81.94,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +4.80 versus line",
+        "Model probability edge +14.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kayla Thornton",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -139.0,
+      "projection": 14.1,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.725,
+      "edge_score": 65.62,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 81.55,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +6.60 versus line",
+        "Model probability edge +14.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Jordin Canada",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "AST",
+      "side": "OVER",
+      "line": 6.5,
+      "sportsbook": null,
+      "odds": -139.5,
+      "projection": 8.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.725,
+      "edge_score": 65.59,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 81.36,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2174,35 +1978,35 @@
       ],
       "evidence": [
         "Projection edge +2.10 versus line",
-        "Model probability edge +14.7%"
+        "Model probability edge +14.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
+      "player": "Kaila Charles",
+      "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "RA",
-      "side": "OVER",
-      "line": 9.5,
+      "market": "PR",
+      "side": "UNDER",
+      "line": 10.5,
       "sportsbook": null,
-      "odds": -146.0,
-      "projection": 11.9,
+      "odds": -122.0,
+      "projection": 8.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.725,
-      "edge_score": 65.25,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.7125,
+      "edge_score": 65.5,
       "confidence": "LOW",
       "components": {
-        "projection": 100.0,
+        "projection": 97.22,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 78.93,
+        "market_value": 85.85,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2222,7 +2026,105 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.40 versus line",
+        "Projection edge +1.70 versus line",
+        "Model probability edge +16.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Veronica Burton",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "RA",
+      "side": "OVER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -142.5,
+      "projection": 9.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.725,
+      "edge_score": 65.43,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 80.22,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.10 versus line",
+        "Model probability edge +13.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kiah Stokes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": -145.5,
+      "projection": 5.3,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 65.28,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 79.11,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +2.20 versus line",
         "Model probability edge +13.2%"
       ],
       "market_type": "standard",
@@ -2237,7 +2139,7 @@
       "side": "OVER",
       "line": 3.5,
       "sportsbook": null,
-      "odds": 142.0,
+      "odds": 140.0,
       "projection": 4.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
@@ -2272,7 +2174,56 @@
       ],
       "evidence": [
         "Projection edge +1.10 versus line",
-        "Model probability edge +26.0%"
+        "Model probability edge +25.7%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Tiffany Hayes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 2.5,
+      "sportsbook": null,
+      "odds": -154.0,
+      "projection": 0.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.725,
+      "edge_score": 64.86,
+      "confidence": "LOW",
+      "components": {
+        "projection": 100.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 76.11,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.60 versus line",
+        "Model probability edge +11.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2286,13 +2237,13 @@
       "side": "UNDER",
       "line": 4.5,
       "sportsbook": null,
-      "odds": -159.5,
+      "odds": -157.5,
       "projection": 2.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.725,
-      "edge_score": 64.6,
+      "edge_score": 64.69,
       "confidence": "LOW",
       "components": {
         "projection": 100.0,
@@ -2300,7 +2251,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 74.28,
+        "market_value": 74.94,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2321,22 +2272,22 @@
       ],
       "evidence": [
         "Projection edge +1.70 versus line",
-        "Model probability edge +11.0%"
+        "Model probability edge +11.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Tiffany Hayes",
+      "player": "Kayla Thornton",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
       "market": "REB",
-      "side": "UNDER",
+      "side": "OVER",
       "line": 2.5,
       "sportsbook": null,
       "odds": -162.0,
-      "projection": 0.9,
+      "projection": 5.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
@@ -2369,57 +2320,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.60 versus line",
+        "Projection edge +2.50 versus line",
         "Model probability edge +10.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kayla Thornton",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "REB",
-      "side": "OVER",
-      "line": 2.5,
-      "sportsbook": null,
-      "odds": -169.0,
-      "projection": 5.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.725,
-      "edge_score": 64.18,
-      "confidence": "LOW",
-      "components": {
-        "projection": 100.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 71.28,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +2.60 versus line",
-        "Model probability edge +9.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2433,13 +2335,13 @@
       "side": "UNDER",
       "line": 5.5,
       "sportsbook": null,
-      "odds": 104.0,
+      "odds": 105.0,
       "projection": 4.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.6732,
-      "edge_score": 63.85,
+      "edge_score": 63.92,
       "confidence": "LOW",
       "components": {
         "projection": 88.5,
@@ -2447,7 +2349,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 90.27,
+        "market_value": 90.8,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2468,7 +2370,105 @@
       ],
       "evidence": [
         "Projection edge +1.10 versus line",
-        "Model probability edge +18.3%"
+        "Model probability edge +18.5%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kaila Charles",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 11.5,
+      "sportsbook": null,
+      "odds": -112.0,
+      "projection": 10.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.6712,
+      "edge_score": 62.49,
+      "confidence": "LOW",
+      "components": {
+        "projection": 88.04,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 81.44,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.50 versus line",
+        "Model probability edge +14.3%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kiah Stokes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PTS",
+      "side": "UNDER",
+      "line": 4.5,
+      "sportsbook": null,
+      "odds": -124.5,
+      "projection": 3.4,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 80.0,
+      "model_probability": 0.6733,
+      "edge_score": 61.87,
+      "confidence": "LOW",
+      "components": {
+        "projection": 88.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 76.11,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.10 versus line",
+        "Model probability edge +11.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2482,13 +2482,13 @@
       "side": "OVER",
       "line": 10.5,
       "sportsbook": null,
-      "odds": -109.0,
+      "odds": -113.0,
       "projection": 11.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
       "model_probability": 0.6625,
-      "edge_score": 61.93,
+      "edge_score": 61.65,
       "confidence": "LOW",
       "components": {
         "projection": 86.11,
@@ -2496,7 +2496,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 81.01,
+        "market_value": 79.04,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2517,35 +2517,35 @@
       ],
       "evidence": [
         "Projection edge +1.30 versus line",
-        "Model probability edge +14.1%"
+        "Model probability edge +13.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Kiah Stokes",
-      "team": "Golden State Valkyries",
+      "player": "Allisha Gray",
+      "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PTS",
-      "side": "UNDER",
-      "line": 4.5,
+      "market": "PR",
+      "side": "OVER",
+      "line": 19.5,
       "sportsbook": null,
-      "odds": -131.0,
-      "projection": 3.4,
+      "odds": -106.0,
+      "projection": 21.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 80.0,
-      "model_probability": 0.6733,
-      "edge_score": 61.48,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.6548,
+      "edge_score": 61.46,
       "confidence": "LOW",
       "components": {
-        "projection": 88.5,
+        "projection": 84.4,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 73.35,
+        "market_value": 80.85,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2565,8 +2565,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +1.10 versus line",
-        "Model probability edge +10.6%"
+        "Projection edge +2.30 versus line",
+        "Model probability edge +14.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2580,21 +2580,21 @@
       "side": "OVER",
       "line": 21.5,
       "sportsbook": null,
-      "odds": -103.5,
-      "projection": 23.9,
+      "odds": -110.0,
+      "projection": 24.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
-      "model_probability": 0.6465,
-      "edge_score": 60.91,
+      "model_probability": 0.6526,
+      "edge_score": 60.98,
       "confidence": "LOW",
       "components": {
-        "projection": 82.56,
+        "projection": 83.91,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 80.34,
+        "market_value": 78.34,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2614,8 +2614,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +2.40 versus line",
-        "Model probability edge +13.8%"
+        "Projection edge +2.50 versus line",
+        "Model probability edge +12.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2629,13 +2629,13 @@
       "side": "OVER",
       "line": 1.5,
       "sportsbook": null,
-      "odds": -180.0,
+      "odds": -175.0,
       "projection": 2.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
       "model_probability": 0.689,
-      "edge_score": 60.54,
+      "edge_score": 60.74,
       "confidence": "LOW",
       "components": {
         "projection": 92.0,
@@ -2643,7 +2643,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 60.15,
+        "market_value": 61.58,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2664,35 +2664,35 @@
       ],
       "evidence": [
         "Projection edge +1.20 versus line",
-        "Model probability edge +4.6%"
+        "Model probability edge +5.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Tiffany Hayes",
-      "team": "Golden State Valkyries",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 4.5,
+      "market": "AST",
+      "side": "OVER",
+      "line": 1.5,
       "sportsbook": null,
-      "odds": 115.0,
-      "projection": 3.8,
+      "odds": -195.0,
+      "projection": 2.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.6102,
-      "edge_score": 59.04,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.689,
+      "edge_score": 59.98,
       "confidence": "LOW",
       "components": {
-        "projection": 74.5,
+        "projection": 92.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 81.93,
+        "market_value": 56.16,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2712,8 +2712,57 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.70 versus line",
-        "Model probability edge +14.5%"
+        "Projection edge +1.20 versus line",
+        "Model probability edge +2.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Tiffany Hayes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 4.5,
+      "sportsbook": null,
+      "odds": 101.0,
+      "projection": 3.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.626,
+      "edge_score": 59.44,
+      "confidence": "LOW",
+      "components": {
+        "projection": 78.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 78.27,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.80 versus line",
+        "Model probability edge +12.8%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2727,13 +2776,13 @@
       "side": "OVER",
       "line": 17.5,
       "sportsbook": null,
-      "odds": -127.5,
+      "odds": -122.0,
       "projection": 19.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.635,
-      "edge_score": 58.3,
+      "edge_score": 58.63,
       "confidence": "LOW",
       "components": {
         "projection": 80.0,
@@ -2741,7 +2790,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 66.4,
+        "market_value": 68.8,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2762,56 +2811,7 @@
       ],
       "evidence": [
         "Projection edge +1.80 versus line",
-        "Model probability edge +7.5%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Kiah Stokes",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 1.5,
-      "sportsbook": null,
-      "odds": -126.0,
-      "projection": 0.7,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.626,
-      "edge_score": 57.59,
-      "confidence": "LOW",
-      "components": {
-        "projection": 78.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 65.07,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge +6.8%"
+        "Model probability edge +8.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2821,17 +2821,17 @@
       "player": "Kaila Charles",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "REB",
+      "market": "PTS",
       "side": "UNDER",
-      "line": 4.5,
+      "line": 5.5,
       "sportsbook": null,
-      "odds": -118.0,
-      "projection": 3.8,
+      "odds": 100.0,
+      "projection": 4.8,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 40.0,
+      "projection_ceiling": 80.0,
       "model_probability": 0.6102,
-      "edge_score": 56.69,
+      "edge_score": 57.97,
       "confidence": "LOW",
       "components": {
         "projection": 74.5,
@@ -2839,7 +2839,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 65.17,
+        "market_value": 74.25,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2860,27 +2860,125 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge +6.9%"
+        "Model probability edge +11.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
+      "player": "Kiah Stokes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 1.5,
+      "sportsbook": null,
+      "odds": -163.0,
+      "projection": 0.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.6418,
+      "edge_score": 57.07,
+      "confidence": "LOW",
+      "components": {
+        "projection": 81.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 54.84,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.90 versus line",
+        "Model probability edge +2.2%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kaila Charles",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 1.5,
+      "sportsbook": null,
+      "odds": -209.0,
+      "projection": 0.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.6575,
+      "edge_score": 56.72,
+      "confidence": "LOW",
+      "components": {
+        "projection": 85.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 45.85,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge -1.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Kaila Charles",
+      "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
       "market": "REB",
       "side": "UNDER",
       "line": 4.5,
       "sportsbook": null,
-      "odds": -148.0,
+      "odds": -143.0,
       "projection": 3.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.626,
-      "edge_score": 56.38,
+      "edge_score": 56.64,
       "confidence": "LOW",
       "components": {
         "projection": 78.0,
@@ -2888,7 +2986,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 56.43,
+        "market_value": 58.25,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2909,7 +3007,56 @@
       ],
       "evidence": [
         "Projection edge +0.80 versus line",
-        "Model probability edge +2.9%"
+        "Model probability edge +3.8%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Gabby Williams",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -178.5,
+      "projection": 2.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.6418,
+      "edge_score": 56.42,
+      "confidence": "LOW",
+      "components": {
+        "projection": 81.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.18,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.90 versus line",
+        "Model probability edge +0.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -2923,13 +3070,13 @@
       "side": "UNDER",
       "line": 19.5,
       "sportsbook": null,
-      "odds": -103.5,
+      "odds": -108.0,
       "projection": 18.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
       "model_probability": 0.5942,
-      "edge_score": 56.28,
+      "edge_score": 55.95,
       "confidence": "LOW",
       "components": {
         "projection": 70.94,
@@ -2937,7 +3084,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 68.84,
+        "market_value": 66.5,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -2958,56 +3105,7 @@
       ],
       "evidence": [
         "Projection edge +1.40 versus line",
-        "Model probability edge +8.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Gabby Williams",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "AST",
-      "side": "UNDER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -182.0,
-      "projection": 2.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.6418,
-      "edge_score": 56.28,
-      "confidence": "LOW",
-      "components": {
-        "projection": 81.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 49.2,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge -0.4%"
+        "Model probability edge +7.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3021,13 +3119,13 @@
       "side": "UNDER",
       "line": 23.5,
       "sportsbook": null,
-      "odds": -120.0,
+      "odds": -118.0,
       "projection": 21.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.6005,
-      "edge_score": 55.71,
+      "edge_score": 55.83,
       "confidence": "LOW",
       "components": {
         "projection": 72.34,
@@ -3035,7 +3133,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 62.12,
+        "market_value": 63.03,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3056,35 +3154,35 @@
       ],
       "evidence": [
         "Projection edge +1.80 versus line",
-        "Model probability edge +5.5%"
+        "Model probability edge +5.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
     },
     {
       "target_date": "2026-10-19",
-      "player": "Kaila Charles",
-      "team": "Golden State Valkyries",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "AST",
+      "market": "REB",
       "side": "UNDER",
-      "line": 1.5,
+      "line": 4.5,
       "sportsbook": null,
-      "odds": -199.0,
-      "projection": 0.6,
+      "odds": -163.0,
+      "projection": 3.7,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": 0.6418,
-      "edge_score": 55.66,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.626,
+      "edge_score": 55.67,
       "confidence": "LOW",
       "components": {
-        "projection": 81.5,
+        "projection": 78.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 44.76,
+        "market_value": 51.37,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3104,8 +3202,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge -2.4%"
+        "Projection edge +0.80 versus line",
+        "Model probability edge +0.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3119,21 +3217,21 @@
       "side": "UNDER",
       "line": 5.5,
       "sportsbook": null,
-      "odds": 102.0,
-      "projection": 5.0,
+      "odds": -118.0,
+      "projection": 4.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
-      "model_probability": 0.5787,
-      "edge_score": 55.33,
+      "model_probability": 0.5945,
+      "edge_score": 55.3,
       "confidence": "LOW",
       "components": {
-        "projection": 67.5,
+        "projection": 71.0,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 68.41,
+        "market_value": 61.71,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3153,8 +3251,8 @@
         "roi"
       ],
       "evidence": [
-        "Projection edge +0.50 versus line",
-        "Model probability edge +8.4%"
+        "Projection edge +0.60 versus line",
+        "Model probability edge +5.3%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3210,55 +3308,6 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Allisha Gray",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "REB",
-      "side": "OVER",
-      "line": 2.5,
-      "sportsbook": null,
-      "odds": -180.0,
-      "projection": 3.3,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.626,
-      "edge_score": 54.96,
-      "confidence": "LOW",
-      "components": {
-        "projection": 78.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 46.29,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.80 versus line",
-        "Model probability edge -1.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
       "player": "Angel Reese",
       "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
@@ -3266,13 +3315,13 @@
       "side": "UNDER",
       "line": 11.5,
       "sportsbook": null,
-      "odds": -141.5,
+      "odds": -142.5,
       "projection": 10.6,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
       "model_probability": 0.6027,
-      "edge_score": 54.65,
+      "edge_score": 54.6,
       "confidence": "LOW",
       "components": {
         "projection": 72.83,
@@ -3280,7 +3329,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 53.7,
+        "market_value": 53.32,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3301,56 +3350,7 @@
       ],
       "evidence": [
         "Projection edge +0.90 versus line",
-        "Model probability edge +1.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Cecilia Zandalasini",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 10.5,
-      "sportsbook": null,
-      "odds": -122.0,
-      "projection": 11.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.5875,
-      "edge_score": 54.42,
-      "confidence": "LOW",
-      "components": {
-        "projection": 69.44,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 58.35,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.70 versus line",
-        "Model probability edge +3.8%"
+        "Model probability edge +1.5%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3364,13 +3364,13 @@
       "side": "OVER",
       "line": 10.5,
       "sportsbook": null,
-      "odds": -125.5,
+      "odds": -123.0,
       "projection": 11.2,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.5875,
-      "edge_score": 54.21,
+      "edge_score": 54.36,
       "confidence": "LOW",
       "components": {
         "projection": 69.44,
@@ -3378,7 +3378,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 56.81,
+        "market_value": 57.9,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3399,7 +3399,7 @@
       ],
       "evidence": [
         "Projection edge +0.70 versus line",
-        "Model probability edge +3.1%"
+        "Model probability edge +3.6%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3413,168 +3413,21 @@
       "side": "UNDER",
       "line": 15.5,
       "sportsbook": null,
-      "odds": -113.0,
-      "projection": 14.6,
+      "odds": -119.5,
+      "projection": 14.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
-      "model_probability": 0.5762,
-      "edge_score": 54.01,
+      "model_probability": 0.5847,
+      "edge_score": 54.33,
       "confidence": "LOW",
       "components": {
-        "projection": 66.94,
+        "projection": 68.82,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 60.05,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.90 versus line",
-        "Model probability edge +4.6%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Cecilia Zandalasini",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "RA",
-      "side": "UNDER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -140.0,
-      "projection": 2.9,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 70.0,
-      "model_probability": 0.5945,
-      "edge_score": 54.0,
-      "confidence": "LOW",
-      "components": {
-        "projection": 71.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 52.46,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.60 versus line",
-        "Model probability edge +1.1%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Allisha Gray",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "REB",
-      "side": "UNDER",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": -172.0,
-      "projection": 2.8,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": 0.6102,
-      "edge_score": 53.89,
-      "confidence": "LOW",
-      "components": {
-        "projection": 74.5,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 45.14,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.70 versus line",
-        "Model probability edge -2.2%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "OVER",
-      "line": 21.5,
-      "sportsbook": null,
-      "odds": -110.0,
-      "projection": 22.5,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.561,
-      "edge_score": 52.87,
-      "confidence": "LOW",
-      "components": {
-        "projection": 63.57,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 58.19,
+        "market_value": 58.86,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3595,7 +3448,252 @@
       ],
       "evidence": [
         "Projection edge +1.00 versus line",
-        "Model probability edge +3.7%"
+        "Model probability edge +4.0%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Cecilia Zandalasini",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 10.5,
+      "sportsbook": null,
+      "odds": -132.0,
+      "projection": 11.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5875,
+      "edge_score": 53.83,
+      "confidence": "LOW",
+      "components": {
+        "projection": 69.44,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 54.08,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +1.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Allisha Gray",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "REB",
+      "side": "UNDER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -181.0,
+      "projection": 2.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": 0.6102,
+      "edge_score": 53.53,
+      "confidence": "LOW",
+      "components": {
+        "projection": 74.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 42.55,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge -3.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Cecilia Zandalasini",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "RA",
+      "side": "UNDER",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": -157.0,
+      "projection": 2.9,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": 0.5945,
+      "edge_score": 53.15,
+      "confidence": "LOW",
+      "components": {
+        "projection": 71.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 46.39,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.60 versus line",
+        "Model probability edge -1.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Jordin Canada",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "OVER",
+      "line": 21.5,
+      "sportsbook": null,
+      "odds": -118.0,
+      "projection": 22.6,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5672,
+      "edge_score": 52.88,
+      "confidence": "LOW",
+      "components": {
+        "projection": 64.92,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 55.69,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.10 versus line",
+        "Model probability edge +2.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Tiffany Hayes",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "AST",
+      "side": "UNDER",
+      "line": 2.5,
+      "sportsbook": null,
+      "odds": -138.0,
+      "projection": 2.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": 0.5787,
+      "edge_score": 52.72,
+      "confidence": "LOW",
+      "components": {
+        "projection": 67.5,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 49.76,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge -0.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3609,13 +3707,13 @@
       "side": "OVER",
       "line": 7.5,
       "sportsbook": null,
-      "odds": -114.0,
+      "odds": -117.0,
       "projection": 7.9,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 80.0,
       "model_probability": 0.563,
-      "edge_score": 52.77,
+      "edge_score": 52.57,
       "confidence": "LOW",
       "components": {
         "projection": 64.0,
@@ -3623,7 +3721,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 56.66,
+        "market_value": 55.24,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3644,7 +3742,7 @@
       ],
       "evidence": [
         "Projection edge +0.40 versus line",
-        "Model probability edge +3.0%"
+        "Model probability edge +2.4%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3658,13 +3756,13 @@
       "side": "OVER",
       "line": 16.5,
       "sportsbook": null,
-      "odds": -119.0,
+      "odds": -119.5,
       "projection": 17.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 110.0,
       "model_probability": 0.5636,
-      "edge_score": 52.5,
+      "edge_score": 52.47,
       "confidence": "LOW",
       "components": {
         "projection": 64.14,
@@ -3672,7 +3770,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 54.46,
+        "market_value": 54.23,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3693,7 +3791,7 @@
       ],
       "evidence": [
         "Projection edge +0.80 versus line",
-        "Model probability edge +2.0%"
+        "Model probability edge +1.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3707,13 +3805,13 @@
       "side": "UNDER",
       "line": 5.5,
       "sportsbook": null,
-      "odds": -150.5,
+      "odds": -146.5,
       "projection": 5.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
       "model_probability": 0.5787,
-      "edge_score": 52.07,
+      "edge_score": 52.27,
       "confidence": "LOW",
       "components": {
         "projection": 67.5,
@@ -3721,7 +3819,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 45.15,
+        "market_value": 46.57,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3742,7 +3840,56 @@
       ],
       "evidence": [
         "Projection edge +0.50 versus line",
-        "Model probability edge -2.2%"
+        "Model probability edge -1.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Jordin Canada",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PA",
+      "side": "OVER",
+      "line": 18.5,
+      "sportsbook": null,
+      "odds": -105.0,
+      "projection": 19.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 110.0,
+      "model_probability": 0.5497,
+      "edge_score": 52.22,
+      "confidence": "LOW",
+      "components": {
+        "projection": 61.04,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 58.24,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +3.7%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3756,13 +3903,13 @@
       "side": "OVER",
       "line": 4.5,
       "sportsbook": null,
-      "odds": -163.0,
+      "odds": -158.0,
       "projection": 5.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 70.0,
       "model_probability": 0.5787,
-      "edge_score": 51.49,
+      "edge_score": 51.71,
       "confidence": "LOW",
       "components": {
         "projection": 67.5,
@@ -3770,7 +3917,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 40.98,
+        "market_value": 42.6,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3791,7 +3938,105 @@
       ],
       "evidence": [
         "Projection edge +0.50 versus line",
-        "Model probability edge -4.1%"
+        "Model probability edge -3.4%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 22.5,
+      "sportsbook": null,
+      "odds": -106.0,
+      "projection": 21.8,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.5408,
+      "edge_score": 51.37,
+      "confidence": "LOW",
+      "components": {
+        "projection": 59.07,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 55.78,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.70 versus line",
+        "Model probability edge +2.6%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PR",
+      "side": "UNDER",
+      "line": 26.5,
+      "sportsbook": null,
+      "odds": -127.0,
+      "projection": 25.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 120.0,
+      "model_probability": 0.5495,
+      "edge_score": 50.76,
+      "confidence": "LOW",
+      "components": {
+        "projection": 61.01,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 47.81,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +1.00 versus line",
+        "Model probability edge -1.0%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3805,13 +4050,13 @@
       "side": "UNDER",
       "line": 11.5,
       "sportsbook": null,
-      "odds": -131.0,
+      "odds": -136.0,
       "projection": 11.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
       "model_probability": 0.5457,
-      "edge_score": 50.18,
+      "edge_score": 49.89,
       "confidence": "LOW",
       "components": {
         "projection": 60.14,
@@ -3819,7 +4064,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 45.28,
+        "market_value": 43.26,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3840,7 +4085,7 @@
       ],
       "evidence": [
         "Projection edge +0.40 versus line",
-        "Model probability edge -2.1%"
+        "Model probability edge -3.1%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -3903,70 +4148,21 @@
       "side": "OVER",
       "line": 27.5,
       "sportsbook": null,
-      "odds": -120.0,
-      "projection": 28.1,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 140.0,
-      "model_probability": 0.5286,
-      "edge_score": 49.34,
-      "confidence": "LOW",
-      "components": {
-        "projection": 56.36,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 46.3,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": true,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": true,
-        "sample_strength": false
-      },
-      "evidence_count": 2,
-      "missing_evidence": [
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi"
-      ],
-      "evidence": [
-        "Projection edge +0.60 versus line",
-        "Model probability edge -1.7%"
-      ],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Angel Reese",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PRA",
-      "side": "UNDER",
-      "line": 28.5,
-      "sportsbook": null,
-      "odds": -121.0,
+      "odds": -114.0,
       "projection": 28.0,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 140.0,
-      "model_probability": 0.523,
-      "edge_score": 48.78,
+      "model_probability": 0.5239,
+      "edge_score": 49.31,
       "confidence": "LOW",
       "components": {
-        "projection": 55.12,
+        "projection": 55.3,
         "recent_form": 50.0,
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 44.61,
+        "market_value": 48.05,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -3987,7 +4183,56 @@
       ],
       "evidence": [
         "Projection edge +0.50 versus line",
-        "Model probability edge -2.4%"
+        "Model probability edge -0.9%"
+      ],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "PRA",
+      "side": "UNDER",
+      "line": 28.5,
+      "sportsbook": null,
+      "odds": -120.0,
+      "projection": 28.0,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 140.0,
+      "model_probability": 0.523,
+      "edge_score": 48.84,
+      "confidence": "LOW",
+      "components": {
+        "projection": 55.12,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 45.07,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": true,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": true,
+        "sample_strength": false
+      },
+      "evidence_count": 2,
+      "missing_evidence": [
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi"
+      ],
+      "evidence": [
+        "Projection edge +0.50 versus line",
+        "Model probability edge -2.2%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4001,13 +4246,13 @@
       "side": "UNDER",
       "line": 2.5,
       "sportsbook": null,
-      "odds": -199.5,
+      "odds": -205.0,
       "projection": 2.1,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
       "model_probability": 0.563,
-      "edge_score": 48.66,
+      "edge_score": 48.48,
       "confidence": "LOW",
       "components": {
         "projection": 64.0,
@@ -4015,7 +4260,7 @@
         "season_history": 50.0,
         "clv": 50.0,
         "roi": 50.0,
-        "market_value": 27.32,
+        "market_value": 25.99,
         "sample_strength": 20.0
       },
       "evidence_available": {
@@ -4036,7 +4281,7 @@
       ],
       "evidence": [
         "Projection edge +0.40 versus line",
-        "Model probability edge -10.3%"
+        "Model probability edge -10.9%"
       ],
       "market_type": "standard",
       "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
@@ -4052,6 +4297,54 @@
       "sportsbook": null,
       "odds": null,
       "projection": 2.2,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 30.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Cecilia Zandalasini",
+      "team": "Golden State Valkyries",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "AST",
+      "side": "PASS",
+      "line": 1.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 1.3,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 30.0,
@@ -4187,102 +4480,6 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Jordin Canada",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "REB",
-      "side": "PASS",
-      "line": 3.5,
-      "sportsbook": null,
-      "odds": null,
-      "projection": 3.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 40.0,
-      "model_probability": null,
-      "edge_score": 32.2,
-      "confidence": "LOW",
-      "components": {
-        "projection": 50.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 50.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": false,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": false,
-        "sample_strength": false
-      },
-      "evidence_count": 0,
-      "missing_evidence": [
-        "projection",
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi",
-        "market_value"
-      ],
-      "evidence": [],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Cecilia Zandalasini",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "AST",
-      "side": "PASS",
-      "line": 1.5,
-      "sportsbook": null,
-      "odds": null,
-      "projection": 1.4,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
-      "model_probability": null,
-      "edge_score": 32.2,
-      "confidence": "LOW",
-      "components": {
-        "projection": 50.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 50.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": false,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": false,
-        "sample_strength": false
-      },
-      "evidence_count": 0,
-      "missing_evidence": [
-        "projection",
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi",
-        "market_value"
-      ],
-      "evidence": [],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
       "player": "Cecilia Zandalasini",
       "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
@@ -4379,15 +4576,111 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Cecilia Zandalasini",
-      "team": "Golden State Valkyries",
+      "player": "Jordin Canada",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "REB",
+      "side": "PASS",
+      "line": 3.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 3.7,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 40.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Rhyne Howard",
+      "team": "Atlanta Dream",
+      "game": "Atlanta Dream @ Golden State Valkyries",
+      "market": "RA",
+      "side": "PASS",
+      "line": 7.5,
+      "sportsbook": null,
+      "odds": null,
+      "projection": 7.5,
+      "projection_source_field": "model_projection",
+      "projection_validated": true,
+      "projection_ceiling": 70.0,
+      "model_probability": null,
+      "edge_score": 32.2,
+      "confidence": "LOW",
+      "components": {
+        "projection": 50.0,
+        "recent_form": 50.0,
+        "season_history": 50.0,
+        "clv": 50.0,
+        "roi": 50.0,
+        "market_value": 50.0,
+        "sample_strength": 20.0
+      },
+      "evidence_available": {
+        "projection": false,
+        "recent_form": false,
+        "season_history": false,
+        "clv": false,
+        "roi": false,
+        "market_value": false,
+        "sample_strength": false
+      },
+      "evidence_count": 0,
+      "missing_evidence": [
+        "projection",
+        "recent_form",
+        "season_history",
+        "clv",
+        "roi",
+        "market_value"
+      ],
+      "evidence": [],
+      "market_type": "standard",
+      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
+    },
+    {
+      "target_date": "2026-10-19",
+      "player": "Angel Reese",
+      "team": "Atlanta Dream",
       "game": "Atlanta Dream @ Golden State Valkyries",
       "market": "PR",
       "side": "PASS",
-      "line": 9.5,
+      "line": 25.5,
       "sportsbook": null,
       "odds": null,
-      "projection": 9.3,
+      "projection": 25.5,
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 120.0,
@@ -4475,18 +4768,18 @@
     },
     {
       "target_date": "2026-10-19",
-      "player": "Rhyne Howard",
-      "team": "Atlanta Dream",
+      "player": "Cecilia Zandalasini",
+      "team": "Golden State Valkyries",
       "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "RA",
+      "market": "PR",
       "side": "PASS",
-      "line": 7.5,
+      "line": 9.5,
       "sportsbook": null,
       "odds": null,
-      "projection": 7.6,
+      "projection": 9.4,
       "projection_source_field": "model_projection",
       "projection_validated": true,
-      "projection_ceiling": 70.0,
+      "projection_ceiling": 120.0,
       "model_probability": null,
       "edge_score": 32.2,
       "confidence": "LOW",
@@ -4535,102 +4828,6 @@
       "projection_source_field": "model_projection",
       "projection_validated": true,
       "projection_ceiling": 40.0,
-      "model_probability": null,
-      "edge_score": 32.2,
-      "confidence": "LOW",
-      "components": {
-        "projection": 50.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 50.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": false,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": false,
-        "sample_strength": false
-      },
-      "evidence_count": 0,
-      "missing_evidence": [
-        "projection",
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi",
-        "market_value"
-      ],
-      "evidence": [],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Angel Reese",
-      "team": "Atlanta Dream",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "PR",
-      "side": "PASS",
-      "line": 25.5,
-      "sportsbook": null,
-      "odds": null,
-      "projection": 25.6,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 120.0,
-      "model_probability": null,
-      "edge_score": 32.2,
-      "confidence": "LOW",
-      "components": {
-        "projection": 50.0,
-        "recent_form": 50.0,
-        "season_history": 50.0,
-        "clv": 50.0,
-        "roi": 50.0,
-        "market_value": 50.0,
-        "sample_strength": 20.0
-      },
-      "evidence_available": {
-        "projection": false,
-        "recent_form": false,
-        "season_history": false,
-        "clv": false,
-        "roi": false,
-        "market_value": false,
-        "sample_strength": false
-      },
-      "evidence_count": 0,
-      "missing_evidence": [
-        "projection",
-        "recent_form",
-        "season_history",
-        "clv",
-        "roi",
-        "market_value"
-      ],
-      "evidence": [],
-      "market_type": "standard",
-      "source": "exact_current_slate_sportsbook_props_plus_player_points_v5_plus_current_injury_intelligence"
-    },
-    {
-      "target_date": "2026-10-19",
-      "player": "Tiffany Hayes",
-      "team": "Golden State Valkyries",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "market": "AST",
-      "side": "PASS",
-      "line": 2.5,
-      "sportsbook": null,
-      "odds": null,
-      "projection": 2.2,
-      "projection_source_field": "model_projection",
-      "projection_validated": true,
-      "projection_ceiling": 30.0,
       "model_probability": null,
       "edge_score": 32.2,
       "confidence": "LOW",
