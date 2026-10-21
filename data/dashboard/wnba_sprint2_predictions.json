@@ -1,69 +1,47 @@
 {
-  "generated_at_utc": "2026-10-20T00:27:36.361671+00:00",
-  "target_date": "2026-10-19",
+  "generated_at_utc": "2026-10-21T15:17:52.290033+00:00",
+  "target_date": "2026-10-21",
   "schema_version": "sprint2-game-projections-v2",
   "model_version": "game_score_l10_market_42_58_v1",
   "status": "PASS",
   "games": [
     {
       "model_version": "game_score_l10_market_42_58_v1",
-      "game": "Atlanta Dream @ Golden State Valkyries",
-      "away_team": "Atlanta Dream",
-      "home_team": "Golden State Valkyries",
-      "start_time": "2026-10-20T00:00Z",
+      "game": "Golden State Valkyries @ Atlanta Dream",
+      "away_team": "Golden State Valkyries",
+      "home_team": "Atlanta Dream",
+      "start_time": "2026-10-22T00:00Z",
       "market": {
-        "home_spread": null,
-        "total": null
+        "home_spread": -3.5,
+        "total": 153.5
       },
       "market_source": "espn_scoreboard",
       "sportsbook": null,
       "projection": {
-        "away_score": 83.9,
-        "home_score": 81.0,
-        "home_margin": -2.91,
-        "model_home_spread": 2.91,
-        "total": 165.0,
-        "home_win_probability": 0.3899,
-        "away_win_probability": 0.6101
+        "away_score": 76.9,
+        "home_score": 81.4,
+        "home_margin": 4.43,
+        "model_home_spread": -4.43,
+        "total": 158.3,
+        "home_win_probability": 0.664,
+        "away_win_probability": 0.336
       },
       "edge": {
-        "spread": null,
-        "total": null
+        "spread": 0.93,
+        "total": 4.82
       },
       "recommendation": {
         "spread": "PASS",
-        "total": "PASS"
+        "total": "OVER"
       },
       "confidence": 88.0,
-      "source": "team_indices+roster_form",
+      "source": "team_indices+roster_form+market_prior",
       "blend_weights": {
         "market": 0.58,
         "statistical": 0.42
       },
       "team_ratings": {
         "away": {
-          "team": "Atlanta Dream",
-          "games_sample": 18,
-          "points_for_l10": 91.4,
-          "points_against_l10": 77.2,
-          "points_for_l5": 87.0,
-          "points_against_l5": 81.2,
-          "home_points_for": 95.44,
-          "away_points_for": 90.89,
-          "offense_index": 105.44,
-          "defense_index": 111.6,
-          "net_index": 17.03,
-          "recent_form_index": -5.88,
-          "power_rating": 11.15,
-          "roster_form": {
-            "players": 20,
-            "weighted_ppg": 8.842,
-            "weighted_roll5_ppg": 8.826,
-            "form_delta": -0.016
-          },
-          "data_confidence": 90
-        },
-        "home": {
           "team": "Golden State Valkyries",
           "games_sample": 18,
           "points_for_l10": 81.8,
@@ -84,6 +62,28 @@
             "form_delta": 0.54
           },
           "data_confidence": 90
+        },
+        "home": {
+          "team": "Atlanta Dream",
+          "games_sample": 18,
+          "points_for_l10": 91.4,
+          "points_against_l10": 77.2,
+          "points_for_l5": 87.0,
+          "points_against_l5": 81.2,
+          "home_points_for": 95.44,
+          "away_points_for": 90.89,
+          "offense_index": 105.44,
+          "defense_index": 111.6,
+          "net_index": 17.03,
+          "recent_form_index": -5.88,
+          "power_rating": 11.15,
+          "roster_form": {
+            "players": 20,
+            "weighted_ppg": 8.842,
+            "weighted_roll5_ppg": 8.826,
+            "form_delta": -0.016
+          },
+          "data_confidence": 90
         }
       }
     }
@@ -91,6 +91,6 @@
   "summary": {
     "game_count": 1,
     "qualified_spreads": 0,
-    "qualified_totals": 0
+    "qualified_totals": 1
   }
 }
