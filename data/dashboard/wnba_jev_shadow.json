@@ -1,11 +1,11 @@
 {
   "version": "jev_shadow_v2",
   "league": "WNBA",
-  "generated_at_utc": "2026-10-26T22:53:08.760002+00:00",
+  "generated_at_utc": "2026-10-27T00:44:12.250982+00:00",
   "target_date": "2026-10-26",
   "source": {
     "target_date": "2026-10-26",
-    "generated_at_utc": "2026-10-26T17:00:47.783063+00:00",
+    "generated_at_utc": "2026-10-26T22:52:40.071798+00:00",
     "status": "READY",
     "schema_version": "sprint19-m02-unified-predictions-v5",
     "input_path": "data/dashboard/wnba_s19_m02_predictions.json",
@@ -16,120 +16,38 @@
   "status": "OK",
   "model": "jev-1.14.0",
   "usage": {
-    "input_tokens": 13184,
-    "output_tokens": 2688
+    "input_tokens": 13236,
+    "output_tokens": 2684
   },
   "summary": {
     "candidates": 20,
-    "new_ledger_rows": 20,
+    "new_ledger_rows": 3,
     "action_counts": {
-      "PASS": 10,
-      "WATCH": 5,
+      "PASS": 8,
+      "WATCH": 8,
       "BET": 3,
-      "LEAN": 2
+      "LEAN": 1
     },
     "trust_counts": {
-      "MEDIUM": 17,
-      "LOW": 3
+      "MEDIUM": 13,
+      "LOW": 7
     },
-    "review_ge_050": 12,
+    "review_ge_050": 10,
     "anomaly_ge_050": 8,
     "batch_directional_concentration_ge_050": true,
     "batch_systemic_integrity_risk_ge_050": true
   },
   "batch": {
-    "directional_concentration_probability": 0.7,
-    "systemic_integrity_risk_probability": 0.65
+    "directional_concentration_probability": 0.64,
+    "systemic_integrity_risk_probability": 0.52
   },
   "decisions": [
-    {
-      "shadow_id": "cc68c367ebca0327c5e8bae0",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Tiffany Hayes",
-        "team": "Golden State Valkyries",
-        "stat": "PR",
-        "line": 16.5,
-        "edge": -8.0,
-        "model_projection": 8.5,
-        "confidence": 66.0,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "PASS",
-        "action_probabilities": {
-          "BET": 0.05,
-          "LEAN": 0.07,
-          "WATCH": 0.05,
-          "PASS": 0.83
-        },
-        "action_confidence": 0.77,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.08,
-          "MEDIUM": 0.43,
-          "LOW": 0.32,
-          "REJECT": 0.17
-        },
-        "trust_confidence": 0.24,
-        "anomaly_probability": 0.59,
-        "review_probability": 0.67
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "d2045f212cab95ed250d2ac1",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Tiffany Hayes",
-        "team": "Golden State Valkyries",
-        "stat": "PTS",
-        "line": 13.5,
-        "edge": -6.6,
-        "model_projection": 6.9,
-        "confidence": 66.0,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "PASS",
-        "action_probabilities": {
-          "BET": 0.04,
-          "LEAN": 0.06,
-          "WATCH": 0.06,
-          "PASS": 0.84
-        },
-        "action_confidence": 0.79,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.07,
-          "MEDIUM": 0.47,
-          "LOW": 0.32,
-          "REJECT": 0.14
-        },
-        "trust_confidence": 0.29,
-        "anomaly_probability": 0.5,
-        "review_probability": 0.62
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
     {
       "shadow_id": "e6e8736a97c5a42383b42c82",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
         "player": "Gabby Williams",
@@ -144,104 +62,104 @@
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.09,
-          "LEAN": 0.16,
-          "WATCH": 0.09,
-          "PASS": 0.66
+          "BET": 0.05,
+          "LEAN": 0.08,
+          "WATCH": 0.04,
+          "PASS": 0.83
         },
-        "action_confidence": 0.55,
+        "action_confidence": 0.77,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.03,
-          "MEDIUM": 0.65,
-          "LOW": 0.24,
-          "REJECT": 0.08
+          "HIGH": 0.07,
+          "MEDIUM": 0.73,
+          "LOW": 0.15,
+          "REJECT": 0.05
         },
-        "trust_confidence": 0.53,
-        "anomaly_probability": 0.49,
-        "review_probability": 0.56
+        "trust_confidence": 0.64,
+        "anomaly_probability": 0.42,
+        "review_probability": 0.55
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "574d777bcb6088d1a188df6c",
+      "shadow_id": "cc68c367ebca0327c5e8bae0",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Gabby Williams",
+        "player": "Tiffany Hayes",
         "team": "Golden State Valkyries",
-        "stat": "PRA",
-        "line": 26.5,
-        "edge": -6.0,
-        "model_projection": 20.5,
+        "stat": "PR",
+        "line": 16.5,
+        "edge": -8.1,
+        "model_projection": 8.4,
         "confidence": 66.0,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.14,
-          "LEAN": 0.18,
-          "WATCH": 0.11,
-          "PASS": 0.57
+          "BET": 0.08,
+          "LEAN": 0.08,
+          "WATCH": 0.04,
+          "PASS": 0.8
         },
-        "action_confidence": 0.43,
+        "action_confidence": 0.73,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.04,
-          "MEDIUM": 0.62,
-          "LOW": 0.26,
-          "REJECT": 0.08
+          "HIGH": 0.22,
+          "MEDIUM": 0.6,
+          "LOW": 0.13,
+          "REJECT": 0.05
         },
-        "trust_confidence": 0.49,
-        "anomaly_probability": 0.52,
-        "review_probability": 0.6
+        "trust_confidence": 0.47,
+        "anomaly_probability": 0.51,
+        "review_probability": 0.53
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "cd420b91ad224aaf0305e7dd",
+      "shadow_id": "d2045f212cab95ed250d2ac1",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Gabby Williams",
+        "player": "Tiffany Hayes",
         "team": "Golden State Valkyries",
-        "stat": "PR",
-        "line": 22.5,
-        "edge": -4.7,
-        "model_projection": 17.8,
-        "confidence": 62.7,
+        "stat": "PTS",
+        "line": 13.5,
+        "edge": -6.6,
+        "model_projection": 6.9,
+        "confidence": 66.0,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.08,
-          "LEAN": 0.19,
-          "WATCH": 0.1,
-          "PASS": 0.63
+          "BET": 0.05,
+          "LEAN": 0.08,
+          "WATCH": 0.04,
+          "PASS": 0.83
         },
-        "action_confidence": 0.51,
+        "action_confidence": 0.77,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.03,
-          "MEDIUM": 0.64,
-          "LOW": 0.28,
+          "HIGH": 0.16,
+          "MEDIUM": 0.62,
+          "LOW": 0.17,
           "REJECT": 0.05
         },
-        "trust_confidence": 0.52,
-        "anomaly_probability": 0.33,
-        "review_probability": 0.49
+        "trust_confidence": 0.49,
+        "anomaly_probability": 0.47,
+        "review_probability": 0.48
       },
       "research_only": true,
       "production_mutation": false,
@@ -252,7 +170,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
         "player": "Naz Hillmon",
@@ -277,13 +195,179 @@
         "trust": "LOW",
         "trust_probabilities": {
           "HIGH": 0.0,
-          "MEDIUM": 0.27,
-          "LOW": 0.62,
-          "REJECT": 0.11
+          "MEDIUM": 0.2,
+          "LOW": 0.67,
+          "REJECT": 0.13
         },
-        "trust_confidence": 0.49,
-        "anomaly_probability": 0.61,
+        "trust_confidence": 0.56,
+        "anomaly_probability": 0.58,
         "review_probability": 0.89
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "b0e4dc1ae77923e20eedce64",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Allisha Gray",
+        "team": "Atlanta Dream",
+        "stat": "PTS",
+        "line": 14.5,
+        "edge": 4.7,
+        "model_projection": 19.2,
+        "confidence": 62.7,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "BET": 0.01,
+          "LEAN": 0.16,
+          "WATCH": 0.82,
+          "PASS": 0.01
+        },
+        "action_confidence": 0.76,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "HIGH": 0.0,
+          "MEDIUM": 0.3,
+          "LOW": 0.57,
+          "REJECT": 0.13
+        },
+        "trust_confidence": 0.43,
+        "anomaly_probability": 0.66,
+        "review_probability": 0.88
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "cd420b91ad224aaf0305e7dd",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Gabby Williams",
+        "team": "Golden State Valkyries",
+        "stat": "PR",
+        "line": 22.5,
+        "edge": -4.7,
+        "model_projection": 17.8,
+        "confidence": 62.7,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "BET": 0.11,
+          "LEAN": 0.14,
+          "WATCH": 0.03,
+          "PASS": 0.72
+        },
+        "action_confidence": 0.63,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.13,
+          "MEDIUM": 0.78,
+          "LOW": 0.07,
+          "REJECT": 0.02
+        },
+        "trust_confidence": 0.71,
+        "anomaly_probability": 0.25,
+        "review_probability": 0.35
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "efc042b4e46eae4512fcb94d",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Veronica Burton",
+        "team": "Golden State Valkyries",
+        "stat": "PA",
+        "line": 14.5,
+        "edge": 4.2,
+        "model_projection": 18.7,
+        "confidence": 61.4,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "BET": 0.79,
+          "LEAN": 0.18,
+          "WATCH": 0.02,
+          "PASS": 0.01
+        },
+        "action_confidence": 0.72,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.16,
+          "MEDIUM": 0.77,
+          "LOW": 0.06,
+          "REJECT": 0.01
+        },
+        "trust_confidence": 0.69,
+        "anomaly_probability": 0.25,
+        "review_probability": 0.3
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "56f62d28bcfbb7b3e0ed4f98",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Naz Hillmon",
+        "team": "Atlanta Dream",
+        "stat": "PR",
+        "line": 10.5,
+        "edge": 2.7,
+        "model_projection": 13.2,
+        "confidence": 57.5,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "BET": 0.01,
+          "LEAN": 0.13,
+          "WATCH": 0.84,
+          "PASS": 0.02
+        },
+        "action_confidence": 0.79,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "HIGH": 0.0,
+          "MEDIUM": 0.27,
+          "LOW": 0.65,
+          "REJECT": 0.08
+        },
+        "trust_confidence": 0.53,
+        "anomaly_probability": 0.56,
+        "review_probability": 0.83
       },
       "research_only": true,
       "production_mutation": false,
@@ -294,7 +378,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
         "player": "Allisha Gray",
@@ -311,309 +395,21 @@
         "action": "WATCH",
         "action_probabilities": {
           "BET": 0.01,
-          "LEAN": 0.1,
-          "WATCH": 0.88,
+          "LEAN": 0.14,
+          "WATCH": 0.84,
           "PASS": 0.01
         },
-        "action_confidence": 0.84,
+        "action_confidence": 0.79,
         "trust": "LOW",
         "trust_probabilities": {
           "HIGH": 0.0,
-          "MEDIUM": 0.26,
-          "LOW": 0.62,
-          "REJECT": 0.12
-        },
-        "trust_confidence": 0.49,
-        "anomaly_probability": 0.68,
-        "review_probability": 0.88
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "efc042b4e46eae4512fcb94d",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Veronica Burton",
-        "team": "Golden State Valkyries",
-        "stat": "PA",
-        "line": 14.5,
-        "edge": 4.2,
-        "model_projection": 18.7,
-        "confidence": 61.4,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "BET": 0.54,
-          "LEAN": 0.17,
-          "WATCH": 0.26,
-          "PASS": 0.03
-        },
-        "action_confidence": 0.39,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.2,
-          "MEDIUM": 0.68,
-          "LOW": 0.1,
-          "REJECT": 0.02
-        },
-        "trust_confidence": 0.57,
-        "anomaly_probability": 0.32,
-        "review_probability": 0.5
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "41644bb735aeb19c3d6b635a",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Kiah Stokes",
-        "team": "Golden State Valkyries",
-        "stat": "PR",
-        "line": 12.5,
-        "edge": -3.5,
-        "model_projection": 9.0,
-        "confidence": 59.6,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "PASS",
-        "action_probabilities": {
-          "BET": 0.03,
-          "LEAN": 0.07,
-          "WATCH": 0.06,
-          "PASS": 0.84
-        },
-        "action_confidence": 0.79,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.02,
-          "MEDIUM": 0.56,
-          "LOW": 0.38,
-          "REJECT": 0.04
-        },
-        "trust_confidence": 0.41,
-        "anomaly_probability": 0.32,
-        "review_probability": 0.48
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "b0e4dc1ae77923e20eedce64",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Allisha Gray",
-        "team": "Atlanta Dream",
-        "stat": "PTS",
-        "line": 14.5,
-        "edge": 4.7,
-        "model_projection": 19.2,
-        "confidence": 62.7,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
-      },
-      "jev": {
-        "action": "WATCH",
-        "action_probabilities": {
-          "BET": 0.02,
-          "LEAN": 0.21,
-          "WATCH": 0.76,
-          "PASS": 0.01
-        },
-        "action_confidence": 0.68,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.0,
-          "MEDIUM": 0.54,
-          "LOW": 0.41,
-          "REJECT": 0.05
+          "MEDIUM": 0.37,
+          "LOW": 0.54,
+          "REJECT": 0.09
         },
         "trust_confidence": 0.39,
-        "anomaly_probability": 0.6,
+        "anomaly_probability": 0.59,
         "review_probability": 0.84
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "89e5891ecd532e3a24d6e098",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Veronica Burton",
-        "team": "Golden State Valkyries",
-        "stat": "PRA",
-        "line": 17.5,
-        "edge": 4.5,
-        "model_projection": 22.0,
-        "confidence": 62.2,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "BET": 0.75,
-          "LEAN": 0.2,
-          "WATCH": 0.03,
-          "PASS": 0.02
-        },
-        "action_confidence": 0.67,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.11,
-          "MEDIUM": 0.8,
-          "LOW": 0.08,
-          "REJECT": 0.01
-        },
-        "trust_confidence": 0.73,
-        "anomaly_probability": 0.31,
-        "review_probability": 0.4
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "de1b4d95fc8271dbe342c9c1",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Veronica Burton",
-        "team": "Golden State Valkyries",
-        "stat": "PA",
-        "line": 13.5,
-        "edge": 5.3,
-        "model_projection": 18.8,
-        "confidence": 64.3,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "BET",
-        "action_probabilities": {
-          "BET": 0.78,
-          "LEAN": 0.19,
-          "WATCH": 0.02,
-          "PASS": 0.01
-        },
-        "action_confidence": 0.71,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.18,
-          "MEDIUM": 0.73,
-          "LOW": 0.08,
-          "REJECT": 0.01
-        },
-        "trust_confidence": 0.64,
-        "anomaly_probability": 0.31,
-        "review_probability": 0.4
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "442e7bd1496c83737b74ba41",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Gabby Williams",
-        "team": "Golden State Valkyries",
-        "stat": "PA",
-        "line": 21.5,
-        "edge": -3.9,
-        "model_projection": 17.6,
-        "confidence": 60.6,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "PASS",
-        "action_probabilities": {
-          "BET": 0.07,
-          "LEAN": 0.13,
-          "WATCH": 0.05,
-          "PASS": 0.75
-        },
-        "action_confidence": 0.67,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.03,
-          "MEDIUM": 0.68,
-          "LOW": 0.25,
-          "REJECT": 0.04
-        },
-        "trust_confidence": 0.57,
-        "anomaly_probability": 0.36,
-        "review_probability": 0.49
-      },
-      "research_only": true,
-      "production_mutation": false,
-      "outcome": "PENDING"
-    },
-    {
-      "shadow_id": "9363696208e42248629b196f",
-      "question_version": "jev_shadow_v2",
-      "league": "WNBA",
-      "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
-      "candidate": {
-        "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Veronica Burton",
-        "team": "Golden State Valkyries",
-        "stat": "PR",
-        "line": 13.5,
-        "edge": 2.6,
-        "model_projection": 16.1,
-        "confidence": 57.3,
-        "injury_status": "ACTIVE"
-      },
-      "jev": {
-        "action": "LEAN",
-        "action_probabilities": {
-          "BET": 0.15,
-          "LEAN": 0.68,
-          "WATCH": 0.13,
-          "PASS": 0.04
-        },
-        "action_confidence": 0.57,
-        "trust": "MEDIUM",
-        "trust_probabilities": {
-          "HIGH": 0.02,
-          "MEDIUM": 0.67,
-          "LOW": 0.29,
-          "REJECT": 0.02
-        },
-        "trust_confidence": 0.56,
-        "anomaly_probability": 0.35,
-        "review_probability": 0.49
       },
       "research_only": true,
       "production_mutation": false,
@@ -624,7 +420,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
         "player": "Allisha Gray",
@@ -641,62 +437,103 @@
         "action": "WATCH",
         "action_probabilities": {
           "BET": 0.01,
-          "LEAN": 0.1,
-          "WATCH": 0.85,
-          "PASS": 0.04
+          "LEAN": 0.13,
+          "WATCH": 0.84,
+          "PASS": 0.02
         },
-        "action_confidence": 0.8,
+        "action_confidence": 0.79,
         "trust": "LOW",
         "trust_probabilities": {
           "HIGH": 0.0,
           "MEDIUM": 0.33,
-          "LOW": 0.59,
-          "REJECT": 0.08
+          "LOW": 0.56,
+          "REJECT": 0.1
         },
-        "trust_confidence": 0.45,
-        "anomaly_probability": 0.6,
-        "review_probability": 0.8
+        "trust_confidence": 0.41,
+        "anomaly_probability": 0.51,
+        "review_probability": 0.82
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "e9e8da49606a21f322eaebf7",
+      "shadow_id": "41644bb735aeb19c3d6b635a",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Kiah Stokes",
+        "team": "Golden State Valkyries",
+        "stat": "PR",
+        "line": 12.5,
+        "edge": -3.5,
+        "model_projection": 9.0,
+        "confidence": 59.6,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "PASS",
+        "action_probabilities": {
+          "BET": 0.06,
+          "LEAN": 0.11,
+          "WATCH": 0.05,
+          "PASS": 0.78
+        },
+        "action_confidence": 0.71,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.07,
+          "MEDIUM": 0.76,
+          "LOW": 0.15,
+          "REJECT": 0.02
+        },
+        "trust_confidence": 0.68,
+        "anomaly_probability": 0.27,
+        "review_probability": 0.42
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "89e5891ecd532e3a24d6e098",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
         "player": "Veronica Burton",
         "team": "Golden State Valkyries",
-        "stat": "PTS",
-        "line": 9.5,
-        "edge": 3.3,
-        "model_projection": 12.8,
-        "confidence": 59.1,
+        "stat": "PRA",
+        "line": 17.5,
+        "edge": 4.6,
+        "model_projection": 22.1,
+        "confidence": 62.5,
         "injury_status": "ACTIVE"
       },
       "jev": {
-        "action": "LEAN",
+        "action": "BET",
         "action_probabilities": {
-          "BET": 0.35,
-          "LEAN": 0.56,
-          "WATCH": 0.06,
-          "PASS": 0.03
+          "BET": 0.82,
+          "LEAN": 0.16,
+          "WATCH": 0.01,
+          "PASS": 0.01
         },
-        "action_confidence": 0.41,
+        "action_confidence": 0.76,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.04,
-          "MEDIUM": 0.74,
-          "LOW": 0.2,
-          "REJECT": 0.02
+          "HIGH": 0.17,
+          "MEDIUM": 0.75,
+          "LOW": 0.07,
+          "REJECT": 0.01
         },
-        "trust_confidence": 0.65,
-        "anomaly_probability": 0.26,
-        "review_probability": 0.4
+        "trust_confidence": 0.67,
+        "anomaly_probability": 0.3,
+        "review_probability": 0.35
       },
       "research_only": true,
       "production_mutation": false,
@@ -707,7 +544,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
         "player": "Kaila Charles",
@@ -722,64 +559,104 @@
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.07,
-          "LEAN": 0.12,
-          "WATCH": 0.08,
-          "PASS": 0.73
+          "BET": 0.03,
+          "LEAN": 0.08,
+          "WATCH": 0.07,
+          "PASS": 0.82
         },
-        "action_confidence": 0.64,
+        "action_confidence": 0.76,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.05,
-          "MEDIUM": 0.45,
-          "LOW": 0.41,
-          "REJECT": 0.09
+          "HIGH": 0.02,
+          "MEDIUM": 0.63,
+          "LOW": 0.33,
+          "REJECT": 0.02
         },
-        "trust_confidence": 0.27,
-        "anomaly_probability": 0.39,
-        "review_probability": 0.54
+        "trust_confidence": 0.51,
+        "anomaly_probability": 0.29,
+        "review_probability": 0.39
       },
       "research_only": true,
       "production_mutation": false,
       "outcome": "PENDING"
     },
     {
-      "shadow_id": "4e10c9229032229b832639f9",
+      "shadow_id": "442e7bd1496c83737b74ba41",
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
-        "player": "Naz Hillmon",
-        "team": "Atlanta Dream",
-        "stat": "PTS",
-        "line": 5.5,
-        "edge": 4.7,
-        "model_projection": 10.2,
-        "confidence": 62.7,
-        "injury_status": "SPECULATIVE",
-        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+        "player": "Gabby Williams",
+        "team": "Golden State Valkyries",
+        "stat": "PA",
+        "line": 21.5,
+        "edge": -4.0,
+        "model_projection": 17.5,
+        "confidence": 60.9,
+        "injury_status": "ACTIVE"
       },
       "jev": {
-        "action": "WATCH",
+        "action": "PASS",
         "action_probabilities": {
-          "BET": 0.04,
-          "LEAN": 0.18,
-          "WATCH": 0.76,
-          "PASS": 0.02
+          "BET": 0.12,
+          "LEAN": 0.15,
+          "WATCH": 0.03,
+          "PASS": 0.7
         },
-        "action_confidence": 0.68,
+        "action_confidence": 0.6,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.0,
-          "MEDIUM": 0.51,
-          "LOW": 0.43,
-          "REJECT": 0.06
+          "HIGH": 0.08,
+          "MEDIUM": 0.74,
+          "LOW": 0.15,
+          "REJECT": 0.03
         },
-        "trust_confidence": 0.35,
-        "anomaly_probability": 0.56,
-        "review_probability": 0.79
+        "trust_confidence": 0.65,
+        "anomaly_probability": 0.3,
+        "review_probability": 0.38
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "9363696208e42248629b196f",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Veronica Burton",
+        "team": "Golden State Valkyries",
+        "stat": "PR",
+        "line": 13.5,
+        "edge": 2.6,
+        "model_projection": 16.1,
+        "confidence": 57.3,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "LEAN",
+        "action_probabilities": {
+          "BET": 0.29,
+          "LEAN": 0.47,
+          "WATCH": 0.13,
+          "PASS": 0.11
+        },
+        "action_confidence": 0.29,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.03,
+          "MEDIUM": 0.72,
+          "LOW": 0.23,
+          "REJECT": 0.02
+        },
+        "trust_confidence": 0.63,
+        "anomaly_probability": 0.31,
+        "review_probability": 0.39
       },
       "research_only": true,
       "production_mutation": false,
@@ -790,7 +667,7 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
         "player": "Gabby Williams",
@@ -803,24 +680,149 @@
         "injury_status": "ACTIVE"
       },
       "jev": {
-        "action": "PASS",
+        "action": "WATCH",
         "action_probabilities": {
-          "BET": 0.14,
-          "LEAN": 0.2,
-          "WATCH": 0.05,
-          "PASS": 0.61
+          "BET": 0.13,
+          "LEAN": 0.14,
+          "WATCH": 0.39,
+          "PASS": 0.34
         },
-        "action_confidence": 0.48,
+        "action_confidence": 0.19,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.05,
-          "MEDIUM": 0.66,
-          "LOW": 0.25,
-          "REJECT": 0.04
+          "HIGH": 0.11,
+          "MEDIUM": 0.44,
+          "LOW": 0.32,
+          "REJECT": 0.13
         },
-        "trust_confidence": 0.55,
-        "anomaly_probability": 0.32,
-        "review_probability": 0.45
+        "trust_confidence": 0.25,
+        "anomaly_probability": 0.43,
+        "review_probability": 0.56
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "d886e164d4363ad8008505e6",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Allisha Gray",
+        "team": "Atlanta Dream",
+        "stat": "PRA",
+        "line": 20.5,
+        "edge": 3.5,
+        "model_projection": 24.0,
+        "confidence": 59.6,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "BET": 0.02,
+          "LEAN": 0.12,
+          "WATCH": 0.82,
+          "PASS": 0.04
+        },
+        "action_confidence": 0.76,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "HIGH": 0.0,
+          "MEDIUM": 0.34,
+          "LOW": 0.54,
+          "REJECT": 0.12
+        },
+        "trust_confidence": 0.39,
+        "anomaly_probability": 0.56,
+        "review_probability": 0.78
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "cb5396a02c81d14b864e49ca",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Naz Hillmon",
+        "team": "Atlanta Dream",
+        "stat": "PR",
+        "line": 9.5,
+        "edge": 3.9,
+        "model_projection": 13.4,
+        "confidence": 60.6,
+        "injury_status": "SPECULATIVE",
+        "injury_detail": "Minutes/usage redistributed from unavailable teammates; speculative until prop market and rotation are confirmed"
+      },
+      "jev": {
+        "action": "WATCH",
+        "action_probabilities": {
+          "BET": 0.03,
+          "LEAN": 0.14,
+          "WATCH": 0.8,
+          "PASS": 0.03
+        },
+        "action_confidence": 0.73,
+        "trust": "LOW",
+        "trust_probabilities": {
+          "HIGH": 0.0,
+          "MEDIUM": 0.43,
+          "LOW": 0.47000000000000003,
+          "REJECT": 0.1
+        },
+        "trust_confidence": 0.29,
+        "anomaly_probability": 0.51,
+        "review_probability": 0.82
+      },
+      "research_only": true,
+      "production_mutation": false,
+      "outcome": "PENDING"
+    },
+    {
+      "shadow_id": "e9e8da49606a21f322eaebf7",
+      "question_version": "jev_shadow_v2",
+      "league": "WNBA",
+      "target_date": "2026-10-26",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
+      "candidate": {
+        "game": "Atlanta Dream @ Golden State Valkyries",
+        "player": "Veronica Burton",
+        "team": "Golden State Valkyries",
+        "stat": "PTS",
+        "line": 9.5,
+        "edge": 3.4,
+        "model_projection": 12.9,
+        "confidence": 59.3,
+        "injury_status": "ACTIVE"
+      },
+      "jev": {
+        "action": "BET",
+        "action_probabilities": {
+          "BET": 0.62,
+          "LEAN": 0.33,
+          "WATCH": 0.03,
+          "PASS": 0.02
+        },
+        "action_confidence": 0.49,
+        "trust": "MEDIUM",
+        "trust_probabilities": {
+          "HIGH": 0.08,
+          "MEDIUM": 0.76,
+          "LOW": 0.14,
+          "REJECT": 0.02
+        },
+        "trust_confidence": 0.68,
+        "anomaly_probability": 0.26,
+        "review_probability": 0.35
       },
       "research_only": true,
       "production_mutation": false,
@@ -831,37 +833,37 @@
       "question_version": "jev_shadow_v2",
       "league": "WNBA",
       "target_date": "2026-10-26",
-      "issued_at_utc": "2026-10-26T22:53:08.760002+00:00",
+      "issued_at_utc": "2026-10-27T00:44:12.250982+00:00",
       "candidate": {
         "game": "Atlanta Dream @ Golden State Valkyries",
         "player": "Kiah Stokes",
         "team": "Golden State Valkyries",
         "stat": "REB",
         "line": 9.5,
-        "edge": -4.1,
-        "model_projection": 5.4,
-        "confidence": 61.2,
+        "edge": -4.2,
+        "model_projection": 5.3,
+        "confidence": 61.4,
         "injury_status": "ACTIVE"
       },
       "jev": {
         "action": "PASS",
         "action_probabilities": {
-          "BET": 0.15,
-          "LEAN": 0.2,
-          "WATCH": 0.04,
-          "PASS": 0.61
+          "BET": 0.12,
+          "LEAN": 0.08,
+          "WATCH": 0.03,
+          "PASS": 0.77
         },
-        "action_confidence": 0.48,
+        "action_confidence": 0.69,
         "trust": "MEDIUM",
         "trust_probabilities": {
-          "HIGH": 0.05,
-          "MEDIUM": 0.6,
-          "LOW": 0.3,
-          "REJECT": 0.05
+          "HIGH": 0.13,
+          "MEDIUM": 0.65,
+          "LOW": 0.19,
+          "REJECT": 0.03
         },
-        "trust_confidence": 0.47,
-        "anomaly_probability": 0.34,
-        "review_probability": 0.51
+        "trust_confidence": 0.53,
+        "anomaly_probability": 0.32,
+        "review_probability": 0.46
       },
       "research_only": true,
       "production_mutation": false,
